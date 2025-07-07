@@ -1,1 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluency Grid Generator</title>
+  <style>
+    body {
+      font-family: 'Century Gothic', Arial, sans-serif;
+      text-align: center;
+      margin: 40px;
+    }
+    #gridContainer {
+      margin-top: 20px;
+    }
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
+    td {
+      border: 1px solid #000;
+      width: 120px;
+      height: 80px;
+      font-size: 32px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    #footer {
+      margin-top: 60px;
+      font-size: 16px;
+    }
+    @media print {
+      button, select {
+        display: none;
+      }
+      #footer {
+        position: fixed;
+        bottom: 40px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Fluency Grid Generator</h2>
+  <label for="skillSelect">Choose a Skill:</label>
+  <select id="skillSelect" onchange="updateTitle()">
+    <option value="shortA">0.1 - Short A</option>
+  </select>
+  <br><br>
+  <button onclick="generateGrid()">Generate Fluency Grid</button>
+  <button onclick="window.print()">Print</button>
+
+  <h2 id="gridTitle" style="margin-top: 40px;">0.1 - Short A</h2>
+  <div id="gridContainer"></div>
+  <div id="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
+
+  <script>
+    const wordLists = {
+      shortA: [
+        "bad", "bag", "ban", "bam", "bat", "cab", "cam", "can", "cap", "cat",
+        "dab", "dad", "dam", "fad", "fan", "fat", "fax", "gag", "gap", "had",
+        "hag", "Hal", "ham", "has", "hat", "jab", "jag", "jam", "lab", "lad",
+        "lag", "lap", "mad", "man", "map", "mat", "nab", "nag", "nap", "pad",
+        "pan", "pat", "rad", "rag", "ram", "ran", "rap", "rat", "sad", "sag",
+        "sap", "sat", "sax", "tab", "tad", "tag", "tan", "tap", "tax", "wag",
+        "wax", "zag", "zap", "Dan", "Max", "Pam", "Sam", "Nat", "Tad", "Jan",
+        "Hal", "I", "a", "the"
+      ]
+    };
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function updateTitle() {
+      const select = document.getElementById("skillSelect");
+      const selectedText = select.options[select.selectedIndex].text;
+      document.getElementById("gridTitle").textContent = selectedText;
+    }
+
+    function generateGrid() {
+      updateTitle();
+      const skill = document.getElementById('skillSelect').value;
+      const words = shuffle([...wordLists[skill]]).slice(0, 30);
+
+      let html = '<table>';
+      for (let i = 0; i < 6; i++) {
+        html += '<tr>';
+        for (let j = 0; j < 5; j++) {
+          const idx = i * 5 + j;
+          const word = words[idx] || "";
+          html += `<td>${word}</td>`;
+        }
+        html += '</tr>';
+      }
+      html += '</table>';
+      document.getElementById('gridContainer').innerHTML = html;
+    }
+  </script>
+
+</body>
+</html>
 
