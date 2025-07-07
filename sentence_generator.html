@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluency Grid Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      margin: 40px;
+    }
+    #gridContainer {
+      margin-top: 20px;
+    }
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+      font-family: 'Poppins', sans-serif;
+    }
+    td {
+      border: 1px solid #000;
+      width: 220px;
+      height: 100px;
+      font-size: 14px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    #footer {
+      margin-top: 60px;
+      font-size: 16px;
+      font-family: 'Poppins', sans-serif;
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+    }
+    @page {
+      size: landscape;
+    }
+
+    @media print {
+      #setupSection, button, select {
+        display: none;
+      }
+      #footer {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="setupSection">
+    <button onclick="generateGrid()">Generate Fluency Grid</button>
+    <button onclick="window.print()">Print</button>
+  </div>
+
+  <h2 id="gridTitle" style="margin-top: 40px;">0.1 - Short A Sentences</h2>
+  <div id="gridContainer"></div>
+
+  <div id="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
+
+  <script>
+    window.onload = function () {
+      generateGrid();
+    };
+
+    const wordLists = {
+      "0.1-sentences": [
+        "A ham sat at a mat.",
+        "I had a jam at the pan.",
+        "Pam sat at a mat.",
+        "The bat and the cat ran.",
+        "Sam had a tan cap.",
+        "A bag had a tag.",
+        "I am at the van.",
+        "The can had a jam.",
+        "A man sat at a cab.",
+        "Pat the Cat had a nap.",
+        "I had a bag.",
+        "A cat sat at the mat.",
+        "Sam the Ram sat at the mat.",
+        "Pam and Pat had a map.",
+        "The bat and the cap sat.",
+        "A man had a cap.",
+        "I sat at the van.",
+        "Dan and Sam sat.",
+        "A rat ran at the bag.",
+        "The cat ran at a cab."
+      ]
+    };
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function generateGrid() {
+      const words = shuffle([...wordLists["0.1-sentences"]]).slice(0, 15);
+      let html = '<table>';
+      for (let i = 0; i < 5; i++) {
+        html += '<tr>';
+        for (let j = 0; j < 3; j++) {
+          const idx = i * 3 + j;
+          const word = words[idx] || "";
+          html += `<td>${word}</td>`;
+        }
+        html += '</tr>';
+      }
+      html += '</table>';
+      document.getElementById('gridContainer').innerHTML = html;
+    }
+  </script>
+
+</body>
+</html>
