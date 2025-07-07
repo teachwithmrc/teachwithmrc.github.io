@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fluency Grid Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Century Gothic', Arial, sans-serif;
+      font-family: 'Poppins', sans-serif;
       text-align: center;
       margin: 40px;
     }
@@ -16,6 +17,7 @@
     table {
       margin: 0 auto;
       border-collapse: collapse;
+      font-family: 'Poppins', sans-serif;
     }
     td {
       border: 1px solid #000;
@@ -28,17 +30,18 @@
     #footer {
       margin-top: 60px;
       font-size: 16px;
+      font-family: 'Poppins', sans-serif;
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      width: 100%;
+      text-align: center;
     }
     @media print {
-      button, select {
+      #setupSection, button, select {
         display: none;
       }
       #footer {
-        position: fixed;
-        bottom: 40px;
-        left: 0;
-        width: 100%;
-        text-align: center;
         font-size: 16px;
       }
     }
@@ -46,21 +49,26 @@
 </head>
 <body>
 
-  <h2>Fluency Grid Generator</h2>
-  <label for="skillSelect">Choose a Skill:</label>
-  <select id="skillSelect" onchange="updateTitle()">
-    <option value="shortA">0.1 - Short A</option>
-  </select>
-  <br><br>
-  <button onclick="generateGrid()">Generate Fluency Grid</button>
-  <button onclick="window.print()">Print</button>
+  <div id="setupSection">
+    <h2>Fluency Grid Generator</h2>
+    <label for="skillSelect">Choose a Skill:</label>
+    <select id="skillSelect" onchange="updateTitle()">
+      <option value="shortA">0.1 - Short A</option>
+    </select>
+    <br><br>
+    <button onclick="generateGrid()">Generate Fluency Grid</button>
+    <button onclick="window.print()">Print</button>
+  </div>
 
   <h2 id="gridTitle" style="margin-top: 40px;">0.1 - Short A</h2>
   <div id="gridContainer"></div>
+
   <div id="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
 
   <script>
-    const wordLists = {
+    window.fluencyData = window.fluencyData || {};
+
+    window.fluencyData.wordLists = window.fluencyData.wordLists || {
       shortA: [
         "bad", "bag", "ban", "bam", "bat", "cab", "cam", "can", "cap", "cat",
         "dab", "dad", "dam", "fad", "fan", "fat", "fax", "gag", "gap", "had",
@@ -90,7 +98,7 @@
     function generateGrid() {
       updateTitle();
       const skill = document.getElementById('skillSelect').value;
-      const words = shuffle([...wordLists[skill]]).slice(0, 30);
+      const words = shuffle([...window.fluencyData.wordLists[skill]]).slice(0, 30);
 
       let html = '<table>';
       for (let i = 0; i < 6; i++) {
