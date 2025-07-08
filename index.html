@@ -3,46 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fluency Grid Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <title>Fluency Sentence Grid</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Poppins', sans-serif;
       text-align: center;
       margin: 40px;
     }
+
     #gridContainer {
       margin-top: 20px;
     }
+
     table {
       margin: 0 auto;
       border-collapse: collapse;
       font-family: 'Poppins', sans-serif;
     }
+
     td {
       border: 1px solid #000;
-      width: 220px;
-      height: 120px;
+      width: 300px;
+      height: 100px;
       font-size: 16px;
       text-align: center;
       vertical-align: middle;
-      padding: 10px;
+      padding: 8px;
     }
+
     #footer {
-      font-size: 14px;
+      font-size: 16px;
       font-family: 'Poppins', sans-serif;
       position: fixed;
-      bottom: 40px;
+      bottom: 30px;
       left: 0;
       width: 100%;
       text-align: center;
     }
+
     @page {
       size: landscape;
+      margin: 20mm;
     }
+
     @media print {
-      #setupSection, button, select, h2#placeholderTitle {
+      #setupSection, button, select {
         display: none;
+      }
+      #footer {
+        position: fixed;
+        bottom: 30px;
       }
     }
   </style>
@@ -50,7 +61,7 @@
 <body>
 
   <div id="setupSection">
-    <h2 id="placeholderTitle">Fluency Grid Generator</h2>
+    <h2>Fluency Grid Generator</h2>
     <label for="skillSelect">Choose a Skill:</label>
     <select id="skillSelect" onchange="updateTitle()">
       <option value="0.1-sentences">0.1 - Short A Sentences</option>
@@ -62,6 +73,7 @@
 
   <h2 id="gridTitle" style="margin-top: 40px;">0.1 - Short A Sentences</h2>
   <div id="gridContainer"></div>
+
   <div id="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
 
   <script>
@@ -87,14 +99,6 @@
         "Pat the Cat had a nap.",
         "I had a bag.",
         "A cat sat at the mat.",
-        "Sam the Ram sat at the mat.",
-        "Pam and Pat had a map.",
-        "The bat and the cap sat.",
-        "A man had a cap.",
-        "I sat at the van.",
-        "Dan and Sam sat.",
-        "A rat ran at the bag.",
-        "The cat ran at a cab."
       ]
     };
 
@@ -107,7 +111,7 @@
     function generateGrid() {
       updateTitle();
       const skill = document.getElementById('skillSelect').value;
-      const words = shuffle([...wordLists[skill]]).slice(0, 12); // 3x4 layout
+      const words = shuffle([...wordLists[skill]]).slice(0, 12);
 
       let html = '<table>';
       for (let i = 0; i < 4; i++) {
@@ -124,9 +128,7 @@
     }
 
     function delayedPrint() {
-      generateGrid();
       setTimeout(() => {
-        document.body.offsetHeight; // force reflow
         window.print();
       }, 300);
     }
