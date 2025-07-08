@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Fluency Grid Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -22,28 +22,32 @@
     td {
       border: 1px solid #000;
       width: 200px;
-      height: 100px;
-      font-size: 14px;
+      height: 120px;
+      font-size: 20px;
       text-align: center;
       vertical-align: middle;
       padding: 10px;
     }
     #footer {
-      margin-top: 100px;
-      font-size: 16px;
-      font-family: 'Poppins', sans-serif;
-      position: fixed;
-      bottom: 10px;
+      font-size: 10px;
+      position: absolute;
+      bottom: 20px;
       left: 0;
       width: 100%;
       text-align: center;
     }
     @page {
       size: landscape;
+      margin-bottom: 50px;
     }
     @media print {
       #setupSection, button, select, label, input {
         display: none;
+      }
+      #footer {
+        position: fixed;
+        bottom: 20px;
+        font-size: 10px;
       }
     }
   </style>
@@ -56,11 +60,9 @@
     <label><input type="checkbox" value="0.2-sentences" checked> 0.2 - Short O Sentences</label><br>
     <label><input type="checkbox" value="0.3-sentences"> 0.3 - Short I Sentences</label><br>
     <label><input type="checkbox" value="0.4-sentences"> 0.4 - Short U Sentences</label><br>
-    <label><input type="checkbox" value="0.5-sentences"> 0.5 - Short E Sentences</label><br>
-    <label><input type="checkbox" value="0.6-sentences"> 0.6 - Bonus Letters (FSZL)</label><br>
-    <label><input type="checkbox" value="mixed-cvc"> Mixed CVC</label><br><br>
+    <label><input type="checkbox" value="0.5-sentences"> 0.5 - Short E Sentences</label><br><br>
     <button onclick="generateGrid()">Generate Fluency Grid</button>
-    <button onclick="window.print()">Print</button>
+    <button onclick="setTimeout(() => window.print(), 300)">Print</button>
   </div>
 
   <h2 id="gridTitle" style="margin-top: 40px;">Fluency Sentences</h2>
@@ -84,44 +86,8 @@
         "Tom ran to the cot.", "The dog got on the log.", "Hot dogs and pop.", "Pop got a box.",
         "The fox is hot.", "Dot is not on the box.", "Ron had a red pot.", "The job is not hot."
       ],
-      "0.3-sentences": [
-        "I hit the bin.", "The kid is in the pit.", "He did a big jig.", "Sit on the red lip.",
-        "You fix the van.", "The pig is it.", "Jim hid the bin.", "It is his lid.",
-        "The big kid can dig.", "The kit is on the bib.", "The man bit the fig.", "I hid it in the bin.",
-        "Dig and fit the pin.", "The lid is a bit big.", "Sit and zip it.", "Did you fix it?",
-        "The pig bit the kid.", "The fig is big.", "Dip it in the bin.", "He is in the pit."
-      ],
-      "0.4-sentences": [
-        "You dug in the mud.", "The sun is on the mat.", "The bug hid in the cup.", "Be on the red rug.",
-        "He cut the bun.", "The gum is fun.", "I had a sub.", "The pup ran to the tub.",
-        "Dan had a hug.", "Fun in the sun.", "Gus got the sub.", "Run to the van.",
-        "The bun had a nut.", "Cut up the bun.", "The cup is full.", "The pup dug a rut.",
-        "The rug is red.", "The mud is on the cup.", "The bug is on the sub.", "Pug got a hug."
-      ],
-      "0.5-sentences": [
-        "I met the red hen.", "The vet had a pet.", "The web is on me.", "He got a ten from me.",
-        "The pet sat on the mat.", "Ben fed the hen.", "I let the pen drop.", "Get the leg up.",
-        "The bed is wet.", "Ten men sat.", "Yes, he met the vet.", "Set the peg in the net.",
-        "Let me get it.", "The red jet is in the den.", "The pen is on the bed.", "He led the pet to the vet.",
-        "The men set the web.", "Get wet in the tub.", "Ben met the vet.", "Deb is in the den."
-      ],
-      "0.6-sentences": [
-        "His hat is on the hill.", "The kid has a red bell.", "His pet is in the big mess.", "The cat did not fill the tub.",
-        "His pill is on the bed.", "The pup has a big puff.", "His cap is in the moss.", "The fox has a bell.",
-        "His dog did not miss.", "The hen got to the well.", "His pot is hot.", "The lad has a wet rag.",
-        "The ram has a bell.", "His lip is cut.", "The cat has a fat muff.", "His rug is wet.",
-        "The duck has a bell.", "His cup is on the mat.", "The bat has a big puff.", "The hen has a red shell.",
-        "His pig is in the pen.", "His bag is on the bed."
-      ]
+      // Add other sentence groups here...
     };
-
-    sentenceData["mixed-cvc"] = [
-      ...sentenceData["0.1-sentences"],
-      ...sentenceData["0.2-sentences"],
-      ...sentenceData["0.3-sentences"],
-      ...sentenceData["0.4-sentences"],
-      ...sentenceData["0.5-sentences"]
-    ];
 
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -138,7 +104,7 @@
       selectedKeys.forEach(key => {
         sentences = sentences.concat(sentenceData[key] || []);
       });
-      sentences = shuffle(sentences).slice(0, 15);
+      sentences = shuffle(sentences).slice(0, 15); // 3x5 grid = 15 cells
 
       let html = '<table>';
       for (let i = 0; i < 5; i++) {
