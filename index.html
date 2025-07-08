@@ -56,7 +56,9 @@
     <label><input type="checkbox" value="0.2-sentences" checked> 0.2 - Short O Sentences</label><br>
     <label><input type="checkbox" value="0.3-sentences"> 0.3 - Short I Sentences</label><br>
     <label><input type="checkbox" value="0.4-sentences"> 0.4 - Short U Sentences</label><br>
-    <label><input type="checkbox" value="0.5-sentences"> 0.5 - Short E Sentences</label><br><br>
+    <label><input type="checkbox" value="0.5-sentences"> 0.5 - Short E Sentences</label><br>
+    <label><input type="checkbox" value="0.6-sentences"> 0.6 - Bonus Letters (FSZL)</label><br>
+    <label><input type="checkbox" value="mixed-cvc"> Mixed CVC</label><br><br>
     <button onclick="generateGrid()">Generate Fluency Grid</button>
     <button onclick="window.print()">Print</button>
   </div>
@@ -67,7 +69,7 @@
   <div id="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
 
   <script>
-    window.sentenceData = window.sentenceData || {
+    const sentenceData = {
       "0.1-sentences": [
         "A ham sat at a mat.", "I had a jam at the pan.", "Pam sat at a mat.", "The bat and the cat ran.",
         "Sam had a tan cap.", "A bag had a tag.", "I am at the van.", "The can had a jam.",
@@ -102,8 +104,24 @@
         "The bed is wet.", "Ten men sat.", "Yes, he met the vet.", "Set the peg in the net.",
         "Let me get it.", "The red jet is in the den.", "The pen is on the bed.", "He led the pet to the vet.",
         "The men set the web.", "Get wet in the tub.", "Ben met the vet.", "Deb is in the den."
+      ],
+      "0.6-sentences": [
+        "His hat is on the hill.", "The kid has a red bell.", "His pet is in the big mess.", "The cat did not fill the tub.",
+        "His pill is on the bed.", "The pup has a big puff.", "His cap is in the moss.", "The fox has a bell.",
+        "His dog did not miss.", "The hen got to the well.", "His pot is hot.", "The lad has a wet rag.",
+        "The ram has a bell.", "His lip is cut.", "The cat has a fat muff.", "His rug is wet.",
+        "The duck has a bell.", "His cup is on the mat.", "The bat has a big puff.", "The hen has a red shell.",
+        "His pig is in the pen.", "His bag is on the bed."
       ]
     };
+
+    sentenceData["mixed-cvc"] = [
+      ...sentenceData["0.1-sentences"],
+      ...sentenceData["0.2-sentences"],
+      ...sentenceData["0.3-sentences"],
+      ...sentenceData["0.4-sentences"],
+      ...sentenceData["0.5-sentences"]
+    ];
 
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -118,12 +136,12 @@
       const selectedKeys = Array.from(checkboxes).map(cb => cb.value);
       let sentences = [];
       selectedKeys.forEach(key => {
-        sentences = sentences.concat(window.sentenceData[key] || []);
+        sentences = sentences.concat(sentenceData[key] || []);
       });
-      sentences = shuffle(sentences).slice(0, 12);
+      sentences = shuffle(sentences).slice(0, 15);
 
       let html = '<table>';
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 5; i++) {
         html += '<tr>';
         for (let j = 0; j < 3; j++) {
           const idx = i * 3 + j;
