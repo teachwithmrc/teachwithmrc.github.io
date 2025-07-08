@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe Fluency Games</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 40px;
+      text-align: center;
+    }
+    h2 {
+      margin-top: 10px;
+      font-size: 24px;
+    }
+    #gridContainer {
+      margin-top: 20px;
+    }
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 90%;
+      table-layout: fixed;
+    }
+    td {
+      border: 1px solid #000;
+      font-size: 16px;
+      text-align: center;
+      vertical-align: middle;
+      padding: 10px;
+      height: 80px;
+    }
+    .game-title {
+      font-weight: bold;
+      margin-top: 40px;
+      font-size: 18px;
+    }
+    #footer {
+      font-size: 12px;
+      margin-top: 60px;
+      text-align: center;
+    }
+    @media print {
+      #setupSection, button {
+        display: none;
+      }
+      body {
+        margin: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="setupSection">
+    <h2>Tic Tac Toe Fluency Games</h2>
+    <label><input type="checkbox" value="0.1-sentences" checked> 0.1 - Short A</label><br>
+    <label><input type="checkbox" value="0.2-sentences" checked> 0.2 - Short O</label><br>
+    <label><input type="checkbox" value="0.3-sentences"> 0.3 - Short I</label><br>
+    <label><input type="checkbox" value="0.4-sentences"> 0.4 - Short U</label><br>
+    <label><input type="checkbox" value="0.5-sentences"> 0.5 - Short E</label><br>
+    <label><input type="checkbox" value="0.6-sentences"> 0.6 - FSZL</label><br>
+    <label><input type="checkbox" value="mixed-cvc"> Mixed CVC</label><br><br>
+    <button onclick="generateGrids()">Generate Games</button>
+    <button onclick="window.print()">Print</button>
+  </div>
+
+  <div id="gridContainer"></div>
+  <div id="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
+
+  <script>
+    const sentenceData = {
+      "0.1-sentences": ["A ham sat at a mat.", "I had a jam at the pan.", "Pam sat at a mat.", "The bat and the cat ran.", "Sam had a tan cap.", "A bag had a tag.", "I am at the van.", "The can had a jam.", "A man sat at a cab.", "Pat the Cat had a nap."],
+      "0.2-sentences": ["The dog is on the cot.", "Tom had a hot dog.", "A fox ran to the box.", "Mom sat on the log.", "Dot got a hug.", "I am not hot.", "Hop on the big box.", "The top is off.", "Ron got a job.", "The dog hid in the fog."],
+      "0.3-sentences": ["I hit the bin.", "The kid is in the pit.", "He did a big jig.", "Sit on the red lip.", "You fix the van.", "The pig is it.", "Jim hid the bin.", "It is his lid.", "The big kid can dig.", "The kit is on the bib."],
+      "0.4-sentences": ["You dug in the mud.", "The sun is on the mat.", "The bug hid in the cup.", "Be on the red rug.", "He cut the bun.", "The gum is fun.", "I had a sub.", "The pup ran to the tub.", "Dan had a hug.", "Fun in the sun."],
+      "0.5-sentences": ["I met the red hen.", "The vet had a pet.", "The web is on me.", "He got a ten from me.", "The pet sat on the mat.", "Ben fed the hen.", "I let the pen drop.", "Get the leg up.", "The bed is wet.", "Ten men sat."],
+      "0.6-sentences": ["The bell is on the bed.", "Buzz the bug is red.", "Will had a fuss.", "I fell on the hill.", "Huff and puff.", "A doll sat in the mud.", "The cup is full.", "Sell the box.", "The dog will sit.", "Miss the sub."],
+    };
+
+    sentenceData["mixed-cvc"] = [
+      ...sentenceData["0.1-sentences"],
+      ...sentenceData["0.2-sentences"],
+      ...sentenceData["0.3-sentences"],
+      ...sentenceData["0.4-sentences"],
+      ...sentenceData["0.5-sentences"]
+    ];
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function generateGrids() {
+      const container = document.getElementById("gridContainer");
+      container.innerHTML = "";
+      const selectedKeys = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+      let sentences = [];
+      selectedKeys.forEach(key => {
+        if (sentenceData[key]) {
+          sentences = sentences.concat(sentenceData[key]);
+        }
+      });
+      sentences = shuffle(sentences);
+
+      for (let g = 0; g < 2; g++) {
+        const gameSentences = sentences.slice(g * 9, (g + 1) * 9);
+        let html = `<div class="game-title">Game ${g + 1}:</div><table>`;
+        for (let i = 0; i < 3; i++) {
+          html += '<tr>';
+          for (let j = 0; j < 3; j++) {
+            const idx = i * 3 + j;
+            html += `<td>${gameSentences[idx] || ""}</td>`;
+          }
+          html += '</tr>';
+        }
+        html += '</table>';
+        container.innerHTML += html;
+      }
+    }
+  </script>
+
+</body>
+</html>
