@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fluency Grid Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -21,33 +21,29 @@
     }
     td {
       border: 1px solid #000;
-      width: 200px;
-      height: 120px;
-      font-size: 20px;
+      width: 180px;
+      height: 90px;
+      font-size: 18px;
       text-align: center;
       vertical-align: middle;
-      padding: 10px;
+      padding: 8px;
     }
     #footer {
-      font-size: 10px;
-      position: absolute;
-      bottom: 20px;
+      font-size: 12px;
+      font-family: 'Poppins', sans-serif;
+      position: fixed;
+      bottom: 5px;
       left: 0;
       width: 100%;
       text-align: center;
     }
     @page {
       size: landscape;
-      margin-bottom: 50px;
+      margin: 20mm;
     }
     @media print {
       #setupSection, button, select, label, input {
         display: none;
-      }
-      #footer {
-        position: fixed;
-        bottom: 20px;
-        font-size: 10px;
       }
     }
   </style>
@@ -60,9 +56,11 @@
     <label><input type="checkbox" value="0.2-sentences" checked> 0.2 - Short O Sentences</label><br>
     <label><input type="checkbox" value="0.3-sentences"> 0.3 - Short I Sentences</label><br>
     <label><input type="checkbox" value="0.4-sentences"> 0.4 - Short U Sentences</label><br>
-    <label><input type="checkbox" value="0.5-sentences"> 0.5 - Short E Sentences</label><br><br>
+    <label><input type="checkbox" value="0.5-sentences"> 0.5 - Short E Sentences</label><br>
+    <label><input type="checkbox" value="0.6-sentences"> 0.6 - FSZL Sentences</label><br>
+    <label><input type="checkbox" value="mixed-sentences"> Mixed CVC Sentences</label><br><br>
     <button onclick="generateGrid()">Generate Fluency Grid</button>
-    <button onclick="setTimeout(() => window.print(), 300)">Print</button>
+    <button onclick="delayedPrint()">Print</button>
   </div>
 
   <h2 id="gridTitle" style="margin-top: 40px;">Fluency Sentences</h2>
@@ -85,8 +83,8 @@
         "Ron got a job.", "The dog hid in the fog.", "The pot is on the top.", "I got a lot of hot dogs.",
         "Tom ran to the cot.", "The dog got on the log.", "Hot dogs and pop.", "Pop got a box.",
         "The fox is hot.", "Dot is not on the box.", "Ron had a red pot.", "The job is not hot."
-      ],
-      // Add other sentence groups here...
+      ]
+      // Add more sets as needed
     };
 
     function shuffle(array) {
@@ -104,13 +102,13 @@
       selectedKeys.forEach(key => {
         sentences = sentences.concat(sentenceData[key] || []);
       });
-      sentences = shuffle(sentences).slice(0, 15); // 3x5 grid = 15 cells
+      sentences = shuffle(sentences).slice(0, 16);
 
       let html = '<table>';
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 4; i++) {
         html += '<tr>';
-        for (let j = 0; j < 3; j++) {
-          const idx = i * 3 + j;
+        for (let j = 0; j < 4; j++) {
+          const idx = i * 4 + j;
           const sentence = sentences[idx] || "";
           html += `<td>${sentence}</td>`;
         }
@@ -118,6 +116,12 @@
       }
       html += '</table>';
       document.getElementById('gridContainer').innerHTML = html;
+    }
+
+    function delayedPrint() {
+      setTimeout(() => {
+        window.print();
+      }, 500);
     }
   </script>
 
