@@ -3,212 +3,193 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tic Tac Toe Sentence Grid Generator</title>
+  <title>Tic Tac Toe Sentence Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      padding: 20px;
+      margin: 20px;
+      padding: 0;
+      background: white;
     }
-    @media print {
-      body {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-        margin: 0;
-      }
-      .no-print {
-        display: none;
-      }
-      .grid {
-        page-break-inside: avoid;
-      }
-    }
-    .options {
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
       margin-bottom: 20px;
     }
-    .options label {
-      display: block;
-      margin-bottom: 5px;
+    label {
+      font-weight: bold;
     }
-    .grid {
-      display: inline-block;
-      width: 45%;
-      margin: 10px;
-      vertical-align: top;
+    .checkboxes label {
+      display: block;
+    }
+    #gamesContainer {
       page-break-inside: avoid;
     }
-    .grid table {
-      width: 100%;
-      border-collapse: collapse;
+    .game {
+      margin-bottom: 40px;
+      page-break-inside: avoid;
+    }
+    .game h2 {
+      text-align: center;
       margin-bottom: 10px;
     }
-    .grid td {
-      border: 1px solid black;
-      padding: 10px;
+    table.tic-tac-toe {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      margin: 0 auto;
+    }
+    table.tic-tac-toe td {
       text-align: center;
       vertical-align: middle;
+      padding: 15px;
       font-size: 16px;
+      height: 80px;
+      border: none;
     }
-    .footer {
-      text-align: center;
-      font-size: 10px;
-      margin-top: 30px;
-      position: relative;
+    /* Custom borders to resemble Tic Tac Toe */
+    table.tic-tac-toe tr:nth-child(1) td {
+      border-bottom: 4px solid black;
+    }
+    table.tic-tac-toe tr:nth-child(2) td {
+      border-top: 4px solid black;
+      border-bottom: 4px solid black;
+    }
+    table.tic-tac-toe tr:nth-child(3) td {
+      border-top: 4px solid black;
+    }
+    table.tic-tac-toe td:nth-child(1) {
+      border-right: 4px solid black;
+    }
+    table.tic-tac-toe td:nth-child(2) {
+      border-left: 4px solid black;
+      border-right: 4px solid black;
+    }
+    table.tic-tac-toe td:nth-child(3) {
+      border-left: 4px solid black;
+    }
+    .print-button {
+      margin-top: 20px;
+    }
+    @media print {
+      .controls, .print-button {
+        display: none;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="no-print">
-    <div class="options">
-      <strong>Select Skills:</strong><br />
-      <label><input type="checkbox" class="skill" value="0.1 - Short A" checked /> 0.1 - Short A</label>
-      <label><input type="checkbox" class="skill" value="0.2 - Short O" checked /> 0.2 - Short O</label>
-      <label><input type="checkbox" class="skill" value="0.3 - Short I" checked /> 0.3 - Short I</label>
-      <label><input type="checkbox" class="skill" value="0.4 - Short U" checked /> 0.4 - Short U</label>
-      <label><input type="checkbox" class="skill" value="0.5 - Short E" checked /> 0.5 - Short E</label>
-      <label><input type="checkbox" class="skill" value="0.6 - FSZL" checked /> 0.6 - FSZL</label>
-      <label><input type="checkbox" class="skill" value="Mixed CVC" checked /> Mixed CVC</label>
+  <div class="controls">
+    <div>
+      <label for="skillSelect">Select Skill(s):</label>
+      <div class="checkboxes" id="skillSelect"></div>
     </div>
-    <div class="options">
-      <strong>How many games per page?</strong><br />
-      <label><input type="radio" name="gameCount" value="2" checked /> 2</label>
-      <label><input type="radio" name="gameCount" value="3" /> 3</label>
-      <label><input type="radio" name="gameCount" value="4" /> 4</label>
+    <div>
+      <label for="numGames">Number of Games:</label>
+      <select id="numGames">
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
     </div>
-    <button onclick="generateGrids()">Generate & Print</button>
+    <button onclick="generateGames()">Generate Games</button>
+    <button class="print-button" onclick="window.print()">Print</button>
   </div>
 
-  <div id="gridContainer"></div>
-
-  <div class="footer">
-    Copyright - InterventionStation.com - @TeachwithMrC
-  </div>
+  <div id="gamesContainer"></div>
 
   <script>
     const sentenceData = {
       "0.1 - Short A": [
-        "A ham sat at a mat.",
-        "I had a jam at the pan.",
-        "Pam sat at a mat.",
-        "The bat and the cat ran.",
-        "Sam had a tan cap.",
-        "A bag had a tag.",
-        "I am at the van.",
-        "The can had a jam.",
-        "A man sat at a cab.",
+        "A ham sat at a mat.", "I had a jam at the pan.", "Pam sat at a mat.",
+        "The bat and the cat ran.", "Sam had a tan cap.", "A bag had a tag.",
+        "I am at the van.", "The can had a jam.", "A man sat at a cab.",
         "Pat the Cat had a nap."
       ],
       "0.2 - Short O": [
-        "Tom got a hot dog.",
-        "The pot had a top.",
-        "Mom had a box.",
-        "A fox ran to the log.",
-        "The cob is on the rod.",
-        "The dog got a job.",
-        "I hop on a cot.",
-        "A lot of fog is on the van.",
-        "A mop is in the lab.",
-        "Bob had a red top."
+        "Bob got a hot dog.", "Tom ran to the box.", "A fox sat on a log.",
+        "Ron had a mop.", "The pot is on top.", "The dog is not sad.",
+        "A cob is on the pod.", "Dot had a big top.", "Pop is in the van.",
+        "A lot of fog hid the van."
       ],
       "0.3 - Short I": [
-        "I hid in the bin.",
-        "The pig did a jig.",
-        "The lid is on the bin.",
-        "A big fig is in the pan.",
-        "Kim got a rip in the bib.",
-        "The kid did a dip.",
-        "I got a zip and a tip.",
-        "The fin is on the rig.",
-        "Jim hit the rim.",
-        "The wig is in the kit."
+        "Tim the Pig did a big jig.", "Sid the Kid hid in a bin.",
+        "Kim the Cat can zip it.", "Dan the Man had a kit.",
+        "Pam the Ham did a dip.", "Kit the Kid hit the rim.",
+        "Jim had a wig.", "The kid hid in the bin.",
+        "I did a big jig.", "The pig had a big fig."
       ],
       "0.4 - Short U": [
-        "The pup is in the tub.",
-        "I had a cup of gum.",
-        "Pam had a big sub.",
-        "Dan ran in the mud.",
-        "A bug is on the rug.",
-        "Tug cut the bun.",
-        "The sun is up.",
-        "Bud had a cup.",
-        "Gus got a hug.",
-        "The pup had fun."
+        "Bud had a cup.", "The pup is in the tub.", "Tug cut the bun.",
+        "Gus got a hug.", "Cub sat in the sun.", "Pam had a big sub.",
+        "Dan dug in the mud.", "The rug is red.", "The bug is on the cup.",
+        "Pug had fun in the tub."
       ],
       "0.5 - Short E": [
-        "The pet is in the pen.",
-        "Jen had a red net.",
-        "The vet met the Rex.",
-        "Bev the vet got wet.",
-        "Ned had a red bed.",
-        "Ted got a jet.",
-        "Ken the hen is in the den.",
-        "Ben fed the pet.",
-        "The web is on the leg.",
-        "Mel fell off the bed."
+        "Ken the Hen sat in the red pen.", "Bev the Vet had to fix the sad pet.",
+        "Jed the Pet got wet in the tub.", "Jen the Web hid in the den.",
+        "Ted the Rex met a big vet.", "Mel the Cub fell off the bed.",
+        "Ned the Leg ran to the van.", "Deb the Jet sat on the log.",
+        "Ben the Ten had a red pen.", "Ken met Bev at the vet."
       ],
-      "0.6 - FSZL": [
-        "I had a big mess.",
-        "The dog will hiss.",
-        "Dan will pass the ball.",
-        "Jill had a bell.",
-        "Will fell off the hill.",
-        "The doll is in the box.",
-        "I had a jazz gig.",
-        "The boss is mad.",
-        "Miss Meg had a muff.",
-        "Gus had a fuss."
-      ],
-      "Mixed CVC": []
+      "0.6 - FLSZ": [
+        "I will buzz the bell.", "The cat will hiss at the dog.",
+        "Jill had a puff.", "The glass will miss the ledge.",
+        "Tess fell off the bed.", "I will quill a pass.",
+        "The doll had a loss.", "I will yell at the mass.",
+        "Will had a jazz gig.", "Jess will toss the pill."
+      ]
     };
 
-    // Populate Mixed CVC by combining all other lists
-    sentenceData["Mixed CVC"] = Object.entries(sentenceData)
-      .filter(([key]) => key !== "Mixed CVC")
-      .flatMap(([, val]) => val);
+    const skillSelect = document.getElementById("skillSelect");
+    Object.keys(sentenceData).forEach(skill => {
+      const label = document.createElement("label");
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.value = skill;
+      checkbox.checked = true;
+      label.appendChild(checkbox);
+      label.appendChild(document.createTextNode(" " + skill));
+      skillSelect.appendChild(label);
+    });
 
-    function generateGrids() {
-      const selectedSkills = Array.from(document.querySelectorAll(".skill:checked"))
-        .map(cb => cb.value);
-      const allSentences = selectedSkills.flatMap(skill => sentenceData[skill] || []);
-      const gridContainer = document.getElementById("gridContainer");
-      gridContainer.innerHTML = "";
+    function getRandomSentences(skills, count) {
+      let all = skills.flatMap(skill => sentenceData[skill] || []);
+      const shuffled = all.sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, count);
+    }
 
-      const gameCount = parseInt(document.querySelector("input[name='gameCount']:checked").value);
-      const perGrid = 9;
-      const fontSizeMap = { 2: '18px', 3: '16px', 4: '14px' };
+    function generateGames() {
+      const selectedSkills = Array.from(skillSelect.querySelectorAll("input:checked")).map(cb => cb.value);
+      const numGames = parseInt(document.getElementById("numGames").value);
+      const container = document.getElementById("gamesContainer");
+      container.innerHTML = "";
 
-      for (let i = 0; i < gameCount; i++) {
-        const grid = document.createElement("div");
-        grid.className = "grid";
-
-        const title = document.createElement("h3");
-        title.textContent = `Game ${i + 1}`;
-        grid.appendChild(title);
+      for (let g = 1; g <= numGames; g++) {
+        const game = document.createElement("div");
+        game.className = "game";
+        const title = document.createElement("h2");
+        title.textContent = `Game ${g}`;
+        game.appendChild(title);
 
         const table = document.createElement("table");
-        const used = [];
-
-        for (let r = 0; r < 3; r++) {
+        table.className = "tic-tac-toe";
+        const sentences = getRandomSentences(selectedSkills, 9);
+        for (let i = 0; i < 3; i++) {
           const row = document.createElement("tr");
-          for (let c = 0; c < 3; c++) {
+          for (let j = 0; j < 3; j++) {
             const cell = document.createElement("td");
-            let sentence;
-            do {
-              sentence = allSentences[Math.floor(Math.random() * allSentences.length)];
-            } while (used.includes(sentence) && used.length < allSentences.length);
-            used.push(sentence);
-            cell.textContent = sentence;
-            cell.style.fontSize = fontSizeMap[gameCount];
+            cell.textContent = sentences[i * 3 + j] || "";
             row.appendChild(cell);
           }
           table.appendChild(row);
         }
-        grid.appendChild(table);
-        gridContainer.appendChild(grid);
+        game.appendChild(table);
+        container.appendChild(game);
       }
-
-      window.print();
     }
   </script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 </body>
 </html>
