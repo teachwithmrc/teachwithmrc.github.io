@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Fluency Grid Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -21,14 +21,15 @@
     }
     td {
       border: 1px solid #000;
-      width: 200px;
-      height: 100px;
-      font-size: 14px;
+      width: 220px;
+      height: 120px;
+      font-size: 16px;
       text-align: center;
       vertical-align: middle;
+      padding: 10px;
     }
     #footer {
-      font-size: 16px;
+      font-size: 14px;
       font-family: 'Poppins', sans-serif;
       position: fixed;
       bottom: 40px;
@@ -38,14 +39,10 @@
     }
     @page {
       size: landscape;
-      margin: 1in;
     }
     @media print {
-      #setupSection, button, select {
+      #setupSection, button, select, h2#placeholderTitle {
         display: none;
-      }
-      #footer {
-        font-size: 16px;
       }
     }
   </style>
@@ -53,7 +50,7 @@
 <body>
 
   <div id="setupSection">
-    <h2>Fluency Grid Generator</h2>
+    <h2 id="placeholderTitle">Fluency Grid Generator</h2>
     <label for="skillSelect">Choose a Skill:</label>
     <select id="skillSelect" onchange="updateTitle()">
       <option value="0.1-sentences">0.1 - Short A Sentences</option>
@@ -63,14 +60,20 @@
     <button onclick="delayedPrint()">Print</button>
   </div>
 
-  <h2 id="gridTitle" style="margin-top: 40px;">0.1 - Short A</h2>
+  <h2 id="gridTitle" style="margin-top: 40px;">0.1 - Short A Sentences</h2>
   <div id="gridContainer"></div>
-
   <div id="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
 
   <script>
-    window.fluencyData = window.fluencyData || {};
-    window.fluencyData.wordLists = {
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    const wordLists = {
       "0.1-sentences": [
         "A ham sat at a mat.",
         "I had a jam at the pan.",
@@ -95,14 +98,6 @@
       ]
     };
 
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    }
-
     function updateTitle() {
       const select = document.getElementById("skillSelect");
       const selectedText = select.options[select.selectedIndex].text;
@@ -112,15 +107,15 @@
     function generateGrid() {
       updateTitle();
       const skill = document.getElementById('skillSelect').value;
-      const sentences = shuffle([...window.fluencyData.wordLists[skill]]).slice(0, 15);
+      const words = shuffle([...wordLists[skill]]).slice(0, 12); // 3x4 layout
 
       let html = '<table>';
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 4; i++) {
         html += '<tr>';
         for (let j = 0; j < 3; j++) {
           const idx = i * 3 + j;
-          const sentence = sentences[idx] || "";
-          html += `<td>${sentence}</td>`;
+          const word = words[idx] || "";
+          html += `<td>${word}</td>`;
         }
         html += '</tr>';
       }
@@ -129,7 +124,9 @@
     }
 
     function delayedPrint() {
+      generateGrid();
       setTimeout(() => {
+        document.body.offsetHeight; // force reflow
         window.print();
       }, 300);
     }
