@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Picture Tic Tac Toe Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+    .printable {
+      width: 100%;
+    }
+    .games-layout-2 .game,
+    .games-layout-3 .game,
+    .games-layout-4 .game {
+      margin-bottom: 30px;
+      page-break-inside: avoid;
+    }
+    .games-layout-3,
+    .games-layout-4 {
+      display: grid;
+      gap: 20px;
+    }
+    .games-layout-3 {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+    }
+    .games-layout-3 .game:nth-child(3) {
+      grid-column: span 2;
+      justify-self: center;
+    }
+    .games-layout-4 {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+    }
+    .grid-title {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    table {
+      border-collapse: collapse;
+      margin: auto;
+      margin-bottom: 10px;
+    }
+    td {
+      width: 100px;
+      height: 100px;
+      text-align: center;
+      vertical-align: middle;
+      border: 2px solid black;
+    }
+    td img {
+      max-width: 90px;
+      max-height: 90px;
+    }
+    .footer {
+      text-align: center;
+      font-size: 10px;
+      margin-top: 40px;
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .printable, .printable * {
+        visibility: visible;
+      }
+      .printable {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Picture Tic Tac Toe Generator</h1>
+  <div class="controls">
+    <div>
+      <label for="numGames">Number of Games:</label>
+      <select id="numGames">
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+    </div>
+    <div class="checkbox-group">
+      <label><input type="checkbox" value="shortE" checked> Short E Pictures</label>
+    </div>
+    <button onclick="generateGames()">Generate</button>
+    <button onclick="window.print()">Print</button>
+  </div>
+
+  <div class="printable" id="gamesArea"></div>
+
+  <div class="footer">
+    Copyright - InterventionStation.com - @TeachwithMrC
+  </div>
+
+  <script>
+    const pictureWords = {
+      shortE: {
+        hen: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e4899038ba8654740abab.png",
+        net: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e48993e1a2584ca7c5caa.png",
+        bed: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e4899038ba8796e40abaa.png",
+        vet: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e4899038ba8f89740abac.png",
+        ten: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e48986e4a641c23bbc32c.png",
+        jet: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e48988796620ad64468e3.png",
+        men: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e489887966215764468e4.png",
+        beg: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e48993e1a2537407c5cab.png",
+        leg: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e4898879662e5364468e5.png"
+      }
+    };
+
+    function getSelectedPictures() {
+      const selected = Array.from(document.querySelectorAll('.checkbox-group input:checked')).map(cb => cb.value);
+      return selected.flatMap(skill => Object.entries(pictureWords[skill] || {}));
+    }
+
+    function shuffle(arr) {
+      return arr.sort(() => Math.random() - 0.5);
+    }
+
+    function generateGames() {
+      const container = document.getElementById('gamesArea');
+      container.innerHTML = '';
+      const count = parseInt(document.getElementById('numGames').value);
+      const images = shuffle(getSelectedPictures());
+
+      const wrapper = document.createElement('div');
+      wrapper.className = `games-layout-${count}`;
+
+      for (let i = 0; i < count; i++) {
+        const gameDiv = document.createElement('div');
+        gameDiv.className = 'game';
+
+        const title = document.createElement('div');
+        title.className = 'grid-title';
+        title.textContent = `Game ${i + 1}`;
+
+        const table = document.createElement('table');
+        const gridImages = images.slice(i * 9, i * 9 + 9);
+
+        for (let r = 0; r < 3; r++) {
+          const row = document.createElement('tr');
+          for (let c = 0; c < 3; c++) {
+            const cell = document.createElement('td');
+            const [word, imgUrl] = gridImages[r * 3 + c] || [null, null];
+            if (imgUrl) {
+              const img = document.createElement('img');
+              img.src = imgUrl;
+              img.alt = word;
+              cell.appendChild(img);
+            }
+            row.appendChild(cell);
+          }
+          table.appendChild(row);
+        }
+
+        gameDiv.appendChild(title);
+        gameDiv.appendChild(table);
+        wrapper.appendChild(gameDiv);
+      }
+
+      container.appendChild(wrapper);
+    }
+  </script>
+</body>
+</html>
