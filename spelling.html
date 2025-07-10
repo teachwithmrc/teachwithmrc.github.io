@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Spelling Worksheet Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
@@ -22,16 +22,31 @@
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      gap: 20px;
       width: 100%;
-      max-width: 600px;
+      max-width: 800px;
       margin: 0 auto;
     }
-    .grid img {
-      width: 100%;
+    .cell {
+      text-align: center;
+      border: 2px solid #000;
+      padding: 10px;
+    }
+    .cell img {
+      width: 140px;
       height: auto;
-      max-width: 120px;
-      border: 3px solid #000;
+      display: block;
+      margin: 0 auto 10px;
+    }
+    .boxes {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+    }
+    .box {
+      width: 20px;
+      height: 20px;
+      border: 1px solid #000;
     }
     .footer {
       text-align: center;
@@ -68,10 +83,7 @@
     <div class="page" id="worksheet">
       <h2>Spelling</h2>
       <div class="grid" id="imageGrid"></div>
-      <div class="footer">
-        Copyright - InterventionStation.com - @TeachwithMrC
-        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-      </div>
+      <div class="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
     </div>
     <div class="page" id="answerKey">
       <h2>Answer Key</h2>
@@ -104,10 +116,24 @@
       answerDiv.innerHTML = "";
 
       selected.forEach(img => {
+        const cell = document.createElement("div");
+        cell.className = "cell";
+
         const image = document.createElement("img");
         image.src = img.url;
         image.alt = img.word;
-        grid.appendChild(image);
+
+        const boxRow = document.createElement("div");
+        boxRow.className = "boxes";
+        for (let i = 0; i < img.word.length; i++) {
+          const box = document.createElement("div");
+          box.className = "box";
+          boxRow.appendChild(box);
+        }
+
+        cell.appendChild(image);
+        cell.appendChild(boxRow);
+        grid.appendChild(cell);
       });
 
       for (let i = 0; i < 3; i++) {
