@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Spelling Worksheet Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
@@ -22,28 +22,25 @@
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      gap: 15px;
       width: 100%;
       max-width: 600px;
       margin: 0 auto;
     }
     .grid img {
-      width: 100%;
-      height: auto;
-      max-width: 150px;
-      border: 2px solid #444;
-      box-sizing: border-box;
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+      border: 2px solid #555;
     }
     .footer {
       text-align: center;
       font-size: 10px;
-      margin-top: 20px;
+      margin-top: 30px;
     }
-    .page {
-      break-after: page;
-      page-break-after: always;
-      display: block;
-      width: 100%;
+    .page-break {
+      page-break-before: always;
+      break-before: page;
     }
     @media print {
       body * {
@@ -69,15 +66,15 @@
   </div>
 
   <div class="printable" id="printArea">
-    <div class="page" id="worksheet">
+    <div id="worksheet">
       <h2>Spelling</h2>
       <div class="grid" id="imageGrid"></div>
       <div class="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
     </div>
-
-    <div class="page" id="answerKey">
+    
+    <div class="page-break" id="answerKey">
       <h2>Answer Key</h2>
-      <div id="answers" style="text-align:center;"></div>
+      <div id="answers" style="text-align: center;"></div>
     </div>
   </div>
 
@@ -99,7 +96,7 @@
     }
 
     function generateImages() {
-      const selected = shuffle(images).slice(0, 6);
+      const selected = shuffle(images).slice(0, 6); // 6 images
       const grid = document.getElementById("imageGrid");
       const answerDiv = document.getElementById("answers");
       grid.innerHTML = "";
@@ -120,6 +117,7 @@
       }
     }
 
+    // Load one by default
     generateImages();
   </script>
 </body>
