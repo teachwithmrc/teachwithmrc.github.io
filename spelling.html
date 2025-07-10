@@ -30,8 +30,7 @@
     .grid img {
       width: 100%;
       height: auto;
-      max-width: 120px;
-      border: 2px solid #333;
+      border: 2px solid #000;
     }
     .footer {
       text-align: center;
@@ -94,7 +93,7 @@
     }
 
     function generateImages() {
-      const selected = shuffle(images).slice(0, 9);
+      const selected = shuffle(images).slice(0, 6);
       const grid = document.getElementById("imageGrid");
       const answerDiv = document.getElementById("answers");
       grid.innerHTML = "";
@@ -107,7 +106,7 @@
         grid.appendChild(image);
       });
 
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 2; i++) {
         const rowWords = selected.slice(i * 3, i * 3 + 3).map(img => img.word).join(", ");
         const p = document.createElement("p");
         p.textContent = `Row ${i + 1} - ${rowWords}`;
