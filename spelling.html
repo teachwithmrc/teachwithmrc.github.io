@@ -9,99 +9,85 @@
     body {
       font-family: 'Poppins', sans-serif;
       padding: 20px;
-    }
-    h1, h2 {
       text-align: center;
     }
+    h1 {
+      font-size: 24px;
+    }
     .controls {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
       margin-bottom: 20px;
     }
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 20px;
-      width: 100%;
-      max-width: 800px;
-      margin: 0 auto;
+      justify-items: center;
     }
-    .cell {
-      text-align: center;
+    .card {
       border: 2px solid #000;
       padding: 10px;
+      width: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    .cell img {
-      width: 140px;
+    .card img {
+      width: 100%;
       height: auto;
-      display: block;
-      margin: 0 auto 10px;
     }
     .boxes {
       display: flex;
-      justify-content: center;
-      gap: 5px;
+      gap: 4px;
+      margin-top: 10px;
     }
     .box {
       width: 20px;
       height: 20px;
-      border: 1px solid #000;
+      border: 2px solid #000;
     }
     .footer {
-      text-align: center;
-      font-size: 10px;
       margin-top: 40px;
+      font-size: 10px;
     }
-    .page {
-      page-break-after: always;
+    .page-break {
+      page-break-before: always;
     }
     @media print {
-      body * {
-        visibility: hidden;
-      }
-      .printable, .printable * {
-        visibility: visible;
-      }
-      .printable {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
+      .no-print {
+        display: none;
       }
     }
   </style>
 </head>
 <body>
   <h1>Spelling Worksheet Generator</h1>
-  <div class="controls">
+  <div class="controls no-print">
     <button onclick="generateImages()">Generate</button>
     <button onclick="window.print()">Print</button>
   </div>
 
-  <div class="printable" id="printArea">
-    <div class="page" id="worksheet">
-      <h2>Spelling</h2>
-      <div class="grid" id="imageGrid"></div>
-      <div class="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
-    </div>
-    <div class="page" id="answerKey">
-      <h2>Answer Key</h2>
-      <div id="answers" style="text-align:center;"></div>
-    </div>
+  <div id="worksheet">
+    <h2>Spelling</h2>
+    <div class="grid" id="imageGrid"></div>
+    <div class="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
+  </div>
+
+  <div class="page-break" id="answerKey">
+    <h2>Answer Key</h2>
+    <div id="answers"></div>
   </div>
 
   <script>
     const images = [
-      { word: "hen", url: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e4899038ba8654740abab.png" },
-      { word: "net", url: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e48993e1a2584ca7c5caa.png" },
-      { word: "bed", url: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e4899038ba8796e40abaa.png" },
+      { word: "leg", url: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e4898879662e5364468e5.png" },
+      { word: "dog", url: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e4899038ba8796e40abaa.png" },
       { word: "vet", url: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e4899038ba8f89740abac.png" },
-      { word: "ten", url: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e48986e4a641c23bbc32c.png" },
-      { word: "jet", url: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e48988796620ad64468e3.png" },
       { word: "men", url: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e489887966215764468e4.png" },
-      { word: "beg", url: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e48993e1a2537407c5cab.png" },
-      { word: "leg", url: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e4898879662e5364468e5.png" }
+      { word: "ten", url: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e48986e4a641c23bbc32c.png" },
+      { word: "bed", url: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e4899038ba8796e40abaa.png" },
+      { word: "net", url: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e48993e1a2584ca7c5caa.png" },
+      { word: "jet", url: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e48988796620ad64468e3.png" },
+      { word: "hen", url: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/686e4899038ba8654740abab.png" }
     ];
 
     function shuffle(array) {
@@ -116,12 +102,13 @@
       answerDiv.innerHTML = "";
 
       selected.forEach(img => {
-        const cell = document.createElement("div");
-        cell.className = "cell";
+        const card = document.createElement("div");
+        card.className = "card";
 
         const image = document.createElement("img");
         image.src = img.url;
         image.alt = img.word;
+        card.appendChild(image);
 
         const boxRow = document.createElement("div");
         boxRow.className = "boxes";
@@ -130,10 +117,8 @@
           box.className = "box";
           boxRow.appendChild(box);
         }
-
-        cell.appendChild(image);
-        cell.appendChild(boxRow);
-        grid.appendChild(cell);
+        card.appendChild(boxRow);
+        grid.appendChild(card);
       });
 
       for (let i = 0; i < 3; i++) {
