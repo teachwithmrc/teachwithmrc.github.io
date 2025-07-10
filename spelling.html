@@ -30,18 +30,16 @@
     .grid img {
       width: 100%;
       height: auto;
-      border: 2px solid #000;
+      border: 2px solid #333;
     }
     .footer {
       text-align: center;
       font-size: 10px;
+      margin-top: 20px;
+    }
+    .page-break {
+      page-break-before: always;
       margin-top: 40px;
-    }
-    .page {
-      page-break-after: always;
-    }
-    .break-after {
-      page-break-after: always;
     }
     @media print {
       body * {
@@ -55,6 +53,10 @@
         left: 0;
         top: 0;
         width: 100%;
+      }
+      .page-break {
+        display: block;
+        page-break-before: always;
       }
     }
   </style>
@@ -72,7 +74,9 @@
       <div class="grid" id="imageGrid"></div>
       <div class="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
     </div>
-    <div class="break-after"></div>
+
+    <div class="page-break"></div>
+
     <div class="page" id="answerKey">
       <h2>Answer Key</h2>
       <div id="answers" style="text-align:center;"></div>
