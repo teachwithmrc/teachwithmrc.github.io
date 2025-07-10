@@ -22,25 +22,24 @@
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
+      gap: 10px;
       width: 100%;
       max-width: 600px;
       margin: 0 auto;
     }
     .grid img {
-      width: 150px;
-      height: 150px;
-      object-fit: contain;
-      border: 2px solid #555;
+      width: 100%;
+      height: auto;
+      max-width: 120px;
+      border: 3px solid #000;
     }
     .footer {
       text-align: center;
       font-size: 10px;
-      margin-top: 30px;
+      margin-top: 40px;
     }
-    .page-break {
-      page-break-before: always;
-      break-before: page;
+    .page {
+      page-break-after: always;
     }
     @media print {
       body * {
@@ -66,15 +65,17 @@
   </div>
 
   <div class="printable" id="printArea">
-    <div id="worksheet">
+    <div class="page" id="worksheet">
       <h2>Spelling</h2>
       <div class="grid" id="imageGrid"></div>
-      <div class="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
+      <div class="footer">
+        Copyright - InterventionStation.com - @TeachwithMrC
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+      </div>
     </div>
-    
-    <div class="page-break" id="answerKey">
+    <div class="page" id="answerKey">
       <h2>Answer Key</h2>
-      <div id="answers" style="text-align: center;"></div>
+      <div id="answers" style="text-align:center;"></div>
     </div>
   </div>
 
@@ -96,7 +97,7 @@
     }
 
     function generateImages() {
-      const selected = shuffle(images).slice(0, 6); // 6 images
+      const selected = shuffle(images).slice(0, 9);
       const grid = document.getElementById("imageGrid");
       const answerDiv = document.getElementById("answers");
       grid.innerHTML = "";
@@ -109,7 +110,7 @@
         grid.appendChild(image);
       });
 
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < 3; i++) {
         const rowWords = selected.slice(i * 3, i * 3 + 3).map(img => img.word).join(", ");
         const p = document.createElement("p");
         p.textContent = `Row ${i + 1} - ${rowWords}`;
@@ -117,7 +118,6 @@
       }
     }
 
-    // Load one by default
     generateImages();
   </script>
 </body>
