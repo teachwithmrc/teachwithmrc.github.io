@@ -21,14 +21,17 @@
     #optionsWrapper {
       display: flex;
       justify-content: center;
-      gap: 80px;
+      gap: 40px;
       flex-wrap: wrap;
       margin-bottom: 20px;
     }
 
-    .checkbox-group {
-      text-align: left;
-      min-width: 200px;
+    .box {
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      padding: 20px;
+      min-width: 220px;
+      box-sizing: border-box;
     }
 
     .checkbox-group label {
@@ -45,10 +48,8 @@
     }
 
     .settings-group {
-      text-align: left;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
       gap: 12px;
       font-size: 16px;
     }
@@ -78,6 +79,7 @@
     table {
       margin: 0 auto;
       border-collapse: collapse;
+      border: 2px solid #000;
     }
 
     td {
@@ -108,7 +110,7 @@
 
   <div id="setupSection">
     <div id="optionsWrapper">
-      <div class="checkbox-group">
+      <div class="box checkbox-group">
         <strong>Select Skill(s):</strong><br>
         <label><input type="checkbox" class="skillCheck" value="0.1" checked>0.1 – Short A</label>
         <label><input type="checkbox" class="skillCheck" value="0.2" checked>0.2 – Short O</label>
@@ -120,8 +122,11 @@
         <label><input type="checkbox" class="skillCheck" value="mixed">Mixed CVC</label>
       </div>
 
-      <div class="settings-group">
-        <label><input type="checkbox" id="includeTricky"> Include Tricky-Sticky Words?</label>
+      <div class="box settings-group">
+        <div>
+          <strong>Tricky-Sticky Words:</strong><br>
+          <label><input type="checkbox" id="includeTricky">Yes, Include Them</label>
+        </div>
         <div class="grid-size-group">
           <strong>Grid Size:</strong><br>
           <label><input type="radio" name="gridSize" value="15"> 3 x 5 – 15 words</label>
@@ -176,7 +181,7 @@
       for (let radio of radios) {
         if (radio.checked) return parseInt(radio.value);
       }
-      return 25; // default
+      return 25;
     }
 
     function generateGrid() {
@@ -202,12 +207,7 @@
       const columns = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
       const rows = 5;
 
-      let spacing = "";
-      if (gridSize === 15) spacing = "<br><br><br><br><br><br>";
-      else if (gridSize === 20) spacing = "<br><br><br><br>";
-      else spacing = "<br><br>";
-
-      let html = spacing + '<table>';
+      let html = '<table>';
       for (let i = 0; i < rows; i++) {
         html += '<tr>';
         for (let j = 0; j < columns; j++) {
@@ -217,7 +217,12 @@
         }
         html += '</tr>';
       }
-      html += '</table>' + spacing;
+      html += '</table>';
+
+      // Add spacing only AFTER the table
+      if (gridSize === 15) html += "<br><br><br><br><br><br>";
+      else if (gridSize === 20) html += "<br><br><br><br>";
+      else html += "<br><br>";
 
       document.getElementById('gridContainer').innerHTML = html;
       document.getElementById('gridTitle').textContent = "Fluency Grid";
