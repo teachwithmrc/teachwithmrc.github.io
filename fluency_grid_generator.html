@@ -11,11 +11,64 @@
       margin: 40px;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      align-items: center;
     }
 
     h2 {
       text-align: center;
+    }
+
+    #optionsWrapper {
+      display: flex;
+      justify-content: center;
+      gap: 80px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .checkbox-group {
+      text-align: left;
+      min-width: 200px;
+    }
+
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .checkbox-group input[type="checkbox"],
+    .settings-group input[type="checkbox"],
+    .settings-group input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    .settings-group {
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 12px;
+      font-size: 16px;
+    }
+
+    .grid-size-group label {
+      display: block;
+      margin-left: 20px;
+      font-size: 16px;
+      margin-top: 4px;
+    }
+
+    #buttons {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    button {
+      font-size: 16px;
+      padding: 6px 12px;
+      margin: 0 5px;
     }
 
     #gridContainer {
@@ -36,78 +89,57 @@
       vertical-align: middle;
     }
 
-    #footer {
-      margin-top: 40px;
-      font-size: 16px;
+    #copyright {
       text-align: center;
-    }
-
-    .checkbox-group {
-      text-align: left;
-      margin: 0 auto;
-      max-width: 300px;
-    }
-
-    .checkbox-group label {
-      display: flex;
-      align-items: center;
-      font-size: 18px;
-      margin-bottom: 6px;
-    }
-
-    .checkbox-group input[type="checkbox"] {
-      margin-right: 10px;
+      font-size: 12px;
+      margin-top: 30px;
     }
 
     @media print {
       #setupSection, button, select {
         display: none;
       }
-      #footer {
-        position: fixed;
-        bottom: 20px;
-        width: 100%;
-        font-size: 16px;
-      }
     }
   </style>
 </head>
 <body>
 
-  <div id="setupSection">
-    <h2>Fluency Grid Generator</h2>
+  <h2>Fluency Grid Generator</h2>
 
-    <div class="checkbox-group">
-      <strong>Select Skill(s):</strong><br>
-      <label><input type="checkbox" class="skillCheck" value="0.1" checked>0.1 – Short A</label>
-      <label><input type="checkbox" class="skillCheck" value="0.2" checked>0.2 – Short O</label>
-      <label><input type="checkbox" class="skillCheck" value="0.3" checked>0.3 – Short I</label>
-      <label><input type="checkbox" class="skillCheck" value="0.4" checked>0.4 – Short U</label>
-      <label><input type="checkbox" class="skillCheck" value="0.5" checked>0.5 – Short E</label>
-      <label><input type="checkbox" class="skillCheck" value="0.6" checked>0.6 – FLSZ</label>
-      <label><input type="checkbox" class="skillCheck" value="0.7">0.7 – CVC + FLSZ</label>
-      <label><input type="checkbox" class="skillCheck" value="mixed">Mixed CVC</label>
+  <div id="setupSection">
+    <div id="optionsWrapper">
+      <div class="checkbox-group">
+        <strong>Select Skill(s):</strong><br>
+        <label><input type="checkbox" class="skillCheck" value="0.1" checked>0.1 – Short A</label>
+        <label><input type="checkbox" class="skillCheck" value="0.2" checked>0.2 – Short O</label>
+        <label><input type="checkbox" class="skillCheck" value="0.3" checked>0.3 – Short I</label>
+        <label><input type="checkbox" class="skillCheck" value="0.4" checked>0.4 – Short U</label>
+        <label><input type="checkbox" class="skillCheck" value="0.5" checked>0.5 – Short E</label>
+        <label><input type="checkbox" class="skillCheck" value="0.6" checked>0.6 – FLSZ</label>
+        <label><input type="checkbox" class="skillCheck" value="0.7">0.7 – CVC + FLSZ</label>
+        <label><input type="checkbox" class="skillCheck" value="mixed">Mixed CVC</label>
+      </div>
+
+      <div class="settings-group">
+        <label><input type="checkbox" id="includeTricky"> Include Tricky-Sticky Words?</label>
+        <div class="grid-size-group">
+          <strong>Grid Size:</strong><br>
+          <label><input type="radio" name="gridSize" value="15"> 3 x 5 – 15 words</label>
+          <label><input type="radio" name="gridSize" value="20"> 4 x 5 – 20 words</label>
+          <label><input type="radio" name="gridSize" value="25" checked> 5 x 5 – 25 words</label>
+        </div>
+      </div>
     </div>
 
-    <br>
-    <label><input type="checkbox" id="includeTricky"> Include Tricky-Sticky Words?</label>
-
-    <br><br>
-    <label for="gridSizeSelect">Grid Size:</label>
-    <select id="gridSizeSelect">
-      <option value="15">3 x 5</option>
-      <option value="20">4 x 5</option>
-      <option value="25" selected>5 x 5</option>
-    </select>
-    <br><br>
-    <button onclick="generateGrid()">Generate Fluency Grid</button>
-    <button onclick="window.print()">Print</button>
+    <div id="buttons">
+      <button onclick="generateGrid()">Generate Fluency Grid</button>
+      <button onclick="window.print()">Print</button>
+    </div>
   </div>
 
-  <h2 id="gridTitle" style="margin-top: 40px;">Fluency Grid</h2>
+  <h2 id="gridTitle" style="margin-top: 20px;">Fluency Grid</h2>
   <div id="gridContainer"></div>
-
-  <div id="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
+  <div id="copyright"></div>
 
   <script>
     const fluencyData = {
@@ -139,8 +171,16 @@
       return array;
     }
 
+    function getSelectedGridSize() {
+      const radios = document.querySelectorAll('input[name="gridSize"]');
+      for (let radio of radios) {
+        if (radio.checked) return parseInt(radio.value);
+      }
+      return 25; // default
+    }
+
     function generateGrid() {
-      const gridSize = parseInt(document.getElementById('gridSizeSelect').value);
+      const gridSize = getSelectedGridSize();
       const checkboxes = document.querySelectorAll('.skillCheck:checked');
       const selectedSkills = Array.from(checkboxes).map(cb => cb.value);
       const includeTricky = document.getElementById("includeTricky").checked;
@@ -154,9 +194,7 @@
 
       selectedSkills.forEach(skill => {
         const mainWords = fluencyData[skill] || [];
-        const tricky = includeTricky
-          ? (trickyWords[skill] || [])
-          : [];
+        const tricky = includeTricky ? (trickyWords[skill] || []) : [];
         wordPool = wordPool.concat(mainWords).concat(tricky);
       });
 
@@ -164,7 +202,12 @@
       const columns = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
       const rows = 5;
 
-      let html = '<table>';
+      let spacing = "";
+      if (gridSize === 15) spacing = "<br><br><br><br><br><br>";
+      else if (gridSize === 20) spacing = "<br><br><br><br>";
+      else spacing = "<br><br>";
+
+      let html = spacing + '<table>';
       for (let i = 0; i < rows; i++) {
         html += '<tr>';
         for (let j = 0; j < columns; j++) {
@@ -174,10 +217,11 @@
         }
         html += '</tr>';
       }
-      html += '</table>';
+      html += '</table>' + spacing;
 
       document.getElementById('gridContainer').innerHTML = html;
       document.getElementById('gridTitle').textContent = "Fluency Grid";
+      document.getElementById('copyright').innerHTML = "Copyright - InterventionStation.com - @TeachwithMrC";
     }
   </script>
 
