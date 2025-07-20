@@ -8,17 +8,21 @@
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      text-align: center;
       margin: 40px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
+
     #gridContainer {
       margin-top: 20px;
     }
+
     table {
       margin: 0 auto;
       border-collapse: collapse;
-      font-family: 'Poppins', sans-serif;
     }
+
     td {
       border: 1px solid #000;
       width: 120px;
@@ -27,21 +31,22 @@
       text-align: center;
       vertical-align: middle;
     }
+
     #footer {
-      margin-top: 60px;
+      margin-top: auto;
       font-size: 16px;
-      font-family: 'Poppins', sans-serif;
-      position: fixed;
-      bottom: 20px;
-      left: 0;
-      width: 100%;
       text-align: center;
+      padding-top: 100px;
     }
+
     @media print {
       #setupSection, button, select {
         display: none;
       }
       #footer {
+        position: fixed;
+        bottom: 40px;
+        width: 100%;
         font-size: 16px;
       }
     }
@@ -61,6 +66,13 @@
       <option value="0.6">0.6 - FLSZ Words</option>
       <option value="0.7">0.7 - CVC and FLSZ</option>
       <option value="mixed">Mixed CVC</option>
+    </select>
+    <br><br>
+    <label for="gridSizeSelect">Grid Size:</label>
+    <select id="gridSizeSelect">
+      <option value="15">3 x 5</option>
+      <option value="20">4 x 5</option>
+      <option value="25" selected>5 x 5</option>
     </select>
     <br><br>
     <button onclick="generateGrid()">Generate Fluency Grid</button>
@@ -102,13 +114,17 @@
     function generateGrid() {
       updateTitle();
       const skill = document.getElementById('skillSelect').value;
-      const words = shuffle([...window.fluencyData.wordLists[skill]]).slice(0, 25);
+      const gridSize = parseInt(document.getElementById('gridSizeSelect').value);
+      const words = shuffle([...window.fluencyData.wordLists[skill]]).slice(0, gridSize);
+
+      let columns = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
+      let rows = 5;
 
       let html = '<table>';
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < rows; i++) {
         html += '<tr>';
-        for (let j = 0; j < 5; j++) {
-          const idx = i * 5 + j;
+        for (let j = 0; j < columns; j++) {
+          const idx = i * columns + j;
           const word = words[idx] || "";
           html += `<td>${word}</td>`;
         }
