@@ -89,6 +89,7 @@
       font-size: 32px;
       text-align: center;
       vertical-align: middle;
+      line-height: 1.1;
     }
 
     #copyright {
@@ -112,12 +113,12 @@
     <div id="optionsWrapper">
       <div class="box checkbox-group">
         <strong>Select Skill(s):</strong><br>
-        <label><input type="checkbox" class="skillCheck" value="0.1" checked>0.1 – Short A</label>
-        <label><input type="checkbox" class="skillCheck" value="0.2" checked>0.2 – Short O</label>
-        <label><input type="checkbox" class="skillCheck" value="0.3" checked>0.3 – Short I</label>
-        <label><input type="checkbox" class="skillCheck" value="0.4" checked>0.4 – Short U</label>
-        <label><input type="checkbox" class="skillCheck" value="0.5" checked>0.5 – Short E</label>
-        <label><input type="checkbox" class="skillCheck" value="0.6" checked>0.6 – FLSZ</label>
+        <label><input type="checkbox" class="skillCheck" value="0.1">0.1 – Short A</label>
+        <label><input type="checkbox" class="skillCheck" value="0.2">0.2 – Short O</label>
+        <label><input type="checkbox" class="skillCheck" value="0.3">0.3 – Short I</label>
+        <label><input type="checkbox" class="skillCheck" value="0.4">0.4 – Short U</label>
+        <label><input type="checkbox" class="skillCheck" value="0.5">0.5 – Short E</label>
+        <label><input type="checkbox" class="skillCheck" value="0.6">0.6 – FLSZ</label>
         <label><input type="checkbox" class="skillCheck" value="0.7">0.7 – CVC + FLSZ</label>
         <label><input type="checkbox" class="skillCheck" value="mixed">Mixed CVC</label>
       </div>
@@ -131,7 +132,7 @@
           <strong>Grid Size:</strong><br>
           <label><input type="radio" name="gridSize" value="15"> 3 x 5 – 15 words</label>
           <label><input type="radio" name="gridSize" value="20"> 4 x 5 – 20 words</label>
-          <label><input type="radio" name="gridSize" value="25" checked> 5 x 5 – 25 words</label>
+          <label><input type="radio" name="gridSize" value="25"> 5 x 5 – 25 words</label>
         </div>
       </div>
     </div>
@@ -203,7 +204,9 @@
         wordPool = wordPool.concat(mainWords).concat(tricky);
       });
 
-      const finalWords = shuffle(wordPool).slice(0, gridSize);
+      // Remove duplicates
+      const uniqueWords = Array.from(new Set(wordPool));
+      const finalWords = shuffle(uniqueWords).slice(0, gridSize);
       const columns = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
       const rows = 5;
 
