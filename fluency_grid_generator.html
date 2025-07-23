@@ -13,30 +13,41 @@
     h1 {
       text-align: center;
       font-size: 28px;
+      margin-bottom: 10px;
+    }
+    .center-buttons {
+      text-align: center;
       margin-bottom: 20px;
+    }
+    .form-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
     }
     .container {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      gap: 20px;
-    }
-    .left-box, .right-box {
       border: 2px solid #000;
       padding: 20px;
-      width: 48%;
+      gap: 40px;
+      max-width: 800px;
+      width: 100%;
+    }
+    .left-box, .right-box {
+      width: 50%;
     }
     .right-box {
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
-    .center-buttons {
+    .grid-buttons {
       text-align: center;
-      margin-top: 20px;
+      margin: 20px 0;
     }
     #gridContainer {
-      margin-top: 20px;
+      margin-top: 10px;
       text-align: center;
     }
     table {
@@ -70,24 +81,26 @@
     <label><input type="radio" name="contentType" value="both"> Both</label>
   </div>
 
-  <div class="container">
-    <div class="left-box">
-      <p><strong>Select Skill:</strong></p>
-      <div id="skillCheckboxes"></div>
+  <div class="form-wrapper">
+    <div class="container">
+      <div class="left-box">
+        <p><strong>Select Skill:</strong></p>
+        <div id="skillCheckboxes"></div>
 
-      <p><strong>Grid Size:</strong></p>
-      <label><input type="radio" name="gridSize" value="15"> 3 x 5 - 15 words</label><br>
-      <label><input type="radio" name="gridSize" value="20"> 4 x 5 - 20 words</label><br>
-      <label><input type="radio" name="gridSize" value="25"> 5 x 5 - 25 words</label>
-    </div>
+        <p><strong>Grid Size:</strong></p>
+        <label><input type="radio" name="gridSize" value="15"> 3 x 5 - 15 words</label><br>
+        <label><input type="radio" name="gridSize" value="20"> 4 x 5 - 20 words</label><br>
+        <label><input type="radio" name="gridSize" value="25"> 5 x 5 - 25 words</label>
+      </div>
 
-    <div class="right-box">
-      <p><strong>Tricky-Sticky Words:</strong></p>
-      <label><input type="checkbox" id="includeTricky"> Yes, Include Them</label>
+      <div class="right-box">
+        <p><strong>Tricky-Sticky Words:</strong></p>
+        <label><input type="checkbox" id="includeTricky"> Yes, Include Them</label>
+      </div>
     </div>
   </div>
 
-  <div class="center-buttons">
+  <div class="grid-buttons">
     <button onclick="generateGrid()">Generate Fluency Grid</button>
     <button onclick="window.print()">Print</button>
   </div>
@@ -97,14 +110,14 @@
 
   <script>
     const fluencyData = {
-      "Mixed CVC": ["hit", "jug", "fed", "hug", "vet", "bun", "gig", "tap", "beg", "bid", "fit", "lass", "pill", "cup", "dog", "dot", "fizz", "cap", "dug", "cod", "fun", "bit", "bin", "bed", "buzz"],
-      "0.1 - Short A": ["bad", "bag", "ban", "bam", "bat", "cab", "cam", "can", "cap", "cat", "dab", "dad", "dam", "fad", "fan", "fat", "fax", "gag", "gap", "had", "hag", "Hal", "ham", "has", "hat"],
-      "0.2 - Short O": ["bog", "bot", "cob", "cod", "con", "cop", "cot", "cog", "dog", "dot", "fog", "got", "hog", "hot", "job", "jog", "lob", "log", "lot", "mob", "mop", "nod", "not", "pod", "pop"],
-      "0.3 - Short i": ["bib", "bid", "big", "bin", "bit", "biz", "did", "dig", "dim", "dip", "fib", "fig", "fin", "fit", "fix", "gig", "hid", "him", "hip", "hit", "his", "jig", "kid", "kin", "kit"],
-      "0.4 - short u": ["bud", "bug", "bun", "but", "bus", "cub", "cup", "cut", "dug", "fun", "gum", "gut", "hub", "hug", "hut", "jug", "lug", "mud", "mug", "nut", "pub", "pug", "pun", "pup", "rub"],
-      "0.5 - Short E": ["bed", "beg", "bet", "den", "fed", "get", "hen", "hem", "jet", "led", "leg", "let", "men", "met", "net", "pen", "peg", "pet", "red", "set", "ten", "vet", "web", "wet", "yes"],
-      "0.6 - FLSZ": ["pal", "pass", "fizz", "lass", "pill", "sell", "fell", "toss", "miss", "hill", "will", "fill", "dill", "buzz"],
-      "0.7 - FLSZ and CVC": ["bill", "boss", "bell", "fizz", "lass", "pill", "toss", "doll", "fill", "sell", "loss", "pass", "buzz", "will"]
+      "Mixed CVC": [...new Set(["hit", "jug", "fed", "hug", "vet", "bun", "gig", "tap", "beg", "bid", "fit", "lass", "pill", "cup", "dog", "dot", "fizz", "cap", "dug", "cod", "fun", "bit", "bin", "bed", "buzz"])],
+      "0.1 - Short A": [...new Set(["bad", "bag", "ban", "bam", "bat", "cab", "cam", "can", "cap", "cat", "dab", "dad", "dam", "fad", "fan", "fat", "fax", "gag", "gap", "had", "hag", "Hal", "ham", "has", "hat"])],
+      "0.2 - Short O": [...new Set(["bog", "bot", "cob", "cod", "con", "cop", "cot", "cog", "dog", "dot", "fog", "got", "hog", "hot", "job", "jog", "lob", "log", "lot", "mob", "mop", "nod", "not", "pod", "pop"])],
+      "0.3 - Short i": [...new Set(["bib", "bid", "big", "bin", "bit", "biz", "did", "dig", "dim", "dip", "fib", "fig", "fin", "fit", "fix", "gig", "hid", "him", "hip", "hit", "his", "jig", "kid", "kin", "kit"])],
+      "0.4 - short u": [...new Set(["bud", "bug", "bun", "but", "bus", "cub", "cup", "cut", "dug", "fun", "gum", "gut", "hub", "hug", "hut", "jug", "lug", "mud", "mug", "nut", "pub", "pug", "pun", "pup", "rub"])],
+      "0.5 - Short E": [...new Set(["bed", "beg", "bet", "den", "fed", "get", "hen", "hem", "jet", "led", "leg", "let", "men", "met", "net", "pen", "peg", "pet", "red", "set", "ten", "vet", "web", "wet", "yes"])],
+      "0.6 - FLSZ": [...new Set(["pal", "pass", "fizz", "lass", "pill", "sell", "fell", "toss", "miss", "hill", "will", "fill", "dill", "buzz"])],
+      "0.7 - FLSZ and CVC": [...new Set(["bill", "boss", "bell", "fizz", "lass", "pill", "toss", "doll", "fill", "sell", "loss", "pass", "buzz", "will"])]
     };
 
     const trickyWords = {
@@ -118,14 +131,14 @@
     };
 
     const sentenceData = {
-      "Mixed CVC": ["I fed the dog.", "The vet had a cup.", "Hit the big jug.", "A fun bug can hop."],
-      "0.1 - Short A": ["Sam had a cat.", "The bag is on the mat.", "Pam sat in the cab."],
-      "0.2 - Short O": ["The dog got a hot rod.", "Mom is on the cob.", "Pop jogs to the lot."],
-      "0.3 - Short i": ["Kim did a big jig.", "The kid hid in the bin.", "Sid had a big bib."],
-      "0.4 - short u": ["The bug dug in the mud.", "The cup had a nut.", "Gus had fun on the bus."],
-      "0.5 - Short E": ["The vet fed the pet.", "Ted met the red hen.", "Get the web on the bed."],
-      "0.6 - FLSZ": ["The boss has a bell.", "Fill the pill box.", "The lass will sell it."],
-      "0.7 - FLSZ and CVC": ["Buzz will miss the toss.", "Will had a loss.", "Sell the red bell."]
+      "Mixed CVC": ["I fed the dog.", "The vet had a cup.", "Hit the big jug.", "A fun bug can hop.", "The fox dug in mud.", "He got a red hat.", "Can you fit the cap?"],
+      "0.1 - Short A": ["Sam had a cat.", "The bag is on the mat.", "Pam sat in the cab.", "Jan can fan the cat.", "The lad had a bad gap."],
+      "0.2 - Short O": ["The dog got a hot rod.", "Mom is on the cob.", "Pop jogs to the lot.", "Tom got a red top.", "The fog is not hot."],
+      "0.3 - Short i": ["Kim did a big jig.", "The kid hid in the bin.", "Sid had a big bib.", "Did you hit the fig?", "Fix the bit on the rig."],
+      "0.4 - short u": ["The bug dug in the mud.", "The cup had a nut.", "Gus had fun on the bus.", "Hug the pup in the hut.", "Pug cut the rug up."],
+      "0.5 - Short E": ["The vet fed the pet.", "Ted met the red hen.", "Get the web on the bed.", "Let the ten men jet.", "Set the peg and net."],
+      "0.6 - FLSZ": ["The boss has a bell.", "Fill the pill box.", "The lass will sell it.", "Buzz has a red fuzz.", "Toss the miss hill pass."],
+      "0.7 - FLSZ and CVC": ["Buzz will miss the toss.", "Will had a loss.", "Sell the red bell.", "The doll had a will.", "Bill fell in the fill."]
     };
 
     const allSkills = Object.keys(fluencyData);
@@ -163,20 +176,26 @@
         return;
       }
 
-      let pool = [];
-      if (contentType === 'words' || contentType === 'both') {
-        selectedSkills.forEach(skill => {
-          pool.push(...(fluencyData[skill] || []));
-          if (includeTricky && trickyWords[skill]) pool.push(...trickyWords[skill]);
-        });
-      }
-      if (contentType === 'sentences' || contentType === 'both') {
-        selectedSkills.forEach(skill => {
-          pool.push(...(sentenceData[skill] || []));
-        });
-      }
+      let wordPool = [], sentencePool = [];
 
-      pool = shuffle([...new Set(pool)]).slice(0, gridSize);
+      selectedSkills.forEach(skill => {
+        if (fluencyData[skill]) wordPool.push(...fluencyData[skill]);
+        if (sentenceData[skill]) sentencePool.push(...sentenceData[skill]);
+        if (includeTricky && trickyWords[skill]) wordPool.push(...trickyWords[skill]);
+      });
+
+      wordPool = shuffle([...new Set(wordPool)]);
+      sentencePool = shuffle([...new Set(sentencePool)]);
+
+      let gridItems = [];
+      if (contentType === 'words') {
+        gridItems = wordPool.slice(0, gridSize);
+      } else if (contentType === 'sentences') {
+        gridItems = sentencePool.slice(0, gridSize);
+      } else if (contentType === 'both') {
+        const half = Math.floor(gridSize / 2);
+        gridItems = shuffle([...wordPool.slice(0, half), ...sentencePool.slice(0, gridSize - half)]);
+      }
 
       const cols = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
       const rows = Math.ceil(gridSize / cols);
@@ -184,7 +203,7 @@
       for (let i = 0; i < rows; i++) {
         html += "<tr>";
         for (let j = 0; j < cols; j++) {
-          const word = pool[i * cols + j] || "";
+          const word = gridItems[i * cols + j] || "";
           const className = word.includes(" ") ? "sentence" : "";
           html += `<td class="${className}">${word}</td>`;
         }
