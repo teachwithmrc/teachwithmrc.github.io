@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fluency Grid Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -17,7 +17,9 @@
     }
     .container {
       display: flex;
+      flex-direction: row;
       justify-content: space-between;
+      gap: 20px;
     }
     .left-box, .right-box {
       border: 2px solid #000;
@@ -27,7 +29,7 @@
     .right-box {
       display: flex;
       flex-direction: column;
-      align-items: center;
+      justify-content: center;
     }
     .center-buttons {
       text-align: center;
@@ -50,7 +52,7 @@
       vertical-align: middle;
     }
     .sentence {
-      font-size: 20px;
+      font-size: 18px;
     }
     .footer {
       text-align: center;
@@ -63,9 +65,9 @@
 
   <div class="center-buttons">
     <p style="font-size: 18px; font-weight: bold;">Select Grid Content Type:</p>
-    <label><input type="radio" name="contentType" value="words" /> Only Words</label>
-    <label><input type="radio" name="contentType" value="sentences" /> Only Sentences</label>
-    <label><input type="radio" name="contentType" value="both" /> Both</label>
+    <label><input type="radio" name="contentType" value="words"> Only Words</label>
+    <label><input type="radio" name="contentType" value="sentences"> Only Sentences</label>
+    <label><input type="radio" name="contentType" value="both"> Both</label>
   </div>
 
   <div class="container">
@@ -74,13 +76,14 @@
       <div id="skillCheckboxes"></div>
 
       <p><strong>Grid Size:</strong></p>
-      <label><input type="radio" name="gridSize" value="15" /> 3 x 5 - 15 words</label><br>
-      <label><input type="radio" name="gridSize" value="20" /> 4 x 5 - 20 words</label><br>
-      <label><input type="radio" name="gridSize" value="25" /> 5 x 5 - 25 words</label>
+      <label><input type="radio" name="gridSize" value="15"> 3 x 5 - 15 words</label><br>
+      <label><input type="radio" name="gridSize" value="20"> 4 x 5 - 20 words</label><br>
+      <label><input type="radio" name="gridSize" value="25"> 5 x 5 - 25 words</label>
     </div>
+
     <div class="right-box">
       <p><strong>Tricky-Sticky Words:</strong></p>
-      <label><input type="checkbox" id="includeTricky" /> Yes, Include Them</label>
+      <label><input type="checkbox" id="includeTricky"> Yes, Include Them</label>
     </div>
   </div>
 
@@ -90,17 +93,42 @@
   </div>
 
   <div id="gridContainer"></div>
-
   <div class="footer" id="footer"></div>
 
   <script>
-    const fluencyData = {};
-    const trickyWords = {};
-    const sentenceData = {};
+    const fluencyData = {
+      "Mixed CVC": ["hit", "jug", "fed", "hug", "vet", "bun", "gig", "tap", "beg", "bid", "fit", "lass", "pill", "cup", "dog", "dot", "fizz", "cap", "dug", "cod", "fun", "bit", "bin", "bed", "buzz"],
+      "0.1 - Short A": ["bad", "bag", "ban", "bam", "bat", "cab", "cam", "can", "cap", "cat", "dab", "dad", "dam", "fad", "fan", "fat", "fax", "gag", "gap", "had", "hag", "Hal", "ham", "has", "hat"],
+      "0.2 - Short O": ["bog", "bot", "cob", "cod", "con", "cop", "cot", "cog", "dog", "dot", "fog", "got", "hog", "hot", "job", "jog", "lob", "log", "lot", "mob", "mop", "nod", "not", "pod", "pop"],
+      "0.3 - Short i": ["bib", "bid", "big", "bin", "bit", "biz", "did", "dig", "dim", "dip", "fib", "fig", "fin", "fit", "fix", "gig", "hid", "him", "hip", "hit", "his", "jig", "kid", "kin", "kit"],
+      "0.4 - short u": ["bud", "bug", "bun", "but", "bus", "cub", "cup", "cut", "dug", "fun", "gum", "gut", "hub", "hug", "hut", "jug", "lug", "mud", "mug", "nut", "pub", "pug", "pun", "pup", "rub"],
+      "0.5 - Short E": ["bed", "beg", "bet", "den", "fed", "get", "hen", "hem", "jet", "led", "leg", "let", "men", "met", "net", "pen", "peg", "pet", "red", "set", "ten", "vet", "web", "wet", "yes"],
+      "0.6 - FLSZ": ["pal", "pass", "fizz", "lass", "pill", "sell", "fell", "toss", "miss", "hill", "will", "fill", "dill", "buzz"],
+      "0.7 - FLSZ and CVC": ["bill", "boss", "bell", "fizz", "lass", "pill", "toss", "doll", "fill", "sell", "loss", "pass", "buzz", "will"]
+    };
 
-    const allSkills = [
-      'Mixed CVC', '0.1 - Short A', '0.2 - Short O', '0.3 - Short i', '0.4 - short u', '0.5 - Short E', '0.6 - FLSZ', '0.7 - FLSZ and CVC'
-    ];
+    const trickyWords = {
+      "0.1 - Short A": ["I", "a", "the"],
+      "0.2 - Short O": ["is", "his", "has", "as"],
+      "0.3 - Short i": ["to", "do"],
+      "0.4 - short u": ["was", "you"],
+      "0.5 - Short E": ["he", "be", "we"],
+      "0.6 - FLSZ": ["my", "try", "by", "why"],
+      "Mixed CVC": ["I", "a", "the", "is", "his", "has", "as", "to", "do", "was", "you", "he", "be", "we", "my", "try", "by", "why"]
+    };
+
+    const sentenceData = {
+      "Mixed CVC": ["I fed the dog.", "The vet had a cup.", "Hit the big jug.", "A fun bug can hop."],
+      "0.1 - Short A": ["Sam had a cat.", "The bag is on the mat.", "Pam sat in the cab."],
+      "0.2 - Short O": ["The dog got a hot rod.", "Mom is on the cob.", "Pop jogs to the lot."],
+      "0.3 - Short i": ["Kim did a big jig.", "The kid hid in the bin.", "Sid had a big bib."],
+      "0.4 - short u": ["The bug dug in the mud.", "The cup had a nut.", "Gus had fun on the bus."],
+      "0.5 - Short E": ["The vet fed the pet.", "Ted met the red hen.", "Get the web on the bed."],
+      "0.6 - FLSZ": ["The boss has a bell.", "Fill the pill box.", "The lass will sell it."],
+      "0.7 - FLSZ and CVC": ["Buzz will miss the toss.", "Will had a loss.", "Sell the red bell."]
+    };
+
+    const allSkills = Object.keys(fluencyData);
 
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -129,7 +157,7 @@
       const gridSize = parseInt(document.querySelector('input[name="gridSize"]:checked')?.value);
       const includeTricky = document.getElementById("includeTricky").checked;
       const selectedSkills = [...document.querySelectorAll('#skillCheckboxes input:checked')].map(cb => cb.value);
-      
+
       if (!contentType || !gridSize || selectedSkills.length === 0) {
         alert("Please select content type, grid size, and at least one skill.");
         return;
@@ -151,7 +179,7 @@
       pool = shuffle([...new Set(pool)]).slice(0, gridSize);
 
       const cols = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
-      const rows = 5;
+      const rows = Math.ceil(gridSize / cols);
       let html = "<table>";
       for (let i = 0; i < rows; i++) {
         html += "<tr>";
