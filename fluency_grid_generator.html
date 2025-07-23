@@ -9,31 +9,53 @@
   <style>
     body {
       font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+    h1 {
       text-align: center;
-      margin: 40px;
+      margin-bottom: 20px;
     }
-    #mainTable {
-      margin: 0 auto;
-      border-collapse: separate;
-      border-spacing: 40px 0;
+
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
     }
-    #controlsLeft, #controlsRight {
-      vertical-align: top;
-      padding: 10px;
-      border: 2px solid #000;
-      border-radius: 10px;
+
+    .left-box, .right-box {
+      border: 1px solid #ccc;
+      padding: 20px;
+      min-width: 260px;
     }
-    #gridSizeOptions {
-      margin-top: 10px;
+
+    .right-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
-    .center-buttons {
-      margin-top: 20px;
+
+    .checkbox-group label,
+    .grid-size label,
+    .tricky-sticky label {
+      display: block;
+      margin-bottom: 8px;
     }
-    table.gridTable {
+
+    #gridContainer {
+      margin: 40px auto;
+      text-align: center;
+    }
+
+    table {
       margin: 0 auto;
       border-collapse: collapse;
     }
-    table.gridTable td {
+
+    td {
       border: 1px solid #000;
       width: 120px;
       height: 80px;
@@ -41,10 +63,25 @@
       text-align: center;
       vertical-align: middle;
     }
-    #footer {
-      font-size: 12px;
+
+    .actions {
+      text-align: center;
       margin-top: 20px;
     }
+
+    .actions button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+
+    .footer-space {
+      height: 40px;
+      text-align: center;
+      font-size: 14px;
+      margin-top: 20px;
+    }
+
     @media print {
       body * {
         visibility: hidden;
@@ -56,118 +93,100 @@
         position: absolute;
         top: 0;
         left: 0;
+        width: 100%;
+        margin-top: 0;
       }
     }
   </style>
 </head>
 <body>
+  <h1>Fluency Grid Generator</h1>
+  <div class="container">
+    <div class="left-box checkbox-group">
+      <strong>Select Skill(s):</strong>
+      <label><input type="checkbox" name="skill" value="0.1 - Short A"> 0.1 - Short A</label>
+      <label><input type="checkbox" name="skill" value="0.2 - Short O"> 0.2 - Short O</label>
+      <label><input type="checkbox" name="skill" value="0.3 - Short i"> 0.3 - Short i</label>
+      <label><input type="checkbox" name="skill" value="0.4 - Short u"> 0.4 - Short u</label>
+      <label><input type="checkbox" name="skill" value="0.5 - Short E"> 0.5 - Short E</label>
+      <label><input type="checkbox" name="skill" value="0.6 - FLSZ"> 0.6 - FLSZ</label>
+      <label><input type="checkbox" name="skill" value="0.7 - FLSZ and CVC"> 0.7 - FLSZ and CVC</label>
+      <label><input type="checkbox" name="skill" value="Mixed CVC"> Mixed CVC</label>
+    </div>
 
-  <h1 style="font-size: 26px; margin-bottom: 10px;">Fluency Grid Generator</h1>
-  <p style="font-size: 18px; font-weight: bold;">First, select what you'd like to generate:</p>
+    <div class="right-box">
+      <div class="tricky-sticky">
+        <strong>Tricky-Sticky Words:</strong>
+        <label><input type="checkbox" id="includeSticky"> Yes, Include Them</label>
+      </div>
 
-  <div class="center-buttons">
-    <label><input type="radio" name="contentType" value="words"> Only Words</label>
-    <label><input type="radio" name="contentType" value="sentences"> Only Sentences</label>
-    <label><input type="radio" name="contentType" value="both"> Both</label>
+      <div class="grid-size">
+        <strong>Grid Size:</strong>
+        <label><input type="radio" name="gridSize" value="15"> 3 x 5 - 15 words</label>
+        <label><input type="radio" name="gridSize" value="20"> 4 x 5 - 20 words</label>
+        <label><input type="radio" name="gridSize" value="25"> 5 x 5 - 25 words</label>
+      </div>
+    </div>
   </div>
 
-  <table id="mainTable">
-    <tr>
-      <td id="controlsLeft">
-        <h3>Select Skill(s):</h3>
-        <div id="skillCheckboxes"></div>
-        <div id="gridSizeOptions">
-          <h3>Grid Size:</h3>
-          <label><input type="radio" name="gridSize" value="15"> 3 x 5 - 15 words</label><br>
-          <label><input type="radio" name="gridSize" value="20"> 4 x 5 - 20 words</label><br>
-          <label><input type="radio" name="gridSize" value="25"> 5 x 5 - 25 words</label><br>
-        </div>
-      </td>
-      <td id="controlsRight">
-        <h3>Tricky-Sticky Words:</h3>
-        <label><input type="checkbox" id="includeSticky"> Yes, Include Them</label>
-      </td>
-    </tr>
-  </table>
-
-  <div class="center-buttons">
-    <button onclick="generateGrid()">Generate Fluency Grid</button>
+  <div class="actions">
+    <button onclick="generateGrid()">Generate Grid</button>
     <button onclick="window.print()">Print</button>
   </div>
 
-  <h2 id="gridTitle" style="margin-top: 40px;"></h2>
   <div id="gridContainer"></div>
+  <div class="footer-space">&copy; InterventionStation.com - @TeachwithMrC</div>
 
   <script>
-    const stickyWords = {
-      "0.1 - Short A": ["I", "a", "the"],
-      "0.2 - Short O": ["is", "his", "has", "as"],
-      "0.3 - Short i": ["to", "do"],
-      "0.4 - Short U": ["was", "you"],
-      "0.5 - Short E": ["he", "be", "we"],
-      "0.6 - FLSZ": ["my", "try", "by", "why"],
-      "0.7 - FLSZ and CVC": [],
-      "Mixed CVC": ["I", "a", "the", "is", "his", "has", "as", "to", "do", "was", "you", "he", "be", "we", "my", "try", "by", "why"]
-    };
-
-    const skills = Object.keys(fluencyData.words);
-    const skillCheckboxes = document.getElementById("skillCheckboxes");
-    skills.forEach(skill => {
-      const label = document.createElement("label");
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.value = skill;
-      label.appendChild(checkbox);
-      label.appendChild(document.createTextNode(" " + skill));
-      skillCheckboxes.appendChild(label);
-      skillCheckboxes.appendChild(document.createElement("br"));
-    });
-
     function generateGrid() {
-      const selectedSkills = [...document.querySelectorAll('#skillCheckboxes input:checked')].map(cb => cb.value);
-      const contentType = document.querySelector('input[name="contentType"]:checked')?.value;
-      const gridSize = parseInt(document.querySelector('input[name="gridSize"]:checked')?.value);
+      const gridSize = parseInt(document.querySelector('input[name="gridSize"]:checked')?.value || 0);
+      const selectedSkills = Array.from(document.querySelectorAll('input[name="skill"]:checked')).map(cb => cb.value);
       const includeSticky = document.getElementById("includeSticky").checked;
-
-      if (!selectedSkills.length || !contentType || !gridSize) {
-        alert("Please select a content type, at least one skill, and a grid size.");
-        return;
-      }
+      const type = "words"; // For now, only words
 
       let pool = [];
       selectedSkills.forEach(skill => {
-        if (contentType === "words" || contentType === "both") {
-          pool.push(...fluencyData.words[skill]);
-        }
-        if (contentType === "sentences" || contentType === "both") {
-          pool.push(...fluencyData.sentences[skill]);
-        }
-        if (includeSticky) {
-          pool.push(...(stickyWords[skill] || []));
-        }
+        const data = fluencyData[type][skill] || [];
+        pool = pool.concat(data);
       });
 
-      // De-duplicate and shuffle
-      pool = [...new Set(pool)].sort(() => 0.5 - Math.random());
-      const selection = pool.slice(0, gridSize);
+      // Add sticky words
+      if (includeSticky) {
+        const stickyWords = {
+          "0.1 - Short A": ["I", "a", "the"],
+          "0.2 - Short O": ["is", "his", "has", "as"],
+          "0.3 - Short i": ["to", "do"],
+          "0.4 - Short u": ["was", "you"],
+          "0.5 - Short E": ["he", "be", "we"],
+          "0.6 - FLSZ": ["my", "try", "by", "why"],
+          "0.7 - FLSZ and CVC": ["my", "try", "by", "why"],
+          "Mixed CVC": ["I", "a", "the", "is", "his", "has", "as", "to", "do", "was", "you", "he", "be", "we", "my", "try", "by", "why"]
+        };
+        selectedSkills.forEach(skill => {
+          if (stickyWords[skill]) {
+            pool = pool.concat(stickyWords[skill]);
+          }
+        });
+      }
 
-      const rows = gridSize / 5;
-      let html = '<table class="gridTable">';
-      for (let i = 0; i < rows; i++) {
+      // Remove duplicates
+      pool = Array.from(new Set(pool));
+
+      const shuffled = pool.sort(() => 0.5 - Math.random()).slice(0, gridSize);
+      const columns = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
+
+      let html = '<table>';
+      for (let i = 0; i < Math.ceil(gridSize / columns); i++) {
         html += '<tr>';
-        for (let j = 0; j < 5; j++) {
-          const idx = i * 5 + j;
-          html += `<td>${selection[idx] || ""}</td>`;
+        for (let j = 0; j < columns; j++) {
+          const idx = i * columns + j;
+          html += `<td>${shuffled[idx] || ""}</td>`;
         }
         html += '</tr>';
       }
       html += '</table>';
-      html += "<br><br>".repeat(gridSize === 15 ? 6 : gridSize === 20 ? 4 : 2);
-      html += '<div id="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>';
-
       document.getElementById("gridContainer").innerHTML = html;
     }
   </script>
-
 </body>
 </html>
