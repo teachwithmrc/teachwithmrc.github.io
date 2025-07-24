@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fluency Grid Generator Layout Options</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 36px;
+      margin-bottom: 40px;
+    }
+
+    .step-title {
+      font-size: 22px;
+      font-weight: bold;
+      margin: 30px 0 10px;
+      text-align: center;
+    }
+
+    .content-options {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .content-box {
+      width: 200px;
+      text-align: center;
+    }
+
+    .content-box img {
+      width: 100%;
+      max-height: 120px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .setup-container {
+      display: flex;
+      justify-content: space-between;
+      border: 2px solid #000;
+      padding: 20px;
+      margin-bottom: 60px;
+    }
+
+    .left-box, .right-box {
+      width: 45%;
+    }
+
+    hr {
+      margin: 60px 0;
+      border: 2px dashed #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Fluency Grid Generator Layout Options</h1>
+
+  <!-- Option 1 -->
+  <div class="step-title">Option 1: Label Above, Classic Look</div>
+  <div class="step-title">Step 1: Choose a Content Type</div>
+  <div class="content-options">
+    <div class="content-box">
+      <label><input type="radio" name="contentType1" value="words"> Words</label>
+      <img src="example-words.png" alt="Words Example">
+    </div>
+    <div class="content-box">
+      <label><input type="radio" name="contentType1" value="sentences"> Sentences</label>
+      <img src="example-sentences.png" alt="Sentences Example">
+    </div>
+    <div class="content-box">
+      <label><input type="radio" name="contentType1" value="both"> Both</label>
+      <img src="example-both.png" alt="Both Example">
+    </div>
+  </div>
+
+  <div class="step-title">Step 2: Skills + Sticky + Grid Size</div>
+  <div class="setup-container">
+    <div class="left-box"><strong>[Skills UI]</strong></div>
+    <div class="right-box"><strong>[Sticky + Size UI]</strong></div>
+  </div>
+
+  <hr>
+
+  <!-- Option 2 -->
+  <div class="step-title">Option 2: Emphasis on Steps + Cleaner Headers</div>
+  <div class="step-title">Step 1: Select Content Type</div>
+  <div class="content-options">
+    <div class="content-box">
+      <label><input type="radio" name="contentType2" value="words"> Words</label>
+      <img src="example-words.png" alt="Words Example">
+    </div>
+    <div class="content-box">
+      <label><input type="radio" name="contentType2" value="sentences"> Sentences</label>
+      <img src="example-sentences.png" alt="Sentences Example">
+    </div>
+    <div class="content-box">
+      <label><input type="radio" name="contentType2" value="both"> Both</label>
+      <img src="example-both.png" alt="Both Example">
+    </div>
+  </div>
+
+  <div class="step-title">Step 2: Skill and Layout Selection</div>
+  <div class="setup-container">
+    <div class="left-box"><strong>[Skills UI]</strong></div>
+    <div class="right-box"><strong>[Sticky + Size UI]</strong></div>
+  </div>
+
+  <hr>
+
+  <!-- Option 3 -->
+  <div class="step-title">Option 3: Table Style Selector</div>
+  <table border="1" cellpadding="10" cellspacing="0" style="margin: 0 auto; text-align: center;">
+    <tr>
+      <th>Words</th>
+      <th>Sentences</th>
+      <th>Both</th>
+    </tr>
+    <tr>
+      <td>
+        <label><input type="radio" name="contentType3" value="words"> Select</label><br>
+        <img src="example-words.png" alt="Words Example" width="150">
+      </td>
+      <td>
+        <label><input type="radio" name="contentType3" value="sentences"> Select</label><br>
+        <img src="example-sentences.png" alt="Sentences Example" width="150">
+      </td>
+      <td>
+        <label><input type="radio" name="contentType3" value="both"> Select</label><br>
+        <img src="example-both.png" alt="Both Example" width="150">
+      </td>
+    </tr>
+  </table>
+
+  <div class="step-title">Step 2: Choose Skills + Layout</div>
+  <div class="setup-container">
+    <div class="left-box"><strong>[Skills UI]</strong></div>
+    <div class="right-box"><strong>[Sticky + Size UI]</strong></div>
+  </div>
+
+</body>
+</html>
