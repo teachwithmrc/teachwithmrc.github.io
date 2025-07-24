@@ -158,29 +158,6 @@
         return;
       }
 
-      let wordPool = [];
-let sentencePool = [];
-
-selectedSkills.forEach(skill => {
-  const wordKey = skill === "mixed"
-    ? "Mixed CVC Words"
-    : `${skill} - Short ${skillMap[skill]} Words`;
-  const sentenceKey = skill === "mixed"
-    ? "Mixed CVC Sentences"
-    : `${skill} - Short ${skillMap[skill]} Sentences`;
-
-  if (contentType === "words" || contentType === "both") {
-    const words = window.fluencyData.words[wordKey] || [];
-    const tricky = includeSticky ? (window.fluencyData.trickySticky[skill] || []) : [];
-    wordPool.push(...words, ...tricky);
-  }
-
-  if (contentType === "sentences" || contentType === "both") {
-    const sentences = window.fluencyData.sentences[sentenceKey] || [];
-    sentencePool.push(...sentences);
-  }
-});
-
    let wordPool = [];
 let sentencePool = [];
 
