@@ -213,8 +213,8 @@ table += "</table>";
       }).join(", ");
 
       document.getElementById("gridHeader").innerHTML = `
-        <h2>Fluency Grid</h2>
-        <p>Skills: ${readableSkills}</p><br>
+  <h2>${readableSkills} Fluency Grid</h2><br>
+`;
       `;
       document.getElementById("gridContainer").innerHTML = table;
     }
