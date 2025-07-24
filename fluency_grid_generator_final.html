@@ -19,13 +19,14 @@
     .content-type {
       text-align: center;
       margin-bottom: 20px;
-      font-size: 18px;
+      font-size: 20px;
     }
 
     .setup-table {
-      width: 100%;
+      width: 70%;
       border-collapse: collapse;
       margin-bottom: 30px;
+      
     }
 
     .setup-table td {
@@ -53,6 +54,16 @@
       text-align: center;
       vertical-align: middle;
     }
+
+    .word-cell {
+  font-size: 28px;
+}
+
+.sentence-cell {
+  font-size: 18px;
+  text-align: left;
+  padding: 6px;
+}
 
     .controls {
       text-align: center;
@@ -175,7 +186,8 @@
         table += "<tr>";
         for (let j = 0; j < cols; j++) {
           const val = shuffled[i + j] || "";
-          table += `<td>${val}</td>`;
+          let cellClass = val.split(" ").length > 3 ? "sentence-cell" : "word-cell";
+table += `<td class="${cellClass}">${val}</td>`;
         }
         table += "</tr>";
       }
