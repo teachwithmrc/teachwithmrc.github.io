@@ -64,9 +64,12 @@
   font-size: 22px;
 }
 
-.content-option input[type="radio"] {
-  transform: scale(1.5);
-  cursor: pointer;
+/* Make the image highlight when selected */
+.content-option input[type="radio"]:checked + img {
+  border: 3px solid #007bff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.6);
+  transform: scale(1.05);
+  z-index: 5;
 }
    
     button {
@@ -161,22 +164,28 @@ td {
 
   <div class="step-label">Step 1: Select Content Type</div>
   <div class="content-type">
-  <div class="content-option">
+<div class="content-option">
   <div class="option-label">Words</div>
-  <input type="radio" name="contentType" value="words">
-  <img src="gridwords1.png" alt="Words Example">
+  <label>
+    <input type="radio" name="contentType" value="words">
+    <img src="gridwords1.png" alt="Words Example">
+  </label>
 </div>
 
 <div class="content-option">
   <div class="option-label">Sentences</div>
-  <input type="radio" name="contentType" value="sentences">
-  <img src="gridsentences1.png" alt="Sentences Example">
+  <label>
+    <input type="radio" name="contentType" value="sentences">
+    <img src="gridsentences1.png" alt="Sentences Example">
+  </label>
 </div>
 
 <div class="content-option">
   <div class="option-label">Both</div>
-  <input type="radio" name="contentType" value="both">
-  <img src="gridboth1.png" alt="Sentences and Words Example">
+  <label>
+    <input type="radio" name="contentType" value="both">
+    <img src="gridboth1.png" alt="Both Example">
+  </label>
 </div>
   </div>
 
