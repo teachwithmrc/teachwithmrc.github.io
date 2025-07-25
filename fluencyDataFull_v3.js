@@ -17,13 +17,14 @@ const fluencyWords = {
 };
 
 const trickyWords = {
-  "0.1 -": ['I', 'a', 'the'],
-  "0.2 -": ['is', 'his', 'has', 'as'],
-  "0.3 -": ['to', 'do'],
-  "0.4 -": ['was', 'you'],
-  "0.5 -": ['he', 'be', 'we'],
-  "0.6 -": ['my', 'try', 'by', 'why'],
-  "Mixed CVC": ['I', 'a', 'the', 'is', 'his', 'has', 'as', 'to', 'do', 'was', 'you', 'he', 'be', 'we', 'my', 'try', 'by', 'why'],
+  "0.1 - Short A": ['I', 'a', 'the'],
+  "0.2 - Short O": ['is', 'his', 'has', 'as'],
+  "0.3 - Short I": ['to', 'do'],
+  "0.4 - Short U": ['was', 'you'],
+  "0.5 - Short E": ['he', 'be', 'we'],
+  "0.6 - FLSZ": ['my', 'try', 'by', 'why'],
+  "0.7 - FLSZ and CVC": ['the', 'a', 'is', 'was', 'has'],
+  "Mixed CVC": ['I', 'a', 'the', 'is', 'his', 'has', 'as', 'to', 'do', 'was', 'you', 'he', 'be', 'we', 'my', 'try', 'by', 'why']
 };
 
 const fluencySentences = {
