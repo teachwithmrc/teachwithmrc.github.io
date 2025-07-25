@@ -322,7 +322,7 @@ if (selectedSkills.length === 1) {
 } else if (skill === "mixed") {
   trickyCount = 5;
 }
-      const trickySample = shuffle(trickyOnly).slice(0, stickyCount);
+      const trickySample = shuffle(trickyOnly).slice(0, trickyCount);
       trickyInserts.push(...trickySample);
       remainingSlots -= trickySample.length;
     }
