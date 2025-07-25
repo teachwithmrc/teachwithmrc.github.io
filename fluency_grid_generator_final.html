@@ -84,7 +84,7 @@
 }
 
 .content-option img {
-  width: 200px;
+  width: 220px;
   margin-top: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -92,10 +92,18 @@
 }
 
 .content-option img:hover {
-  transform: scale(1.5);
+  transform: scale(1.2); /* Increased from 1.1 */
   z-index: 10;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
-
+.content-type {
+  display: flex;
+  justify-content: center;
+  gap: 60px; /* Increased spacing */
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  align-items: flex-start; /* Align top instead of center vertically */
+}
     .content-option img {
       width: 200px;
       margin-top: 10px;
