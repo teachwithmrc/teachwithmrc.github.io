@@ -249,16 +249,22 @@ if (skill === "mixed") {
   let words = window.fluencyData.words[wordKey] || [];
   let sentences = window.fluencyData.sentences[sentenceKey] || [];
 
-  if (includeSticky) {
-let trickyKey;
-if (skill === "mixed") {
-  trickyKey = "Mixed CVC";
-} else {
-  trickyKey = `${skill} - Short ${skillMap[skill]}`;
-}
-const sticky = window.fluencyData.trickySticky[trickyKey] || [];
-    words = words.concat(sticky);
+if (includeSticky) {
+  let trickyKey = null;
+
+  if (skill === "mixed") {
+    trickyKey = "Mixed CVC";
+  } else if (["0.6", "0.7"].includes(skill)) {
+    trickyKey = null; // FLSZ and FLSZ + CVC don’t use tricky words
+  } else {
+    trickyKey = `${skill} - Short ${skillMap[skill]}`;
   }
+
+  if (trickyKey && window.fluencyData.trickySticky[trickyKey]) {
+    const stickyWords = window.fluencyData.trickySticky[trickyKey];
+    words = [...words, ...stickyWords];
+  }
+}
 
   if (contentType === "words" || contentType === "both") {
     wordPools[skill] = words;
