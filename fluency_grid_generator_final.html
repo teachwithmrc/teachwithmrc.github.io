@@ -199,11 +199,10 @@ table += "</table>";
         return map[s] || s;
       }).join(", ");
 
-      document.getElementById("gridHeader").innerHTML = `
+  document.getElementById("gridHeader").innerHTML = `
   <h2>${readableSkills} Fluency Grid</h2><br>
 `;
-      `;
-      document.getElementById("gridContainer").innerHTML = table;
+document.getElementById("gridContainer").innerHTML = table;
     }
 
     const skillMap = {
