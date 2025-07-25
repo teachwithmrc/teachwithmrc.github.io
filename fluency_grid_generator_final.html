@@ -250,7 +250,12 @@ if (skill === "mixed") {
   let sentences = window.fluencyData.sentences[sentenceKey] || [];
 
   if (includeSticky) {
-  let trickyKey = (skill === "mixed") ? "Mixed CVC" : (skill + " -");
+let trickyKey;
+if (skill === "mixed") {
+  trickyKey = "Mixed CVC";
+} else {
+  trickyKey = `${skill} - Short ${skillMap[skill]}`;
+}
 const sticky = window.fluencyData.trickySticky[trickyKey] || [];
     words = words.concat(sticky);
   }
