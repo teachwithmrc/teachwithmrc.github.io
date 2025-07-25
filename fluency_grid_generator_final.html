@@ -63,51 +63,56 @@
     align-items: flex-start;
   }
 
-  .content-option {
-    display: inline-block;
-    cursor: pointer;
-  }
+.content-option {
+  display: inline-block;
+}
 
-  .content-box {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-    border: 2px solid transparent;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-  }
+.content-box {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
 
-  .content-box input[type="radio"] {
-    transform: scale(1.5);
-    cursor: pointer;
-  }
+.content-box input[type="radio"] {
+  transform: scale(1.5);
+  cursor: pointer;
+}
 
-  .content-details {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
+.content-option:has(input[type="radio"]:checked) .content-box {
+  border-color: #007bff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
 
-  .option-label {
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
+.content-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
 
-  .content-details img {
-    width: 400px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    transition: transform 0.3s ease;
-  }
+.option-label {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
 
-  .content-details img:hover {
-    transform: scale(1.2);
-    z-index: 10;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  }
+.content-details img {
+  width: 400px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: transform 0.3s ease;
+}
+
+.content-details img:hover {
+  transform: scale(1.2);
+  z-index: 10;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
 
   /* 🔷 Highlight the entire box and image/text when selected */
   .content-option:has(input[type="radio"]:checked) .content-box {
@@ -169,33 +174,36 @@
   <div class="step-label">Step 1: Select Content Type</div>
   <div class="content-type">
 <div class="content-type">
-  <label class="content-option">
-    <div class="content-box">
-      <input type="radio" name="contentType" value="words" />
+ <div class="content-type">
+  <div class="content-option">
+    <label class="content-box">
+      <input type="radio" name="contentType" value="words">
       <div class="content-details">
         <div class="option-label">Words</div>
-        <img src="gridwords1.png" alt="Words Example" />
+        <img src="gridwords1.png" alt="Words Example">
       </div>
-    </div>
-  </label>
+    </label>
+  </div>
 
-  <label class="content-option">
-    <div class="content-box">
-      <input type="radio" name="contentType" value="sentences" />
+  <div class="content-option">
+    <label class="content-box">
+      <input type="radio" name="contentType" value="sentences">
       <div class="content-details">
         <div class="option-label">Sentences</div>
-        <img src="gridsentences1.png" alt="Sentences Example" />
+        <img src="gridsentences1.png" alt="Sentences Example">
       </div>
-    </div>
-  </label>
+    </label>
+  </div>
 
-  <label class="content-option">
-    <div class="content-box">
-      <input type="radio" name="contentType" value="both" />
+  <div class="content-option">
+    <label class="content-box">
+      <input type="radio" name="contentType" value="both">
       <div class="content-details">
         <div class="option-label">Both</div>
-        <img src="gridboth1.png" alt="Sentences and Words Example" />
+        <img src="gridboth1.png" alt="Sentences and Words Example">
       </div>
+    </label>
+  </div>
     </div>
   </label>
 </div>
