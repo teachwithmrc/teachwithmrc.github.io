@@ -346,9 +346,6 @@ if (selectedSkills.length === 1) {
 if (finalPool.length >= gridSize) break;
 }  // ✅ This closes the 'for' loop or logic block cleanly.
 
-else if (contentType === "sentences") 
-  // now this block is correctly attached
-
  else if (contentType === "sentences") {
   const perSkillSentences = Math.ceil(gridSize / selectedSkills.length);
   selectedSkills.forEach(skill => {
