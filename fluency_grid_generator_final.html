@@ -10,7 +10,21 @@
       font-family: 'Poppins', sans-serif;
       margin: 40px;
     }
-
+    
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printableSection, #printableSection * {
+    visibility: visible;
+  }
+  #printableSection {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+}
     h1 {
       text-align: center;
       font-size: 36px;
@@ -149,10 +163,10 @@ td {
     </tr>
   </table>
 
-<div class="controls">
+<center></center></centrer><div class="controls">
   <button onclick="generateGrid()">Generate</button>
   <button onclick="window.print()">Print</button>
-</div>
+</div></center>
 
   <div id="printableSection">
     <div id="gridHeader" style="text-align: center; margin-top: 30px;"></div>
