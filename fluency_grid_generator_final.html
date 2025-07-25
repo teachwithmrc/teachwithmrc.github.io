@@ -15,6 +15,12 @@
   body * {
     visibility: hidden;
   }
+  button {
+  font-size: 20px;
+  padding: 12px 24px;
+  margin: 10px;
+  cursor: pointer;
+}
   #printableSection, #printableSection * {
     visibility: visible;
   }
@@ -163,11 +169,11 @@ td {
     </tr>
   </table>
 
-<center></center></centrer><div class="controls">
+<center></center></center><div class="controls">
   <button onclick="generateGrid()">Generate</button>
   <button onclick="window.print()">Print</button>
 </div></center>
-
+  
   <div id="printableSection">
     <div id="gridHeader" style="text-align: center; margin-top: 30px;"></div>
     <div id="gridContainer"></div>
