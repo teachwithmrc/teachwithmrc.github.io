@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="fluencyDataFull_v3.js"></script>
+  <title>Fluency Grid Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 36px;
+      margin-bottom: 30px;
+    }
+
+    .step-label {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 20px 0 10px;
+      text-align: center;
+    }
+
+    .content-type {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+
+    .content-option {
+      display: inline-block;
+    }
+
+    .content-box {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 10px;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .content-box input[type="radio"] {
+      transform: scale(1.5);
+      cursor: pointer;
+    }
+
+    .content-option:has(input[type="radio"]:checked) .content-box {
+      border-color: #007bff;
+      box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+    }
+
+    .content-details {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .option-label-with-radio {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .content-details img {
+      width: 400px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .setup-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+    }
+
+    .setup-table td {
+      border: 2px solid #000;
+      vertical-align: top;
+      padding: 20px;
+    }
+
+    .skill-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+    }
+
+    .skill-item {
+      border: 2px solid transparent;
+      padding: 10px;
+      border-radius: 10px;
+      transition: 0.3s ease;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .skill-item input[type="checkbox"] {
+      transform: scale(1.5);
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .skill-item img {
+      width: 100px;
+      height: auto;
+      margin-top: 5px;
+    }
+
+    .skill-item.selected {
+      border-color: #007bff;
+      box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+    }
+
+    .right-column label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .controls {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .word-cell {
+      font-size: 28px;
+    }
+
+    .sentence-cell {
+      font-size: 18px;
+      text-align: left;
+      padding: 6px;
+    }
+
+    .copyright {
+      font-size: 12px;
+      text-align: right;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printableSection,
+      #printableSection * {
+        visibility: visible;
+      }
+      #printableSection {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Fluency Grid Generator</h1>
+
+<div class="step-label">Step 1: Select Content Type</div>
+<div class="content-type">
+  <div class="content-option">
+    <label class="content-box">
+      <div class="content-details">
+        <div class="option-label-with-radio">
+          <input type="radio" name="contentType" value="words">
+          <span class="radio-label-text">Words</span>
+        </div>
+        <img src="gridwords1.png" alt="Words Example">
+      </div>
+    </label>
+  </div>
+
+  <div class="content-option">
+    <label class="content-box">
+      <div class="content-details">
+        <div class="option-label-with-radio">
+          <input type="radio" name="contentType" value="sentences">
+          <span class="radio-label-text">Sentences</span>
+        </div>
+        <img src="gridsentences1.png" alt="Sentences Example">
+      </div>
+    </label>
+  </div>
+
+  <div class="content-option">
+    <label class="content-box">
+      <div class="content-details">
+        <div class="option-label-with-radio">
+          <input type="radio" name="contentType" value="both">
+          <span class="radio-label-text">Both</span>
+        </div>
+        <img src="gridboth1.png" alt="Both Example">
+      </div>
+    </label>
+  </div>
+</div>
+
+<div class="step-label">Step 2: Skill and Layout Selection</div>
+<table class="setup-table">
+  <tr>
+    <td style="width: 75%">
+      <div class="skill-grid">
+        <div class="skill-item">
+          <label><input type="checkbox" name="skill" value="0.1"> Short A</label>
+          <img src="shorta.png" alt="Short A">
+        </div>
+        <div class="skill-item">
+          <label><input type="checkbox" name="skill" value="0.2"> Short O</label>
+          <img src="shorto.png" alt="Short O">
+        </div>
+        <div class="skill-item">
+          <label><input type="checkbox" name="skill" value="0.3"> Short I</label>
+          <img src="shorti.png" alt="Short I">
+        </div>
+        <div class="skill-item">
+          <label><input type="checkbox" name="skill" value="0.4"> Short U</label>
+          <img src="shortu.png" alt="Short U">
+        </div>
+        <div class="skill-item">
+          <label><input type="checkbox" name="skill" value="0.5"> Short E</label>
+          <img src="shorte.png" alt="Short E">
+        </div>
+        <div class="skill-item">
+          <label><input type="checkbox" name="skill" value="0.6"> FLSZ</label>
+        </div>
+        <div class="skill-item">
+          <label><input type="checkbox" name="skill" value="0.7"> FLSZ and CVC</label>
+        </div>
+        <div class="skill-item">
+          <label><input type="checkbox" name="skill" value="mixed"> Mixed CVC</label>
+        </div>
+      </div>
+    </td>
+    <td class="right-column">
+      <strong>Tricky-Sticky Words:</strong><br>
+      <label><input type="checkbox" id="includeSticky"> Yes, Include Them</label><br><br>
+
+      <strong>Grid Size:</strong><br>
+      <label><input type="radio" name="gridSize" value="15"> 3 x 5 - 15 words</label><br>
+      <label><input type="radio" name="gridSize" value="20"> 4 x 5 - 20 words</label><br>
+      <label><input type="radio" name="gridSize" value="25" checked> 5 x 5 - 25 words</label><br>
+    </td>
+  </tr>
+</table>
+
+<div class="controls">
+  <button onclick="generateGrid()">Generate</button>
+  <button onclick="window.print()">Print</button>
+</div>
+
+<div id="printableSection">
+  <div id="gridHeader" style="text-align: center; margin-top: 30px;"></div>
+  <div id="gridContainer"></div><br><br><br>
+  <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+</div>
+
+<script>
+  // Highlight skill checkbox container when selected
+  document.querySelectorAll('.skill-item input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.closest('.skill-item').classList.toggle('selected', cb.checked);
+    });
+  });
+</script>
+
+<script>
+// KEEP ALL YOUR ORIGINAL generateGrid FUNCTION HERE (as-is)...
+// I haven’t pasted it to keep the message compact, but nothing in generateGrid changes
+</script>
+
+</body>
+</html>
