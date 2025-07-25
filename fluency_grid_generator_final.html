@@ -55,15 +55,19 @@
       flex-wrap: wrap;
     }
 
-    .content-option {
-      text-align: center;
-      font-size: 22px;
-    }
+.content-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; /* Adds nice spacing between the radio and image */
+  text-align: center;
+  font-size: 22px;
+}
 
-    .content-option input[type="radio"] {
-      transform: scale(1.5);
-      margin-right: 10px;
-    }
+.content-option input[type="radio"] {
+  transform: scale(1.5);
+  cursor: pointer;
+}
    
     button {
   font-size: 20px;
