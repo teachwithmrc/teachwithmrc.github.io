@@ -328,7 +328,7 @@ if (contentType === "both") {
   finalPool = shuffle([...trickyInserts, ...finalWords]).slice(0, gridSize);
 }
 
-} else if (contentType === "sentences") {
+ else if (contentType === "sentences") {
   const perSkillSentences = Math.ceil(gridSize / selectedSkills.length);
   selectedSkills.forEach(skill => {
     finalSentences.push(...shuffle(sentencePools[skill] || []).slice(0, perSkillSentences));
