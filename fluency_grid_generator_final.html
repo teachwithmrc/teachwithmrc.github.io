@@ -292,16 +292,10 @@ if (contentType === "both") {
     finalSentences.push(...shuffle(sentencePools[skill] || []).slice(0, perSkillSentences));
   });
 
-  finalPool = shuffle(finalSentences).slice(0, gridSize);
-}
-
-} else if (contentType === "sentences") {
-  const perSkillSentences = Math.floor(gridSize / selectedSkills.length);
-  selectedSkills.forEach(skill => {
-    finalSentences.push(...shuffle(sentencePools[skill] || []).slice(0, perSkillSentences));
-  });
   finalPool = shuffle(finalSentences);
 
+  // Ensure we have exactly gridSize items by trimming or padding
+  finalPool = finalPool.slice(0, gridSize);
   while (finalPool.length < gridSize) {
     finalPool.push("");
   }
