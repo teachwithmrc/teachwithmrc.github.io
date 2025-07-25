@@ -356,12 +356,13 @@ if (finalPool.length >= gridSize) break;
 
   // Ensure we have exactly gridSize items by trimming or padding
   finalPool = finalPool.slice(0, gridSize);
- while (finalPool.length < gridSize && finalPool.length > 0) {
-  finalPool.push(finalPool[finalPool.length % finalPool.length]);
+  while (finalPool.length < gridSize && finalPool.length > 0) {
+    finalPool.push(finalPool[finalPool.length % finalPool.length]);
+  }
 }
 
-
-     const cols = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
+// ✅ Build and display table AFTER all contentType logic
+const cols = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
 let table = "<table>";
 for (let i = 0; i < gridSize; i += cols) {
   table += "<tr>";
@@ -374,19 +375,21 @@ for (let i = 0; i < gridSize; i += cols) {
 }
 table += "</table>";
 
-      const readableSkills = selectedSkills.map(s => {
-        if (s === "mixed") return "Mixed CVC";
-        const map = { "0.1": "Short A", "0.2": "Short O", "0.3": "Short I", "0.4": "Short U", "0.5": "Short E", "0.6": "FLSZ", "0.7": "FLSZ and CVC" };
-        return map[s] || s;
-      }).join(", ");
+const readableSkills = selectedSkills.map(s => {
+  if (s === "mixed") return "Mixed CVC";
+  const map = {
+    "0.1": "Short A", "0.2": "Short O", "0.3": "Short I",
+    "0.4": "Short U", "0.5": "Short E", "0.6": "FLSZ", "0.7": "FLSZ and CVC"
+  };
+  return map[s] || s;
+}).join(", ");
 
-  document.getElementById("gridHeader").innerHTML = `
+document.getElementById("gridHeader").innerHTML = `
   <h2>${readableSkills} Fluency Grid</h2><br>
 `;
 document.getElementById("gridContainer").innerHTML = table;
-    }
-   }
-   const skillMap = {
+}
+const skillMap = {
   "0.1": "A",
   "0.2": "O",
   "0.3": "I",
@@ -396,6 +399,6 @@ document.getElementById("gridContainer").innerHTML = table;
   "0.7": "FLSZ and CVC",
   "mixed": "Mixed"
 };
-  </script>
+</script>
 </body>
 </html>
