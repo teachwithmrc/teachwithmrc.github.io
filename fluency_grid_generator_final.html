@@ -230,12 +230,21 @@ td {
 let sentencePools = {};
 
 selectedSkills.forEach(skill => {
-  const wordKey = skill === "mixed"
-    ? "Mixed CVC Words"
-    : `${skill} - Short ${skillMap[skill]} Words`;
-  const sentenceKey = skill === "mixed"
-    ? "Mixed CVC Sentences"
-    : `${skill} - Short ${skillMap[skill]} Sentences`;
+let wordKey, sentenceKey;
+
+if (skill === "mixed") {
+  wordKey = "Mixed CVC Words";
+  sentenceKey = "Mixed CVC Sentences";
+} else if (skill === "0.6") {
+  wordKey = "FLSZ Words";
+  sentenceKey = "FLSZ Sentences";
+} else if (skill === "0.7") {
+  wordKey = "FLSZ and CVC Words";
+  sentenceKey = "FLSZ and CVC Sentences";
+} else {
+  wordKey = `${skill} - Short ${skillMap[skill]} Words`;
+  sentenceKey = `${skill} - Short ${skillMap[skill]} Sentences`;
+}
 
   let words = window.fluencyData.words[wordKey] || [];
   let sentences = window.fluencyData.sentences[sentenceKey] || [];
@@ -259,7 +268,7 @@ let finalSentences = [];
 
 if (contentType === "both") {
   const half = Math.floor(gridSize / 2);
-  const perSkillWords = Math.floor(half / selectedSkills.length);
+  const perSkillWords = Math.ceil(half / selectedSkills.length);
   const perSkillSentences = Math.floor((gridSize - half) / selectedSkills.length);
 
   selectedSkills.forEach(skill => {
@@ -269,6 +278,10 @@ if (contentType === "both") {
 
   finalPool = shuffle([...finalWords, ...finalSentences]);
 
+  while (finalPool.length < gridSize) {
+    finalPool.push("");
+  }
+
 } else if (contentType === "words") {
   const perSkillWords = Math.floor(gridSize / selectedSkills.length);
   selectedSkills.forEach(skill => {
@@ -276,12 +289,20 @@ if (contentType === "both") {
   });
   finalPool = shuffle(finalWords);
 
+  while (finalPool.length < gridSize) {
+    finalPool.push("");
+  }
+
 } else if (contentType === "sentences") {
   const perSkillSentences = Math.floor(gridSize / selectedSkills.length);
   selectedSkills.forEach(skill => {
     finalSentences.push(...shuffle(sentencePools[skill] || []).slice(0, perSkillSentences));
   });
   finalPool = shuffle(finalSentences);
+
+  while (finalPool.length < gridSize) {
+    finalPool.push("");
+  }
 }
 
      const cols = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
@@ -309,15 +330,16 @@ table += "</table>";
 document.getElementById("gridContainer").innerHTML = table;
     }
 
-    const skillMap = {
-      "0.1": "A",
-      "0.2": "O",
-      "0.3": "I",
-      "0.4": "U",
-      "0.5": "E",
-      "0.6": "FLSZ",
-      "0.7": "FLSZ and CVC"
-    };
+   const skillMap = {
+  "0.1": "A",
+  "0.2": "O",
+  "0.3": "I",
+  "0.4": "U",
+  "0.5": "E",
+  "0.6": "FLSZ",
+  "0.7": "FLSZ and CVC",
+  "mixed": "Mixed"
+};
   </script>
 </body>
 </html>
