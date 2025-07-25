@@ -227,7 +227,11 @@ td {
     alert("Select skills and content type.");
     return;
   }
-
+function getTrickyKey(skill) {
+  if (skill === "mixed") return "Mixed CVC";
+  if (["0.6", "0.7"].includes(skill)) return null;
+  return `${skill} - Short ${skillMap[skill]}`;
+}
   // 🔍 DEBUG LOGS
   console.log("Selected Skills:", selectedSkills);
   console.log("Content Type:", contentType);
@@ -260,13 +264,11 @@ if (skill === "mixed") {
 if (includeSticky) {
   let trickyKey = null;
 
-  if (skill === "mixed") {
-    trickyKey = "Mixed CVC";
-  } else if (["0.6", "0.7"].includes(skill)) {
-    trickyKey = null; // FLSZ and FLSZ + CVC don’t use tricky words
-  } else {
-    trickyKey = `${skill} - Short ${skillMap[skill]}`;
-  }
+ if (["mixed", "0.6", "0.7"].includes(skill)) {
+  trickyKey = "Mixed CVC"; // FLSZ, FLSZ + CVC, and Mixed all use the full tricky set
+} else {
+  trickyKey = `${skill} - Short ${skillMap[skill]}`;
+}
 
   console.log("Checking tricky key:", trickyKey);
 
@@ -303,12 +305,28 @@ if (contentType === "both") {
   finalPool = shuffle([...finalWords, ...finalSentences]).slice(0, gridSize);
 
 } else if (contentType === "words") {
-  const perSkillWords = Math.ceil(gridSize / selectedSkills.length);
+  let remainingSlots = gridSize;
+  const trickyInserts = [];
+
   selectedSkills.forEach(skill => {
-    finalWords.push(...shuffle(wordPools[skill] || []).slice(0, perSkillWords));
+    const allWords = wordPools[skill] || [];
+    const trickyOnly = (window.fluencyData.trickySticky || {})[getTrickyKey(skill)] || [];
+
+    // Insert specific amount of tricky words based on the number of skills
+    if (includeSticky && trickyOnly.length > 0) {
+      let stickyCount = selectedSkills.length === 1 ? 4 : (skill === "mixed" ? 5 : 2);
+      const trickySample = shuffle(trickyOnly).slice(0, stickyCount);
+      trickyInserts.push(...trickySample);
+      remainingSlots -= trickySample.length;
+    }
+
+    finalWords.push(...shuffle(allWords));
   });
 
-  finalPool = shuffle(finalWords).slice(0, gridSize);
+  // Trim and shuffle to fill remaining slots
+  finalWords = shuffle(finalWords).slice(0, remainingSlots);
+  finalPool = shuffle([...trickyInserts, ...finalWords]).slice(0, gridSize);
+}
 
 } else if (contentType === "sentences") {
   const perSkillSentences = Math.ceil(gridSize / selectedSkills.length);
