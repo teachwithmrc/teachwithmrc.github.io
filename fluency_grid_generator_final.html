@@ -215,16 +215,22 @@ td {
       return array;
     }
 
-    function generateGrid() {
-      const selectedSkills = Array.from(document.querySelectorAll('input[type=checkbox]:checked')).map(cb => cb.value);
-      const gridSize = parseInt(document.querySelector('input[name=gridSize]:checked')?.value || "25");
-      const contentType = document.querySelector('input[name=contentType]:checked')?.value;
-      const includeSticky = document.getElementById("includeSticky").checked;
+   function generateGrid() {
+  const selectedSkills = Array.from(document.querySelectorAll('input[type=checkbox]:checked')).map(cb => cb.value);
+  const gridSize = parseInt(document.querySelector('input[name=gridSize]:checked')?.value || "25");
+  const contentType = document.querySelector('input[name=contentType]:checked')?.value;
+  const includeSticky = document.getElementById("includeSticky").checked;
 
-      if (!selectedSkills.length || !contentType) {
-        alert("Select skills and content type.");
-        return;
-      }
+  if (!selectedSkills.length || !contentType) {
+    alert("Select skills and content type.");
+    return;
+  }
+
+  // 🔍 DEBUG LOGS
+  console.log("Selected Skills:", selectedSkills);
+  console.log("Content Type:", contentType);
+  console.log("Grid Size:", gridSize);
+  console.log("Include Sticky Words?", includeSticky);
 
    let wordPools = {};
 let sentencePools = {};
@@ -260,19 +266,23 @@ if (includeSticky) {
     trickyKey = `${skill} - Short ${skillMap[skill]}`;
   }
 
+  console.log("Checking tricky key:", trickyKey);
+
   if (trickyKey && window.fluencyData.trickySticky[trickyKey]) {
     const stickyWords = window.fluencyData.trickySticky[trickyKey];
+    console.log("Loaded sticky words:", stickyWords);
     words = [...words, ...stickyWords];
+  } else {
+    console.warn("Tricky key not found or empty:", trickyKey);
   }
 }
 
-  if (contentType === "words" || contentType === "both") {
-    wordPools[skill] = words;
-  }
-  if (contentType === "sentences" || contentType === "both") {
-    sentencePools[skill] = sentences;
-  }
-});
+if (contentType === "words" || contentType === "both") {
+  wordPools[skill] = words;
+}
+if (contentType === "sentences" || contentType === "both") {
+  sentencePools[skill] = sentences;
+}
 
 let finalPool = [];
 let finalWords = [];
