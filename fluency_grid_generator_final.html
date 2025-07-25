@@ -269,29 +269,31 @@ let finalSentences = [];
 if (contentType === "both") {
   const half = Math.floor(gridSize / 2);
   const perSkillWords = Math.ceil(half / selectedSkills.length);
-  const perSkillSentences = Math.floor((gridSize - half) / selectedSkills.length);
+  const perSkillSentences = Math.ceil((gridSize - half) / selectedSkills.length);
 
   selectedSkills.forEach(skill => {
     finalWords.push(...shuffle(wordPools[skill] || []).slice(0, perSkillWords));
     finalSentences.push(...shuffle(sentencePools[skill] || []).slice(0, perSkillSentences));
   });
 
-  finalPool = shuffle([...finalWords, ...finalSentences]);
-
-  while (finalPool.length < gridSize) {
-    finalPool.push("");
-  }
+  finalPool = shuffle([...finalWords, ...finalSentences]).slice(0, gridSize);
 
 } else if (contentType === "words") {
-  const perSkillWords = Math.floor(gridSize / selectedSkills.length);
+  const perSkillWords = Math.ceil(gridSize / selectedSkills.length);
   selectedSkills.forEach(skill => {
     finalWords.push(...shuffle(wordPools[skill] || []).slice(0, perSkillWords));
   });
-  finalPool = shuffle(finalWords);
 
-  while (finalPool.length < gridSize) {
-    finalPool.push("");
-  }
+  finalPool = shuffle(finalWords).slice(0, gridSize);
+
+} else if (contentType === "sentences") {
+  const perSkillSentences = Math.ceil(gridSize / selectedSkills.length);
+  selectedSkills.forEach(skill => {
+    finalSentences.push(...shuffle(sentencePools[skill] || []).slice(0, perSkillSentences));
+  });
+
+  finalPool = shuffle(finalSentences).slice(0, gridSize);
+}
 
 } else if (contentType === "sentences") {
   const perSkillSentences = Math.floor(gridSize / selectedSkills.length);
