@@ -241,6 +241,7 @@ function getTrickyKey(skill) {
    let wordPools = {};
 let sentencePools = {};
 
+     
 selectedSkills.forEach(skill => {
 let wordKey, sentenceKey;
 
@@ -314,7 +315,13 @@ if (contentType === "both") {
 
     // Insert specific amount of tricky words based on the number of skills
     if (includeSticky && trickyOnly.length > 0) {
-      let stickyCount = selectedSkills.length === 1 ? 4 : (skill === "mixed" ? 5 : 2);
+      let trickyCount = 2;
+
+if (selectedSkills.length === 1) {
+  trickyCount = (skill === "mixed") ? 5 : 4;
+} else if (skill === "mixed") {
+  trickyCount = 5;
+}
       const trickySample = shuffle(trickyOnly).slice(0, stickyCount);
       trickyInserts.push(...trickySample);
       remainingSlots -= trickySample.length;
