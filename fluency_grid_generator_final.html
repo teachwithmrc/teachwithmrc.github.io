@@ -236,11 +236,11 @@ if (skill === "mixed") {
   wordKey = "Mixed CVC Words";
   sentenceKey = "Mixed CVC Sentences";
 } else if (skill === "0.6") {
-  wordKey = "FLSZ";
-  sentenceKey = "FLSZ Sentences";
+  wordKey = "0.6 - FLSZ";
+  sentenceKey = "0.6 - FLSZ Sentences";
 } else if (skill === "0.7") {
-  wordKey = "FLSZ and CVC";
-  sentenceKey = "FLSZ and CVC Sentences";
+  wordKey = "0.7 - FLSZ and CVC";
+  sentenceKey = "0.7 - FLSZ and CVC Sentences";
 } else {
   wordKey = `${skill} - Short ${skillMap[skill]} Words`;
   sentenceKey = `${skill} - Short ${skillMap[skill]} Sentences`;
@@ -250,7 +250,8 @@ if (skill === "mixed") {
   let sentences = window.fluencyData.sentences[sentenceKey] || [];
 
   if (includeSticky) {
-    const sticky = window.fluencyData.trickySticky[skill] || [];
+  let trickyKey = (skill === "mixed") ? "Mixed CVC" : (skill + " -");
+const sticky = window.fluencyData.trickySticky[trickyKey] || [];
     words = words.concat(sticky);
   }
 
@@ -296,9 +297,9 @@ if (contentType === "both") {
 
   // Ensure we have exactly gridSize items by trimming or padding
   finalPool = finalPool.slice(0, gridSize);
-  while (finalPool.length < gridSize) {
-    finalPool.push("");
-  }
+ while (finalPool.length < gridSize && finalPool.length > 0) {
+  finalPool.push(finalPool[finalPool.length % finalPool.length]);
+}
 }
 
      const cols = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
