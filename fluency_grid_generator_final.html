@@ -108,12 +108,6 @@
   flex-wrap: wrap;
   align-items: flex-start; /* Align top instead of center vertically */
 }
-    .content-option img {
-      width: 200px;
-      margin-top: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
 
     .setup-table {
       width: 100%;
@@ -167,27 +161,23 @@ td {
 
   <div class="step-label">Step 1: Select Content Type</div>
   <div class="content-type">
-   <div class="content-option">
-  <label>
-    <div class="option-label">Words</div>
-     <input type="radio" name="contentType" value="words">
-    <img src="gridwords1.png" alt="Words Example">
-  </label>
+  <div class="content-option">
+  <div class="option-label">Words</div>
+  <input type="radio" name="contentType" value="words">
+  <img src="gridwords1.png" alt="Words Example">
 </div>
-    <div class="content-option">
-      <label>
-    <div class="option-label">Sentences</div>
-            <input type="radio" name="contentType" value="sentences">
-    <img src="gridsentences1.png" alt="Sentences Example">
-      </label>
-    </div>
-     <div class="content-option">
-      <label>
-    <div class="option-label">Both</div>
-         <input type="radio" name="contentType" value="both">
-    <img src="gridboth1.png" alt="Sentences and Words Example">
-      </label>
-    </div>
+
+<div class="content-option">
+  <div class="option-label">Sentences</div>
+  <input type="radio" name="contentType" value="sentences">
+  <img src="gridsentences1.png" alt="Sentences Example">
+</div>
+
+<div class="content-option">
+  <div class="option-label">Both</div>
+  <input type="radio" name="contentType" value="both">
+  <img src="gridboth1.png" alt="Sentences and Words Example">
+</div>
   </div>
 
   <div class="step-label">Step 2: Skill and Layout Selection</div>
