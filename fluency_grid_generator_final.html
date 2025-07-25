@@ -324,9 +324,20 @@ if (contentType === "both") {
   });
 
   // Trim and shuffle to fill remaining slots
-  finalWords = shuffle(finalWords).slice(0, remainingSlots);
-  finalPool = shuffle([...trickyInserts, ...finalWords]).slice(0, gridSize);
-}
+  finalWords = shuffle(finalWords);
+
+  // Combine tricky words + other words, ensuring uniqueness
+  const combined = [...trickyInserts, ...finalWords];
+
+  const seen = new Set();
+  finalPool = [];
+  for (const word of combined) {
+    if (!seen.has(word)) {
+      finalPool.push(word);
+      seen.add(word);
+    }
+    if (finalPool.length >= gridSize) break;
+  }
 
  else if (contentType === "sentences") {
   const perSkillSentences = Math.ceil(gridSize / selectedSkills.length);
