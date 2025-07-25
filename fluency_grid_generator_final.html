@@ -100,7 +100,18 @@
   font-weight: bold;
   margin-bottom: 10px;
 }
+.option-label-with-radio {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
 
+.radio-label-text {
+  cursor: pointer;
+}
 .content-details img {
   width: 400px;
   border: 1px solid #ccc;
@@ -172,14 +183,15 @@
   <h1>Fluency Grid Generator</h1>
 
   <div class="step-label">Step 1: Select Content Type</div>
-  <div class="content-type">
 <div class="content-type">
- <div class="content-type">
+
   <div class="content-option">
     <label class="content-box">
-      <input type="radio" name="contentType" value="words">
       <div class="content-details">
-        <div class="option-label">Words</div>
+        <div class="option-label-with-radio">
+          <input type="radio" name="contentType" value="words">
+          <span class="radio-label-text">Words</span>
+        </div>
         <img src="gridwords1.png" alt="Words Example">
       </div>
     </label>
@@ -187,9 +199,11 @@
 
   <div class="content-option">
     <label class="content-box">
-      <input type="radio" name="contentType" value="sentences">
       <div class="content-details">
-        <div class="option-label">Sentences</div>
+        <div class="option-label-with-radio">
+          <input type="radio" name="contentType" value="sentences">
+          <span class="radio-label-text">Sentences</span>
+        </div>
         <img src="gridsentences1.png" alt="Sentences Example">
       </div>
     </label>
@@ -197,17 +211,16 @@
 
   <div class="content-option">
     <label class="content-box">
-      <input type="radio" name="contentType" value="both">
       <div class="content-details">
-        <div class="option-label">Both</div>
+        <div class="option-label-with-radio">
+          <input type="radio" name="contentType" value="both">
+          <span class="radio-label-text">Both</span>
+        </div>
         <img src="gridboth1.png" alt="Sentences and Words Example">
       </div>
     </label>
   </div>
-    </div>
-  </label>
 </div>
-  </div>
 
   <div class="step-label">Step 2: Skill and Layout Selection</div>
   <table class="setup-table">
