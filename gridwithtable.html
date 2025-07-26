@@ -236,10 +236,10 @@
     </label>
   </div>
 </div>
-<!-- ✅ Step 2: Select Skills - Full Block -->
+<!-- ✅ Step 2: Select Skills - Horizontal Format with HFW Toggles -->
 <div class="step-label">Step 2: Select Skills</div>
 
-<!-- Short Vowels Row -->
+<!-- Row 1: Short Vowels with Images -->
 <div class="skill-table-row">
   <!-- Short A -->
   <div class="skill-block" data-skill="0.1">
@@ -322,7 +322,7 @@
   </div>
 </div>
 
-<!-- Advanced Skills Row -->
+<!-- Row 2: Advanced (no images) -->
 <div class="skill-table-row">
   <!-- FLSZ -->
   <div class="skill-block" data-skill="0.6">
@@ -334,9 +334,7 @@
       <input type="checkbox" name="trick" value="0.6" class="trick-checkbox" hidden>
       <div class="trick-box">
         <div class="trick-label">Include HFW?</div>
-        <div class="trick-list tight-grid">
-          my&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;why
-        </div>
+        <div class="trick-list">my<br>try<br>by<br>why</div>
       </div>
     </div>
   </div>
@@ -347,11 +345,11 @@
     <div class="skill-box no-image">
       <div class="skill-label">FLSZ and CVC</div>
     </div>
-    <div class="trick-toggle" data-trick-skill="mixed">
-      <input type="checkbox" name="trick" value="mixed" class="trick-checkbox" hidden>
+    <div class="trick-toggle" data-trick-skill="0.7">
+      <input type="checkbox" name="trick" value="0.7" class="trick-checkbox" hidden>
       <div class="trick-box">
         <div class="trick-label">Include HFW?</div>
-        <div class="trick-list tight-grid">
+        <div class="trick-list">
           I&nbsp;&nbsp;a&nbsp;&nbsp;the&nbsp;&nbsp;is&nbsp;&nbsp;his&nbsp;&nbsp;has<br>
           as&nbsp;&nbsp;to&nbsp;&nbsp;do&nbsp;&nbsp;was&nbsp;&nbsp;you&nbsp;&nbsp;he<br>
           be&nbsp;&nbsp;we&nbsp;&nbsp;my&nbsp;&nbsp;try&nbsp;&nbsp;by&nbsp;&nbsp;why
@@ -370,7 +368,7 @@
       <input type="checkbox" name="trick" value="mixed" class="trick-checkbox" hidden>
       <div class="trick-box">
         <div class="trick-label">Include HFW?</div>
-        <div class="trick-list tight-grid">
+        <div class="trick-list">
           I&nbsp;&nbsp;a&nbsp;&nbsp;the&nbsp;&nbsp;is&nbsp;&nbsp;his&nbsp;&nbsp;has<br>
           as&nbsp;&nbsp;to&nbsp;&nbsp;do&nbsp;&nbsp;was&nbsp;&nbsp;you&nbsp;&nbsp;he<br>
           be&nbsp;&nbsp;we&nbsp;&nbsp;my&nbsp;&nbsp;try&nbsp;&nbsp;by&nbsp;&nbsp;why
@@ -379,38 +377,45 @@
     </div>
   </div>
 </div>
-
 <style>
 .skill-table-row {
   display: flex;
-  flex-direction: row;
   gap: 30px;
-  flex-wrap: wrap;
   margin-bottom: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .skill-block {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 2px solid transparent;
-  padding: 8px;
-  border-radius: 10px;
-  cursor: pointer;
+  min-width: 120px;
 }
 
 .skill-box img {
-  width: 100px;
+  width: 90px;
   height: auto;
-  border-radius: 6px;
+  margin-top: 5px;
+}
+
+.trick-box {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.trick-list {
+  font-size: 14px;
+  line-height: 1.4;
+  max-width: 140px;
 }
 
 .skill-box.no-image {
-  padding: 10px;
-  font-weight: bold;
-  font-size: 16px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
 .trick-toggle {
   margin-top: 4px;
   text-align: center;
