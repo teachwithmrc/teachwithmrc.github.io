@@ -96,20 +96,24 @@
 
   #printableSection {
     position: relative;
-    width: 100%;
+    margin: 0;
     padding: 0;
-    margin: 0 auto;
-    min-height: auto; /* Let height adjust naturally */
+    width: 100%;
+  }
+
+  #gridHeader {
+    margin-top: 0 !important;
+  }
+
+  table {
+    margin-top: 0;
+    page-break-inside: avoid;
   }
 
   #copyrightTag {
     position: absolute;
     bottom: 20px;
     right: 40px;
-  }
-
-  table {
-    page-break-inside: avoid;
   }
 }
   </style>
