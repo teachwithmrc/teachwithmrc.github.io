@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fluency Grid Generator</title>
+  <script src="fluencyDataFull_v3.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 40px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+
+    .table-section {
+      border: 2px solid #000;
+      padding: 20px;
+      margin: 12px auto;
+      width: fit-content;
+      box-sizing: border-box;
+    }
+
+    .section-label {
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .skill-button-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .skill-button-grid .row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .skill-button {
+      border: 2px solid #000;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+
+    .skill-button.selected {
+      background-color: #007bff;
+      color: white;
+      box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+    }
+
+    .option-grid {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .option-box {
+      padding: 10px 14px;
+      border: 2px solid #000;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .option-box.selected-step2 {
+      background-color: #d9c9ff;
+    }
+
+    table {
+      margin: auto;
+      border-collapse: collapse;
+    }
+
+    td {
+      border: 1px solid #000;
+      width: 120px;
+      height: 80px;
+      font-size: 32px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .copyright {
+      text-align: center;
+      font-size: 12px;
+      margin-top: 60px;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+
+      #printableSection, #printableSection * {
+        visibility: visible;
+      }
+
+      #printableSection {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>CVC and FLSZ Fluency Grid Generator</h1>
+  <div class="subtitle">
+    This generator includes <b>CVC Words</b> such as <b>hat, men, cup</b>.<br>
+    In addition, it includes <b>FLSZ (Double Consonant Endings)</b> with short vowels such as <b>buff, miss, and buzz</b>.
+  </div>
+
+  <div class="table-section">
+    <div class="section-label">Step 1: Select Skills</div>
+    <div class="skill-button-grid">
+      <div class="row">
+        <div class="skill-button" data-skill="0.1">Short A</div>
+        <div class="skill-button" data-skill="0.2">Short O</div>
+        <div class="skill-button" data-skill="0.3">Short I</div>
+        <div class="skill-button" data-skill="0.4">Short U</div>
+        <div class="skill-button" data-skill="0.5">Short E</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-section">
+    <div class="section-label">Step 2: What would you like in the grid?</div>
+    <div class="option-grid" id="contentOptions">
+      <label class="option-box">
+        <input type="radio" name="contentType" value="words" checked />
+        Only Words
+      </label>
+    </div>
+  </div>
+
+  <div style="margin-top: 30px;">
+    <button onclick="generateMazeGrids()" style="font-size: 18px; padding: 10px 24px;">Generate Maze Grids</button>
+    <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
+  </div>
+
+  <div id="printableSection">
+    <div id="gridHeader" style="text-align: center; margin-top: 30px;"></div>
+    <div id="gridContainer"></div><br><br><br>
+    <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+  </div>
+
+  <script>
+    const selectedSkills = new Set();
+
+    document.querySelectorAll('.skill-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const skill = button.dataset.skill;
+        selectedSkills.clear();
+        document.querySelectorAll('.skill-button').forEach(b => b.classList.remove('selected'));
+        selectedSkills.add(skill);
+        button.classList.add('selected');
+      });
+    });
+
+    document.querySelectorAll('#contentOptions .option-box').forEach(box => {
+      box.addEventListener('click', () => {
+        document.querySelectorAll('#contentOptions .option-box').forEach(b => b.classList.remove('selected-step2'));
+        box.classList.add('selected-step2');
+        box.querySelector('input').checked = true;
+      });
+    });
+
+    const shortVowelSkillMap = {
+      "0.1": "Short A Words",
+      "0.2": "Short O Words",
+      "0.3": "Short I Words",
+      "0.4": "Short U Words",
+      "0.5": "Short E Words"
+    };
+
+    const allMazePaths = [
+      "RDRDRDRDRD", "DRDRDRDRRD", "RRDDRDRRDD", "DRRDRDRRDD", "RDDRDRDRRD",
+      "DRDDRDRRRD", "RDRDRRDDRD", "RDRDDRDRRD", "DRRRDRDRDD", "RRDDRRDDRD",
+      "RDRRDDRRDD", "DDRRDRRDRR", "DRDRRDDRRD", "RRDDDRRDRD", "RDDRRDRDRD",
+      "DRRDDRRDRD", "DRRDRRDDRD", "RDRRDDDRRD", "DDRDRDRRRD", "DRDRDRRDRD"
+    ];
+
+    function generateMazeGrids() {
+      const skill = Array.from(selectedSkills)[0];
+      const contentType = document.querySelector('input[name=contentType]:checked')?.value;
+
+      if (!skill) {
+        alert("❗ Please select one skill in Step 1.");
+        return;
+      }
+      if (!contentType || contentType !== "words") {
+        alert("❗ Maze game only supports 'Only Words' at the moment.");
+        return;
+      }
+
+      const skillLabel = shortVowelSkillMap[skill];
+      const targetWords = window.fluencyData.words[`0.${skill.split(".")[1]} - ${skillLabel}`];
+      const distractorSkills = Object.keys(shortVowelSkillMap).filter(s => s !== skill);
+      const distractorWords = distractorSkills.flatMap(s => {
+        const label = shortVowelSkillMap[s];
+        return window.fluencyData.words[`0.${s.split(".")[1]} - ${label}`];
+      });
+
+      const gridContainer = document.getElementById("gridContainer");
+      const gridHeader = document.getElementById("gridHeader");
+      gridHeader.innerHTML = `<h2>${skillLabel} Maze Boards</h2><br><p><strong>Directions:</strong> Help the student follow the path of the correct word. All other words are traps!</p>`;
+      gridContainer.innerHTML = "";
+
+      for (let g = 0; g < 2; g++) {
+        const grid = Array.from({ length: 5 }, () => Array(5).fill(""));
+        const path = allMazePaths[Math.floor(Math.random() * allMazePaths.length)];
+        const targetWord = targetWords[Math.floor(Math.random() * targetWords.length)];
+        const distractors = distractorWords.filter(w => w !== targetWord);
+
+        let pathCoords = [[0, 0]];
+        let row = 0, col = 0;
+        for (let move of path) {
+          if (move === 'R') col++;
+          else if (move === 'D') row++;
+          pathCoords.push([row, col]);
+        }
+
+        for (let r = 0; r < 5; r++) {
+          for (let c = 0; c < 5; c++) {
+            const onPath = pathCoords.some(([pr, pc]) => pr === r && pc === c);
+            grid[r][c] = onPath ? targetWord : distractors[Math.floor(Math.random() * distractors.length)];
+          }
+        }
+
+        const table = document.createElement("table");
+        for (let r = 0; r < 5; r++) {
+          const row = document.createElement("tr");
+          for (let c = 0; c < 5; c++) {
+            const cell = document.createElement("td");
+            cell.textContent = grid[r][c];
+            row.appendChild(cell);
+          }
+          table.appendChild(row);
+        }
+        gridContainer.appendChild(table);
+        gridContainer.appendChild(document.createElement("br"));
+      }
+    }
+  </script>
+</body>
+</html>
