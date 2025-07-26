@@ -199,7 +199,7 @@
 
 <div id="printableSection" style="margin-top: 20px;">
   <h2 id="gameTitle"></h2>
-  <p style="font-size: 12px; max-width: 600px; margin: 0"">
+<p style="font-size: 12px; max-width: 600px; margin: 0 0 20px;">
     <strong>Directions:</strong> Read the word or sentence in the space you’d like to go, then put an X or O. Your opponent does the same. If you get 3 in a row…you win!
   </p>
   <div id="boardWrapper" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; justify-content: center; max-width: 900px; margin: 0 auto;"></div>
@@ -322,7 +322,7 @@ const boardGroup = document.createElement("div");
 boardGroup.style.display = "flex";
 boardGroup.style.flexDirection = "column";
 boardGroup.style.alignItems = "center";
-boardGroup.style.marginBottom = (b === 1) ? "60px" : "0px"; // space after 2nd board
+boardGroup.style.marginTop = b >= 2 ? "20px" : "0px";
 boardGroup.style.width = "100%";
 
 boardGroup.appendChild(gameLabel);
