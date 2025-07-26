@@ -134,7 +134,20 @@ td {
 <body>
  <h1>CVC and FLSZ Fluency Grid Generator</h1>
   <div class="subtitle">This generator includes <b>CVC Words</b> such as <b>hat, men, cup</b>.<BR> In addition, it includes <b>FLSZ (Double Consonant Endings</b>) with short vowels such as <b>buff, miss, and buzz.</b></div>
-
+<script>
+  const selectedSkills = new Set();
+document.querySelectorAll('.skill-button').forEach(button => {
+  button.addEventListener('click', () => {
+    const skill = button.dataset.skill;
+    if (selectedSkills.has(skill)) {
+      selectedSkills.delete(skill);
+      button.classList.remove('selected');
+    } else {
+      selectedSkills.add(skill);
+      button.classList.add('selected');
+    }
+  });
+});</script> 
 <div class="table-section">
   <div class="section-label">Step 1: Select Skills</div>
   <div class="skill-button-grid">
@@ -205,6 +218,15 @@ document.querySelectorAll('#gridSizeOptions .option-box').forEach(box => {
   });
 });
 
+</script><script>
+  // Step 1: allow clicking skill buttons to toggle selection
+  document.querySelectorAll('.skill-button').forEach(button => {
+    button.addEventListener('click', () => {
+      button.classList.toggle('selected');
+    });
+  });
+
+  // (keep contentOptions and gridSizeOptions code here too)
 </script>
 <div style="margin-top: 30px; text-align: center;">
   <button onclick="generateGrid()" style="font-size: 18px; padding: 10px 24px;">Generate Fluency Grid</button>
