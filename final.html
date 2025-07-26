@@ -2,47 +2,80 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Fluency Grid Generator</title>
   <script src="fluencyDataFull_v3.js"></script>
+  <title>Fluency Grid Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Poppins', sans-serif; margin: 40px; text-align: center; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 40px;
+      text-align: center;
+    }
     h1 { font-size: 26px; margin-bottom: 10px; }
     .subtitle { font-size: 16px; margin-bottom: 30px; }
-    .table-section { border: 2px solid #000; padding: 20px; margin: 12px auto; width: fit-content; }
-    .section-label { font-weight: 600; font-size: 18px; margin-bottom: 12px; }
-    .skill-button-grid { display: flex; flex-direction: column; gap: 8px; justify-content: center; }
-    .skill-button-grid .row { display: flex; justify-content: center; gap: 8px; margin-bottom: 6px; }
+    .table-section {
+      border: 2px solid #000; padding: 20px;
+      margin: 12px auto; width: fit-content;
+    }
+    .section-label {
+      font-weight: 600; font-size: 18px; margin-bottom: 12px;
+    }
+    .skill-button-grid {
+      display: flex; flex-direction: column;
+      gap: 8px; justify-content: center;
+    }
+    .skill-button-grid .row {
+      display: flex; justify-content: center; gap: 8px;
+    }
     .skill-button {
-      border: 2px solid #000; padding: 10px 16px; border-radius: 8px;
-      font-weight: 600; cursor: pointer;
+      border: 2px solid #000; padding: 10px 16px;
+      border-radius: 8px; font-weight: 600;
+      cursor: pointer;
       transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
     }
-    .skill-button.selected { background-color: #007bff; color: white; box-shadow: 0 0 4px rgba(0, 123, 255, 0.5); }
-    .option-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+    .skill-button.selected {
+      background-color: #007bff;
+      color: white;
+      box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+    }
+    .option-grid {
+      display: flex; justify-content: center;
+      flex-wrap: wrap; gap: 12px; margin-top: 10px;
+    }
     .option-box {
-      padding: 10px 14px; border: 2px solid #000; border-radius: 8px; cursor: pointer;
-      transition: background-color 0.3s, color 0.3s;
+      padding: 10px 14px; border: 2px solid #000;
+      border-radius: 8px; cursor: pointer;
     }
     .option-box.selected-step2 { background-color: #d9c9ff; }
     .option-box.selected-step3 { background-color: #d0f0ff; }
     .option-box input { display: none; }
-    table { margin: auto; border-collapse: collapse; }
-    td {
-      border: 1px solid #000; width: 120px; height: 80px;
-      font-size: 32px; text-align: center; vertical-align: middle;
+    table {
+      margin: auto; border-collapse: collapse;
     }
-    .copyright { text-align: center; font-size: 12px; margin-top: 60px; }
+    td {
+      border: 1px solid #000;
+      width: 120px; height: 80px;
+      font-size: 32px;
+      text-align: center; vertical-align: middle;
+    }
+    .copyright {
+      text-align: center; font-size: 12px; margin-top: 60px;
+    }
     @media print {
       body * { visibility: hidden; }
       #printableSection, #printableSection * { visibility: visible; }
-      #printableSection { position: absolute; top: 0; left: 0; width: 100%; }
+      #printableSection {
+        position: absolute; top: 0; left: 0; width: 100%;
+      }
     }
   </style>
 </head>
 <body>
   <h1>CVC and FLSZ Fluency Grid Generator</h1>
-  <div class="subtitle">This generator includes <b>CVC Words</b> such as <b>hat, men, cup</b>.<br>In addition, it includes <b>FLSZ (Double Consonant Endings)</b> with short vowels such as <b>buff, miss, and buzz</b>.</div>
+  <div class="subtitle">
+    This generator includes <b>CVC Words</b> such as <b>hat, men, cup</b>.<br>
+    In addition, it includes <b>FLSZ (Double Consonant Endings)</b> with short vowels such as <b>buff, miss, and buzz</b>.
+  </div>
 
   <div class="table-section">
     <div class="section-label">Step 1: Select Skills</div>
@@ -80,8 +113,8 @@
     </div>
   </div>
 
-  <div style="margin-top: 30px; text-align: center;">
-    <button id="generateButton" style="font-size: 18px; padding: 10px 24px;">Generate Fluency Grid</button>
+  <div style="margin-top: 30px;">
+    <button onclick="generateGrid()" style="font-size: 18px; padding: 10px 24px;">Generate Fluency Grid</button>
     <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
   </div>
 
@@ -94,6 +127,7 @@
 
   <script>
     const selectedSkills = new Set();
+
     document.querySelectorAll('.skill-button').forEach(button => {
       button.addEventListener('click', () => {
         const skill = button.dataset.skill;
@@ -123,24 +157,43 @@
       });
     });
 
-    document.getElementById("generateButton").addEventListener("click", generateGrid);
-
     function generateGrid() {
-      const contentType = document.querySelector('input[name=contentType]:checked')?.value;
-      const gridSize = parseInt(document.querySelector('input[name=gridSize]:checked')?.value || "25");
-      if (selectedSkills.size === 0) return alert("❗ Please select at least one skill in Step 1.");
-      if (!contentType) return alert("❗ Please select a content type in Step 2.");
+      const contentType = document.querySelector('input[name="contentType"]:checked')?.value;
+      const gridSize = parseInt(document.querySelector('input[name="gridSize"]:checked')?.value || "25");
 
-      const fakeWords = ["cat", "dog", "bus", "hop", "run", "bug", "cup", "bed", "jet", "sun"];
-      const fakeSentences = ["The cat ran.", "I see a bug.", "Hop on the bus.", "The dog is big.", "He can run fast."];
+      if (selectedSkills.size === 0) {
+        alert("❗ Please select at least one skill in Step 1.");
+        return;
+      }
 
-      const items = [];
-      const half = Math.floor(gridSize / 2);
-      if (contentType === "words") for (let i = 0; i < gridSize; i++) items.push(fakeWords[i % fakeWords.length]);
-      else if (contentType === "sentences") for (let i = 0; i < gridSize; i++) items.push(fakeSentences[i % fakeSentences.length]);
-      else {
-        for (let i = 0; i < half; i++) items.push(fakeWords[i % fakeWords.length]);
-        for (let i = 0; i < gridSize - half; i++) items.push(fakeSentences[i % fakeSentences.length]);
+      if (!contentType) {
+        alert("❗ Please select a content type in Step 2.");
+        return;
+      }
+
+      const selected = Array.from(selectedSkills);
+      const pool = [];
+
+      selected.forEach(skill => {
+        const skillData = window.fluencyData[skill];
+        if (!skillData) return;
+
+        if (contentType === "words" || contentType === "both") {
+          pool.push(...skillData.words);
+        }
+        if (contentType === "sentences" || contentType === "both") {
+          pool.push(...skillData.sentences);
+        }
+      });
+
+      if (pool.length === 0) {
+        alert("❗ No data found for selected skills/content.");
+        return;
+      }
+
+      const final = [];
+      for (let i = 0; i < gridSize; i++) {
+        final.push(pool[i % pool.length]);
       }
 
       const cols = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
@@ -148,17 +201,17 @@
       for (let i = 0; i < gridSize; i += cols) {
         table += "<tr>";
         for (let j = 0; j < cols; j++) {
-          const val = items[i + j] || "";
+          const val = final[i + j] || "";
           table += `<td>${val}</td>`;
         }
         table += "</tr>";
       }
       table += "</table>";
 
-      const readableSkills = Array.from(selectedSkills).map(s => ({
+      const readableSkills = selected.map(s => ({
         "0.1": "Short A", "0.2": "Short O", "0.3": "Short I",
-        "0.4": "Short U", "0.5": "Short E", "0.6": "FLSZ", "0.7": "FLSZ and CVC", "mixed": "Mixed CVC"
-      })[s]).join(", ");
+        "0.4": "Short U", "0.5": "Short E", "0.6": "FLSZ", "0.7": "CVC & FLSZ", "mixed": "Mixed CVC"
+      }[s])).join(", ");
 
       document.getElementById("gridHeader").innerHTML = `<h2>${readableSkills} Fluency Grid</h2><br>`;
       document.getElementById("gridContainer").innerHTML = table;
