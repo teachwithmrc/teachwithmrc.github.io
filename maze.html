@@ -1,5 +1,3 @@
-// UPDATED: Maze Grid Generator with unique correct path words
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,14 +11,8 @@
       margin: 40px;
       text-align: center;
     }
-    h1 {
-      font-size: 26px;
-      margin-bottom: 10px;
-    }
-    .subtitle {
-      font-size: 16px;
-      margin-bottom: 30px;
-    }
+    h1 { font-size: 26px; margin-bottom: 10px; }
+    .subtitle { font-size: 16px; margin-bottom: 30px; }
     .table-section {
       border: 2px solid #000;
       padding: 20px;
@@ -28,23 +20,9 @@
       width: fit-content;
       box-sizing: border-box;
     }
-    .section-label {
-      font-weight: 600;
-      font-size: 18px;
-      margin-bottom: 12px;
-    }
-    .skill-button-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      justify-content: center;
-    }
-    .skill-button-grid .row {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
+    .section-label { font-weight: 600; font-size: 18px; margin-bottom: 12px; }
+    .skill-button-grid { display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+    .skill-button-grid .row { display: flex; justify-content: center; gap: 8px; margin-bottom: 6px; }
     .skill-button {
       border: 2px solid #000;
       padding: 10px 16px;
@@ -53,18 +31,8 @@
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
     }
-    .skill-button.selected {
-      background-color: #007bff;
-      color: white;
-      box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-    }
-    .option-grid {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 10px;
-    }
+    .skill-button.selected { background-color: #007bff; color: white; box-shadow: 0 0 4px rgba(0, 123, 255, 0.5); }
+    .option-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
     .option-box {
       padding: 10px 14px;
       border: 2px solid #000;
@@ -72,13 +40,10 @@
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s;
     }
-    .option-box.selected-step2 {
-      background-color: #d9c9ff;
-    }
-    table {
-      margin: auto;
-      border-collapse: collapse;
-    }
+    .option-box.selected-step2 { background-color: #d9c9ff; }
+    .option-box.selected-step3 { background-color: #d0f0ff; }
+    .option-box input { display: none; }
+    table { margin: auto; border-collapse: collapse; }
     td {
       border: 1px solid #000;
       width: 120px;
@@ -87,18 +52,10 @@
       text-align: center;
       vertical-align: middle;
     }
-    .copyright {
-      text-align: center;
-      font-size: 12px;
-      margin-top: 60px;
-    }
+    .copyright { text-align: center; font-size: 12px; margin-top: 60px; }
     @media print {
-      body * {
-        visibility: hidden;
-      }
-      #printableSection, #printableSection * {
-        visibility: visible;
-      }
+      body * { visibility: hidden; }
+      #printableSection, #printableSection * { visibility: visible; }
       #printableSection {
         position: absolute;
         top: 0;
@@ -109,14 +66,12 @@
   </style>
 </head>
 <body>
-  <h1>CVC and FLSZ Fluency Grid Generator</h1>
+  <h1>CVC and FLSZ Maze Grid Generator</h1>
   <div class="subtitle">
-    This generator includes <b>CVC Words</b> such as <b>hat, men, cup</b>.<br>
-    In addition, it includes <b>FLSZ (Double Consonant Endings)</b> with short vowels such as <b>buff, miss, and buzz</b>.
+    Directions: Follow the path of different target words. All other squares are traps!
   </div>
-
   <div class="table-section">
-    <div class="section-label">Step 1: Select Skills</div>
+    <div class="section-label">Step 1: Select Skill</div>
     <div class="skill-button-grid">
       <div class="row">
         <div class="skill-button" data-skill="0.1">Short A</div>
@@ -127,128 +82,76 @@
       </div>
     </div>
   </div>
-
-  <div class="table-section">
-    <div class="section-label">Step 2: What would you like in the grid?</div>
-    <div class="option-grid" id="contentOptions">
-      <label class="option-box">
-        <input type="radio" name="contentType" value="words" checked />
-        Only Words
-      </label>
-    </div>
-  </div>
-
   <div style="margin-top: 30px;">
     <button onclick="generateMazeGrids()" style="font-size: 18px; padding: 10px 24px;">Generate Maze Grids</button>
     <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
   </div>
-
   <div id="printableSection">
-    <div id="gridHeader" style="text-align: center; margin-top: 30px;"></div>
     <div id="gridContainer"></div><br><br><br>
     <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
   </div>
-
   <script>
     const selectedSkills = new Set();
-
     document.querySelectorAll('.skill-button').forEach(button => {
       button.addEventListener('click', () => {
         const skill = button.dataset.skill;
-        selectedSkills.clear();
-        document.querySelectorAll('.skill-button').forEach(b => b.classList.remove('selected'));
-        selectedSkills.add(skill);
-        button.classList.add('selected');
+        if (selectedSkills.has(skill)) {
+          selectedSkills.delete(skill);
+          button.classList.remove('selected');
+        } else {
+          selectedSkills.clear();
+          document.querySelectorAll('.skill-button').forEach(btn => btn.classList.remove('selected'));
+          selectedSkills.add(skill);
+          button.classList.add('selected');
+        }
       });
     });
 
-    document.querySelectorAll('#contentOptions .option-box').forEach(box => {
-      box.addEventListener('click', () => {
-        document.querySelectorAll('#contentOptions .option-box').forEach(b => b.classList.remove('selected-step2'));
-        box.classList.add('selected-step2');
-        box.querySelector('input').checked = true;
-      });
-    });
+    const allShortSkills = ["0.1", "0.2", "0.3", "0.4", "0.5"];
 
-    const shortVowelSkillMap = {
-      "0.1": "Short A Words",
-      "0.2": "Short O Words",
-      "0.3": "Short I Words",
-      "0.4": "Short U Words",
-      "0.5": "Short E Words"
-    };
-
-    const allMazePaths = [
-      "RDRDRDRDRD", "DRDRDRDRRD", "RRDDRDRRDD", "DRRDRDRRDD", "RDDRDRDRRD",
-      "DRDDRDRRRD", "RDRDRRDDRD", "RDRDDRDRRD", "DRRRDRDRDD", "RRDDRRDDRD",
-      "RDRRDDRRDD", "DDRRDRRDRR", "DRDRRDDRRD", "RRDDDRRDRD", "RDDRRDRDRD",
-      "DRRDDRRDRD", "DRRDRRDDRD", "RDRRDDDRRD", "DDRDRDRRRD", "DRDRDRRDRD"
+    const pathPatterns = [
+      [[0,0],[0,1],[1,1],[1,2],[2,2],[3,2],[4,2]],
+      [[0,0],[1,0],[1,1],[2,1],[2,2],[3,2],[4,2]],
+      [[0,0],[1,0],[2,0],[2,1],[2,2],[3,2],[4,2]],
+      [[0,0],[1,0],[1,1],[2,1],[2,2],[3,2],[4,2]],
+      [[0,0],[1,0],[2,0],[2,1],[2,2],[3,2],[4,2]],
+      [[0,0],[1,0],[1,1],[1,2],[2,2],[3,2],[4,2]],
+      [[0,0],[0,1],[0,2],[1,2],[2,2],[3,2],[4,2]],
+      [[0,0],[1,0],[2,0],[3,0],[3,1],[4,1],[4,2]],
+      [[0,0],[1,0],[2,0],[3,0],[4,0],[4,1],[4,2]],
+      [[0,0],[0,1],[1,1],[2,1],[3,1],[4,1],[4,2]]
     ];
 
     function generateMazeGrids() {
-      const skill = Array.from(selectedSkills)[0];
-      const contentType = document.querySelector('input[name=contentType]:checked')?.value;
-
-      if (!skill) {
-        alert("❗ Please select one skill in Step 1.");
-        return;
-      }
-      if (!contentType || contentType !== "words") {
-        alert("❗ Maze game only supports 'Only Words' at the moment.");
-        return;
-      }
-
-      const skillLabel = shortVowelSkillMap[skill];
-      const targetPool = [...window.fluencyData.words[`0.${skill.split(".")[1]} - ${skillLabel}`]];
-      const distractorSkills = Object.keys(shortVowelSkillMap).filter(s => s !== skill);
-      const distractorWords = distractorSkills.flatMap(s => {
-        const label = shortVowelSkillMap[s];
-        return window.fluencyData.words[`0.${s.split(".")[1]} - ${label}`];
-      });
-
-      const gridContainer = document.getElementById("gridContainer");
-      const gridHeader = document.getElementById("gridHeader");
-      gridHeader.innerHTML = `<h2>${skillLabel} Maze Boards</h2><br><p><strong>Directions:</strong> Follow the path of different target words. All other squares are traps!</p>`;
-      gridContainer.innerHTML = "";
-
-      for (let g = 0; g < 2; g++) {
+      const skill = [...selectedSkills][0];
+      if (!skill) return alert("Select one skill.");
+      const targetWords = [...(fluencyData.words[`${skill} - ${getSkillLabel(skill)} Words`] || [])];
+      if (targetWords.length < 7) return alert("Need at least 7 target words.");
+      const otherWords = allShortSkills.filter(s => s !== skill).flatMap(s => fluencyData.words[`${s} - ${getSkillLabel(s)} Words`] || []);
+      const container = document.getElementById("gridContainer");
+      container.innerHTML = "";
+      for (let m = 0; m < 2; m++) {
+        const path = pathPatterns[Math.floor(Math.random() * pathPatterns.length)];
+        const pathWords = [...targetWords].sort(() => 0.5 - Math.random()).slice(0, path.length);
         const grid = Array.from({ length: 5 }, () => Array(5).fill(""));
-        const path = allMazePaths[Math.floor(Math.random() * allMazePaths.length)];
-
-        const pathCoords = [[0, 0]];
-        let row = 0, col = 0;
-        for (let move of path) {
-          if (move === 'R') col++;
-          else if (move === 'D') row++;
-          pathCoords.push([row, col]);
-        }
-
-        const pathWords = [...targetPool].sort(() => 0.5 - Math.random()).slice(0, pathCoords.length);
-
+        path.forEach((pos, idx) => { grid[pos[0]][pos[1]] = pathWords[idx]; });
         for (let r = 0; r < 5; r++) {
           for (let c = 0; c < 5; c++) {
-            const index = pathCoords.findIndex(([pr, pc]) => pr === r && pc === c);
-            if (index !== -1) {
-              grid[r][c] = pathWords[index];
-            } else {
-              grid[r][c] = distractorWords[Math.floor(Math.random() * distractorWords.length)];
+            if (!grid[r][c]) {
+              let word;
+              do { word = otherWords[Math.floor(Math.random() * otherWords.length)]; }
+              while (targetWords.includes(word));
+              grid[r][c] = word;
             }
           }
         }
-
-        const table = document.createElement("table");
-        for (let r = 0; r < 5; r++) {
-          const rowEl = document.createElement("tr");
-          for (let c = 0; c < 5; c++) {
-            const cell = document.createElement("td");
-            cell.textContent = grid[r][c];
-            rowEl.appendChild(cell);
-          }
-          table.appendChild(rowEl);
-        }
-        gridContainer.appendChild(table);
-        gridContainer.appendChild(document.createElement("br"));
+        let html = "<table>" + grid.map(row => `<tr>${row.map(w => `<td>${w}</td>`).join('')}</tr>`).join('') + "</table><br><br>";
+        container.innerHTML += html;
       }
+    }
+
+    function getSkillLabel(skill) {
+      return skill === "0.1" ? "Short A" : skill === "0.2" ? "Short O" : skill === "0.3" ? "Short I" : skill === "0.4" ? "Short U" : "Short E";
     }
   </script>
 </body>
