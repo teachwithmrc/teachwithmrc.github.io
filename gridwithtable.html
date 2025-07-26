@@ -14,33 +14,40 @@
     }
 
     h1 {
-      font-size: 28px;
-      margin-bottom: 5px;
+      font-size: 26px;
+      margin-bottom: 10px;
     }
 
-    .subheading {
+    .subtitle {
       font-size: 16px;
       margin-bottom: 30px;
-      color: #333;
     }
 
-    .table-container {
-      max-width: 60%;
-      margin: 0 auto 30px;
+    .table-section {
+      border: 2px solid #000;
+      padding: 20px;
+      margin: 20px auto;
+      width: 60%;
+      box-sizing: border-box;
+    }
+
+    .section-label {
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 12px;
     }
 
     .skill-button-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 8px;
-      justify-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
     }
 
     .skill-button {
       border: 2px solid #000;
-      padding: 12px 16px;
+      padding: 10px 16px;
       border-radius: 8px;
-      text-align: center;
       font-weight: 600;
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
@@ -49,25 +56,35 @@
     .skill-button.selected {
       background-color: #007bff;
       color: white;
-      box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
+      box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
     }
 
-    .radio-group label {
-      display: inline-block;
+    .option-grid {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .option-box {
+      padding: 10px 14px;
       border: 2px solid #000;
       border-radius: 8px;
-      padding: 10px 20px;
-      margin: 5px;
       cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
     }
 
-    .radio-group input[type="radio"] {
+    .option-box.selected-step2 {
+      background-color: #d9c9ff;
+    }
+
+    .option-box.selected-step3 {
+      background-color: #d0f0ff;
+    }
+
+    .option-box input {
       display: none;
-    }
-
-    .radio-group input[type="radio"]:checked + label {
-      background-color: #007bff;
-      color: white;
     }
 
     table {
@@ -82,20 +99,6 @@
       font-size: 32px;
       text-align: center;
       vertical-align: middle;
-    }
-
-    #controls {
-      margin-top: 30px;
-    }
-
-    button {
-      padding: 10px 20px;
-      margin: 10px;
-      font-size: 16px;
-      border: 2px solid #000;
-      background-color: #f0f0f0;
-      cursor: pointer;
-      border-radius: 6px;
     }
 
     .copyright {
@@ -124,10 +127,10 @@
 </head>
 <body>
   <h1>CVC and FLSZ Fluency Grid Generator</h1>
-  <p class="subheading">This generator includes CVC words such as <em>hat</em>, <em>men</em>, <em>cup</em>. In addition, it includes FLSZ (Double Consonant Endings) with short vowels such as <em>buff</em>, <em>miss</em>, and <em>buzz</em>.</p>
+  <div class="subtitle">This generator includes CVC words such as hat, men, cup. In addition, it includes FLSZ (Double Consonant Endings) with short vowels such as buff, miss, and buzz.</div>
 
-  <div class="table-container">
-    <div><strong>Step 1: Select Skills</strong></div>
+  <div class="table-section">
+    <div class="section-label">Step 1: Select Skills</div>
     <div class="skill-button-grid" id="skillButtons">
       <div class="skill-button" data-skill="0.1">Short A</div>
       <div class="skill-button" data-skill="0.2">Short O</div>
@@ -140,36 +143,31 @@
     </div>
   </div>
 
-  <div class="table-container">
-    <div><strong>Step 2: What would you like in the grid?</strong></div>
-    <div class="radio-group">
-      <input type="radio" name="contentType" value="words" id="optWords">
-      <label for="optWords">Only Words</label>
-      <input type="radio" name="contentType" value="sentences" id="optSentences">
-      <label for="optSentences">Only Sentences</label>
-      <input type="radio" name="contentType" value="both" id="optBoth">
-      <label for="optBoth">Both</label>
+  <div class="table-section">
+    <div class="section-label">Step 2: What would you like in the grid?</div>
+    <div class="option-grid" id="contentOptions">
+      <label class="option-box"><input type="radio" name="contentType" value="words"> Only Words</label>
+      <label class="option-box"><input type="radio" name="contentType" value="sentences"> Only Sentences</label>
+      <label class="option-box"><input type="radio" name="contentType" value="both"> Both</label>
     </div>
   </div>
 
-  <div class="table-container">
-    <div><strong>Step 3: Grid Size</strong></div>
-    <div class="radio-group">
-      <input type="radio" name="gridSize" value="15" id="size15">
-      <label for="size15">3 x 5 - 15 words</label>
-      <input type="radio" name="gridSize" value="20" id="size20">
-      <label for="size20">4 x 5 - 20 words</label>
-      <input type="radio" name="gridSize" value="25" id="size25" checked>
-      <label for="size25">5 x 5 - 25 words</label>
+  <div class="table-section">
+    <div class="section-label">Step 3: Select Grid Size</div>
+    <div class="option-grid" id="gridSizeOptions">
+      <label class="option-box"><input type="radio" name="gridSize" value="15"> 3 x 5 - 15</label>
+      <label class="option-box"><input type="radio" name="gridSize" value="20"> 4 x 5 - 20</label>
+      <label class="option-box"><input type="radio" name="gridSize" value="25" checked> 5 x 5 - 25</label>
     </div>
-    <div id="controls">
-      <button onclick="generateGrid()">Generate Fluency Grid</button>
-      <button onclick="window.print()">Print</button>
-    </div>
+  </div>
+
+  <div style="margin-top: 30px;">
+    <button onclick="generateGrid()" style="font-size: 18px; padding: 10px 24px;">Generate Fluency Grid</button>
+    <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
   </div>
 
   <div id="printableSection">
-    <div id="gridHeader" style="margin-top: 40px;"></div>
+    <div id="gridHeader" style="text-align: center; margin-top: 40px;"></div>
     <div id="gridContainer"></div>
     <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
   </div>
@@ -187,6 +185,22 @@
           selectedSkills.add(skill);
           button.classList.add('selected');
         }
+      });
+    });
+
+    document.querySelectorAll('#contentOptions .option-box').forEach(box => {
+      box.addEventListener('click', () => {
+        document.querySelectorAll('#contentOptions .option-box').forEach(b => b.classList.remove('selected-step2'));
+        box.classList.add('selected-step2');
+        box.querySelector('input').checked = true;
+      });
+    });
+
+    document.querySelectorAll('#gridSizeOptions .option-box').forEach(box => {
+      box.addEventListener('click', () => {
+        document.querySelectorAll('#gridSizeOptions .option-box').forEach(b => b.classList.remove('selected-step3'));
+        box.classList.add('selected-step3');
+        box.querySelector('input').checked = true;
       });
     });
 
