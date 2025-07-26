@@ -205,19 +205,6 @@ document.querySelectorAll('#gridSizeOptions .option-box').forEach(box => {
   });
 });
 
-const selectedSkills = new Set();
-document.querySelectorAll('.skill-button').forEach(button => {
-  button.addEventListener('click', () => {
-    const skill = button.dataset.skill;
-    if (selectedSkills.has(skill)) {
-      selectedSkills.delete(skill);
-      button.classList.remove('selected');
-    } else {
-      selectedSkills.add(skill);
-      button.classList.add('selected');
-    }
-  });
-});
 </script>
 <div style="margin-top: 30px; text-align: center;">
   <button onclick="generateGrid()" style="font-size: 18px; padding: 10px 24px;">Generate Fluency Grid</button>
