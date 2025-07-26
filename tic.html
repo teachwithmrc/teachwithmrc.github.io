@@ -190,19 +190,8 @@
 </div>
 
 <script>
-  function generateTicTacToeBoards() {
-    const selectedSkills = Array.from(document.querySelectorAll('.skill-button.selected')).map(btn => btn.dataset.skill);
-    const contentType = document.querySelector('input[name=contentType]:checked')?.value;
-
-    if (selectedSkills.length === 0) {
-      alert("❗ Please select at least one skill in Step 1.");
-      return;
-    }
-
-    if (!contentType) {
-      alert("❗ Please select a content type in Step 2.");
-      return;
-    }
+  document.addEventListener("DOMContentLoaded", function () {
+    const selectedSkills = new Set();
 
     const skillLabelMap = {
       "0.1": "Short A",
@@ -215,58 +204,95 @@
       "mixed": "Mixed CVC"
     };
 
-    const wordPool = [];
+    // Step 1: Select skills
+    document.querySelectorAll('.skill-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const skill = button.dataset.skill;
+        if (selectedSkills.has(skill)) {
+          selectedSkills.delete(skill);
+          button.classList.remove('selected');
+        } else {
+          selectedSkills.add(skill);
+          button.classList.add('selected');
+        }
+      });
+    });
 
-    for (const skill of selectedSkills) {
-      const label = skillLabelMap[skill];
+    // Step 2: Select content type
+    document.querySelectorAll('#contentOptions .option-box').forEach(box => {
+      box.addEventListener('click', () => {
+        document.querySelectorAll('#contentOptions .option-box').forEach(b => b.classList.remove('selected-step2'));
+        box.classList.add('selected-step2');
+        box.querySelector('input').checked = true;
+      });
+    });
 
-      if ((contentType === "words" || contentType === "both") && window.fluencyData[`${skill} - ${label} Words`]) {
-        wordPool.push(...window.fluencyData[`${skill} - ${label} Words`]);
+    // Step 3: Generate Tic Tac Toe Boards
+    window.generateTicTacToeBoards = function () {
+      const skills = Array.from(selectedSkills);
+      const contentType = document.querySelector('input[name=contentType]:checked')?.value;
+
+      if (skills.length === 0) {
+        alert("❗ Please select at least one skill in Step 1.");
+        return;
       }
 
-      if ((contentType === "sentences" || contentType === "both") && window.fluencyData[`${skill} - ${label} Sentences`]) {
-        wordPool.push(...window.fluencyData[`${skill} - ${label} Sentences`]);
+      if (!contentType) {
+        alert("❗ Please select a content type in Step 2.");
+        return;
       }
-    }
 
-    if (wordPool.length < 36) {
-      alert("⚠️ Not enough entries to build all 4 boards.");
-      return;
-    }
+      const pool = [];
 
-    const shuffled = wordPool.sort(() => 0.5 - Math.random()).slice(0, 36);
+      for (const skill of skills) {
+        const label = skillLabelMap[skill];
 
-    const boardWrapper = document.getElementById('boardWrapper');
-    boardWrapper.innerHTML = '';
+        if ((contentType === "words" || contentType === "both") && window.fluencyData[`${skill} - ${label} Words`]) {
+          pool.push(...window.fluencyData[`${skill} - ${label} Words`]);
+        }
 
-    for (let b = 0; b < 4; b++) {
-      const board = document.createElement('table');
-      board.className = 'tic-tac-toe';
-      board.style.borderCollapse = 'collapse';
-      board.style.width = '100%';
-
-      for (let r = 0; r < 3; r++) {
-        const row = board.insertRow();
-        for (let c = 0; c < 3; c++) {
-          const cell = row.insertCell();
-          const val = shuffled[b * 9 + r * 3 + c] || "";
-          const isSentence = val.trim().includes(" ");
-          cell.textContent = val;
-          cell.style.border = '1px solid #000';
-          cell.style.height = '80px';
-          cell.style.verticalAlign = 'middle';
-          cell.style.textAlign = 'center';
-          cell.style.padding = '10px';
-          cell.style.fontSize = isSentence ? '14px' : '20px';
-          cell.style.wordBreak = 'break-word';
+        if ((contentType === "sentences" || contentType === "both") && window.fluencyData[`${skill} - ${label} Sentences`]) {
+          pool.push(...window.fluencyData[`${skill} - ${label} Sentences`]);
         }
       }
 
-      boardWrapper.appendChild(board);
-    }
+      if (pool.length < 36) {
+        alert("⚠️ Not enough data to generate 4 boards.");
+        return;
+      }
 
-    // Header: list out all selected skill names
-    const skillNames = selectedSkills.map(s => skillLabelMap[s]).join(" and ");
-    document.getElementById('gameTitle').innerText = `${skillNames} Tic Tac Toe Game`;
-  }
+      const shuffled = pool.sort(() => 0.5 - Math.random()).slice(0, 36);
+      const boardWrapper = document.getElementById('boardWrapper');
+      boardWrapper.innerHTML = '';
+
+      for (let b = 0; b < 4; b++) {
+        const board = document.createElement('table');
+        board.className = 'tic-tac-toe';
+        board.style.borderCollapse = 'collapse';
+        board.style.width = '100%';
+
+        for (let r = 0; r < 3; r++) {
+          const row = board.insertRow();
+          for (let c = 0; c < 3; c++) {
+            const cell = row.insertCell();
+            const val = shuffled[b * 9 + r * 3 + c] || "";
+            const isSentence = val.trim().includes(" ");
+            cell.textContent = val;
+            cell.style.border = '1px solid #000';
+            cell.style.height = '80px';
+            cell.style.verticalAlign = 'middle';
+            cell.style.textAlign = 'center';
+            cell.style.padding = '10px';
+            cell.style.fontSize = isSentence ? '14px' : '20px';
+            cell.style.wordBreak = 'break-word';
+          }
+        }
+
+        boardWrapper.appendChild(board);
+      }
+
+      const skillNames = skills.map(s => skillLabelMap[s]).join(" and ");
+      document.getElementById('gameTitle').innerText = `${skillNames} Tic Tac Toe Game`;
+    };
+  });
 </script>
