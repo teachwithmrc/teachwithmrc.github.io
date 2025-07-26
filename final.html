@@ -240,9 +240,8 @@ document.querySelectorAll('.skill-button').forEach(button => {
     }
 
    function generateGrid() {
- const selectedSkills = Array.from(document.querySelectorAll('input[type=checkbox]'))
-  .filter(cb => cb.checked && cb.name === "skill")
-  .map(cb => cb.value);
+const selectedSkills = Array.from(document.querySelectorAll('.skill-button.selected'))
+  .map(btn => btn.dataset.skill);
   const gridSize = parseInt(document.querySelector('input[name=gridSize]:checked')?.value || "25");
   const contentType = document.querySelector('input[name=contentType]:checked')?.value;
   const includeSticky = document.getElementById("includeSticky").checked;
