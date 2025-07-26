@@ -129,7 +129,6 @@
     width: 100%;
   }
  .tic-tac-toe td {
-    font-size: 16px !important;
     height: 60px !important;
     width: 100px !important;
     padding: 6px !important;
@@ -199,9 +198,9 @@
 
 <div id="printableSection" style="margin-top: 20px;">
   <h2 id="gameTitle"></h2>
-<p style="font-size: 12px; max-width: 600px; margin: 0 0 20px;">
-    <strong>Directions:</strong> Read the word or sentence in the space you’d like to go, then put an X or O. Your opponent does the same. If you get 3 in a row…you win!
-  </p>
+<p style="font-size: 12px; max-width: 600px; margin: 0 0 20px; text-align: center;">
+  <strong>Directions:</strong> Read the word or sentence in the space you’d like to go, then put an X or O. Your opponent does the same. If you get 3 in a row…you win!
+</p>
   <div id="boardWrapper" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; justify-content: center; max-width: 900px; margin: 0 auto;"></div>
   <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
 </div>
@@ -314,8 +313,8 @@ for (let b = 0; b < 4; b++) {
 const gameLabel = document.createElement("div");
 gameLabel.textContent = `Game ${b + 1}`;
 gameLabel.style.fontWeight = "bold";
-gameLabel.style.fontSize = "18px";
-gameLabel.style.marginBottom = "6px";
+gameLabel.style.fontSize = "24px";
+gameLabel.style.marginBottom = "15px";
 
 // Wrapper to group label + board
 const boardGroup = document.createElement("div");
