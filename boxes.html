@@ -81,17 +81,18 @@
   font-size: 12px;
 }
 @media print {
-  body {
+  html, body {
+    width: 100%;
     margin: 0;
     padding: 0;
   }
 
   body * {
-    display: none;
+    display: none !important;
   }
 
   #printableSection, #printableSection * {
-    display: block;
+    display: revert !important;
   }
 
   #printableSection {
@@ -99,6 +100,7 @@
     margin: 0;
     padding: 0;
     width: 100%;
+    page-break-inside: avoid;
   }
 
   #gridHeader {
@@ -106,7 +108,7 @@
   }
 
   table {
-    margin-top: 0;
+    margin: 0 auto;
     page-break-inside: avoid;
   }
 
@@ -115,7 +117,6 @@
     bottom: 20px;
     right: 40px;
   }
-}
 }
   </style>
 </head>
