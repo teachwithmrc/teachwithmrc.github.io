@@ -358,7 +358,132 @@
     </div>
   </div>
 </div>
+<div class="step-label">Step 2: Select Skills</div>
+<div class="skill-grid-row">
+  <div class="skill-item" data-skill="0.1">
+    <label>
+      <input type="checkbox" name="skill" value="0.1">
+      <div class="skill-label">Short A</div>
+      <img src="shorta.png" alt="Short A">
+    </label>
+    <div class="trick-toggle">
+      <label><input type="checkbox" disabled data-trick="0.1"> <span class="trick-label">Include HFW?</span></label>
+      <div class="trick-list red-outline">I<br>a<br>the</div>
+    </div>
+  </div>
 
+  <div class="skill-item" data-skill="0.2">
+    <label>
+      <input type="checkbox" name="skill" value="0.2">
+      <div class="skill-label">Short O</div>
+      <img src="shorto.png" alt="Short O">
+    </label>
+    <div class="trick-toggle">
+      <label><input type="checkbox" disabled data-trick="0.2"> <span class="trick-label">Include HFW?</span></label>
+      <div class="trick-list red-outline">is<br>his<br>as<br>was</div>
+    </div>
+  </div>
+
+  <div class="skill-item" data-skill="0.3">
+    <label>
+      <input type="checkbox" name="skill" value="0.3">
+      <div class="skill-label">Short I</div>
+      <img src="shorti.png" alt="Short I">
+    </label>
+    <div class="trick-toggle">
+      <label><input type="checkbox" disabled data-trick="0.3"> <span class="trick-label">Include HFW?</span></label>
+      <div class="trick-list red-outline">to<br>do</div>
+    </div>
+  </div>
+
+  <div class="skill-item" data-skill="0.4">
+    <label>
+      <input type="checkbox" name="skill" value="0.4">
+      <div class="skill-label">Short U</div>
+      <img src="shortu.png" alt="Short U">
+    </label>
+    <div class="trick-toggle">
+      <label><input type="checkbox" disabled data-trick="0.4"> <span class="trick-label">Include HFW?</span></label>
+      <div class="trick-list red-outline">was<br>you</div>
+    </div>
+  </div>
+
+  <div class="skill-item" data-skill="0.5">
+    <label>
+      <input type="checkbox" name="skill" value="0.5">
+      <div class="skill-label">Short E</div>
+      <img src="shorte.png" alt="Short E">
+    </label>
+    <div class="trick-toggle">
+      <label><input type="checkbox" disabled data-trick="0.5"> <span class="trick-label">Include HFW?</span></label>
+      <div class="trick-list red-outline">he<br>be<br>we</div>
+    </div>
+  </div>
+</div>
+
+<style>
+.skill-grid-row {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+.skill-item {
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 12px;
+  width: 150px;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.skill-item.selected {
+  border-color: #007bff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+.skill-label {
+  font-weight: bold;
+  margin: 8px 0;
+}
+.skill-item img {
+  width: 100px;
+  height: auto;
+}
+.trick-toggle {
+  margin-top: 10px;
+}
+.trick-list {
+  font-size: 14px;
+  margin-top: 5px;
+}
+.red-outline {
+  border: 1px solid red;
+  padding: 4px;
+  border-radius: 6px;
+}
+</style>
+
+<script>
+document.querySelectorAll('.skill-item').forEach(item => {
+  const checkbox = item.querySelector('input[type="checkbox"]');
+  item.addEventListener('click', () => {
+    checkbox.checked = !checkbox.checked;
+    item.classList.toggle('selected', checkbox.checked);
+
+    // Enable/disable HFW checkbox based on main skill selection
+    const trickCheckbox = item.querySelector('.trick-toggle input[type="checkbox"]');
+    if (trickCheckbox) {
+      trickCheckbox.disabled = !checkbox.checked;
+    }
+  });
+
+  // Prevent default checkbox behavior when clicking directly on it
+  item.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('click', e => e.stopPropagation());
+  });
+});
+</script>
 <style>
 .skill-grid-row {
   display: flex;
