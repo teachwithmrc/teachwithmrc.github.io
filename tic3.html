@@ -85,10 +85,6 @@
       background-color: #d9c9ff;
     }
 
-    .option-box.selected-step3 {
-      background-color: #d0f0ff;
-    }
-
     .option-box input {
       display: none;
     }
@@ -174,20 +170,20 @@
     </div>
   </div>
 
-<div class="table-section">
-  <div class="section-label">Step 3: Generate Your Boards</div>
-  <button onclick="generateTicTacToeBoards()" style="font-size: 18px; padding: 10px 24px;">Generate Tic Tac Toe Boards</button>
-  <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
-</div>
+  <div class="table-section">
+    <div class="section-label">Step 3: Generate Your Boards</div>
+    <button onclick="generateTicTacToeBoards()" style="font-size: 18px; padding: 10px 24px;">Generate Tic Tac Toe Boards</button>
+    <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
+  </div>
 
-<div id="printableSection" style="margin-top: 40px;">
-  <h2 id="gameTitle"></h2>
-  <p style="font-size: 12px; max-width: 600px; margin: 0 auto 20px;">
-    <strong>Directions:</strong> Read the word or sentence in the space you’d like to go, then put an X or O. Your opponent does the same. If you get 3 in a row…you win!
-  </p>
-  <div id="boardWrapper" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; justify-content: center; max-width: 900px; margin: 0 auto;"></div>
-  <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
-</div>
+  <div id="printableSection" style="margin-top: 40px;">
+    <h2 id="gameTitle" style="margin-bottom: 2px;"></h2>
+    <p style="font-size: 13px; max-width: 600px; margin: 0 auto 20px;">
+      <strong>Directions:</strong> Read the word or sentence in the space you’d like to go, then put an X or O. Your opponent does the same. If you get 3 in a row…you win!
+    </p>
+    <div id="boardWrapper"></div>
+    <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+  </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -204,7 +200,6 @@
       "mixed": "Mixed CVC"
     };
 
-    // Step 1: Select skills
     document.querySelectorAll('.skill-button').forEach(button => {
       button.addEventListener('click', () => {
         const skill = button.dataset.skill;
@@ -218,7 +213,6 @@
       });
     });
 
-    // Step 2: Select content type
     document.querySelectorAll('#contentOptions .option-box').forEach(box => {
       box.addEventListener('click', () => {
         document.querySelectorAll('#contentOptions .option-box').forEach(b => b.classList.remove('selected-step2'));
@@ -227,7 +221,6 @@
       });
     });
 
-    // Step 3: Generate Tic Tac Toe Boards
     window.generateTicTacToeBoards = function () {
       const skills = Array.from(selectedSkills);
       const contentType = document.querySelector('input[name=contentType]:checked')?.value;
@@ -247,13 +240,13 @@
       for (const skill of skills) {
         const label = skillLabelMap[skill];
 
-       if ((contentType === "words" || contentType === "both") && window.fluencyData.words[`${skill} - ${label} Words`]) {
-  pool.push(...window.fluencyData.words[`${skill} - ${label} Words`]);
-}
+        if ((contentType === "words" || contentType === "both") && window.fluencyData.words[`${skill} - ${label} Words`]) {
+          pool.push(...window.fluencyData.words[`${skill} - ${label} Words`]);
+        }
 
-if ((contentType === "sentences" || contentType === "both") && window.fluencyData.sentences[`${skill} - ${label} Sentences`]) {
-  pool.push(...window.fluencyData.sentences[`${skill} - ${label} Sentences`]);
-}
+        if ((contentType === "sentences" || contentType === "both") && window.fluencyData.sentences[`${skill} - ${label} Sentences`]) {
+          pool.push(...window.fluencyData.sentences[`${skill} - ${label} Sentences`]);
+        }
       }
 
       if (pool.length < 36) {
@@ -265,55 +258,66 @@ if ((contentType === "sentences" || contentType === "both") && window.fluencyDat
       const boardWrapper = document.getElementById('boardWrapper');
       boardWrapper.innerHTML = '';
 
-for (let b = 0; b < 4; b++) {
-  const board = document.createElement('table');
-  board.className = 'tic-tac-toe';
-  board.style.borderCollapse = 'collapse';
-  board.style.width = '100%';
+      const gamesTable = document.createElement('table');
+      gamesTable.style.margin = 'auto';
+      gamesTable.style.borderCollapse = 'separate';
+      gamesTable.style.borderSpacing = '60px 80px';
 
-  for (let r = 0; r < 3; r++) {
-    const row = board.insertRow();
-    for (let c = 0; c < 3; c++) {
-      const cell = row.insertCell();
-      const val = shuffled[b * 9 + r * 3 + c] || "";
-      const isSentence = val.trim().includes(" ");
-      cell.textContent = val;
+      for (let row = 0; row < 2; row++) {
+        const tr = gamesTable.insertRow();
+        for (let col = 0; col < 2; col++) {
+          const b = row * 2 + col;
+          const td = tr.insertCell();
+          td.style.verticalAlign = 'top';
+          td.style.textAlign = 'center';
 
-      // ✅ Realistic tic-tac-toe styling
-      cell.style.border = 'none';
-      if (r < 2) cell.style.borderBottom = '6px solid black';
-      if (c < 2) cell.style.borderRight = '6px solid black';
+          const gameLabel = document.createElement("div");
+          gameLabel.textContent = `Game ${b + 1}`;
+          gameLabel.style.fontWeight = "bold";
+          gameLabel.style.fontSize = "18px";
+          gameLabel.style.marginBottom = "6px";
 
-      cell.style.height = '80px';
-      cell.style.verticalAlign = 'middle';
-      cell.style.textAlign = 'center';
-      cell.style.padding = '10px';
-      cell.style.fontSize = isSentence ? '14px' : '20px';
-      cell.style.wordBreak = 'break-word';
-    }
-  }
+          const board = document.createElement('table');
+          board.className = 'tic-tac-toe';
+          board.style.borderCollapse = 'collapse';
 
- // Label
-const gameLabel = document.createElement("div");
-gameLabel.textContent = `Game ${b + 1}`;
-gameLabel.style.fontWeight = "bold";
-gameLabel.style.fontSize = "18px";
-gameLabel.style.marginBottom = "6px";
+          for (let r = 0; r < 3; r++) {
+            const row = board.insertRow();
+            for (let c = 0; c < 3; c++) {
+              const cell = row.insertCell();
+              const val = shuffled[b * 9 + r * 3 + c] || "";
+              const isSentence = val.trim().includes(" ");
+              cell.textContent = val;
 
-// Wrapper to group label + board
-const boardGroup = document.createElement("div");
-boardGroup.style.display = "flex";
-boardGroup.style.flexDirection = "column";
-boardGroup.style.alignItems = "center";
-boardGroup.style.marginBottom = (b === 1) ? "60px" : "0px"; // space after 2nd board
+              cell.style.border = 'none';
+              if (r < 2) cell.style.borderBottom = '6px solid black';
+              if (c < 2) cell.style.borderRight = '6px solid black';
 
-boardGroup.appendChild(gameLabel);
-boardGroup.appendChild(board);
-boardWrapper.appendChild(boardGroup);
-}
+              cell.style.height = '80px';
+              cell.style.verticalAlign = 'middle';
+              cell.style.textAlign = 'center';
+              cell.style.padding = '10px';
+              cell.style.fontSize = isSentence ? '14px' : '20px';
+              cell.style.wordBreak = 'break-word';
+            }
+          }
 
+          const wrapper = document.createElement('div');
+          wrapper.style.display = 'flex';
+          wrapper.style.flexDirection = 'column';
+          wrapper.style.alignItems = 'center';
+          wrapper.appendChild(gameLabel);
+          wrapper.appendChild(board);
+
+          td.appendChild(wrapper);
+        }
+      }
+
+      boardWrapper.appendChild(gamesTable);
       const skillNames = skills.map(s => skillLabelMap[s]).join(" and ");
       document.getElementById('gameTitle').innerText = `${skillNames} Tic Tac Toe Game`;
     };
   });
 </script>
+</body>
+</html>
