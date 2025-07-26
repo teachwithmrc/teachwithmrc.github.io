@@ -249,5 +249,95 @@ document.querySelectorAll('#gridSizeOptions .option-box').forEach(box => {
     "mixed": "Mixed"
   };
 </script>
+  <script>
+const selectedSkills = new Set();
+
+// Skill button toggle logic
+document.querySelectorAll('.skill-button').forEach(button => {
+  button.addEventListener('click', () => {
+    const skill = button.dataset.skill;
+    if (selectedSkills.has(skill)) {
+      selectedSkills.delete(skill);
+      button.classList.remove('selected');
+    } else {
+      selectedSkills.add(skill);
+      button.classList.add('selected');
+    }
+  });
+});
+
+const skillMap = {
+  "0.1": "A", "0.2": "O", "0.3": "I",
+  "0.4": "U", "0.5": "E", "0.6": "FLSZ", "0.7": "FLSZ and CVC",
+  "mixed": "Mixed"
+};
+
+function generateGrid() {
+  const contentType = document.querySelector('input[name=contentType]:checked')?.value;
+  const gridSize = parseInt(document.querySelector('input[name=gridSize]:checked')?.value || "25");
+
+  if (selectedSkills.size === 0) {
+    alert("❗ Please select at least one skill in Step 1.");
+    return;
+  }
+
+  if (!contentType) {
+    alert("❗ Please select a content type in Step 2.");
+    return;
+  }
+
+  // Dummy sample data (replace with real window.fluencyData lookup if needed)
+  const fakeWords = ["cat", "dog", "bus", "hop", "run", "bug", "cup", "bed", "jet", "sun"];
+  const fakeSentences = [
+    "The cat ran.", "I see a bug.", "Hop on the bus.",
+    "The dog is big.", "He can run fast."
+  ];
+
+  const skills = Array.from(selectedSkills);
+  const finalPool = [];
+
+  if (contentType === "words") {
+    for (let i = 0; i < gridSize; i++) {
+      finalPool.push(fakeWords[i % fakeWords.length]);
+    }
+  } else if (contentType === "sentences") {
+    for (let i = 0; i < gridSize; i++) {
+      finalPool.push(fakeSentences[i % fakeSentences.length]);
+    }
+  } else if (contentType === "both") {
+    const half = Math.floor(gridSize / 2);
+    for (let i = 0; i < half; i++) {
+      finalPool.push(fakeWords[i % fakeWords.length]);
+    }
+    for (let i = 0; i < gridSize - half; i++) {
+      finalPool.push(fakeSentences[i % fakeSentences.length]);
+    }
+  }
+
+  const cols = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
+  let table = "<table>";
+  for (let i = 0; i < gridSize; i += cols) {
+    table += "<tr>";
+    for (let j = 0; j < cols; j++) {
+      const val = finalPool[i + j] || "";
+      const cellClass = val.includes(" ") ? "sentence-cell" : "word-cell";
+      table += `<td class="${cellClass}">${val}</td>`;
+    }
+    table += "</tr>";
+  }
+  table += "</table>";
+
+  const readableSkills = skills.map(s => {
+    if (s === "mixed") return "Mixed CVC";
+    return {
+      "0.1": "Short A", "0.2": "Short O", "0.3": "Short I",
+      "0.4": "Short U", "0.5": "Short E", "0.6": "FLSZ", "0.7": "FLSZ and CVC"
+    }[s];
+  }).join(", ");
+
+  document.getElementById("gridHeader").innerHTML = `<h2>${readableSkills} Fluency Grid</h2><br>`;
+  document.getElementById("gridContainer").innerHTML = table;
+}
+</script>
 </body>
 </html>
