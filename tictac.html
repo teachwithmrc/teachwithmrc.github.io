@@ -342,6 +342,7 @@ boardWrapper.appendChild(boardGroup);
       const skillNames = skills.map(s => skillLabelMap[s]).join(" and ");
       document.getElementById('gameTitle').innerText = `${skillNames} Tic Tac Toe Game`;
       document.getElementById("directions").style.display = "block";
+      document.querySelector('.copyright').style.display = 'block';
     };
   });
 </script>
