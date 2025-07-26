@@ -185,7 +185,7 @@
       const selected = Array.from(selectedSkills);
       const contentType = document.querySelector('input[name="contentType"]:checked')?.value;
       const gridSize = parseInt(document.querySelector('input[name="gridSize"]:checked')?.value || "25");
-      const includeSticky = document.getElementById("includeSticky").checked;
+      const includeSticky = false;
 
       if (!selected.length || !contentType) {
         alert("❗ Please select skills and a content type.");
