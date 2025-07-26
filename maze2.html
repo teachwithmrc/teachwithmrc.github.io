@@ -168,13 +168,22 @@
         return grid;
       };
 
-      let html = '';
-      for (let i = 0; i < 2; i++) {
-        const maze = getMaze();
-        html += `<table>` + maze.map(row => `<tr>` + row.map(word => `<td>${word}</td>`).join('') + `</tr>`).join('') + `</table>`;
-      }
-      document.getElementById("printableSection").innerHTML = html;
-    }
+    let html = '';
+for (let i = 0; i < 2; i++) {
+  const maze = getMaze();
+  html += `
+    <div style="page-break-inside: avoid; margin-bottom: 40px;">
+      <h2 style="margin-bottom: 6px;">${label} Maze - Game ${i + 1}</h2>
+      <div style="font-size: 14px; margin-bottom: 12px;">
+        Directions: Begin at START and shade in the ${label} words to reach the FINISH.
+      </div>
+      <table>
+        ${maze.map(row => `<tr>${row.map(word => `<td>${word}</td>`).join('')}</tr>`).join('')}
+      </table>
+    </div>
+  `;
+}
+document.getElementById("printableSection").innerHTML = html;
   </script>
 </body>
 </html>
