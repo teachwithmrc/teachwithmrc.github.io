@@ -107,18 +107,18 @@
       vertical-align: middle;
     }
 
-   .copyright {
-  position: absolute !important;
-  right: 30px !important;
-  bottom: 30px !important;
-  font-size: 12px !important;
-  text-align: right !important;
-}
-
    @media print {
   body * {
     visibility: hidden;
   }
+     
+  .copyright {
+    text-align: right !important;
+    font-size: 12px !important;
+    margin-top: 60px !important;
+    max-width: 900px !important;
+  }
+}
 
   #printableSection, #printableSection * {
     visibility: visible;
@@ -202,9 +202,11 @@
 
 <div id="printableSection" style="margin-top: 20px;">
   <h2 id="gameTitle"></h2>
-<p style="font-size: 12px; max-width: 600px; margin: 0 0 20px; text-align: center;">
-  <strong>Directions:</strong> Read the word or sentence in the space you’d like to go, then put an X or O. Your opponent does the same. If you get 3 in a row…you win!
-</p>
+<div id="directions" style="display: none;">
+  <p style="font-size: 12px; max-width: 600px; margin: 12px auto 24px auto; text-align: center;">
+    <strong>Directions:</strong> Read the word or sentence in the space you’d like to go, then put an X or O. Your opponent does the same. If you get 3 in a row…you win!
+  </p>
+</div>
   <div id="boardWrapper" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; justify-content: center; max-width: 900px; margin: 0 auto;"></div>
   <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
 </div>
@@ -335,6 +337,7 @@ boardWrapper.appendChild(boardGroup);
 
       const skillNames = skills.map(s => skillLabelMap[s]).join(" and ");
       document.getElementById('gameTitle').innerText = `${skillNames} Tic Tac Toe Game`;
+      document.getElementById("directions").style.display = "block";
     };
   });
 </script>
