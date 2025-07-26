@@ -290,37 +290,27 @@
 
   finalPool = shuffle([...finalWords, ...finalSentences]).slice(0, gridSize);
 } else if (contentType === "words") {
-        const trickyInserts = [];
-        let remainingSlots = gridSize;
-        selected.forEach(skill => {
-          const allWords = wordPools[skill] || [];
-          const stickyKey = skill === "mixed" ? "Mixed CVC" : `${skill} - Short ${skillMap[skill]}`;
-          const trickyOnly = (fluencyData.trickySticky || {})[stickyKey] || [];
-          if (includeSticky && trickyOnly.length > 0) {
-            const trickyCount = (selected.length === 1)
-              ? (skill === "mixed" ? 5 : 4)
-              : (skill === "mixed" ? 5 : 2);
-            trickyInserts.push(...shuffle(trickyOnly).slice(0, trickyCount));
-            remainingSlots -= trickyCount;
-          }
-          finalWords.push(...shuffle(allWords));
-        });
+  const wordsPerSkill = Math.floor(gridSize / selected.length);
+  const extra = gridSize % selected.length;
 
-        const seen = new Set();
-        const combined = [...trickyInserts, ...finalWords];
-        for (const word of combined) {
-          if (!seen.has(word)) {
-            finalPool.push(word);
-            seen.add(word);
-          }
-          if (finalPool.length >= gridSize) break;
-        }
+  selected.forEach((skill, i) => {
+    const count = wordsPerSkill + (i < extra ? 1 : 0);
+    finalWords.push(...shuffle(wordPools[skill] || []).slice(0, count));
+  });
+
+  finalPool = shuffle(finalWords).slice(0, gridSize);
+}
       } else if (contentType === "sentences") {
-        selected.forEach(skill => {
-          finalSentences.push(...shuffle(sentencePools[skill] || []).slice(0, Math.ceil(gridSize / selected.length)));
-        });
-        finalPool = shuffle(finalSentences).slice(0, gridSize);
-      }
+  const sentencesPerSkill = Math.floor(gridSize / selected.length);
+  const extra = gridSize % selected.length;
+
+  selected.forEach((skill, i) => {
+    const count = sentencesPerSkill + (i < extra ? 1 : 0);
+    finalSentences.push(...shuffle(sentencePools[skill] || []).slice(0, count));
+  });
+
+  finalPool = shuffle(finalSentences).slice(0, gridSize);
+}
 
       const cols = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
       let table = "<table>";
