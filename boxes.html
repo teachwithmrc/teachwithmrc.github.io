@@ -299,8 +299,7 @@
   });
 
   finalPool = shuffle(finalWords).slice(0, gridSize);
-}
-      } else if (contentType === "sentences") {
+} else if (contentType === "sentences") {
   const sentencesPerSkill = Math.floor(gridSize / selected.length);
   const extra = gridSize % selected.length;
 
