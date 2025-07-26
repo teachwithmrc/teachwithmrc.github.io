@@ -262,14 +262,20 @@ if ((contentType === "sentences" || contentType === "both") && window.fluencyDat
       }
 
       const shuffled = pool.sort(() => 0.5 - Math.random()).slice(0, 36);
-      const boardWrapper = document.getElementById('boardWrapper');
-      boardWrapper.innerHTML = '';
+  const boardWrapper = document.getElementById('boardWrapper');
+boardWrapper.innerHTML = '';
+
+// ✅ STEP 1: Create 2x2 grid container
+const gridContainer = document.createElement("div");
+gridContainer.style.display = "grid";
+gridContainer.style.gridTemplateColumns = "1fr 1fr";
+gridContainer.style.gap = "60px 60px";
+gridContainer.style.justifyContent = "center";
 
 for (let b = 0; b < 4; b++) {
   const board = document.createElement('table');
   board.className = 'tic-tac-toe';
   board.style.borderCollapse = 'collapse';
-  board.style.width = '100%';
 
   for (let r = 0; r < 3; r++) {
     const row = board.insertRow();
@@ -279,7 +285,7 @@ for (let b = 0; b < 4; b++) {
       const isSentence = val.trim().includes(" ");
       cell.textContent = val;
 
-      // ✅ Realistic tic-tac-toe styling
+      // ✅ Border styling for tic-tac-toe
       cell.style.border = 'none';
       if (r < 2) cell.style.borderBottom = '6px solid black';
       if (c < 2) cell.style.borderRight = '6px solid black';
@@ -293,25 +299,27 @@ for (let b = 0; b < 4; b++) {
     }
   }
 
- // Label
-const gameLabel = document.createElement("div");
-gameLabel.textContent = `Game ${b + 1}`;
-gameLabel.style.fontWeight = "bold";
-gameLabel.style.fontSize = "18px";
-gameLabel.style.marginBottom = "6px";
+  // 🏷️ Add Game label and wrap
+  const gameLabel = document.createElement("div");
+  gameLabel.textContent = `Game ${b + 1}`;
+  gameLabel.style.fontWeight = "bold";
+  gameLabel.style.fontSize = "18px";
+  gameLabel.style.marginBottom = "6px";
 
-// Wrapper to group label + board
-const boardGroup = document.createElement("div");
-boardGroup.style.display = "flex";
-boardGroup.style.flexDirection = "column";
-boardGroup.style.alignItems = "center";
-boardGroup.style.marginBottom = (b === 1) ? "60px" : "0px"; // space after 2nd board
+  const boardGroup = document.createElement("div");
+  boardGroup.style.display = "flex";
+  boardGroup.style.flexDirection = "column";
+  boardGroup.style.alignItems = "center";
 
-boardGroup.appendChild(gameLabel);
-boardGroup.appendChild(board);
-boardWrapper.appendChild(boardGroup);
+  boardGroup.appendChild(gameLabel);
+  boardGroup.appendChild(board);
+
+  // ✅ Add to grid container instead of boardWrapper
+  gridContainer.appendChild(boardGroup);
 }
 
+// ✅ Add grid container to wrapper
+boardWrapper.appendChild(gridContainer);
       const skillNames = skills.map(s => skillLabelMap[s]).join(" and ");
       document.getElementById('gameTitle').innerText = `${skillNames} Tic Tac Toe Game`;
     };
