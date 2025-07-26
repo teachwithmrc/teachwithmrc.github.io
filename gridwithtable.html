@@ -421,6 +421,132 @@
   </div>
 </div>
 
+  <!-- ✅ Short A Skill Block -->
+<div class="skill-container">
+  <div class="skill-block" data-skill="0.1">
+    <input type="checkbox" name="skill" value="0.1" class="skill-checkbox" hidden>
+    <div class="skill-box">
+      <div class="skill-label">Short A</div>
+      <img src="shorta.png" alt="Short A">
+    </div>
+    <div class="trick-toggle" data-trick-skill="0.1">
+      <input type="checkbox" name="trick" value="0.1" class="trick-checkbox" hidden>
+      <div class="trick-box">
+        <div class="trick-label">Include HFW?</div>
+        <div class="trick-list">I<br>a<br>the</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ Short O Skill Block -->
+<div class="skill-container">
+  <div class="skill-block" data-skill="0.2">
+    <input type="checkbox" name="skill" value="0.2" class="skill-checkbox" hidden>
+    <div class="skill-box">
+      <div class="skill-label">Short O</div>
+      <img src="shorto.png" alt="Short O">
+    </div>
+    <div class="trick-toggle" data-trick-skill="0.2">
+      <input type="checkbox" name="trick" value="0.2" class="trick-checkbox" hidden>
+      <div class="trick-box">
+        <div class="trick-label">Include HFW?</div>
+        <div class="trick-list">is<br>his<br>as<br>was</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.skill-container {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.skill-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding: 10px;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.skill-block.selected .skill-box {
+  border: 2px solid #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+  border-radius: 10px;
+}
+
+.skill-box {
+  text-align: center;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.skill-label {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.skill-box img {
+  width: 100px;
+  height: auto;
+  border-radius: 6px;
+}
+
+.trick-toggle {
+  margin-top: 10px;
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  padding: 6px;
+  border-radius: 10px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.trick-toggle.selected {
+  border: 2px solid red;
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+}
+
+.trick-label {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.trick-list {
+  font-size: 14px;
+}
+</style>
+
+<script>
+document.querySelectorAll('.skill-block').forEach(block => {
+  const skillCheckbox = block.querySelector('.skill-checkbox');
+  const skillBox = block.querySelector('.skill-box');
+
+  skillBox.addEventListener('click', () => {
+    skillCheckbox.checked = !skillCheckbox.checked;
+    block.classList.toggle('selected', skillCheckbox.checked);
+  });
+});
+
+document.querySelectorAll('.trick-toggle').forEach(toggle => {
+  const trickCheckbox = toggle.querySelector('.trick-checkbox');
+  toggle.addEventListener('click', e => {
+    e.stopPropagation();
+    trickCheckbox.checked = !trickCheckbox.checked;
+    toggle.classList.toggle('selected', trickCheckbox.checked);
+  });
+});
+</script>
+
 <style>
 .skill-grid-row {
   display: flex;
