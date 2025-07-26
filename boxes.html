@@ -81,7 +81,16 @@
   font-size: 12px;
 }
    @media print {
-  body * { visibility: hidden; }
+  body {
+  margin: 0;
+  padding: 0;
+}
+* {
+  visibility: hidden;
+}
+#printableSection, #printableSection * {
+  visibility: visible;
+}
   #printableSection, #printableSection * {
     visibility: visible;
   }
@@ -99,6 +108,12 @@
   </style>
 </head>
 <body>
+  <div id="printableSection">
+    <div id="gridHeader" style="text-align: center; margin-top: 30px;"></div>
+    <div id="gridContainer"></div>
+    <br><br><br>
+    <div class="copyright" id="copyrightTag">Copyright - InterventionStation.com - @TeachwithMrC</div>
+  </div>
   <h1>CVC and FLSZ Fluency Grid Generator</h1>
   <div class="subtitle">
     This generator includes <b>CVC Words</b> such as <b>hat, men, cup</b>.<br>
@@ -146,12 +161,7 @@
     <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
   </div>
 
-  <div id="printableSection">
-    <div id="gridHeader" style="text-align: center; margin-top: 30px;"></div>
-    <div id="gridContainer"></div>
-    <br><br><br>
-   <div class="copyright" id="copyrightTag">Copyright - InterventionStation.com - @TeachwithMrC</div>
-  </div>
+
 
   <script>
     const selectedSkills = new Set();
