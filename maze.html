@@ -1,3 +1,5 @@
+// UPDATED: Maze Grid Generator with unique correct path words
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,17 +13,14 @@
       margin: 40px;
       text-align: center;
     }
-
     h1 {
       font-size: 26px;
       margin-bottom: 10px;
     }
-
     .subtitle {
       font-size: 16px;
       margin-bottom: 30px;
     }
-
     .table-section {
       border: 2px solid #000;
       padding: 20px;
@@ -29,27 +28,23 @@
       width: fit-content;
       box-sizing: border-box;
     }
-
     .section-label {
       font-weight: 600;
       font-size: 18px;
       margin-bottom: 12px;
     }
-
     .skill-button-grid {
       display: flex;
       flex-direction: column;
       gap: 8px;
       justify-content: center;
     }
-
     .skill-button-grid .row {
       display: flex;
       justify-content: center;
       gap: 8px;
       margin-bottom: 6px;
     }
-
     .skill-button {
       border: 2px solid #000;
       padding: 10px 16px;
@@ -58,13 +53,11 @@
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
     }
-
     .skill-button.selected {
       background-color: #007bff;
       color: white;
       box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
     }
-
     .option-grid {
       display: flex;
       justify-content: center;
@@ -72,7 +65,6 @@
       gap: 12px;
       margin-top: 10px;
     }
-
     .option-box {
       padding: 10px 14px;
       border: 2px solid #000;
@@ -80,16 +72,13 @@
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s;
     }
-
     .option-box.selected-step2 {
       background-color: #d9c9ff;
     }
-
     table {
       margin: auto;
       border-collapse: collapse;
     }
-
     td {
       border: 1px solid #000;
       width: 120px;
@@ -98,22 +87,18 @@
       text-align: center;
       vertical-align: middle;
     }
-
     .copyright {
       text-align: center;
       font-size: 12px;
       margin-top: 60px;
     }
-
     @media print {
       body * {
         visibility: hidden;
       }
-
       #printableSection, #printableSection * {
         visibility: visible;
       }
-
       #printableSection {
         position: absolute;
         top: 0;
@@ -214,7 +199,7 @@
       }
 
       const skillLabel = shortVowelSkillMap[skill];
-      const targetWords = window.fluencyData.words[`0.${skill.split(".")[1]} - ${skillLabel}`];
+      const targetPool = [...window.fluencyData.words[`0.${skill.split(".")[1]} - ${skillLabel}`]];
       const distractorSkills = Object.keys(shortVowelSkillMap).filter(s => s !== skill);
       const distractorWords = distractorSkills.flatMap(s => {
         const label = shortVowelSkillMap[s];
@@ -223,16 +208,14 @@
 
       const gridContainer = document.getElementById("gridContainer");
       const gridHeader = document.getElementById("gridHeader");
-      gridHeader.innerHTML = `<h2>${skillLabel} Maze Boards</h2><br><p><strong>Directions:</strong> Help the student follow the path of the correct word. All other words are traps!</p>`;
+      gridHeader.innerHTML = `<h2>${skillLabel} Maze Boards</h2><br><p><strong>Directions:</strong> Follow the path of different target words. All other squares are traps!</p>`;
       gridContainer.innerHTML = "";
 
       for (let g = 0; g < 2; g++) {
         const grid = Array.from({ length: 5 }, () => Array(5).fill(""));
         const path = allMazePaths[Math.floor(Math.random() * allMazePaths.length)];
-        const targetWord = targetWords[Math.floor(Math.random() * targetWords.length)];
-        const distractors = distractorWords.filter(w => w !== targetWord);
 
-        let pathCoords = [[0, 0]];
+        const pathCoords = [[0, 0]];
         let row = 0, col = 0;
         for (let move of path) {
           if (move === 'R') col++;
@@ -240,22 +223,28 @@
           pathCoords.push([row, col]);
         }
 
+        const pathWords = [...targetPool].sort(() => 0.5 - Math.random()).slice(0, pathCoords.length);
+
         for (let r = 0; r < 5; r++) {
           for (let c = 0; c < 5; c++) {
-            const onPath = pathCoords.some(([pr, pc]) => pr === r && pc === c);
-            grid[r][c] = onPath ? targetWord : distractors[Math.floor(Math.random() * distractors.length)];
+            const index = pathCoords.findIndex(([pr, pc]) => pr === r && pc === c);
+            if (index !== -1) {
+              grid[r][c] = pathWords[index];
+            } else {
+              grid[r][c] = distractorWords[Math.floor(Math.random() * distractorWords.length)];
+            }
           }
         }
 
         const table = document.createElement("table");
         for (let r = 0; r < 5; r++) {
-          const row = document.createElement("tr");
+          const rowEl = document.createElement("tr");
           for (let c = 0; c < 5; c++) {
             const cell = document.createElement("td");
             cell.textContent = grid[r][c];
-            row.appendChild(cell);
+            rowEl.appendChild(cell);
           }
-          table.appendChild(row);
+          table.appendChild(rowEl);
         }
         gridContainer.appendChild(table);
         gridContainer.appendChild(document.createElement("br"));
