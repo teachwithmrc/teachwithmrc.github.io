@@ -69,13 +69,33 @@
     .copyright {
       text-align: center; font-size: 12px; margin-top: 60px;
     }
-    @media print {
-      body * { visibility: hidden; }
-      #printableSection, #printableSection * { visibility: visible; }
-      #printableSection {
-        position: absolute; top: 0; left: 0; width: 100%;
-      }
-    }
+    #printableSection {
+  position: relative;
+  min-height: 10in;
+}
+
+#printableSection #copyrightTag {
+  position: absolute;
+  bottom: 20px;
+  right: 40px;
+  font-size: 12px;
+}
+   @media print {
+  body * { visibility: hidden; }
+  #printableSection, #printableSection * {
+    visibility: visible;
+  }
+  #printableSection {
+    position: relative; /* CHANGED from absolute */
+    width: 100%;
+    min-height: 10in; /* optional: ensure full height */
+  }
+  #copyrightTag {
+    position: absolute;
+    bottom: 20px;
+    right: 40px;
+  }
+}
   </style>
 </head>
 <body>
@@ -130,7 +150,7 @@
     <div id="gridHeader" style="text-align: center; margin-top: 30px;"></div>
     <div id="gridContainer"></div>
     <br><br><br>
-    <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+   <div class="copyright" id="copyrightTag">Copyright - InterventionStation.com - @TeachwithMrC</div>
   </div>
 
   <script>
@@ -284,7 +304,11 @@
         "0.7": "FLSZ and CVC", "mixed": "Mixed CVC"
       }[s])).join(", ");
 
-      document.getElementById("gridHeader").innerHTML = `<h2>${readableSkills} Fluency Grid</h2><br>`;
+      document.getElementById("gridHeader").innerHTML = `
+  <h2>Fluency Grid</h2>
+  <div style="font-weight: bold; font-size: 20px;">Skills: ${readableSkills}</div>
+  <br>
+`;
       document.getElementById("gridContainer").innerHTML = table;
     }
   </script>
