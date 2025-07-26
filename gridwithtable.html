@@ -1,190 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CVC and FLSZ Fluency Grid Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <script src="fluencyDataFull_v3.js"></script>
-  <title>Fluency Grid Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Poppins', sans-serif;
       margin: 40px;
     }
-.skill-box {
-  text-align: center;
-  padding: 6px; /* reduce padding */
-  margin-bottom: 4px; /* optional extra spacing tweak */
-}
 
-.skill-box img {
-  width: 100px;
-  height: auto;
-  border-radius: 6px;
-  margin-bottom: 4px; /* reduce space under image */
-}
-
-.trick-box {
-  margin-top: 4px; /* reduce space between image and HFW box */
-  padding: 4px;
-  line-height: 1.4;
-}
-
-.trick-label {
-  font-weight: bold;
-  margin-bottom: 2px; /* reduce space under "Include HFW?" */
-}
-
-.trick-list {
-  font-size: 13px;
-  line-height: 1.4; /* tighten row spacing */
-}
-}
     h1 {
       text-align: center;
-      font-size: 36px;
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 16px;
       margin-bottom: 30px;
     }
 
-    .step-label {
-      font-size: 24px;
-      font-weight: bold;
-      margin: 20px 0 10px;
-      text-align: center;
+    .table-section {
+      border: 2px solid #000;
+      padding: 20px;
+      margin-bottom: 30px;
     }
 
-    .content-type {
+    .skill-button-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      justify-items: center;
+      margin-top: 15px;
+    }
+
+    .skill-button, .grid-option {
+      border: 2px solid #000;
+      padding: 14px 24px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+
+    .selected {
+      background-color: #007bff;
+      color: white;
+      box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
+    }
+
+    .radio-container {
       display: flex;
       justify-content: center;
-      gap: 60px;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-      align-items: flex-start;
+      gap: 20px;
+      margin-top: 15px;
     }
 
-    .content-option {
-      display: inline-block;
-    }
-
-    .content-box {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      padding: 10px;
-      border: 2px solid transparent;
-      border-radius: 8px;
-      transition: all 0.3s ease;
+    .radio-container label {
       cursor: pointer;
-    }
-
-    .content-box input[type="radio"] {
-      transform: scale(1.5);
-      cursor: pointer;
-    }
-
-    .content-option:has(input[type="radio"]:checked) .content-box {
-      border-color: #007bff;
-      box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
-    }
-
-    .content-details {
       display: flex;
       flex-direction: column;
       align-items: center;
+      gap: 5px;
+    }
+
+    .radio-container img {
+      width: 120px;
+    }
+
+    #gridContainer {
       text-align: center;
+      margin: 40px auto 20px;
     }
 
-    .option-label-with-radio {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 22px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    .content-details img {
-      width: 400px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    .setup-table {
-      width: 100%;
+    table {
+      margin: auto;
       border-collapse: collapse;
-      margin-bottom: 30px;
     }
 
-    .setup-table td {
-      border: 2px solid #000;
-      vertical-align: top;
-      padding: 20px;
-    }
-
-    .skill-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 30px;
-    }
-
-    .skill-item {
-      border: 2px solid transparent;
-      padding: 10px;
-      border-radius: 10px;
-      transition: 0.3s ease;
+    td {
+      border: 1px solid #000;
+      width: 120px;
+      height: 80px;
+      font-size: 32px;
       text-align: center;
-      cursor: pointer;
+      vertical-align: middle;
     }
 
-    .skill-item input[type="checkbox"] {
-      transform: scale(1.5);
-      margin-bottom: 10px;
-      cursor: pointer;
-    }
-
-    .skill-item img {
-      width: 100px;
-      height: auto;
-      margin-top: 5px;
-    }
-
-    .skill-item.selected {
-      border-color: #007bff;
-      box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
-    }
-
-    .right-column label {
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    .controls {
+    #controls {
       text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .word-cell {
-      font-size: 28px;
-    }
-
-    .sentence-cell {
-      font-size: 18px;
-      text-align: left;
-      padding: 6px;
+      margin-top: 30px;
     }
 
     .copyright {
+      text-align: center;
       font-size: 12px;
-      text-align: right;
+      margin-top: 60px;
     }
 
     @media print {
       body * {
         visibility: hidden;
       }
-      #printableSection,
-      #printableSection * {
+
+      #printableSection, #printableSection * {
         visibility: visible;
       }
+
       #printableSection {
         position: absolute;
         top: 0;
@@ -195,1073 +122,133 @@
   </style>
 </head>
 <body>
-
-<h1>Fluency Grid Generator</h1>
-
-<div class="step-label">Step 1: Select Content Type</div>
-<div class="content-type">
-  <div class="content-option">
-    <label class="content-box">
-      <div class="content-details">
-        <div class="option-label-with-radio">
-          <input type="radio" name="contentType" value="words">
-          <span class="radio-label-text">Words</span>
-        </div>
-        <img src="gridwords1.png" alt="Words Example">
-      </div>
-    </label>
+  <h1>CVC and FLSZ Fluency Grid Generator</h1>
+  <div class="subtitle">
+    This generator includes CVC words such as hat, men, cup. In addition, it includes FLSZ (Double Consonant Endings) with short vowels such as buff, miss, and buzz.
   </div>
 
-  <div class="content-option">
-    <label class="content-box">
-      <div class="content-details">
-        <div class="option-label-with-radio">
-          <input type="radio" name="contentType" value="sentences">
-          <span class="radio-label-text">Sentences</span>
-        </div>
-        <img src="gridsentences1.png" alt="Sentences Example">
-      </div>
-    </label>
-  </div>
-
-  <div class="content-option">
-    <label class="content-box">
-      <div class="content-details">
-        <div class="option-label-with-radio">
-          <input type="radio" name="contentType" value="both">
-          <span class="radio-label-text">Both</span>
-        </div>
-        <img src="gridboth1.png" alt="Both Example">
-      </div>
-    </label>
-  </div>
-</div>
-<!-- ✅ Step 2: Select Skills - Horizontal Format with HFW Toggles -->
-<div class="step-label">Step 2: Select Skills</div>
-
-<!-- Row 1: Short Vowels with Images -->
-<div class="skill-table-row">
-  <!-- Short A -->
-  <div class="skill-block" data-skill="0.1">
-    <input type="checkbox" name="skill" value="0.1" class="skill-checkbox" hidden>
-    <div class="skill-box">
-      <div class="skill-label">Short A</div>
-      <img src="shorta.png" alt="Short A">
-    </div>
-    <div class="trick-toggle" data-trick-skill="0.1">
-      <input type="checkbox" name="trick" value="0.1" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">I<br>a<br>the</div>
-      </div>
+  <!-- Step 1 -->
+  <div class="table-section">
+    <h2>Step 1: Select Skills</h2>
+    <div class="skill-button-grid" id="skillButtons">
+      <div class="skill-button" data-skill="0.1">Short A</div>
+      <div class="skill-button" data-skill="0.2">Short O</div>
+      <div class="skill-button" data-skill="0.3">Short I</div>
+      <div class="skill-button" data-skill="0.4">Short U</div>
+      <div class="skill-button" data-skill="0.5">Short E</div>
+      <div class="skill-button" data-skill="0.6">FLSZ</div>
+      <div class="skill-button" data-skill="0.7">CVC & FLSZ</div>
+      <div class="skill-button" data-skill="mixed">Mixed CVC</div>
     </div>
   </div>
 
-  <!-- Short O -->
-  <div class="skill-block" data-skill="0.2">
-    <input type="checkbox" name="skill" value="0.2" class="skill-checkbox" hidden>
-    <div class="skill-box">
-      <div class="skill-label">Short O</div>
-      <img src="shorto.png" alt="Short O">
-    </div>
-    <div class="trick-toggle" data-trick-skill="0.2">
-      <input type="checkbox" name="trick" value="0.2" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">is<br>his<br>as<br>was</div>
-      </div>
+  <!-- Step 2 -->
+  <div class="table-section">
+    <h2>Step 2: What would you like in the grid?</h2>
+    <div class="radio-container">
+      <label><input type="radio" name="contentType" value="words"> Only Words<br><img src="Screenshot%202025-07-26%20at%208.26.31%20AM.png"></label>
+      <label><input type="radio" name="contentType" value="sentences"> Only Sentences<br><img src="Screenshot%202025-07-26%20at%208.26.37%20AM.png"></label>
+      <label><input type="radio" name="contentType" value="both"> Both<br><img src="Screenshot%202025-07-26%20at%208.26.51%20AM.png"></label>
     </div>
   </div>
 
-  <!-- Short I -->
-  <div class="skill-block" data-skill="0.3">
-    <input type="checkbox" name="skill" value="0.3" class="skill-checkbox" hidden>
-    <div class="skill-box">
-      <div class="skill-label">Short I</div>
-      <img src="shorti.png" alt="Short I">
+  <!-- Step 3 -->
+  <div class="table-section">
+    <h2>Step 3: Grid Size</h2>
+    <div class="skill-button-grid">
+      <div class="grid-option" data-size="15">3 x 5 - 15 words</div>
+      <div class="grid-option" data-size="20">4 x 5 - 20 words</div>
+      <div class="grid-option selected" data-size="25">5 x 5 - 25 words</div>
     </div>
-    <div class="trick-toggle" data-trick-skill="0.3">
-      <input type="checkbox" name="trick" value="0.3" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">to<br>do</div>
-      </div>
-    </div>
-  </div>
 
-  <!-- Short U -->
-  <div class="skill-block" data-skill="0.4">
-    <input type="checkbox" name="skill" value="0.4" class="skill-checkbox" hidden>
-    <div class="skill-box">
-      <div class="skill-label">Short U</div>
-      <img src="shortu.png" alt="Short U">
-    </div>
-    <div class="trick-toggle" data-trick-skill="0.4">
-      <input type="checkbox" name="trick" value="0.4" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">was<br>you</div>
-      </div>
+    <div id="controls">
+      <button onclick="generateGrid()" style="font-size:18px; padding:10px 20px; margin-top:20px;">Generate Fluency Grid</button>
+      <button onclick="window.print()" style="font-size:18px; padding:10px 20px; margin-left:10px;">Print</button>
     </div>
   </div>
 
-  <!-- Short E -->
-  <div class="skill-block" data-skill="0.5">
-    <input type="checkbox" name="skill" value="0.5" class="skill-checkbox" hidden>
-    <div class="skill-box">
-      <div class="skill-label">Short E</div>
-      <img src="shorte.png" alt="Short E">
-    </div>
-    <div class="trick-toggle" data-trick-skill="0.5">
-      <input type="checkbox" name="trick" value="0.5" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">he<br>be<br>we</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Row 2: Advanced (no images) -->
-<div class="skill-table-row">
-  <!-- FLSZ -->
-  <div class="skill-block" data-skill="0.6">
-    <input type="checkbox" name="skill" value="0.6" class="skill-checkbox" hidden>
-    <div class="skill-box no-image">
-      <div class="skill-label">FLSZ</div>
-    </div>
-    <div class="trick-toggle" data-trick-skill="0.6">
-      <input type="checkbox" name="trick" value="0.6" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">my<br>try<br>by<br>why</div>
-      </div>
-    </div>
+  <!-- GRID SECTION FOR PRINT -->
+  <div id="printableSection">
+    <div id="gridHeader" style="text-align: center; margin-top: 40px;"></div>
+    <div id="gridContainer"></div>
+    <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
   </div>
 
-  <!-- FLSZ and CVC -->
-  <div class="skill-block" data-skill="0.7">
-    <input type="checkbox" name="skill" value="0.7" class="skill-checkbox" hidden>
-    <div class="skill-box no-image">
-      <div class="skill-label">FLSZ and CVC</div>
-    </div>
-    <div class="trick-toggle" data-trick-skill="0.7">
-      <input type="checkbox" name="trick" value="0.7" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">
-          I&nbsp;&nbsp;a&nbsp;&nbsp;the&nbsp;&nbsp;is&nbsp;&nbsp;his&nbsp;&nbsp;has<br>
-          as&nbsp;&nbsp;to&nbsp;&nbsp;do&nbsp;&nbsp;was&nbsp;&nbsp;you&nbsp;&nbsp;he<br>
-          be&nbsp;&nbsp;we&nbsp;&nbsp;my&nbsp;&nbsp;try&nbsp;&nbsp;by&nbsp;&nbsp;why
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mixed CVC -->
-  <div class="skill-block" data-skill="mixed">
-    <input type="checkbox" name="skill" value="mixed" class="skill-checkbox" hidden>
-    <div class="skill-box no-image">
-      <div class="skill-label">Mixed CVC</div>
-    </div>
-    <div class="trick-toggle" data-trick-skill="mixed">
-      <input type="checkbox" name="trick" value="mixed" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">
-          I&nbsp;&nbsp;a&nbsp;&nbsp;the&nbsp;&nbsp;is&nbsp;&nbsp;his&nbsp;&nbsp;has<br>
-          as&nbsp;&nbsp;to&nbsp;&nbsp;do&nbsp;&nbsp;was&nbsp;&nbsp;you&nbsp;&nbsp;he<br>
-          be&nbsp;&nbsp;we&nbsp;&nbsp;my&nbsp;&nbsp;try&nbsp;&nbsp;by&nbsp;&nbsp;why
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<style>
-.skill-table-row {
-  display: flex;
-  gap: 30px;
-  margin-bottom: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.skill-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 120px;
-}
-
-.skill-box img {
-  width: 90px;
-  height: auto;
-  margin-top: 5px;
-}
-
-.trick-box {
-  margin-top: 10px;
-  text-align: center;
-}
-
-.trick-list {
-  font-size: 14px;
-  line-height: 1.4;
-  max-width: 140px;
-}
-
-.skill-box.no-image {
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.trick-toggle {
-  margin-top: 4px;
-  text-align: center;
-  border: 2px solid transparent;
-  padding: 4px;
-  border-radius: 10px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.trick-label {
-  font-weight: bold;
-  font-size: 14px;
-  margin-bottom: 3px;
-}
-
-.trick-list {
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.trick-list.tight-grid {
-  white-space: pre-wrap;
-  line-height: 1.4;
-  word-spacing: 6px;
-}
-</style>
-      </div>
-    </div>
-  </div>
-</div>
-  </div>
-</div>
-
-<!-- ✅ Styling and Logic (if not already included) -->
-<style>
-.skill-table-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 30px;
-  margin-bottom: 40px;
-}
-
-.skill-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 2px solid transparent;
-  border-radius: 10px;
-  padding: 10px;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
-  cursor: pointer;
-}
-
-.skill-block.selected .skill-box {
-  border: 2px solid #007bff;
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-  border-radius: 10px;
-}
-
-.skill-box {
-  text-align: center;
-  padding: 10px;
-  border-radius: 10px;
-}
-
-.skill-label {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 6px;
-}
-
-.skill-box img {
-  width: 100px;
-  height: auto;
-  border-radius: 6px;
-}
-
-.trick-toggle {
-  margin-top: 10px;
-  text-align: center;
-  cursor: pointer;
-  border: 2px solid transparent;
-  padding: 6px;
-  border-radius: 10px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.trick-toggle.selected {
-  border: 2px solid red;
-  box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
-}
-
-.trick-label {
-  font-weight: bold;
-  margin-bottom: 4px;
-}
-
-.trick-list {
-  font-size: 14px;
-}
-</style>
-
-<script>
-document.querySelectorAll('.skill-block').forEach(block => {
-  const skillCheckbox = block.querySelector('.skill-checkbox');
-  const skillBox = block.querySelector('.skill-box');
-
-  skillBox.addEventListener('click', () => {
-    skillCheckbox.checked = !skillCheckbox.checked;
-    block.classList.toggle('selected', skillCheckbox.checked);
-  });
-});
-
-document.querySelectorAll('.trick-toggle').forEach(toggle => {
-  const trickCheckbox = toggle.querySelector('.trick-checkbox');
-  toggle.addEventListener('click', e => {
-    e.stopPropagation();
-    trickCheckbox.checked = !trickCheckbox.checked;
-    toggle.classList.toggle('selected', trickCheckbox.checked);
-  });
-});
-</script>
-<!-- ✅ Step 2: Select Skills - Table Row Format -->
-<div class="step-label">Step 2: Select Skills</div>
-<div class="skill-table-row">
-  <!-- Short A -->
-  <div class="skill-block" data-skill="0.1">
-    <input type="checkbox" name="skill" value="0.1" class="skill-checkbox" hidden>
-    <div class="skill-box">
-      <div class="skill-label">Short A</div>
-      <img src="shorta.png" alt="Short A">
-    </div>
-    <div class="trick-toggle" data-trick-skill="0.1">
-      <input type="checkbox" name="trick" value="0.1" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">I<br>a<br>the</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Short O -->
-  <div class="skill-block" data-skill="0.2">
-    <input type="checkbox" name="skill" value="0.2" class="skill-checkbox" hidden>
-    <div class="skill-box">
-      <div class="skill-label">Short O</div>
-      <img src="shorto.png" alt="Short O">
-    </div>
-    <div class="trick-toggle" data-trick-skill="0.2">
-      <input type="checkbox" name="trick" value="0.2" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">is<br>his<br>as<br>was</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Short I -->
-  <div class="skill-block" data-skill="0.3">
-    <input type="checkbox" name="skill" value="0.3" class="skill-checkbox" hidden>
-    <div class="skill-box">
-      <div class="skill-label">Short I</div>
-      <img src="shorti.png" alt="Short I">
-    </div>
-    <div class="trick-toggle" data-trick-skill="0.3">
-      <input type="checkbox" name="trick" value="0.3" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">to<br>do</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Short U -->
-  <div class="skill-block" data-skill="0.4">
-    <input type="checkbox" name="skill" value="0.4" class="skill-checkbox" hidden>
-    <div class="skill-box">
-      <div class="skill-label">Short U</div>
-      <img src="shortu.png" alt="Short U">
-    </div>
-    <div class="trick-toggle" data-trick-skill="0.4">
-      <input type="checkbox" name="trick" value="0.4" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">was<br>you</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Short E -->
-  <div class="skill-block" data-skill="0.5">
-    <input type="checkbox" name="skill" value="0.5" class="skill-checkbox" hidden>
-    <div class="skill-box">
-      <div class="skill-label">Short E</div>
-      <img src="shorte.png" alt="Short E">
-    </div>
-    <div class="trick-toggle" data-trick-skill="0.5">
-      <input type="checkbox" name="trick" value="0.5" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">he<br>be<br>we</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Style for Horizontal Row -->
-<style>
-.skill-table-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 30px;
-  margin-bottom: 40px;
-}
-
-.skill-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 2px solid transparent;
-  border-radius: 10px;
-  padding: 10px;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
-  cursor: pointer;
-}
-
-.skill-block.selected .skill-box {
-  border: 2px solid #007bff;
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-  border-radius: 10px;
-}
-
-.skill-box {
-  text-align: center;
-  padding: 10px;
-  border-radius: 10px;
-}
-
-.skill-label {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 6px;
-}
-
-.skill-box img {
-  width: 100px;
-  height: auto;
-  border-radius: 6px;
-}
-
-.trick-toggle {
-  margin-top: 10px;
-  text-align: center;
-  cursor: pointer;
-  border: 2px solid transparent;
-  padding: 6px;
-  border-radius: 10px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.trick-toggle.selected {
-  border: 2px solid red;
-  box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
-}
-
-.trick-label {
-  font-weight: bold;
-  margin-bottom: 4px;
-}
-
-.trick-list {
-  font-size: 14px;
-}
-</style>
-
-<!-- Interaction Logic -->
-<script>
-document.querySelectorAll('.skill-block').forEach(block => {
-  const skillCheckbox = block.querySelector('.skill-checkbox');
-  const skillBox = block.querySelector('.skill-box');
-
-  skillBox.addEventListener('click', () => {
-    skillCheckbox.checked = !skillCheckbox.checked;
-    block.classList.toggle('selected', skillCheckbox.checked);
-  });
-});
-
-document.querySelectorAll('.trick-toggle').forEach(toggle => {
-  const trickCheckbox = toggle.querySelector('.trick-checkbox');
-  toggle.addEventListener('click', e => {
-    e.stopPropagation();
-    trickCheckbox.checked = !trickCheckbox.checked;
-    toggle.classList.toggle('selected', trickCheckbox.checked);
-  });
-});
-</script>
-<div class="step-label">Step 2: Skill and Layout Selection</div>
-<table class="setup-table">
-  <tr>
-    <td style="width: 75%">
-      <div class="skill-grid">
-        <div class="skill-item">
-          <label><input type="checkbox" name="skill" value="0.1"> Short A</label>
-          <img src="shorta.png" alt="Short A">
-        </div>
-        <div class="skill-item">
-          <label><input type="checkbox" name="skill" value="0.2"> Short O</label>
-          <img src="shorto.png" alt="Short O">
-        </div>
-        <div class="skill-item">
-          <label><input type="checkbox" name="skill" value="0.3"> Short I</label>
-          <img src="shorti.png" alt="Short I">
-        </div>
-        <div class="skill-item">
-          <label><input type="checkbox" name="skill" value="0.4"> Short U</label>
-          <img src="shortu.png" alt="Short U">
-        </div>
-        <div class="skill-item">
-          <label><input type="checkbox" name="skill" value="0.5"> Short E</label>
-          <img src="shorte.png" alt="Short E">
-        </div>
-        <div class="skill-item">
-          <label><input type="checkbox" name="skill" value="0.6"> FLSZ</label>
-        </div>
-        <div class="skill-item">
-          <label><input type="checkbox" name="skill" value="0.7"> FLSZ and CVC</label>
-        </div>
-        <div class="skill-item">
-          <label><input type="checkbox" name="skill" value="mixed"> Mixed CVC</label>
-        </div>
-      </div>
-    </td>
-    <td class="right-column">
-      <strong>Tricky-Sticky Words:</strong><br>
-      <label><input type="checkbox" id="includeSticky"> Yes, Include Them</label><br><br>
-
-      <strong>Grid Size:</strong><br>
-      <label><input type="radio" name="gridSize" value="15"> 3 x 5 - 15 words</label><br>
-      <label><input type="radio" name="gridSize" value="20"> 4 x 5 - 20 words</label><br>
-      <label><input type="radio" name="gridSize" value="25" checked> 5 x 5 - 25 words</label><br>
-    </td>
-  </tr>
-</table>
-<!-- ✅ Short Vowel Skills Row with Trick Word Control -->
-<div class="step-label">Step 2: Select Skills</div>
-<div class="skill-grid-row">
-  <div class="skill-item" data-skill="0.1">
-    <label>
-      <input type="checkbox" name="skill" value="0.1">
-      <div class="skill-label">Short A</div>
-      <img src="shorta.png" alt="Short A">
-    </label>
-    <div class="trick-toggle">
-      <label><input type="checkbox" disabled data-trick="0.1"> Include Trick Words?</label>
-      <div class="trick-list">I<br>a<br>the</div>
-    </div>
-  </div>
-
-  <div class="skill-item" data-skill="0.2">
-    <label>
-      <input type="checkbox" name="skill" value="0.2">
-      <div class="skill-label">Short O</div>
-      <img src="shorto.png" alt="Short O">
-    </label>
-    <div class="trick-toggle">
-      <label><input type="checkbox" disabled data-trick="0.2"> Include Trick Words?</label>
-      <div class="trick-list">is<br>his<br>has</div>
-    </div>
-  </div>
-
-  <div class="skill-item" data-skill="0.3">
-    <label>
-      <input type="checkbox" name="skill" value="0.3">
-      <div class="skill-label">Short I</div>
-      <img src="shorti.png" alt="Short I">
-    </label>
-    <div class="trick-toggle">
-      <label><input type="checkbox" disabled data-trick="0.3"> Include Trick Words?</label>
-      <div class="trick-list">to<br>do</div>
-    </div>
-  </div>
-
-  <div class="skill-item" data-skill="0.4">
-    <label>
-      <input type="checkbox" name="skill" value="0.4">
-      <div class="skill-label">Short U</div>
-      <img src="shortu.png" alt="Short U">
-    </label>
-    <div class="trick-toggle">
-      <label><input type="checkbox" disabled data-trick="0.4"> Include Trick Words?</label>
-      <div class="trick-list">was<br>you</div>
-    </div>
-  </div>
-
-  <div class="skill-item" data-skill="0.5">
-    <label>
-      <input type="checkbox" name="skill" value="0.5">
-      <div class="skill-label">Short E</div>
-      <img src="shorte.png" alt="Short E">
-    </label>
-    <div class="trick-toggle">
-      <label><input type="checkbox" disabled data-trick="0.5"> Include Trick Words?</label>
-      <div class="trick-list">he<br>we</div>
-    </div>
-  </div>
-</div>
-
-<!-- ✅ Advanced Skill Row: FLSZ, 0.7, Mixed -->
-<div class="skill-grid-row advanced">
-  <div class="skill-item" data-skill="0.6">
-    <label>
-      <input type="checkbox" name="skill" value="0.6">
-      <div class="skill-label">FLSZ</div>
-      <img src="flsz.png" alt="FLSZ">
-    </label>
-    <div class="trick-toggle">
-      <label><input type="checkbox" disabled data-trick="0.6"> Include Trick Words?</label>
-      <div class="trick-list">my<br>try<br>by<br>why</div>
-    </div>
-  </div>
-
-  <div class="skill-item" data-skill="0.7">
-    <label>
-      <input type="checkbox" name="skill" value="0.7">
-      <div class="skill-label">FLSZ and CVC</div>
-      <img src="flszcvc.png" alt="FLSZ and CVC">
-    </label>
-    <div class="trick-toggle">
-      <label><input type="checkbox" disabled data-trick="mixed"> Include Trick Words?</label>
-      <div class="trick-list">I<br>a<br>the<br>is<br>his<br>has<br>as<br>to<br>do<br>was<br>you<br>he<br>be<br>we<br>my<br>try<br>by<br>why</div>
-    </div>
-  </div>
-
-  <div class="skill-item" data-skill="mixed">
-    <label>
-      <input type="checkbox" name="skill" value="mixed">
-      <div class="skill-label">Mixed CVC</div>
-      <img src="mixedcvc.png" alt="Mixed CVC">
-    </label>
-    <div class="trick-toggle">
-      <label><input type="checkbox" disabled data-trick="mixed"> Include Trick Words?</label>
-      <div class="trick-list">I<br>a<br>the<br>is<br>his<br>has<br>as<br>to<br>do<br>was<br>you<br>he<br>be<br>we<br>my<br>try<br>by<br>why</div>
-    </div>
-  </div>
-</div>
-<div class="step-label">Step 2: Select Skills</div>
-<div class="skill-grid-row">
-  <div class="skill-item" data-skill="0.1">
-    <label>
-      <input type="checkbox" name="skill" value="0.1">
-      <div class="skill-label">Short A</div>
-      <img src="shorta.png" alt="Short A">
-    </label>
-    <div class="trick-toggle">
-      <label><input type="checkbox" disabled data-trick="0.1"> <span class="trick-label">Include HFW?</span></label>
-      <div class="trick-list red-outline">I<br>a<br>the</div>
-    </div>
-  </div>
-
-  <div class="skill-item" data-skill="0.2">
-    <label>
-      <input type="checkbox" name="skill" value="0.2">
-      <div class="skill-label">Short O</div>
-      <img src="shorto.png" alt="Short O">
-    </label>
-    <div class="trick-toggle">
-      <label><input type="checkbox" disabled data-trick="0.2"> <span class="trick-label">Include HFW?</span></label>
-      <div class="trick-list red-outline">is<br>his<br>as<br>was</div>
-    </div>
-  </div>
-
-  <div class="skill-item" data-skill="0.3">
-    <label>
-      <input type="checkbox" name="skill" value="0.3">
-      <div class="skill-label">Short I</div>
-      <img src="shorti.png" alt="Short I">
-    </label>
-    <div class="trick-toggle">
-      <label><input type="checkbox" disabled data-trick="0.3"> <span class="trick-label">Include HFW?</span></label>
-      <div class="trick-list red-outline">to<br>do</div>
-    </div>
-  </div>
-
-  <div class="skill-item" data-skill="0.4">
-    <label>
-      <input type="checkbox" name="skill" value="0.4">
-      <div class="skill-label">Short U</div>
-      <img src="shortu.png" alt="Short U">
-    </label>
-    <div class="trick-toggle">
-      <label><input type="checkbox" disabled data-trick="0.4"> <span class="trick-label">Include HFW?</span></label>
-      <div class="trick-list red-outline">was<br>you</div>
-    </div>
-  </div>
-
-  <div class="skill-item" data-skill="0.5">
-    <label>
-      <input type="checkbox" name="skill" value="0.5">
-      <div class="skill-label">Short E</div>
-      <img src="shorte.png" alt="Short E">
-    </label>
-    <div class="trick-toggle">
-      <label><input type="checkbox" disabled data-trick="0.5"> <span class="trick-label">Include HFW?</span></label>
-      <div class="trick-list red-outline">he<br>be<br>we</div>
-    </div>
-  </div>
-</div>
-
-  <!-- ✅ Short A Skill Block -->
-<div class="skill-container">
-  <div class="skill-block" data-skill="0.1">
-    <input type="checkbox" name="skill" value="0.1" class="skill-checkbox" hidden>
-    <div class="skill-box">
-      <div class="skill-label">Short A</div>
-      <img src="shorta.png" alt="Short A">
-    </div>
-    <div class="trick-toggle" data-trick-skill="0.1">
-      <input type="checkbox" name="trick" value="0.1" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">I<br>a<br>the</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ✅ Short O Skill Block -->
-<div class="skill-container">
-  <div class="skill-block" data-skill="0.2">
-    <input type="checkbox" name="skill" value="0.2" class="skill-checkbox" hidden>
-    <div class="skill-box">
-      <div class="skill-label">Short O</div>
-      <img src="shorto.png" alt="Short O">
-    </div>
-    <div class="trick-toggle" data-trick-skill="0.2">
-      <input type="checkbox" name="trick" value="0.2" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">is<br>his<br>as<br>was</div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- ✅ Short I Skill Block -->
-<div class="skill-container">
-  <div class="skill-block" data-skill="0.3">
-    <input type="checkbox" name="skill" value="0.3" class="skill-checkbox" hidden>
-    <div class="skill-box">
-      <div class="skill-label">Short I</div>
-      <img src="shorti.png" alt="Short I">
-    </div>
-    <div class="trick-toggle" data-trick-skill="0.3">
-      <input type="checkbox" name="trick" value="0.3" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">to<br>do</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ✅ Short U Skill Block -->
-<div class="skill-container">
-  <div class="skill-block" data-skill="0.4">
-    <input type="checkbox" name="skill" value="0.4" class="skill-checkbox" hidden>
-    <div class="skill-box">
-      <div class="skill-label">Short U</div>
-      <img src="shortu.png" alt="Short U">
-    </div>
-    <div class="trick-toggle" data-trick-skill="0.4">
-      <input type="checkbox" name="trick" value="0.4" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">was<br>you</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ✅ Short E Skill Block -->
-<div class="skill-container">
-  <div class="skill-block" data-skill="0.5">
-    <input type="checkbox" name="skill" value="0.5" class="skill-checkbox" hidden>
-    <div class="skill-box">
-      <div class="skill-label">Short E</div>
-      <img src="shorte.png" alt="Short E">
-    </div>
-    <div class="trick-toggle" data-trick-skill="0.5">
-      <input type="checkbox" name="trick" value="0.5" class="trick-checkbox" hidden>
-      <div class="trick-box">
-        <div class="trick-label">Include HFW?</div>
-        <div class="trick-list">he<br>be<br>we</div>
-      </div>
-    </div>
-  </div>
-</div>
-<style>
-.skill-container {
-  display: flex;
-  flex-direction: row;
-  gap: 40px;
-  margin-bottom: 30px;
-  flex-wrap: wrap;
-}
-
-.skill-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 2px solid transparent;
-  border-radius: 10px;
-  padding: 10px;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
-  cursor: pointer;
-}
-
-.skill-block.selected .skill-box {
-  border: 2px solid #007bff;
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-  border-radius: 10px;
-}
-
-.skill-box {
-  text-align: center;
-  padding: 10px;
-  border-radius: 10px;
-}
-
-.skill-label {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 6px;
-}
-
-.skill-box img {
-  width: 100px;
-  height: auto;
-  border-radius: 6px;
-}
-
-.trick-toggle {
-  margin-top: 10px;
-  text-align: center;
-  cursor: pointer;
-  border: 2px solid transparent;
-  padding: 6px;
-  border-radius: 10px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.trick-toggle.selected {
-  border: 2px solid red;
-  box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
-}
-
-.trick-label {
-  font-weight: bold;
-  margin-bottom: 4px;
-}
-
-.trick-list {
-  font-size: 14px;
-}
-</style>
-
-<script>
-document.querySelectorAll('.skill-block').forEach(block => {
-  const skillCheckbox = block.querySelector('.skill-checkbox');
-  const skillBox = block.querySelector('.skill-box');
-
-  skillBox.addEventListener('click', () => {
-    skillCheckbox.checked = !skillCheckbox.checked;
-    block.classList.toggle('selected', skillCheckbox.checked);
-  });
-});
-
-document.querySelectorAll('.trick-toggle').forEach(toggle => {
-  const trickCheckbox = toggle.querySelector('.trick-checkbox');
-  toggle.addEventListener('click', e => {
-    e.stopPropagation();
-    trickCheckbox.checked = !trickCheckbox.checked;
-    toggle.classList.toggle('selected', trickCheckbox.checked);
-  });
-});
-</script>
-
-<style>
-.skill-grid-row {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-bottom: 30px;
-  flex-wrap: wrap;
-}
-.skill-item {
-  text-align: center;
-  cursor: pointer;
-  border: 2px solid transparent;
-  border-radius: 8px;
-  padding: 12px;
-  width: 150px;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
-}
-.skill-item.selected {
-  border-color: #007bff;
-  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
-}
-.skill-label {
-  font-weight: bold;
-  margin: 8px 0;
-}
-.skill-item img {
-  width: 100px;
-  height: auto;
-}
-.trick-toggle {
-  margin-top: 10px;
-}
-.trick-list {
-  font-size: 14px;
-  margin-top: 5px;
-}
-.red-outline {
-  border: 1px solid red;
-  padding: 4px;
-  border-radius: 6px;
-}
-</style>
-
-<script>
-document.querySelectorAll('.skill-item').forEach(item => {
-  const checkbox = item.querySelector('input[type="checkbox"]');
-  item.addEventListener('click', () => {
-    checkbox.checked = !checkbox.checked;
-    item.classList.toggle('selected', checkbox.checked);
-
-    // Enable/disable HFW checkbox based on main skill selection
-    const trickCheckbox = item.querySelector('.trick-toggle input[type="checkbox"]');
-    if (trickCheckbox) {
-      trickCheckbox.disabled = !checkbox.checked;
-    }
-  });
-
-  // Prevent default checkbox behavior when clicking directly on it
-  item.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-    cb.addEventListener('click', e => e.stopPropagation());
-  });
-});
-</script>
-<style>
-.skill-grid-row {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-bottom: 40px;
-  flex-wrap: wrap;
-}
-
-.skill-item {
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  padding: 10px;
-  width: 140px;
-  text-align: center;
-  background-color: #f9f9f9;
-}
-
-.skill-label {
-  font-weight: bold;
-  margin-bottom: 6px;
-}
-
-.skill-item img {
-  width: 100px;
-  height: auto;
-  border-radius: 4px;
-  margin-bottom: 8px;
-}
-
-.trick-toggle {
-  font-size: 13px;
-  margin-top: 4px;
-}
-
-.trick-list {
-  font-size: 12px;
-  margin-top: 3px;
-  line-height: 1.4;
-}
-
-.skill-item input[type="checkbox"] {
-  margin-bottom: 4px;
-}
-</style>
-
-<script>
-document.querySelectorAll('.skill-item').forEach(item => {
-  const skillCheckbox = item.querySelector('input[type="checkbox"][name="skill"]');
-  const trickCheckbox = item.querySelector('input[data-trick]');
-  const skill = item.dataset.skill;
-
-  skillCheckbox.addEventListener('change', () => {
-    const isChecked = skillCheckbox.checked;
-    if (trickCheckbox) {
-      trickCheckbox.disabled = !isChecked;
-      if (!isChecked) trickCheckbox.checked = false;
-    }
-  });
-
-  item.addEventListener('click', (e) => {
-    if (e.target.tagName !== 'INPUT') {
-      skillCheckbox.checked = !skillCheckbox.checked;
-      skillCheckbox.dispatchEvent(new Event('change'));
-    }
-  });
-});
-</script>
-
-<div class="controls">
-  <button onclick="generateGrid()">Generate</button>
-  <button onclick="window.print()">Print</button>
-</div>
-
-<div id="printableSection">
-  <div id="gridHeader" style="text-align: center; margin-top: 30px;"></div>
-  <div id="gridContainer"></div><br><br><br>
-  <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
-</div>
-
-<script>
-  // Highlight skill checkbox container when selected
-  document.querySelectorAll('.skill-item input[type="checkbox"]').forEach(cb => {
-    cb.addEventListener('change', () => {
-      cb.closest('.skill-item').classList.toggle('selected', cb.checked);
+  <script>
+    const selectedSkills = new Set();
+    let selectedGridSize = 25;
+
+    document.querySelectorAll('.skill-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const skill = button.dataset.skill;
+        if (selectedSkills.has(skill)) {
+          selectedSkills.delete(skill);
+          button.classList.remove('selected');
+        } else {
+          selectedSkills.add(skill);
+          button.classList.add('selected');
+        }
+      });
     });
-  });
-</script>
 
-<script>
-// KEEP ALL YOUR ORIGINAL generateGrid FUNCTION HERE (as-is)...
-// I haven’t pasted it to keep the message compact, but nothing in generateGrid changes
-</script>
+    document.querySelectorAll('.grid-option').forEach(option => {
+      option.addEventListener('click', () => {
+        document.querySelectorAll('.grid-option').forEach(el => el.classList.remove('selected'));
+        option.classList.add('selected');
+        selectedGridSize = parseInt(option.dataset.size);
+      });
+    });
 
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function generateGrid() {
+      const skills = Array.from(selectedSkills);
+      const type = document.querySelector('input[name="contentType"]:checked')?.value;
+
+      if (!skills.length || !type) {
+        alert("Please select at least one skill and a content type.");
+        return;
+      }
+
+      let allItems = [];
+      skills.forEach(skill => {
+        if (type === "words" || type === "both") {
+          let words = window.fluencyData.words[`${skill} - Short A Words`] || window.fluencyData.words[`${skill} Words`] || [];
+          allItems.push(...words);
+        }
+        if (type === "sentences" || type === "both") {
+          const sKey = skill === "mixed" ? "Mixed CVC" : `${skill} Sentences`;
+          const sentences = window.fluencyData.sentences[sKey] || [];
+          allItems.push(...sentences);
+        }
+      });
+
+      const shuffled = shuffle([...new Set(allItems)]).slice(0, selectedGridSize);
+
+      let tableHTML = "<table>";
+      const cols = selectedGridSize === 15 ? 3 : selectedGridSize === 20 ? 4 : 5;
+      for (let i = 0; i < selectedGridSize; i += cols) {
+        tableHTML += "<tr>";
+        for (let j = 0; j < cols; j++) {
+          tableHTML += `<td>${shuffled[i + j] || ""}</td>`;
+        }
+        tableHTML += "</tr>";
+      }
+      tableHTML += "</table>";
+
+      document.getElementById("gridHeader").innerHTML = `
+        <h2>Fluency Grid</h2>
+        <p>Skills: ${skills.join(", ")}</p><br/><br/>
+      `;
+
+      document.getElementById("gridContainer").innerHTML = tableHTML;
+    }
+  </script>
 </body>
 </html>
