@@ -80,34 +80,37 @@
   right: 40px;
   font-size: 12px;
 }
-   @media print {
+@media print {
   body {
-  margin: 0;
-  padding: 0;
-   
-}
-* {
-  visibility: hidden;
-}
-#printableSection, #printableSection * {
-  visibility: visible;
-}
+    margin: 0;
+    padding: 0;
+  }
 
- #printableSection {
-  position: relative;
-  width: 100%;
-  padding: 0;
-  margin: 0 auto;
-  min-height: auto; /* Let height adjust naturally */
-}
+  * {
+    visibility: hidden;
+  }
+
+  #printableSection, #printableSection * {
+    visibility: visible;
+  }
+
+  #printableSection {
+    position: relative;
+    width: 100%;
+    padding: 0;
+    margin: 0 auto;
+    min-height: auto; /* Let height adjust naturally */
+  }
+
   #copyrightTag {
     position: absolute;
     bottom: 20px;
     right: 40px;
   }
-      table {
-  page-break-inside: avoid;
-}
+
+  table {
+    page-break-inside: avoid;
+  }
 }
   </style>
 </head>
