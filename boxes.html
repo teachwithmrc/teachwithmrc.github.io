@@ -2,150 +2,298 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Fluency Grid Generator Layout Options</title>
+  <title>Fluency Grid Generator</title>
+  <script src="fluencyDataFull_v3.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Poppins', sans-serif;
       margin: 40px;
+      text-align: center;
     }
-
     h1 {
-      text-align: center;
-      font-size: 36px;
-      margin-bottom: 40px;
+      font-size: 26px;
+      margin-bottom: 10px;
     }
-
-    .step-title {
-      font-size: 22px;
-      font-weight: bold;
-      margin: 30px 0 10px;
-      text-align: center;
-    }
-
-    .content-options {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
+    .subtitle {
+      font-size: 16px;
       margin-bottom: 30px;
-      flex-wrap: wrap;
     }
-
-    .content-box {
-      width: 200px;
-      text-align: center;
-    }
-
-    .content-box img {
-      width: 100%;
-      max-height: 120px;
-      margin-top: 10px;
-      border: 1px solid #ccc;
-    }
-
-    .setup-container {
-      display: flex;
-      justify-content: space-between;
+    .table-section {
       border: 2px solid #000;
       padding: 20px;
-      margin-bottom: 60px;
+      margin: 12px auto;
+      width: fit-content;
+      box-sizing: border-box;
     }
-
-    .left-box, .right-box {
-      width: 45%;
+    .section-label {
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 12px;
     }
-
-    hr {
-      margin: 60px 0;
-      border: 2px dashed #ccc;
+    .skill-button-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: center;
+    }
+    .skill-button-grid .row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .skill-button {
+      border: 2px solid #000;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+    .skill-button.selected {
+      background-color: #007bff;
+      color: white;
+      box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+    }
+    .option-grid {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .option-box {
+      padding: 10px 14px;
+      border: 2px solid #000;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .option-box.selected-step2 {
+      background-color: #d9c9ff;
+    }
+    .option-box.selected-step3 {
+      background-color: #d0f0ff;
+    }
+    .option-box input {
+      display: none;
+    }
+    table {
+      margin: auto;
+      border-collapse: collapse;
+    }
+    td {
+      border: 1px solid #000;
+      width: 120px;
+      height: 80px;
+      font-size: 32px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .copyright {
+      text-align: center;
+      font-size: 12px;
+      margin-top: 60px;
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printableSection, #printableSection * {
+        visibility: visible;
+      }
+      #printableSection {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>Fluency Grid Generator Layout Options</h1>
+<h1>CVC and FLSZ Fluency Grid Generator</h1>
+<div class="subtitle">
+  This generator includes <b>CVC Words</b> such as <b>hat, men, cup</b>.<br>
+  In addition, it includes <b>FLSZ (Double Consonant Endings)</b> like <b>buff, miss, and buzz.</b>
+</div>
 
-  <!-- Option 1 -->
-  <div class="step-title">Option 1: Label Above, Classic Look</div>
-  <div class="step-title">Step 1: Choose a Content Type</div>
-  <div class="content-options">
-    <div class="content-box">
-      <label><input type="radio" name="contentType1" value="words"> Words</label>
-      <img src="example-words.png" alt="Words Example">
+<div class="table-section">
+  <div class="section-label">Step 1: Select Skills</div>
+  <div class="skill-button-grid">
+    <div class="row">
+      <div class="skill-button" data-skill="0.1">Short A</div>
+      <div class="skill-button" data-skill="0.2">Short O</div>
+      <div class="skill-button" data-skill="0.3">Short I</div>
+      <div class="skill-button" data-skill="0.4">Short U</div>
+      <div class="skill-button" data-skill="0.5">Short E</div>
     </div>
-    <div class="content-box">
-      <label><input type="radio" name="contentType1" value="sentences"> Sentences</label>
-      <img src="example-sentences.png" alt="Sentences Example">
-    </div>
-    <div class="content-box">
-      <label><input type="radio" name="contentType1" value="both"> Both</label>
-      <img src="example-both.png" alt="Both Example">
-    </div>
-  </div>
-
-  <div class="step-title">Step 2: Skills + Sticky + Grid Size</div>
-  <div class="setup-container">
-    <div class="left-box"><strong>[Skills UI]</strong></div>
-    <div class="right-box"><strong>[Sticky + Size UI]</strong></div>
-  </div>
-
-  <hr>
-
-  <!-- Option 2 -->
-  <div class="step-title">Option 2: Emphasis on Steps + Cleaner Headers</div>
-  <div class="step-title">Step 1: Select Content Type</div>
-  <div class="content-options">
-    <div class="content-box">
-      <label><input type="radio" name="contentType2" value="words"> Words</label>
-      <img src="example-words.png" alt="Words Example">
-    </div>
-    <div class="content-box">
-      <label><input type="radio" name="contentType2" value="sentences"> Sentences</label>
-      <img src="example-sentences.png" alt="Sentences Example">
-    </div>
-    <div class="content-box">
-      <label><input type="radio" name="contentType2" value="both"> Both</label>
-      <img src="example-both.png" alt="Both Example">
+    <div class="row">
+      <div class="skill-button" data-skill="0.6">FLSZ</div>
+      <div class="skill-button" data-skill="0.7">CVC & FLSZ</div>
+      <div class="skill-button" data-skill="mixed">Mixed CVC</div>
     </div>
   </div>
+</div>
 
-  <div class="step-title">Step 2: Skill and Layout Selection</div>
-  <div class="setup-container">
-    <div class="left-box"><strong>[Skills UI]</strong></div>
-    <div class="right-box"><strong>[Sticky + Size UI]</strong></div>
+<div class="table-section">
+  <div class="section-label">Step 2: What would you like in the grid?</div>
+  <div class="option-grid" id="contentOptions">
+    <label class="option-box">
+      <input type="radio" name="contentType" value="words" /> Only Words
+    </label>
+    <label class="option-box">
+      <input type="radio" name="contentType" value="sentences" /> Only Sentences
+    </label>
+    <label class="option-box">
+      <input type="radio" name="contentType" value="both" /> Both
+    </label>
   </div>
+</div>
 
-  <hr>
-
-  <!-- Option 3 -->
-  <div class="step-title">Option 3: Table Style Selector</div>
-  <table border="1" cellpadding="10" cellspacing="0" style="margin: 0 auto; text-align: center;">
-    <tr>
-      <th>Words</th>
-      <th>Sentences</th>
-      <th>Both</th>
-    </tr>
-    <tr>
-      <td>
-        <label><input type="radio" name="contentType3" value="words"> Select</label><br>
-        <img src="example-words.png" alt="Words Example" width="150">
-      </td>
-      <td>
-        <label><input type="radio" name="contentType3" value="sentences"> Select</label><br>
-        <img src="example-sentences.png" alt="Sentences Example" width="150">
-      </td>
-      <td>
-        <label><input type="radio" name="contentType3" value="both"> Select</label><br>
-        <img src="example-both.png" alt="Both Example" width="150">
-      </td>
-    </tr>
-  </table>
-
-  <div class="step-title">Step 2: Choose Skills + Layout</div>
-  <div class="setup-container">
-    <div class="left-box"><strong>[Skills UI]</strong></div>
-    <div class="right-box"><strong>[Sticky + Size UI]</strong></div>
+<div class="table-section">
+  <div class="section-label">Step 3: Select Grid Size</div>
+  <div class="option-grid" id="gridSizeOptions">
+    <label class="option-box">
+      <input type="radio" name="gridSize" value="15" /> 3 x 5 - 15
+    </label>
+    <label class="option-box">
+      <input type="radio" name="gridSize" value="20" /> 4 x 5 - 20
+    </label>
+    <label class="option-box">
+      <input type="radio" name="gridSize" value="25" checked /> 5 x 5 - 25
+    </label>
   </div>
+</div>
+
+<div style="margin-top: 30px;">
+  <button onclick="generateGrid()" style="font-size: 18px; padding: 10px 24px;">Generate Fluency Grid</button>
+  <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
+</div>
+
+<div id="printableSection">
+  <div id="gridHeader" style="text-align: center; margin-top: 30px;"></div>
+  <div id="gridContainer"></div>
+  <br><br><br>
+  <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+</div>
+
+<script>
+  const selectedSkills = new Set();
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('.skill-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const skill = button.dataset.skill;
+        if (selectedSkills.has(skill)) {
+          selectedSkills.delete(skill);
+          button.classList.remove('selected');
+        } else {
+          selectedSkills.add(skill);
+          button.classList.add('selected');
+        }
+      });
+    });
+
+    document.querySelectorAll('#contentOptions .option-box').forEach(box => {
+      box.addEventListener('click', () => {
+        document.querySelectorAll('#contentOptions .option-box').forEach(b => b.classList.remove('selected-step2'));
+        box.classList.add('selected-step2');
+        box.querySelector('input').checked = true;
+      });
+    });
+
+    document.querySelectorAll('#gridSizeOptions .option-box').forEach(box => {
+      box.addEventListener('click', () => {
+        document.querySelectorAll('#gridSizeOptions .option-box').forEach(b => b.classList.remove('selected-step3'));
+        box.classList.add('selected-step3');
+        box.querySelector('input').checked = true;
+      });
+    });
+  });
+
+  function generateGrid() {
+    const contentType = document.querySelector('input[name=contentType]:checked')?.value;
+    const gridSize = parseInt(document.querySelector('input[name=gridSize]:checked')?.value || "25");
+
+    if (selectedSkills.size === 0) {
+      alert("❗ Please select at least one skill in Step 1.");
+      return;
+    }
+
+    if (!contentType) {
+      alert("❗ Please select a content type in Step 2.");
+      return;
+    }
+
+    const skillKeys = Array.from(selectedSkills);
+    const wordPool = [];
+    const sentencePool = [];
+
+    skillKeys.forEach(skill => {
+      const wordKey = skill === "mixed" ? "Mixed CVC Words" : `${skill} - ${skillName(skill)} Words`;
+      const sentenceKey = skill === "mixed" ? "Mixed CVC Sentences" : `${skill} - ${skillName(skill)} Sentences`;
+
+      if (contentType === "words" || contentType === "both") {
+        const words = fluencyData.words[wordKey] || [];
+        wordPool.push(...words);
+      }
+      if (contentType === "sentences" || contentType === "both") {
+        const sentences = fluencyData.sentences[sentenceKey] || [];
+        sentencePool.push(...sentences);
+      }
+    });
+
+    const finalPool = [];
+    if (contentType === "words") {
+      for (let i = 0; i < gridSize; i++) {
+        finalPool.push(wordPool[i % wordPool.length]);
+      }
+    } else if (contentType === "sentences") {
+      for (let i = 0; i < gridSize; i++) {
+        finalPool.push(sentencePool[i % sentencePool.length]);
+      }
+    } else if (contentType === "both") {
+      const half = Math.floor(gridSize / 2);
+      for (let i = 0; i < half; i++) {
+        finalPool.push(wordPool[i % wordPool.length]);
+      }
+      for (let i = 0; i < gridSize - half; i++) {
+        finalPool.push(sentencePool[i % sentencePool.length]);
+      }
+    }
+
+    const cols = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
+    let table = "<table>";
+    for (let i = 0; i < gridSize; i += cols) {
+      table += "<tr>";
+      for (let j = 0; j < cols; j++) {
+        const val = finalPool[i + j] || "";
+        table += `<td>${val}</td>`;
+      }
+      table += "</tr>";
+    }
+    table += "</table>";
+
+    const header = skillKeys.map(s => s === "mixed" ? "Mixed CVC" : skillName(s)).join(", ");
+    document.getElementById("gridHeader").innerHTML = `<h2>${header} Fluency Grid</h2><br>`;
+    document.getElementById("gridContainer").innerHTML = table;
+  }
+
+  function skillName(code) {
+    return {
+      "0.1": "Short A",
+      "0.2": "Short O",
+      "0.3": "Short I",
+      "0.4": "Short U",
+      "0.5": "Short E",
+      "0.6": "FLSZ",
+      "0.7": "FLSZ and CVC"
+    }[code] || code;
+  }
+</script>
 
 </body>
 </html>
