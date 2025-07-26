@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Fluency Grid Generator</title>
   <script src="fluencyDataFull_v3.js"></script>
+  <title>Fluency Grid Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
     body {
@@ -11,43 +11,25 @@
       margin: 40px;
       text-align: center;
     }
-    h1 {
-      font-size: 26px;
-      margin-bottom: 10px;
-    }
-    .subtitle {
-      font-size: 16px;
-      margin-bottom: 30px;
-    }
+    h1 { font-size: 26px; margin-bottom: 10px; }
+    .subtitle { font-size: 16px; margin-bottom: 30px; }
     .table-section {
-      border: 2px solid #000;
-      padding: 20px;
-      margin: 12px auto;
-      width: fit-content;
-      box-sizing: border-box;
+      border: 2px solid #000; padding: 20px;
+      margin: 12px auto; width: fit-content;
     }
     .section-label {
-      font-weight: 600;
-      font-size: 18px;
-      margin-bottom: 12px;
+      font-weight: 600; font-size: 18px; margin-bottom: 12px;
     }
     .skill-button-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      justify-content: center;
+      display: flex; flex-direction: column;
+      gap: 8px; justify-content: center;
     }
     .skill-button-grid .row {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 6px;
+      display: flex; justify-content: center; gap: 8px;
     }
     .skill-button {
-      border: 2px solid #000;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-weight: 600;
+      border: 2px solid #000; padding: 10px 16px;
+      border-radius: 8px; font-weight: 600;
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
     }
@@ -57,133 +39,112 @@
       box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
     }
     .option-grid {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 10px;
+      display: flex; justify-content: center;
+      flex-wrap: wrap; gap: 12px; margin-top: 10px;
     }
     .option-box {
-      padding: 10px 14px;
-      border: 2px solid #000;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s, color 0.3s;
+      padding: 10px 14px; border: 2px solid #000;
+      border-radius: 8px; cursor: pointer;
     }
-    .option-box.selected-step2 {
-      background-color: #d9c9ff;
-    }
-    .option-box.selected-step3 {
-      background-color: #d0f0ff;
-    }
-    .option-box input {
-      display: none;
-    }
+    .option-box.selected-step2 { background-color: #d9c9ff; }
+    .option-box.selected-step3 { background-color: #d0f0ff; }
+    .option-box input { display: none; }
     table {
-      margin: auto;
-      border-collapse: collapse;
+      margin: auto; border-collapse: collapse;
     }
     td {
       border: 1px solid #000;
-      width: 120px;
-      height: 80px;
+      width: 120px; height: 80px;
       font-size: 32px;
-      text-align: center;
-      vertical-align: middle;
+      text-align: center; vertical-align: middle;
+    }
+    .word-cell {
+      font-size: 28px;
+    }
+    .sentence-cell {
+      font-size: 18px;
+      text-align: left;
+      padding: 6px;
     }
     .copyright {
-      text-align: center;
-      font-size: 12px;
-      margin-top: 60px;
+      text-align: center; font-size: 12px; margin-top: 60px;
     }
     @media print {
-      body * {
-        visibility: hidden;
-      }
-      #printableSection, #printableSection * {
-        visibility: visible;
-      }
+      body * { visibility: hidden; }
+      #printableSection, #printableSection * { visibility: visible; }
       #printableSection {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
+        position: absolute; top: 0; left: 0; width: 100%;
       }
     }
   </style>
 </head>
 <body>
+  <h1>CVC and FLSZ Fluency Grid Generator</h1>
+  <div class="subtitle">
+    This generator includes <b>CVC Words</b> such as <b>hat, men, cup</b>.<br>
+    In addition, it includes <b>FLSZ (Double Consonant Endings)</b> with short vowels such as <b>buff, miss, and buzz</b>.
+  </div>
 
-<h1>CVC and FLSZ Fluency Grid Generator</h1>
-<div class="subtitle">
-  This generator includes <b>CVC Words</b> such as <b>hat, men, cup</b>.<br>
-  In addition, it includes <b>FLSZ (Double Consonant Endings)</b> like <b>buff, miss, and buzz.</b>
-</div>
-
-<div class="table-section">
-  <div class="section-label">Step 1: Select Skills</div>
-  <div class="skill-button-grid">
-    <div class="row">
-      <div class="skill-button" data-skill="0.1">Short A</div>
-      <div class="skill-button" data-skill="0.2">Short O</div>
-      <div class="skill-button" data-skill="0.3">Short I</div>
-      <div class="skill-button" data-skill="0.4">Short U</div>
-      <div class="skill-button" data-skill="0.5">Short E</div>
+  <div class="table-section">
+    <div class="section-label">Step 1: Select Skills</div>
+    <div class="skill-button-grid">
+      <div class="row">
+        <div class="skill-button" data-skill="0.1">Short A</div>
+        <div class="skill-button" data-skill="0.2">Short O</div>
+        <div class="skill-button" data-skill="0.3">Short I</div>
+        <div class="skill-button" data-skill="0.4">Short U</div>
+        <div class="skill-button" data-skill="0.5">Short E</div>
+      </div>
+      <div class="row">
+        <div class="skill-button" data-skill="0.6">FLSZ</div>
+        <div class="skill-button" data-skill="0.7">CVC & FLSZ</div>
+        <div class="skill-button" data-skill="mixed">Mixed CVC</div>
+      </div>
     </div>
-    <div class="row">
-      <div class="skill-button" data-skill="0.6">FLSZ</div>
-      <div class="skill-button" data-skill="0.7">CVC & FLSZ</div>
-      <div class="skill-button" data-skill="mixed">Mixed CVC</div>
+  </div>
+
+  <div class="table-section">
+    <div class="section-label">Step 2: What would you like in the grid?</div>
+    <div class="option-grid" id="contentOptions">
+      <label class="option-box"><input type="radio" name="contentType" value="words" />Only Words</label>
+      <label class="option-box"><input type="radio" name="contentType" value="sentences" />Only Sentences</label>
+      <label class="option-box"><input type="radio" name="contentType" value="both" />Both</label>
     </div>
   </div>
-</div>
 
-<div class="table-section">
-  <div class="section-label">Step 2: What would you like in the grid?</div>
-  <div class="option-grid" id="contentOptions">
-    <label class="option-box">
-      <input type="radio" name="contentType" value="words" /> Only Words
-    </label>
-    <label class="option-box">
-      <input type="radio" name="contentType" value="sentences" /> Only Sentences
-    </label>
-    <label class="option-box">
-      <input type="radio" name="contentType" value="both" /> Both
-    </label>
+  <div class="table-section">
+    <div class="section-label">Step 3: Select Grid Size</div>
+    <div class="option-grid" id="gridSizeOptions">
+      <label class="option-box"><input type="radio" name="gridSize" value="15">3 x 5 - 15</label>
+      <label class="option-box"><input type="radio" name="gridSize" value="20">4 x 5 - 20</label>
+      <label class="option-box"><input type="radio" name="gridSize" value="25" checked>5 x 5 - 25</label>
+    </div>
   </div>
-</div>
 
-<div class="table-section">
-  <div class="section-label">Step 3: Select Grid Size</div>
-  <div class="option-grid" id="gridSizeOptions">
-    <label class="option-box">
-      <input type="radio" name="gridSize" value="15" /> 3 x 5 - 15
-    </label>
-    <label class="option-box">
-      <input type="radio" name="gridSize" value="20" /> 4 x 5 - 20
-    </label>
-    <label class="option-box">
-      <input type="radio" name="gridSize" value="25" checked /> 5 x 5 - 25
-    </label>
+  <div class="table-section">
+    <label><input type="checkbox" id="includeSticky" /> Include Tricky-Sticky Words</label>
   </div>
-</div>
 
-<div style="margin-top: 30px;">
-  <button onclick="generateGrid()" style="font-size: 18px; padding: 10px 24px;">Generate Fluency Grid</button>
-  <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
-</div>
+  <div style="margin-top: 30px;">
+    <button onclick="generateGrid()" style="font-size: 18px; padding: 10px 24px;">Generate Fluency Grid</button>
+    <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
+  </div>
 
-<div id="printableSection">
-  <div id="gridHeader" style="text-align: center; margin-top: 30px;"></div>
-  <div id="gridContainer"></div>
-  <br><br><br>
-  <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
-</div>
+  <div id="printableSection">
+    <div id="gridHeader" style="text-align: center; margin-top: 30px;"></div>
+    <div id="gridContainer"></div>
+    <br><br><br>
+    <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+  </div>
 
-<script>
-  const selectedSkills = new Set();
+  <script>
+    const selectedSkills = new Set();
+    const skillMap = {
+      "0.1": "A", "0.2": "O", "0.3": "I",
+      "0.4": "U", "0.5": "E", "0.6": "FLSZ",
+      "0.7": "FLSZ and CVC", "mixed": "Mixed"
+    };
 
-  document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.skill-button').forEach(button => {
       button.addEventListener('click', () => {
         const skill = button.dataset.skill;
@@ -212,88 +173,124 @@
         box.querySelector('input').checked = true;
       });
     });
-  });
 
-  function generateGrid() {
-    const contentType = document.querySelector('input[name=contentType]:checked')?.value;
-    const gridSize = parseInt(document.querySelector('input[name=gridSize]:checked')?.value || "25");
-
-    if (selectedSkills.size === 0) {
-      alert("❗ Please select at least one skill in Step 1.");
-      return;
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
     }
 
-    if (!contentType) {
-      alert("❗ Please select a content type in Step 2.");
-      return;
+    function generateGrid() {
+      document.getElementById("gridHeader").innerHTML = "";
+      document.getElementById("gridContainer").innerHTML = "";
+
+      const selected = Array.from(selectedSkills);
+      const contentType = document.querySelector('input[name="contentType"]:checked')?.value;
+      const gridSize = parseInt(document.querySelector('input[name="gridSize"]:checked')?.value || "25");
+      const includeSticky = document.getElementById("includeSticky").checked;
+
+      if (!selected.length || !contentType) {
+        alert("❗ Please select skills and a content type.");
+        return;
+      }
+
+      let wordPools = {}, sentencePools = {};
+
+      selected.forEach(skill => {
+        let wordKey = "", sentenceKey = "";
+        if (skill === "mixed") {
+          wordKey = "Mixed CVC Words";
+          sentenceKey = "Mixed CVC Sentences";
+        } else if (skill === "0.6") {
+          wordKey = "0.6 - FLSZ";
+          sentenceKey = "0.6 - FLSZ Sentences";
+        } else if (skill === "0.7") {
+          wordKey = "0.7 - FLSZ and CVC";
+          sentenceKey = "0.7 - FLSZ and CVC Sentences";
+        } else {
+          wordKey = `${skill} - Short ${skillMap[skill]} Words`;
+          sentenceKey = `${skill} - Short ${skillMap[skill]} Sentences`;
+        }
+
+        let words = fluencyData.words[wordKey] || [];
+        let sentences = fluencyData.sentences[sentenceKey] || [];
+
+        if (includeSticky && !["0.6", "0.7"].includes(skill)) {
+          const stickyKey = skill === "mixed" ? "Mixed CVC" : `${skill} - Short ${skillMap[skill]}`;
+          const stickyWords = fluencyData.trickySticky[stickyKey] || [];
+          words = [...words, ...stickyWords];
+        }
+
+        if (contentType === "words" || contentType === "both") wordPools[skill] = words;
+        if (contentType === "sentences" || contentType === "both") sentencePools[skill] = sentences;
+      });
+
+      let finalPool = [], finalWords = [], finalSentences = [];
+
+      if (contentType === "both") {
+        const half = Math.floor(gridSize / 2);
+        selected.forEach(skill => {
+          finalWords.push(...shuffle(wordPools[skill] || []).slice(0, Math.ceil(half / selected.length)));
+          finalSentences.push(...shuffle(sentencePools[skill] || []).slice(0, Math.ceil((gridSize - half) / selected.length)));
+        });
+        finalPool = shuffle([...finalWords, ...finalSentences]).slice(0, gridSize);
+      } else if (contentType === "words") {
+        const trickyInserts = [];
+        let remainingSlots = gridSize;
+        selected.forEach(skill => {
+          const allWords = wordPools[skill] || [];
+          const stickyKey = skill === "mixed" ? "Mixed CVC" : `${skill} - Short ${skillMap[skill]}`;
+          const trickyOnly = (fluencyData.trickySticky || {})[stickyKey] || [];
+          if (includeSticky && trickyOnly.length > 0) {
+            const trickyCount = (selected.length === 1)
+              ? (skill === "mixed" ? 5 : 4)
+              : (skill === "mixed" ? 5 : 2);
+            trickyInserts.push(...shuffle(trickyOnly).slice(0, trickyCount));
+            remainingSlots -= trickyCount;
+          }
+          finalWords.push(...shuffle(allWords));
+        });
+
+        const seen = new Set();
+        const combined = [...trickyInserts, ...finalWords];
+        for (const word of combined) {
+          if (!seen.has(word)) {
+            finalPool.push(word);
+            seen.add(word);
+          }
+          if (finalPool.length >= gridSize) break;
+        }
+      } else if (contentType === "sentences") {
+        selected.forEach(skill => {
+          finalSentences.push(...shuffle(sentencePools[skill] || []).slice(0, Math.ceil(gridSize / selected.length)));
+        });
+        finalPool = shuffle(finalSentences).slice(0, gridSize);
+      }
+
+      const cols = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
+      let table = "<table>";
+      for (let i = 0; i < gridSize; i += cols) {
+        table += "<tr>";
+        for (let j = 0; j < cols; j++) {
+          const val = finalPool[i + j] || "";
+          const cellClass = val.split(" ").length > 3 ? "sentence-cell" : "word-cell";
+          table += `<td class="${cellClass}">${val}</td>`;
+        }
+        table += "</tr>";
+      }
+      table += "</table>";
+
+      const readableSkills = selected.map(s => ({
+        "0.1": "Short A", "0.2": "Short O", "0.3": "Short I",
+        "0.4": "Short U", "0.5": "Short E", "0.6": "FLSZ",
+        "0.7": "FLSZ and CVC", "mixed": "Mixed CVC"
+      }[s])).join(", ");
+
+      document.getElementById("gridHeader").innerHTML = `<h2>${readableSkills} Fluency Grid</h2><br>`;
+      document.getElementById("gridContainer").innerHTML = table;
     }
-
-    const skillKeys = Array.from(selectedSkills);
-    const wordPool = [];
-    const sentencePool = [];
-
-    skillKeys.forEach(skill => {
-      const wordKey = skill === "mixed" ? "Mixed CVC Words" : `${skill} - ${skillName(skill)} Words`;
-      const sentenceKey = skill === "mixed" ? "Mixed CVC Sentences" : `${skill} - ${skillName(skill)} Sentences`;
-
-      if (contentType === "words" || contentType === "both") {
-        const words = fluencyData.words[wordKey] || [];
-        wordPool.push(...words);
-      }
-      if (contentType === "sentences" || contentType === "both") {
-        const sentences = fluencyData.sentences[sentenceKey] || [];
-        sentencePool.push(...sentences);
-      }
-    });
-
-    const finalPool = [];
-    if (contentType === "words") {
-      for (let i = 0; i < gridSize; i++) {
-        finalPool.push(wordPool[i % wordPool.length]);
-      }
-    } else if (contentType === "sentences") {
-      for (let i = 0; i < gridSize; i++) {
-        finalPool.push(sentencePool[i % sentencePool.length]);
-      }
-    } else if (contentType === "both") {
-      const half = Math.floor(gridSize / 2);
-      for (let i = 0; i < half; i++) {
-        finalPool.push(wordPool[i % wordPool.length]);
-      }
-      for (let i = 0; i < gridSize - half; i++) {
-        finalPool.push(sentencePool[i % sentencePool.length]);
-      }
-    }
-
-    const cols = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
-    let table = "<table>";
-    for (let i = 0; i < gridSize; i += cols) {
-      table += "<tr>";
-      for (let j = 0; j < cols; j++) {
-        const val = finalPool[i + j] || "";
-        table += `<td>${val}</td>`;
-      }
-      table += "</tr>";
-    }
-    table += "</table>";
-
-    const header = skillKeys.map(s => s === "mixed" ? "Mixed CVC" : skillName(s)).join(", ");
-    document.getElementById("gridHeader").innerHTML = `<h2>${header} Fluency Grid</h2><br>`;
-    document.getElementById("gridContainer").innerHTML = table;
-  }
-
-  function skillName(code) {
-    return {
-      "0.1": "Short A",
-      "0.2": "Short O",
-      "0.3": "Short I",
-      "0.4": "Short U",
-      "0.5": "Short E",
-      "0.6": "FLSZ",
-      "0.7": "FLSZ and CVC"
-    }[code] || code;
-  }
-</script>
-
+  </script>
 </body>
 </html>
