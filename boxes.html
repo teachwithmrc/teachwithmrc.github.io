@@ -266,14 +266,30 @@
 
       let finalPool = [], finalWords = [], finalSentences = [];
 
-      if (contentType === "both") {
-        const half = Math.floor(gridSize / 2);
-        selected.forEach(skill => {
-          finalWords.push(...shuffle(wordPools[skill] || []).slice(0, Math.ceil(half / selected.length)));
-          finalSentences.push(...shuffle(sentencePools[skill] || []).slice(0, Math.ceil((gridSize - half) / selected.length)));
-        });
-        finalPool = shuffle([...finalWords, ...finalSentences]).slice(0, gridSize);
-      } else if (contentType === "words") {
+  if (contentType === "both") {
+  const numSkills = selected.length;
+  const half = Math.floor(gridSize / 2);
+  const totalWords = half;
+  const totalSentences = gridSize - half;
+
+  const wordsPerSkill = Math.floor(totalWords / numSkills);
+  const sentencesPerSkill = Math.floor(totalSentences / numSkills);
+  const extraWords = totalWords % numSkills;
+  const extraSentences = totalSentences % numSkills;
+
+  selected.forEach((skill, i) => {
+    const wordCount = wordsPerSkill + (i < extraWords ? 1 : 0);
+    const sentenceCount = sentencesPerSkill + (i < extraSentences ? 1 : 0);
+
+    const words = shuffle(wordPools[skill] || []).slice(0, wordCount);
+    const sentences = shuffle(sentencePools[skill] || []).slice(0, sentenceCount);
+
+    finalWords.push(...words);
+    finalSentences.push(...sentences);
+  });
+
+  finalPool = shuffle([...finalWords, ...finalSentences]).slice(0, gridSize);
+} else if (contentType === "words") {
         const trickyInserts = [];
         let remainingSlots = gridSize;
         selected.forEach(skill => {
