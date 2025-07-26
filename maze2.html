@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Maze Game Generator</title>
+  <script src="fluencyDataFull_v3.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 40px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+
+    .skill-button-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .skill-button-grid .row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .skill-button {
+      border: 2px solid #000;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+
+    .skill-button.selected {
+      background-color: #007bff;
+      color: white;
+      box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+    }
+
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+
+    td {
+      border: 1px solid #000;
+      width: 100px;
+      height: 80px;
+      font-size: 28px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .maze-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printableSection, #printableSection * {
+        visibility: visible;
+      }
+      #printableSection {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>CVC Maze Generator</h1>
+  <div class="subtitle">Pick a short vowel skill and click generate to create two printable mazes.</div>
+
+  <div class="skill-button-grid">
+    <div class="row">
+      <div class="skill-button" data-skill="0.1">Short A</div>
+      <div class="skill-button" data-skill="0.2">Short O</div>
+      <div class="skill-button" data-skill="0.3">Short I</div>
+      <div class="skill-button" data-skill="0.4">Short U</div>
+      <div class="skill-button" data-skill="0.5">Short E</div>
+    </div>
+  </div>
+
+  <div style="margin-top: 30px;">
+    <button onclick="generateMaze()" style="font-size: 18px; padding: 10px 24px;">Generate Maze</button>
+    <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
+  </div>
+
+  <div id="printableSection" class="maze-wrapper"></div>
+
+  <script>
+    const selectedSkills = new Set();
+    const funPaths = [
+      [[0,0],[0,1],[1,1],[1,2],[2,2],[3,2],[3,3],[4,3],[4,4]],
+      [[0,0],[1,0],[2,0],[2,1],[2,2],[3,2],[3,3],[3,4],[4,4]],
+      [[0,0],[1,0],[1,1],[2,1],[2,2],[2,3],[3,3],[4,3],[4,4]],
+      [[0,0],[0,1],[0,2],[1,2],[2,2],[2,3],[3,3],[4,3],[4,4]],
+      [[0,0],[1,0],[1,1],[2,1],[3,1],[3,2],[4,2],[4,3],[4,4]]
+    ];
+
+    document.querySelectorAll('.skill-button').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.skill-button').forEach(b => b.classList.remove('selected'));
+        button.classList.add('selected');
+        selectedSkills.clear();
+        selectedSkills.add(button.dataset.skill);
+      });
+    });
+
+    function generateMaze() {
+      const skill = [...selectedSkills][0];
+      if (!skill) return alert("Please select a skill.");
+      const label = {
+        "0.1": "Short A",
+        "0.2": "Short O",
+        "0.3": "Short I",
+        "0.4": "Short U",
+        "0.5": "Short E"
+      }[skill];
+      const pathWords = [...fluencyData.words[`${skill} - ${label} Words`]];
+      const otherWords = Object.entries(fluencyData.words)
+        .filter(([k]) => !k.includes(label))
+        .flatMap(([_, v]) => v);
+
+      const getMaze = () => {
+        const path = funPaths[Math.floor(Math.random() * funPaths.length)];
+        const used = new Set();
+        const grid = Array.from({ length: 5 }, () => Array(5).fill(""));
+
+        for (let i = 0; i < path.length; i++) {
+          let word;
+          do {
+            word = pathWords[Math.floor(Math.random() * pathWords.length)];
+          } while (used.has(word));
+          used.add(word);
+          const [r,c] = path[i];
+          grid[r][c] = word;
+        }
+
+        for (let r = 0; r < 5; r++) {
+          for (let c = 0; c < 5; c++) {
+            if (!grid[r][c]) {
+              grid[r][c] = otherWords[Math.floor(Math.random() * otherWords.length)];
+            }
+          }
+        }
+
+        return grid;
+      };
+
+      let html = '';
+      for (let i = 0; i < 2; i++) {
+        const maze = getMaze();
+        html += `<table>` + maze.map(row => `<tr>` + row.map(word => `<td>${word}</td>`).join('') + `</tr>`).join('') + `</table>`;
+      }
+      document.getElementById("printableSection").innerHTML = html;
+    }
+  </script>
+</body>
+</html>
