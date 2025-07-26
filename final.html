@@ -423,5 +423,47 @@ const skillMap = {
   "mixed": "Mixed"
 };
 </script>
+  <script>
+function generateGrid() {
+  // Get the selected skills from the Set
+  const skillsArray = Array.from(selectedSkills);
+
+  // Define grid size (rows and columns)
+  const gridSize = 5; // 5x5 grid for example
+  const totalCells = gridSize * gridSize;
+
+  // Shuffle and trim selected skills to fit grid
+  const shuffled = skillsArray.sort(() => 0.5 - Math.random());
+  const gridValues = [];
+  // If fewer than totalCells, repeat or fill with empty
+  for (let i = 0; i < totalCells; i++) {
+    gridValues.push(shuffled[i % shuffled.length] || "");
+  }
+
+  // Build the grid/table
+  const gridContainer = document.getElementById("gridContainer");
+  gridContainer.innerHTML = ""; // Clear previous
+
+  const table = document.createElement("table");
+  table.style.margin = "0 auto";
+  table.style.borderCollapse = "collapse";
+  table.style.fontSize = "24px";
+
+  for (let r = 0; r < gridSize; r++) {
+    const row = document.createElement("tr");
+    for (let c = 0; c < gridSize; c++) {
+      const cell = document.createElement("td");
+      cell.style.border = "1px solid #000";
+      cell.style.padding = "8px";
+      cell.style.textAlign = "center";
+      cell.textContent = gridValues[r * gridSize + c];
+      row.appendChild(cell);
+    }
+    table.appendChild(row);
+  }
+
+  gridContainer.appendChild(table);
+}
+</script>
 </body>
 </html>
