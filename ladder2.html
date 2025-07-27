@@ -46,7 +46,7 @@
     }
 
     .image-cell img {
-      height: 60px;
+      height: 200px;
     }
 
     .speech-bubble {
@@ -62,6 +62,20 @@
       font-size: 28px;
       letter-spacing: 12px;
     }
+    .letter-lines {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.letter-lines span {
+  display: block;
+  width: 30px;     /* Adjust line length */
+  height: 4px;     /* Adjust thickness */
+  background: black;
+  border-radius: 2px;
+}
   </style>
 </head>
 <body>
@@ -76,27 +90,27 @@
     </tr>
     <tr>
       <td class="image-cell"><img src="images/cat.png" alt="cat"></td>
-      <td class="bottom-cell">___ ___ ___</td>
+      <div class="letter-lines">   <span></span><span></span><span></span> </div>
       <td><div class="speech-bubble">p → t</div></td>
     </tr>
     <tr>
       <td class="image-cell"><img src="images/bat.png" alt="bat"></td>
-      <td class="bottom-cell">___ ___ ___</td>
+      <div class="letter-lines">   <span></span><span></span><span></span> </div>
       <td><div class="speech-bubble">c → b</div></td>
     </tr>
     <tr>
       <td class="image-cell"><img src="images/bag.png" alt="bag"></td>
-      <td class="bottom-cell">___ ___ ___</td>
+      <td class="bottom-cell">_ _ _</td>
       <td><div class="speech-bubble">t → g</div></td>
     </tr>
     <tr>
       <td class="image-cell"><img src="images/bug.png" alt="bug"></td>
-      <td class="bottom-cell">___ ___ ___</td>
+      <div class="letter-lines">   <span></span><span></span><span></span> </div>
       <td><div class="speech-bubble">a → u</div></td>
     </tr>
     <tr>
       <td class="image-cell"><img src="images/bun.png" alt="bun"></td>
-      <td class="bottom-cell">___ ___ ___</td>
+      <div class="letter-lines">   <span></span><span></span><span></span> </div>
       <td><div class="speech-bubble">g → n</div></td>
     </tr>
   </table>
