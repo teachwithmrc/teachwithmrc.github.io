@@ -5,20 +5,17 @@
   <title>CVC Word Ladder</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      text-align: center;
-      padding: 30px;
-    }
-.top-word {
-  font-size: 40px; /* or whatever size you want */
-  font-weight: bold;
-  letter-spacing: 10px;
+   body {
+  padding: 10px; /* was 30px */
+  font-size: 14px; /* optional: makes text more compact */
 }
+.top-word {
+  font-size: 28px;  /* was 40px */
+  letter-spacing: 6px; /* was 10px */
     h1 {
-      font-size: 32px;
-      margin-bottom: 20px;
-    }
+  font-size: 24px; /* was 32px */
+  margin-bottom: 10px;
+}
 
     table {
       border-collapse: collapse;
@@ -27,21 +24,16 @@
 td, th {
   border: 6px solid black; /* cell borders */
 }
-    td {
-      border: 6px solid black;
-      padding: 12px;
-      width: 200px;
-      height: 90px;
-      vertical-align: middle;
-      text-align: center;
-      font-size: 24px;
-    }
-    td img {
-  max-height: 200px;
-  max-width: 200px;
-  object-fit: contain;
-  display: block;
-  margin: auto;
+   td {
+  padding: 6px; /* was 12px */
+  width: 140px; /* was 200px */
+  height: 70px; /* was 90px */
+  font-size: 18px; /* was 24px */
+}
+
+td img {
+  max-height: 100px; /* was 200px */
+  max-width: 120px;  /* was 200px */
 }
     .no-top-right-bottom {
   border-top: none;
@@ -49,8 +41,10 @@ td, th {
   border-bottom: none;
 }
 .bottom-cell {
-  vertical-align: bottom;
+  font-size: 20px; /* was 28px */
+  letter-spacing: 8px; /* was 12px */
 }
+
 .image-cell {
   border: 2px solid black;
   padding: 1px;
@@ -70,14 +64,10 @@ td, th {
   border-bottom: none;
 }
 
-    .speech-bubble {
-      display: inline-block;
-      padding: 6px 24px;
-      border: 2px solid black;
-      border-radius: 18px;
-      font-size: 25px;
-      font-weight: 600;
-    }
+.speech-bubble {
+  padding: 4px 12px; /* was 6px 24px */
+  font-size: 16px;   /* was 25px */
+}
 
     .bottom-cell {
       font-size: 28px;
