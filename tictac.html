@@ -279,7 +279,21 @@
   const totalCells = 36; // 4 boards x 9 cells
   let words = [];
   let sentences = [];
+let overrideHandled = false;
 
+if (skills.includes("0.7") && contentType !== "sentences") {
+  const cvcWords = window.fluencyData.words["Mixed CVC Words"] || [];
+  const flszWords = window.fluencyData.words["0.6 - FLSZ"] || [];
+
+  const totalNeeded = 36;
+  const half = Math.floor(totalNeeded / 2);
+
+  const shuffledCVC = cvcWords.sort(() => 0.5 - Math.random()).slice(0, half);
+  const shuffledFLSZ = flszWords.sort(() => 0.5 - Math.random()).slice(0, totalNeeded - half);
+
+  words = [...shuffledCVC, ...shuffledFLSZ];
+  overrideHandled = true;
+}
   const labelFor = (skill, type) => {
   if (type === "words") {
     if (skill === "0.6" || skill === "0.7") return `${skill} - ${skillLabelMap[skill]}`;
@@ -293,6 +307,7 @@
 };
 
   for (const skill of skills) {
+    if (overrideHandled && skill === "0.7") continue;
   if ((contentType === "words" || contentType === "both") && window.fluencyData.words[labelFor(skill, "words")]) {
     words.push(...window.fluencyData.words[labelFor(skill, "words")]);
   }
