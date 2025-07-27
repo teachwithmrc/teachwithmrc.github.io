@@ -156,7 +156,7 @@
     const graph = buildWordGraph(cvcLadderWords);
     let ladder = null;
 
-    const tries = 100;
+    const tries = 500;
     for (let i = 0; i < tries; i++) {
       const start = cvcLadderWords[Math.floor(Math.random() * cvcLadderWords.length)];
       const path = findLadder(graph, start, 4); // 4 steps = 5 total words
