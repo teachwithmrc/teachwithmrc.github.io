@@ -91,11 +91,13 @@
   </div>
 
   <script src="cvcLadderData.js"></script>
-  <script>
-    function generateLadder() {
-      // Placeholder for now — full JS generation logic will go here
-      const container = document.getElementById('ladderContainer');
-      container.innerHTML = `<table class='ladder-table'>
+ <script>
+  function generateLadder() {
+    const container = document.getElementById('ladderContainer');
+    container.innerHTML = ""; // Clear previous ladder
+
+    const ladderHTML = `
+      <table class='ladder-table'>
         <tr>
           <td><div class='change-box'>m → r</div></td>
           <td class='ladder-cell top-open'>_ _ _</td>
@@ -126,8 +128,11 @@
           <td class='ladder-cell bottom-open'><strong>b a t</strong></td>
           <td></td>
         </tr>
-      </table>`;
-    }
-  </script>
+      </table>
+    `;
+
+    container.innerHTML = ladderHTML;
+  }
+</script>
 </body>
 </html>
