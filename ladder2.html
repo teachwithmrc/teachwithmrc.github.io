@@ -5,81 +5,77 @@
   <title>CVC Word Ladder</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: sans-serif;
       text-align: center;
-      margin: 40px;
     }
-    h1 {
-      font-size: 32px;
-      margin-bottom: 30px;
+    .ladder-table {
+      margin: 0 auto;
+      border-collapse: collapse;
     }
-    .ladder-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .img-cell, .word-cell, .hint-cell {
+    .ladder-table td {
       padding: 10px;
-    }
-    .word-box {
       border: 2px solid black;
-      width: 140px;
+      width: 100px;
       height: 60px;
-      font-size: 26px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-    }
-    .blank-box {
-      border: 2px solid black;
-      width: 140px;
-      height: 60px;
-      font-size: 32px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      letter-spacing: 14px;
-    }
-    .hint-box {
-      border: 2px solid black;
-      border-radius: 12px;
+      vertical-align: middle;
       font-size: 20px;
-      padding: 12px 20px;
-      font-weight: bold;
     }
-    .img-cell img {
-      height: 50px;
+    .image-cell img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+    }
+    .hint-cell {
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .top-word {
+      font-size: 24px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
+
   <h1>CVC Word Ladder</h1>
-
-  <div class="ladder-row">
-    <div class="img-cell"><img src="images/cap.png" alt="cap"></div>
-    <div class="word-cell"><div class="word-box">c a p</div></div>
-    <div class="hint-cell"></div>
-  </div>
-
-  <div class="ladder-row">
-    <div class="img-cell"><img src="images/cat.png" alt="cat"></div>
-    <div class="word-cell"><div class="blank-box">_ _ _</div></div>
-    <div class="hint-cell"><div class="hint-box">t → p</div></div>
-  </div>
-
-  <div class="ladder-row">
-    <div class="img-cell"><img src="images/bat.png" alt="bat"></div>
-    <div class="word-cell"><div class="blank-box">_ _ _</div></div>
-    <div class="hint-cell"><div class="hint-box">b → c</div></div>
-  </div>
-
-  <div class="ladder-row">
-    <div class="img-cell"><img src="images/bag.png" alt="bag"></div>
-    <div class="word-cell"><div class="blank-box">_ _ _</div></div>
-    <div class="hint-cell"><div class="hint-box">g → t</div></div>
-  </div>
+  <table class="ladder-table">
+    <!-- Row 1 -->
+    <tr>
+      <td class="image-cell"><img src="images/cap.png" alt="cap"></td>
+      <td class="top-word">c a p</td>
+      <td></td>
+    </tr>
+    <!-- Row 2 -->
+    <tr>
+      <td class="image-cell"><img src="images/cat.png" alt="cat"></td>
+      <td>_ _ _</td>
+      <td class="hint-cell">p → t</td>
+    </tr>
+    <!-- Row 3 -->
+    <tr>
+      <td class="image-cell"><img src="images/bat.png" alt="bat"></td>
+      <td>_ _ _</td>
+      <td class="hint-cell">c → b</td>
+    </tr>
+    <!-- Row 4 -->
+    <tr>
+      <td class="image-cell"><img src="images/bag.png" alt="bag"></td>
+      <td>_ _ _</td>
+      <td class="hint-cell">t → g</td>
+    </tr>
+    <!-- Row 5 -->
+    <tr>
+      <td class="image-cell"><img src="images/bug.png" alt="bug"></td>
+      <td>_ _ _</td>
+      <td class="hint-cell">a → u</td>
+    </tr>
+    <!-- Row 6 -->
+    <tr>
+      <td class="image-cell"><img src="images/bun.png" alt="bun"></td>
+      <td>_ _ _</td>
+      <td class="hint-cell">g → n</td>
+    </tr>
+  </table>
 
 </body>
 </html>
