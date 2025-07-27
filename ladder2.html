@@ -1,72 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>CVC Word Ladder</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Poppins', sans-serif;
       text-align: center;
-      margin: 40px;
+      padding: 20px;
     }
 
     h1 {
-      font-size: 28px;
-      margin-bottom: 20px;
+      font-size: 32px;
+      margin-bottom: 30px;
     }
 
-    .ladder-row {
+    .row {
       display: flex;
       align-items: center;
       justify-content: center;
+      margin: 0 auto;
+      max-width: 600px;
     }
 
-    .image-cell img {
-      height: 60px;
-      margin-right: 12px;
-    }
-
-    .word-box {
-      width: 120px;
-      height: 60px;
-      border-left: 2px solid black;
-      border-right: 2px solid black;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: bold;
-      margin: 0;
-    }
-
-    .word-box.blank {
-      font-weight: normal;
-      letter-spacing: 10px;
-    }
-
-    .hint-bubble {
-      background: white;
-      border: 2px solid black;
-      border-radius: 12px;
-      padding: 8px 14px;
-      font-size: 18px;
-      margin-left: 12px;
-      white-space: nowrap;
-    }
-
-    .ladder-container {
+    .left, .middle, .right {
       display: flex;
       flex-direction: column;
+      justify-content: center;
+    }
+
+    .left img {
+      height: 50px;
+      margin: 10px;
+    }
+
+    .middle .box {
+      border: 2px solid black;
+      padding: 10px 20px;
+      font-size: 28px;
+      margin: -1px 0;
+      display: flex;
+      justify-content: center;
       align-items: center;
+      min-width: 120px;
+      min-height: 60px;
     }
 
-    .top-word {
-      border-top: none;
+    .right .hint {
+      border: 2px solid black;
+      border-radius: 12px;
+      padding: 8px 16px;
+      margin: 14px 0;
+      font-size: 18px;
+      font-weight: 600;
+      display: inline-block;
+      min-width: 80px;
     }
 
-    .bottom-word {
-      border-bottom: none;
+    .container {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
     }
   </style>
 </head>
@@ -74,50 +69,33 @@
 
   <h1>CVC Word Ladder</h1>
 
-  <div class="ladder-container">
-
-    <!-- Row 1 -->
-    <div class="ladder-row">
-      <div class="image-cell"><img src="cap.png" alt="cap"></div>
-      <div class="word-box top-word">c a p</div>
-      <div class="hint-bubble"></div>
+  <div class="container">
+    <div class="left">
+      <img src="cap.png" alt="cap">
+      <img src="cat.png" alt="cat">
+      <img src="bat.png" alt="bat">
+      <img src="bag.png" alt="bag">
+      <img src="bug.png" alt="bug">
+      <img src="bun.png" alt="bun">
     </div>
 
-    <!-- Row 2 -->
-    <div class="ladder-row">
-      <div class="image-cell"><img src="cat.png" alt="cat"></div>
-      <div class="word-box blank">_ _ _</div>
-      <div class="hint-bubble">p → t</div>
+    <div class="middle">
+      <div class="box"><strong>c a p</strong></div>
+      <div class="box">_ _ _</div>
+      <div class="box">_ _ _</div>
+      <div class="box">_ _ _</div>
+      <div class="box">_ _ _</div>
+      <div class="box">_ _ _</div>
     </div>
 
-    <!-- Row 3 -->
-    <div class="ladder-row">
-      <div class="image-cell"><img src="bat.png" alt="bat"></div>
-      <div class="word-box blank">_ _ _</div>
-      <div class="hint-bubble">c → b</div>
+    <div class="right">
+      <div class="hint"></div>
+      <div class="hint">p → t</div>
+      <div class="hint">c → b</div>
+      <div class="hint">t → g</div>
+      <div class="hint">a → u</div>
+      <div class="hint">g → n</div>
     </div>
-
-    <!-- Row 4 -->
-    <div class="ladder-row">
-      <div class="image-cell"><img src="bag.png" alt="bag"></div>
-      <div class="word-box blank">_ _ _</div>
-      <div class="hint-bubble">t → g</div>
-    </div>
-
-    <!-- Row 5 -->
-    <div class="ladder-row">
-      <div class="image-cell"><img src="bug.png" alt="bug"></div>
-      <div class="word-box blank">_ _ _</div>
-      <div class="hint-bubble">a → u</div>
-    </div>
-
-    <!-- Row 6 -->
-    <div class="ladder-row">
-      <div class="image-cell"><img src="bun.png" alt="bun"></div>
-      <div class="word-box blank bottom-word">_ _ _</div>
-      <div class="hint-bubble">g → n</div>
-    </div>
-
   </div>
 
 </body>
