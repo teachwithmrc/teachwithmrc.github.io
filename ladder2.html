@@ -141,66 +141,49 @@
     return null;
   }
 
-  function generateLadder() {
-    const includeHint = document.getElementById("showHint").checked;
-    const includePhoto = document.getElementById("showPhoto").checked;
-    const container = document.getElementById("ladderContainer");
-    container.innerHTML = "";
+ function generateLadder() {
+  const includeHint = document.getElementById("showHint").checked;
+  const includePhoto = document.getElementById("showPhoto").checked;
+  const container = document.getElementById("ladderContainer");
+  container.innerHTML = "";
 
-    if (!includeHint && !includePhoto) {
-      container.innerHTML = "<p style='color: red; font-weight: bold;'>Please select at least one option: Hint or Photo.</p>";
-      return;
-    }
+  if (!includeHint && !includePhoto) {
+    container.innerHTML = "<p style='color: red; font-weight: bold;'>Please select at least one option: Hint or Photo.</p>";
+    return;
+  }
 
-    const graph = buildWordGraph(cvcLadderWords);
-    let ladder = null;
+  const ladder = [...cvcWordLadders[Math.floor(Math.random() * cvcWordLadders.length)]].reverse(); // Pick random and reverse
+  let html = `<table class='ladder-table'>`;
 
-    const tries = 500;
-    for (let i = 0; i < tries; i++) {
-      const start = cvcLadderWords[Math.floor(Math.random() * cvcLadderWords.length)];
-      const path = findLadder(graph, start, 4); // 4 steps = 5 total words
-      if (path) {
-        ladder = path;
-        break;
-      }
-    }
-
-    if (!ladder) {
-      container.innerHTML = "<p style='color: red; font-weight: bold;'>Sorry, no valid ladder found after multiple tries.</p>";
-      return;
-    }
-
-    ladder.reverse(); // So final word is at bottom
-    let html = `<table class='ladder-table'>`;
-
-    for (let i = 0; i < ladder.length - 1; i++) {
-      const from = ladder[i + 1];
-      const to = ladder[i];
-      const changeIndex = [...from].findIndex((char, idx) => char !== to[idx]);
-      const fromLetter = from[changeIndex];
-      const toLetter = to[changeIndex];
-      const changeBox = includeHint ? `<div class='change-box'>${fromLetter} → ${toLetter}</div>` : "";
-      const picture = includePhoto && cvcLadderImages[to] ? `<img src='${cvcLadderImages[to]}' alt='${to}'>` : "";
-
-      html += `
-        <tr>
-          <td>${i % 2 === 0 ? changeBox : picture}</td>
-          <td class='ladder-cell'>_ _ _</td>
-          <td>${i % 2 !== 0 ? changeBox : picture}</td>
-        </tr>
-      `;
-    }
+  for (let i = 0; i < ladder.length - 1; i++) {
+    const from = ladder[i + 1];
+    const to = ladder[i];
+    const changeIndex = [...from].findIndex((char, idx) => char !== to[idx]);
+    const fromLetter = from[changeIndex];
+    const toLetter = to[changeIndex];
+    const changeBox = includeHint ? `<div class='change-box'>${fromLetter} → ${toLetter}</div>` : "";
+    const picture = includePhoto && cvcLadderImages[to] ? `<img src='${cvcLadderImages[to]}' alt='${to}'>` : "";
 
     html += `
       <tr>
-        <td></td>
-        <td class='ladder-cell bottom-open'><strong>${ladder[0].split("").join(" ")}</strong></td>
-        <td></td>
+        <td>${i % 2 === 0 ? changeBox : picture}</td>
+        <td class='ladder-cell'>_ _ _</td>
+        <td>${i % 2 !== 0 ? changeBox : picture}</td>
       </tr>
-    </table>`;
-
-    container.innerHTML = html;
+    `;
   }
+
+  html += `
+    <tr>
+      <td></td>
+      <td class='ladder-cell bottom-open'><strong>${ladder[0].split("").join(" ")}</strong></td>
+      <td></td>
+    </tr>
+  </table>`;
+
+  container.innerHTML = html;
+}
+  
 </script>
 </body>
 </html>
