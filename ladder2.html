@@ -30,7 +30,16 @@
       text-align: center;
       font-size: 24px;
     }
-
+    td img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+  margin: auto;
+}
+.bottom-cell {
+  vertical-align: bottom;
+}
     .image-cell {
       border: 2px solid black;
       padding: 8px;
@@ -42,14 +51,14 @@
 
     .speech-bubble {
       display: inline-block;
-      padding: 6px 12px;
+      padding: 6px 24px;
       border: 2px solid black;
       border-radius: 18px;
       font-size: 18px;
       font-weight: 600;
     }
 
-    .blank-cell {
+    .bottom-cell {
       font-size: 28px;
       letter-spacing: 12px;
     }
@@ -67,27 +76,27 @@
     </tr>
     <tr>
       <td class="image-cell"><img src="images/cat.png" alt="cat"></td>
-      <td class="blank-cell">_ _ _</td>
+      <td class="bottom-cell">___ ___ ___</td>
       <td><div class="speech-bubble">p → t</div></td>
     </tr>
     <tr>
       <td class="image-cell"><img src="images/bat.png" alt="bat"></td>
-      <td class="blank-cell">_ _ _</td>
+      <td class="bottom-cell">___ ___ ___</td>
       <td><div class="speech-bubble">c → b</div></td>
     </tr>
     <tr>
       <td class="image-cell"><img src="images/bag.png" alt="bag"></td>
-      <td class="blank-cell">_ _ _</td>
+      <td class="bottom-cell">___ ___ ___</td>
       <td><div class="speech-bubble">t → g</div></td>
     </tr>
     <tr>
       <td class="image-cell"><img src="images/bug.png" alt="bug"></td>
-      <td class="blank-cell">_ _ _</td>
+      <td class="bottom-cell">___ ___ ___</td>
       <td><div class="speech-bubble">a → u</div></td>
     </tr>
     <tr>
       <td class="image-cell"><img src="images/bun.png" alt="bun"></td>
-      <td class="blank-cell">_ _ _</td>
+      <td class="bottom-cell">___ ___ ___</td>
       <td><div class="speech-bubble">g → n</div></td>
     </tr>
   </table>
