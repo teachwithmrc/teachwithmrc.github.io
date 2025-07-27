@@ -1,207 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>CVC Word Ladder Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
   <style>
     * {
       font-family: 'Poppins', sans-serif;
-      box-sizing: border-box;
     }
 
     body {
       text-align: center;
-      margin: 20px;
+      margin: 30px;
     }
 
     h1 {
-      margin-bottom: 16px;
-      font-size: 22px;
-    }
-
-    label {
-      display: inline-block;
-      margin: 4px 10px;
-      font-size: 14px;
-    }
-
-    button {
-      font-size: 14px;
-      margin: 10px 6px;
-      padding: 6px 14px;
+      font-size: 28px;
+      margin-bottom: 20px;
     }
 
     .ladder-table {
       border-collapse: collapse;
-      margin: 16px auto;
+      margin: 0 auto;
     }
 
     .ladder-table td {
-      padding: 6px;
+      padding: 10px;
       vertical-align: middle;
       text-align: center;
-      max-width: 100px;
-      overflow: hidden;
+      width: 160px;
+      height: 70px;
     }
 
     .ladder-cell {
       border: 2px solid black;
-      width: 100px;
-      height: 40px;
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    .hint {
       font-size: 20px;
       font-weight: bold;
-    }
-
-    .ladder-cell.bottom-open {
-      border-left: 2px solid black;
-      border-right: 2px solid black;
-      border-top: 2px solid black;
-      border-bottom: none;
-    }
-
-    .ladder-cell.top-open {
-      border-left: 2px solid black;
-      border-right: 2px solid black;
-      border-top: none;
-      border-bottom: 2px solid black;
-    }
-
-    .change-box {
-      font-size: 16px;
-      font-weight: bold;
-      width: 70px;
+      background: #f0f0f0;
       border: 2px solid black;
-      padding: 4px 8px;
+      border-radius: 8px;
+      padding: 6px 10px;
       display: inline-block;
-      border-radius: 6px;
-      background-color: #f9f9f9;
     }
 
-    img {
-      max-height: 45px;
-      width: auto;
-      display: block;
-      margin: 0 auto;
+    button {
+      font-size: 16px;
+      margin: 20px 10px;
+      padding: 10px 20px;
     }
 
     @media print {
-      button, label {
+      button {
         display: none;
       }
     }
   </style>
 </head>
 <body>
-
-  <h1>CVC Word Ladder Generator</h1>
-
-  <label><input type="checkbox" id="showHint"> Include hint (b → h)</label>
-  <label><input type="checkbox" id="showPhoto"> Include photo</label>
-
-  <br>
-  <button onclick="generateLadder()">Generate</button>
+  <h1>CVC Word Ladder</h1>
+  <button onclick="generateLadder()">Generate New Ladder</button>
   <button onclick="window.print()">Print</button>
 
   <div id="ladderContainer"></div>
 
-  <!-- Load word and image data FIRST -->
-  <script src="cvcLadderData.js"></script>
+  <script>
+    const cvcWords = [
+      "bag","bat","bed","beg","bib","bin","bot","box","bug","bun","bus",
+      "cab","can","cap","cat","cod","cop","cot","cub","cup","cut","dad",
+      "dam","den","dig","doc","dog","dot","dug","fan","fin","gap","gum",
+      "ham","hat","hen","hid","hip","hit","hog","hop","hot","hug","hut",
+      "jag","jet","jig","job","jog","jug","kid","kit","lab","leg","lid",
+      "lip","lit","lob","log","mad","man","map","mat","mom","mop","mud",
+      "mug","nap","net","nut","pad","pan","pen","pet","pig","pin","pit",
+      "pop","pot","pug","pup","rag","ram","rat","rib","rig","rim","rip",
+      "rob","rod","rug","run","sad","sap","sip","sit","sob","sub","sun",
+      "tag","tap","ten","tin","top","tub","tug","tux","van","vet","wag",
+      "wax","web","wed","wig","win","zap","zip"
+    ];
 
-<script>
-  function isOneLetterDifferent(w1, w2) {
-    let diff = 0;
-    for (let i = 0; i < w1.length; i++) {
-      if (w1[i] !== w2[i]) diff++;
+    function isOneLetterDiff(w1, w2) {
+      let diff = 0;
+      for (let i = 0; i < w1.length; i++) {
+        if (w1[i] !== w2[i]) diff++;
+      }
+      return diff === 1;
     }
-    return diff === 1;
-  }
 
-  function buildWordGraph(words) {
-    const graph = {};
-    for (let word of words) {
-      graph[word] = [];
-      for (let other of words) {
-        if (word !== other && isOneLetterDifferent(word, other)) {
-          graph[word].push(other);
+    function buildGraph(words) {
+      const graph = {};
+      for (let word of words) graph[word] = [];
+      for (let i = 0; i < words.length; i++) {
+        for (let j = i + 1; j < words.length; j++) {
+          if (isOneLetterDiff(words[i], words[j])) {
+            graph[words[i]].push(words[j]);
+            graph[words[j]].push(words[i]);
+          }
         }
       }
+      return graph;
     }
-    return graph;
-  }
 
-  function findLadder(graph, start, steps, visited = new Set()) {
-    if (steps === 0) return [start];
-    visited.add(start);
-    for (let neighbor of graph[start]) {
-      if (!visited.has(neighbor)) {
-        const path = findLadder(graph, neighbor, steps - 1, new Set(visited));
-        if (path) return [start, ...path];
+    function findLadder(graph, length = 5) {
+      const words = Object.keys(graph);
+      const visited = new Set();
+
+      for (let start of shuffle(words)) {
+        let queue = [[start]];
+        while (queue.length) {
+          const path = queue.shift();
+          const current = path[path.length - 1];
+
+          if (path.length === length) return path;
+
+          for (let neighbor of graph[current]) {
+            if (!path.includes(neighbor)) {
+              queue.push([...path, neighbor]);
+            }
+          }
+        }
       }
-    }
-    return null;
-  }
-
-  function generateLadder() {
-    const includeHint = document.getElementById("showHint").checked;
-    const includePhoto = document.getElementById("showPhoto").checked;
-    const container = document.getElementById("ladderContainer");
-    container.innerHTML = "";
-
-    if (!includeHint && !includePhoto) {
-      container.innerHTML = "<p style='color: red; font-weight: bold;'>Please select at least one option: Hint or Photo.</p>";
-      return;
+      return null;
     }
 
-    const graph = buildWordGraph(cvcLadderWords);
-    let ladder = null;
+    function shuffle(arr) {
+      return arr.sort(() => Math.random() - 0.5);
+    }
 
-    const tries = 500;
-    for (let i = 0; i < tries; i++) {
-      const start = cvcLadderWords[Math.floor(Math.random() * cvcLadderWords.length)];
-      const path = findLadder(graph, start, 4); // 4 steps = 5 total words
-      if (path) {
-        ladder = path;
-        break;
+    function generateHint(from, to) {
+      for (let i = 0; i < from.length; i++) {
+        if (from[i] !== to[i]) return `${from[i]} → ${to[i]}`;
       }
+      return "";
     }
 
-    if (!ladder) {
-      container.innerHTML = "<p style='color: red; font-weight: bold;'>Sorry, no valid ladder found after multiple tries.</p>";
-      return;
+    function generateLadder() {
+      const graph = buildGraph(cvcWords);
+      const ladder = findLadder(graph, 5);
+      const container = document.getElementById("ladderContainer");
+      if (!ladder) {
+        container.innerHTML = "<p>Could not generate a valid ladder. Try again!</p>";
+        return;
+      }
+
+      let html = "<table class='ladder-table'>";
+      // Display bottom-up
+      for (let i = ladder.length - 1; i >= 0; i--) {
+        html += `<tr><td class="ladder-cell">${ladder[i].toUpperCase().split("").join(" ")}</td></tr>`;
+        if (i > 0) {
+          const hint = generateHint(ladder[i], ladder[i - 1]);
+          html += `<tr><td class="hint">${hint}</td></tr>`;
+        }
+      }
+      html += "</table>";
+      container.innerHTML = html;
     }
 
-    ladder.reverse(); // So final word is at bottom
-    let html = `<table class='ladder-table'>`;
-
-    for (let i = 0; i < ladder.length - 1; i++) {
-      const from = ladder[i + 1];
-      const to = ladder[i];
-      const changeIndex = [...from].findIndex((char, idx) => char !== to[idx]);
-      const fromLetter = from[changeIndex];
-      const toLetter = to[changeIndex];
-      const changeBox = includeHint ? `<div class='change-box'>${fromLetter} → ${toLetter}</div>` : "";
-      const picture = includePhoto && cvcLadderImages[to] ? `<img src='${cvcLadderImages[to]}' alt='${to}'>` : "";
-
-      html += `
-        <tr>
-          <td>${i % 2 === 0 ? changeBox : picture}</td>
-          <td class='ladder-cell'>_ _ _</td>
-          <td>${i % 2 !== 0 ? changeBox : picture}</td>
-        </tr>
-      `;
-    }
-
-    html += `
-      <tr>
-        <td></td>
-        <td class='ladder-cell bottom-open'><strong>${ladder[0].split("").join(" ")}</strong></td>
-        <td></td>
-      </tr>
-    </table>`;
-
-    container.innerHTML = html;
-  }
-</script>
+    // Auto-generate on first load
+    window.onload = generateLadder;
+  </script>
 </body>
 </html>
