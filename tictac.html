@@ -281,13 +281,11 @@
   let sentences = [];
 let overrideHandled = false;
 
-let overrideHandled = false;
-
-if (skills.includes("0.7") && contentType !== "sentences") {
+if (skills.includes("0.7") && (contentType === "words" || contentType === "both")) {
   const cvcWords = window.fluencyData.words["Mixed CVC Words"] || [];
   const flszWords = window.fluencyData.words["0.6 - FLSZ"] || [];
 
-  const totalNeeded = 36;
+  const totalNeeded = (contentType === "both") ? 18 : 36;
   const half = Math.floor(totalNeeded / 2);
 
   const shuffledCVC = cvcWords.sort(() => 0.5 - Math.random()).slice(0, half);
