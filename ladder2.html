@@ -20,7 +20,9 @@
       border-collapse: collapse;
       margin: 0 auto;
     }
-
+td, th {
+  border: 6px solid black; /* cell borders */
+}
     td {
       border: 2px solid black;
       padding: 12px;
@@ -51,7 +53,12 @@
   text-align: center;
   vertical-align: middle;
 }
-
+.no-top-border {
+  border-top: none;
+}
+    .no-bottom-border {
+  border-bottom: none;
+}
 .no-top-left-bottom {
   border-top: none;
   border-left: none;
@@ -94,7 +101,7 @@
   <table>
     <tr>
       <td class="image-cell no-top-left-bottom"><img src="images/cap.png" alt="cap"></td>
-      <td><strong>c a p</strong></td>
+     <td class="ladder-cell top-word no-top-border">c a p</td>
       <td></td>
     </tr>
     <tr>
@@ -119,7 +126,7 @@
     </tr>
     <tr>
       <td class="image-cell no-top-left-bottom"><img src="images/bun.png" alt="bun"></td>
-    <td class="bottom-cell"> <div class="letter-lines">   <span></span><span></span><span></span> </div></td>
+   <td class="no-bottom-border"> <div class="letter-lines">   <span></span><span></span><span></span> </div></td>
       <td><div class="speech-bubble">g → n</div></td>
     </tr>
   </table>
