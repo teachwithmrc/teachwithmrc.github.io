@@ -16,52 +16,43 @@
       margin-bottom: 30px;
     }
 
-    .row {
+    .ladder-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ladder-row {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto;
-      max-width: 600px;
+      gap: 20px;
     }
 
-    .left, .middle, .right {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .left img {
+    .img-cell img {
       height: 50px;
-      margin: 10px;
     }
 
-    .middle .box {
+    .ladder-box {
       border: 2px solid black;
       padding: 10px 20px;
       font-size: 28px;
-      margin: -1px 0;
+      min-width: 120px;
+      min-height: 60px;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-width: 120px;
-      min-height: 60px;
+      margin: -1px 0;
     }
 
-    .right .hint {
+    .hint-box {
       border: 2px solid black;
       border-radius: 12px;
       padding: 8px 16px;
-      margin: 14px 0;
       font-size: 18px;
       font-weight: 600;
-      display: inline-block;
       min-width: 80px;
-    }
-
-    .container {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
     }
   </style>
 </head>
@@ -69,32 +60,41 @@
 
   <h1>CVC Word Ladder</h1>
 
-  <div class="container">
-    <div class="left">
-      <img src="images/cap.png" alt="cap">
-      <img src="images/cat.png" alt="cat">
-      <img src="images/bat.png" alt="bat">
-      <img src="images/bag.png" alt="bag">
-      <img src="images/bug.png" alt="bug">
-      <img src="images/bun.png" alt="bun">
+  <div class="ladder-container">
+    <div class="ladder-row">
+      <div class="img-cell"><img src="images/cap.png" alt="cap"></div>
+      <div class="ladder-box"><strong>c a p</strong></div>
+      <div class="hint-box" style="visibility: hidden;">x → y</div>
     </div>
 
-    <div class="middle">
-      <div class="box"><strong>c a p</strong></div>
-      <div class="box">_ _ _</div>
-      <div class="box">_ _ _</div>
-      <div class="box">_ _ _</div>
-      <div class="box">_ _ _</div>
-      <div class="box">_ _ _</div>
+    <div class="ladder-row">
+      <div class="img-cell"><img src="images/cat.png" alt="cat"></div>
+      <div class="ladder-box">_ _ _</div>
+      <div class="hint-box">p → t</div>
     </div>
 
-    <div class="right">
-      <div class="hint"></div>
-      <div class="hint">p → t</div>
-      <div class="hint">c → b</div>
-      <div class="hint">t → g</div>
-      <div class="hint">a → u</div>
-      <div class="hint">g → n</div>
+    <div class="ladder-row">
+      <div class="img-cell"><img src="images/bat.png" alt="bat"></div>
+      <div class="ladder-box">_ _ _</div>
+      <div class="hint-box">c → b</div>
+    </div>
+
+    <div class="ladder-row">
+      <div class="img-cell"><img src="images/bag.png" alt="bag"></div>
+      <div class="ladder-box">_ _ _</div>
+      <div class="hint-box">t → g</div>
+    </div>
+
+    <div class="ladder-row">
+      <div class="img-cell"><img src="images/bug.png" alt="bug"></div>
+      <div class="ladder-box">_ _ _</div>
+      <div class="hint-box">a → u</div>
+    </div>
+
+    <div class="ladder-row">
+      <div class="img-cell"><img src="images/bun.png" alt="bun"></div>
+      <div class="ladder-box">_ _ _</div>
+      <div class="hint-box">g → n</div>
     </div>
   </div>
 
