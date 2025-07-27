@@ -45,9 +45,18 @@
       padding: 8px;
     }
 
-    .image-cell img {
-      height: 200px;
-    }
+   .image-cell {
+  padding: 6px;
+     height: 200px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.no-top-left-bottom {
+  border-top: none;
+  border-left: none;
+  border-bottom: none;
+}
 
     .speech-bubble {
       display: inline-block;
@@ -71,7 +80,7 @@
 
 .letter-lines span {
   display: block;
-  width: 30px;     /* Adjust line length */
+  width: 40px;     /* Adjust line length */
   height: 4px;     /* Adjust thickness */
   background: black;
   border-radius: 2px;
@@ -89,7 +98,7 @@
       <td></td>
     </tr>
     <tr>
-      <td class="image-cell"><img src="images/cat.png" alt="cat"></td>
+     <td class="image-cell no-top-left-bottom"><img src="images/cat.png" alt="cat"></td>
      <td class="bottom-cell"> <div class="letter-lines">   <span></span><span></span><span></span> </div></td>
       <td><div class="speech-bubble">p → t</div></td>
     </tr>
