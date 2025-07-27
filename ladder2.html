@@ -27,16 +27,18 @@ h1 {
 td, th {
   border: 6px solid black; /* cell borders */
 }
-   td {
-  padding: 6px; /* was 12px */
-  width: 140px; /* was 200px */
-  height: 70px; /* was 90px */
-  font-size: 18px; /* was 24px */
+    td {
+  padding: 4px;
+  width: 100px;
+  height: 60px;
+  font-size: 14px;
 }
-
-td img {
-  max-height: 100px; /* was 200px */
-  max-width: 120px;  /* was 200px */
+ td img {
+  max-height: 60px;
+  max-width: 60px;
+  object-fit: contain;
+  display: block;
+  margin: auto;
 }
     .no-top-right-bottom {
   border-top: none;
@@ -86,13 +88,34 @@ td img {
   gap: 8px;
   margin-top: 20px;
 }
-
+.bottom-align {
+  vertical-align: bottom;
+  display: table-cell;
+  height: 100%;
+}
 .letter-lines span {
   display: block;
   width: 40px;     /* Adjust line length */
   height: 4px;     /* Adjust thickness */
   background: black;
   border-radius: 2px;
+}
+  @media print {
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  button {
+    display: none;
+  }
+  table {
+    page-break-inside: avoid;
+  }
+  .letter-lines span {
+    display: inline-block !important;
+    background: black !important;
+  }
+}
 }
   </style>
 </head>
