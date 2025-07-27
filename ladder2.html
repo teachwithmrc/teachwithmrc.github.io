@@ -3,79 +3,88 @@
 <head>
   <meta charset="UTF-8">
   <title>CVC Word Ladder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: sans-serif;
+      font-family: 'Poppins', sans-serif;
       text-align: center;
+      padding: 20px;
     }
-    .ladder-table {
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    table {
       margin: 0 auto;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 20px 10px;
     }
-    .ladder-table td {
-      padding: 10px;
-      border: 2px solid black;
-      width: 100px;
-      height: 60px;
+
+    td {
       vertical-align: middle;
-      font-size: 20px;
     }
+
     .image-cell img {
       width: 60px;
+      height: auto;
+    }
+
+    .word-box {
+      border: 2px solid black;
+      font-size: 32px;
+      padding: 20px;
+      width: 120px;
       height: 60px;
-      object-fit: contain;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .hint-cell {
+
+    .clue-box {
+      border: 2px solid black;
+      border-radius: 16px;
+      padding: 8px 16px;
+      font-size: 20px;
       font-weight: bold;
-      font-size: 18px;
-    }
-    .top-word {
-      font-size: 24px;
-      font-weight: bold;
+      display: inline-block;
     }
   </style>
 </head>
 <body>
-
   <h1>CVC Word Ladder</h1>
-  <table class="ladder-table">
-    <!-- Row 1 -->
+  <table>
     <tr>
       <td class="image-cell"><img src="images/cap.png" alt="cap"></td>
-      <td class="top-word">c a p</td>
+      <td><div class="word-box">c a p</div></td>
       <td></td>
     </tr>
-    <!-- Row 2 -->
     <tr>
       <td class="image-cell"><img src="images/cat.png" alt="cat"></td>
-      <td>_ _ _</td>
-      <td class="hint-cell">p → t</td>
+      <td><div class="word-box">_ _ _</div></td>
+      <td><div class="clue-box">p → t</div></td>
     </tr>
-    <!-- Row 3 -->
     <tr>
       <td class="image-cell"><img src="images/bat.png" alt="bat"></td>
-      <td>_ _ _</td>
-      <td class="hint-cell">c → b</td>
+      <td><div class="word-box">_ _ _</div></td>
+      <td><div class="clue-box">c → b</div></td>
     </tr>
-    <!-- Row 4 -->
     <tr>
       <td class="image-cell"><img src="images/bag.png" alt="bag"></td>
-      <td>_ _ _</td>
-      <td class="hint-cell">t → g</td>
+      <td><div class="word-box">_ _ _</div></td>
+      <td><div class="clue-box">t → g</div></td>
     </tr>
-    <!-- Row 5 -->
     <tr>
       <td class="image-cell"><img src="images/bug.png" alt="bug"></td>
-      <td>_ _ _</td>
-      <td class="hint-cell">a → u</td>
+      <td><div class="word-box">_ _ _</div></td>
+      <td><div class="clue-box">a → u</div></td>
     </tr>
-    <!-- Row 6 -->
     <tr>
       <td class="image-cell"><img src="images/bun.png" alt="bun"></td>
-      <td>_ _ _</td>
-      <td class="hint-cell">g → n</td>
+      <td><div class="word-box">_ _ _</div></td>
+      <td><div class="clue-box">g → n</div></td>
     </tr>
   </table>
-
 </body>
 </html>
