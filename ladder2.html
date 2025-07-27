@@ -8,83 +8,117 @@
     body {
       font-family: 'Poppins', sans-serif;
       text-align: center;
-      padding: 20px;
+      margin: 40px;
     }
 
     h1 {
-      font-size: 32px;
+      font-size: 28px;
       margin-bottom: 20px;
     }
 
-    table {
-      margin: 0 auto;
-      border-collapse: separate;
-      border-spacing: 20px 10px;
-    }
-
-    td {
-      vertical-align: middle;
-    }
-
-    .image-cell img {
-      width: 60px;
-      height: auto;
-    }
-
-    .word-box {
-      border: 2px solid black;
-      font-size: 32px;
-      padding: 20px;
-      width: 120px;
-      height: 60px;
+    .ladder-row {
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .clue-box {
-      border: 2px solid black;
-      border-radius: 16px;
-      padding: 8px 16px;
-      font-size: 20px;
+    .image-cell img {
+      height: 60px;
+      margin-right: 12px;
+    }
+
+    .word-box {
+      width: 120px;
+      height: 60px;
+      border-left: 2px solid black;
+      border-right: 2px solid black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
       font-weight: bold;
-      display: inline-block;
+      margin: 0;
+    }
+
+    .word-box.blank {
+      font-weight: normal;
+      letter-spacing: 10px;
+    }
+
+    .hint-bubble {
+      background: white;
+      border: 2px solid black;
+      border-radius: 12px;
+      padding: 8px 14px;
+      font-size: 18px;
+      margin-left: 12px;
+      white-space: nowrap;
+    }
+
+    .ladder-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .top-word {
+      border-top: none;
+    }
+
+    .bottom-word {
+      border-bottom: none;
     }
   </style>
 </head>
 <body>
+
   <h1>CVC Word Ladder</h1>
-  <table>
-    <tr>
-      <td class="image-cell"><img src="images/cap.png" alt="cap"></td>
-      <td><div class="word-box">c a p</div></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td class="image-cell"><img src="images/cat.png" alt="cat"></td>
-      <td><div class="word-box">_ _ _</div></td>
-      <td><div class="clue-box">p → t</div></td>
-    </tr>
-    <tr>
-      <td class="image-cell"><img src="images/bat.png" alt="bat"></td>
-      <td><div class="word-box">_ _ _</div></td>
-      <td><div class="clue-box">c → b</div></td>
-    </tr>
-    <tr>
-      <td class="image-cell"><img src="images/bag.png" alt="bag"></td>
-      <td><div class="word-box">_ _ _</div></td>
-      <td><div class="clue-box">t → g</div></td>
-    </tr>
-    <tr>
-      <td class="image-cell"><img src="images/bug.png" alt="bug"></td>
-      <td><div class="word-box">_ _ _</div></td>
-      <td><div class="clue-box">a → u</div></td>
-    </tr>
-    <tr>
-      <td class="image-cell"><img src="images/bun.png" alt="bun"></td>
-      <td><div class="word-box">_ _ _</div></td>
-      <td><div class="clue-box">g → n</div></td>
-    </tr>
-  </table>
+
+  <div class="ladder-container">
+
+    <!-- Row 1 -->
+    <div class="ladder-row">
+      <div class="image-cell"><img src="cap.png" alt="cap"></div>
+      <div class="word-box top-word">c a p</div>
+      <div class="hint-bubble"></div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="ladder-row">
+      <div class="image-cell"><img src="cat.png" alt="cat"></div>
+      <div class="word-box blank">_ _ _</div>
+      <div class="hint-bubble">p → t</div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="ladder-row">
+      <div class="image-cell"><img src="bat.png" alt="bat"></div>
+      <div class="word-box blank">_ _ _</div>
+      <div class="hint-bubble">c → b</div>
+    </div>
+
+    <!-- Row 4 -->
+    <div class="ladder-row">
+      <div class="image-cell"><img src="bag.png" alt="bag"></div>
+      <div class="word-box blank">_ _ _</div>
+      <div class="hint-bubble">t → g</div>
+    </div>
+
+    <!-- Row 5 -->
+    <div class="ladder-row">
+      <div class="image-cell"><img src="bug.png" alt="bug"></div>
+      <div class="word-box blank">_ _ _</div>
+      <div class="hint-bubble">a → u</div>
+    </div>
+
+    <!-- Row 6 -->
+    <div class="ladder-row">
+      <div class="image-cell"><img src="bun.png" alt="bun"></div>
+      <div class="word-box blank bottom-word">_ _ _</div>
+      <div class="hint-bubble">g → n</div>
+    </div>
+
+  </div>
+
 </body>
 </html>
