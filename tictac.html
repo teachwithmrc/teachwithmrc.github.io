@@ -280,16 +280,26 @@
   let words = [];
   let sentences = [];
 
-  const labelFor = skill => `${skill} - ${skillLabelMap[skill]}`;
+  const labelFor = (skill, type) => {
+  if (type === "words") {
+    if (skill === "0.6" || skill === "0.7") return `${skill} - ${skillLabelMap[skill]}`;
+    if (skill === "mixed") return "Mixed CVC Words";
+    return `${skill} - ${skillLabelMap[skill]} Words`;
+  }
+  if (type === "sentences") {
+    if (skill === "mixed") return "Mixed CVC Sentences";
+    return `${skill} - ${skillLabelMap[skill]} Sentences`;
+  }
+};
 
   for (const skill of skills) {
-    if ((contentType === "words" || contentType === "both") && window.fluencyData.words[`${labelFor(skill)} Words`]) {
-      words.push(...window.fluencyData.words[`${labelFor(skill)} Words`]);
-    }
-    if ((contentType === "sentences" || contentType === "both") && window.fluencyData.sentences[`${labelFor(skill)} Sentences`]) {
-      sentences.push(...window.fluencyData.sentences[`${labelFor(skill)} Sentences`]);
-    }
+  if ((contentType === "words" || contentType === "both") && window.fluencyData.words[labelFor(skill, "words")]) {
+    words.push(...window.fluencyData.words[labelFor(skill, "words")]);
   }
+  if ((contentType === "sentences" || contentType === "both") && window.fluencyData.sentences[labelFor(skill, "sentences")]) {
+    sentences.push(...window.fluencyData.sentences[labelFor(skill, "sentences")]);
+  }
+}
 
   if ((contentType === "words" && words.length < totalCells) ||
       (contentType === "sentences" && sentences.length < totalCells) ||
