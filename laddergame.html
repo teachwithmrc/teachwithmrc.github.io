@@ -89,48 +89,107 @@
 
   <div id="ladderContainer"></div>
 
-  <script>
-    function generateLadder() {
-      const container = document.getElementById('ladderContainer');
-      container.innerHTML = ""; // Clear previous ladder
-
-      const ladderHTML = `
-        <table class='ladder-table'>
-          <tr>
-            <td><div class='change-box'>m → r</div></td>
-            <td class='ladder-cell top-open'>_ _ _</td>
-            <td class='picture'><img src='images/rip.png' alt='rip'></td>
-          </tr>
-          <tr>
-            <td class='picture'><img src='images/hop.png' alt='hop'></td>
-            <td class='ladder-cell'>_ _ _</td>
-            <td><div class='change-box'>h → m</div></td>
-          </tr>
-          <tr>
-            <td><div class='change-box'>t → p</div></td>
-            <td class='ladder-cell'>_ _ _</td>
-            <td class='picture'><img src='images/hip.png' alt='hip'></td>
-          </tr>
-          <tr>
-            <td class='picture'><img src='images/hit.png' alt='hit'></td>
-            <td class='ladder-cell'>_ _ _</td>
-            <td><div class='change-box'>a → i</div></td>
-          </tr>
-          <tr>
-            <td><div class='change-box'>b → h</div></td>
-            <td class='ladder-cell'>_ _ _</td>
-            <td class='picture'><img src='images/hat.png' alt='hat'></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td class='ladder-cell bottom-open'><strong>b a t</strong></td>
-            <td></td>
-          </tr>
-        </table>
-      `;
-
-      container.innerHTML = ladderHTML;
+<script>
+  function getOneLetterDiff(w1, w2) {
+    if (w1.length !== 3 || w2.length !== 3) return false;
+    let diff = 0;
+    for (let i = 0; i < 3; i++) {
+      if (w1[i] !== w2[i]) diff++;
     }
-  </script>
+    return diff === 1;
+  }
+
+  function generateWordLadder(words, steps = 6) {
+    const shuffled = [...words].sort(() => Math.random() - 0.5);
+    for (let start of shuffled) {
+      const ladder = [start];
+      const used = new Set([start]);
+
+      while (ladder.length < steps) {
+        const last = ladder[ladder.length - 1];
+        const candidates = words.filter(
+          w => !used.has(w) && getOneLetterDiff(last, w)
+        );
+        if (candidates.length === 0) break;
+        const next = candidates[Math.floor(Math.random() * candidates.length)];
+        ladder.push(next);
+        used.add(next);
+      }
+
+      if (ladder.length === steps) return ladder.reverse(); // Start word ends at bottom
+    }
+    return null;
+  }
+
+  function generateLadder() {
+    const showHint = document.getElementById('showHint').checked;
+    const showPhoto = document.getElementById('showPhoto').checked;
+    const container = document.getElementById('ladderContainer');
+    const error = document.getElementById('errorContainer');
+
+    container.innerHTML = "";
+    error.innerHTML = "";
+
+    if (!showHint && !showPhoto) {
+      error.textContent = "Please select at least one option: Hint or Photo.";
+      return;
+    }
+
+    const ladder = generateWordLadder(Object.keys(cvcLadderWords), 6);
+    if (!ladder) {
+      container.innerHTML = "<p>Could not generate a full ladder. Try again.</p>";
+      return;
+    }
+
+    const table = document.createElement("table");
+    table.className = "ladder-table";
+
+    for (let i = 0; i < ladder.length; i++) {
+      const row = document.createElement("tr");
+      const word = ladder[i];
+      const isTop = i === 0;
+      const isBottom = i === ladder.length - 1;
+
+      const left = document.createElement("td");
+      const middle = document.createElement("td");
+      const right = document.createElement("td");
+
+      if (isBottom) {
+        middle.className = "ladder-cell bottom-open";
+        middle.innerHTML = `<strong>${word.split('').join(' ')}</strong>`;
+      } else {
+        middle.className = isTop ? "ladder-cell top-open" : "ladder-cell";
+        middle.innerHTML = "_ _ _";
+      }
+
+      const prevWord = ladder[i + 1];
+      if (!isBottom && getOneLetterDiff(prevWord, word)) {
+        let diffIndex = -1;
+        for (let j = 0; j < 3; j++) {
+          if (prevWord[j] !== word[j]) diffIndex = j;
+        }
+        const fromChar = prevWord[diffIndex];
+        const toChar = word[diffIndex];
+        const hintBox = `<div class='change-box'>${fromChar} → ${toChar}</div>`;
+        const img = `<div class='picture'><img src='images/${word}.png' alt='${word}'></div>`;
+
+        if (i % 2 === 0) {
+          left.innerHTML = showHint ? hintBox : "";
+          right.innerHTML = showPhoto ? img : "";
+        } else {
+          left.innerHTML = showPhoto ? img : "";
+          right.innerHTML = showHint ? hintBox : "";
+        }
+      }
+
+      row.appendChild(left);
+      row.appendChild(middle);
+      row.appendChild(right);
+      table.appendChild(row);
+    }
+
+    container.appendChild(table);
+  }
+</script>
 </body>
 </html>
