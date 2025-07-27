@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CVC Word Ladder Generator</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      margin: 40px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .controls {
+      margin-bottom: 30px;
+    }
+
+    .controls label {
+      font-size: 16px;
+      margin: 0 10px;
+    }
+
+    button {
+      font-size: 16px;
+      padding: 10px 20px;
+      margin: 0 10px;
+      cursor: pointer;
+    }
+
+    .ladder-container {
+      margin-top: 40px;
+    }
+
+    .ladder-table {
+      border-collapse: collapse;
+      margin: 0 auto;
+    }
+
+    .ladder-table td {
+      padding: 10px;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    .ladder-cell {
+      border-top: 2px solid black;
+      border-bottom: 2px solid black;
+      border-left: 5px solid black;
+      border-right: 5px solid black;
+      width: 120px;
+      height: 50px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .ladder-cell.top-open { border-top: none; }
+    .ladder-cell.bottom-open { border-bottom: none; }
+
+    .change-box {
+      font-size: 18px;
+      font-weight: bold;
+      width: 80px;
+      border: 2px solid black;
+      padding: 5px 10px;
+      display: inline-block;
+      border-radius: 6px;
+      background-color: #f9f9f9;
+    }
+
+    .picture img {
+      height: 50px;
+      width: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>CVC Word Ladder Generator</h1>
+
+  <div class="controls">
+    <label><input type="checkbox" id="includeHint"> Include hint (b → h)</label>
+    <label><input type="checkbox" id="includePhoto" checked> Include photo</label>
+    <button onclick="generateLadder()">Generate</button>
+    <button onclick="window.print()">Print</button>
+  </div>
+
+  <div class="ladder-container" id="ladderContainer">
+    <!-- Ladder will be injected here -->
+  </div>
+
+  <script src="cvcLadderData.js"></script>
+  <script>
+    function generateLadder() {
+      // Placeholder for now — full JS generation logic will go here
+      const container = document.getElementById('ladderContainer');
+      container.innerHTML = `<table class='ladder-table'>
+        <tr>
+          <td><div class='change-box'>m → r</div></td>
+          <td class='ladder-cell top-open'>_ _ _</td>
+          <td class='picture'><img src='images/rip.png' alt='rip'></td>
+        </tr>
+        <tr>
+          <td class='picture'><img src='images/hop.png' alt='hop'></td>
+          <td class='ladder-cell'>_ _ _</td>
+          <td><div class='change-box'>h → m</div></td>
+        </tr>
+        <tr>
+          <td><div class='change-box'>t → p</div></td>
+          <td class='ladder-cell'>_ _ _</td>
+          <td class='picture'><img src='images/hip.png' alt='hip'></td>
+        </tr>
+        <tr>
+          <td class='picture'><img src='images/hit.png' alt='hit'></td>
+          <td class='ladder-cell'>_ _ _</td>
+          <td><div class='change-box'>a → i</div></td>
+        </tr>
+        <tr>
+          <td><div class='change-box'>b → h</div></td>
+          <td class='ladder-cell'>_ _ _</td>
+          <td class='picture'><img src='images/hat.png' alt='hat'></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class='ladder-cell bottom-open'><strong>b a t</strong></td>
+          <td></td>
+        </tr>
+      </table>`;
+    }
+  </script>
+</body>
+</html>
