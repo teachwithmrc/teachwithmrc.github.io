@@ -196,7 +196,12 @@ th, td {
     <div id="worksheetTitle"></div>
     <div id="worksheetDirections"></div>
   </div>
-
+<div style="margin-top: 10px;">
+  <label style="font-size: 14px;">
+    <input type="checkbox" id="includeWordBank">
+    Include Word Bank
+  </label>
+</div>
   <script>
     const selectedSkills = new Set();
     const skillLabels = {
@@ -289,8 +294,34 @@ tdLines.appendChild(linesWrapper);
         table.appendChild(row);
       });
 
-      container.appendChild(table);container.appendChild(table);
+      container.appendChild(table);
+// 👇 Add this block right after
+if (document.getElementById('includeWordBank').checked) {
+  const wordBankHeader = document.createElement('div');
+  wordBankHeader.style.marginTop = '12px';
+  wordBankHeader.style.fontWeight = 'bold';
+  wordBankHeader.style.textAlign = 'left';
+  wordBankHeader.textContent = 'Word Bank:';
 
+  const wordBankList = document.createElement('div');
+  wordBankList.style.display = 'grid';
+  wordBankList.style.gridTemplateColumns = 'repeat(4, auto)';
+  wordBankList.style.justifyContent = 'left';
+  wordBankList.style.gap = '10px 20px';
+  wordBankList.style.marginTop = '4px';
+  wordBankList.style.fontSize = '13px';
+
+  const shuffledBank = [...shuffled].sort(() => 0.5 - Math.random());
+
+  shuffledBank.forEach(word => {
+    const span = document.createElement('span');
+    span.textContent = word;
+    wordBankList.appendChild(span);
+  });
+
+  container.appendChild(wordBankHeader);
+  container.appendChild(wordBankList);
+}
 const copyright = document.createElement('div');
 copyright.id = 'worksheetCopyright';
 copyright.textContent = '© 2025 Intervention Station – TeachWithMrC';
