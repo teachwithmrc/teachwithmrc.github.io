@@ -112,6 +112,14 @@
       border-bottom: 2px solid black;
       margin: 0 2px;
     }
+
+    #worksheetCopyright {
+  font-size: 10px;
+  text-align: right;
+  margin-top: 12px;
+  padding-right: 20px;
+  visibility: hidden;
+}
     @media print {
       body * {
         visibility: hidden;
@@ -124,6 +132,9 @@
         top: 0;
         left: 0;
         width: 100%;
+         #worksheetCopyright {
+    visibility: visible;
+  }
       }
     }
   </style>
@@ -257,6 +268,10 @@ tdLines.appendChild(linesWrapper);
 
       container.appendChild(table);
     }
+    const copyright = document.createElement('div');
+copyright.id = 'worksheetCopyright';
+copyright.textContent = '© 2025 Intervention Station – TeachWithMrC';
+container.appendChild(copyright);
   </script>
 </body>
 </html>
