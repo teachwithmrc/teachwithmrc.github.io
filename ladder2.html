@@ -107,12 +107,25 @@ td, th {
  .ladder-cell {
   height: 80px;               /* Constrain height */
   vertical-align: bottom;     /* Align content to bottom */
-  padding: 0;                 /* Remove excess space */
+  padding: 0;  
+   padding-left: 4px;
+padding-right: 4px;/* Remove excess space */
 }
   table {
     page-break-inside: avoid;
   }
 
+}
+    .image-col {
+  width: 80px;
+}
+
+.middle-col {
+  width: 220px; /* Make this WIDER — adjust as needed */
+}
+
+.speech-col {
+  width: 100px;
 }
     @media print {
   body {
@@ -130,37 +143,57 @@ td, th {
   <h1>CVC Word Ladder</h1>
 
   <table>
-    <tr>
-      <td class="image-cell no-top-left-bottom"><img src="images/cap.png" alt="cap"></td>
-     <td class="ladder-cell top-word no-top-border">c a p</td>
-     <td class="no-top-right-bottom"></td>
-    </tr>
-    <tr>
-     <td class="image-cell no-top-left-bottom"><img src="images/cat.png" alt="cat"></td>
-    <td class="ladder-cell bottom-cell"> <div class="letter-lines">   <span></span><span></span><span></span> </div></td>
-     <td class="no-top-right-bottom"><div class="speech-bubble">p → t</div></td>
-    </tr>
-    <tr>
-      <td class="image-cell no-top-left-bottom"><img src="images/bat.png" alt="bat"></td>
-     <td class="ladder-cell bottom-cell"> <div class="letter-lines">   <span></span><span></span><span></span> </div></td>
-     <td class="no-top-right-bottom"><div class="speech-bubble">c → b</div></td>
-    </tr>
-    <tr>
-       <td class="image-cell no-top-left-bottom"><img src="images/bag.png" alt="bag"></td>
-       <td class="ladder-cell bottom-cell"> <div class="letter-lines">   <span></span><span></span><span></span> </div></td>
-     <td class="no-top-right-bottom"><div class="speech-bubble">t → g</div></td>
-    </tr>
-    <tr>
-      <td class="image-cell no-top-left-bottom"><img src="images/bug.png" alt="bug"></td>
-    <td class="ladder-cell bottom-cell"> <div class="letter-lines">   <span></span><span></span><span></span> </div></td>
-     <td class="no-top-right-bottom"><div class="speech-bubble">a → u</div></td>
-    </tr>
-    <tr>
-      <td class="image-cell no-top-left-bottom"><img src="images/bun.png" alt="bun"></td>
-  <td class="ladder-cell no-bottom-border"> <div class="letter-lines">   <span></span><span></span><span></span> </div></td>
-      <td class="no-top-right-bottom"><div class="speech-bubble">g → n</div></td>
-    </tr>
-  </table>
+  <tr>
+    <td class="image-cell image-col no-top-left-bottom"><img src="images/cap.png" alt="cap"></td>
+    <td class="ladder-cell top-word middle-col no-top-border">c a p</td>
+    <td class="speech-col no-top-right-bottom"></td>
+  </tr>
+  <tr>
+    <td class="image-cell image-col no-top-left-bottom"><img src="images/cat.png" alt="cat"></td>
+    <td class="ladder-cell bottom-cell middle-col">
+      <div class="letter-lines"><span></span><span></span><span></span></div>
+    </td>
+    <td class="speech-col no-top-right-bottom">
+      <div class="speech-bubble">p → t</div>
+    </td>
+  </tr>
+  <tr>
+    <td class="image-cell image-col no-top-left-bottom"><img src="images/bat.png" alt="bat"></td>
+    <td class="ladder-cell bottom-cell middle-col">
+      <div class="letter-lines"><span></span><span></span><span></span></div>
+    </td>
+    <td class="speech-col no-top-right-bottom">
+      <div class="speech-bubble">c → b</div>
+    </td>
+  </tr>
+  <tr>
+    <td class="image-cell image-col no-top-left-bottom"><img src="images/bag.png" alt="bag"></td>
+    <td class="ladder-cell bottom-cell middle-col">
+      <div class="letter-lines"><span></span><span></span><span></span></div>
+    </td>
+    <td class="speech-col no-top-right-bottom">
+      <div class="speech-bubble">t → g</div>
+    </td>
+  </tr>
+  <tr>
+    <td class="image-cell image-col no-top-left-bottom"><img src="images/bug.png" alt="bug"></td>
+    <td class="ladder-cell bottom-cell middle-col">
+      <div class="letter-lines"><span></span><span></span><span></span></div>
+    </td>
+    <td class="speech-col no-top-right-bottom">
+      <div class="speech-bubble">a → u</div>
+    </td>
+  </tr>
+  <tr>
+    <td class="image-cell image-col no-top-left-bottom"><img src="images/bun.png" alt="bun"></td>
+    <td class="ladder-cell no-bottom-border middle-col">
+      <div class="letter-lines"><span></span><span></span><span></span></div>
+    </td>
+    <td class="speech-col no-top-right-bottom">
+      <div class="speech-bubble">g → n</div>
+    </td>
+  </tr>
+</table>
 
 </body>
 </html>
