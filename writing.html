@@ -246,6 +246,38 @@ th, td {
 
       container.appendChild(title);
       container.appendChild(directions);
+      if (document.getElementById('includeWordBank').checked) {
+  const wordBankContainer = document.createElement('div');
+  wordBankContainer.style.border = '1px solid #000';
+  wordBankContainer.style.padding = '10px';
+  wordBankContainer.style.margin = '10px auto';
+  wordBankContainer.style.width = 'fit-content';
+  wordBankContainer.style.textAlign = 'left';
+
+  const wordBankHeader = document.createElement('div');
+  wordBankHeader.style.fontWeight = 'bold';
+  wordBankHeader.style.marginBottom = '6px';
+  wordBankHeader.textContent = 'Word Bank:';
+  wordBankContainer.appendChild(wordBankHeader);
+
+  const wordBankList = document.createElement('div');
+  wordBankList.style.display = 'grid';
+  wordBankList.style.gridTemplateColumns = 'repeat(4, auto)';
+  wordBankList.style.gap = '10px 20px';
+  wordBankList.style.fontSize = '13px';
+
+  const shuffledBank = [...shuffled].sort(() => 0.5 - Math.random());
+
+  shuffledBank.forEach(word => {
+    const span = document.createElement('span');
+    span.textContent = word;
+    span.style.fontWeight = '600';
+    wordBankList.appendChild(span);
+  });
+
+  wordBankContainer.appendChild(wordBankList);
+  container.appendChild(wordBankContainer);
+}
 
       const words = [...cvcLadderWords];
       const shuffled = words.sort(() => 0.5 - Math.random()).slice(0, 8);
@@ -295,32 +327,6 @@ tdLines.appendChild(linesWrapper);
       });
 
       container.appendChild(table);
-// 👇 Add this block right after
-if (document.getElementById('includeWordBank').checked) {
-  const wordBankHeader = document.createElement('div');
-  wordBankHeader.style.marginTop = '12px';
-  wordBankHeader.style.fontWeight = 'bold';
-  wordBankHeader.style.textAlign = 'left';
-  wordBankHeader.textContent = 'Word Bank:';
-
-  const wordBankList = document.createElement('div');
-  wordBankList.style.display = 'grid';
-  wordBankList.style.gridTemplateColumns = 'repeat(4, auto)';
-  wordBankList.style.justifyContent = 'left';
-  wordBankList.style.gap = '10px 20px';
-  wordBankList.style.marginTop = '4px';
-  wordBankList.style.fontSize = '13px';
-
-  const shuffledBank = [...shuffled].sort(() => 0.5 - Math.random());
-
-  shuffledBank.forEach(word => {
-    const span = document.createElement('span');
-    span.textContent = word;
-    wordBankList.appendChild(span);
-  });
-
-  container.appendChild(wordBankHeader);
-  container.appendChild(wordBankList);
 }
 const copyright = document.createElement('div');
 copyright.id = 'worksheetCopyright';
