@@ -6,97 +6,114 @@
   <script src="cvcLadderData.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 40px;
-      text-align: center;
-    }
-    h1 {
-      font-size: 26px;
-      margin-bottom: 10px;
-    }
-    .subtitle {
-      font-size: 16px;
-      margin-bottom: 30px;
-    }
-    .table-section {
-      border: 2px solid #000;
-      padding: 5px;
-      margin: 12px auto;
-      width: fit-content;
-      box-sizing: border-box;
-    }
-    .section-label {
-      font-weight: 600;
-      font-size: 18px;
-      margin-bottom: 12px;
-    }
-    .skill-button-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      justify-content: center;
-    }
-    .skill-button-grid .row {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-    .skill-button {
-      border: 2px solid #000;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
-    }
-    .skill-button.selected {
-      background-color: #007bff;
-      color: white;
-      box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-    }
-    #printableSection {
-      margin-top: 30px;
-    }
-    #worksheetTitle {
-      font-size: 16px;
-      font-weight: bold;
-      margin-bottom: 2px;
-      text-align: center;
-    }
-    #worksheetDirections {
-      font-size: 12px;
-      margin-bottom: 5px;
-      text-align: center;
-    }
-    table {
-      width: 500px;
-      margin: auto;
-      border-collapse: collapse;
-    }
-    th, td {
-      border: 1px solid #000;
-      padding: 2px;
-      text-align: center;
-      vertical-align: middle;
-      font-size: 14px;
-    }
-    .picture-cell {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 80px;
-      padding: 0px;
-    }
-    .picture-cell img {
-      height: 100%;
-      object-fit: contain;
-    }
-    .write-cell {
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 40px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 26px;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+.table-section {
+  border: 2px solid #000;
+  padding: 5px;
+  margin: 12px auto;
+  width: fit-content;
+  box-sizing: border-box;
+}
+
+.section-label {
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.skill-button-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+}
+
+.skill-button-grid .row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.skill-button {
+  border: 2px solid #000;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+}
+
+.skill-button.selected {
+  background-color: #007bff;
+  color: white;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
+#printableSection {
+  margin-top: 30px;
+}
+
+#worksheetTitle {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 2px;
+  text-align: center;
+}
+
+#worksheetDirections {
+  font-size: 12px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+table {
+  width: 500px;
+  margin: auto;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #000;
+  padding: 0;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+.picture-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90px;
+  padding: 0;
+}
+
+.picture-cell img {
+  max-height: 85px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.write-cell {
   vertical-align: bottom;
-  padding-bottom: 6px;
-  height: 100px; /* or match your actual row height */
+  height: 100px;
+  padding: 0;
 }
 
 .line-wrapper {
@@ -104,39 +121,45 @@
   justify-content: center;
   gap: 4px;
   margin-top: auto;
-  margin-bottom: 4px; /* optional: gives a little breathing room */
+  margin-bottom: 4px;
 }
-    .letter-line {
-      display: inline-block;
-      width: 30px;
-      border-bottom: 2px solid black;
-      margin: 0 2px;
-    }
 
-    #worksheetCopyright {
+.letter-line {
+  display: inline-block;
+  width: 30px;
+  border-bottom: 2px solid black;
+  margin: 0 2px;
+}
+
+#worksheetCopyright {
   font-size: 10px;
   text-align: right;
-  margin-top: 12px;
+  margin-top: 10px;
   padding-right: 20px;
   visibility: hidden;
 }
-    @media print {
-      body * {
-        visibility: hidden;
-      }
-      #printableSection, #printableSection * {
-        visibility: visible;
-      }
-      #printableSection {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-         #worksheetCopyright {
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #printableSection, #printableSection * {
     visibility: visible;
   }
-      }
-    }
+
+  #printableSection {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 95%; /* slightly smaller to prevent clipping */
+    margin: auto;
+  }
+
+  #worksheetCopyright {
+    visibility: visible;
+  }
+}
   </style>
 </head>
 <body>
@@ -266,12 +289,13 @@ tdLines.appendChild(linesWrapper);
         table.appendChild(row);
       });
 
-      container.appendChild(table);
-    }
-    const copyright = document.createElement('div');
+      container.appendChild(table);container.appendChild(table);
+
+const copyright = document.createElement('div');
 copyright.id = 'worksheetCopyright';
 copyright.textContent = '© 2025 Intervention Station – TeachWithMrC';
 container.appendChild(copyright);
+    }
   </script>
 </body>
 </html>
