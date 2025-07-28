@@ -95,11 +95,12 @@ td, th {
   height: 100%;
 }
 .letter-lines span {
-  display: block;
-  width: 40px;     /* Adjust line length */
-  height: 4px;     /* Adjust thickness */
+  display: inline-block; /* ← This is the fix */
+  width: 40px;
+  height: 4px;
   background: black;
   border-radius: 2px;
+  margin: 0 4px; /* optional: add spacing between lines */
 }
   button {
     display: none;
