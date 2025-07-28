@@ -88,11 +88,10 @@ td, th {
       font-size: 28px;
       letter-spacing: 12px;
     }
-    .letter-lines {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 0px;
+.letter-lines {
+  height: auto;               /* Don't stretch full cell */
+  align-items: flex-end;      /* Still aligns lines to bottom */
+  margin-top: 0;
 }
 .bottom-align {
   vertical-align: bottom;
@@ -106,23 +105,16 @@ td, th {
   background: black;
   border-radius: 2px;
 }
-  @media print {
-  body {
-    margin: 0;
-    padding: 0;
-  }
   button {
     display: none;
   }
-    .ladder-cell {
-  min-height: 110px;
+ .ladder-cell {
+  height: 80px;               /* Constrain height */
+  vertical-align: bottom;     /* Align content to bottom */
+  padding: 0;                 /* Remove excess space */
 }
   table {
     page-break-inside: avoid;
-  }
-  .letter-lines span {
-    display: inline-block !important;
-    background: black !important;
   }
 
 }
