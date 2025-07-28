@@ -71,10 +71,19 @@
       vertical-align: bottom;
       font-size: 14px;
     }
-    .pic-box img {
-      width: 60px;
-      height: 60px;
-    }
+/* REPLACE WITH THIS CLEANER VERSION */
+.picture-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  padding: 4px;
+}
+.picture-cell img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
     .letter-line {
       display: inline-block;
       width: 30px;
@@ -154,11 +163,14 @@
         const tdNum = document.createElement('td');
         tdNum.textContent = index + 1;
 
-        const tdPic = document.createElement('td');
-        const img = document.createElement('img');
-        img.src = cvcLadderImages[word] || '';
-        img.alt = word;
-        tdPic.appendChild(img);
+       const tdPic = document.createElement('td');
+const picWrapper = document.createElement('div');
+picWrapper.className = 'picture-cell';
+const img = document.createElement('img');
+img.src = cvcLadderImages[word] || '';
+img.alt = word;
+picWrapper.appendChild(img);
+tdPic.appendChild(picWrapper);
 
         const tdLines = document.createElement('td');
         for (let i = 0; i < word.length; i++) {
