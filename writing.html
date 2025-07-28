@@ -90,10 +90,23 @@
       padding: 0px;
     }
     .picture-cell img {
-      width: 80px;
-      height: 80px;
+      width: 130px;
+      height: 130px;
       object-fit: contain;
     }
+    .write-cell {
+  vertical-align: bottom;
+  padding-bottom: 6px;
+  height: 100px; /* or match your actual row height */
+}
+
+.line-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: auto;
+  margin-bottom: 4px; /* optional: gives a little breathing room */
+}
     .letter-line {
       display: inline-block;
       width: 30px;
@@ -224,12 +237,17 @@
         picWrapper.appendChild(img);
         tdPic.appendChild(picWrapper);
 
-        const tdLines = document.createElement('td');
-        for (let i = 0; i < word.length; i++) {
-          const span = document.createElement('span');
-          span.className = 'letter-line';
-          tdLines.appendChild(span);
-        }
+       const tdLines = document.createElement('td');
+tdLines.className = 'write-cell';
+
+const linesWrapper = document.createElement('div');
+linesWrapper.className = 'line-wrapper';
+for (let i = 0; i < word.length; i++) {
+  const span = document.createElement('span');
+  span.className = 'letter-line';
+  linesWrapper.appendChild(span);
+}
+tdLines.appendChild(linesWrapper);
 
         row.appendChild(tdNum);
         row.appendChild(tdPic);
