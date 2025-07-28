@@ -61,7 +61,13 @@
     }
     #worksheetTitle {
       font-size: 20px;
-      margin-bottom: 16px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    #worksheetDirections {
+      font-size: 16px;
+      margin-bottom: 20px;
       text-align: center;
     }
     table {
@@ -71,21 +77,21 @@
     }
     th, td {
       border: 1px solid #000;
-      padding: 6px;
+      padding: 8px;
       text-align: center;
-      vertical-align: bottom;
+      vertical-align: middle;
       font-size: 14px;
     }
     .picture-cell {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 60px;
+      height: 80px;
       padding: 4px;
     }
     .picture-cell img {
-      width: 50px;
-      height: 50px;
+      width: 70px;
+      height: 70px;
       object-fit: contain;
     }
     .letter-line {
@@ -141,11 +147,22 @@
   </div>
 
   <div id="printableSection">
-    <div id="worksheetTitle">Write the Word</div>
+    <div id="worksheetTitle"></div>
+    <div id="worksheetDirections"></div>
   </div>
 
   <script>
     const selectedSkills = new Set();
+    const skillLabels = {
+      "0.1": "Short A",
+      "0.2": "Short O",
+      "0.3": "Short I",
+      "0.4": "Short U",
+      "0.5": "Short E",
+      "0.6": "FLSZ",
+      "0.7": "CVC & FLSZ",
+      "mixed": "Mixed CVC"
+    };
 
     document.querySelectorAll('.skill-button').forEach(button => {
       button.addEventListener('click', () => {
@@ -162,7 +179,22 @@
 
     function generatePictureWordTable() {
       const container = document.getElementById('printableSection');
-      container.innerHTML = '<div id="worksheetTitle">Write the Word</div>';
+      container.innerHTML = '';
+
+      const skillNames = [...selectedSkills].map(skill => skillLabels[skill] || skill);
+      const skillTitle = `${skillNames.join(', ')} Spelling`;
+      const skillDirections = `Directions: Spell the word that matches the picture.`;
+
+      const title = document.createElement('div');
+      title.id = "worksheetTitle";
+      title.textContent = skillTitle;
+
+      const directions = document.createElement('div');
+      directions.id = "worksheetDirections";
+      directions.textContent = skillDirections;
+
+      container.appendChild(title);
+      container.appendChild(directions);
 
       const words = [...cvcLadderWords];
       const shuffled = words.sort(() => 0.5 - Math.random()).slice(0, 8);
