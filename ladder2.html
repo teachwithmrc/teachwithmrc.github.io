@@ -11,8 +11,11 @@
   font-size: 14px;
 }
 .top-word {
-  font-size: 28px;  /* was 40px */
-  letter-spacing: 6px; /* was 10px */
+  font-size: 28px;
+  letter-spacing: 6px;
+  vertical-align: bottom;
+  height: 100%;
+  display: table-cell;
 }
 
 h1 {
@@ -111,6 +114,9 @@ td, th {
   button {
     display: none;
   }
+    .ladder-cell {
+  min-height: 110px;
+}
   table {
     page-break-inside: avoid;
   }
@@ -118,7 +124,16 @@ td, th {
     display: inline-block !important;
     background: black !important;
   }
+
 }
+    @media print {
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  h1 {
+    margin-bottom: 4px;
+  }
 }
   </style>
 </head>
