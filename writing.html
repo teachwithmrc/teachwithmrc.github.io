@@ -19,7 +19,7 @@ h1 {
 
 .subtitle {
   font-size: 16px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .table-section {
@@ -33,7 +33,7 @@ h1 {
 .section-label {
   font-weight: 600;
   font-size: 18px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .skill-button-grid {
@@ -66,7 +66,7 @@ h1 {
 }
 
 #printableSection {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 #worksheetTitle {
@@ -78,12 +78,12 @@ h1 {
 
 #worksheetDirections {
   font-size: 12px;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   text-align: center;
 }
 
 table {
-  width: 500px;
+  width: 480px; /* slightly smaller */
   margin: auto;
   border-collapse: collapse;
 }
@@ -93,48 +93,48 @@ th, td {
   padding: 0;
   text-align: center;
   vertical-align: middle;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .picture-cell {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 90px;
+  height: 80px; /* reduced */
   padding: 0;
 }
 
 .picture-cell img {
-  max-height: 75px;
+  max-height: 70px; /* reduced */
   max-width: 100%;
   object-fit: contain;
 }
 
 .write-cell {
   vertical-align: bottom;
-  height: 100px;
+  height: 85px; /* reduced */
   padding: 0;
 }
 
 .line-wrapper {
   display: flex;
   justify-content: center;
-  gap: 4px;
+  gap: 3px;
   margin-top: auto;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .letter-line {
   display: inline-block;
-  width: 30px;
+  width: 26px; /* slightly smaller */
   border-bottom: 2px solid black;
-  margin: 0 2px;
+  margin: 0 1px;
 }
 
 #worksheetCopyright {
   font-size: 10px;
   text-align: right;
-  margin-top: 10px;
+  margin-top: 6px;
   padding-right: 20px;
   visibility: hidden;
 }
@@ -154,6 +154,8 @@ th, td {
     left: 0;
     width: 95%; /* slightly smaller to prevent clipping */
     margin: auto;
+    transform: scale(0.95); /* scale down slightly for one page */
+    transform-origin: top center;
   }
 
   #worksheetCopyright {
@@ -196,12 +198,14 @@ th, td {
     <div id="worksheetTitle"></div>
     <div id="worksheetDirections"></div>
   </div>
-<div style="margin-top: 10px;">
-  <label style="font-size: 14px;">
-    <input type="checkbox" id="includeWordBank">
-    Include Word Bank
-  </label>
-</div>
+  
+  <div style="margin-top: 8px;">
+    <label style="font-size: 14px;">
+      <input type="checkbox" id="includeWordBank">
+      Include Word Bank
+    </label>
+  </div>
+
   <script>
     const selectedSkills = new Set();
     const skillLabels = {
@@ -252,26 +256,28 @@ function generatePictureWordTable() {
   const words = [...cvcLadderWords];
   const shuffled = words.sort(() => 0.5 - Math.random()).slice(0, 8);
 
-  // ✅ Word Bank (now shuffled exists)
+  // ✅ Word Bank (with rounded rectangle)
   if (document.getElementById('includeWordBank').checked) {
     const wordBankContainer = document.createElement('div');
     wordBankContainer.style.border = '1px solid #000';
-    wordBankContainer.style.padding = '10px';
-    wordBankContainer.style.margin = '10px auto';
+    wordBankContainer.style.borderRadius = '12px';
+    wordBankContainer.style.padding = '6px';
+    wordBankContainer.style.margin = '6px auto';
     wordBankContainer.style.width = 'fit-content';
     wordBankContainer.style.textAlign = 'left';
 
     const wordBankHeader = document.createElement('div');
     wordBankHeader.style.fontWeight = 'bold';
-    wordBankHeader.style.marginBottom = '6px';
+    wordBankHeader.style.marginBottom = '4px';
+    wordBankHeader.style.fontSize = '13px';
     wordBankHeader.textContent = 'Word Bank:';
     wordBankContainer.appendChild(wordBankHeader);
 
     const wordBankList = document.createElement('div');
     wordBankList.style.display = 'grid';
     wordBankList.style.gridTemplateColumns = 'repeat(4, auto)';
-    wordBankList.style.gap = '10px 20px';
-    wordBankList.style.fontSize = '13px';
+    wordBankList.style.gap = '6px 16px';
+    wordBankList.style.fontSize = '12px';
 
     const shuffledBank = [...shuffled].sort(() => 0.5 - Math.random());
     shuffledBank.forEach(word => {
