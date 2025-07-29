@@ -255,15 +255,15 @@ function generatePictureWordTable() {
   const words = [...cvcLadderWords];
   const shuffled = words.sort(() => 0.5 - Math.random()).slice(0, 8);
 
-  // ✅ Adjust sizes dynamically
+  // ✅ Dynamic sizing
   const includeBank = document.getElementById('includeWordBank').checked;
   const tableWidth = includeBank ? 480 : 550;
-  const pictureHeight = includeBank ? 80 : 100;
-  const imageMaxHeight = includeBank ? 70 : 90;
-  const writeCellHeight = includeBank ? 85 : 100;
-  const letterLineWidth = includeBank ? 26 : 32;
+  const pictureHeight = includeBank ? 80 : 120;
+  const imageMaxHeight = includeBank ? 70 : 110;
+  const writeCellHeight = includeBank ? 85 : 120;
+  const letterLineWidth = includeBank ? 26 : 36;
 
-  // ✅ Word Bank (single line)
+  // ✅ Word Bank (single line, rounded box)
   if (includeBank) {
     const wordBankContainer = document.createElement('div');
     wordBankContainer.style.border = '1px solid #000';
@@ -299,7 +299,7 @@ function generatePictureWordTable() {
     container.appendChild(wordBankContainer);
   }
 
-  // ✅ Generate the table
+  // ✅ Generate the main table
   const table = document.createElement('table');
   table.style.width = tableWidth + 'px';
 
