@@ -259,7 +259,7 @@
     });
 
     // Step 3: Generate Tic Tac Toe Boards
-   window.generateTicTacToeBoards = function () {
+ window.generateTicTacToeBoards = function () {
   const skills = Array.from(selectedSkills);
   const contentType = document.querySelector('input[name=contentType]:checked')?.value;
 
@@ -279,59 +279,58 @@
   const totalCells = 36; // 4 boards x 9 cells
   let words = [];
   let sentences = [];
-let overrideHandled = false;
+  let overrideHandled = false;
 
-if (skills.includes("0.7") && (contentType === "words" || contentType === "both")) {
-  const cvcWords = window.fluencyData.words["Mixed CVC Words"] || [];
-  const flszWords = window.fluencyData.words["0.6 - FLSZ"] || [];
+  // Special handling for 0.7 (CVC & FLSZ)
+  if (skills.includes("0.7") && (contentType === "words" || contentType === "both")) {
+    const cvcWords = window.fluencyData.words["Mixed CVC Words"] || [];
+    const flszWords = window.fluencyData.words["0.6 - FLSZ"] || [];
+    const totalNeeded = contentType === "both" ? 18 : 36;
+    const half = Math.floor(totalNeeded / 2);
 
-  const totalNeeded = (contentType === "both") ? 18 : 36;
-  const half = Math.floor(totalNeeded / 2);
+    const shuffledCVC = cvcWords.sort(() => 0.5 - Math.random()).slice(0, half);
+    const shuffledFLSZ = flszWords.sort(() => 0.5 - Math.random()).slice(0, totalNeeded - half);
 
-  const shuffledCVC = cvcWords.sort(() => 0.5 - Math.random()).slice(0, half);
-  const shuffledFLSZ = flszWords.sort(() => 0.5 - Math.random()).slice(0, totalNeeded - half);
-
-  words = [...shuffledCVC, ...shuffledFLSZ];
-  overrideHandled = true;
-}
-
-// ✅ Also pull FLSZ + Mixed CVC sentences when 0.7 and type is sentences or both
-if (skills.includes("0.7") && (contentType === "sentences" || contentType === "both")) {
-  const cvcSentences = window.fluencyData.sentences["Mixed CVC Sentences"] || [];
-  const flszSentences = window.fluencyData.sentences["0.6 - FLSZ Sentences"] || [];
-  sentences.push(...cvcSentences, ...flszSentences);
-}
-
-const labelFor = (skill, type) => {
-  if (type === "words") {
-    if (skill === "0.6" || skill === "0.7") return `${skill} - ${skillLabelMap[skill]}`;
-    if (skill === "mixed") return "Mixed CVC Words";
-    return `${skill} - ${skillLabelMap[skill]} Words`;
-  }
-  if (type === "sentences") {
-    if (skill === "mixed") return "Mixed CVC Sentences";
-    return `${skill} - ${skillLabelMap[skill]} Sentences`;
-  }
-};
-
-for (const skill of skills) {
-  if (overrideHandled && skill === "0.7") continue;
-
-  if ((contentType === "words" || contentType === "both") && window.fluencyData.words[labelFor(skill, "words")]) {
-    words.push(...window.fluencyData.words[labelFor(skill, "words")]);
+    words = [...shuffledCVC, ...shuffledFLSZ];
+    overrideHandled = true;
   }
 
-  if ((contentType === "sentences" || contentType === "both") && window.fluencyData.sentences[labelFor(skill, "sentences")]) {
-    sentences.push(...window.fluencyData.sentences[labelFor(skill, "sentences")]);
+  if (skills.includes("0.7") && (contentType === "sentences" || contentType === "both")) {
+    const cvcSentences = window.fluencyData.sentences["Mixed CVC Sentences"] || [];
+    const flszSentences = window.fluencyData.sentences["0.6 - FLSZ Sentences"] || [];
+    sentences.push(...cvcSentences, ...flszSentences);
   }
-}
 
-if ((contentType === "words" && words.length < totalCells) ||
-    (contentType === "sentences" && sentences.length < totalCells) ||
-    (contentType === "both" && (words.length + sentences.length) < totalCells)) {
-  alert("⚠️ Not enough content to generate 4 boards.");
-  return;
-}
+  const labelFor = (skill, type) => {
+    if (type === "words") {
+      if (skill === "0.6" || skill === "0.7") return `${skill} - ${skillLabelMap[skill]}`;
+      if (skill === "mixed") return "Mixed CVC Words";
+      return `${skill} - ${skillLabelMap[skill]} Words`;
+    }
+    if (type === "sentences") {
+      if (skill === "mixed") return "Mixed CVC Sentences";
+      return `${skill} - ${skillLabelMap[skill]} Sentences`;
+    }
+  };
+
+  for (const skill of skills) {
+    if (overrideHandled && skill === "0.7") continue;
+
+    if ((contentType === "words" || contentType === "both") && window.fluencyData.words[labelFor(skill, "words")]) {
+      words.push(...window.fluencyData.words[labelFor(skill, "words")]);
+    }
+
+    if ((contentType === "sentences" || contentType === "both") && window.fluencyData.sentences[labelFor(skill, "sentences")]) {
+      sentences.push(...window.fluencyData.sentences[labelFor(skill, "sentences")]);
+    }
+  }
+
+  if ((contentType === "words" && words.length < totalCells) ||
+      (contentType === "sentences" && sentences.length < totalCells) ||
+      (contentType === "both" && (words.length + sentences.length) < totalCells)) {
+    alert("⚠️ Not enough content to generate 4 boards.");
+    return;
+  }
 
   let finalContent = [];
   if (contentType === "words") {
@@ -341,8 +340,7 @@ if ((contentType === "words" && words.length < totalCells) ||
   } else {
     // both
     const basePerType = Math.floor(totalCells / 2); // 18
-    const extra = totalCells % 2; // 0
-    const numWords = Math.min(words.length, basePerType + (extra === 1 ? 1 : 0));
+    const numWords = Math.min(words.length, basePerType);
     const numSentences = totalCells - numWords;
     const selectedWords = words.sort(() => 0.5 - Math.random()).slice(0, numWords);
     const selectedSentences = sentences.sort(() => 0.5 - Math.random()).slice(0, numSentences);
@@ -370,7 +368,8 @@ if ((contentType === "words" && words.length < totalCells) ||
         cell.style.verticalAlign = 'middle';
         cell.style.textAlign = 'center';
         cell.style.padding = '6px';
-        cell.style.fontSize = isSentence ? '18px' : '24px';
+        cell.style.fontSize = isSentence ? '16px' : '24px'; // ✅ smaller font for sentences
+        cell.style.lineHeight = isSentence ? '18px' : '28px';
         cell.style.wordBreak = 'break-word';
       }
     }
@@ -378,15 +377,20 @@ if ((contentType === "words" && words.length < totalCells) ||
     const gameLabel = document.createElement("div");
     gameLabel.textContent = `Game ${b + 1}`;
     gameLabel.style.fontWeight = "bold";
-    gameLabel.style.fontSize = "24px";
-    gameLabel.style.marginBottom = "15px";
+    gameLabel.style.fontSize = "22px";
+    gameLabel.style.marginBottom = "10px";
 
+    // ✅ Rounded Rectangle Container
     const boardGroup = document.createElement("div");
     boardGroup.style.display = "flex";
     boardGroup.style.flexDirection = "column";
     boardGroup.style.alignItems = "center";
-    boardGroup.style.marginTop = b >= 2 ? "20px" : "0px";
     boardGroup.style.width = "100%";
+    boardGroup.style.border = "3px solid black";
+    boardGroup.style.borderRadius = "16px";
+    boardGroup.style.padding = "12px";
+    boardGroup.style.backgroundColor = "white";
+    boardGroup.style.boxSizing = "border-box";
 
     boardGroup.appendChild(gameLabel);
     boardGroup.appendChild(board);
