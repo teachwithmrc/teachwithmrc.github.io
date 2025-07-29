@@ -83,7 +83,6 @@ h1 {
 }
 
 table {
-  width: 480px; /* slightly smaller */
   margin: auto;
   border-collapse: collapse;
 }
@@ -100,19 +99,16 @@ th, td {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80px; /* reduced */
   padding: 0;
 }
 
 .picture-cell img {
-  max-height: 70px; /* reduced */
   max-width: 100%;
   object-fit: contain;
 }
 
 .write-cell {
   vertical-align: bottom;
-  height: 85px; /* reduced */
   padding: 0;
 }
 
@@ -126,7 +122,6 @@ th, td {
 
 .letter-line {
   display: inline-block;
-  width: 26px; /* slightly smaller */
   border-bottom: 2px solid black;
   margin: 0 1px;
 }
@@ -137,6 +132,11 @@ th, td {
   margin-top: 6px;
   padding-right: 20px;
   visibility: hidden;
+}
+
+#answerKey {
+  page-break-before: always;
+  margin-top: 20px;
 }
 
 @media print {
@@ -152,9 +152,9 @@ th, td {
     position: absolute;
     top: 0;
     left: 0;
-    width: 95%; /* slightly smaller to prevent clipping */
+    width: 95%;
     margin: auto;
-    transform: scale(0.95); /* scale down slightly for one page */
+    transform: scale(0.95);
     transform-origin: top center;
   }
 
@@ -192,18 +192,17 @@ th, td {
     <div class="section-label">Generate Worksheet</div>
     <button onclick="generatePictureWordTable()" style="font-size: 18px; padding: 10px 24px;">Generate</button>
     <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
+    <div style="margin-top: 8px;">
+      <label style="font-size: 14px;">
+        <input type="checkbox" id="includeWordBank">
+        Include Word Bank
+      </label>
+    </div>
   </div>
 
   <div id="printableSection">
     <div id="worksheetTitle"></div>
     <div id="worksheetDirections"></div>
-  </div>
-  
-  <div style="margin-top: 8px;">
-    <label style="font-size: 14px;">
-      <input type="checkbox" id="includeWordBank">
-      Include Word Bank
-    </label>
   </div>
 
   <script>
@@ -256,15 +255,23 @@ function generatePictureWordTable() {
   const words = [...cvcLadderWords];
   const shuffled = words.sort(() => 0.5 - Math.random()).slice(0, 8);
 
-  // ✅ Word Bank (with rounded rectangle)
-  if (document.getElementById('includeWordBank').checked) {
+  // ✅ Adjust sizes dynamically
+  const includeBank = document.getElementById('includeWordBank').checked;
+  const tableWidth = includeBank ? 480 : 550;
+  const pictureHeight = includeBank ? 80 : 100;
+  const imageMaxHeight = includeBank ? 70 : 90;
+  const writeCellHeight = includeBank ? 85 : 100;
+  const letterLineWidth = includeBank ? 26 : 32;
+
+  // ✅ Word Bank (single line)
+  if (includeBank) {
     const wordBankContainer = document.createElement('div');
     wordBankContainer.style.border = '1px solid #000';
     wordBankContainer.style.borderRadius = '12px';
-    wordBankContainer.style.padding = '6px';
+    wordBankContainer.style.padding = '6px 12px';
     wordBankContainer.style.margin = '6px auto';
     wordBankContainer.style.width = 'fit-content';
-    wordBankContainer.style.textAlign = 'left';
+    wordBankContainer.style.textAlign = 'center';
 
     const wordBankHeader = document.createElement('div');
     wordBankHeader.style.fontWeight = 'bold';
@@ -274,10 +281,11 @@ function generatePictureWordTable() {
     wordBankContainer.appendChild(wordBankHeader);
 
     const wordBankList = document.createElement('div');
-    wordBankList.style.display = 'grid';
-    wordBankList.style.gridTemplateColumns = 'repeat(4, auto)';
-    wordBankList.style.gap = '6px 16px';
     wordBankList.style.fontSize = '12px';
+    wordBankList.style.display = 'flex';
+    wordBankList.style.flexWrap = 'wrap';
+    wordBankList.style.justifyContent = 'center';
+    wordBankList.style.gap = '12px';
 
     const shuffledBank = [...shuffled].sort(() => 0.5 - Math.random());
     shuffledBank.forEach(word => {
@@ -293,6 +301,7 @@ function generatePictureWordTable() {
 
   // ✅ Generate the table
   const table = document.createElement('table');
+  table.style.width = tableWidth + 'px';
 
   const headerRow = document.createElement('tr');
   ['No.', 'Picture', 'Write the Word'].forEach(text => {
@@ -311,20 +320,24 @@ function generatePictureWordTable() {
     const tdPic = document.createElement('td');
     const picWrapper = document.createElement('div');
     picWrapper.className = 'picture-cell';
+    picWrapper.style.height = pictureHeight + 'px';
     const img = document.createElement('img');
     img.src = cvcLadderImages[word] || '';
     img.alt = word;
+    img.style.maxHeight = imageMaxHeight + 'px';
     picWrapper.appendChild(img);
     tdPic.appendChild(picWrapper);
 
     const tdLines = document.createElement('td');
     tdLines.className = 'write-cell';
+    tdLines.style.height = writeCellHeight + 'px';
 
     const linesWrapper = document.createElement('div');
     linesWrapper.className = 'line-wrapper';
     for (let i = 0; i < word.length; i++) {
       const span = document.createElement('span');
       span.className = 'letter-line';
+      span.style.width = letterLineWidth + 'px';
       linesWrapper.appendChild(span);
     }
     tdLines.appendChild(linesWrapper);
@@ -338,7 +351,60 @@ function generatePictureWordTable() {
 
   container.appendChild(table);
 
-  // ✅ Copyright (inside function)
+  // ✅ Answer Key on new page
+  const answerKey = document.createElement('div');
+  answerKey.id = 'answerKey';
+
+  const answerTitle = document.createElement('div');
+  answerTitle.style.fontWeight = 'bold';
+  answerTitle.style.marginBottom = '8px';
+  answerTitle.style.fontSize = '16px';
+  answerTitle.textContent = `${skillNames.join(', ')} Spelling – Answer Key`;
+  answerKey.appendChild(answerTitle);
+
+  const answerTable = document.createElement('table');
+  answerTable.style.width = tableWidth + 'px';
+
+  const answerHeader = document.createElement('tr');
+  ['No.', 'Picture', 'Answer'].forEach(text => {
+    const th = document.createElement('th');
+    th.textContent = text;
+    answerHeader.appendChild(th);
+  });
+  answerTable.appendChild(answerHeader);
+
+  shuffled.forEach((word, index) => {
+    const row = document.createElement('tr');
+
+    const tdNum = document.createElement('td');
+    tdNum.textContent = index + 1;
+
+    const tdPic = document.createElement('td');
+    const picWrapper = document.createElement('div');
+    picWrapper.className = 'picture-cell';
+    picWrapper.style.height = pictureHeight + 'px';
+    const img = document.createElement('img');
+    img.src = cvcLadderImages[word] || '';
+    img.alt = word;
+    img.style.maxHeight = imageMaxHeight + 'px';
+    picWrapper.appendChild(img);
+    tdPic.appendChild(picWrapper);
+
+    const tdAnswer = document.createElement('td');
+    tdAnswer.textContent = word;
+    tdAnswer.style.fontWeight = '600';
+
+    row.appendChild(tdNum);
+    row.appendChild(tdPic);
+    row.appendChild(tdAnswer);
+
+    answerTable.appendChild(row);
+  });
+
+  answerKey.appendChild(answerTable);
+  container.appendChild(answerKey);
+
+  // ✅ Copyright
   const copyright = document.createElement('div');
   copyright.id = 'worksheetCopyright';
   copyright.textContent = '© 2025 Intervention Station – TeachWithMrC';
