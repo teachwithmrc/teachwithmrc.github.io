@@ -255,13 +255,13 @@ function generatePictureWordTable() {
   const words = [...cvcLadderWords];
   const shuffled = words.sort(() => 0.5 - Math.random()).slice(0, 8);
 
-  // ✅ Dynamic sizing
+  // ✅ Dynamic sizing (balanced)
   const includeBank = document.getElementById('includeWordBank').checked;
-  const tableWidth = includeBank ? 480 : 550;
-  const pictureHeight = includeBank ? 80 : 120;
-  const imageMaxHeight = includeBank ? 70 : 110;
-  const writeCellHeight = includeBank ? 85 : 120;
-  const letterLineWidth = includeBank ? 26 : 36;
+  const tableWidth = includeBank ? 500 : 540;
+  const pictureHeight = includeBank ? 100 : 110;
+  const imageMaxHeight = includeBank ? 90 : 100;
+  const writeCellHeight = includeBank ? 110 : 110;
+  const letterLineWidth = includeBank ? 30 : 34;
 
   // ✅ Word Bank (single line, rounded box)
   if (includeBank) {
