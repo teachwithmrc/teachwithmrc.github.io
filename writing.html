@@ -258,9 +258,9 @@ function generatePictureWordTable() {
   // ✅ Dynamic sizing (balanced)
   const includeBank = document.getElementById('includeWordBank').checked;
   const tableWidth = includeBank ? 500 : 540;
-  const pictureHeight = includeBank ? 100 : 110;
-  const imageMaxHeight = includeBank ? 90 : 100;
-  const writeCellHeight = includeBank ? 110 : 110;
+const pictureHeight = includeBank ? 70 : 100;     // was 80
+const imageMaxHeight = includeBank ? 60 : 90;     // was 70
+const writeCellHeight = includeBank ? 75 : 100;   // was 85
   const letterLineWidth = includeBank ? 30 : 34;
 
 // ✅ Word Bank (single line, wider, tighter)
