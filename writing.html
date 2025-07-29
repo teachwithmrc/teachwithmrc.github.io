@@ -99,12 +99,15 @@ th, td {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0;
+  overflow: hidden;        /* 🔹 Prevent overflow */
+  width: 100%;
+  height: 100%;            /* 🔹 Match the td's height */
 }
 
 .picture-cell img {
-  max-width: 100%;
-  object-fit: contain;
+  width: 100%;             /* 🔹 Force the image to respect container */
+  height: 100%;
+  object-fit: contain;      /* 🔹 Keeps aspect ratio and fits inside */
 }
 
 .write-cell {
@@ -387,16 +390,24 @@ if (includeBank) {
     const tdNum = document.createElement('td');
     tdNum.textContent = index + 1;
 
-    const tdPic = document.createElement('td');
-    const picWrapper = document.createElement('div');
-    picWrapper.className = 'picture-cell';
-    picWrapper.style.height = pictureHeight + 'px';
-    const img = document.createElement('img');
-    img.src = cvcLadderImages[word] || '';
-    img.alt = word;
-    img.style.maxHeight = imageMaxHeight + 'px';
-    picWrapper.appendChild(img);
-    tdPic.appendChild(picWrapper);
+   const tdPic = document.createElement('td');
+const picWrapper = document.createElement('div');
+picWrapper.className = 'picture-cell';
+picWrapper.style.height = pictureHeight + 'px';
+picWrapper.style.width = '100%';
+picWrapper.style.overflow = 'hidden';
+
+const img = document.createElement('img');
+img.src = cvcLadderImages[word] || '';
+img.alt = word;
+
+// 🔹 Make it fit perfectly
+img.style.width = '100%';
+img.style.height = '100%';
+img.style.objectFit = 'contain';
+
+picWrapper.appendChild(img);
+tdPic.appendChild(picWrapper);
 
     const tdAnswer = document.createElement('td');
     tdAnswer.textContent = word;
