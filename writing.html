@@ -94,22 +94,27 @@ th, td {
   vertical-align: middle;
   font-size: 13px;
 }
+/* Force table cells to fixed heights */
+td.picture-td {
+  height: 100px;   /* default, will override in JS */
+  width: 180px;    /* adjust to your table proportions */
+  overflow: hidden;
+  position: relative;
+}
 
 .picture-cell {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;        /* 🔹 Prevent overflow */
   width: 100%;
-  height: 100%;            /* 🔹 Match the td's height */
+  height: 100%;
 }
 
 .picture-cell img {
-  width: 100%;             /* 🔹 Force the image to respect container */
+  width: 100%;
   height: 100%;
-  object-fit: contain;      /* 🔹 Keeps aspect ratio and fits inside */
+  object-fit: contain; /* fills the space but keeps ratio */
 }
-
 .write-cell {
   vertical-align: bottom;
   padding: 0;
@@ -261,47 +266,45 @@ function generatePictureWordTable() {
   // ✅ Dynamic sizing (balanced)
   const includeBank = document.getElementById('includeWordBank').checked;
   const tableWidth = includeBank ? 500 : 540;
-const pictureHeight = includeBank ? 85 : 100;     // was 80
-const imageMaxHeight = includeBank ? 85 : 90;     // was 70
-const writeCellHeight = includeBank ? 85 : 100;   // was 85
+  const pictureHeight = includeBank ? 85 : 105;     
+  const writeCellHeight = includeBank ? 85 : 100;   
   const letterLineWidth = includeBank ? 30 : 34;
 
-// ✅ Word Bank (single line, wider, tighter)
-if (includeBank) {
-  const wordBankContainer = document.createElement('div');
-  wordBankContainer.style.border = '1px solid #000';
-  wordBankContainer.style.borderRadius = '12px';
-  wordBankContainer.style.padding = '4px 12px'; // smaller padding
-  wordBankContainer.style.margin = '6px auto';
-  wordBankContainer.style.width = tableWidth + 'px'; // match table width
-  wordBankContainer.style.textAlign = 'center';
+  // ✅ Word Bank (single line, wider, tighter)
+  if (includeBank) {
+    const wordBankContainer = document.createElement('div');
+    wordBankContainer.style.border = '1px solid #000';
+    wordBankContainer.style.borderRadius = '12px';
+    wordBankContainer.style.padding = '4px 12px';
+    wordBankContainer.style.margin = '6px auto';
+    wordBankContainer.style.width = tableWidth + 'px';
+    wordBankContainer.style.textAlign = 'center';
 
-  const wordBankHeader = document.createElement('div');
-  wordBankHeader.style.fontWeight = 'bold';
-  wordBankHeader.style.fontSize = '13px';
-  wordBankHeader.textContent = 'Word Bank:';
-  // ✅ No margin bottom, so no big gap
-  wordBankContainer.appendChild(wordBankHeader);
+    const wordBankHeader = document.createElement('div');
+    wordBankHeader.style.fontWeight = 'bold';
+    wordBankHeader.style.fontSize = '13px';
+    wordBankHeader.textContent = 'Word Bank:';
+    wordBankContainer.appendChild(wordBankHeader);
 
-  const wordBankList = document.createElement('div');
-  wordBankList.style.fontSize = '12px';
-  wordBankList.style.display = 'flex';
-  wordBankList.style.flexWrap = 'wrap';
-  wordBankList.style.justifyContent = 'center';
-  wordBankList.style.gap = '20px'; // more space between each word
-  wordBankList.style.marginTop = '2px'; // tiny space
+    const wordBankList = document.createElement('div');
+    wordBankList.style.fontSize = '12px';
+    wordBankList.style.display = 'flex';
+    wordBankList.style.flexWrap = 'wrap';
+    wordBankList.style.justifyContent = 'center';
+    wordBankList.style.gap = '20px';
+    wordBankList.style.marginTop = '2px';
 
-  const shuffledBank = [...shuffled].sort(() => 0.5 - Math.random());
-  shuffledBank.forEach(word => {
-    const span = document.createElement('span');
-    span.textContent = word;
-    span.style.fontWeight = '600';
-    wordBankList.appendChild(span);
-  });
+    const shuffledBank = [...shuffled].sort(() => 0.5 - Math.random());
+    shuffledBank.forEach(word => {
+      const span = document.createElement('span');
+      span.textContent = word;
+      span.style.fontWeight = '600';
+      wordBankList.appendChild(span);
+    });
 
-  wordBankContainer.appendChild(wordBankList);
-  container.appendChild(wordBankContainer);
-}
+    wordBankContainer.appendChild(wordBankList);
+    container.appendChild(wordBankContainer);
+  }
 
   // ✅ Generate the main table
   const table = document.createElement('table');
@@ -321,14 +324,25 @@ if (includeBank) {
     const tdNum = document.createElement('td');
     tdNum.textContent = index + 1;
 
+    // ✅ Fixed Picture Cell
     const tdPic = document.createElement('td');
+    tdPic.className = 'picture-td';
+    tdPic.style.height = pictureHeight + 'px';
+    tdPic.style.width = '180px';
+    tdPic.style.overflow = 'hidden';
+
     const picWrapper = document.createElement('div');
     picWrapper.className = 'picture-cell';
-    picWrapper.style.height = pictureHeight + 'px';
+    picWrapper.style.width = '100%';
+    picWrapper.style.height = '100%';
+
     const img = document.createElement('img');
     img.src = cvcLadderImages[word] || '';
     img.alt = word;
-    img.style.maxHeight = imageMaxHeight + 'px';
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'contain';
+
     picWrapper.appendChild(img);
     tdPic.appendChild(picWrapper);
 
@@ -354,13 +368,82 @@ if (includeBank) {
   });
 
   container.appendChild(table);
-   container.appendChild(table);
 
-  // ✅ Copyright immediately after the first table
+  // ✅ Copyright after student page
   const copyrightStudent = document.createElement('div');
   copyrightStudent.id = 'worksheetCopyright';
   copyrightStudent.textContent = '© 2025 Intervention Station – TeachWithMrC';
   container.appendChild(copyrightStudent);
+
+  // ✅ Answer Key on new page
+  const answerKey = document.createElement('div');
+  answerKey.id = 'answerKey';
+
+  const answerTitle = document.createElement('div');
+  answerTitle.style.fontWeight = 'bold';
+  answerTitle.style.marginBottom = '8px';
+  answerTitle.style.fontSize = '16px';
+  answerTitle.textContent = `${skillNames.join(', ')} Spelling – Answer Key`;
+  answerKey.appendChild(answerTitle);
+
+  const answerTable = document.createElement('table');
+  answerTable.style.width = tableWidth + 'px';
+
+  const answerHeader = document.createElement('tr');
+  ['No.', 'Picture', 'Answer'].forEach(text => {
+    const th = document.createElement('th');
+    th.textContent = text;
+    answerHeader.appendChild(th);
+  });
+  answerTable.appendChild(answerHeader);
+
+  shuffled.forEach((word, index) => {
+    const row = document.createElement('tr');
+
+    const tdNum = document.createElement('td');
+    tdNum.textContent = index + 1;
+
+    const tdPic = document.createElement('td');
+    tdPic.className = 'picture-td';
+    tdPic.style.height = pictureHeight + 'px';
+    tdPic.style.width = '180px';
+    tdPic.style.overflow = 'hidden';
+
+    const picWrapper = document.createElement('div');
+    picWrapper.className = 'picture-cell';
+    picWrapper.style.width = '100%';
+    picWrapper.style.height = '100%';
+
+    const img = document.createElement('img');
+    img.src = cvcLadderImages[word] || '';
+    img.alt = word;
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'contain';
+
+    picWrapper.appendChild(img);
+    tdPic.appendChild(picWrapper);
+
+    const tdAnswer = document.createElement('td');
+    tdAnswer.textContent = word;
+    tdAnswer.style.fontWeight = '600';
+
+    row.appendChild(tdNum);
+    row.appendChild(tdPic);
+    row.appendChild(tdAnswer);
+
+    answerTable.appendChild(row);
+  });
+
+  answerKey.appendChild(answerTable);
+  container.appendChild(answerKey);
+
+  // ✅ Copyright at the end
+  const copyright = document.createElement('div');
+  copyright.id = 'worksheetCopyright';
+  copyright.textContent = '© 2025 Intervention Station – TeachWithMrC';
+  container.appendChild(copyright);
+}
 
   // ✅ Answer Key on new page
   const answerKey = document.createElement('div');
