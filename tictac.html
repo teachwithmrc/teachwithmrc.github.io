@@ -129,7 +129,12 @@
     padding: 6px !important;
   }
 
- .copyright {
+.copyright {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  text-align: right;
+  font-size: 12px;
   display: none;
 }
 
@@ -152,10 +157,6 @@
 
   .copyright {
     display: block !important;
-    text-align: right !important;
-    font-size: 12px !important;
-    margin-top: 80px !important;
-    max-width: 900px !important;
   }
 }
 </style>
@@ -368,8 +369,8 @@
         cell.style.verticalAlign = 'middle';
         cell.style.textAlign = 'center';
         cell.style.padding = '6px';
-        cell.style.fontSize = isSentence ? '16px' : '24px'; // ✅ smaller font for sentences
-        cell.style.lineHeight = isSentence ? '18px' : '28px';
+        cell.style.fontSize = isSentence ? '18px' : '24px'; // ✅ smaller font for sentences
+        cell.style.lineHeight = isSentence ? '20px' : '28px';
         cell.style.wordBreak = 'break-word';
       }
     }
