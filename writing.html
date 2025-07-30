@@ -5,208 +5,225 @@
   <title>Picture Word Worksheet Generator</title>
   <script src="cvcLadderData.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 40px;
-      text-align: center;
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    margin: 40px;
+    text-align: center;
+  }
+
+  /* 1) New page margins */
+  @page {
+    size: letter;
+    margin: 0.4in;
+  }
+
+  h1 {
+    font-size: 26px;
+    margin-bottom: 10px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .table-section {
+    border: 2px solid #000;
+    padding: 5px;
+    margin: 12px auto;
+    width: fit-content;
+    box-sizing: border-box;
+  }
+
+  .section-label {
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .skill-button-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .skill-button-grid .row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .skill-button {
+    border: 2px solid #000;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .skill-button.selected {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+  }
+
+  #printableSection {
+    margin-top: 20px;
+  }
+
+  #worksheetTitle {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 2px;
+  }
+
+  #worksheetDirections {
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  table {
+    margin: auto;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid #000;
+    padding: 2px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 13px;
+  }
+
+  td.picture-td {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .picture-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .picture-cell img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .write-cell {
+    vertical-align: bottom;
+    padding: 0;
+  }
+
+  .line-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 3px;
+    margin-bottom: 3px;
+  }
+
+  .letter-line {
+    display: inline-block;
+    border-bottom: 2px solid black;
+    width: 34px;
+  }
+
+  #worksheetCopyright {
+    font-size: 10px;
+    text-align: right;
+    margin-top: 6px;
+    padding-right: 20px;
+    visibility: hidden;
+  }
+
+  #answerKey {
+    page-break-before: always;
+    margin-top: 20px;
+  }
+
+  /* PRINT STYLES */
+  @media print {
+    /* Hide everything except the printable section */
+    body * {
+      visibility: hidden !important;
     }
 
-    h1 {
-      font-size: 26px;
-      margin-bottom: 10px;
+    #printableSection,
+    #printableSection * {
+      visibility: visible !important;
     }
 
-    .subtitle {
-      font-size: 16px;
-      margin-bottom: 20px;
-    }
-
-    .table-section {
-      border: 2px solid #000;
-      padding: 5px;
-      margin: 12px auto;
-      width: fit-content;
-      box-sizing: border-box;
-    }
-
-    .section-label {
-      font-weight: 600;
-      font-size: 18px;
-      margin-bottom: 8px;
-    }
-
-    .skill-button-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      justify-content: center;
-    }
-
-    .skill-button-grid .row {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .skill-button {
-      border: 2px solid #000;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .skill-button.selected {
-      background-color: #007bff;
-      color: white;
-      box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-    }
-
+    /* Main printable section styling (scaled down) */
     #printableSection {
-      margin-top: 20px;
+      position: absolute !important;
+      top: 0;
+      left: 0;
+      width: 95% !important;
+      margin: 0 auto !important;
+      transform: scale(0.90) !important;
+      transform-origin: top center;
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
 
-    #worksheetTitle {
-      font-size: 16px;
-      font-weight: bold;
-      margin-bottom: 2px;
-    }
-
-    #worksheetDirections {
-      font-size: 12px;
-      margin-bottom: 4px;
-    }
-
+    /* Keep only the table and overall wrapper intact; allow word-bank to split if needed */
+    .worksheet-content,
     table {
-      margin: auto;
-      border-collapse: collapse;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
     }
 
-    th, td {
-      border: 1px solid #000;
-      padding: 2px;
-      text-align: center;
-      vertical-align: middle;
-      font-size: 13px;
+    /* Word bank styling (tightened) */
+    .word-bank {
+      border: 1px solid #000 !important;
+      border-radius: 12px !important;
+      padding: 2px 8px !important;
+      margin: 4px auto 8px auto !important;
+      width: auto !important;
+      font-size: 11px !important;
+      text-align: center !important;
+      page-break-inside: avoid;
     }
 
-    td.picture-td {
-      overflow: hidden;
-      position: relative;
+    /* Table and cell layout */
+    table {
+      width: 100% !important;
+      border-collapse: collapse !important;
     }
 
+    td.picture-td,
     .picture-cell {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
+      width: 180px !important;
+      height: 105px !important;
+      overflow: hidden !important;
     }
 
     .picture-cell img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      display: block;
+      max-width: 180px !important;
+      max-height: 105px !important;
+      object-fit: contain !important;
     }
 
-    .write-cell {
-      vertical-align: bottom;
-      padding: 0;
-    }
-
-    .line-wrapper {
-      display: flex;
-      justify-content: center;
-      gap: 3px;
-      margin-bottom: 3px;
-    }
-
-    .letter-line {
-      display: inline-block;
-      border-bottom: 2px solid black;
-      width: 34px;
-    }
-
+    /* Copyright pinned to bottom right */
     #worksheetCopyright {
+      display: block !important;
+      visibility: visible !important;
+      position: fixed !important;
+      bottom: 8px;
+      right: 12px;
       font-size: 10px;
-      text-align: right;
-      margin-top: 6px;
-      padding-right: 20px;
-      visibility: hidden;
     }
-
-    #answerKey {
-      page-break-before: always;
-      margin-top: 20px;
-    }
-
-    /* PRINT STYLES */
-    @media print {
-      /* Hide everything except the printable section */
-      body * {
-        visibility: hidden !important;
-      }
-
-      #printableSection,
-      #printableSection * {
-        visibility: visible !important;
-      }
-
-      /* Main printable section styling */
-      #printableSection {
-        position: absolute !important;
-        top: 0;
-        left: 0;
-        width: 95% !important;
-        margin: 0 auto !important;
-        transform: scale(0.95);
-        transform-origin: top center;
-        page-break-inside: avoid;
-        break-inside: avoid;
-      }
-
-      /* Keep key elements from splitting across pages */
-      .worksheet-content,
-      .word-bank,
-      table {
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-      }
-
-      /* Table and cell layout */
-      table {
-        width: 100% !important;
-        border-collapse: collapse !important;
-      }
-
-      td.picture-td,
-      .picture-cell {
-        width: 180px !important;
-        height: 105px !important;
-        overflow: hidden !important;
-      }
-
-      .picture-cell img {
-        max-width: 180px !important;
-        max-height: 105px !important;
-        object-fit: contain !important;
-      }
-
-      /* Copyright pinned to bottom right */
-      #worksheetCopyright {
-        display: block !important;
-        visibility: visible !important;
-        position: fixed !important;
-        bottom: 8px;
-        right: 12px;
-        font-size: 10px;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
   <h1>Picture Word Worksheet Generator</h1>
