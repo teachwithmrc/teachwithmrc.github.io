@@ -15,7 +15,7 @@
   /* 1) New page margins */
   @page {
     size: letter;
-    margin: 0.4in;
+    margin: 0.3in;
   }
 
   h1 {
@@ -146,81 +146,87 @@
   }
 
   #answerKey {
+    /* force answer key onto its own page */
     page-break-before: always;
     margin-top: 20px;
   }
 
   /* PRINT STYLES */
   @media print {
-    /* Hide everything except the printable section */
+    /* hide UI chrome */
     body * {
       visibility: hidden !important;
     }
-
+    /* show only our printable section */
     #printableSection,
     #printableSection * {
       visibility: visible !important;
     }
 
-    /* Main printable section styling (scaled down) */
+    /* shrink entire worksheet */
     #printableSection {
       position: absolute !important;
-      top: 0;
-      left: 0;
-      width: 95% !important;
+      top: 0; left: 0;
+      width: 98% !important;
       margin: 0 auto !important;
-      transform: scale(0.90) !important;
+      transform: scale(0.85) !important;
       transform-origin: top center;
-      page-break-inside: avoid;
-      break-inside: avoid;
+      /* allow normal page-breaks */
     }
 
-    /* Keep only the table and overall wrapper intact; allow word-bank to split if needed */
+    /* allow breaking anywhere to fill page */
     .worksheet-content,
+    .word-bank,
     table {
-      page-break-inside: avoid !important;
-      break-inside: avoid !important;
+      page-break-inside: auto !important;
+      break-inside: auto !important;
     }
 
-    /* Word bank styling (tightened) */
+    /* tighten Word Bank styling */
     .word-bank {
       border: 1px solid #000 !important;
       border-radius: 12px !important;
-      padding: 2px 8px !important;
+      padding: 1px 6px !important;
       margin: 4px auto 8px auto !important;
-      width: auto !important;
-      font-size: 11px !important;
+      font-size: 10px !important;
       text-align: center !important;
-      page-break-inside: avoid;
+      width: auto !important;
     }
 
-    /* Table and cell layout */
+    /* shrink table text a touch */
+    th, td {
+      font-size: 11px !important;
+    }
+
     table {
       width: 100% !important;
-      border-collapse: collapse !important;
     }
 
+    /* smaller picture cells */
     td.picture-td,
     .picture-cell {
-      width: 180px !important;
-      height: 105px !important;
-      overflow: hidden !important;
+      width: 160px !important;
+      height: 90px !important;
     }
 
     .picture-cell img {
-      max-width: 180px !important;
-      max-height: 105px !important;
-      object-fit: contain !important;
+      max-width: 160px !important;
+      max-height: 90px !important;
     }
 
-    /* Copyright pinned to bottom right */
+    /* narrower letter lines */
+    .letter-line {
+      width: 28px !important;
+    }
+
+    /* pin the copyright */
     #worksheetCopyright {
       display: block !important;
       visibility: visible !important;
       position: fixed !important;
       bottom: 8px;
       right: 12px;
-      font-size: 10px;
+      font-size: 9px !important;
     }
   }
 </style>
