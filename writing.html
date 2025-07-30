@@ -151,20 +151,26 @@ td.picture-td {
 }
 
 @media print {
-  body {
-    display: flex;
-    justify-content: center;
-  }
   body * {
     visibility: hidden;
   }
+
   #printableSection, #printableSection * {
     visibility: visible;
   }
+
   #printableSection {
-    position: relative !important;
-    width: 95% !important;
-    margin: 0 auto !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;          /* ✅ Allow centering */
+    width: 95%;
+    margin: 0 auto;    /* ✅ Now this actually centers */
+    transform-origin: top center;
+  }
+
+  .worksheetCopyright {
+    visibility: visible !important;
   }
 }
   </style>
