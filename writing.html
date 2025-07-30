@@ -144,49 +144,67 @@
       margin-top: 20px;
     }
 
-    @media print {
-      body * {
-        visibility: hidden !important;
-      }
+ @media print {
+  /* Hide everything except the printable section */
+  body * {
+    visibility: hidden !important;
+  }
 
-      #printableSection, #printableSection * {
-        visibility: visible !important;
-      }
+  #printableSection,
+  #printableSection * {
+    visibility: visible !important;
+  }
 
-      #printableSection {
-        position: absolute !important;
-        top: 0;
-        left: 0;
-        width: 95% !important;
-        margin: 0 auto !important;
-        transform: scale(0.95);
-        transform-origin: top center;
-      }
+  /* Main printable section styling */
+  #printableSection {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 95% !important;
+    margin: 0 auto !important;
+    transform: scale(0.95);
+    transform-origin: top center;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
 
-      table {
-        page-break-inside: avoid;
-      }
+  /* Keep key elements from splitting across pages */
+  .worksheet-content,
+  .word-bank,
+  table {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
 
-      td.picture-td, .picture-cell {
-        width: 180px !important;
-        height: 105px !important;
-        overflow: hidden !important;
-      }
+  /* Table and cell layout */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
 
-      .picture-cell img {
-        max-width: 180px !important;
-        max-height: 105px !important;
-        object-fit: contain !important;
-      }
+  td.picture-td,
+  .picture-cell {
+    width: 180px !important;
+    height: 105px !important;
+    overflow: hidden !important;
+  }
 
-      #worksheetCopyright {
-        display: block !important;
-        visibility: visible !important;
-        position: fixed;
-        bottom: 8px;
-        right: 12px;
-        font-size: 10px;
-      }
+  .picture-cell img {
+    max-width: 180px !important;
+    max-height: 105px !important;
+    object-fit: contain !important;
+  }
+
+  /* Copyright pinned to bottom right */
+  #worksheetCopyright {
+    display: block !important;
+    visibility: visible !important;
+    position: fixed !important;
+    bottom: 8px;
+    right: 12px;
+    font-size: 10px;
+  }
+}
     }
   </style>
 </head>
@@ -255,12 +273,19 @@ function generatePictureWordTable() {
   const container = document.getElementById('printableSection');
   container.innerHTML = '';
 
-  // Title + directions
+  // Skill Title + Directions
   const skillNames = [...selectedSkills].map(s => skillLabels[s] || s);
   const skillTitle = `${skillNames.join(', ')} Spelling`;
   const skillDirections = `Directions: Spell the word that matches the picture.`;
 
-  container.innerHTML = `
+  // Prepare wrapper
+  const contentWrapper = document.createElement('div');
+  contentWrapper.className = 'worksheet-content';
+  contentWrapper.style.pageBreakInside = 'avoid';
+  contentWrapper.style.breakInside = 'avoid';
+
+  // Title and directions
+  contentWrapper.innerHTML = `
     <div id="worksheetTitle">${skillTitle}</div>
     <div id="worksheetDirections">${skillDirections}</div>
   `;
@@ -268,76 +293,92 @@ function generatePictureWordTable() {
   // Generate 8 shuffled words
   const words = [...cvcLadderWords].sort(() => 0.5 - Math.random()).slice(0, 8);
   const includeBank = document.getElementById('includeWordBank').checked;
+
+  // Adjust layout sizes based on word bank
   const tableWidth = includeBank ? 480 : 540;
   const maxImgWidth = includeBank ? 140 : 160;
   const maxImgHeight = includeBank ? 85 : 105;
   const letterLineWidth = includeBank ? 30 : 34;
 
-  // Parent wrapper to prevent page breaks
-  let worksheetHTML = `<div class="worksheet-content" style="page-break-inside: avoid; break-inside: avoid;">`;
-
-  // Word Bank
+  // Word Bank (if selected)
   if (includeBank) {
-    worksheetHTML += `
-      <div class="word-bank" style="border:1px solid #000; border-radius:12px; padding:4px 12px; 
-                                    margin:6px auto; width:${tableWidth}px; text-align:center; 
-                                    page-break-inside: avoid; break-inside: avoid;">
-        <div style="font-weight:bold; font-size:13px;">Word Bank:</div>
-        <div style="font-size:12px; display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:2px;">
-          ${[...words].sort(() => 0.5 - Math.random()).map(w => `<span style="font-weight:600;">${w}</span>`).join('')}
-        </div>
+    const wordBank = document.createElement('div');
+    wordBank.className = 'word-bank';
+    wordBank.style.cssText = `
+      border: 1px solid #000;
+      border-radius: 12px;
+      padding: 4px 12px;
+      margin: 6px auto;
+      width: ${tableWidth}px;
+      text-align: center;
+      page-break-inside: avoid;
+    `;
+    wordBank.innerHTML = `
+      <div style="font-weight:bold; font-size:13px;">Word Bank:</div>
+      <div style="font-size:12px; display:flex; flex-wrap:wrap; justify-content:center; gap:20px; margin-top:2px;">
+        ${[...words].sort(() => 0.5 - Math.random()).map(w => `<span style="font-weight:600;">${w}</span>`).join('')}
       </div>
     `;
+    contentWrapper.appendChild(wordBank);
   }
 
   // Main Table
-  worksheetHTML += `<table style="width:${tableWidth}px; page-break-inside: avoid;">
-    <tr><th>No.</th><th>Picture</th><th>Write the Word</th></tr>`;
+  const table = document.createElement('table');
+  table.style.width = tableWidth + 'px';
+  table.style.pageBreakInside = 'avoid';
+  table.innerHTML = `
+    <tr><th>No.</th><th>Picture</th><th>Write the Word</th></tr>
+  `;
 
   words.forEach((word, i) => {
     const lines = `<div class="line-wrapper">${'<span class="letter-line" style="width:'+letterLineWidth+'px;"></span>'.repeat(word.length)}</div>`;
-    worksheetHTML += `
-      <tr>
-        <td>${i + 1}</td>
-        <td class="picture-td" style="width:${maxImgWidth}px; height:${maxImgHeight}px;">
-          <div class="picture-cell" style="width:${maxImgWidth}px; height:${maxImgHeight}px;">
-            <img src="${cvcLadderImages[word] || ''}" alt="${word}" style="max-width:${maxImgWidth}px; max-height:${maxImgHeight}px;">
-          </div>
-        </td>
-        <td class="write-cell" style="height:${maxImgHeight}px;">${lines}</td>
-      </tr>
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${i+1}</td>
+      <td class="picture-td" style="width:${maxImgWidth}px; height:${maxImgHeight}px;">
+        <div class="picture-cell" style="width:${maxImgWidth}px; height:${maxImgHeight}px;">
+          <img src="${cvcLadderImages[word] || ''}" alt="${word}">
+        </div>
+      </td>
+      <td class="write-cell" style="height:${maxImgHeight}px;">${lines}</td>
     `;
+    table.appendChild(row);
   });
-  worksheetHTML += '</table></div>'; // close worksheet-content
 
-  // Add to DOM
-  container.innerHTML += worksheetHTML;
+  contentWrapper.appendChild(table);
 
   // Copyright
-  container.innerHTML += `<div id="worksheetCopyright">© 2025 Intervention Station – TeachWithMrC</div>`;
+  const copyright = document.createElement('div');
+  copyright.id = 'worksheetCopyright';
+  copyright.textContent = '© 2025 Intervention Station – TeachWithMrC';
+  contentWrapper.appendChild(copyright);
+
+  // Append everything to container
+  container.appendChild(contentWrapper);
 
   // Answer Key
-  let answerKeyHTML = `
-    <div id="answerKey">
-      <div style="font-weight:bold; margin-bottom:8px; font-size:16px;">${skillTitle} – Answer Key</div>
-      <table style="width:${tableWidth}px;">
-        <tr><th>No.</th><th>Picture</th><th>Answer</th></tr>
+  const answerKey = document.createElement('div');
+  answerKey.id = 'answerKey';
+  answerKey.style.pageBreakBefore = 'always';
+  answerKey.innerHTML = `
+    <div style="font-weight:bold; margin-bottom:8px; font-size:16px;">${skillTitle} – Answer Key</div>
+    <table style="width:${tableWidth}px;">
+      <tr><th>No.</th><th>Picture</th><th>Answer</th></tr>
+      ${words.map((word,i) => `
+        <tr>
+          <td>${i+1}</td>
+          <td class="picture-td" style="width:${maxImgWidth}px; height:${maxImgHeight}px;">
+            <div class="picture-cell" style="width:${maxImgWidth}px; height:${maxImgHeight}px;">
+              <img src="${cvcLadderImages[word] || ''}" alt="${word}">
+            </div>
+          </td>
+          <td style="font-weight:600;">${word}</td>
+        </tr>
+      `).join('')}
+    </table>
   `;
-  words.forEach((word, i) => {
-    answerKeyHTML += `
-      <tr>
-        <td>${i + 1}</td>
-        <td class="picture-td" style="width:${maxImgWidth}px; height:${maxImgHeight}px;">
-          <div class="picture-cell" style="width:${maxImgWidth}px; height:${maxImgHeight}px;">
-            <img src="${cvcLadderImages[word] || ''}" alt="${word}">
-          </div>
-        </td>
-        <td style="font-weight:600;">${word}</td>
-      </tr>
-    `;
-  });
-  answerKeyHTML += '</table></div>';
-  container.innerHTML += answerKeyHTML;
+  container.appendChild(answerKey);
+}
 }
   </script>
 </body>
