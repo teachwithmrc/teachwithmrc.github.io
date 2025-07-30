@@ -12,15 +12,8 @@
       text-align: center;
     }
 
-    h1 {
-      font-size: 26px;
-      margin-bottom: 10px;
-    }
-
-    .subtitle {
-      font-size: 16px;
-      margin-bottom: 20px;
-    }
+    h1 { font-size: 26px; margin-bottom: 10px; }
+    .subtitle { font-size: 16px; margin-bottom: 20px; }
 
     .skill-button-grid {
       display: flex;
@@ -42,23 +35,14 @@
       border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
+      transition: 0.3s;
     }
+    .skill-button.selected { background-color: #007bff; color: white; }
 
-    .skill-button.selected {
-      background-color: #007bff;
-      color: white;
-    }
-
-    table.board {
-      border-collapse: collapse;
-      margin: 0 auto;
-    }
-
+    table.board { border-collapse: collapse; margin: 0 auto; }
     td {
-      width: 75px;
-      height: 75px;
-      text-align: center;
-      vertical-align: middle;
+      width: 75px; height: 75px;
+      text-align: center; vertical-align: middle;
     }
 
     .board-cell {
@@ -67,25 +51,25 @@
       font-size: 18px;
       font-weight: bold;
       color: black;
-      background-color: lightblue;
       word-wrap: break-word;
       padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .empty-cell {
-      border: none;
-      background: none;
-    }
+    .empty-cell { border: none; background: none; }
 
+    /* ✅ Ensure colors and circles print */
     @media print {
       @page { size: landscape; }
       body * { visibility: hidden; }
       #printableSection, #printableSection * { visibility: visible; }
-      #printableSection {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
+      #printableSection { position: absolute; left: 0; top: 0; width: 100%; }
+
+      body, .board-cell {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
     }
   </style>
@@ -171,6 +155,10 @@
 
     const shuffled = allWords.sort(() => 0.5 - Math.random());
     const wordsForPath = shuffled.slice(0, pathCoords.length);
+
+    // ✅ Set START and FINISH
+    wordsForPath[0] = "START";
+    wordsForPath[wordsForPath.length - 1] = "FINISH!";
 
     // Create 7x7 table
     const table = document.createElement('table');
