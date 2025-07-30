@@ -171,15 +171,20 @@
       margin: 0 auto !important;
       transform: scale(0.85) !important;
       transform-origin: top center;
-      /* allow normal page-breaks */
     }
 
-    /* allow breaking anywhere to fill page */
-    .worksheet-content,
-    .word-bank,
+    /* keep header + word bank + full table + copyright together on page 1 */
+    .worksheet-content {
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+
+    /* ensure table itself doesn't split */
     table {
-      page-break-inside: auto !important;
-      break-inside: auto !important;
+      width: 100% !important;
+      border-collapse: collapse !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
     }
 
     /* tighten Word Bank styling */
@@ -196,10 +201,6 @@
     /* shrink table text a touch */
     th, td {
       font-size: 11px !important;
-    }
-
-    table {
-      width: 100% !important;
     }
 
     /* smaller picture cells */
