@@ -164,7 +164,15 @@ td.picture-td {
     margin: 0 auto !important;
     position: static !important; /* Keeps table layout correct */
   }
+  img {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+  }
 
+  td.picture-td, .picture-cell {
+    overflow: hidden !important;
+  }
   #worksheetCopyright {
     display: block !important;
   }
