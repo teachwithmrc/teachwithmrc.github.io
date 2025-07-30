@@ -268,58 +268,50 @@ function generatePictureWordTable() {
   // Generate 8 shuffled words
   const words = [...cvcLadderWords].sort(() => 0.5 - Math.random()).slice(0, 8);
   const includeBank = document.getElementById('includeWordBank').checked;
-  const tableWidth = includeBank ? 500 : 540;
+  const tableWidth = includeBank ? 480 : 540;
   const maxImgWidth = includeBank ? 140 : 160;
   const maxImgHeight = includeBank ? 85 : 105;
   const letterLineWidth = includeBank ? 30 : 34;
 
+  // Parent wrapper to prevent page breaks
+  let worksheetHTML = `<div class="worksheet-content" style="page-break-inside: avoid; break-inside: avoid;">`;
+
   // Word Bank
   if (includeBank) {
-    const wordBankHTML = `
-      <div class="word-bank" 
-           style="border:1px solid #000; border-radius:12px; padding:4px 12px; 
-                  margin:6px auto; width:${tableWidth}px; text-align:center; 
-                  display:inline-block; page-break-inside:avoid;">
+    worksheetHTML += `
+      <div class="word-bank" style="border:1px solid #000; border-radius:12px; padding:4px 12px; 
+                                    margin:6px auto; width:${tableWidth}px; text-align:center; 
+                                    page-break-inside: avoid; break-inside: avoid;">
         <div style="font-weight:bold; font-size:13px;">Word Bank:</div>
-        <div style="font-size:12px; display:flex; flex-wrap:wrap; justify-content:center; 
-                    gap:20px; margin-top:2px;">
-          ${[...words].sort(() => 0.5 - Math.random()).map(w => 
-            `<span style="font-weight:600;">${w}</span>`
-          ).join('')}
+        <div style="font-size:12px; display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:2px;">
+          ${[...words].sort(() => 0.5 - Math.random()).map(w => `<span style="font-weight:600;">${w}</span>`).join('')}
         </div>
       </div>
     `;
-    container.innerHTML += wordBankHTML;
   }
 
   // Main Table
-  let tableHTML = `<table style="width:${tableWidth}px;">
+  worksheetHTML += `<table style="width:${tableWidth}px; page-break-inside: avoid;">
     <tr><th>No.</th><th>Picture</th><th>Write the Word</th></tr>`;
 
   words.forEach((word, i) => {
-    // Fixed line generator to prevent px;"> errors
-    const lines = `<div class="line-wrapper">${
-      Array.from({ length: word.length }, () => 
-        `<span class="letter-line" style="width:${letterLineWidth}px;"></span>`
-      ).join('')
-    }</div>`;
-
-    tableHTML += `
+    const lines = `<div class="line-wrapper">${'<span class="letter-line" style="width:'+letterLineWidth+'px;"></span>'.repeat(word.length)}</div>`;
+    worksheetHTML += `
       <tr>
         <td>${i + 1}</td>
         <td class="picture-td" style="width:${maxImgWidth}px; height:${maxImgHeight}px;">
           <div class="picture-cell" style="width:${maxImgWidth}px; height:${maxImgHeight}px;">
-            <img src="${cvcLadderImages[word] || ''}" alt="${word}" 
-                 style="max-width:${maxImgWidth}px; max-height:${maxImgHeight}px;">
+            <img src="${cvcLadderImages[word] || ''}" alt="${word}" style="max-width:${maxImgWidth}px; max-height:${maxImgHeight}px;">
           </div>
         </td>
         <td class="write-cell" style="height:${maxImgHeight}px;">${lines}</td>
       </tr>
     `;
   });
+  worksheetHTML += '</table></div>'; // close worksheet-content
 
-  tableHTML += '</table>';
-  container.innerHTML += tableHTML;
+  // Add to DOM
+  container.innerHTML += worksheetHTML;
 
   // Copyright
   container.innerHTML += `<div id="worksheetCopyright">© 2025 Intervention Station – TeachWithMrC</div>`;
@@ -327,9 +319,7 @@ function generatePictureWordTable() {
   // Answer Key
   let answerKeyHTML = `
     <div id="answerKey">
-      <div style="font-weight:bold; margin-bottom:8px; font-size:16px;">
-        ${skillTitle} – Answer Key
-      </div>
+      <div style="font-weight:bold; margin-bottom:8px; font-size:16px;">${skillTitle} – Answer Key</div>
       <table style="width:${tableWidth}px;">
         <tr><th>No.</th><th>Picture</th><th>Answer</th></tr>
   `;
