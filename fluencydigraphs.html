@@ -93,13 +93,28 @@
 
 <script>
   const selectedSkills = new Set();
-  const skillLabels = {
-    "1.1": "ck",
-    "1.2": "sh",
-    "1.3": "th",
-    "1.4": "ch",
-    "1.5": "wh",
-    "1.6": "Digraphs"
+
+  const wordLabels = {
+    "1.1": "1.1 - ck Words",
+    "1.2": "1.2 - sh Words",
+    "1.3": "1.3 - th Words",
+    "1.4": "1.4 - ch Words",
+    "1.5": "1.5 - wh Words",
+    "1.6": "1.6 - Digraphs Words"
+  };
+
+  const sentenceLabels = {
+    "1.1": "1.1 - ck Sentences",
+    "1.2": "1.2 - sh Sentences",
+    "1.3": "1.3 - th Sentences",
+    "1.4": "1.4 - ch Sentences",
+    "1.5": "1.5 - wh Sentences",
+    "1.6": "1.6 - Digraphs Sentences"
+  };
+
+  const skillDisplayNames = {
+    "1.1": "ck", "1.2": "sh", "1.3": "th",
+    "1.4": "ch", "1.5": "wh", "1.6": "Digraph Mix"
   };
 
   document.querySelectorAll('.skill-button').forEach(button => {
@@ -154,14 +169,11 @@
 
     let wordPools = {}, sentencePools = {};
     selected.forEach(skill => {
-      const label = skillLabels[skill];
-      const wordKey = `${skill} - ${label} Words`;
-      const sentenceKey = `${skill} - ${label} Sentences`;
-      wordPools[skill] = fluencyData.words[wordKey] || [];
-      sentencePools[skill] = fluencyData.sentences[sentenceKey] || [];
+      wordPools[skill] = fluencyData.words[wordLabels[skill]] || [];
+      sentencePools[skill] = fluencyData.sentences[sentenceLabels[skill]] || [];
     });
 
-    // (Distribution logic reused from original)
+    // Build the pool
     let finalPool = [], finalWords = [], finalSentences = [];
 
     if (contentType === "both") {
@@ -222,7 +234,7 @@
     }
     table += "</table>";
 
-    const readableSkills = selected.map(s => skillLabels[s]).join(", ");
+    const readableSkills = selected.map(s => skillDisplayNames[s]).join(", ");
     document.getElementById("gridHeader").innerHTML = `
       <h2>Digraph Fluency Grid</h2>
       <div style="font-weight: bold; font-size: 20px;">Skills: ${readableSkills}</div>
