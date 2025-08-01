@@ -76,7 +76,7 @@
     <div class="option-grid" id="gridSizeOptions">
       <label class="option-box"><input type="radio" name="gridSize" value="15">3 x 5 - 15</label>
       <label class="option-box"><input type="radio" name="gridSize" value="20">4 x 5 - 20</label>
-      <label class="option-box"><input type="radio" name="gridSize" value="25" checked>5 x 5 - 25</label>
+      <label class="option-box"><input type="radio" name="gridSize" value="25">5 x 5 - 25</label>
     </div>
   </div>
 
@@ -160,12 +160,19 @@
 
     const selected = Array.from(selectedSkills);
     const contentType = document.querySelector('input[name="contentType"]:checked')?.value;
-    const gridSize = parseInt(document.querySelector('input[name="gridSize"]:checked')?.value || "25");
+    const gridSizeInput = document.querySelector('input[name="gridSize"]:checked');
 
     if (!selected.length || !contentType) {
       alert("❗ Please select skills and a content type.");
       return;
     }
+
+    if (!gridSizeInput) {
+      alert("❗ Please select a grid size.");
+      return;
+    }
+
+    const gridSize = parseInt(gridSizeInput.value);
 
     let wordPools = {}, sentencePools = {};
     selected.forEach(skill => {
