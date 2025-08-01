@@ -120,6 +120,23 @@
     "3.5": "-onk/-unk", "3.6": "Mixed Glued Sounds"
   };
 
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  function getItemsWithRepeat(array, count) {
+    if (!array || array.length === 0) return Array(count).fill("");
+    const result = [];
+    while (result.length < count) {
+      result.push(...array);
+    }
+    return shuffle(result).slice(0, count);
+  }
+
   document.querySelectorAll('.skill-button').forEach(button => {
     button.addEventListener('click', () => {
       const skill = button.dataset.skill;
@@ -149,14 +166,6 @@
     });
   });
 
-  function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
-
   function generateGrid() {
     document.getElementById("gridHeader").innerHTML = "";
     document.getElementById("gridContainer").innerHTML = "";
@@ -183,7 +192,6 @@
       sentencePools[skill] = fluencyData.sentences[sentenceLabels[skill]] || [];
     });
 
-    // Build the pool
     let finalPool = [], finalWords = [], finalSentences = [];
 
     if (contentType === "both") {
@@ -201,8 +209,8 @@
         const wordCount = wordsPerSkill + (i < extraWords ? 1 : 0);
         const sentenceCount = sentencesPerSkill + (i < extraSentences ? 1 : 0);
 
-        const words = shuffle(wordPools[skill]).slice(0, wordCount);
-        const sentences = shuffle(sentencePools[skill]).slice(0, sentenceCount);
+        const words = getItemsWithRepeat(wordPools[skill], wordCount);
+        const sentences = getItemsWithRepeat(sentencePools[skill], sentenceCount);
 
         finalWords.push(...words);
         finalSentences.push(...sentences);
@@ -215,7 +223,7 @@
 
       selected.forEach((skill, i) => {
         const count = wordsPerSkill + (i < extra ? 1 : 0);
-        finalWords.push(...shuffle(wordPools[skill]).slice(0, count));
+        finalWords.push(...getItemsWithRepeat(wordPools[skill], count));
       });
 
       finalPool = shuffle(finalWords).slice(0, gridSize);
@@ -225,7 +233,7 @@
 
       selected.forEach((skill, i) => {
         const count = sentencesPerSkill + (i < extra ? 1 : 0);
-        finalSentences.push(...shuffle(sentencePools[skill]).slice(0, count));
+        finalSentences.push(...getItemsWithRepeat(sentencePools[skill], count));
       });
 
       finalPool = shuffle(finalSentences).slice(0, gridSize);
