@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <script src="fluencyDataFull_v5.js"></script>
-  <title>Digraph Fluency Grid Generator</title>
+  <script src="fluencyDataFull_v6.js"></script>
+  <title>Level 1 (Digraphs) Fluency Grid Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Poppins', sans-serif; margin: 10px; text-align: center; }
@@ -41,11 +41,12 @@
   </style>
 </head>
 <body>
-  <h1>Digraph Fluency Grid Generator</h1>
+  <h1>Level 1 (Digraphs) Fluency Grid Generator</h1>
   <div class="subtitle">
-    This generator includes <b>Digraph Words</b> like <b>ship, chat, thin, whiz</b> and their matching sentences.
+    Generate grids for <b>Digraphs</b> like <b>ck, sh, th, ch, wh</b> and their sentences.
   </div>
 
+  <!-- Step 1 -->
   <div class="table-section">
     <div class="section-label">Step 1: Select Digraph Skills</div>
     <div class="skill-button-grid">
@@ -62,6 +63,7 @@
     </div>
   </div>
 
+  <!-- Step 2 -->
   <div class="table-section">
     <div class="section-label">Step 2: What would you like in the grid?</div>
     <div class="option-grid" id="contentOptions">
@@ -71,6 +73,7 @@
     </div>
   </div>
 
+  <!-- Step 3 -->
   <div class="table-section">
     <div class="section-label">Step 3: Select Grid Size</div>
     <div class="option-grid" id="gridSizeOptions">
@@ -117,6 +120,23 @@
     "1.4": "ch", "1.5": "wh", "1.6": "Digraph Mix"
   };
 
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  function getItemsWithRepeat(array, count) {
+    if (!array || array.length === 0) return Array(count).fill("");
+    const result = [];
+    while (result.length < count) {
+      result.push(...array);
+    }
+    return shuffle(result).slice(0, count);
+  }
+
   document.querySelectorAll('.skill-button').forEach(button => {
     button.addEventListener('click', () => {
       const skill = button.dataset.skill;
@@ -146,14 +166,6 @@
     });
   });
 
-  function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
-
   function generateGrid() {
     document.getElementById("gridHeader").innerHTML = "";
     document.getElementById("gridContainer").innerHTML = "";
@@ -180,7 +192,6 @@
       sentencePools[skill] = fluencyData.sentences[sentenceLabels[skill]] || [];
     });
 
-    // Build the pool
     let finalPool = [], finalWords = [], finalSentences = [];
 
     if (contentType === "both") {
@@ -198,8 +209,8 @@
         const wordCount = wordsPerSkill + (i < extraWords ? 1 : 0);
         const sentenceCount = sentencesPerSkill + (i < extraSentences ? 1 : 0);
 
-        const words = shuffle(wordPools[skill]).slice(0, wordCount);
-        const sentences = shuffle(sentencePools[skill]).slice(0, sentenceCount);
+        const words = getItemsWithRepeat(wordPools[skill], wordCount);
+        const sentences = getItemsWithRepeat(sentencePools[skill], sentenceCount);
 
         finalWords.push(...words);
         finalSentences.push(...sentences);
@@ -212,7 +223,7 @@
 
       selected.forEach((skill, i) => {
         const count = wordsPerSkill + (i < extra ? 1 : 0);
-        finalWords.push(...shuffle(wordPools[skill]).slice(0, count));
+        finalWords.push(...getItemsWithRepeat(wordPools[skill], count));
       });
 
       finalPool = shuffle(finalWords).slice(0, gridSize);
@@ -222,7 +233,7 @@
 
       selected.forEach((skill, i) => {
         const count = sentencesPerSkill + (i < extra ? 1 : 0);
-        finalSentences.push(...shuffle(sentencePools[skill]).slice(0, count));
+        finalSentences.push(...getItemsWithRepeat(sentencePools[skill], count));
       });
 
       finalPool = shuffle(finalSentences).slice(0, gridSize);
@@ -243,7 +254,7 @@
 
     const readableSkills = selected.map(s => skillDisplayNames[s]).join(", ");
     document.getElementById("gridHeader").innerHTML = `
-      <h2>Digraph Fluency Grid</h2>
+      <h2>Level 1 (Digraphs) Fluency Grid</h2>
       <div style="font-weight: bold; font-size: 20px;">Skills: ${readableSkills}</div>
       <br>
     `;
