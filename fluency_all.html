@@ -17,24 +17,7 @@
     .tab-button.active { background-color: #007bff; color: white; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
-    /* Shared table styles */
-    table { margin: auto; border-collapse: collapse; }
-    td { border: 1px solid #000; width: 120px; height: 80px; font-size: 32px;
-      text-align: center; vertical-align: middle; }
-    .word-cell { font-size: 28px; }
-    .sentence-cell { font-size: 18px; text-align: left; padding: 6px; }
-    .copyright { text-align: center; font-size: 12px; margin-top: 60px; }
-    #printableSection { position: relative; min-height: 10in; }
-    #printableSection #copyrightTag { position: absolute; bottom: 20px; right: 40px; font-size: 12px; }
-    @media print {
-      html, body { width: 100%; margin: 0; padding: 0; }
-      body * { display: none !important; }
-      #printableSection, #printableSection * { display: revert !important; }
-      #printableSection { position: relative; margin: 0; padding: 0; width: 100%; page-break-inside: avoid; }
-      #gridHeader { margin-top: 0 !important; }
-      table { margin: 0 auto; page-break-inside: avoid; }
-      #copyrightTag { position: absolute; bottom: 20px; right: 40px; }
-    }
+    iframe { width: 100%; height: 1200px; border: none; }
   </style>
 </head>
 <body>
@@ -47,7 +30,7 @@
     <div class="tab-button" onclick="showTab('glued')">Glued Sounds</div>
   </div>
 
-  <!-- TAB CONTENT SECTIONS -->
+  <!-- Tab Content -->
   <div id="cvc" class="tab-content active"></div>
   <div id="digraphs" class="tab-content"></div>
   <div id="vce" class="tab-content"></div>
@@ -62,36 +45,22 @@
       document.getElementById(tabId).classList.add('active');
     }
 
-    // 🔹 Shared Shuffle & Repeat Logic
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    }
+    // 🔹 Load your generators in iframes with the correct file names
+    document.getElementById('cvc').innerHTML = `
+      <iframe src="boxes.html"></iframe>
+    `;
 
-    function getItemsWithRepeat(array, count) {
-      if (!array || array.length === 0) return Array(count).fill("");
-      const result = [];
-      while (result.length < count) {
-        result.push(...array);
-      }
-      return shuffle(result).slice(0, count);
-    }
+    document.getElementById('digraphs').innerHTML = `
+      <iframe src="fluency_digraphs.html"></iframe>
+    `;
 
-    // 🔹 Inject the four generators dynamically
-    document.getElementById('cvc').innerHTML = `<h2>Level 0 (CVC / FLSZ) Fluency Grid Generator</h2>
-      <iframe src="cvc_flsz.html" style="width:100%; height:1200px; border:none;"></iframe>`;
+    document.getElementById('vce').innerHTML = `
+      <iframe src="vcefluency.html"></iframe>
+    `;
 
-    document.getElementById('digraphs').innerHTML = `<h2>Level 1 (Digraphs) Fluency Grid Generator</h2>
-      <iframe src="digraphs.html" style="width:100%; height:1200px; border:none;"></iframe>`;
-
-    document.getElementById('vce').innerHTML = `<h2>Level 2 (VCe) Fluency Grid Generator</h2>
-      <iframe src="vce.html" style="width:100%; height:1200px; border:none;"></iframe>`;
-
-    document.getElementById('glued').innerHTML = `<h2>Level 3 (Glued Sounds) Fluency Grid Generator</h2>
-      <iframe src="glued_sounds.html" style="width:100%; height:1200px; border:none;"></iframe>`;
+    document.getElementById('glued').innerHTML = `
+      <iframe src="glued_fluency.html"></iframe>
+    `;
   </script>
 
 </body>
