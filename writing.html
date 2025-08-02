@@ -1,120 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Picture Word Worksheet Generator</title>
-<script src="cvcLadderData.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<title>Picture Word Worksheet</title>
+<script src="cvcLadderData.js"></script><!-- leave if you populate words there -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 <style>
-  /* ---------- GENERAL ---------- */
-  body{font-family:'Poppins',sans-serif;margin:40px;text-align:center;}
-  @page{size:letter;margin:0.3in;}   /* printer margins */
+/* ---------- BASICS ---------- */
+body{font-family:'Poppins',sans-serif;margin:40px;text-align:center;}
+@page{size:letter;margin:0.3in;}
 
-  /* ---------- HEADINGS ---------- */
-  #worksheetTitle{font-size:20px;font-weight:700;margin:4px 0;}
-  #worksheetDirections{font-size:15px;margin:4px 0 8px;}
+/* ---------- HEADERS ---------- */
+#worksheetTitle{font-size:20px;font-weight:700;margin:4px 0;}
+#worksheetDirections{font-size:15px;margin:4px 0 10px;}
 
-  /* ---------- WORD-BANK ---------- */
-  .word-bank{
-    border:2px solid #000;border-radius:8px;
-    padding:6px 10px;margin:10px auto 14px;font-size:14px;
-    max-width:520px;text-align:center;
+/* ---------- WORD BANK ---------- */
+.word-bank{
+  border:2px solid #000;border-radius:8px;
+  padding:6px 10px;margin:10px auto 14px;max-width:520px;
+  font-size:16px;text-align:center;
+}
+.word-bank span{font-size:18px;font-weight:600;margin:4px 10px;display:inline-block;}
+
+/* ---------- TABLE ---------- */
+table{
+  margin:auto;border-collapse:collapse;
+  width:520px;table-layout:fixed;
+}
+th,td{border:1px solid #000;padding:2px;text-align:center;vertical-align:middle;font-size:12px;}
+
+th:first-child,td:first-child{width:30px;min-width:30px;font-size:18px;font-weight:700;padding:2px 0;}
+
+td.picture-td{width:110px;height:80px;overflow:hidden;}
+.picture-cell{display:flex;justify-content:center;align-items:center;width:100%;height:100%;}
+.picture-cell img{max-width:100%;max-height:80px;object-fit:contain;}
+
+td.write-cell{width:180px;height:80px;}
+td.write-cell img{max-width:120px;height:auto;display:block;margin:auto;}
+
+/* ---------- PRINT ---------- */
+@media print{
+  body *{visibility:hidden!important;}
+  #printableSection,#printableSection *{visibility:visible!important;}
+
+  #printableSection{
+    position:absolute;top:0;left:0;width:97%;
+    transform:scale(0.88);transform-origin:top center;
   }
-  .word-bank span{font-size:16px;font-weight:600;margin:4px 10px;display:inline-block;}
-
-  /* ---------- TABLE ---------- */
-  table{
-    margin:auto;border-collapse:collapse;
-    table-layout:fixed;               /* lock column widths */
-    width:100%;
-  }
-  th,td{border:1px solid #000;padding:2px;text-align:center;vertical-align:middle;font-size:12px;}
-
-  /* number column */
-  th:first-child,td:first-child{
-    width:30px;min-width:30px;
-    font-size:18px;font-weight:700;padding:2px 4px;
-  }
-
-  /* picture column */
-  td.picture-td{width:110px;height:110px;overflow:hidden;}
-  .picture-cell{display:flex;justify-content:center;align-items:center;width:100%;height:100%;}
-  .picture-cell img{max-width:100%;max-height:100%;object-fit:contain;display:block;}
-
-  /* write-cell */
-  td.write-cell{width:150px;height:110px;}
-  td.write-cell img{max-width:120px;height:auto;display:block;margin:auto;}
-
-  /* ---------- PRINT OVERRIDES ---------- */
-  @media print{
-    body *{visibility:hidden!important;}
-    #printableSection,#printableSection *{visibility:visible!important;}
-
-    #printableSection{
-      position:absolute;top:0;left:0;width:97%;margin:0 auto;
-      transform:scale(0.90);transform-origin:top center;
-    }
-    #answerKey{page-break-before:always;}   /* force key to page 2 */
-  }
+  #answerKey{page-break-before:always;}
+}
 </style>
 </head>
 <body>
-  <!-- TITLE -->
-  <div id="worksheetTitle">Spelling</div>
-  <div id="worksheetDirections">Directions: Spell the word that matches the picture.</div>
 
-  <!-- WORD BANK (inserted dynamically) -->
-  <div id="printableSection">
-    <!-- word bank + main table will be injected here -->
-  </div>
+<div id="worksheetTitle">Spelling</div>
+<div id="worksheetDirections">Directions: Spell the word that matches the picture.</div>
+
+<div id="printableSection"></div>
 
 <script>
-/* ----------------- CONFIG ----------------- */
-const words = ['tub','wig','hut','beg','hen','map','mat','bot'];  // demo words
-const pics  = {tub:'images/tub.png',wig:'images/wig.png',hut:'images/hut.png',
-               beg:'images/beg.png',hen:'images/hen.png',map:'images/map.png',
-               mat:'images/mat.png',bot:'images/bot.png'};       // demo pics
+/* ----------- demo data: replace with your JS source if desired ----------- */
+const words=['tub','wig','hut','beg','hen','map','mat','bot']; // 8 words
+const pics={
+  tub:'images/tub.png',wig:'images/wig.png',hut:'images/hut.png',
+  beg:'images/beg.png',hen:'images/hen.png',map:'images/map.png',
+  mat:'images/mat.png',bot:'images/bot.png'
+};
+/* ------------------------------------------------------------------------ */
 
-/* -------------- BUILD WORKSHEET ----------- */
-build();
+buildWorksheet(words);
 
-function build(){
-  const wrap=document.getElementById('printableSection');
-  wrap.innerHTML='';
+function buildWorksheet(wordArray){
+  const wrap=document.getElementById('printableSection');wrap.innerHTML='';
 
-  /* word-bank */
+  /* ---------- word bank ---------- */
   const wb=document.createElement('div');
   wb.className='word-bank';
-  wb.innerHTML=`<div style="font-weight:700;font-size:15px;margin-bottom:4px;">Word Bank:</div>
-    ${words.map(w=>`<span>${w}</span>`).join('')}`;
+  wb.innerHTML=`<div style="font-weight:700;font-size:17px;margin-bottom:4px;">Word Bank:</div>
+    ${wordArray.map(w=>`<span>${w}</span>`).join('')}`;
   wrap.appendChild(wb);
 
-  /* main table */
+  /* ---------- main table ---------- */
   const tbl=document.createElement('table');
   tbl.innerHTML='<tr><th>No.</th><th>Picture</th><th>Write the Word</th></tr>';
-  words.forEach((w,i)=>{
-    const row=document.createElement('tr');
-    row.innerHTML=`
-      <td>${i+1}</td>
-      <td class="picture-td"><div class="picture-cell"><img src="${pics[w]||''}" alt=""></div></td>
-      <td class="write-cell"><img src="images/elkonin.png" alt="boxes"></td>`;
-    tbl.appendChild(row);
-  });
-  wrap.appendChild(tbl);
-
-  /* answer key page */
-  const key=document.createElement('div');
-  key.id='answerKey';
-  key.innerHTML=`<div style="font-size:18px;font-weight:700;margin:6px 0;">Spelling – Answer Key</div>
-  <table>
-    <tr><th>No.</th><th>Picture</th><th>Answer</th></tr>
-    ${words.map((w,i)=>`
+  wordArray.forEach((w,i)=>{
+    tbl.insertAdjacentHTML('beforeend',`
       <tr>
         <td>${i+1}</td>
         <td class="picture-td"><div class="picture-cell"><img src="${pics[w]||''}" alt=""></div></td>
-        <td style="font-weight:600;">${w}</td>
-      </tr>`).join('')}
-  </table>`;
+        <td class="write-cell"><img src="images/elkonin.png" alt="elkonin"></td>
+      </tr>`);
+  });
+  wrap.appendChild(tbl);
+
+  /* ---------- answer-key page ---------- */
+  const key=document.createElement('div');
+  key.id='answerKey';
+  key.innerHTML=`<div style="font-size:18px;font-weight:700;margin:8px 0;">Spelling – Answer Key</div>
+    <table>
+      <tr><th>No.</th><th>Picture</th><th>Answer</th></tr>
+      ${wordArray.map((w,i)=>`
+        <tr>
+          <td>${i+1}</td>
+          <td class="picture-td"><div class="picture-cell"><img src="${pics[w]||''}" alt=""></div></td>
+          <td style="font-weight:600;">${w}</td>
+        </tr>`).join('')}
+    </table>`;
   wrap.appendChild(key);
 }
 </script>
