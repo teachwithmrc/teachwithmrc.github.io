@@ -55,8 +55,8 @@
 
     #printableSection { margin-top: 20px; }
 
-    #worksheetTitle { font-size: 16px; font-weight: bold; margin-bottom: 2px; }
-    #worksheetDirections { font-size: 12px; margin-bottom: 4px; }
+    #worksheetTitle { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+    #worksheetDirections { font-size: 20px; margin-bottom: 12px; }
 
     table { margin: auto; border-collapse: collapse; }
     th, td {
@@ -75,32 +75,18 @@
       object-fit: contain; display: block;
     }
 
-    .write-cell { vertical-align: bottom; padding: 0; }
-    .line-wrapper {
-      display: flex; justify-content: center;
-      gap: 3px; margin-bottom: 3px;
-    }
-    .letter-line {
-      display: inline-block;
-      border-bottom: 2px solid black;
-      width: 34px;
-    }
+    .write-cell { padding: 0; }
 
     .word-bank {
-      border: 1px solid #000;
-      border-radius: 12px;
-      padding: 4px 8px;
-      margin: 12px auto;
+      font-size: 20px;
+      font-weight: 700;
       text-align: center;
-      font-size: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      margin: 12px auto 20px auto;
     }
     .word-bank span {
-      font-weight: 600;
-      margin: 0 12px;
-      display: inline-block;
+      font-size: 22px;
+      font-weight: 700;
+      margin: 4px 12px;
     }
 
     #worksheetCopyright {
@@ -109,19 +95,16 @@
     }
 
     #answerKey {
-      /* force answer key onto its own page */
       page-break-before: always;
       margin-top: 20px;
     }
 
     /* PRINT STYLES */
     @media print {
-      /* hide everything but the printable section */
       body * { visibility: hidden !important; }
       #printableSection,
       #printableSection * { visibility: visible !important; }
 
-      /* shrink & center */
       #printableSection {
         position: absolute !important;
         top: 0; left: 0;
@@ -131,67 +114,37 @@
         transform-origin: top center;
       }
 
-      /* keep title, directions, word-bank, table & copyright together */
-      .worksheet-content {
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-      }
+      .worksheet-content { page-break-inside: avoid !important; }
 
-      /* make title & directions larger */
-      #worksheetTitle {
-        font-size: 20px !important;
-        margin-bottom: 6px !important;
-      }
-      #worksheetDirections {
-        font-size: 16px !important;
-        margin-bottom: 8px !important;
-      }
+      #worksheetTitle { font-size: 32px !important; }
+      #worksheetDirections { font-size: 22px !important; }
 
-      /* word-bank bigger in print */
       .word-bank {
         border: 1px solid #000 !important;
         border-radius: 12px !important;
-        padding: 4px 8px !important;
-        margin: 10px auto !important;
-        font-size: 16px !important;
+        padding: 8px !important;
+        font-size: 22px !important;
         text-align: center !important;
         width: auto !important;
       }
-      .word-bank span {
-        font-size: 18px !important;
-        font-weight: 700 !important;
-        margin: 0 8px !important;
-      }
+      .word-bank span { font-size: 24px !important; }
 
-      /* table layout */
       table {
         width: 100% !important;
         border-collapse: collapse !important;
         page-break-inside: avoid !important;
-        break-inside: avoid !important;
       }
       th, td {
-        font-size: 11px !important;
-        padding: 2px !important;
+        font-size: 16px !important;
+        padding: 4px !important;
       }
 
-      /* picture cells */
       td.picture-td,
       .picture-cell {
         width: 160px !important;
         height: 90px !important;
       }
-      .picture-cell img {
-        max-width: 160px !important;
-        max-height: 90px !important;
-      }
 
-      /* adjust letter lines */
-      .letter-line {
-        width: 28px !important;
-      }
-
-      /* pin copyright on page 1 */
       #worksheetCopyright {
         display: block !important;
         visibility: visible !important;
@@ -201,7 +154,6 @@
         font-size: 9px !important;
       }
 
-      /* force answer key onto page 2 */
       #answerKey {
         page-break-before: always !important;
       }
@@ -211,7 +163,7 @@
 <body>
   <h1>Picture Word Worksheet Generator</h1>
   <div class="subtitle">
-    Select a phonics skill, then generate a worksheet with matching pictures and writing lines.
+    Select a phonics skill, then generate a worksheet with matching pictures and Elkonin boxes.
   </div>
 
   <!-- Skill Selection -->
@@ -280,7 +232,7 @@
       // Title & Directions
       const names = [...selectedSkills].map(s => skillLabels[s] || s);
       const titleText = `${names.join(', ')} Spelling`;
-      const dirText   = `Directions: Spell the word that matches the picture.`;
+      const dirText   = `Directions: Say the word and write it in the Elkonin boxes.`;
 
       const wrapper = document.createElement('div');
       wrapper.className = 'worksheet-content';
@@ -292,24 +244,17 @@
       // Pick words & sizes
       const words = [...cvcLadderWords].sort(() => 0.5 - Math.random()).slice(0,8);
       const bank  = document.getElementById('includeWordBank').checked;
-      const tableW = bank ? 480 : 540;
-      const imgW   = bank ? 140 : 160;
-      const imgH   = bank ? 85  : 105;
-      const lineW  = bank ? 30  : 34;
+      const tableW = 600;
+      const imgW   = 160;
+      const imgH   = 100;
 
       // Word Bank
       if (bank) {
         const wb = document.createElement('div');
         wb.className = 'word-bank';
-        wb.style.cssText = `
-          width:${tableW}px;
-          margin: 0 auto;
-          text-align: center;
-        `;
         wb.innerHTML = `
-          <div style="font-weight:bold;font-size:14px;">Word Bank:</div>
-          <div style="font-size:16px;display:flex;flex-wrap:wrap;
-                      justify-content:center;gap:24px;margin-top:4px;">
+          <div style="font-weight:bold;font-size:22px;">Word Bank:</div>
+          <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin-top:6px;">
             ${[...words].sort(() => 0.5 - Math.random())
               .map(w => `<span>${w}</span>`).join('')}
           </div>`;
@@ -323,21 +268,17 @@
         <th>No.</th><th>Picture</th><th>Write the Word</th>
       </tr>`;
       words.forEach((w,i) => {
-        const lines = `
-          <div class="line-wrapper">
-            ${Array.from({length:w.length})
-              .map(()=>`<span class="letter-line" style="width:${lineW}px;"></span>`)
-              .join('')}
-          </div>`;
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${i+1}</td>
+          <td style="font-size:28px;font-weight:700;">${i+1}</td>
           <td class="picture-td" style="width:${imgW}px;height:${imgH}px;">
             <div class="picture-cell" style="width:${imgW}px;height:${imgH}px;">
               <img src="${cvcLadderImages[w]||''}" alt="${w}">
             </div>
           </td>
-          <td class="write-cell" style="height:${imgH}px;">${lines}</td>`;
+          <td class="write-cell" style="height:${imgH/1.5}px;">
+            <img src="elkonin.png" style="width:100%; height:auto;">
+          </td>`;
         tbl.appendChild(row);
       });
       wrapper.appendChild(tbl);
@@ -354,20 +295,20 @@
       const ak = document.createElement('div');
       ak.id = 'answerKey';
       ak.innerHTML = `
-        <div style="font-weight:bold;font-size:16px;margin-bottom:8px;">
+        <div style="font-weight:bold;font-size:20px;margin-bottom:8px;">
           ${titleText} – Answer Key
         </div>
         <table style="width:${tableW}px;">
           <tr><th>No.</th><th>Picture</th><th>Answer</th></tr>
           ${words.map((w,i)=>`
             <tr>
-              <td>${i+1}</td>
+              <td style="font-size:24px;font-weight:700;">${i+1}</td>
               <td class="picture-td" style="width:${imgW}px;height:${imgH}px;">
                 <div class="picture-cell" style="width:${imgW}px;height:${imgH}px;">
                   <img src="${cvcLadderImages[w]||''}" alt="${w}">
                 </div>
               </td>
-              <td style="font-weight:600;">${w}</td>
+              <td style="font-weight:600;font-size:20px;">${w}</td>
             </tr>`).join('')}
         </table>`;
       container.appendChild(ak);
