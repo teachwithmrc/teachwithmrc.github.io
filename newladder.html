@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CVC Word Ladder Generator</title>
+  <script src="cvcLadderData.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 40px;
+      text-align: center;
+    }
+
+    @page {
+      size: letter;
+      margin: 0.3in;
+    }
+
+    h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .ladder-container {
+      display: flex;
+      justify-content: center;
+      margin: 0 auto;
+      margin-top: 20px;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin: 0 auto;
+    }
+
+    td {
+      padding: 10px;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    /* Left image column */
+    .ladder-image {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+    }
+
+    /* Middle ladder column */
+    .ladder-word {
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: 8px;
+    }
+
+    .ladder-blank {
+      font-size: 28px;
+      letter-spacing: 8px;
+    }
+
+    .ladder-final {
+      font-size: 18px;
+      color: #555;
+    }
+
+    /* Right hint column */
+    .hint-bubble {
+      display: inline-block;
+      background: #f0f0f0;
+      border: 2px solid #333;
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 18px;
+      font-weight: 500;
+      position: relative;
+    }
+
+    .hint-bubble::after {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 6px solid transparent;
+      border-right-color: #333;
+    }
+
+    /* Buttons & Controls */
+    select, button {
+      font-size: 18px;
+      padding: 8px 12px;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>CVC Word Ladder</h1>
+  <div class="subtitle">Select a skill and generate a word ladder!</div>
+
+  <div>
+    <select id="skillSelect">
+      <option value="0.1">0.1 - Short A</option>
+      <option value="0.2">0.2 - Short O</option>
+      <option value="0.3">0.3 - Short I</option>
+      <option value="0.4">0.4 - Short U</option>
+      <option value="0.5">0.5 - Short E</option>
+    </select>
+    <button onclick="generateLadder()">Generate Ladder</button>
+  </div>
+
+  <div id="ladderOutput"></div>
+
+  <script>
+    function generateLadder() {
+      const skill = document.getElementById('skillSelect').value;
+      const wordList = cvcLadderData.words[skill] || [];
+      const imageList = cvcLadderData.images[skill] || [];
+
+      if (wordList.length < 6) {
+        alert("Not enough words for a ladder!");
+        return;
+      }
+
+      // Pick 6 words for the ladder
+      const ladderWords = [];
+      while (ladderWords.length < 6) {
+        const word = wordList[Math.floor(Math.random() * wordList.length)];
+        if (!ladderWords.includes(word)) ladderWords.push(word);
+      }
+
+      const ladderHTML = `
+        <div class="ladder-container">
+          <table>
+            ${ladderWords.map((word, index) => {
+              const isFirst = index === 0;
+              const isLast = index === ladderWords.length - 1;
+
+              const displayWord = isFirst ? 
+                `<div class="ladder-word">${word.toUpperCase()}</div>` :
+                `<div class="ladder-blank">${"_ ".repeat(word.length)}</div>
+                 ${isLast ? `<div class="ladder-final">(${word.toUpperCase()})</div>` : ''}`;
+
+              // Generate random letter change hint
+              const letters = ['a','e','i','o','u','b','c','d','f','g','h','j','k','l','m','n','p','q','r','s','t','v','w','x','y','z'];
+              const hint = letters[Math.floor(Math.random() * letters.length)] + 
+                           " → " + 
+                           letters[Math.floor(Math.random() * letters.length)];
+
+              return `
+                <tr>
+                  <td><img class="ladder-image" src="${imageList[word] || ''}" alt="${word}"></td>
+                  <td>${displayWord}</td>
+                  <td><div class="hint-bubble">${hint}</div></td>
+                </tr>
+              `;
+            }).join('')}
+          </table>
+        </div>
+      `;
+
+      document.getElementById('ladderOutput').innerHTML = ladderHTML;
+    }
+  </script>
+
+</body>
+</html>
