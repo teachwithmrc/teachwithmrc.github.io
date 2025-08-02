@@ -2,329 +2,135 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Picture Word Worksheet Generator</title>
+  <title>CVC Word Ladder Generator</title>
+  <script src="cvcWordLadders_6words.js"></script>
   <script src="cvcLadderData.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 40px;
-      text-align: center;
-    }
+    body { font-family: 'Poppins', sans-serif; margin: 40px; text-align: center; }
+    @page { size: letter; margin: 0.3in; }
 
-    @page {
-      size: letter;
-      margin: 0.3in;
-    }
+    h1 { font-size: 30px; margin-bottom: 8px; }
+    .subtitle { font-size: 18px; margin-bottom: 20px; }
 
-    h1 {
-      font-size: 26px;
-      margin-bottom: 10px;
-    }
+    .ladder-container { display: flex; justify-content: center; margin: 20px auto; }
+    table { border-collapse: collapse; }
+    td { padding: 12px 20px; text-align: center; vertical-align: middle; }
 
-    .subtitle {
-      font-size: 16px;
-      margin-bottom: 20px;
-    }
+    /* Image column */
+    .ladder-image { width: 100px; height: 100px; object-fit: contain; }
 
-    .table-section {
-      border: 2px solid #000;
-      padding: 5px;
-      margin: 12px auto;
-      width: fit-content;
-      box-sizing: border-box;
-    }
+    /* Ladder words column */
+    .ladder-word { font-size: 32px; font-weight: 600; letter-spacing: 8px; }
+    .ladder-blank { font-size: 32px; letter-spacing: 8px; }
+    .ladder-final { font-size: 18px; color: #555; }
 
-    .section-label {
-      font-weight: 600;
-      font-size: 18px;
-      margin-bottom: 8px;
-    }
-
-    .skill-button-grid { display: flex; flex-direction: column; gap: 8px; }
-    .skill-button-grid .row { display: flex; justify-content: center; gap: 8px; }
-    .skill-button {
-      border: 2px solid #000; padding: 10px 16px; border-radius: 8px;
-      font-weight: 600; cursor: pointer; transition: 0.3s;
-    }
-    .skill-button.selected {
-      background-color: #007bff; color: #fff;
-      box-shadow: 0 0 4px rgba(0,123,255,0.5);
-    }
-
-    #printableSection { margin-top: 20px; }
-
-    #worksheetTitle { font-size: 18px; font-weight: bold; margin-bottom: 4px; }
-    #worksheetDirections { font-size: 14px; margin-bottom: 6px; }
-
-    table { margin: auto; border-collapse: collapse; }
-    th, td {
-      border: 1px solid #000; padding: 2px;
-      text-align: center; vertical-align: middle;
-      font-size: 12px;
-    }
-
-    td:first-child { font-size: 18px; font-weight: 700; }
-/* Number column: only as wide as the number + padding */
-th:first-child, td:first-child {
-  width: 28px;       /* Adjust to your liking */
-  min-width: 28px;   /* Keeps it consistent */
-  text-align: center;
-  font-size: 18px;
-  font-weight: 700;
-  padding: 2px 4px;  /* Small padding */
-}
-    td.picture-td { overflow: hidden; position: relative; }
-    .picture-cell {
-      display: flex; justify-content: center; align-items: center;
-      width: 100%; height: 100%; overflow: hidden;
-    }
-    .picture-cell img {
-      max-width: 100%; max-height: 100%;
-      object-fit: contain; display: block;
-    }
-
-    td.write-cell { width: 180px; height: 80px; }
-    td.write-cell img { width: 85%; height: auto; }
-
-    /* Word Bank with Border */
-    .word-bank {
-      font-size: 18px;
-      font-weight: 700;
-      text-align: center;
-      margin: 10px auto 16px auto;
-      max-width: 520px;
-      border: 2px solid #000;
-      padding: 6px 10px;
-      border-radius: 6px;
-    }
-    .word-bank span {
-      font-size: 20px;
-      font-weight: 700;
-      margin: 4px 10px;
+    /* Hint bubbles */
+    .hint-bubble {
       display: inline-block;
+      background: #f0f0f0;
+      border: 2px solid #333;
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 18px;
+      font-weight: 500;
+      position: relative;
+      min-width: 60px;
     }
-
-    #worksheetCopyright {
-      font-size: 10px; text-align: right; margin-top: 6px;
-      padding-right: 20px; visibility: hidden;
+    .hint-bubble::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 6px solid transparent;
     }
+    .right-bubble::after { left: -10px; border-right-color: #333; }
+    .left-bubble::after { right: -10px; border-left-color: #333; }
 
-    #answerKey { page-break-before: always; margin-top: 20px; }
+    button { font-size: 18px; padding: 8px 12px; margin: 10px; cursor: pointer; }
 
     @media print {
-      body * { visibility: hidden !important; }
-      #printableSection,
-      #printableSection * { visibility: visible !important; }
-
-      #printableSection {
-        position: absolute !important;
-        top: 0; left: 0;
-        width: 98% !important;
-        margin: 0 auto !important;
-        transform: scale(0.88) !important;
-        transform-origin: top center;
-      }
-
-      .worksheet-content {
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-      }
-
-      #worksheetTitle { font-size: 20px !important; margin-bottom: 6px !important; }
-      #worksheetDirections { font-size: 16px !important; margin-bottom: 8px !important; }
-
-      .word-bank {
-        font-size: 18px !important;
-        border: 2px solid #000 !important;
-        border-radius: 12px !important;
-        padding: 4px 8px !important;
-        margin: 6px auto 10px auto !important;
-      }
-      .word-bank span { font-size: 20px !important; }
-
-      table {
-        width: 100% !important;
-        border-collapse: collapse !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-      }
-      th, td {
-        font-size: 11px !important;
-        padding: 2px !important;
-      }
-
-      td.picture-td,
-      .picture-cell {
-        width: 160px !important;
-        height: 90px !important;
-      }
-      .picture-cell img {
-        max-width: 160px !important;
-        max-height: 90px !important;
-      }
-
-      td.write-cell { width: 180px !important; height: 80px !important; }
-      td.write-cell img { width: 85% !important; }
-
-      #worksheetCopyright {
-        display: block !important;
-        visibility: visible !important;
-        position: fixed !important;
-        bottom: 8px;
-        right: 12px;
-        font-size: 9px !important;
-      }
-
-      #answerKey { page-break-before: always !important; }
+      body * { visibility: hidden; }
+      #ladderOutput, #ladderOutput * { visibility: visible; }
+      #ladderOutput { position: absolute; top: 0; left: 0; width: 100%; }
     }
   </style>
 </head>
 <body>
-  <h1>Picture Word Worksheet Generator</h1>
-  <div class="subtitle">
-    Select a phonics skill, then generate a worksheet with matching pictures and writing lines.
+
+  <h1>CVC Word Ladder</h1>
+  <div class="subtitle">Click generate to create a 6-step word ladder.</div>
+
+  <div>
+    <button onclick="generateLadder()">Generate Ladder</button>
+    <button onclick="window.print()">Print Page</button>
   </div>
 
-  <!-- Skill Selection -->
-  <div class="table-section">
-    <div class="section-label">Select Skills</div>
-    <div class="skill-button-grid">
-      <div class="row">
-        <div class="skill-button" data-skill="0.1">Short A</div>
-        <div class="skill-button" data-skill="0.2">Short O</div>
-        <div class="skill-button" data-skill="0.3">Short I</div>
-        <div class="skill-button" data-skill="0.4">Short U</div>
-        <div class="skill-button" data-skill="0.5">Short E</div>
-      </div>
-      <div class="row">
-        <div class="skill-button" data-skill="0.6">FLSZ</div>
-        <div class="skill-button" data-skill="0.7">CVC &amp; FLSZ</div>
-        <div class="skill-button" data-skill="mixed">Mixed CVC</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Generate/Print Options -->
-  <div class="table-section">
-    <div class="section-label">Generate Worksheet</div>
-    <button onclick="generatePictureWordTable()" style="font-size:18px;padding:10px 24px;">
-      Generate
-    </button>
-    <button onclick="window.print()" style="font-size:18px;padding:10px 24px;">
-      Print
-    </button>
-    <div style="margin-top:8px;">
-      <label style="font-size:14px;">
-        <input type="checkbox" id="includeWordBank"> Include Word Bank
-      </label>
-    </div>
-  </div>
-
-  <div id="printableSection"></div>
+  <div id="ladderOutput"></div>
 
   <script>
-    const selectedSkills = new Set();
-    const skillLabels = {
-      "0.1": "Short A", "0.2": "Short O", "0.3": "Short I",
-      "0.4": "Short U", "0.5": "Short E", "0.6": "FLSZ",
-      "0.7": "CVC & FLSZ", "mixed": "Mixed CVC"
-    };
+    // Remove any images or words with "2"
+    for (const key in cvcLadderImages) {
+      if (key.includes("2")) {
+        delete cvcLadderImages[key];
+      }
+    }
 
-    document.querySelectorAll('.skill-button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const skill = btn.dataset.skill;
-        if (selectedSkills.has(skill)) {
-          selectedSkills.delete(skill);
-          btn.classList.remove('selected');
-        } else {
-          selectedSkills.add(skill);
-          btn.classList.add('selected');
-        }
-      });
-    });
-
-    function generatePictureWordTable() {
-      const container = document.getElementById('printableSection');
-      container.innerHTML = '';
-
-      // Title & Directions
-      const names = [...selectedSkills].map(s => skillLabels[s] || s);
-      const titleText = `${names.join(', ')} Spelling`;
-      const dirText   = `Directions: Spell the word that matches the picture.`;
-
-      const wrapper = document.createElement('div');
-      wrapper.className = 'worksheet-content';
-      wrapper.innerHTML = `
-        <div id="worksheetTitle">${titleText}</div>
-        <div id="worksheetDirections">${dirText}</div>
-      `;
-
-      // Pick words
-      const words = [...cvcLadderWords].sort(() => 0.5 - Math.random()).slice(0,8);
-      const bank  = document.getElementById('includeWordBank').checked;
-
-      // Word Bank
-      if (bank) {
-        const wb = document.createElement('div');
-        wb.className = 'word-bank';
-        wb.innerHTML = `
-          <div style="font-weight:bold;font-size:16px;margin-bottom:4px;">Word Bank:</div>
-          ${[...words].sort(() => 0.5 - Math.random())
-            .map(w => `<span>${w}</span>`).join('')}
-        `;
-        wrapper.appendChild(wb);
+    function generateLadder() {
+      if (!window.cvcWordLadders || cvcWordLadders.length === 0) {
+        alert("❌ No 6-word ladders found!");
+        return;
       }
 
-      // Main Table
-      const tbl = document.createElement('table');
-      tbl.innerHTML = `<tr>
-        <th>No.</th><th>Picture</th><th>Write the Word</th>
-      </tr>`;
-      words.forEach((w,i) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${i+1}</td>
-          <td class="picture-td" style="width:160px;height:90px;">
-            <div class="picture-cell">
-              <img src="${cvcLadderImages[w]||''}" alt="${w}">
-            </div>
-          </td>
-          <td class="write-cell"><img src="images/elkonin.png" alt="Elkonin Box"></td>`;
-        tbl.appendChild(row);
-      });
-      wrapper.appendChild(tbl);
+      // Pick a random 6-word ladder
+      const ladder = cvcWordLadders[Math.floor(Math.random() * cvcWordLadders.length)];
 
-      // Copyright
-      const cr = document.createElement('div');
-      cr.id = 'worksheetCopyright';
-      cr.textContent = '© 2025 Intervention Station – TeachWithMrC';
-      wrapper.appendChild(cr);
+      const ladderHTML = `
+        <div class="ladder-container">
+          <table>
+            ${ladder.map((word, index) => {
+              const isFirst = index === 0;
+              const isLast = index === ladder.length - 1;
 
-      container.appendChild(wrapper);
+              const displayWord = isFirst
+                ? `<div class="ladder-word">${word.toUpperCase()}</div>`
+                : `<div class="ladder-blank">${"_ ".repeat(word.length)}</div>
+                   ${isLast ? `<div class="ladder-final">(${word.toUpperCase()})</div>` : ''}`;
 
-      // Answer Key
-      const ak = document.createElement('div');
-      ak.id = 'answerKey';
-      ak.innerHTML = `
-        <div style="font-weight:bold;font-size:16px;margin-bottom:8px;">
-          ${titleText} – Answer Key
+              // Alternate left/right
+              const isEven = index % 2 === 0;
+
+              // Image with fallback
+              const imgSrc = cvcLadderImages[word] || "https://via.placeholder.com/100?text=?";
+              const imageCell = `<img class="ladder-image" src="${imgSrc}" alt="${word}">`;
+
+              // Calculate hint: find differing letter from previous word if exists
+              let hint = "? → ?";
+              if (index > 0) {
+                const prevWord = ladder[index - 1];
+                for (let i = 0; i < word.length; i++) {
+                  if (prevWord[i] !== word[i]) {
+                    hint = `${prevWord[i]} → ${word[i]}`;
+                    break;
+                  }
+                }
+              }
+              const hintCell = `<div class="hint-bubble ${isEven ? 'right-bubble':'left-bubble'}">${hint}</div>`;
+
+              return `
+                <tr>
+                  ${isEven ? `<td>${imageCell}</td><td>${displayWord}</td><td>${hintCell}</td>` 
+                           : `<td>${hintCell}</td><td>${displayWord}</td><td>${imageCell}</td>`}
+                </tr>
+              `;
+            }).join('')}
+          </table>
         </div>
-        <table>
-          <tr><th>No.</th><th>Picture</th><th>Answer</th></tr>
-          ${words.map((w,i)=>`
-            <tr>
-              <td>${i+1}</td>
-              <td class="picture-td" style="width:160px;height:90px;">
-                <div class="picture-cell">
-                  <img src="${cvcLadderImages[w]||''}" alt="${w}">
-                </div>
-              </td>
-              <td style="font-weight:600;">${w}</td>
-            </tr>`).join('')}
-        </table>`;
-      container.appendChild(ak);
+      `;
+
+      document.getElementById('ladderOutput').innerHTML = ladderHTML;
     }
   </script>
+
 </body>
 </html>
