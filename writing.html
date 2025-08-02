@@ -73,25 +73,21 @@
     font-weight: 700;
   }
 
-  /* Picture column */
   td.picture-td {
     padding: 3px !important;
     width: auto !important;
     max-width: max-content !important;
     text-align: center;
   }
-  .picture-cell {
-    display: inline-block;
-    padding: 0;
-  }
   .picture-cell img {
     display: block;
     max-width: 140px;
     max-height: 80px;
     object-fit: contain;
+    margin: 0 auto;
   }
 
-  /* Write cell (Elkonin Boxes) */
+  /* --- FIXED ELKONIN SIZE --- */
   td.write-cell {
     width: 350px;
     height: 70px;
@@ -99,9 +95,13 @@
     vertical-align: middle;
   }
   td.write-cell img.elkonin-img {
-    width: 350px;
-    height: 70px;
+    display: block;
+    width: 350px !important;
+    height: 70px !important;
+    max-width: 350px !important;
+    max-height: 70px !important;
     object-fit: contain;
+    margin: 0 auto;
   }
 
   /* Word Bank */
@@ -157,37 +157,15 @@
       padding: 2px !important;
     }
 
-    th:first-child, td:first-child {
-      width: 30px !important;
-      max-width: 30px !important;
-    }
-
-    td.picture-td {
-      padding: 2px !important;
-    }
-    .picture-cell img {
-      max-width: 140px !important;
-      max-height: 70px !important;
-    }
-
-    td.write-cell {
-      width: 350px !important;
-      height: 70px !important;
-    }
     td.write-cell img.elkonin-img {
+      display: block !important;
       width: 350px !important;
       height: 70px !important;
+      max-width: 350px !important;
+      max-height: 70px !important;
       object-fit: contain !important;
+      margin: 0 auto !important;
     }
-
-    .word-bank {
-      font-size: 16px !important;
-      margin: 6px auto 10px auto !important;
-      max-width: 500px !important;
-    }
-
-    #worksheetTitle { font-size: 18px !important; margin-bottom: 4px !important; }
-    #worksheetDirections { font-size: 14px !important; margin-bottom: 6px !important; }
 
     #worksheetCopyright {
       display: block !important;
@@ -308,8 +286,9 @@
               <img src="${cvcLadderImages[w]||''}" alt="${w}">
             </div>
           </td>
-          <td class="write-cell"><img src="images/elkonin.png" class="elkonin-img" alt="Elkonin Box"></td>
-        `;
+          <td class="write-cell">
+            <img src="images/elkonin.png" class="elkonin-img" alt="Elkonin Box">
+          </td>`;
         tbl.appendChild(row);
       });
       wrapper.appendChild(tbl);
