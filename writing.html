@@ -57,35 +57,53 @@
     #worksheetTitle { font-size: 18px; font-weight: bold; margin-bottom: 4px; }
     #worksheetDirections { font-size: 14px; margin-bottom: 6px; }
 
-    table { margin: auto; border-collapse: collapse; }
+    /* Table Styling */
+    table {
+      margin: auto;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
     th, td {
-      border: 1px solid #000; padding: 2px;
-      text-align: center; vertical-align: middle;
+      border: 1px solid #000; 
+      padding: 2px;
+      text-align: center;
+      vertical-align: middle;
       font-size: 12px;
     }
 
-    td:first-child { font-size: 18px; font-weight: 700; }
-/* Number column: only as wide as the number + padding */
-th:first-child, td:first-child {
-  width: 28px;       /* Adjust to your liking */
-  min-width: 28px;   /* Keeps it consistent */
-  text-align: center;
-  font-size: 18px;
-  font-weight: 700;
-  padding: 2px 4px;  /* Small padding */
-}
-    td.picture-td { overflow: hidden; position: relative; }
-    .picture-cell {
-      display: flex; justify-content: center; align-items: center;
-      width: 100%; height: 100%; overflow: hidden;
-    }
-    .picture-cell img {
-      max-width: 100%; max-height: 100%;
-      object-fit: contain; display: block;
+    th:first-child, td:first-child {
+      width: 30px;
+      max-width: 30px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
     }
 
-    td.write-cell { width: 180px; height: 80px; }
-    td.write-cell img { width: 85%; height: auto; }
+    td.picture-td,
+    .picture-cell {
+      width: 140px;
+      height: 80px;
+      overflow: hidden;
+      position: relative;
+    }
+    .picture-cell img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    td.write-cell {
+      width: 160px;
+      height: 70px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    td.write-cell img {
+      width: 140px;
+      max-height: 60px;
+      object-fit: contain;
+    }
 
     /* Word Bank with Border */
     .word-bank {
@@ -106,12 +124,16 @@ th:first-child, td:first-child {
     }
 
     #worksheetCopyright {
-      font-size: 10px; text-align: right; margin-top: 6px;
-      padding-right: 20px; visibility: hidden;
+      font-size: 10px;
+      text-align: right;
+      margin-top: 6px;
+      padding-right: 20px;
+      visibility: hidden;
     }
 
     #answerKey { page-break-before: always; margin-top: 20px; }
 
+    /* --- Print Styling --- */
     @media print {
       body * { visibility: hidden !important; }
       #printableSection,
@@ -120,52 +142,57 @@ th:first-child, td:first-child {
       #printableSection {
         position: absolute !important;
         top: 0; left: 0;
-        width: 98% !important;
+        width: 100% !important;
         margin: 0 auto !important;
-        transform: scale(0.88) !important;
+        transform: scale(0.95) !important;
         transform-origin: top center;
       }
 
-      .worksheet-content {
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-      }
-
-      #worksheetTitle { font-size: 20px !important; margin-bottom: 6px !important; }
-      #worksheetDirections { font-size: 16px !important; margin-bottom: 8px !important; }
-
-      .word-bank {
-        font-size: 18px !important;
-        border: 2px solid #000 !important;
-        border-radius: 12px !important;
-        padding: 4px 8px !important;
-        margin: 6px auto 10px auto !important;
-      }
-      .word-bank span { font-size: 20px !important; }
-
       table {
         width: 100% !important;
+        table-layout: fixed !important;
         border-collapse: collapse !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
       }
       th, td {
         font-size: 11px !important;
         padding: 2px !important;
       }
 
-      td.picture-td,
-      .picture-cell {
-        width: 160px !important;
-        height: 90px !important;
-      }
-      .picture-cell img {
-        max-width: 160px !important;
-        max-height: 90px !important;
+      th:first-child, td:first-child {
+        width: 30px !important;
+        max-width: 30px !important;
       }
 
-      td.write-cell { width: 180px !important; height: 80px !important; }
-      td.write-cell img { width: 85% !important; }
+      td.picture-td,
+      .picture-cell {
+        width: 140px !important;
+        height: 80px !important;
+      }
+
+      .picture-cell img {
+        max-width: 100% !important;
+        max-height: 100% !important;
+        object-fit: contain !important;
+      }
+
+      td.write-cell {
+        width: 160px !important;
+        height: 70px !important;
+      }
+      td.write-cell img {
+        width: 140px !important;
+        max-height: 60px !important;
+        object-fit: contain !important;
+      }
+
+      .word-bank {
+        font-size: 16px !important;
+        margin: 6px auto 10px auto !important;
+        max-width: 500px !important;
+      }
+
+      #worksheetTitle { font-size: 18px !important; margin-bottom: 4px !important; }
+      #worksheetDirections { font-size: 14px !important; margin-bottom: 6px !important; }
 
       #worksheetCopyright {
         display: block !important;
@@ -248,7 +275,6 @@ th:first-child, td:first-child {
       const container = document.getElementById('printableSection');
       container.innerHTML = '';
 
-      // Title & Directions
       const names = [...selectedSkills].map(s => skillLabels[s] || s);
       const titleText = `${names.join(', ')} Spelling`;
       const dirText   = `Directions: Spell the word that matches the picture.`;
@@ -260,7 +286,7 @@ th:first-child, td:first-child {
         <div id="worksheetDirections">${dirText}</div>
       `;
 
-      // Pick words
+      // Pick words (example random selection)
       const words = [...cvcLadderWords].sort(() => 0.5 - Math.random()).slice(0,8);
       const bank  = document.getElementById('includeWordBank').checked;
 
@@ -285,7 +311,7 @@ th:first-child, td:first-child {
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${i+1}</td>
-          <td class="picture-td" style="width:160px;height:90px;">
+          <td class="picture-td">
             <div class="picture-cell">
               <img src="${cvcLadderImages[w]||''}" alt="${w}">
             </div>
@@ -315,7 +341,7 @@ th:first-child, td:first-child {
           ${words.map((w,i)=>`
             <tr>
               <td>${i+1}</td>
-              <td class="picture-td" style="width:160px;height:90px;">
+              <td class="picture-td">
                 <div class="picture-cell">
                   <img src="${cvcLadderImages[w]||''}" alt="${w}">
                 </div>
