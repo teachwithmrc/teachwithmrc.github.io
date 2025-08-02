@@ -16,11 +16,11 @@
       text-align: center; 
     }
 
-    h1 { font-size: 20px; margin-bottom: 2px; }
-    .subtitle { font-size: 10px; margin-bottom: 8px; }
+    h1 { font-size: 24px; margin-bottom: 2px; }
+    .subtitle { font-size: 12px; margin-bottom: 8px; }
 
     button { 
-      font-size: 12px; 
+      font-size: 14px; 
       padding: 4px 8px; 
       margin: 4px; 
       cursor: pointer; 
@@ -95,48 +95,46 @@
 
       const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
       const middleCell = cellStyle === 'lines'
-        ? `<img src="images/lines.png" style="width:100%;max-width:120px;">`
-        : `<img src="images/elkonin.png" style="width:100%;max-width:120px;">`;
+        ? `<img src="images/lines.png" style="width:100%;max-width:160px;">`
+        : `<img src="images/elkonin.png" style="width:100%;max-width:160px;">`;
 
       const randomIndex = Math.floor(Math.random() * cvcWordLadders.length);
       const ladder = cvcWordLadders[randomIndex];
 
       const ladderHTML = `
-        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center; width:90%; margin:0 auto;">
+        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center; width:95%; margin:0 auto;">
           <div style="text-align:center;margin-bottom:4px;">
-            <h2 style="margin-bottom:1px;font-size:16px;">CVC Word Ladder</h2>
+            <h2 style="margin-bottom:1px;font-size:18px;">CVC Word Ladder</h2>
             <p style="margin-top:0;font-size:10px;">
               <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
             </p>
           </div>
 
-          <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:400px;">
+          <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:500px;">
             ${ladder.map((word, idx) => {
               const isLast = idx === ladder.length - 1;
 
               const wordCell =
                 idx === 0
-                  ? `<div style="font-size:18px;font-weight:600;letter-spacing:4px;">${word}</div>`
+                  ? `<div style="font-size:22px;font-weight:600;letter-spacing:4px;">${word}</div>`
                   : middleCell;
 
-              const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/60?text=?';
-              const imageTD = `<td style="padding:2px 4px; width: 70px;">
-                                 <img src="${imgSrc}" alt="${word}" style="width:60px;height:60px;object-fit:contain;">
+              const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/80?text=?';
+              const imageTD = `<td style="padding:4px 6px; width: 90px;">
+                                 <img src="${imgSrc}" alt="${word}" style="width:80px;height:80px;object-fit:contain;">
                                </td>`;
 
-              let hintTD = '<td style="padding:2px 4px; width: 70px;"></td>';
+              let hintTD = '<td style="padding:4px 6px; width: 90px;"></td>';
               if (idx > 0) {
                 const prev = ladder[idx - 1];
                 let hint = '? → ?';
                 for (let i = 0; i < word.length; i++) {
                   if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
                 }
-                hintTD = `<td style="padding:2px 4px;width:70px;">
+                hintTD = `<td style="padding:4px 6px;width:90px;">
                             <div style="display:inline-block;background:#f0f0f0;border:2px solid #000;border-radius:8px;
-                                        padding:2px 4px;font-size:10px;position:relative;">
+                                        padding:2px 4px;font-size:12px;">
                               ${hint}
-                              <span style="content:'';position:absolute;left:-4px;top:50%;transform:translateY(-50%);
-                                           border:3px solid transparent;border-right-color:#000;"></span>
                             </div>
                           </td>`;
               }
@@ -144,7 +142,7 @@
               const borderStyle = !isLast
                 ? 'border-bottom:2px solid #000;border-left:2px solid #000;border-right:2px solid #000;'
                 : 'border-left:2px solid #000;border-right:2px solid #000;';
-              const wordTD = `<td style="padding:2px 4px;${borderStyle}">${wordCell}</td>`;
+              const wordTD = `<td style="padding:4px 6px;${borderStyle}">${wordCell}</td>`;
 
               return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
             }).join('')}
