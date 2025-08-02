@@ -65,7 +65,15 @@
     }
 
     td:first-child { font-size: 18px; font-weight: 700; }
-
+/* Number column: only as wide as the number + padding */
+th:first-child, td:first-child {
+  width: 28px;       /* Adjust to your liking */
+  min-width: 28px;   /* Keeps it consistent */
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 2px 4px;  /* Small padding */
+}
     td.picture-td { overflow: hidden; position: relative; }
     .picture-cell {
       display: flex; justify-content: center; align-items: center;
