@@ -12,98 +12,69 @@
       text-align: center;
     }
 
-    /* page size & margins */
-    @page {
-      size: letter;
-      margin: 0.3in;
-    }
+    @page { size: letter; margin: 0.3in; }
 
-    h1 {
-      font-size: 26px;
-      margin-bottom: 10px;
-    }
+    /* Title and Directions */
+    #worksheetTitle { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+    #worksheetDirections { font-size: 18px; margin-bottom: 10px; }
 
-    .subtitle {
-      font-size: 16px;
-      margin-bottom: 20px;
-    }
-
-    .table-section {
-      border: 2px solid #000;
-      padding: 5px;
-      margin: 12px auto;
-      width: fit-content;
-      box-sizing: border-box;
-    }
-
-    .section-label {
-      font-weight: 600;
-      font-size: 18px;
-      margin-bottom: 8px;
-    }
-
-    .skill-button-grid { display: flex; flex-direction: column; gap: 8px; }
-    .skill-button-grid .row { display: flex; justify-content: center; gap: 8px; }
-    .skill-button {
-      border: 2px solid #000; padding: 10px 16px; border-radius: 8px;
-      font-weight: 600; cursor: pointer; transition: 0.3s;
-    }
-    .skill-button.selected {
-      background-color: #007bff; color: #fff;
-      box-shadow: 0 0 4px rgba(0,123,255,0.5);
-    }
-
-    #printableSection { margin-top: 20px; }
-
-    #worksheetTitle { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
-    #worksheetDirections { font-size: 20px; margin-bottom: 12px; }
-
-    table { margin: auto; border-collapse: collapse; }
-    th, td {
-      border: 1px solid #000; padding: 2px;
-      text-align: center; vertical-align: middle;
-      font-size: 13px;
-    }
-
-    td.picture-td { overflow: hidden; position: relative; }
-    .picture-cell {
-      display: flex; justify-content: center; align-items: center;
-      width: 100%; height: 100%; overflow: hidden;
-    }
-    .picture-cell img {
-      max-width: 100%; max-height: 100%;
-      object-fit: contain; display: block;
-    }
-
-    .write-cell { padding: 0; }
-
+    /* Word Bank */
     .word-bank {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
       text-align: center;
-      margin: 12px auto 20px auto;
+      margin: 10px auto 16px auto;
+      max-width: 520px;
     }
     .word-bank span {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 700;
-      margin: 4px 12px;
+      margin: 4px 10px;
     }
 
+    /* Table */
+    table { 
+      margin: auto; 
+      border-collapse: collapse; 
+      width: 520px; 
+    }
+    th, td {
+      border: 1px solid #000;
+      text-align: center;
+      vertical-align: middle;
+      padding: 2px;
+      font-size: 12px;
+    }
+
+    /* Picture & Write cells */
+    td.number-cell { font-size: 22px; font-weight: 700; width: 40px; }
+    td.picture-td { width: 140px; height: 80px; }
+    td.picture-td img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+    td.write-cell { width: 180px; height: 80px; }
+    td.write-cell img { width: 100%; height: auto; }
+
+    /* Answer Key */
+    #answerKey { page-break-before: always; margin-top: 20px; }
+
+    /* Copyright */
     #worksheetCopyright {
-      font-size: 10px; text-align: right; margin-top: 6px;
-      padding-right: 20px; visibility: hidden;
+      font-size: 9px;
+      text-align: right;
+      margin-top: 6px;
+      padding-right: 20px;
+      visibility: hidden;
     }
 
-    #answerKey {
-      page-break-before: always;
-      margin-top: 20px;
-    }
-
-    /* PRINT STYLES */
+    /* Print Styles */
     @media print {
       body * { visibility: hidden !important; }
-      #printableSection,
-      #printableSection * { visibility: visible !important; }
+      #printableSection, #printableSection * { visibility: visible !important; }
 
       #printableSection {
         position: absolute !important;
@@ -114,36 +85,11 @@
         transform-origin: top center;
       }
 
-      .worksheet-content { page-break-inside: avoid !important; }
-
-      #worksheetTitle { font-size: 32px !important; }
-      #worksheetDirections { font-size: 22px !important; }
-
-      .word-bank {
-        border: 1px solid #000 !important;
-        border-radius: 12px !important;
-        padding: 8px !important;
-        font-size: 22px !important;
-        text-align: center !important;
-        width: auto !important;
-      }
-      .word-bank span { font-size: 24px !important; }
-
-      table {
-        width: 100% !important;
-        border-collapse: collapse !important;
-        page-break-inside: avoid !important;
-      }
-      th, td {
-        font-size: 16px !important;
-        padding: 4px !important;
-      }
-
-      td.picture-td,
-      .picture-cell {
-        width: 160px !important;
-        height: 90px !important;
-      }
+      #worksheetTitle { font-size: 26px !important; }
+      #worksheetDirections { font-size: 20px !important; }
+      .word-bank { font-size: 18px !important; }
+      .word-bank span { font-size: 20px !important; }
+      td.number-cell { font-size: 22px !important; }
 
       #worksheetCopyright {
         display: block !important;
@@ -151,11 +97,6 @@
         position: fixed !important;
         bottom: 8px;
         right: 12px;
-        font-size: 9px !important;
-      }
-
-      #answerKey {
-        page-break-before: always !important;
       }
     }
   </style>
@@ -163,7 +104,7 @@
 <body>
   <h1>Picture Word Worksheet Generator</h1>
   <div class="subtitle">
-    Select a phonics skill, then generate a worksheet with matching pictures and Elkonin boxes.
+    Select a phonics skill, then generate a worksheet with matching pictures and Elkonin writing boxes.
   </div>
 
   <!-- Skill Selection -->
@@ -196,8 +137,7 @@
     </button>
     <div style="margin-top:8px;">
       <label style="font-size:14px;">
-        <input type="checkbox" id="includeWordBank">
-        Include Word Bank
+        <input type="checkbox" id="includeWordBank"> Include Word Bank
       </label>
     </div>
   </div>
@@ -229,10 +169,9 @@
       const container = document.getElementById('printableSection');
       container.innerHTML = '';
 
-      // Title & Directions
       const names = [...selectedSkills].map(s => skillLabels[s] || s);
       const titleText = `${names.join(', ')} Spelling`;
-      const dirText   = `Directions: Say the word and write it in the Elkonin boxes.`;
+      const dirText   = `Directions: Spell the word that matches the picture.`;
 
       const wrapper = document.createElement('div');
       wrapper.className = 'worksheet-content';
@@ -241,49 +180,36 @@
         <div id="worksheetDirections">${dirText}</div>
       `;
 
-      // Pick words & sizes
       const words = [...cvcLadderWords].sort(() => 0.5 - Math.random()).slice(0,8);
       const bank  = document.getElementById('includeWordBank').checked;
-      const tableW = 600;
-      const imgW   = 160;
-      const imgH   = 100;
 
       // Word Bank
       if (bank) {
         const wb = document.createElement('div');
         wb.className = 'word-bank';
         wb.innerHTML = `
-          <div style="font-weight:bold;font-size:22px;">Word Bank:</div>
-          <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin-top:6px;">
-            ${[...words].sort(() => 0.5 - Math.random())
-              .map(w => `<span>${w}</span>`).join('')}
-          </div>`;
+          <div>Word Bank:</div>
+          ${[...words].sort(() => 0.5 - Math.random())
+            .map(w => `<span>${w}</span>`).join('')}
+        `;
         wrapper.appendChild(wb);
       }
 
       // Main Table
       const tbl = document.createElement('table');
-      tbl.style.width = tableW + 'px';
       tbl.innerHTML = `<tr>
         <th>No.</th><th>Picture</th><th>Write the Word</th>
       </tr>`;
       words.forEach((w,i) => {
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td style="font-size:28px;font-weight:700;">${i+1}</td>
-          <td class="picture-td" style="width:${imgW}px;height:${imgH}px;">
-            <div class="picture-cell" style="width:${imgW}px;height:${imgH}px;">
-              <img src="${cvcLadderImages[w]||''}" alt="${w}">
-            </div>
-          </td>
-          <td class="write-cell" style="height:${imgH/1.5}px;">
-            <img src="elkonin.png" style="width:100%; height:auto;">
-          </td>`;
+          <td class="number-cell">${i+1}</td>
+          <td class="picture-td"><img src="${cvcLadderImages[w]||''}" alt="${w}"></td>
+          <td class="write-cell"><img src="images/elkonin.png" alt="Elkonin boxes"></td>`;
         tbl.appendChild(row);
       });
       wrapper.appendChild(tbl);
 
-      // Copyright
       const cr = document.createElement('div');
       cr.id = 'worksheetCopyright';
       cr.textContent = '© 2025 Intervention Station – TeachWithMrC';
@@ -295,20 +221,18 @@
       const ak = document.createElement('div');
       ak.id = 'answerKey';
       ak.innerHTML = `
-        <div style="font-weight:bold;font-size:20px;margin-bottom:8px;">
+        <div style="font-weight:bold;font-size:16px;margin-bottom:8px;">
           ${titleText} – Answer Key
         </div>
-        <table style="width:${tableW}px;">
+        <table style="width:520px;">
           <tr><th>No.</th><th>Picture</th><th>Answer</th></tr>
           ${words.map((w,i)=>`
             <tr>
-              <td style="font-size:24px;font-weight:700;">${i+1}</td>
-              <td class="picture-td" style="width:${imgW}px;height:${imgH}px;">
-                <div class="picture-cell" style="width:${imgW}px;height:${imgH}px;">
-                  <img src="${cvcLadderImages[w]||''}" alt="${w}">
-                </div>
+              <td class="number-cell">${i+1}</td>
+              <td class="picture-td">
+                <img src="${cvcLadderImages[w]||''}" alt="${w}">
               </td>
-              <td style="font-weight:600;font-size:20px;">${w}</td>
+              <td style="font-weight:600;">${w}</td>
             </tr>`).join('')}
         </table>`;
       container.appendChild(ak);
