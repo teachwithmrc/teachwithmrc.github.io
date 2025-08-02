@@ -2,165 +2,330 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CVC Word Ladder</title>
+  <title>Picture Word Worksheet Generator</title>
+  <script src="cvcLadderData.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    margin: 40px;
+    text-align: center;
+  }
 
-  <script src="cvcLadderData.js" defer></script>
-  <script src="cvcWordLadders_6words.js" defer></script>
+  @page {
+    size: letter;
+    margin: 0.3in;
+  }
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  h1 { font-size: 26px; margin-bottom: 10px; }
+  .subtitle { font-size: 16px; margin-bottom: 20px; }
 
-  <style>
-    body { 
-      font-family: 'Poppins', sans-serif; 
-      margin: 10px; 
-      text-align: center; 
+  .table-section {
+    border: 2px solid #000;
+    padding: 5px;
+    margin: 12px auto;
+    width: fit-content;
+    box-sizing: border-box;
+  }
+
+  .section-label {
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .skill-button-grid { display: flex; flex-direction: column; gap: 8px; }
+  .skill-button-grid .row { display: flex; justify-content: center; gap: 8px; }
+  .skill-button {
+    border: 2px solid #000; padding: 10px 16px; border-radius: 8px;
+    font-weight: 600; cursor: pointer; transition: 0.3s;
+  }
+  .skill-button.selected {
+    background-color: #007bff; color: #fff;
+    box-shadow: 0 0 4px rgba(0,123,255,0.5);
+  }
+
+  #printableSection { margin-top: 20px; }
+
+  #worksheetTitle { font-size: 18px; font-weight: bold; margin-bottom: 4px; }
+  #worksheetDirections { font-size: 14px; margin-bottom: 6px; }
+
+  /* Table Styling */
+  table {
+    margin: auto;
+    border-collapse: collapse;
+    table-layout: auto;
+    width: auto;
+  }
+  th, td {
+    border: 1px solid #000;
+    padding: 2px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 12px;
+  }
+
+  th:first-child, td:first-child {
+    width: 30px;
+    max-width: 30px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  td.picture-td {
+    padding: 3px !important;
+    width: auto !important;
+    max-width: max-content !important;
+    text-align: center;
+  }
+  .picture-cell img {
+    display: block;
+    max-width: 140px;
+    max-height: 80px;
+    object-fit: contain;
+    margin: 0 auto;
+  }
+
+  /* --- FIXED ELKONIN SIZE --- */
+  td.write-cell {
+    width: 500px; /* Adjusted to accommodate wider image */
+    height: 80px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  td.write-cell img.elkonin-img {
+    display: block;
+    width: 500px !important; /* Adjusted image width */
+    height: 80px !important;
+    max-width: 500px !important; /* Adjusted max-width */
+    max-height: 80px !important;
+    object-fit: contain;
+    margin: 0 auto;
+  }
+
+  /* Word Bank */
+  .word-bank {
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    margin: 10px auto 16px auto;
+    max-width: 520px;
+    border: 2px solid #000;
+    padding: 6px 10px;
+    border-radius: 6px;
+  }
+  .word-bank span {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 4px 10px;
+    display: inline-block;
+  }
+
+  #worksheetCopyright {
+    font-size: 10px;
+    text-align: right;
+    margin-top: 6px;
+    padding-right: 20px;
+    visibility: hidden;
+  }
+
+  #answerKey { page-break-before: always; margin-top: 20px; }
+
+  /* --- Print Styling --- */
+  @media print {
+    body * { visibility: hidden !important; }
+    #printableSection,
+    #printableSection * { visibility: visible !important; }
+
+    #printableSection {
+      position: absolute !important;
+      top: 0; left: 0;
+      width: 100% !important;
+      margin: 0 auto !important;
+      transform: scale(1) !important;
+      transform-origin: top center;
     }
 
-    h1 { font-size: 24px; margin-bottom: 2px; }
-    .subtitle { font-size: 12px; margin-bottom: 8px; }
-
-    button { 
-      font-size: 14px; 
-      padding: 4px 8px; 
-      margin: 4px; 
-      cursor: pointer; 
+    table {
+      width: auto !important;
+      table-layout: auto !important;
+      border-collapse: collapse !important;
+    }
+    th, td {
+      font-size: 11px !important;
+      padding: 2px !important;
     }
 
-    label { margin: 0 5px; font-size: 12px; }
-
-    @media print {
-      body * { visibility: hidden; }
-      #ladderOutput, #ladderOutput * { visibility: visible; }
-      #ladderOutput { 
-        position: absolute; 
-        top: 0; 
-        left: 0; 
-        width: 100%; 
-        margin: 0; 
-        scale: (1.5);
-        padding: 10px; 
-        box-sizing: border-box; 
-      }
-      @page { margin: 0.5in; }
+    td.write-cell {
+      width: 450px !important; /* Adjusted to accommodate wider image */
+      height: 70px !important;
     }
-  </style>
+    td.write-cell img.elkonin-img {
+      display: block !important;
+      padding: 0.5px;
+      width: 450px !important; /* Adjusted image width */
+      height: 70px !important;
+      max-width: 450px !important; /* Adjusted max-width */
+      max-height: 70px !important;
+      object-fit: contain !important;
+      margin: 0 auto !important;
+    }
+
+    #worksheetCopyright {
+      display: block !important;
+      visibility: visible !important;
+      position: fixed !important;
+      bottom: 8px;
+      right: 12px;
+      font-size: 9px !important;
+    }
+
+    #answerKey { page-break-before: always !important; }
+  }
+</style>
 </head>
 <body>
-
-  <h1>CVC Word Ladder</h1>
-  <p class="subtitle">
-    <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
-  </p>
-
-  <div style="margin-bottom:8px;">
-    <label><input type="radio" name="cellStyle" value="lines" checked> Writing Lines</label>
-    <label><input type="radio" name="cellStyle" value="elkonin"> Elkonin Boxes</label>
+  <h1>Picture Word Worksheet Generator</h1>
+  <div class="subtitle">
+    Select a phonics skill, then generate a worksheet with matching pictures and writing lines.
   </div>
 
-  <div>
-    <button onclick="generateLadder()">Generate Ladder</button>
-    <button onclick="window.print()">Print Page</button>
+  <!-- Skill Selection -->
+  <div class="table-section">
+    <div class="section-label">Select Skills</div>
+    <div class="skill-button-grid">
+      <div class="row">
+        <div class="skill-button" data-skill="0.1">Short A</div>
+        <div class="skill-button" data-skill="0.2">Short O</div>
+        <div class="skill-button" data-skill="0.3">Short I</div>
+        <div class="skill-button" data-skill="0.4">Short U</div>
+        <div class="skill-button" data-skill="0.5">Short E</div>
+      </div>
+      <div class="row">
+        <div class="skill-button" data-skill="0.6">FLSZ</div>
+        <div class="skill-button" data-skill="0.7">CVC &amp; FLSZ</div>
+        <div class="skill-button" data-skill="mixed">Mixed CVC</div>
+      </div>
+    </div>
   </div>
 
-  <div id="ladderOutput" style="margin-top:8px;"></div>
+  <!-- Generate/Print Options -->
+  <div class="table-section">
+    <div class="section-label">Generate Worksheet</div>
+    <button onclick="generatePictureWordTable()" style="font-size:18px;padding:10px 24px;">
+      Generate
+    </button>
+    <button onclick="window.print()" style="font-size:18px;padding:10px 24px;">
+      Print
+    </button>
+    <div style="margin-top:8px;">
+      <label style="font-size:14px;">
+        <input type="checkbox" id="includeWordBank"> Include Word Bank
+      </label>
+    </div>
+  </div>
+
+  <div id="printableSection"></div>
 
   <script>
-    // Initialize data after scripts are loaded
-    function initializeLadderData() {
-      if (typeof cvcLadderImages === 'undefined') {
-        console.error('cvcLadderImages is not defined. Ensure cvcLadderData.js is loaded correctly.');
-        return false;
-      }
-      try {
-        for (const key in cvcLadderImages) {
-          if (key.includes('2')) delete cvcLadderImages[key];
+    const selectedSkills = new Set();
+    const skillLabels = {
+      "0.1": "Short A", "0.2": "Short O", "0.3": "Short I",
+      "0.4": "Short U", "0.5": "Short E", "0.6": "FLSZ",
+      "0.7": "CVC & FLSZ", "mixed": "Mixed CVC"
+    };
+
+    document.querySelectorAll('.skill-button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const skill = btn.dataset.skill;
+        if (selectedSkills.has(skill)) {
+          selectedSkills.delete(skill);
+          btn.classList.remove('selected');
+        } else {
+          selectedSkills.add(skill);
+          btn.classList.add('selected');
         }
-        return true;
-      } catch (e) {
-        console.error('Error processing cvcLadderImages:', e);
-        return false;
-      }
-    }
+      });
+    });
 
-    function generateLadder() {
-      // Check if initialization was successful
-      if (!initializeLadderData()) {
-        alert('❌ Error: Ladder data not available. Check console for details.');
-        return;
-      }
+    function generatePictureWordTable() {
+      const container = document.getElementById('printableSection');
+      container.innerHTML = '';
 
-      if (typeof cvcWordLadders === 'undefined' || !cvcWordLadders || cvcWordLadders.length === 0) {
-        alert('❌ No 6-word ladders found! Ensure cvcWordLadders_6words.js is loaded correctly.');
-        return;
-      }
+      const names = [...selectedSkills].map(s => skillLabels[s] || s);
+      const titleText = `${names.join(', ')} Spelling`;
+      const dirText   = `Directions: Spell the word that matches the picture.`;
 
-      const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
-      const middleCell = cellStyle === 'lines'
-        ? `<img src="images/lines.png" style="width:100%;max-width:160px;">`
-        : `<img src="images/elkonin.png" style="width:100%;max-width:160px;">`;
-
-      const randomIndex = Math.floor(Math.random() * cvcWordLadders.length);
-      const ladder = cvcWordLadders[randomIndex];
-
-      const ladderHTML = `
-        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center; width:95%; margin:0 auto;">
-          <div style="text-align:center;margin-bottom:4px;">
-            <h2 style="margin-bottom:1px;font-size:18px;">CVC Word Ladder</h2>
-            <p style="margin-top:0;font-size:10px;">
-              <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
-            </p>
-          </div>
-
-          <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:500px;">
-            ${ladder.map((word, idx) => {
-              const isLast = idx === ladder.length - 1;
-
-              const wordCell =
-                idx === 0
-                  ? `<div style="font-size:22px;font-weight:600;letter-spacing:4px;">${word}</div>`
-                  : middleCell;
-
-              const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/80?text=?';
-              const imageTD = `<td style="padding:4px 6px; width: 90px;">
-                                 <img src="${imgSrc}" alt="${word}" style="width:80px;height:80px;object-fit:contain;">
-                               </td>`;
-
-              let hintTD = '<td style="padding:4px 6px; width: 90px;"></td>';
-              if (idx > 0) {
-                const prev = ladder[idx - 1];
-                let hint = '? → ?';
-                for (let i = 0; i < word.length; i++) {
-                  if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
-                }
-                hintTD = `<td style="padding:4px 6px;width:90px;">
-                            <div style="display:inline-block;background:#f0f0f0;border:2px solid #000;border-radius:8px;
-                                        padding:2px 4px;font-size:12px;">
-                              ${hint}
-                            </div>
-                          </td>`;
-              }
-
-              const borderStyle = !isLast
-                ? 'border-bottom:2px solid #000;border-left:2px solid #000;border-right:2px solid #000;'
-                : 'border-left:2px solid #000;border-right:2px solid #000;';
-              const wordTD = `<td style="padding:4px 6px;${borderStyle}">${wordCell}</td>`;
-
-              return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
-            }).join('')}
-          </table>
-        </div>
+      const wrapper = document.createElement('div');
+      wrapper.className = 'worksheet-content';
+      wrapper.innerHTML = `
+        <div id="worksheetTitle">${titleText}</div>
+        <div id="worksheetDirections">${dirText}</div>
       `;
 
-      document.getElementById('ladderOutput').innerHTML = ladderHTML;
-    }
+      const words = [...cvcLadderWords].sort(() => 0.5 - Math.random()).slice(0,8);
+      const bank  = document.getElementById('includeWordBank').checked;
 
-    // Ensure scripts are loaded before running initialization
-    window.addEventListener('load', () => {
-      if (!initializeLadderData()) {
-        console.error('Initialization failed. Check script files and variable definitions.');
+      if (bank) {
+        const wb = document.createElement('div');
+        wb.className = 'word-bank';
+        wb.innerHTML = `
+          <div style="font-weight:bold;font-size:16px;margin-bottom:4px;">Word Bank:</div>
+          ${[...words].sort(() => 0.5 - Math.random())
+            .map(w => `<span>${w}</span>`).join('')}
+        `;
+        wrapper.appendChild(wb);
       }
-    });
-  </script>
 
+      const tbl = document.createElement('table');
+      tbl.innerHTML = `<tr>
+        <th>No.</th><th>Picture</th><th>Write the Word</th>
+      </tr>`;
+      words.forEach((w,i) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${i+1}</td>
+          <td class="picture-td">
+            <div class="picture-cell">
+              <img src="${cvcLadderImages[w]||''}" alt="${w}">
+            </div>
+          </td>
+          <td class="write-cell">
+            <img src="images/lines.png" class="elkonin-img" alt="Elkonin Box">
+          </td>`;
+        tbl.appendChild(row);
+      });
+      wrapper.appendChild(tbl);
+
+      const cr = document.createElement('div');
+      cr.id = 'worksheetCopyright';
+      cr.textContent = '© 2025 Intervention Station – TeachWithMrC';
+      wrapper.appendChild(cr);
+
+      container.appendChild(wrapper);
+
+      const ak = document.createElement('div');
+      ak.id = 'answerKey';
+      ak.innerHTML = `
+        <div style="font-weight:bold;font-size:16px;margin-bottom:8px;">
+          ${titleText} – Answer Key
+        </div>
+        <table>
+          <tr><th>No.</th><th>Picture</th><th>Answer</th></tr>
+          ${words.map((w,i)=>`
+            <tr>
+              <td>${i+1}</td>
+              <td class="picture-td">
+                <div class="picture-cell">
+                  <img src="${cvcLadderImages[w]||''}" alt="${w}">
+                </div>
+              </td>
+              <td style="font-weight:600;">${w}</td>
+            </tr>`).join('')}
+        </table>`;
+      container.appendChild(ak);
+    }
+  </script>
 </body>
 </html>
