@@ -59,79 +59,78 @@
 </head>
 <body>
 
-  <h1>CVC Word Ladder</h1>
-  <div class="subtitle">Click generate to create a 6-step word ladder.</div>
+<!-- CVC Word Ladder  –– place in your HTML where the old generator was -->
+<h2 style="margin-bottom:4px;">CVC Word Ladder</h2>
+<p style="margin-top:0;margin-bottom:16px;font-size:14px;">
+  <strong>Directions:</strong> Start at the top and climb down, spelling each word correctly.
+</p>
 
-  <div>
-    <button onclick="generateLadder()">Generate Ladder</button>
-    <button onclick="window.print()">Print Page</button>
-  </div>
+<div style="text-align:center;">
+  <button onclick="generateLadder()">Generate Ladder</button>
+  <button onclick="window.print()">Print Page</button>
+</div>
 
-  <div id="ladderOutput"></div>
+<div id="ladderOutput" style="margin-top:20px;"></div>
 
-  <script>
-    // Remove any images or words with "2"
-    for (const key in cvcLadderImages) {
-      if (key.includes("2")) {
-        delete cvcLadderImages[key];
-      }
+<script>
+  /*  Clean image map: remove entries containing "2"  */
+  for (const key in cvcLadderImages) {
+    if (key.includes('2')) delete cvcLadderImages[key];
+  }
+
+  function generateLadder () {
+    if (!window.cvcWordLadders || cvcWordLadders.length === 0) {
+      alert('❌ No 6-word ladders found!');
+      return;
     }
 
-    function generateLadder() {
-      if (!window.cvcWordLadders || cvcWordLadders.length === 0) {
-        alert("❌ No 6-word ladders found!");
-        return;
-      }
+    /* pick a truly random ladder */
+    const ladder = cvcWordLadders[Math.floor(Math.random() * cvcWordLadders.length)];
 
-      // Pick a random 6-word ladder
-      const ladder = cvcWordLadders[Math.floor(Math.random() * cvcWordLadders.length)];
+    const ladderHTML = `
+      <div style="display:flex;justify-content:center;">
+        <table style="border-collapse:collapse;">
+          ${ladder.map((word, idx) => {
+            /* WORD CELL  – top word shown, others blank */
+            const wordCell =
+              idx === 0
+                ? `<div class="ladder-word" style="font-size:32px;font-weight:600;letter-spacing:8px;">${word.toUpperCase()}</div>`
+                : `<div class="ladder-blank" style="font-size:32px;letter-spacing:8px;">${'_ '.repeat(word.length)}</div>`;
 
-      const ladderHTML = `
-        <div class="ladder-container">
-          <table>
-            ${ladder.map((word, index) => {
-              const isFirst = index === 0;
-              const isLast = index === ladder.length - 1;
+            /* IMAGE (always left)  */
+            const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/100?text=?';
+            const imageTD = `<td style="padding:12px 20px;"><img src="${imgSrc}" alt="${word}" style="width:100px;height:100px;object-fit:contain;"></td>`;
 
-              const displayWord = isFirst
-                ? `<div class="ladder-word">${word.toUpperCase()}</div>`
-                : `<div class="ladder-blank">${"_ ".repeat(word.length)}</div>
-                   ${isLast ? `<div class="ladder-final">(${word.toUpperCase()})</div>` : ''}`;
-
-              // Alternate left/right
-              const isEven = index % 2 === 0;
-
-              // Image with fallback
-              const imgSrc = cvcLadderImages[word] || "https://via.placeholder.com/100?text=?";
-              const imageCell = `<img class="ladder-image" src="${imgSrc}" alt="${word}">`;
-
-              // Calculate hint: find differing letter from previous word if exists
-              let hint = "? → ?";
-              if (index > 0) {
-                const prevWord = ladder[index - 1];
-                for (let i = 0; i < word.length; i++) {
-                  if (prevWord[i] !== word[i]) {
-                    hint = `${prevWord[i]} → ${word[i]}`;
-                    break;
-                  }
-                }
+            /* HINT (always right) – blank for first row */
+            let hintTD = '<td style="padding:12px 20px;"></td>';
+            if (idx > 0) {
+              const prev = ladder[idx - 1];
+              let hint = '?→?';
+              for (let i = 0; i < word.length; i++) {
+                if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
               }
-              const hintCell = `<div class="hint-bubble ${isEven ? 'right-bubble':'left-bubble'}">${hint}</div>`;
+              hintTD = `<td style="padding:12px 20px;">
+                          <div class="hint-bubble right-bubble"
+                               style="display:inline-block;background:#f0f0f0;border:2px solid #000;border-radius:20px;padding:6px 12px;font-size:18px;position:relative;">
+                            ${hint}
+                            <span style="content:'';position:absolute;left:-10px;top:50%;transform:translateY(-50%);
+                                         border:6px solid transparent;border-right-color:#000;"></span>
+                          </div>
+                        </td>`;
+            }
 
-              return `
-                <tr>
-                  ${isEven ? `<td>${imageCell}</td><td>${displayWord}</td><td>${hintCell}</td>` 
-                           : `<td>${hintCell}</td><td>${displayWord}</td><td>${imageCell}</td>`}
-                </tr>
-              `;
-            }).join('')}
-          </table>
-        </div>
-      `;
+            /* WORD column with border (center) */
+            const wordTD = `<td style="padding:12px 20px;border-left:3px solid #000;border-right:3px solid #000;">${wordCell}</td>`;
 
-      document.getElementById('ladderOutput').innerHTML = ladderHTML;
-    }
-  </script>
+            return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
+          }).join('')}
+        </table>
+      </div>
+    `;
+
+    document.getElementById('ladderOutput').innerHTML = ladderHTML;
+  }
+</script>
 
 </body>
 </html>
