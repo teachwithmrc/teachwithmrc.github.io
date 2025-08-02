@@ -95,14 +95,14 @@
 
       const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
       const middleCell = cellStyle === 'lines'
-        ? `<img src="images/lines.png" style="width:100%;max-width:240px;">`
-        : `<img src="images/elkonin.png" style="width:100%;max-width:240px;">`;
+        ? `<img src="images/lines.png" style="width:100%;max-width:200px;">`
+        : `<img src="images/elkonin.png" style="width:100%;max-width:200px;">`;
 
       const randomIndex = Math.floor(Math.random() * cvcWordLadders.length);
       const ladder = cvcWordLadders[randomIndex];
 
       const ladderHTML = `
-        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center; width:100%; margin:0 auto;">
+        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center; width:98%; margin:0 auto;">
           <div style="text-align:center;margin-bottom:4px;">
             <h2 style="margin-bottom:1px;font-size:24px;">CVC Word Ladder</h2>
             <p style="margin-top:0;font-size:12px;">
@@ -110,7 +110,7 @@
             </p>
           </div>
 
-          <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:650px;">
+          <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
             ${ladder.map((word, idx) => {
               const isLast = idx === ladder.length - 1;
 
@@ -119,21 +119,21 @@
                   ? `<div style="font-size:30px;font-weight:600;letter-spacing:4px;">${word}</div>`
                   : middleCell;
 
-              const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/120?text=?';
-              const imageTD = `<td style="padding:8px 10px; width: 130px;">
-                                 <img src="${imgSrc}" alt="${word}" style="width:120px;height:120px;object-fit:contain;">
+              const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/100?text=?';
+              const imageTD = `<td style="padding:6px 8px; width: 130px;">
+                                 <img src="${imgSrc}" alt="${word}" style="width:100px;height:100px;object-fit:contain;">
                                </td>`;
 
-              let hintTD = '<td style="padding:8px 10px; width: 130px;"></td>';
+              let hintTD = '<td style="padding:6px 8px; width: 130px;"></td>';
               if (idx > 0) {
                 const prev = ladder[idx - 1];
                 let hint = '? → ?';
                 for (let i = 0; i < word.length; i++) {
                   if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
                 }
-                hintTD = `<td style="padding:8px 10px;width:130px;">
-                            <div style="display:inline-block;background:#f0f0f0;border:2px solid #000;border-radius:10px;
-                                        padding:4px 8px;font-size:18px;">
+                hintTD = `<td style="padding:6px 8px;width:130px;">
+                            <div style="display:inline-block;background:#f0f0f0;border:3px solid #000;border-radius:12px;
+                                        padding:6px 10px;font-size:20px;">
                               ${hint}
                             </div>
                           </td>`;
@@ -142,7 +142,7 @@
               const borderStyle = !isLast
                 ? 'border-bottom:2px solid #000;border-left:2px solid #000;border-right:2px solid #000;'
                 : 'border-left:2px solid #000;border-right:2px solid #000;';
-              const wordTD = `<td style="padding:8px 10px;${borderStyle}">${wordCell}</td>`;
+              const wordTD = `<td style="padding:6px 8px;${borderStyle}">${wordCell}</td>`;
 
               return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
             }).join('')}
