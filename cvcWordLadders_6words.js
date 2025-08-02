@@ -1,4 +1,4 @@
-const cvcWordLadders = [
+var cvcWordLadders = [
   ["bag", "bat", "bot", "box", "fox", "fix"],
   ["bag", "bat", "bot", "cot", "cat", "cab"],
   ["bag", "bat", "bot", "cot", "cat", "can"],
@@ -7755,5 +7755,3 @@ const cvcWordLadders = [
   ["bag", "wag", "wig", "win", "tin", "pin"],
   ["bag", "wag", "wig", "win", "tin", "ten"],
 ];
-
-export default cvcWordLadders;
