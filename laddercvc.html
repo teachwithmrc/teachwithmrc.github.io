@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CVC Word Ladder Generator</title>
+
+  <script src="cvcLadderData.js"></script>
+    <script src="cvcWordLadders_6words.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Poppins', sans-serif; margin: 40px; text-align: center; }
+    @page { size: letter; margin: 0.3in; }
+
+    h1 { font-size: 30px; margin-bottom: 8px; }
+    .subtitle { font-size: 18px; margin-bottom: 20px; }
+
+    .ladder-container { display: flex; justify-content: center; margin: 20px auto; }
+    table { border-collapse: collapse; }
+    td { padding: 12px 20px; text-align: center; vertical-align: middle; }
+
+    /* Image column */
+    .ladder-image { width: 100px; height: 100px; object-fit: contain; }
+
+    /* Ladder words column */
+    .ladder-word { font-size: 32px; font-weight: 600; letter-spacing: 8px; }
+    .ladder-blank { font-size: 32px; letter-spacing: 8px; }
+    .ladder-final { font-size: 18px; color: #555; }
+
+    /* Hint bubbles */
+    .hint-bubble {
+      display: inline-block;
+      background: #f0f0f0;
+      border: 2px solid #333;
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 18px;
+      font-weight: 500;
+      position: relative;
+      min-width: 60px;
+    }
+    .hint-bubble::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 6px solid transparent;
+    }
+    .right-bubble::after { left: -10px; border-right-color: #333; }
+    .left-bubble::after { right: -10px; border-left-color: #333; }
+
+    button { font-size: 18px; padding: 8px 12px; margin: 10px; cursor: pointer; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #ladderOutput, #ladderOutput * { visibility: visible; }
+      #ladderOutput { position: absolute; top: 0; left: 0; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- CVC Word Ladder  –– place in your HTML where the old generator was -->
+<h2 style="margin-bottom:4px;">CVC Word Ladder</h2>
+<p style="margin-top:0;margin-bottom:16px;font-size:14px;">
+  <strong>Directions:</strong> Start at the top and climb down, spelling each word correctly.
+</p>
+
+<div style="text-align:center;">
+  <button onclick="generateLadder()">Generate Ladder</button>
+  <button onclick="window.print()">Print Page</button>
+</div>
+
+<div id="ladderOutput" style="margin-top:20px;"></div>
+
+<script>
+  /*  Clean image map: remove entries containing "2"  */
+  for (const key in cvcLadderImages) {
+    if (key.includes('2')) delete cvcLadderImages[key];
+  }
+
+  function generateLadder () {
+    if (!window.cvcWordLadders || cvcWordLadders.length === 0) {
+      alert('❌ No 6-word ladders found!');
+      return;
+    }
+
+    /* pick a truly random ladder */
+    const ladder = cvcWordLadders[Math.floor(Math.random() * cvcWordLadders.length)];
+
+    const ladderHTML = `
+      <div style="display:flex;justify-content:center;">
+        <table style="border-collapse:collapse;">
+          ${ladder.map((word, idx) => {
+            /* WORD CELL  – top word shown, others blank */
+            const wordCell =
+              idx === 0
+                ? `<div class="ladder-word" style="font-size:32px;font-weight:600;letter-spacing:8px;">${word.toUpperCase()}</div>`
+                : `<div class="ladder-blank" style="font-size:32px;letter-spacing:8px;">${'_ '.repeat(word.length)}</div>`;
+
+            /* IMAGE (always left)  */
+            const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/100?text=?';
+            const imageTD = `<td style="padding:12px 20px;"><img src="${imgSrc}" alt="${word}" style="width:100px;height:100px;object-fit:contain;"></td>`;
+
+            /* HINT (always right) – blank for first row */
+            let hintTD = '<td style="padding:12px 20px;"></td>';
+            if (idx > 0) {
+              const prev = ladder[idx - 1];
+              let hint = '?→?';
+              for (let i = 0; i < word.length; i++) {
+                if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
+              }
+              hintTD = `<td style="padding:12px 20px;">
+                          <div class="hint-bubble right-bubble"
+                               style="display:inline-block;background:#f0f0f0;border:2px solid #000;border-radius:20px;padding:6px 12px;font-size:18px;position:relative;">
+                            ${hint}
+                            <span style="content:'';position:absolute;left:-10px;top:50%;transform:translateY(-50%);
+                                         border:6px solid transparent;border-right-color:#000;"></span>
+                          </div>
+                        </td>`;
+            }
+
+            /* WORD column with border (center) */
+            const wordTD = `<td style="padding:12px 20px;border-left:3px solid #000;border-right:3px solid #000;">${wordCell}</td>`;
+
+            return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
+          }).join('')}
+        </table>
+      </div>
+    `;
+
+    document.getElementById('ladderOutput').innerHTML = ladderHTML;
+  }
+</script>
+
+</body>
+</html>
