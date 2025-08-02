@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>CVC Word Ladder Generator</title>
 
-  <!-- Load the ladder data files (fixed JS version for randomness) -->
   <script src="cvcLadderData.js"></script>
   <script src="cvcWordLadders_6words.js"></script>
 
@@ -13,23 +12,22 @@
   <style>
     body { 
       font-family: 'Poppins', sans-serif; 
-      margin: 40px; 
+      margin: 30px; 
       text-align: center; 
     }
 
-    h1 { font-size: 34px; margin-bottom: 4px; }
-    .subtitle { font-size: 15px; margin-bottom: 18px; }
+    h1 { font-size: 28px; margin-bottom: 4px; }
+    .subtitle { font-size: 13px; margin-bottom: 14px; }
 
     button { 
-      font-size: 18px; 
-      padding: 8px 14px; 
-      margin: 10px; 
+      font-size: 16px; 
+      padding: 6px 12px; 
+      margin: 8px; 
       cursor: pointer; 
     }
 
-    label { margin: 0 12px; font-size: 15px; }
+    label { margin: 0 10px; font-size: 14px; }
 
-    /* Print styling */
     @media print {
       body * { visibility: hidden; }
       #ladderOutput, #ladderOutput * { visibility: visible; }
@@ -44,8 +42,7 @@
     <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
   </p>
 
-  <!-- Step 1: Choose middle cell style -->
-  <div style="margin-bottom:18px;">
+  <div style="margin-bottom:14px;">
     <label><input type="radio" name="cellStyle" value="lines" checked> Writing Lines</label>
     <label><input type="radio" name="cellStyle" value="elkonin"> Elkonin Boxes</label>
   </div>
@@ -55,10 +52,9 @@
     <button onclick="window.print()">Print Page</button>
   </div>
 
-  <div id="ladderOutput" style="margin-top:20px;"></div>
+  <div id="ladderOutput" style="margin-top:16px;"></div>
 
   <script>
-    // Clean image map: remove entries containing "2"
     for (const key in cvcLadderImages) {
       if (key.includes('2')) delete cvcLadderImages[key];
     }
@@ -69,66 +65,59 @@
         return;
       }
 
-      // Get selected middle cell style
       const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
       const middleCell = cellStyle === 'lines'
-        ? `<img src="images/lines.png" style="width:100%;max-width:220px;">`
-        : `<img src="images/elkonin.png" style="width:100%;max-width:220px;">`;
+        ? `<img src="images/lines.png" style="width:100%;max-width:160px;">`
+        : `<img src="images/elkonin.png" style="width:100%;max-width:160px;">`;
 
-      // Pick a random 6-word ladder
       const randomIndex = Math.floor(Math.random() * cvcWordLadders.length);
       const ladder = cvcWordLadders[randomIndex];
 
       const ladderHTML = `
-        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center; width:90%; margin:0 auto;">
+        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center; width:75%; margin:0 auto;">
 
-          <!-- Title and directions on printed page -->
-          <div style="text-align:center;margin-bottom:10px;">
-            <h2 style="margin-bottom:4px;font-size:28px;">CVC Word Ladder</h2>
-            <p style="margin-top:0;font-size:15px;">
+          <div style="text-align:center;margin-bottom:8px;">
+            <h2 style="margin-bottom:2px;font-size:22px;">CVC Word Ladder</h2>
+            <p style="margin-top:0;font-size:12px;">
               <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
             </p>
           </div>
 
-          <table style="border-collapse:collapse;margin:0 auto;width:85%;">
+          <table style="border-collapse:collapse;margin:0 auto;width:100%;">
             ${ladder.map((word, idx) => {
               const isLast = idx === ladder.length - 1;
 
-              // First word text, others image based on selection
               const wordCell =
                 idx === 0
-                  ? `<div style="font-size:32px;font-weight:600;letter-spacing:10px;">${word}</div>`
+                  ? `<div style="font-size:24px;font-weight:600;letter-spacing:6px;">${word}</div>`
                   : middleCell;
 
-              // Image (always left, scaled reasonably)
-              const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/110?text=?';
-              const imageTD = `<td style="padding:8px 12px; width: 120px;">
-                                 <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
+              const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/80?text=?';
+              const imageTD = `<td style="padding:4px 8px; width: 90px;">
+                                 <img src="${imgSrc}" alt="${word}" style="width:80px;height:80px;object-fit:contain;">
                                </td>`;
 
-              // Hint (always right) – blank for top row
-              let hintTD = '<td style="padding:8px 12px; width: 120px;"></td>';
+              let hintTD = '<td style="padding:4px 8px; width: 90px;"></td>';
               if (idx > 0) {
                 const prev = ladder[idx - 1];
                 let hint = '? → ?';
                 for (let i = 0; i < word.length; i++) {
                   if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
                 }
-                hintTD = `<td style="padding:8px 12px;width:120px;">
-                            <div style="display:inline-block;background:#f0f0f0;border:2px solid #000;border-radius:16px;
-                                        padding:5px 10px;font-size:16px;position:relative;">
+                hintTD = `<td style="padding:4px 8px;width:90px;">
+                            <div style="display:inline-block;background:#f0f0f0;border:2px solid #000;border-radius:12px;
+                                        padding:3px 6px;font-size:12px;position:relative;">
                               ${hint}
-                              <span style="content:'';position:absolute;left:-8px;top:50%;transform:translateY(-50%);
-                                           border:5px solid transparent;border-right-color:#000;"></span>
+                              <span style="content:'';position:absolute;left:-6px;top:50%;transform:translateY(-50%);
+                                           border:4px solid transparent;border-right-color:#000;"></span>
                             </div>
                           </td>`;
               }
 
-              // Word column with horizontal borders for writing lines (skip last row)
               const borderStyle = !isLast
-                ? 'border-bottom:3px solid #000;border-left:3px solid #000;border-right:3px solid #000;'
-                : 'border-left:3px solid #000;border-right:3px solid #000;';
-              const wordTD = `<td style="padding:8px 12px;${borderStyle}">${wordCell}</td>`;
+                ? 'border-bottom:2px solid #000;border-left:2px solid #000;border-right:2px solid #000;'
+                : 'border-left:2px solid #000;border-right:2px solid #000;';
+              const wordTD = `<td style="padding:4px 8px;${borderStyle}">${wordCell}</td>`;
 
               return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
             }).join('')}
