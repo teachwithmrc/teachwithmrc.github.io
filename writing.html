@@ -138,6 +138,12 @@
     #printableSection,
     #printableSection * { visibility: visible !important; }
 
+    /* Normal screen size */
+.elkonin-img {
+  width: 250px;
+  height: 70px;
+  object-fit: contain;
+}
     #printableSection {
       position: absolute !important;
       top: 0; left: 0;
@@ -187,6 +193,11 @@
       height: 70px !important;
       object-fit: contain !important;
     }
+      .elkonin-img {
+    width: 400px !important;
+    height: 70px !important;
+    object-fit: contain !important;
+  }
 
     .word-bank {
       font-size: 16px !important;
@@ -319,7 +330,7 @@
               <img src="${cvcLadderImages[w]||''}" alt="${w}">
             </div>
           </td>
-          <td class="write-cell"><img src="images/elkonin.png" alt="Elkonin Box"></td>`;
+         <td class="write-cell"><img src="images/elkonin.png" class="elkonin-img" alt="Elkonin Box"></td>;
         tbl.appendChild(row);
       });
       wrapper.appendChild(tbl);
