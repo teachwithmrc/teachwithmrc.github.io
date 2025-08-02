@@ -3,42 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <title>CVC Word Ladder Generator</title>
-  <script src="cvcWordLadders.js"></script>
+  <script src="cvcWordLadders_6words.js"></script>
+  <script src="cvcLadderData.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 40px;
-      text-align: center;
-    }
-
+    body { font-family: 'Poppins', sans-serif; margin: 40px; text-align: center; }
     @page { size: letter; margin: 0.3in; }
 
     h1 { font-size: 30px; margin-bottom: 8px; }
     .subtitle { font-size: 18px; margin-bottom: 20px; }
 
-    .ladder-container {
-      display: flex;
-      justify-content: center;
-      margin: 20px auto;
-    }
-
+    .ladder-container { display: flex; justify-content: center; margin: 20px auto; }
     table { border-collapse: collapse; }
     td { padding: 12px 20px; text-align: center; vertical-align: middle; }
 
-    /* Left image column */
-    .ladder-image {
-      width: 100px;
-      height: 100px;
-      object-fit: contain;
-    }
+    /* Image column */
+    .ladder-image { width: 100px; height: 100px; object-fit: contain; }
 
-    /* Middle ladder column */
+    /* Ladder words column */
     .ladder-word { font-size: 32px; font-weight: 600; letter-spacing: 8px; }
     .ladder-blank { font-size: 32px; letter-spacing: 8px; }
     .ladder-final { font-size: 18px; color: #555; }
 
-    /* Speech bubble hints */
+    /* Hint bubbles */
     .hint-bubble {
       display: inline-block;
       background: #f0f0f0;
@@ -60,12 +47,7 @@
     .right-bubble::after { left: -10px; border-right-color: #333; }
     .left-bubble::after { right: -10px; border-left-color: #333; }
 
-    select, button {
-      font-size: 18px;
-      padding: 8px 12px;
-      margin: 10px;
-      cursor: pointer;
-    }
+    button { font-size: 18px; padding: 8px 12px; margin: 10px; cursor: pointer; }
 
     @media print {
       body * { visibility: hidden; }
@@ -77,7 +59,7 @@
 <body>
 
   <h1>CVC Word Ladder</h1>
-  <div class="subtitle">Click generate to create a word ladder.</div>
+  <div class="subtitle">Click generate to create a 6-step word ladder.</div>
 
   <div>
     <button onclick="generateLadder()">Generate Ladder</button>
@@ -87,40 +69,53 @@
   <div id="ladderOutput"></div>
 
   <script>
+    // Remove any images or words with "2"
+    for (const key in cvcLadderImages) {
+      if (key.includes("2")) {
+        delete cvcLadderImages[key];
+      }
+    }
+
     function generateLadder() {
-      if (!window.cvcWordLadders || !Array.isArray(cvcWordLadders) || cvcWordLadders.length === 0) {
-        alert("No word ladders found!");
+      if (!window.cvcWordLadders || cvcWordLadders.length === 0) {
+        alert("❌ No 6-word ladders found!");
         return;
       }
 
-      // Pick a random ladder
-      const randomLadder = cvcWordLadders[Math.floor(Math.random() * cvcWordLadders.length)];
+      // Pick a random 6-word ladder
+      const ladder = cvcWordLadders[Math.floor(Math.random() * cvcWordLadders.length)];
 
       const ladderHTML = `
         <div class="ladder-container">
           <table>
-            ${randomLadder.map((word, index) => {
+            ${ladder.map((word, index) => {
               const isFirst = index === 0;
-              const isLast = index === randomLadder.length - 1;
+              const isLast = index === ladder.length - 1;
 
-              // Show first word, blanks for others, last word in parentheses
               const displayWord = isFirst
                 ? `<div class="ladder-word">${word.toUpperCase()}</div>`
                 : `<div class="ladder-blank">${"_ ".repeat(word.length)}</div>
                    ${isLast ? `<div class="ladder-final">(${word.toUpperCase()})</div>` : ''}`;
 
-              // Alternate sides for image/hint
+              // Alternate left/right
               const isEven = index % 2 === 0;
-              const imageCell = `<img class="ladder-image" src="images/${word}.png" alt="${word}">`;
 
-              // Generate a simple placeholder hint like "c → t"
-              const fromLetter = word[Math.floor(Math.random() * word.length)];
-              const alphabet = 'abcdefghijklmnopqrstuvwxyz';
-              let toLetter = fromLetter;
-              while (toLetter === fromLetter) {
-                toLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+              // Image with fallback
+              const imgSrc = cvcLadderImages[word] || "https://via.placeholder.com/100?text=?";
+              const imageCell = `<img class="ladder-image" src="${imgSrc}" alt="${word}">`;
+
+              // Calculate hint: find differing letter from previous word if exists
+              let hint = "? → ?";
+              if (index > 0) {
+                const prevWord = ladder[index - 1];
+                for (let i = 0; i < word.length; i++) {
+                  if (prevWord[i] !== word[i]) {
+                    hint = `${prevWord[i]} → ${word[i]}`;
+                    break;
+                  }
+                }
               }
-              const hintCell = `<div class="hint-bubble ${isEven ? 'right-bubble':'left-bubble'}">${fromLetter} → ${toLetter}</div>`;
+              const hintCell = `<div class="hint-bubble ${isEven ? 'right-bubble':'left-bubble'}">${hint}</div>`;
 
               return `
                 <tr>
