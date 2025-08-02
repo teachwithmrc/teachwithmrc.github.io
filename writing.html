@@ -54,8 +54,8 @@
   table {
     margin: auto;
     border-collapse: collapse;
-    table-layout: auto;      /* Allow shrink-to-fit behavior */
-    width: auto;             /* Let table size to its content */
+    table-layout: auto;
+    width: auto;
   }
   th, td {
     border: 1px solid #000;
@@ -73,7 +73,7 @@
     font-weight: 700;
   }
 
-  /* Picture column shrink-wrapped to image */
+  /* Picture column */
   td.picture-td {
     padding: 3px !important;
     width: auto !important;
@@ -81,7 +81,7 @@
     text-align: center;
   }
   .picture-cell {
-    display: inline-block; /* shrink to image */
+    display: inline-block;
     padding: 0;
   }
   .picture-cell img {
@@ -91,20 +91,20 @@
     object-fit: contain;
   }
 
+  /* Write cell (Elkonin Boxes) */
   td.write-cell {
-    width: 250px;
+    width: 350px;
     height: 70px;
     text-align: center;
     vertical-align: middle;
   }
-  td.write-cell img {
-    width: 250px;
-    max-height: 60px;
+  td.write-cell img.elkonin-img {
+    width: 350px;
+    height: 70px;
     object-fit: contain;
-    padding: 0px;
   }
 
-  /* Word Bank with Border */
+  /* Word Bank */
   .word-bank {
     font-size: 18px;
     font-weight: 700;
@@ -138,12 +138,6 @@
     #printableSection,
     #printableSection * { visibility: visible !important; }
 
-    /* Normal screen size */
-.elkonin-img {
-  width: 250px;
-  height: 70px;
-  object-fit: contain;
-}
     #printableSection {
       position: absolute !important;
       top: 0; left: 0;
@@ -170,34 +164,21 @@
 
     td.picture-td {
       padding: 2px !important;
-      width: auto !important;
-      max-width: max-content !important;
-    }
-    .picture-cell {
-      display: inline-block !important;
-      padding: 2px !important;
     }
     .picture-cell img {
-      display: block !important;
       max-width: 140px !important;
       max-height: 70px !important;
-      object-fit: contain !important;
     }
 
     td.write-cell {
-      width: 200px !important;
+      width: 350px !important;
       height: 70px !important;
     }
-    td.write-cell img {
-      width: 400px !important;
+    td.write-cell img.elkonin-img {
+      width: 350px !important;
       height: 70px !important;
       object-fit: contain !important;
     }
-      .elkonin-img {
-    width: 400px !important;
-    height: 70px !important;
-    object-fit: contain !important;
-  }
 
     .word-bank {
       font-size: 16px !important;
@@ -300,11 +281,9 @@
         <div id="worksheetDirections">${dirText}</div>
       `;
 
-      // Pick words (example random selection)
       const words = [...cvcLadderWords].sort(() => 0.5 - Math.random()).slice(0,8);
       const bank  = document.getElementById('includeWordBank').checked;
 
-      // Word Bank
       if (bank) {
         const wb = document.createElement('div');
         wb.className = 'word-bank';
@@ -316,7 +295,6 @@
         wrapper.appendChild(wb);
       }
 
-      // Main Table
       const tbl = document.createElement('table');
       tbl.innerHTML = `<tr>
         <th>No.</th><th>Picture</th><th>Write the Word</th>
@@ -330,12 +308,12 @@
               <img src="${cvcLadderImages[w]||''}" alt="${w}">
             </div>
           </td>
-         <td class="write-cell"><img src="images/elkonin.png" class="elkonin-img" alt="Elkonin Box"></td>;
+          <td class="write-cell"><img src="images/elkonin.png" class="elkonin-img" alt="Elkonin Box"></td>
+        `;
         tbl.appendChild(row);
       });
       wrapper.appendChild(tbl);
 
-      // Copyright
       const cr = document.createElement('div');
       cr.id = 'worksheetCopyright';
       cr.textContent = '© 2025 Intervention Station – TeachWithMrC';
@@ -343,7 +321,6 @@
 
       container.appendChild(wrapper);
 
-      // Answer Key
       const ak = document.createElement('div');
       ak.id = 'answerKey';
       ak.innerHTML = `
