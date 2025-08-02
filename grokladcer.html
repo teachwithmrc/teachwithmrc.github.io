@@ -95,8 +95,8 @@
 
       const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
       const middleCell = cellStyle === 'lines'
-        ? `<img src="images/lines.png" style="width:100%;max-width:200px;">`
-        : `<img src="images/elkonin.png" style="width:100%;max-width:200px;">`;
+        ? `<img src="images/lines.png" style="width:100%;max-width:220px;">`
+        : `<img src="images/elkonin.png" style="width:100%;max-width:220px;">`;
 
       const randomIndex = Math.floor(Math.random() * cvcWordLadders.length);
       const ladder = cvcWordLadders[randomIndex];
@@ -113,36 +113,45 @@
           <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
             ${ladder.map((word, idx) => {
               const isLast = idx === ladder.length - 1;
+              const isFirst = idx === 0;
 
               const wordCell =
                 idx === 0
                   ? `<div style="font-size:30px;font-weight:600;letter-spacing:4px;">${word}</div>`
                   : middleCell;
 
-              const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/100?text=?';
-              const imageTD = `<td style="padding:6px 8px; width: 130px;">
-                                 <img src="${imgSrc}" alt="${word}" style="width:100px;height:100px;object-fit:contain;">
+              const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/110?text=?';
+              const imageBorderStyle = isFirst
+                ? 'border-top-left-radius:12px;'
+                : isLast
+                ? 'border-bottom-left-radius:12px;'
+                : '';
+              const imageTD = `<td style="padding:5px 7px; width: 140px; ${imageBorderStyle}">
+                                 <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
                                </td>`;
 
-              let hintTD = '<td style="padding:6px 8px; width: 130px;"></td>';
+              let hintTD = '<td style="padding:5px 7px; width: 140px;"></td>';
               if (idx > 0) {
                 const prev = ladder[idx - 1];
                 let hint = '? → ?';
                 for (let i = 0; i < word.length; i++) {
                   if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
                 }
-                hintTD = `<td style="padding:6px 8px;width:130px;">
+                const hintBorderStyle = isLast ? 'border-bottom-right-radius:12px;' : '';
+                hintTD = `<td style="padding:5px 7px;width:140px;${hintBorderStyle}">
                             <div style="display:inline-block;background:#f0f0f0;border:3px solid #000;border-radius:12px;
                                         padding:6px 10px;font-size:20px;">
                               ${hint}
                             </div>
                           </td>`;
+              } else if (isFirst) {
+                hintTD = `<td style="padding:5px 7px;width:140px;border-top-right-radius:12px;"></td>`;
               }
 
               const borderStyle = !isLast
-                ? 'border-bottom:2px solid #000;border-left:2px solid #000;border-right:2px solid #000;'
-                : 'border-left:2px solid #000;border-right:2px solid #000;';
-              const wordTD = `<td style="padding:6px 8px;${borderStyle}">${wordCell}</td>`;
+                ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
+                : 'border-left:4px solid #000;border-right:4px solid #000;';
+              const wordTD = `<td style="padding:5px 7px;${borderStyle}">${wordCell}</td>`;
 
               return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
             }).join('')}
