@@ -1,418 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Mapping Generator</title>
-    <script src="soundBoxWords.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-    <style>
-        @font-face {
-            font-family: 'Boxes';
-            src: url('fonts/boxes.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 40px;
-            text-align: center;
-        }
-        h1 {
-            font-size: 26px;
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            font-size: 16px;
-            margin-bottom: 30px;
-        }
-        .table-section {
-            border: 2px solid #000;
-            padding: 20px;
-            margin: 12px auto;
-            width: fit-content;
-            box-sizing: border-box;
-        }
-        .section-label {
-            font-weight: 600;
-            font-size: 18px;
-            margin-bottom: 12px;
-        }
-        .skill-button-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            justify-content: center;
-        }
-        .skill-button-grid .row {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 6px;
-        }
-        .skill-button {
-            border: 2px solid #000;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
-        }
-        .skill-button.selected {
-            background-color: #007bff;
-            color: white;
-            box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-        }
-        .option-grid {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 10px;
-        }
-        .option-box {
-            padding: 10px 14px;
-            border: 2px solid #000;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .option-box.selected-step2 {
-            background-color: #d9c9ff;
-        }
-        button {
-            font-size: 18px;
-            padding: 10px 24px;
-            border: 2px solid #000;
-            border-radius: 8px;
-            cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        #printableSection {
-            margin-top: 20px;
-        }
-        .page {
-            display: none;
-            page-break-after: always;
-        }
-        .page.active {
-            display: block;
-        }
-        .page-title {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            text-align: center;
-        }
-        .word-grid {
-            display: flex;
-            justify-content: space-between;
-            max-width: 900px;
-            margin: 0 auto;
-            gap: 30px;
-        }
-        .column {
-            width: 48%;
-        }
-        .word-block {
-            border: 3px solid #000;
-            padding: 12px;
-            margin: 10px 0;
-            text-align: center;
-            border-radius: 16px;
-            background-color: white;
-            box-sizing: border-box;
-        }
-        .word-block .word {
-            font-family: 'Poppins', sans-serif;
-            font-weight: bold;
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-        .word-block .pattern {
-            font-family: 'Boxes', monospace;
-            font-size: 20px;
-            color: #333;
-        }
-        .copyright {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            text-align: right;
-            font-size: 12px;
-            display: none;
-        }
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            #printableSection,
-            #printableSection * {
-                visibility: visible;
-            }
-            #printableSection {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-            }
-            .page {
-                display: block !important;
-            }
-            .copyright {
-                display: block !important;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Word Mapping Generator</title>
+  <script src="August3rd_masterjs_encoding_fixed.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: 'BoxesFont';
+      src: url('font/boxes.ttf') format('truetype');
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 40px;
+      text-align: center;
+    }
+
+    h1 { font-size: 36px; margin-bottom: 5px; }
+    h2 { font-size: 20px; margin-bottom: 20px; }
+
+    .table-section {
+      border: 2px solid #000;
+      padding: 20px;
+      margin: 12px auto;
+      width: fit-content;
+      box-sizing: border-box;
+    }
+
+    .section-label {
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .skill-button-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .skill-button-grid .row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .skill-button {
+      border: 2px solid #000;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+
+    .skill-button.selected {
+      background-color: #007bff;
+      color: white;
+      box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+    }
+
+    .option-grid {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .option-box {
+      padding: 10px 14px;
+      border: 2px solid #000;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .option-box.selected {
+      background-color: #d9c9ff;
+    }
+
+    /* Word Mapping Blocks */
+    .page { 
+      display: flex; 
+      justify-content: space-between; 
+      page-break-after: always; 
+      margin-top: 30px;
+    }
+
+    .column { 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: space-around; 
+    }
+
+    .block { 
+      margin-bottom: 40px; 
+      text-align: center; 
+    }
+
+    .word { 
+      font-size: 28px; 
+      font-weight: 600; 
+    }
+
+    .pattern { 
+      font-size: 40px; 
+      font-family: 'BoxesFont';
+    }
+  </style>
 </head>
 <body>
-    <h1>Word Mapping Generator</h1>
-    <div class="subtitle">
-        Generate word mapping blocks for phonics practice, including <b>CVC Words</b>, <b>FLSZ</b>, <b>Digraphs</b>, and more.<br>
-        Select skills and choose whether to include blends to create printable pages with 8 word blocks each.
+  <h1>Word Mapping</h1>
+  <h2>Skills: <span id="selected-skills"></span></h2>
+
+  <!-- Step 1 -->
+  <div class="table-section">
+    <div class="section-label">Step 1: Select Skills</div>
+    <div class="skill-button-grid">
+      <div class="row">
+        <div class="skill-button" data-skill="Mixed Short Vowels">Mixed Short Vowels</div>
+      </div>
+      <div class="row">
+        <div class="skill-button" data-skill="Digraph(ck)">ck</div>
+        <div class="skill-button" data-skill="Digraph(sh)">sh</div>
+        <div class="skill-button" data-skill="Digraph(th)">th</div>
+        <div class="skill-button" data-skill="Digraph(ch)">ch</div>
+        <div class="skill-button" data-skill="Digraph(wh)">wh</div>
+      </div>
+      <div class="row">
+        <div class="skill-button" data-skill="Glued(all)">all</div>
+        <div class="skill-button" data-skill="Glued(-nk)">-nk</div>
+        <div class="skill-button" data-skill="Glued(-ng)">-ng</div>
+      </div>
+      <div class="row">
+        <div class="skill-button" data-skill="VCe(a_e)">a_e</div>
+        <div class="skill-button" data-skill="VCe(i_e)">i_e</div>
+        <div class="skill-button" data-skill="VCe(o_e)">o_e</div>
+        <div class="skill-button" data-skill="VCe(u_e)">u_e</div>
+      </div>
+      <div class="row">
+        <div class="skill-button" data-skill="R-Controlled(ar)">ar</div>
+        <div class="skill-button" data-skill="R-Controlled(or)">or</div>
+        <div class="skill-button" data-skill="R-Controlled(er,ir,ur)">er/ir/ur</div>
+      </div>
     </div>
+  </div>
 
-    <div class="table-section">
-        <div class="section-label">Step 1: Select Skills</div>
-        <div class="skill-button-grid">
-            <div class="row">
-                <div class="skill-button" data-skill="Short A">Short A</div>
-                <div class="skill-button" data-skill="Short O">Short O</div>
-                <div class="skill-button" data-skill="Short I">Short I</div>
-                <div class="skill-button" data-skill="Short U">Short U</div>
-                <div class="skill-button" data-skill="Short E">Short E</div>
-            </div>
-            <div class="row">
-                <div class="skill-button" data-skill="Mixed Short Vowels">Mixed Short Vowels</div>
-                <div class="skill-button" data-skill="FLSZ Words">FLSZ Words</div>
-                <div class="skill-button" data-skill="Digraph(ck)">Digraph(ck)</div>
-                <div class="skill-button" data-skill="Digraph(sh)">Digraph(sh)</div>
-            </div>
-            <div class="row">
-                <div class="skill-button" data-skill="Digraph(th)">Digraph(th)</div>
-                <div class="skill-button" data-skill="Digraph(ch)">Digraph(ch)</div>
-                <div class="skill-button" data-skill="Digraph(wh)">Digraph(wh)</div>
-                <div class="skill-button" data-skill="VCe(a_e)">VCe(a_e)</div>
-            </div>
-            <div class="row">
-                <div class="skill-button" data-skill="VCe(i_e)">VCe(i_e)</div>
-                <div class="skill-button" data-skill="VCe(o_e)">VCe(o_e)</div>
-                <div class="skill-button" data-skill="VCe(u_e)">VCe(u_e)</div>
-                <div class="skill-button" data-skill="R-Controlled(ar)">R-Controlled(ar)</div>
-            </div>
-            <div class="row">
-                <div class="skill-button" data-skill="R-Controlled(or)">R-Controlled(or)</div>
-                <div class="skill-button" data-skill="R-Controlled(er,ir,ur)">R-Controlled(er,ir,ur)</div>
-                <div class="skill-button" data-skill="Long A(ay)">Long A(ay)</div>
-                <div class="skill-button" data-skill="Long A(ai)">Long A(ai)</div>
-            </div>
-            <div class="row">
-                <div class="skill-button" data-skill="Irregular Long A(eigh, ey, ei)">Irregular Long A(eigh, ey, ei)</div>
-                <div class="skill-button" data-skill="Long E(ee)">Long E(ee)</div>
-                <div class="skill-button" data-skill="Long E(ea)">Long E(ea)</div>
-                <div class="skill-button" data-skill="Long I(igh)">Long I(igh)</div>
-            </div>
-            <div class="row">
-                <div class="skill-button" data-skill="Long I(y)">Long I(y)</div>
-                <div class="skill-button" data-skill="Long I(ie)">Long I(ie)</div>
-                <div class="skill-button" data-skill="Long O(oa)">Long O(oa)</div>
-                <div class="skill-button" data-skill="Long O(ow)">Long O(ow)</div>
-            </div>
-            <div class="row">
-                <div class="skill-button" data-skill="Long O(oe)">Long O(oe)</div>
-                <div class="skill-button" data-skill="Long U(oo)">Long U(oo)</div>
-                <div class="skill-button" data-skill="Long U(ew)">Long U(ew)</div>
-                <div class="skill-button" data-skill="Diphthong(ou)">Diphthong(ou)</div>
-            </div>
-            <div class="row">
-                <div class="skill-button" data-skill="Diphthong(oi)">Diphthong(oi)</div>
-                <div class="skill-button" data-skill="Diphthong(oy)">Diphthong(oy)</div>
-                <div class="skill-button" data-skill="Variant Vowel(aw)">Variant Vowel(aw)</div>
-                <div class="skill-button" data-skill="Variant Vowel(au)">Variant Vowel(au)</div>
-            </div>
-            <div class="row">
-                <div class="skill-button" data-skill="Variant Vowel(oo)">Variant Vowel(oo)</div>
-                <div class="skill-button" data-skill="Soft C (ce) ">Soft C (ce) </div>
-            </div>
-        </div>
+  <!-- Step 2 -->
+  <div class="table-section">
+    <div class="section-label">Step 2: Options</div>
+    <div class="option-grid">
+      <div class="option-box" id="includeBlendsOption">Include Blends?</div>
     </div>
+  </div>
 
-    <div class="table-section">
-        <div class="section-label">Step 2: Include Blends?</div>
-        <div class="option-grid" id="blendOptions">
-            <label class="option-box">
-                <input type="radio" name="blendType" value="noBlends" />
-                No Blends
-            </label>
-            <label class="option-box">
-                <input type="radio" name="blendType" value="withBlends" />
-                Include Blends
-            </label>
-        </div>
-    </div>
+  <!-- Step 3 -->
+  <div class="table-section">
+    <div class="section-label">Step 3: Generate & Print</div>
+    <button onclick="generatePage()" style="font-size: 18px; padding: 10px 24px;">Generate</button>
+    <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
+  </div>
 
-    <div class="table-section">
-        <div class="section-label">Step 3: Generate Your Word Mapping Pages</div>
-        <button onclick="generateWordMappingPages()">Generate Pages</button>
-        <button onclick="window.print()">Print</button>
-    </div>
+  <div id="output"></div>
 
-    <div id="printableSection">
-        <div id="pages"></div>
-        <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
-    </div>
+  <script>
+    let currentSkill = "";
+    let includeBlends = false;
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const selectedSkills = new Set();
-            let includeBlends = false;
+    const selectedSkills = new Set();
 
-            const skillLabelMap = {
-                "Short A": "Short A",
-                "Short O": "Short O",
-                "Short I": "Short I",
-                "Short U": "Short U",
-                "Short E": "Short E",
-                "Mixed Short Vowels": "Mixed Short Vowels",
-                "FLSZ Words": "FLSZ Words",
-                "Digraph(ck)": "Digraph(ck)",
-                "Digraph(sh)": "Digraph(sh)",
-                "Digraph(th)": "Digraph(th)",
-                "Digraph(ch)": "Digraph(ch)",
-                "Digraph(wh)": "Digraph(wh)",
-                "VCe(a_e)": "VCe(a_e)",
-                "VCe(i_e)": "VCe(i_e)",
-                "VCe(o_e)": "VCe(o_e)",
-                "VCe(u_e)": "VCe(u_e)",
-                "R-Controlled(ar)": "R-Controlled(ar)",
-                "R-Controlled(or)": "R-Controlled(or)",
-                "R-Controlled(er,ir,ur)": "R-Controlled(er,ir,ur)",
-                "Long A(ay)": "Long A(ay)",
-                "Long A(ai)": "Long A(ai)",
-                "Irregular Long A(eigh, ey, ei)": "Irregular Long A(eigh, ey, ei)",
-                "Long E(ee)": "Long E(ee)",
-                "Long E(ea)": "Long E(ea)",
-                "Long I(igh)": "Long I(igh)",
-                "Long I(y)": "Long I(y)",
-                "Long I(ie)": "Long I(ie)",
-                "Long O(oa)": "Long O(oa)",
-                "Long O(ow)": "Long O(ow)",
-                "Long O(oe)": "Long O(oe)",
-                "Long U(oo)": "Long U(oo)",
-                "Long U(ew)": "Long U(ew)",
-                "Diphthong(ou)": "Diphthong(ou)",
-                "Diphthong(oi)": "Diphthong(oi)",
-                "Diphthong(oy)": "Diphthong(oy)",
-                "Variant Vowel(aw)": "Variant Vowel(aw)",
-                "Variant Vowel(au)": "Variant Vowel(au)",
-                "Variant Vowel(oo)": "Variant Vowel(oo)",
-                "Soft C (ce) ": "Soft C (ce)"
-            };
+    // Skill button selection
+    document.querySelectorAll('.skill-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const skill = button.dataset.skill;
+        if (selectedSkills.has(skill)) {
+          selectedSkills.delete(skill);
+          button.classList.remove('selected');
+        } else {
+          selectedSkills.add(skill);
+          button.classList.add('selected');
+        }
+        document.getElementById('selected-skills').innerText = Array.from(selectedSkills).join(', ');
+      });
+    });
 
-            // Step 1: Select skills
-            document.querySelectorAll('.skill-button').forEach(button => {
-                button.addEventListener('click', () => {
-                    const skill = button.dataset.skill;
-                    if (selectedSkills.has(skill)) {
-                        selectedSkills.delete(skill);
-                        button.classList.remove('selected');
-                    } else {
-                        selectedSkills.add(skill);
-                        button.classList.add('selected');
-                    }
-                });
-            });
+    // Include blends toggle
+    document.getElementById('includeBlendsOption').addEventListener('click', function () {
+      includeBlends = !includeBlends;
+      this.classList.toggle('selected', includeBlends);
+    });
 
-            // Step 2: Select blend option
-            document.querySelectorAll('#blendOptions .option-box').forEach(box => {
-                box.addEventListener('click', () => {
-                    document.querySelectorAll('#blendOptions .option-box').forEach(b => b.classList.remove('selected-step2'));
-                    box.classList.add('selected-step2');
-                    box.querySelector('input').checked = true;
-                    includeBlends = box.querySelector('input').value === 'withBlends';
-                });
-            });
+    function getWordsForSkill(skill, blends) {
+      if (!window.soundBoxWords) {
+        console.error("soundBoxWords is not defined. Check if August3rd_masterjs_encoding_fixed.js loaded correctly.");
+        return [];
+      }
 
-            // Step 3: Generate Word Mapping Pages
-            window.generateWordMappingPages = function () {
-                const skills = Array.from(selectedSkills);
-                if (skills.length === 0) {
-                    alert("❗ Please select at least one skill in Step 1.");
-                    return;
-                }
-                if (!document.querySelector('input[name=blendType]:checked')) {
-                    alert("❗ Please select a blend option in Step 2.");
-                    return;
-                }
+      let list = [];
 
-                let allWords = [];
-                if (skills.includes('Mixed Short Vowels')) {
-                    const shortVowels = ['Short A', 'Short E', 'Short I', 'Short O', 'Short U'];
-                    shortVowels.forEach(skill => {
-                        allWords.push(...(window.soundBoxWords[skill] || []));
-                        if (includeBlends) {
-                            const blendSkill = skill + ' with Blends';
-                            allWords.push(...(window.soundBoxWords[blendSkill] || []));
-                        }
-                    });
-                } else {
-                    skills.forEach(skill => {
-                        allWords.push(...(window.soundBoxWords[skill] || []));
-                        if (includeBlends) {
-                            const blendSkill = skill + ' with Blends';
-                            allWords.push(...(window.soundBoxWords[blendSkill] || []));
-                        }
-                    });
-                }
+      // Mixed Short Vowels
+      if (skill === 'Mixed Short Vowels') {
+        list = [].concat(
+          window.soundBoxWords["Short A"] || [],
+          window.soundBoxWords["Short E"] || [],
+          window.soundBoxWords["Short I"] || [],
+          window.soundBoxWords["Short O"] || [],
+          window.soundBoxWords["Short U"] || []
+        );
+        if (blends) {
+          list = list.concat(
+            window.soundBoxWords["Short A with Blends"] || [],
+            window.soundBoxWords["Short E with Blends"] || [],
+            window.soundBoxWords["Short I with Blends"] || [],
+            window.soundBoxWords["Short O with Blends"] || [],
+            window.soundBoxWords["Short U with Blends"] || []
+          );
+        }
+      } 
+      // Glued Sound Groups
+      else if (skill === 'Glued(-nk)') {
+        list = (window.soundBoxWords["Glued(ank,ink) "] || []).concat(window.soundBoxWords["Glued(onk,unk)"] || []);
+      } else if (skill === 'Glued(-ng)') {
+        list = (window.soundBoxWords["Glued(ang,ing)"] || []).concat(window.soundBoxWords["Glued(ong,ung)"] || []);
+      } 
+      else {
+        list = window.soundBoxWords[skill] || [];
+      }
 
-                if (allWords.length === 0) {
-                    alert("⚠️ No words available for the selected skills.");
-                    return;
-                }
+      return shuffle(list);
+    }
 
-                const pages = [];
-                const wordsPerPage = 8;
-                const totalPages = Math.ceil(allWords.length / wordsPerPage);
-                const shuffledWords = allWords.sort(() => 0.5 - Math.random());
+    function generatePage() {
+      if (selectedSkills.size === 0) {
+        alert("Please select at least one skill.");
+        return;
+      }
 
-                for (let i = 0; i < totalPages; i++) {
-                    const pageWords = shuffledWords.slice(i * wordsPerPage, (i + 1) * wordsPerPage);
-                    const leftColumn = pageWords.slice(0, 4);
-                    const rightColumn = pageWords.slice(4, 8);
-                    let pageHTML = `
-                        <div class="page ${i === 0 ? 'active' : ''}">
-                            <div class="page-title">Word Mapping - ${skills.map(s => skillLabelMap[s]).join(' and ')}</div>
-                            <div class="word-grid">
-                                <div class="column">
-                                    ${leftColumn.map(word => `
-                                        <div class="word-block">
-                                            <div class="word">${word.word}</div>
-                                            <div class="pattern">${word.pattern}</div>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                                <div class="column">
-                                    ${rightColumn.map(word => `
-                                        <div class="word-block">
-                                            <div class="word">${word.word}</div>
-                                            <div class="pattern">${word.pattern}</div>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    pages.push(pageHTML);
-                }
+      if (!window.soundBoxWords) {
+        alert("⚠️ Word data not loaded. Please check if August3rd_masterjs_encoding_fixed.js is correctly included.");
+        return;
+      }
 
-                document.getElementById('pages').innerHTML = pages.join('');
-            };
-        });
-    </script>
-</body>
-</html>
+      let words = [];
+      selectedSkills.forEach(skill => {
+        words = words.concat(getWordsForSkill(skill, includeBlends));
+      });
+
+      if (words.length === 0) {
+        alert("No words found for the selected skills.");
+        return;
+      }
+
+      while (words.length < 8) words = words.concat(words);
+      words = words.slice(0, 8);
+
+      const output = document.getElementById('output');
+      output.innerHTML = "";
+      const page = document.createElement('div');
+      page.className = "page";
+
+      const col1 = document.createElement('div');
+      col1.className = "column";
+      const col2 = document.createElement('div');
+      col2.className = "column";
+
+      words.forEach((entry,
