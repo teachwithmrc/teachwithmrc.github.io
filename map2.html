@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Word Mapping Generator - Short Vowels</title>
+  <script src="soundBoxWords_base.js"></script>
+  <script src="soundBoxWords_blends.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: 'BoxesFont';
+      src: url('font/boxes.ttf') format('truetype');
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 40px;
+      text-align: center;
+    }
+
+    h1 { font-size: 36px; margin-bottom: 5px; }
+    h2 { font-size: 20px; margin-bottom: 20px; }
+
+    .table-section {
+      border: 2px solid #000;
+      padding: 20px;
+      margin: 12px auto;
+      width: fit-content;
+      box-sizing: border-box;
+    }
+
+    .section-label {
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .skill-button-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .skill-button-grid .row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .skill-button {
+      border: 2px solid #000;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+
+    .skill-button.selected {
+      background-color: #007bff;
+      color: white;
+      box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+    }
+
+    .option-grid {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .option-box {
+      padding: 10px 14px;
+      border: 2px solid #000;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .option-box.selected {
+      background-color: #d9c9ff;
+    }
+
+    /* Word Mapping Blocks */
+    .page { 
+      display: flex; 
+      justify-content: space-between; 
+      page-break-after: always; 
+      margin-top: 30px;
+    }
+
+    .column { 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: space-around; 
+    }
+
+    .block { 
+      margin-bottom: 40px; 
+      text-align: center; 
+    }
+
+    .word { 
+      font-size: 28px; 
+      font-weight: 600; 
+    }
+
+    .pattern { 
+      font-size: 40px; 
+      font-family: 'BoxesFont';
+    }
+  </style>
+</head>
+<body>
+  <h1>Word Mapping</h1>
+  <h2>Skills: <span id="selected-skills"></span></h2>
+
+  <!-- Step 1 -->
+  <div class="table-section">
+    <div class="section-label">Step 1: Select a Short Vowel</div>
+    <div class="skill-button-grid">
+      <div class="row">
+        <div class="skill-button" data-skill="Short A">Short A</div>
+        <div class="skill-button" data-skill="Short E">Short E</div>
+        <div class="skill-button" data-skill="Short I">Short I</div>
+        <div class="skill-button" data-skill="Short O">Short O</div>
+        <div class="skill-button" data-skill="Short U">Short U</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="table-section">
+    <div class="section-label">Step 2: Options</div>
+    <div class="option-grid">
+      <div class="option-box" id="includeBlendsOption">Include Blends?</div>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="table-section">
+    <div class="section-label">Step 3: Generate & Print</div>
+    <button onclick="generatePage()" style="font-size: 18px; padding: 10px 24px;">Generate</button>
+    <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
+  </div>
+
+  <div id="output"></div>
+
+  <script>
+    let currentSkill = "";
+    let includeBlends = false;
+
+    // Handle skill button selection
+    document.querySelectorAll('.skill-button').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.skill-button').forEach(b => b.classList.remove('selected'));
+        currentSkill = button.dataset.skill;
+        button.classList.add('selected');
+        document.getElementById('selected-skills').innerText = currentSkill;
+      });
+    });
+
+    // Include blends toggle
+    document.getElementById('includeBlendsOption').addEventListener('click', function () {
+      includeBlends = !includeBlends;
+      this.classList.toggle('selected', includeBlends);
+    });
+
+    function getWordsForSkill(skill, blends) {
+      let list = soundBoxWords[skill] || [];
+
+      // Include blends if checked
+      if (blends) {
+        const blendsKey = skill + " with Blends";
+        if (soundBoxWordsBlends[blendsKey]) {
+          list = list.concat(soundBoxWordsBlends[blendsKey]);
+        }
+      }
+
+      return shuffle(list);
+    }
+
+    function generatePage() {
+      if (!currentSkill) {
+        alert("Please select a short vowel first.");
+        return;
+      }
+
+      let words = getWordsForSkill(currentSkill, includeBlends);
+
+      if (words.length === 0) {
+        alert("No words found for that skill.");
+        return;
+      }
+
+      // Ensure 8 blocks
+      while (words.length < 8) words = words.concat(words);
+      words = words.slice(0, 8);
+
+      const output = document.getElementById('output');
+      output.innerHTML = "";
+      const page = document.createElement('div');
+      page.className = "page";
+
+      const col1 = document.createElement('div');
+      col1.className = "column";
+      const col2 = document.createElement('div');
+      col2.className = "column";
+
+      words.forEach((entry, idx) => {
+        const block = document.createElement('div');
+        block.className = 'block';
+        block.innerHTML = `
+          <div class="word">${entry.word}</div>
+          <div class="pattern">${entry.pattern}</div>
+        `;
+        if (idx < 4) col1.appendChild(block);
+        else col2.appendChild(block);
+      });
+
+      page.appendChild(col1);
+      page.appendChild(col2);
+      output.appendChild(page);
+    }
+
+    function shuffle(arr) {
+      return [...arr].sort(() => Math.random() - 0.5);
+    }
+  </script>
+</body>
+</html>
