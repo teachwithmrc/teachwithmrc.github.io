@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Word Mapping Generator - Short Vowels</title>
-  <script src="soundBoxWords_base.js"></script>
-  <script src="soundBoxWords_blends.js"></script>
+  <title>Word Mapping Generator - Short A</title>
+  <script src="newtry.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
   <style>
@@ -36,20 +35,6 @@
       margin-bottom: 12px;
     }
 
-    .skill-button-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      justify-content: center;
-    }
-
-    .skill-button-grid .row {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-
     .skill-button {
       border: 2px solid #000;
       padding: 10px 16px;
@@ -63,14 +48,6 @@
       background-color: #007bff;
       color: white;
       box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-    }
-
-    .option-grid {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 10px;
     }
 
     .option-box {
@@ -117,28 +94,18 @@
 </head>
 <body>
   <h1>Word Mapping</h1>
-  <h2>Skills: <span id="selected-skills"></span></h2>
+  <h2>Skill: <span id="selected-skills"></span></h2>
 
   <!-- Step 1 -->
   <div class="table-section">
-    <div class="section-label">Step 1: Select a Short Vowel</div>
-    <div class="skill-button-grid">
-      <div class="row">
-        <div class="skill-button" data-skill="Short A">Short A</div>
-        <div class="skill-button" data-skill="Short E">Short E</div>
-        <div class="skill-button" data-skill="Short I">Short I</div>
-        <div class="skill-button" data-skill="Short O">Short O</div>
-        <div class="skill-button" data-skill="Short U">Short U</div>
-      </div>
-    </div>
+    <div class="section-label">Step 1: Select Short A</div>
+    <button class="skill-button" id="shortAButton" data-skill="Short A">Short A</button>
   </div>
 
   <!-- Step 2 -->
   <div class="table-section">
     <div class="section-label">Step 2: Options</div>
-    <div class="option-grid">
-      <div class="option-box" id="includeBlendsOption">Include Blends?</div>
-    </div>
+    <div class="option-box" id="includeBlendsOption">Include Blends?</div>
   </div>
 
   <!-- Step 3 -->
@@ -154,14 +121,12 @@
     let currentSkill = "";
     let includeBlends = false;
 
-    // Handle skill button selection
-    document.querySelectorAll('.skill-button').forEach(button => {
-      button.addEventListener('click', () => {
-        document.querySelectorAll('.skill-button').forEach(b => b.classList.remove('selected'));
-        currentSkill = button.dataset.skill;
-        button.classList.add('selected');
-        document.getElementById('selected-skills').innerText = currentSkill;
-      });
+    // Handle skill button
+    const skillButton = document.getElementById('shortAButton');
+    skillButton.addEventListener('click', () => {
+      skillButton.classList.add('selected');
+      currentSkill = skillButton.dataset.skill;
+      document.getElementById('selected-skills').innerText = currentSkill;
     });
 
     // Include blends toggle
@@ -176,8 +141,8 @@
       // Include blends if checked
       if (blends) {
         const blendsKey = skill + " with Blends";
-        if (soundBoxWordsBlends[blendsKey]) {
-          list = list.concat(soundBoxWordsBlends[blendsKey]);
+        if (soundBoxWords[blendsKey]) {
+          list = list.concat(soundBoxWords[blendsKey]);
         }
       }
 
@@ -186,7 +151,12 @@
 
     function generatePage() {
       if (!currentSkill) {
-        alert("Please select a short vowel first.");
+        alert("Please select the skill first.");
+        return;
+      }
+
+      if (!window.soundBoxWords) {
+        alert("⚠️ Word data not loaded. Check your script path.");
         return;
       }
 
