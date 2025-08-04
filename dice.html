@@ -6,49 +6,119 @@
   <title>Fluency Grid Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Poppins', sans-serif; margin: 10px; text-align: center; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 10px;
+      text-align: center;
+    }
     h1 { font-size: 26px; margin-bottom: 10px; }
     .subtitle { font-size: 16px; margin-bottom: 30px; }
 
-    .table-section { border: 2px solid #000; padding: 20px; margin: 12px auto; width: fit-content; }
-    .section-label { font-weight: 600; font-size: 18px; margin-bottom: 12px; }
+    .table-section {
+      border: 2px solid #000; padding: 20px;
+      margin: 12px auto; width: fit-content;
+    }
+    .section-label {
+      font-weight: 600; font-size: 18px; margin-bottom: 12px;
+    }
 
-    .skill-button-grid { display: flex; flex-direction: column; gap: 8px; justify-content: center; }
-    .skill-button-grid .row { display: flex; justify-content: center; gap: 8px; }
-
+    .skill-button-grid {
+      display: flex; flex-direction: column;
+      gap: 8px; justify-content: center;
+    }
+    .skill-button-grid .row {
+      display: flex; justify-content: center; gap: 8px;
+    }
     .skill-button {
       border: 2px solid #000; padding: 10px 16px;
-      border-radius: 8px; font-weight: 600; cursor: pointer;
+      border-radius: 8px; font-weight: 600;
+      cursor: pointer;
       transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
     }
-    .skill-button.selected { background-color: #007bff; color: white; box-shadow: 0 0 4px rgba(0, 123, 255, 0.5); }
+    .skill-button.selected {
+      background-color: #007bff;
+      color: white;
+      box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+    }
 
-    .option-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
-    .option-box { padding: 10px 14px; border: 2px solid #000; border-radius: 8px; cursor: pointer; }
+    .option-grid {
+      display: flex; justify-content: center;
+      flex-wrap: wrap; gap: 12px; margin-top: 10px;
+    }
+    .option-box {
+      padding: 10px 14px; border: 2px solid #000;
+      border-radius: 8px; cursor: pointer;
+    }
     .option-box.selected-step2 { background-color: #d9c9ff; }
     .option-box.selected-step3 { background-color: #d0f0ff; }
     .option-box input { display: none; }
 
-    table { margin: auto; border-collapse: collapse; }
-    td { border: 1px solid #000; width: 120px; height: 80px; font-size: 32px; text-align: center; vertical-align: middle; }
+    table {
+      margin: auto; border-collapse: collapse;
+    }
+    td {
+      border: 1px solid #000;
+      width: 120px; height: 80px;
+      text-align: center; vertical-align: middle;
+    }
     .word-cell { font-size: 28px; }
     .sentence-cell { font-size: 18px; text-align: left; padding: 6px; }
+    .dice-cell { height: 100px; }
 
-    .dice-cell { border: none; height: 80px; }
-    .dice-cell img { width: 60px; }
+    .copyright {
+      text-align: center; font-size: 12px; margin-top: 60px;
+    }
 
-    .copyright { text-align: center; font-size: 12px; margin-top: 60px; }
-    #printableSection { position: relative; min-height: 10in; }
-    #printableSection #copyrightTag { position: absolute; bottom: 20px; right: 40px; font-size: 12px; }
+    #printableSection {
+      position: relative;
+      min-height: 8in;
+    }
+
+    #printableSection #copyrightTag {
+      position: absolute;
+      bottom: 20px;
+      right: 40px;
+      font-size: 12px;
+    }
 
     @media print {
-      html, body { width: 100%; margin: 0; padding: 0; }
-      body * { display: none !important; }
-      #printableSection, #printableSection * { display: revert !important; }
-      #printableSection { position: relative; margin: 0; padding: 0; width: 100%; page-break-inside: avoid; }
-      #gridHeader { margin-top: 0 !important; }
-      table { margin: 0 auto; page-break-inside: avoid; }
-      #copyrightTag { position: absolute; bottom: 20px; right: 40px; }
+      @page {
+        size: landscape;
+        margin: 0.3in;
+      }
+
+      html, body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      body * {
+        display: none !important;
+      }
+
+      #printableSection, #printableSection * {
+        display: revert !important;
+      }
+
+      #printableSection {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        page-break-inside: avoid;
+      }
+
+      table {
+        margin: 0 auto;
+        page-break-inside: avoid;
+      }
+
+      #copyrightTag {
+        position: absolute;
+        bottom: 20px;
+        right: 40px;
+      }
     }
   </style>
 </head>
@@ -56,10 +126,10 @@
   <h1>CVC and FLSZ Fluency Grid Generator</h1>
   <div class="subtitle">
     This generator includes <b>CVC Words</b> such as <b>hat, men, cup</b>.<br>
-    It also includes <b>FLSZ Words</b> like <b>buff, miss, buzz</b>.
+    In addition, it includes <b>FLSZ (Double Consonant Endings)</b> with short vowels such as <b>buff, miss, and buzz</b>.
   </div>
 
-  <!-- Step 1: Skills -->
+  <!-- Step 1 -->
   <div class="table-section">
     <div class="section-label">Step 1: Select Skills</div>
     <div class="skill-button-grid">
@@ -78,7 +148,7 @@
     </div>
   </div>
 
-  <!-- Step 2: Content Type -->
+  <!-- Step 2 -->
   <div class="table-section">
     <div class="section-label">Step 2: What would you like in the grid?</div>
     <div class="option-grid" id="contentOptions">
@@ -88,7 +158,7 @@
     </div>
   </div>
 
-  <!-- Step 3: Grid Size -->
+  <!-- Step 3 -->
   <div class="table-section">
     <div class="section-label">Step 3: Select Grid Size</div>
     <div class="option-grid" id="gridSizeOptions">
@@ -98,13 +168,11 @@
     </div>
   </div>
 
-  <!-- Buttons -->
   <div style="margin-top: 30px;">
     <button onclick="generateGrid()" style="font-size: 18px; padding: 10px 24px;">Generate Fluency Grid</button>
     <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
   </div>
 
-  <!-- Output -->
   <div id="printableSection">
     <div id="gridHeader" style="text-align: center; margin-top: 30px;"></div>
     <div id="gridContainer"></div>
@@ -122,8 +190,13 @@
     document.querySelectorAll('.skill-button').forEach(button => {
       button.addEventListener('click', () => {
         const skill = button.dataset.skill;
-        button.classList.toggle('selected');
-        selectedSkills.has(skill) ? selectedSkills.delete(skill) : selectedSkills.add(skill);
+        if (selectedSkills.has(skill)) {
+          selectedSkills.delete(skill);
+          button.classList.remove('selected');
+        } else {
+          selectedSkills.add(skill);
+          button.classList.add('selected');
+        }
       });
     });
 
@@ -164,8 +237,12 @@
         return;
       }
 
-      // Build word/sentence pools
-      let finalPool = [];
+      // Determine columns (always 6) + dice header
+      const cols = 6;
+      const rows = gridSize / 6;
+      const finalPool = [];
+      let wordPools = {}, sentencePools = {};
+
       selected.forEach(skill => {
         let wordKey = "", sentenceKey = "";
         if (skill === "mixed") {
@@ -181,27 +258,50 @@
           wordKey = `${skill} - Short ${skillMap[skill]} Words`;
           sentenceKey = `${skill} - Short ${skillMap[skill]} Sentences`;
         }
-
-        let words = fluencyData.words[wordKey] || [];
-        let sentences = fluencyData.sentences[sentenceKey] || [];
-        if (contentType === "words") finalPool.push(...words);
-        if (contentType === "sentences") finalPool.push(...sentences);
-        if (contentType === "both") finalPool.push(...words, ...sentences);
+        wordPools[skill] = fluencyData.words[wordKey] || [];
+        sentencePools[skill] = fluencyData.sentences[sentenceKey] || [];
       });
 
-      finalPool = shuffle(finalPool).slice(0, gridSize);
+      // Fill final pool
+      const perSkill = Math.floor(gridSize / selected.length);
+      const extra = gridSize % selected.length;
+      if (contentType === "words") {
+        selected.forEach((skill, i) => {
+          const count = perSkill + (i < extra ? 1 : 0);
+          finalPool.push(...shuffle(wordPools[skill]).slice(0, count));
+        });
+      } else if (contentType === "sentences") {
+        selected.forEach((skill, i) => {
+          const count = perSkill + (i < extra ? 1 : 0);
+          finalPool.push(...shuffle(sentencePools[skill]).slice(0, count));
+        });
+      } else {
+        // "both" mode: half words half sentences
+        const half = Math.floor(gridSize / 2);
+        const words = [], sentences = [];
+        selected.forEach((skill, i) => {
+          const countWords = Math.floor(half / selected.length) + (i < half % selected.length ? 1 : 0);
+          const countSent = Math.floor((gridSize-half) / selected.length) + (i < (gridSize-half) % selected.length ? 1 : 0);
+          words.push(...shuffle(wordPools[skill]).slice(0, countWords));
+          sentences.push(...shuffle(sentencePools[skill]).slice(0, countSent));
+        });
+        finalPool.push(...words, ...sentences);
+      }
 
-      // Build table with dice row + words
+      shuffle(finalPool);
+
+      // Build table
       let table = "<table><tr>";
-      for (let c = 0; c < 6; c++) {
-        table += `<td class="dice-cell"><img src="images/dice${c+1}.png" alt="Dice ${c+1}"></td>`;
+      for (let c = 0; c < cols; c++) {
+        table += `<td class="dice-cell"><img src="dice${c+1}.png" style="width:60px;height:60px;"></td>`;
       }
       table += "</tr>";
 
-      for (let r = 0; r < gridSize; r += 6) {
+      let index = 0;
+      for (let r = 0; r < rows; r++) {
         table += "<tr>";
-        for (let c = 0; c < 6; c++) {
-          const val = finalPool[r + c] || "";
+        for (let c = 0; c < cols; c++) {
+          const val = finalPool[index++] || "";
           const cellClass = val.split(" ").length > 3 ? "sentence-cell" : "word-cell";
           table += `<td class="${cellClass}">${val}</td>`;
         }
