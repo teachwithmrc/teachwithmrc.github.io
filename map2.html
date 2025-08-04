@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Word Mapping Generator</title>
-  <script src="newtry_FULL.js" defer></script>
+  <script src="newtry_FULL_FIXED.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
   <style>
@@ -35,24 +35,30 @@
       margin-bottom: 12px;
     }
 
+    /* Skill Button Grid */
     .skill-button-grid {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      justify-content: center;
+      gap: 12px;
     }
-
     .skill-row {
       display: flex;
       justify-content: center;
-      gap: 8px;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .skill-row-label {
+      font-weight: 600;
+      margin-right: 8px;
     }
 
     .skill-button {
       border: 2px solid #000;
-      padding: 10px 16px;
-      border-radius: 8px;
+      padding: 6px 12px;
+      border-radius: 6px;
       font-weight: 600;
+      font-size: 14px;
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
     }
@@ -130,35 +136,61 @@
   <h2>Skills: <span id="selected-skills"></span></h2>
   <div id="error-message"></div>
 
+  <!-- Step 1: Skill Selection -->
   <div class="table-section">
     <div class="section-label">Step 1: Select Skills</div>
     <div class="skill-button-grid">
-      <!-- Row 1: Short Vowels and Mixed CVC -->
+
+      <!-- Row 1: Short Vowels -->
       <div class="skill-row">
+        <span class="skill-row-label">Short Vowels:</span>
         <button class="skill-button" data-skill="Short A">Short A</button>
         <button class="skill-button" data-skill="Short B">Short B</button>
         <button class="skill-button" data-skill="Short C">Short C</button>
         <button class="skill-button" data-skill="Short D">Short D</button>
         <button class="skill-button" data-skill="Short E">Short E</button>
         <button class="skill-button" data-skill="Mixed CVC">Mixed CVC</button>
+        <button class="skill-button" data-skill="FLSZ Words">FLSZ</button>
       </div>
 
       <!-- Row 2: Digraphs -->
       <div class="skill-row">
+        <span class="skill-row-label">Digraphs:</span>
         <button class="skill-button" data-skill="Digraph(ck)">ck</button>
         <button class="skill-button" data-skill="Digraph(sh)">sh</button>
         <button class="skill-button" data-skill="Digraph(th)">th</button>
         <button class="skill-button" data-skill="Digraph(ch)">ch</button>
         <button class="skill-button" data-skill="Digraph(wh)">wh</button>
       </div>
+
+      <!-- Row 3: Glued Sounds -->
+      <div class="skill-row">
+        <span class="skill-row-label">Glued Sounds:</span>
+        <button class="skill-button" data-skill="Glued(all)">-all</button>
+        <button class="skill-button" data-skill="Glued(-ng)">-ng</button>
+        <button class="skill-button" data-skill="Glued(-nk)">-nk</button>
+      </div>
+
+      <!-- Row 4: Silent E -->
+      <div class="skill-row">
+        <span class="skill-row-label">Silent E (VCe):</span>
+        <button class="skill-button" data-skill="VCe(a_e)">a_e</button>
+        <button class="skill-button" data-skill="VCe(i_e)">i_e</button>
+        <button class="skill-button" data-skill="VCe(o_e)">o_e</button>
+        <button class="skill-button" data-skill="VCe(u_e)">u_e</button>
+        <button class="skill-button" data-skill="Mixed VCe">Mixed VCe</button>
+      </div>
+
     </div>
   </div>
 
+  <!-- Step 2: Options -->
   <div class="table-section">
     <div class="section-label">Step 2: Options</div>
     <div class="option-box" id="includeBlendsOption" role="button" tabindex="0">Include Blends?</div>
   </div>
 
+  <!-- Step 3: Generate & Print -->
   <div class="table-section">
     <div class="section-label">Step 3: Generate & Print</div>
     <button onclick="generatePage()" style="font-size: 18px; padding: 10px 24px;">Generate</button>
@@ -171,6 +203,7 @@
     let selectedSkills = new Set();
     let includeBlends = false;
 
+    // Handle skill selection
     const skillButtons = document.querySelectorAll('.skill-button');
     skillButtons.forEach(button => {
       button.addEventListener('click', () => {
@@ -187,13 +220,47 @@
       });
     });
 
+    // Toggle Include Blends
     document.getElementById('includeBlendsOption').addEventListener('click', function () {
       includeBlends = !includeBlends;
       this.classList.toggle('selected', includeBlends);
     });
 
+    // Fetch words by skill, handle Mixed CVC and Mixed VCe
     function getWordsForSkill(skill, blends) {
-      let list = soundBoxWords[skill] || [];
+      let list = [];
+
+      if (skill === "Mixed CVC") {
+        list = [].concat(
+          soundBoxWords["Short A"] || [],
+          soundBoxWords["Short B"] || [],
+          soundBoxWords["Short C"] || [],
+          soundBoxWords["Short D"] || [],
+          soundBoxWords["Short E"] || []
+        );
+        if (blends) {
+          list = list.concat(
+            soundBoxWords["Short A with Blends"] || [],
+            soundBoxWords["Short B with Blends"] || [],
+            soundBoxWords["Short C with Blends"] || [],
+            soundBoxWords["Short D with Blends"] || [],
+            soundBoxWords["Short E with Blends"] || []
+          );
+        }
+        return list;
+      }
+
+      if (skill === "Mixed VCe") {
+        list = [].concat(
+          soundBoxWords["VCe(a_e)"] || [],
+          soundBoxWords["VCe(i_e)"] || [],
+          soundBoxWords["VCe(o_e)"] || [],
+          soundBoxWords["VCe(u_e)"] || []
+        );
+        return list;
+      }
+
+      list = soundBoxWords[skill] || [];
       if (blends) {
         const blendsKey = skill + " with Blends";
         if (soundBoxWords[blendsKey]) {
