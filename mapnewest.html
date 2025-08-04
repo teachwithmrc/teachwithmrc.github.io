@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ultimate Word Mapping Generator</title>
+  <script src="newtry_FULL.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: 'BoxesFont';
+      src: url('fonts/boxes.ttf') format('truetype');
+    }
+
+    body { font-family: 'Poppins', sans-serif; margin: 40px; text-align: center; }
+    h1 { font-size: 36px; margin-bottom: 5px; }
+    h2 { font-size: 20px; margin-bottom: 20px; }
+
+    .table-section { border: 2px solid #000; padding: 20px; margin: 12px auto; width: fit-content; box-sizing: border-box; }
+    .section-label { font-weight: 600; font-size: 18px; margin-bottom: 12px; }
+
+    .skill-button-grid { display: flex; flex-direction: column; gap: 12px; }
+    .skill-row { display: flex; justify-content: center; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .skill-row-label { font-weight: 600; margin-right: 8px; }
+
+    .skill-button {
+      border: 2px solid #000; padding: 6px 12px; border-radius: 6px;
+      font-weight: 600; font-size: 14px; cursor: pointer;
+      transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+    .skill-button.selected { background-color: #007bff; color: white; box-shadow: 0 0 4px rgba(0, 123, 255, 0.5); }
+
+    /* Blend filter row */
+    #blend-filter-row { display: none; margin-top: 12px; }
+    #blend-filter-row span { font-weight: 600; margin-right: 6px; }
+    #blend-filter-row label { margin: 0 6px; }
+
+    /* Worksheet Layout */
+    .word-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid black; }
+    .word-table td { width: 50%; text-align: center; vertical-align: middle; padding: 10px 0; border: 2px solid black; }
+
+    .worksheet-title { font-size: 40px; margin-bottom: 5px; font-weight: 700; }
+    .worksheet-directions { font-size: 22px; margin-bottom: 20px; }
+
+    .word { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+    .pattern { font-size: 100px; font-family: 'BoxesFont', monospace; line-height: 1; }
+
+    #error-message { color: red; margin: 10px; min-height: 20px; }
+
+    @media print {
+      body { margin: 0; }
+      h1, h2, .table-section, button, #error-message, #blend-filter-row { display: none; }
+      #output { margin: 0; }
+      .worksheet-title, .worksheet-directions { display: block; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Word Mapping Generator</h1>
+  <h2>Skills: <span id="selected-skills"></span></h2>
+  <div id="error-message"></div>
+
+  <!-- Step 1: Skill Selection -->
+  <div class="table-section">
+    <div class="section-label">Step 1: Select Skills</div>
+    <div class="skill-button-grid">
+
+      <!-- Row 1: CVC Short Vowels -->
+      <div class="skill-row">
+        <span class="skill-row-label">CVC Short Vowels:</span>
+        <button class="skill-button" data-skill="Short A">Short A</button>
+        <button class="skill-button" data-skill="Short E">Short E</button>
+        <button class="skill-button" data-skill="Short I">Short I</button>
+        <button class="skill-button" data-skill="Short O">Short O</button>
+        <button class="skill-button" data-skill="Short U">Short U</button>
+        <button class="skill-button" data-skill="Mixed CVC">Mixed CVC</button>
+        <button class="skill-button" data-skill="FLSZ Words">FLSZ</button>
+      </div>
+
+      <!-- Row 2: Short Vowels with Blends -->
+      <div class="skill-row">
+        <span class="skill-row-label">Short Vowels w/Blends:</span>
+        <button class="skill-button" data-skill="Short A with Blends">Short A w/Blends</button>
+        <button class="skill-button" data-skill="Short E with Blends">Short E w/Blends</button>
+        <button class="skill-button" data-skill="Short I with Blends">Short I w/Blends</button>
+        <button class="skill-button" data-skill="Short O with Blends">Short O w/Blends</button>
+        <button class="skill-button" data-skill="Short U with Blends">Short U w/Blends</button>
+      </div>
+
+      <!-- Row 3: Digraphs -->
+      <div class="skill-row">
+        <span class="skill-row-label">Digraphs:</span>
+        <button class="skill-button" data-skill="Digraph(ck)">ck</button>
+        <button class="skill-button" data-skill="Digraph(sh)">sh</button>
+        <button class="skill-button" data-skill="Digraph(th)">th</button>
+        <button class="skill-button" data-skill="Digraph(ch)">ch</button>
+        <button class="skill-button" data-skill="Digraph(wh)">wh</button>
+      </div>
+
+      <!-- Row 4: Glued Sounds -->
+      <div class="skill-row">
+        <span class="skill-row-label">Glued Sounds:</span>
+        <button class="skill-button" data-skill="Glued(all)">-all</button>
+        <button class="skill-button" data-skill="Glued(-ng)">-ng</button>
+        <button class="skill-button" data-skill="Glued(-nk)">-nk</button>
+      </div>
+
+      <!-- Row 5: Silent E (VCe) -->
+      <div class="skill-row">
+        <span class="skill-row-label">Silent E (VCe):</span>
+        <button class="skill-button" data-skill="VCe(a_e)">a_e</button>
+        <button class="skill-button" data-skill="VCe(i_e)">i_e</button>
+        <button class="skill-button" data-skill="VCe(o_e)">o_e</button>
+        <button class="skill-button" data-skill="VCe(u_e)">u_e</button>
+        <button class="skill-button" data-skill="Mixed VCe">Mixed VCe</button>
+      </div>
+
+      <!-- Row 6: R-Controlled -->
+      <div class="skill-row">
+        <span class="skill-row-label">R-Controlled:</span>
+        <button class="skill-button" data-skill="R-Controlled(ar)">ar</button>
+        <button class="skill-button" data-skill="R-Controlled(or)">or</button>
+        <button class="skill-button" data-skill="R-Controlled(er,ir,ur)">er/ir/ur</button>
+        <button class="skill-button" data-skill="Mixed R">Mixed R</button>
+      </div>
+
+    </div>
+
+    <!-- Dynamic Blend Filter Row -->
+    <div id="blend-filter-row">
+      <span>Filter Blends:</span>
+      <label><input type="checkbox" value="bl"> bl-</label>
+      <label><input type="checkbox" value="cl"> cl-</label>
+      <label><input type="checkbox" value="fl"> fl-</label>
+      <label><input type="checkbox" value="gl"> gl-</label>
+      <label><input type="checkbox" value="pl"> pl-</label>
+      <label><input type="checkbox" value="sl"> sl-</label>
+      <label><input type="checkbox" value="st"> st-</label>
+      <label><input type="checkbox" value="-mp"> -mp</label>
+      <label><input type="checkbox" value="-nd"> -nd</label>
+      <label><input type="checkbox" value="-st"> -st</label>
+    </div>
+  </div>
+
+  <!-- Step 3: Generate & Print -->
+  <div class="table-section">
+    <div class="section-label">Step 2: Generate & Print</div>
+    <button onclick="generatePage()" style="font-size: 18px; padding: 10px 24px;">Generate</button>
+    <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
+  </div>
+
+  <div id="output"></div>
+
+  <script>
+    let selectedSkills = new Set();
+
+    // Toggle skill buttons
+    document.querySelectorAll('.skill-button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const skill = btn.dataset.skill;
+        if (selectedSkills.has(skill)) {
+          selectedSkills.delete(skill);
+          btn.classList.remove('selected');
+        } else {
+          selectedSkills.add(skill);
+          btn.classList.add('selected');
+        }
+        document.getElementById('selected-skills').innerText = Array.from(selectedSkills).join(', ');
+        // Show blend filter if any "with Blends" selected
+        const showBlend = Array.from(selectedSkills).some(s => s.includes('with Blends'));
+        document.getElementById('blend-filter-row').style.display = showBlend ? 'block' : 'none';
+      });
+    });
+
+    function generatePage() {
+      const output = document.getElementById('output');
+      output.innerHTML = '';
+      const selected = Array.from(selectedSkills);
+      if (selected.length === 0) return alert("Select at least one skill!");
+
+      const gridSize = 8;
+      const perSkill = Math.floor(gridSize / selected.length);
+      const extra = gridSize % selected.length;
+      let finalPool = [];
+
+      selected.forEach((skill, idx) => {
+        let words = getWordsForSkill(skill);
+        words = shuffle(words);
+        const takeCount = perSkill + (idx < extra ? 1 : 0);
+        finalPool.push(...words.slice(0, takeCount));
+      });
+
+      const words = shuffle(finalPool);
+      const title = document.createElement('div');
+      title.className = 'worksheet-title';
+      title.textContent = `${selected.join(', ')} Word Mapping`;
+
+      const directions = document.createElement('div');
+      directions.className = 'worksheet-directions';
+      directions.textContent = "Read each word, write it in the sound boxes correctly, read it again.";
+
+      output.appendChild(title);
+      output.appendChild(directions);
+
+      const table = document.createElement('table');
+      table.className = 'word-table';
+      for (let r = 0; r < 4; r++) {
+        const tr = document.createElement('tr');
+        for (let c = 0; c < 2; c++) {
+          const td = document.createElement('td');
+          const idx = r * 2 + c;
+          if (idx < words.length) {
+            td.innerHTML = `
+              <div class="word">${words[idx].word}</div>
+              <div class="pattern">${words[idx].pattern}</div>
+            `;
+          }
+          tr.appendChild(td);
+        }
+        table.appendChild(tr);
+      }
+      output.appendChild(table);
+    }
+
+    function getWordsForSkill(skill) {
+      return shuffle(soundBoxWords[skill] || []);
+    }
+
+    function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+  </script>
+</body>
+</html>
