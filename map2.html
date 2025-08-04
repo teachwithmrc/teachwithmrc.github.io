@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Word Mapping Generator</title>
-  <script src="newtry_FIXED-3.js" defer></script>
+  <script src="newtry_FULL.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
   <style>
@@ -35,6 +35,19 @@
       margin-bottom: 12px;
     }
 
+    .skill-button-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .skill-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
     .skill-button {
       border: 2px solid #000;
       padding: 10px 16px;
@@ -42,7 +55,6 @@
       font-weight: 600;
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
-      margin: 5px;
     }
     .skill-button.selected {
       background-color: #007bff;
@@ -71,7 +83,7 @@
       width: 50%;
       text-align: center;
       vertical-align: middle;
-      padding: 10px 0; /* smaller padding */
+      padding: 10px 0;
       border: 2px solid black;
     }
 
@@ -86,12 +98,12 @@
     }
 
     .word { 
-      font-size: 28px;  /* smaller word font */
+      font-size: 28px;
       font-weight: 700;
-      margin-bottom: 4px; /* less gap between word and pattern */
+      margin-bottom: 4px;
     }
     .pattern { 
-      font-size: 100px;  /* much bigger pattern font */
+      font-size: 100px;
       font-family: 'BoxesFont', monospace;
       line-height: 1;
     }
@@ -115,14 +127,31 @@
 </head>
 <body>
   <h1>Word Mapping</h1>
-  <h2>Skill: <span id="selected-skills"></span></h2>
+  <h2>Skills: <span id="selected-skills"></span></h2>
   <div id="error-message"></div>
 
   <div class="table-section">
-    <div class="section-label">Step 1: Select a Skill</div>
-    <button class="skill-button" data-skill="Short A">Short A</button>
-    <button class="skill-button" data-skill="Short O">Short O</button>
-    <button class="skill-button" data-skill="FLSZ Words">FLSZ Words</button>
+    <div class="section-label">Step 1: Select Skills</div>
+    <div class="skill-button-grid">
+      <!-- Row 1: Short Vowels and Mixed CVC -->
+      <div class="skill-row">
+        <button class="skill-button" data-skill="Short A">Short A</button>
+        <button class="skill-button" data-skill="Short B">Short B</button>
+        <button class="skill-button" data-skill="Short C">Short C</button>
+        <button class="skill-button" data-skill="Short D">Short D</button>
+        <button class="skill-button" data-skill="Short E">Short E</button>
+        <button class="skill-button" data-skill="Mixed CVC">Mixed CVC</button>
+      </div>
+
+      <!-- Row 2: Digraphs -->
+      <div class="skill-row">
+        <button class="skill-button" data-skill="Digraph(ck)">ck</button>
+        <button class="skill-button" data-skill="Digraph(sh)">sh</button>
+        <button class="skill-button" data-skill="Digraph(th)">th</button>
+        <button class="skill-button" data-skill="Digraph(ch)">ch</button>
+        <button class="skill-button" data-skill="Digraph(wh)">wh</button>
+      </div>
+    </div>
   </div>
 
   <div class="table-section">
@@ -139,16 +168,21 @@
   <div id="output"></div>
 
   <script>
-    let currentSkill = "";
+    let selectedSkills = new Set();
     let includeBlends = false;
 
     const skillButtons = document.querySelectorAll('.skill-button');
     skillButtons.forEach(button => {
       button.addEventListener('click', () => {
-        skillButtons.forEach(btn => btn.classList.remove('selected'));
-        button.classList.add('selected');
-        currentSkill = button.dataset.skill;
-        document.getElementById('selected-skills').innerText = currentSkill;
+        const skill = button.dataset.skill;
+        if (selectedSkills.has(skill)) {
+          selectedSkills.delete(skill);
+          button.classList.remove('selected');
+        } else {
+          selectedSkills.add(skill);
+          button.classList.add('selected');
+        }
+        document.getElementById('selected-skills').innerText = Array.from(selectedSkills).join(', ');
         document.getElementById('error-message').innerText = '';
       });
     });
@@ -158,51 +192,48 @@
       this.classList.toggle('selected', includeBlends);
     });
 
-    document.getElementById('includeBlendsOption').addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        includeBlends = !includeBlends;
-        this.classList.toggle('selected', includeBlends);
-        e.preventDefault();
-      }
-    });
-
     function getWordsForSkill(skill, blends) {
       let list = soundBoxWords[skill] || [];
       if (blends) {
         const blendsKey = skill + " with Blends";
         if (soundBoxWords[blendsKey]) {
           list = list.concat(soundBoxWords[blendsKey]);
-        } else {
-          console.warn(`No blends found for ${blendsKey}`);
         }
       }
-      return shuffle(list);
+      return list;
     }
 
     function generatePage() {
+      const output = document.getElementById('output');
+      output.innerHTML = "";
       document.getElementById('error-message').innerText = '';
-      if (!currentSkill) {
-        document.getElementById('error-message').innerText = "Please select a skill first.";
+
+      if (selectedSkills.size === 0) {
+        document.getElementById('error-message').innerText = "Please select at least one skill.";
         return;
       }
       if (!window.soundBoxWords) {
-        document.getElementById('error-message').innerText = "⚠️ Word data not loaded. Check your script path.";
+        document.getElementById('error-message').innerText = "⚠️ Word data not loaded.";
         return;
       }
-      let words = getWordsForSkill(currentSkill, includeBlends);
-      if (words.length === 0) {
-        document.getElementById('error-message').innerText = `No words found for skill: ${currentSkill}`;
-        return;
-      }
-      words = shuffle(words).slice(0, 8);
 
-      const output = document.getElementById('output');
-      output.innerHTML = "";
+      let words = [];
+      selectedSkills.forEach(skill => {
+        words = words.concat(getWordsForSkill(skill, includeBlends));
+      });
+
+      if (words.length === 0) {
+        document.getElementById('error-message').innerText = `No words found for selected skills.`;
+        return;
+      }
+
+      // Pick 8 random words
+      words = shuffle(words).slice(0, 8);
 
       // Title & directions
       const title = document.createElement('div');
       title.className = 'worksheet-title';
-      title.textContent = `${currentSkill} Word Mapping`;
+      title.textContent = `${Array.from(selectedSkills).join(", ")} Word Mapping`;
 
       const directions = document.createElement('div');
       directions.className = 'worksheet-directions';
@@ -211,7 +242,7 @@
       output.appendChild(title);
       output.appendChild(directions);
 
-      // Create table
+      // Table layout
       const table = document.createElement('table');
       table.className = 'word-table';
 
@@ -230,7 +261,6 @@
         }
         table.appendChild(tr);
       }
-
       output.appendChild(table);
     }
 
