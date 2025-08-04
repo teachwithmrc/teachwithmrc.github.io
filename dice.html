@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Roll and Read Generator</title>
+  <script src="fluencyDataFull_v6.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Poppins', sans-serif; margin: 20px; text-align: center; }
+    h1 { font-size: 28px; margin-bottom: 20px; }
+
+    .options { margin-bottom: 20px; }
+    .options label { margin: 0 10px; font-size: 16px; }
+
+    button {
+      font-size: 16px;
+      padding: 8px 14px;
+      margin-top: 10px;
+      border-radius: 6px;
+    }
+
+    table { 
+      margin: 30px auto; 
+      border-collapse: collapse; 
+    }
+    td {
+      border: 1px solid #000;
+      width: 100px;
+      height: 50px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 18px;
+    }
+    .dice-cell {
+      width: 70px;
+      border: none;
+    }
+    .dice-cell img {
+      width: 50px;
+      height: 50px;
+    }
+
+    #gridContainer { margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <h1>Roll and Read Generator</h1>
+
+  <!-- Skill Selection -->
+  <div class="options">
+    <strong>Skills:</strong><br>
+    <label><input type="checkbox" name="skills" value="0.1"> Short A</label>
+    <label><input type="checkbox" name="skills" value="0.2"> Short O</label>
+    <label><input type="checkbox" name="skills" value="0.3"> Short I</label>
+    <label><input type="checkbox" name="skills" value="0.4"> Short U</label>
+    <label><input type="checkbox" name="skills" value="0.5"> Short E</label>
+    <label><input type="checkbox" name="skills" value="0.6"> FLSZ (ff,ll,ss,zz)</label>
+  </div>
+
+  <!-- Content Type -->
+  <div class="options">
+    <strong>Content Type:</strong><br>
+    <label><input type="radio" name="contentType" value="words" checked> Words</label>
+    <label><input type="radio" name="contentType" value="sentences"> Sentences</label>
+    <label><input type="radio" name="contentType" value="both"> Both</label>
+  </div>
+
+  <!-- Tricky Words Option -->
+  <div class="options">
+    <label><input type="checkbox" id="includeTricky"> Include Tricky Words</label>
+  </div>
+
+  <!-- Grid Size -->
+  <div class="options">
+    <strong>Grid Size:</strong><br>
+    <label><input type="checkbox" name="gridSize" value="18"> 18 Words (6x3)</label>
+    <label><input type="checkbox" name="gridSize" value="24"> 24 Words (6x4)</label>
+    <label><input type="checkbox" name="gridSize" value="30"> 30 Words (6x5)</label>
+  </div>
+
+  <!-- Generate Button -->
+  <button onclick="generateGrid()">Generate</button>
+
+  <!-- Output -->
+  <div id="gridContainer"></div>
+
+  <script>
+    const diceImages = [
+      'images/dice1.png',
+      'images/dice2.png',
+      'images/dice3.png',
+      'images/dice4.png',
+      'images/dice5.png',
+      'images/dice6.png'
+    ];
+
+    function getSelectedSkills() {
+      return Array.from(document.querySelectorAll('input[name="skills"]:checked')).map(cb => cb.value);
+    }
+
+    function getWordsForSkill(selectedSkills, gridSize, contentType, includeTricky) {
+      let words = [];
+
+      // Collect from fluencyData
+      selectedSkills.forEach(skill => {
+        let label;
+        if (contentType === "words") {
+          label = skillMap[skill] ? `${skill} - ${skillMap[skill]}` : skill;
+          words = words.concat(fluencyData.words[label] || []);
+        } else if (contentType === "sentences") {
+          label = skillMap[skill] ? `${skill} - ${skillMap[skill]} Sentences` : skill;
+          words = words.concat(fluencyData.sentences[label] || []);
+        } else if (contentType === "both") {
+          // Split half words/half sentences
+          let wordLabel = skillMap[skill] ? `${skill} - ${skillMap[skill]}` : skill;
+          let sentenceLabel = skillMap[skill] ? `${skill} - ${skillMap[skill]} Sentences` : skill;
+          words = words.concat(fluencyData.words[wordLabel] || [], fluencyData.sentences[sentenceLabel] || []);
+        }
+      });
+
+      if (includeTricky) {
+        selectedSkills.forEach(skill => {
+          let trickyLabel = skillMap[skill] ? `${skill} - ${skillMap[skill]}` : skill;
+          words = words.concat(fluencyData.trickySticky[trickyLabel] || []);
+        });
+      }
+
+      // Shuffle and slice
+      return words.sort(() => Math.random() - 0.5).slice(0, gridSize);
+    }
+
+    function generateGrid() {
+      const selectedSkills = getSelectedSkills();
+      const contentType = document.querySelector('input[name="contentType"]:checked')?.value;
+      const includeTricky = document.getElementById('includeTricky').checked;
+
+      const selected = Array.from(document.querySelectorAll('input[name="gridSize"]:checked'));
+      if (selected.length !== 1) {
+        alert('Please select exactly one grid size.');
+        return;
+      }
+
+      const gridSize = parseInt(selected[0].value);
+      const cols = 6;
+      const rows = gridSize / cols;
+
+      const words = getWordsForSkill(selectedSkills, gridSize, contentType, includeTricky);
+
+      // 🔹 Build the dice table
+      let html = '<table>';
+      for (let r = 0; r < rows; r++) {
+        html += '<tr>';
+        
+        // Dice image first column
+        html += `<td class="dice-cell"><img src="${diceImages[r % 6]}" alt="Dice ${r+1}"></td>`;
+        
+        // Word cells
+        for (let c = 0; c < cols; c++) {
+          const wordIndex = r * cols + c;
+          html += `<td>${words[wordIndex] || ''}</td>`;
+        }
+        
+        html += '</tr>';
+      }
+      html += '</table>';
+
+      document.getElementById('gridContainer').innerHTML = html;
+    }
+
+    // 🔹 Skill mapping like in your working code
+    const skillMap = {
+      "0.1": "Short A",
+      "0.2": "Short O",
+      "0.3": "Short I",
+      "0.4": "Short U",
+      "0.5": "Short E",
+      "0.6": "FLSZ"
+    };
+  </script>
+
+</body>
+</html>
