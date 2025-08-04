@@ -60,9 +60,17 @@
     }
     .word-cell { font-size: 28px; }
     .sentence-cell { font-size: 18px; text-align: left; padding: 6px; }
-    .dice-cell { border: none; height: 60px; }
-    .dice-cell img { width: 50px; }
-    .copyright { text-align: center; font-size: 12px; margin-top: 60px; }
+    .dice-cell {
+      text-align: center;
+      padding: 8px;
+      border: none !important;
+    }
+    .dice-cell img {
+      height: 40px;
+    }
+    .copyright {
+      text-align: center; font-size: 12px; margin-top: 60px;
+    }
     #printableSection { position: relative; min-height: 10in; }
     #printableSection #copyrightTag {
       position: absolute; bottom: 20px; right: 40px; font-size: 12px;
@@ -71,10 +79,15 @@
       html, body { width: 100%; margin: 0; padding: 0; }
       body * { display: none !important; }
       #printableSection, #printableSection * { display: revert !important; }
-      #printableSection { position: relative; margin: 0; padding: 0; width: 100%; page-break-inside: avoid; }
+      #printableSection {
+        position: relative; margin: 0; padding: 0; width: 100%;
+        page-break-inside: avoid;
+      }
       #gridHeader { margin-top: 0 !important; }
       table { margin: 0 auto; page-break-inside: avoid; }
-      #copyrightTag { position: absolute; bottom: 20px; right: 40px; }
+      #copyrightTag {
+        position: absolute; bottom: 20px; right: 40px;
+      }
     }
   </style>
 </head>
@@ -132,113 +145,163 @@
     <div class="copyright" id="copyrightTag">Copyright - InterventionStation.com - @TeachwithMrC</div>
   </div>
 
-<script>
-const selectedSkills = new Set();
-const skillMap = {
-  "0.1": "A","0.2": "O","0.3": "I","0.4": "U","0.5": "E",
-  "0.6": "FLSZ","0.7": "FLSZ and CVC","mixed": "Mixed"
-};
+  <script>
+    const selectedSkills = new Set();
+    const skillMap = {
+      "0.1": "A", "0.2": "O", "0.3": "I",
+      "0.4": "U", "0.5": "E", "0.6": "FLSZ",
+      "0.7": "FLSZ and CVC", "mixed": "Mixed"
+    };
 
-document.querySelectorAll('.skill-button').forEach(button=>{
-  button.addEventListener('click',()=>{
-    const skill = button.dataset.skill;
-    if(selectedSkills.has(skill)){selectedSkills.delete(skill);button.classList.remove('selected');}
-    else{selectedSkills.add(skill);button.classList.add('selected');}
-  });
-});
-
-document.querySelectorAll('#contentOptions .option-box').forEach(box=>{
-  box.addEventListener('click',()=>{
-    document.querySelectorAll('#contentOptions .option-box').forEach(b=>b.classList.remove('selected-step2'));
-    box.classList.add('selected-step2'); box.querySelector('input').checked = true;
-  });
-});
-
-document.querySelectorAll('#gridSizeOptions .option-box').forEach(box=>{
-  box.addEventListener('click',()=>{
-    document.querySelectorAll('#gridSizeOptions .option-box').forEach(b=>b.classList.remove('selected-step3'));
-    box.classList.add('selected-step3'); box.querySelector('input').checked = true;
-  });
-});
-
-function shuffle(array){
-  for(let i=array.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[array[i],array[j]]=[array[j],array[i]];}
-  return array;
-}
-
-function generateGrid(){
-  document.getElementById("gridHeader").innerHTML="";
-  document.getElementById("gridContainer").innerHTML="";
-  const selected = Array.from(selectedSkills);
-  const contentType = document.querySelector('input[name="contentType"]:checked')?.value;
-  const gridSize = parseInt(document.querySelector('input[name="gridSize"]:checked')?.value || "30");
-
-  if(!selected.length || !contentType){
-    alert("❗ Please select skills and a content type."); return;
-  }
-
-  // Build word/sentence pools
-  let wordPools = {}, sentencePools = {};
-  selected.forEach(skill=>{
-    let wordKey="",sentenceKey="";
-    if(skill==="mixed"){wordKey="Mixed CVC Words";sentenceKey="Mixed CVC Sentences";}
-    else if(skill==="0.6"){wordKey="0.6 - FLSZ";sentenceKey="0.6 - FLSZ Sentences";}
-    else if(skill==="0.7"){wordKey="0.7 - FLSZ and CVC";sentenceKey="0.7 - FLSZ and CVC Sentences";}
-    else{wordKey=`${skill} - Short ${skillMap[skill]} Words`;sentenceKey=`${skill} - Short ${skillMap[skill]} Sentences`;}
-    wordPools[skill] = fluencyData.words[wordKey] || [];
-    sentencePools[skill] = fluencyData.sentences[sentenceKey] || [];
-  });
-
-  // Build final pool
-  let finalPool=[];
-  if(contentType==="both"){
-    const numSkills=selected.length;
-    const half=Math.floor(gridSize/2);
-    let finalWords=[],finalSentences=[];
-    const wordsPerSkill=Math.floor(half/numSkills), sentencesPerSkill=Math.floor((gridSize-half)/numSkills);
-    selected.forEach(skill=>{
-      finalWords.push(...shuffle(wordPools[skill]).slice(0,wordsPerSkill));
-      finalSentences.push(...shuffle(sentencePools[skill]).slice(0,sentencesPerSkill));
+    document.querySelectorAll('.skill-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const skill = button.dataset.skill;
+        if (selectedSkills.has(skill)) {
+          selectedSkills.delete(skill);
+          button.classList.remove('selected');
+        } else {
+          selectedSkills.add(skill);
+          button.classList.add('selected');
+        }
+      });
     });
-    finalPool=shuffle([...finalWords,...finalSentences]).slice(0,gridSize);
-  }else if(contentType==="words"){
-    const perSkill=Math.floor(gridSize/selected.length);
-    selected.forEach(skill=>{finalPool.push(...shuffle(wordPools[skill]).slice(0,perSkill));});
-    finalPool=shuffle(finalPool).slice(0,gridSize);
-  }else{
-    const perSkill=Math.floor(gridSize/selected.length);
-    selected.forEach(skill=>{finalPool.push(...shuffle(sentencePools[skill]).slice(0,perSkill));});
-    finalPool=shuffle(finalPool).slice(0,gridSize);
-  }
 
-  const rows = gridSize/6;
-  let table = "<table>";
-  for(let r=0;r<rows;r++){
-    // Dice row
-    table+="<tr>";
-    for(let c=0;c<6;c++){
-      table+=`<td class="dice-cell"><img src="dice${c+1}.png" alt="dice${c+1}"></td>`;
+    document.querySelectorAll('#contentOptions .option-box').forEach(box => {
+      box.addEventListener('click', () => {
+        document.querySelectorAll('#contentOptions .option-box').forEach(b => b.classList.remove('selected-step2'));
+        box.classList.add('selected-step2');
+        box.querySelector('input').checked = true;
+      });
+    });
+
+    document.querySelectorAll('#gridSizeOptions .option-box').forEach(box => {
+      box.addEventListener('click', () => {
+        document.querySelectorAll('#gridSizeOptions .option-box').forEach(b => b.classList.remove('selected-step3'));
+        box.classList.add('selected-step3');
+        box.querySelector('input').checked = true;
+      });
+    });
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
     }
-    table+="</tr>";
-    // Content row
-    table+="<tr>";
-    for(let c=0;c<6;c++){
-      const val = finalPool[r*6+c] || "";
-      const cellClass = val.split(" ").length>3?"sentence-cell":"word-cell";
-      table+=`<td class="${cellClass}">${val}</td>`;
+
+    function generateGrid() {
+      document.getElementById("gridHeader").innerHTML = "";
+      document.getElementById("gridContainer").innerHTML = "";
+
+      const selected = Array.from(selectedSkills);
+      const contentType = document.querySelector('input[name="contentType"]:checked')?.value;
+      const gridSize = parseInt(document.querySelector('input[name="gridSize"]:checked')?.value || "30");
+
+      if (!selected.length || !contentType) {
+        alert("❗ Please select skills and a content type.");
+        return;
+      }
+
+      let wordPools = {}, sentencePools = {};
+
+      selected.forEach(skill => {
+        let wordKey = "", sentenceKey = "";
+        if (skill === "mixed") {
+          wordKey = "Mixed CVC Words";
+          sentenceKey = "Mixed CVC Sentences";
+        } else if (skill === "0.6") {
+          wordKey = "0.6 - FLSZ";
+          sentenceKey = "0.6 - FLSZ Sentences";
+        } else if (skill === "0.7") {
+          wordKey = "0.7 - FLSZ and CVC";
+          sentenceKey = "0.7 - FLSZ and CVC Sentences";
+        } else {
+          wordKey = `${skill} - Short ${skillMap[skill]} Words`;
+          sentenceKey = `${skill} - Short ${skillMap[skill]} Sentences`;
+        }
+
+        let words = fluencyData.words[wordKey] || [];
+        let sentences = fluencyData.sentences[sentenceKey] || [];
+
+        if (contentType === "words" || contentType === "both") wordPools[skill] = words;
+        if (contentType === "sentences" || contentType === "both") sentencePools[skill] = sentences;
+      });
+
+      let finalPool = [], finalWords = [], finalSentences = [];
+
+      if (contentType === "both") {
+        const numSkills = selected.length;
+        const half = Math.floor(gridSize / 2);
+        const totalWords = half;
+        const totalSentences = gridSize - half;
+
+        const wordsPerSkill = Math.floor(totalWords / numSkills);
+        const sentencesPerSkill = Math.floor(totalSentences / numSkills);
+        const extraWords = totalWords % numSkills;
+        const extraSentences = totalSentences % numSkills;
+
+        selected.forEach((skill, i) => {
+          const wordCount = wordsPerSkill + (i < extraWords ? 1 : 0);
+          const sentenceCount = sentencesPerSkill + (i < extraSentences ? 1 : 0);
+
+          const words = shuffle(wordPools[skill] || []).slice(0, wordCount);
+          const sentences = shuffle(sentencePools[skill] || []).slice(0, sentenceCount);
+
+          finalWords.push(...words);
+          finalSentences.push(...sentences);
+        });
+
+        finalPool = shuffle([...finalWords, ...finalSentences]).slice(0, gridSize);
+      } else if (contentType === "words") {
+        const wordsPerSkill = Math.floor(gridSize / selected.length);
+        const extra = gridSize % selected.length;
+
+        selected.forEach((skill, i) => {
+          const count = wordsPerSkill + (i < extra ? 1 : 0);
+          finalWords.push(...shuffle(wordPools[skill] || []).slice(0, count));
+        });
+
+        finalPool = shuffle(finalWords).slice(0, gridSize);
+      } else if (contentType === "sentences") {
+        const sentencesPerSkill = Math.floor(gridSize / selected.length);
+        const extra = gridSize % selected.length;
+
+        selected.forEach((skill, i) => {
+          const count = sentencesPerSkill + (i < extra ? 1 : 0);
+          finalSentences.push(...shuffle(sentencePools[skill] || []).slice(0, count));
+        });
+
+        finalPool = shuffle(finalSentences).slice(0, gridSize);
+      }
+
+      const rows = gridSize / 6;
+      let table = "<table>";
+      for (let r = 0; r < rows; r++) {
+        table += `<tr><td colspan="6" class="dice-cell"><img src="dice${r + 1}.png" alt="Dice ${r + 1}"></td></tr>`;
+        table += "<tr>";
+        for (let c = 0; c < 6; c++) {
+          const val = finalPool[r * 6 + c] || "";
+          const cellClass = val.split(" ").length > 3 ? "sentence-cell" : "word-cell";
+          table += `<td class="${cellClass}">${val}</td>`;
+        }
+        table += "</tr>";
+      }
+      table += "</table>";
+
+      const readableSkills = selected.map(s => ({
+        "0.1": "Short A", "0.2": "Short O", "0.3": "Short I",
+        "0.4": "Short U", "0.5": "Short E", "0.6": "FLSZ",
+        "0.7": "FLSZ and CVC", "mixed": "Mixed CVC"
+      }[s])).join(", ");
+
+      document.getElementById("gridHeader").innerHTML = `
+        <h2>Fluency Grid</h2>
+        <div style="font-weight: bold; font-size: 20px;">Skills: ${readableSkills}</div>
+        <br>
+      `;
+      document.getElementById("gridContainer").innerHTML = table;
     }
-    table+="</tr>";
-  }
-  table+="</table>";
-
-  const readableSkills = selected.map(s=>({
-    "0.1":"Short A","0.2":"Short O","0.3":"Short I","0.4":"Short U","0.5":"Short E",
-    "0.6":"FLSZ","0.7":"FLSZ and CVC","mixed":"Mixed CVC"
-  }[s])).join(", ");
-
-  document.getElementById("gridHeader").innerHTML = `<h2>Fluency Grid</h2><div style="font-weight: bold; font-size: 20px;">Skills: ${readableSkills}</div><br>`;
-  document.getElementById("gridContainer").innerHTML = table;
-}
-</script>
+  </script>
 </body>
 </html>
