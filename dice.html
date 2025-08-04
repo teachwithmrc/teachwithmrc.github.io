@@ -77,11 +77,13 @@
       flex-grow: 1;
     }
 
-    .copyright {
-      text-align: center;
-      font-size: 12px;
-      margin-top: 20px;
-    }
+   .copyright {
+  text-align: right;       /* Align text to the right */
+  font-size: 12px;
+  margin-top: 40px;        /* Add extra space from the table */
+  padding-right: 10px;     /* Small right padding */
+}
+
 
     #copyrightTag {
       font-size: 12px;
@@ -120,14 +122,13 @@
         page-break-inside: avoid;
       }
 
-      #copyrightTag {
-        position: relative;
-        bottom: 0;
-        right: 0;
-        text-align: center;
-        margin-top: 5px;
-        page-break-inside: avoid;
-      }
+       #copyrightTag {
+    position: absolute;
+    bottom: 0.3in;         /* Pin to the bottom of page */
+    right: 0.3in;          /* Align to the right margin */
+    text-align: right;
+    margin-top: 0;
+  }
     }
   </style>
 </head>
