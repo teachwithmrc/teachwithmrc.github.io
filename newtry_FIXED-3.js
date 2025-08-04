@@ -16,12 +16,11 @@ soundBoxWords["Short A"] = [
 ];
 
 soundBoxWords["Short A with Blends"] = [
-    { word: "back", pattern: "112", split: ["b","a","ck"] },
-    { word: "band", pattern: "112", split: ["b","a","nd"] },
-    { word: "blast", pattern: "113", split: ["bl","a","st"] },
-    { word: "clap", pattern: "112", split: ["cl","a","p"] },
-    { word: "flat", pattern: "112", split: ["fl","a","t"] },
-    { word: "snap", pattern: "112", split: ["sn","a","p"] }
+    { word: "band", pattern: "1111", split: ["b","a","nd"] },
+    { word: "blast", pattern: "11111", split: ["bl","a","st"] },
+    { word: "clap", pattern: "1111", split: ["cl","a","p"] },
+    { word: "flat", pattern: "1111", split: ["fl","a","t"] },
+    { word: "snap", pattern: "1111", split: ["sn","a","p"] }
 ];
 
 soundBoxWords["Short O"] = [
