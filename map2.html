@@ -1,208 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Word Mapping Generator</title>
-    <script src="newtry_FIXED-3.js" defer></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-    <style>
-        @font-face {
-            font-family: 'BoxesFont';
-            src: url('fonts/boxes.ttf') format('truetype');
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 40px;
-            text-align: center;
-        }
-        h1 { font-size: 36px; margin-bottom: 5px; }
-        h2 { font-size: 20px; margin-bottom: 20px; }
-        .table-section {
-            border: 2px solid #000;
-            padding: 20px;
-            margin: 12px auto;
-            width: fit-content;
-            box-sizing: border-box;
-        }
-        .section-label {
-            font-weight: 600;
-            font-size: 18px;
-            margin-bottom: 12px;
-        }
-        .skill-button {
-            border: 2px solid #000;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
-            margin: 5px;
-        }
-        .skill-button.selected {
-            background-color: #007bff;
-            color: white;
-            box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-        }
-        .option-box {
-            padding: 10px 14px;
-            border: 2px solid #000;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-            display: inline-block;
-        }
-        .option-box.selected {
-            background-color: #d9c9ff;
-        }
-        .page { 
-            display: flex; 
-            justify-content: space-between; 
-            page-break-after: always; 
-            margin-top: 30px;
-        }
-        .column { 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-around; 
-        }
-        .block { 
-            margin-bottom: 40px; 
-            text-align: center; 
-        }
-        .word { 
-            font-size: 28px; 
-            font-weight: 600; 
-        }
-        .pattern { 
-            font-size: 40px; 
-            font-family: 'BoxesFont', monospace;
-        }
-        #error-message {
-            color: red;
-            margin: 10px;
-            min-height: 20px;
-        }
-        @media print {
-            body { margin: 0; }
-            h1, h2, .table-section, button, #error-message { display: none; }
-            #output { margin: 0; }
-            .page { width: 100%; display: flex; justify-content: space-between; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Word Mapping Generator</title>
+  <script src="newtry_FIXED-3.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: 'BoxesFont';
+      src: url('fonts/boxes.ttf') format('truetype');
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 40px;
+      text-align: center;
+    }
+
+    h1 { font-size: 36px; margin-bottom: 5px; }
+    h2 { font-size: 20px; margin-bottom: 20px; }
+
+    .table-section {
+      border: 2px solid #000;
+      padding: 20px;
+      margin: 12px auto;
+      width: fit-content;
+      box-sizing: border-box;
+    }
+
+    .section-label {
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .skill-button {
+      border: 2px solid #000;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+      margin: 5px;
+    }
+    .skill-button.selected {
+      background-color: #007bff;
+      color: white;
+      box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+    }
+
+    .option-box {
+      padding: 10px 14px;
+      border: 2px solid #000;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+      display: inline-block;
+    }
+    .option-box.selected { background-color: #d9c9ff; }
+
+    .word-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    .word-table td {
+      width: 50%;
+      text-align: center;
+      vertical-align: top;
+      padding: 40px 0;
+    }
+
+    .worksheet-title {
+      font-size: 40px;
+      margin-bottom: 5px;
+      font-weight: 700;
+    }
+    .worksheet-directions {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .word { 
+      font-size: 48px; 
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .pattern { 
+      font-size: 64px; 
+      font-family: 'BoxesFont', monospace;
+    }
+
+    #error-message {
+      color: red;
+      margin: 10px;
+      min-height: 20px;
+    }
+
+    @media print {
+      body { margin: 0; }
+      h1, h2, .table-section, button, #error-message { display: none; }
+      #output { margin: 0; }
+      .worksheet-title, .worksheet-directions { display: block; text-align: center; }
+    }
+  </style>
 </head>
 <body>
-    <h1>Word Mapping</h1>
-    <h2>Skill: <span id="selected-skills"></span></h2>
-    <div id="error-message"></div>
+  <h1>Word Mapping</h1>
+  <h2>Skill: <span id="selected-skills"></span></h2>
+  <div id="error-message"></div>
 
-    <div class="table-section">
-        <div class="section-label">Step 1: Select a Skill</div>
-        <button class="skill-button" data-skill="Short A" aria-label="Select Short A skill">Short A</button>
-        <button class="skill-button" data-skill="Short O" aria-label="Select Short O skill">Short O</button>
-        <button class="skill-button" data-skill="FLSZ Words" aria-label="Select FLSZ Words skill">FLSZ Words</button>
-    </div>
+  <div class="table-section">
+    <div class="section-label">Step 1: Select a Skill</div>
+    <button class="skill-button" data-skill="Short A">Short A</button>
+    <button class="skill-button" data-skill="Short O">Short O</button>
+    <button class="skill-button" data-skill="FLSZ Words">FLSZ Words</button>
+  </div>
 
-    <div class="table-section">
-        <div class="section-label">Step 2: Options</div>
-        <div class="option-box" id="includeBlendsOption" role="button" tabindex="0" aria-label="Toggle include blends">Include Blends?</div>
-    </div>
+  <div class="table-section">
+    <div class="section-label">Step 2: Options</div>
+    <div class="option-box" id="includeBlendsOption" role="button" tabindex="0">Include Blends?</div>
+  </div>
 
-    <div class="table-section">
-        <div class="section-label">Step 3: Generate & Print</div>
-        <button onclick="generatePage()" style="font-size: 18px; padding: 10px 24px;">Generate</button>
-        <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
-    </div>
+  <div class="table-section">
+    <div class="section-label">Step 3: Generate & Print</div>
+    <button onclick="generatePage()" style="font-size: 18px; padding: 10px 24px;">Generate</button>
+    <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
+  </div>
 
-    <div id="output"></div>
+  <div id="output"></div>
 
-    <script>
-        let currentSkill = "";
-        let includeBlends = false;
+  <script>
+    let currentSkill = "";
+    let includeBlends = false;
 
-        const skillButtons = document.querySelectorAll('.skill-button');
-        skillButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                skillButtons.forEach(btn => btn.classList.remove('selected'));
-                button.classList.add('selected');
-                currentSkill = button.dataset.skill;
-                document.getElementById('selected-skills').innerText = currentSkill;
-                document.getElementById('error-message').innerText = '';
-            });
-        });
+    const skillButtons = document.querySelectorAll('.skill-button');
+    skillButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        skillButtons.forEach(btn => btn.classList.remove('selected'));
+        button.classList.add('selected');
+        currentSkill = button.dataset.skill;
+        document.getElementById('selected-skills').innerText = currentSkill;
+        document.getElementById('error-message').innerText = '';
+      });
+    });
 
-        document.getElementById('includeBlendsOption').addEventListener('click', function () {
-            includeBlends = !includeBlends;
-            this.classList.toggle('selected', includeBlends);
-        });
+    document.getElementById('includeBlendsOption').addEventListener('click', function () {
+      includeBlends = !includeBlends;
+      this.classList.toggle('selected', includeBlends);
+    });
 
-        document.getElementById('includeBlendsOption').addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                includeBlends = !includeBlends;
-                this.classList.toggle('selected', includeBlends);
-                e.preventDefault();
-            }
-        });
+    document.getElementById('includeBlendsOption').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        includeBlends = !includeBlends;
+        this.classList.toggle('selected', includeBlends);
+        e.preventDefault();
+      }
+    });
 
-        function getWordsForSkill(skill, blends) {
-            let list = soundBoxWords[skill] || [];
-            if (blends) {
-                const blendsKey = skill + " with Blends";
-                if (soundBoxWords[blendsKey]) {
-                    list = list.concat(soundBoxWords[blendsKey]);
-                } else {
-                    console.warn(`No blends found for ${blendsKey}`);
-                }
-            }
-            return shuffle(list);
+    function getWordsForSkill(skill, blends) {
+      let list = soundBoxWords[skill] || [];
+      if (blends) {
+        const blendsKey = skill + " with Blends";
+        if (soundBoxWords[blendsKey]) {
+          list = list.concat(soundBoxWords[blendsKey]);
+        } else {
+          console.warn(`No blends found for ${blendsKey}`);
         }
+      }
+      return shuffle(list);
+    }
 
-        function generatePage() {
-            document.getElementById('error-message').innerText = '';
-            if (!currentSkill) {
-                document.getElementById('error-message').innerText = "Please select a skill first.";
-                return;
-            }
-            if (!window.soundBoxWords) {
-                document.getElementById('error-message').innerText = "⚠️ Word data not loaded. Check your script path.";
-                return;
-            }
-            let words = getWordsForSkill(currentSkill, includeBlends);
-            if (words.length === 0) {
-                document.getElementById('error-message').innerText = `No words found for skill: ${currentSkill}`;
-                return;
-            }
-            if (words.length < 8) {
-                document.getElementById('error-message').innerText = `Only ${words.length} words available for ${currentSkill}. Displaying all.`;
-                words = shuffle(words);
-            } else {
-                words = shuffle(words).slice(0, 8);
-            }
-            const output = document.getElementById('output');
-            output.innerHTML = "";
-            const page = document.createElement('div');
-            page.className = "page";
-            const col1 = document.createElement('div');
-            col1.className = "column";
-            const col2 = document.createElement('div');
-            col2.className = "column";
-            words.forEach((entry, idx) => {
-                const block = document.createElement('div');
-                block.className = 'block';
-                block.innerHTML = `
-                    <div class="word">${entry.word}</div>
-                    <div class="pattern">${entry.pattern}</div>
-                `;
-                if (idx < 4) col1.appendChild(block);
-                else col2.appendChild(block);
-            });
-            page.appendChild(col1);
-            page.appendChild(col2);
-            output.appendChild(page);
-        }
+    function generatePage() {
+      document.getElementById('error-message').innerText = '';
+      if (!currentSkill) {
+        document.getElementById('error-message').innerText = "Please select a skill first.";
+        return;
+      }
+      if (!window.soundBoxWords) {
+        document.getElementById('error-message').innerText = "⚠️ Word data not loaded. Check your script path.";
+        return;
+      }
+      let words = getWordsForSkill(currentSkill, includeBlends);
+      if (words.length === 0) {
+        document.getElementById('error-message').innerText = `No words found for skill: ${currentSkill}`;
+        return;
+      }
+      if (words.length < 8) {
+        document.getElementById('error-message').innerText = `Only ${words.length} words available for ${currentSkill}. Displaying all.`;
+      }
+      words = shuffle(words).slice(0, 8);
 
-        function shuffle(arr) {
-            return [...arr].sort(() => Math.random() - 0.5);
+      const output = document.getElementById('output');
+      output.innerHTML = "";
+
+      // Title & directions
+      const title = document.createElement('div');
+      title.className = 'worksheet-title';
+      title.textContent = `${currentSkill} Word Mapping`;
+
+      const directions = document.createElement('div');
+      directions.className = 'worksheet-directions';
+      directions.textContent = "Read each word, write it in the sound boxes correctly, read it again.";
+
+      output.appendChild(title);
+      output.appendChild(directions);
+
+      // Create table
+      const table = document.createElement('table');
+      table.className = 'word-table';
+
+      for (let r = 0; r < 4; r++) {
+        const tr = document.createElement('tr');
+        for (let c = 0; c < 2; c++) {
+          const td = document.createElement('td');
+          const idx = r * 2 + c;
+          if (idx < words.length) {
+            td.innerHTML = `
+              <div class="word">${words[idx].word}</div>
+              <div class="pattern">${words[idx].pattern}</div>
+            `;
+          }
+          tr.appendChild(td);
         }
-    </script>
+        table.appendChild(tr);
+      }
+
+      output.appendChild(table);
+    }
+
+    function shuffle(arr) {
+      return [...arr].sort(() => Math.random() - 0.5);
+    }
+  </script>
 </body>
 </html>
