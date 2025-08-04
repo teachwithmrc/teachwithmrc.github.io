@@ -1,6 +1,6 @@
 console.log("newtry_FIXED.js loaded successfully");
 
-const soundBoxWords = {};
+var soundBoxWords = {};
 
 soundBoxWords["Short A"] = [
     { word: "bad", pattern: "111", split: ["b","a","d"] },
