@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <script src="fluencyDataFull_v3.js"></script>
-  <title>Fluency Grid Generator</title>
+  <title>Roll and Read Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
     body {
@@ -125,16 +125,17 @@
         bottom: 0;
         right: 0;
         text-align: center;
-        margin-top: 10px;
+        margin-top: 5px;
+        page-break-inside: avoid;
       }
     }
   </style>
 </head>
 <body>
-  <h1>CVC and FLSZ Fluency Grid Generator</h1>
+  <h1>Roll and Read Generator</h1>
   <div class="subtitle">
-    This generator includes <b>CVC Words</b> such as <b>hat, men, cup</b>.<br>
-    In addition, it includes <b>FLSZ (Double Consonant Endings)</b> with short vowels such as <b>buff, miss, and buzz</b>.
+    This generator includes <b>CVC Words</b> and <b>FLSZ (Double Consonant Endings)</b>.<br>
+    Select skills, content type, and grid size, then print your "Roll and Read" sheet!
   </div>
 
   <!-- Step 1 -->
@@ -177,7 +178,7 @@
   </div>
 
   <div style="margin-top: 30px;">
-    <button onclick="generateGrid()" style="font-size: 18px; padding: 10px 24px;">Generate Fluency Grid</button>
+    <button onclick="generateGrid()" style="font-size: 18px; padding: 10px 24px;">Generate Roll & Read</button>
     <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
   </div>
 
@@ -271,6 +272,7 @@
 
       const perSkill = Math.floor(gridSize / selected.length);
       const extra = gridSize % selected.length;
+
       if (contentType === "words") {
         selected.forEach((skill, i) => {
           const count = perSkill + (i < extra ? 1 : 0);
@@ -314,7 +316,8 @@
       }
       table += "</table>";
 
-      document.getElementById("gridHeader").innerHTML = `<h2>Fluency Grid</h2>`;
+      const selectedNames = selected.map(skill => skillMap[skill]).join(", ");
+      document.getElementById("gridHeader").innerHTML = `<h2>Roll and Read</h2><div>Skills: ${selectedNames}</div>`;
       document.getElementById("gridContainer").innerHTML = table;
     }
   </script>
