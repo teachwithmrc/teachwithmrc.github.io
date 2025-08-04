@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Word Mapping Generator</title>
-  <script src="newtry_FULL.js" defer></script>
+  <script src="newtry_FULL_FIXED.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
   <style>
@@ -145,10 +145,10 @@
       <div class="skill-row">
         <span class="skill-row-label">Short Vowels:</span>
         <button class="skill-button" data-skill="Short A">Short A</button>
-        <button class="skill-button" data-skill="Short B">Short B</button>
-        <button class="skill-button" data-skill="Short C">Short C</button>
-        <button class="skill-button" data-skill="Short D">Short D</button>
         <button class="skill-button" data-skill="Short E">Short E</button>
+        <button class="skill-button" data-skill="Short I">Short I</button>
+        <button class="skill-button" data-skill="Short O">Short O</button>
+        <button class="skill-button" data-skill="Short U">Short U</button>
         <button class="skill-button" data-skill="Mixed CVC">Mixed CVC</button>
         <button class="skill-button" data-skill="FLSZ Words">FLSZ</button>
       </div>
@@ -233,18 +233,18 @@
       if (skill === "Mixed CVC") {
         list = [].concat(
           soundBoxWords["Short A"] || [],
-          soundBoxWords["Short B"] || [],
-          soundBoxWords["Short C"] || [],
-          soundBoxWords["Short D"] || [],
-          soundBoxWords["Short E"] || []
+          soundBoxWords["Short E"] || [],
+          soundBoxWords["Short I"] || [],
+          soundBoxWords["Short O"] || [],
+          soundBoxWords["Short U"] || []
         );
         if (blends) {
           list = list.concat(
             soundBoxWords["Short A with Blends"] || [],
-            soundBoxWords["Short B with Blends"] || [],
-            soundBoxWords["Short C with Blends"] || [],
-            soundBoxWords["Short D with Blends"] || [],
-            soundBoxWords["Short E with Blends"] || []
+            soundBoxWords["Short E with Blends"] || [],
+            soundBoxWords["Short I with Blends"] || [],
+            soundBoxWords["Short O with Blends"] || [],
+            soundBoxWords["Short U with Blends"] || []
           );
         }
         return list;
@@ -275,7 +275,8 @@
       output.innerHTML = "";
       document.getElementById('error-message').innerText = '';
 
-      if (selectedSkills.size === 0) {
+      const selected = Array.from(selectedSkills);
+      if (selected.length === 0) {
         document.getElementById('error-message').innerText = "Please select at least one skill.";
         return;
       }
@@ -284,23 +285,30 @@
         return;
       }
 
-      let words = [];
-      selectedSkills.forEach(skill => {
-        words = words.concat(getWordsForSkill(skill, includeBlends));
+      const gridSize = 8;
+      const perSkill = Math.floor(gridSize / selected.length);
+      const extra = gridSize % selected.length;
+      let finalPool = [];
+
+      selected.forEach((skill, idx) => {
+        let words = getWordsForSkill(skill, includeBlends);
+        words = shuffle(words);
+
+        const takeCount = perSkill + (idx < extra ? 1 : 0);
+        finalPool.push(...words.slice(0, takeCount));
       });
 
-      if (words.length === 0) {
+      if (finalPool.length === 0) {
         document.getElementById('error-message').innerText = `No words found for selected skills.`;
         return;
       }
 
-      // Pick 8 random words
-      words = shuffle(words).slice(0, 8);
+      const words = shuffle(finalPool);
 
       // Title & directions
       const title = document.createElement('div');
       title.className = 'worksheet-title';
-      title.textContent = `${Array.from(selectedSkills).join(", ")} Word Mapping`;
+      title.textContent = `${selected.join(", ")} Word Mapping`;
 
       const directions = document.createElement('div');
       directions.className = 'worksheet-directions';
