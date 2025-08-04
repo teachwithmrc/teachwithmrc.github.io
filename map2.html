@@ -60,16 +60,19 @@
     }
     .option-box.selected { background-color: #d9c9ff; }
 
+    /* Worksheet Layout */
     .word-table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
+      border: 2px solid black;
     }
     .word-table td {
       width: 50%;
       text-align: center;
-      vertical-align: top;
-      padding: 40px 0;
+      vertical-align: middle;
+      padding: 20px 0; /* smaller padding to fit on one page */
+      border: 2px solid black;
     }
 
     .worksheet-title {
@@ -83,12 +86,12 @@
     }
 
     .word { 
-      font-size: 48px; 
+      font-size: 36px;  /* smaller word font */
       font-weight: 700;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .pattern { 
-      font-size: 64px; 
+      font-size: 80px;  /* much bigger pattern font */
       font-family: 'BoxesFont', monospace;
     }
 
@@ -102,7 +105,10 @@
       body { margin: 0; }
       h1, h2, .table-section, button, #error-message { display: none; }
       #output { margin: 0; }
-      .worksheet-title, .worksheet-directions { display: block; text-align: center; }
+      .worksheet-title, .worksheet-directions { 
+        display: block; 
+        text-align: center; 
+      }
     }
   </style>
 </head>
@@ -186,9 +192,6 @@
       if (words.length === 0) {
         document.getElementById('error-message').innerText = `No words found for skill: ${currentSkill}`;
         return;
-      }
-      if (words.length < 8) {
-        document.getElementById('error-message').innerText = `Only ${words.length} words available for ${currentSkill}. Displaying all.`;
       }
       words = shuffle(words).slice(0, 8);
 
