@@ -176,6 +176,8 @@ const soundBoxWords = {
 { word: "Kit", pattern: "111", split: ["K","i","t"] },
 { word: "Sid", pattern: "111", split: ["S","i","d"] },
 { word: "Tim", pattern: "111", split: ["T","i","m"] },
+{ word: "quiz", pattern: "211", split: ["qu","i","z"] },
+{ word: "quit", pattern: "211", split: ["qu","i","t"] },
 ],
 "Short U": [
 { word: "bud", pattern: "111", split: ["b","u","d"] },
