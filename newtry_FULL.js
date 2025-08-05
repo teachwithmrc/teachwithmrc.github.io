@@ -481,7 +481,7 @@ const soundBoxWords = {
   "Digraph(wh with Blends)": [
 { word: "whisk", pattern: "2111", split: ["wh","a","ck"] },
     { word: "whisp", pattern: "2111", split: ["wh","a","ck"] },
-    ]
+    ],
   "Digraph(wh)": [
 { word: "whack", pattern: "212", split: ["wh","a","ck"] },
 { word: "whip", pattern: "211", split: ["wh","i","p"] },
