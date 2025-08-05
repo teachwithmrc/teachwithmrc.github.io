@@ -340,23 +340,49 @@ case "Mixed R-Controlled":
   );
   
 
-        // Vowel Teams
-        case "Long A": return fetchSet("Long A");
-        case "Long E": return fetchSet("Long E");
-        case "Long I": return fetchSet("Long I");
-        case "Long O": return fetchSet("Long O");
-        case "Long U": return fetchSet("Long U");
-        case "Mixed Vowel Teams": return [].concat(
-          fetchSet("Long A"), fetchSet("Long E"), fetchSet("Long I"), fetchSet("Long O"), fetchSet("Long U")
-        );
+      // --- Vowel Teams ---
+case "Long A":
+  return [].concat(fetchSet("Long A(ai)"), fetchSet("Long A(ay)"));
+case "Long E":
+  return [].concat(fetchSet("Long E(ee)"), fetchSet("Long E(ea)"));
+case "Long I":
+  return [].concat(fetchSet("Long I(igh)"), fetchSet("Long I(y)"), fetchSet("Long I(ie)"));
+case "Long O":
+  return [].concat(fetchSet("Long O(oa)"), fetchSet("Long O(ow)"), fetchSet("Long O(oe)"));
+case "Long U":
+  return [].concat(fetchSet("Long U(oo)"), fetchSet("Long U(ew)"), fetchSet("Long U(ue)"));
 
-        // Diphthongs
-        case "oy/oi": return fetchSet("oy/oi");
-        case "ow/ou": return fetchSet("ow/ou");
+case "Mixed Vowel Teams":
+  return [].concat(
+    fetchSet("Long A(ai)"), fetchSet("Long A(ay)"),
+    fetchSet("Long E(ee)"), fetchSet("Long E(ea)"),
+    fetchSet("Long I(igh)"), fetchSet("Long I(y)"), fetchSet("Long I(ie)"),
+    fetchSet("Long O(oa)"), fetchSet("Long O(ow)"), fetchSet("Long O(oe)"),
+    fetchSet("Long U(oo)"), fetchSet("Long U(ew)"), fetchSet("Long U(ue)")
+  );
 
-        // Variant Vowels
-        case "au/aw": return fetchSet("au/aw");
-        case "oo": return fetchSet("oo");
+       // --- Diphthongs ---
+case "oy/oi":
+  return [].concat(
+    fetchSet("Diphthong(oi)"),
+    fetchSet("Diphthong(oy)")
+  );
+
+case "ow/ou":
+  return [].concat(
+    fetchSet("Diphthong(ou)"),
+    fetchSet("Diphthong(ow)")
+  );
+          
+// --- Variant Vowels ---
+case "au/aw":
+  return [].concat(
+    fetchSet("Variant Vowel(au)"),
+    fetchSet("Variant Vowel(aw)")
+  );
+
+case "oo":
+  return fetchSet("Variant Vowel(oo)");
 
         // Soft C & G
         case "Soft C(ce)": return fetchSet("Soft C(ce)");
