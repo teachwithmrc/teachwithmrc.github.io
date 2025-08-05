@@ -42,14 +42,21 @@
     .worksheet-directions { font-size: 22px; margin-bottom: 20px; }
 
     .word { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
-    .pattern { font-size: 100px; font-family: 'BoxesFont', monospace; line-height: 1; }
-
+  .pattern {
+  font-size: 60px;
+  transform: scale(1.5);
+  display: inline-block;
+  font-family: 'BoxesFont', monospace;
+  font-weight: normal;
+  line-height: 1;
+}
     @media print {
       body { margin: 0; }
       h1, h2, .table-section, button { display: none; }
       #output { margin: 0; }
       .worksheet-title, .worksheet-directions { display: block; text-align: center; }
     }
+    
   </style>
 </head>
 <body>
