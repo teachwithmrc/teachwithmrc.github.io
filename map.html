@@ -35,14 +35,14 @@
     .option-box.selected { background-color: #d9c9ff; }
 
     /* Worksheet Layout */
-    .page { display: flex; justify-content: space-between; page-break-after: always; margin-top: 30px; }
-    .column { display: flex; flex-direction: column; justify-content: space-around; }
-    .block { margin-bottom: 40px; text-align: center; }
-    .word { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
-    .pattern { font-size: 100px; font-family: 'BoxesFont', monospace; line-height: 1; }
+    .word-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid black; }
+    .word-table td { width: 50%; text-align: center; vertical-align: middle; padding: 10px 0; border: 2px solid black; }
 
     .worksheet-title { font-size: 40px; margin-bottom: 5px; font-weight: 700; }
     .worksheet-directions { font-size: 22px; margin-bottom: 20px; }
+
+    .word { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+    .pattern { font-size: 100px; font-family: 'BoxesFont', monospace; line-height: 1; }
 
     @media print {
       body { margin: 0; }
@@ -137,7 +137,7 @@
     let selectedSkills = new Set();
     let includeBlends = null;
 
-    // Toggle skill buttons
+    // Skill button toggle
     document.querySelectorAll('.skill-button').forEach(btn => {
       btn.addEventListener('click', () => {
         const skill = btn.dataset.skill;
@@ -164,7 +164,7 @@
       document.getElementById('includeBlendsYes').classList.remove('selected');
     });
 
-    // Generate Page
+    // Generate Page (Old Style Output)
     function generatePage() {
       if (selectedSkills.size === 0) return alert("Select at least one skill!");
       if (includeBlends === null) return alert("Please choose Include Blends: Yes or No");
@@ -184,6 +184,7 @@
       const output = document.getElementById('output');
       output.innerHTML = '';
 
+      // Worksheet Title & Directions
       const title = document.createElement('div');
       title.className = 'worksheet-title';
       title.textContent = `${Array.from(selectedSkills).join(', ')} Word Mapping`;
@@ -192,30 +193,30 @@
       directions.className = 'worksheet-directions';
       directions.textContent = "Read each word, write it in the sound boxes correctly, read it again.";
 
-      const page = document.createElement('div');
-      page.className = 'page';
-
-      const col1 = document.createElement('div'); col1.className = "column";
-      const col2 = document.createElement('div'); col2.className = "column";
-
-      allWords.forEach((entry, idx) => {
-        const block = document.createElement('div');
-        block.className = 'block';
-        block.innerHTML = `
-          <div class="word">${entry.word}</div>
-          <div class="pattern">${entry.pattern}</div>
-        `;
-        if (idx < 4) col1.appendChild(block); else col2.appendChild(block);
-      });
-
-      page.appendChild(col1); page.appendChild(col2);
-
       output.appendChild(title);
       output.appendChild(directions);
-      output.appendChild(page);
+
+      // Create 4x2 Table
+      const table = document.createElement('table');
+      table.className = 'word-table';
+      for (let r = 0; r < 4; r++) {
+        const tr = document.createElement('tr');
+        for (let c = 0; c < 2; c++) {
+          const td = document.createElement('td');
+          const idx = r * 2 + c;
+          if (idx < allWords.length) {
+            td.innerHTML = `
+              <div class="word">${allWords[idx].word}</div>
+              <div class="pattern">${allWords[idx].pattern}</div>
+            `;
+          }
+          tr.appendChild(td);
+        }
+        table.appendChild(tr);
+      }
+      output.appendChild(table);
     }
 
-    // Get Words for Skill (with dynamic Mixed handling)
     function getWordsForSkill(skill, source) {
       switch (skill) {
         case "Mixed CVC": return [].concat(
