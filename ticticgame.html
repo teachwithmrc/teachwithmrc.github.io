@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Tic Tac Toe Game</title>
+  <script src="fluencyDataFull_v3.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 40px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+
+    .table-section {
+      border: 2px solid #000;
+      padding: 20px;
+      margin: 12px auto;
+      width: fit-content;
+      box-sizing: border-box;
+    }
+
+    .section-label {
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .skill-button-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .skill-button-grid .row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .skill-button {
+      border: 2px solid #000;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+
+    .skill-button.selected {
+      background-color: #007bff;
+      color: white;
+      box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+    }
+
+    .option-grid {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .option-box {
+      padding: 10px 14px;
+      border: 2px solid #000;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .option-box.selected-step2 {
+      background-color: #d9c9ff;
+    }
+
+    /* ✅ Interactive Tic Tac Toe Styles */
+    .tic-tac-toe-board {
+      display: grid;
+      grid-template-columns: repeat(3, 120px);
+      grid-template-rows: repeat(3, 120px);
+      gap: 5px;
+      margin: 30px auto;
+      justify-content: center;
+    }
+
+    .tic-tac-toe-cell {
+      background-color: #f0f0f0;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 60px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .tic-tac-toe-cell:hover {
+      background-color: #d9e8ff;
+      transform: scale(1.05);
+    }
+
+    .winner {
+      background-color: #ffeb3b !important;
+    }
+
+    #winnerMessage {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 20px;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Interactive Tic Tac Toe Game</h1>
+  <div class="subtitle">Play a fun and colorful game of Tic Tac Toe online!</div>
+
+  <div class="table-section">
+    <div class="section-label">Step 1: Select Skills</div>
+    <div class="skill-button-grid">
+      <div class="row">
+        <div class="skill-button" data-skill="0.1">Short A</div>
+        <div class="skill-button" data-skill="0.2">Short O</div>
+        <div class="skill-button" data-skill="0.3">Short I</div>
+        <div class="skill-button" data-skill="0.4">Short U</div>
+        <div class="skill-button" data-skill="0.5">Short E</div>
+      </div>
+      <div class="row">
+        <div class="skill-button" data-skill="0.6">FLSZ</div>
+        <div class="skill-button" data-skill="0.7">CVC & FLSZ</div>
+        <div class="skill-button" data-skill="mixed">Mixed CVC</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-section">
+    <div class="section-label">Step 2: What would you like in the grid?</div>
+    <div class="option-grid" id="contentOptions">
+      <label class="option-box">
+        <input type="radio" name="contentType" value="words" />
+        Only Words
+      </label>
+      <label class="option-box">
+        <input type="radio" name="contentType" value="sentences" />
+        Only Sentences
+      </label>
+      <label class="option-box">
+        <input type="radio" name="contentType" value="both" />
+        Both
+      </label>
+    </div>
+  </div>
+
+  <div class="table-section">
+    <div class="section-label">Step 3: Play Interactive Tic Tac Toe</div>
+    <button onclick="startTicTacToe()" style="font-size: 18px; padding: 10px 24px;">Start Game</button>
+  </div>
+
+  <div id="gameContainer"></div>
+  <div id="winnerMessage"></div>
+
+  <script>
+    let currentPlayer = 'X';
+    let gameBoard = Array(9).fill('');
+    let gameOver = false;
+
+    function startTicTacToe() {
+      const first = prompt("Who goes first? Enter X or O").toUpperCase();
+      currentPlayer = (first === 'O') ? 'O' : 'X';
+      gameBoard = Array(9).fill('');
+      gameOver = false;
+      document.getElementById('winnerMessage').textContent = '';
+      renderBoard();
+    }
+
+    function renderBoard() {
+      const container = document.getElementById('gameContainer');
+      container.innerHTML = '';
+      const board = document.createElement('div');
+      board.className = 'tic-tac-toe-board';
+
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'tic-tac-toe-cell';
+        cell.textContent = gameBoard[i];
+        cell.addEventListener('click', () => handleMove(i, cell));
+        board.appendChild(cell);
+      }
+
+      container.appendChild(board);
+    }
+
+    function handleMove(index, cell) {
+      if (gameBoard[index] !== '' || gameOver) return;
+      gameBoard[index] = currentPlayer;
+      cell.textContent = currentPlayer;
+
+      if (checkWinner()) {
+        document.getElementById('winnerMessage').textContent = `${currentPlayer} Wins! 🎉`;
+        highlightWinner();
+        gameOver = true;
+        return;
+      }
+
+      if (!gameBoard.includes('')) {
+        document.getElementById('winnerMessage').textContent = `It's a Tie! 🤝`;
+        gameOver = true;
+        return;
+      }
+
+      currentPlayer = (currentPlayer === 'X') ? 'O' : 'X';
+    }
+
+    function checkWinner() {
+      const wins = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      return wins.some(combination => {
+        const [a,b,c] = combination;
+        return gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c];
+      });
+    }
+
+    function highlightWinner() {
+      const wins = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      const cells = document.querySelectorAll('.tic-tac-toe-cell');
+      wins.forEach(combination => {
+        const [a,b,c] = combination;
+        if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+          cells[a].classList.add('winner');
+          cells[b].classList.add('winner');
+          cells[c].classList.add('winner');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
