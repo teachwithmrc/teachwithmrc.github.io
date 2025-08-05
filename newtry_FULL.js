@@ -363,6 +363,23 @@ const soundBoxWords = {
 { word: "Zack", pattern: "112", split: ["Z","a","ck"] },
 { word: "Vick", pattern: "112", split: ["V","i","ck"] }
   ],
+ "Digraph(ck) with Blends": [
+{ word: "brick", pattern: "1112", split: ["b","a","ck"] },
+{ word: "Brock", pattern: "1112", split: ["n","e","ck"] },
+{ word: "crack", pattern: "1112", split: ["p","i","ck"] },
+{ word: "pluck", pattern: "1112", split: ["s","o","ck"] },
+{ word: "slick", pattern: "1112", split: ["l","u","ck"] },
+{ word: "slack", pattern: "1112", split: ["r","a","ck"] },
+{ word: "smack", pattern: "1112", split: ["t","u","ck"] },
+{ word: "snack", pattern: "1112", split: ["m","o","ck"] },
+{ word: "snuck", pattern: "1112", split: ["m","u","ck"] },
+{ word: "speck", pattern: "1112", split: ["p","a","ck"] },
+{ word: "stack", pattern: "1112", split: ["r","o","ck"] },
+{ word: "stick", pattern: "1112", split: ["s","u","ck"] },
+{ word: "stock", pattern: "1112", split: ["l","a","ck"] },
+{ word: "stuck", pattern: "1112", split: ["s","i","ck"] },
+{ word: "stack", pattern: "1112", split: ["h","a","ck"] },
+ ],
   "Digraph(sh)": [
 { word: "she", pattern: "21", split: ["sh","e"] },
 { word: "wish", pattern: "112", split: ["w","i","sh"] },
@@ -400,6 +417,19 @@ const soundBoxWords = {
 { word: "Ash", pattern: "12", split: ["A","sh"] },
 { word: "Dash", pattern: "112", split: ["D","a","sh"] }
   ],
+  "Digraph(sh with Blends)": [
+{ word: "brash", pattern: "1112", split: ["sh","e"] },
+{ word: "brush", pattern: "1112", split: ["w","i","sh"] },
+{ word: "crash", pattern: "1112", split: ["sh","u","t"] },
+{ word: "crush", pattern: "1112", split: ["a","sh"] },
+{ word: "fresh", pattern: "1112", split: ["sh","o","ck"] },
+{ word: "slash", pattern: "1112", split: ["sh","a","ck"] },
+{ word: "slush", pattern: "1112", split: ["d","i","sh"] },
+{ word: "smash", pattern: "1112", split: ["sh","e","d"] },
+{ word: "splash", pattern: "11112", split: ["sh","o","p"] },
+    { word: "stash", pattern: "1112", split: ["d","i","sh"] },
+{ word: "shelf", pattern: "2111", split: ["sh","e","d"] },
+],
   "Digraph(th)": [
 { word: "than", pattern: "211", split: ["th","a","n"] },
 { word: "that", pattern: "211", split: ["th","a","t"] },
@@ -418,6 +448,11 @@ const soundBoxWords = {
 { word: "Beth", pattern: "112", split: ["B","e","th"] },
 { word: "Seth", pattern: "112", split: ["S","e","th"] }
   ],
+
+  "Digraph(th with Blends)": [
+{ word: "froth", pattern: "1112", split: ["th","a","n"] },
+{ word: "sloth", pattern: "1112", split: ["th","a","t"] },
+    ],
   "Digraph(ch)": [
 { word: "chap", pattern: "211", split: ["ch","a","p"] },
 { word: "such", pattern: "111", split: ["s","u","ch"] },
@@ -440,6 +475,13 @@ const soundBoxWords = {
 { word: "Chip", pattern: "211", split: ["Ch","i","p"] },
 { word: "Chaz", pattern: "211", split: ["Ch","a","z"] },
   ],
+
+   "Digraph(ch)": [
+{ word: "champ", pattern: "2111", split: ["ch","a","p"] },
+],
+  "Digraph(wh with Blends)": [
+{ word: "whisk", pattern: "2111", split: ["wh","a","ck"] },
+    { word: "whisp", pattern: "2111", split: ["wh","a","ck"] },
   "Digraph(wh)": [
 { word: "whack", pattern: "212", split: ["wh","a","ck"] },
 { word: "whip", pattern: "211", split: ["wh","i","p"] },
