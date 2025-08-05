@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ultimate Word Mapping Generator</title>
+  <script src="newtry_FULL.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: 'BoxesFont';
+      src: url('fonts/boxes.ttf') format('truetype');
+    }
+
+    body { font-family: 'Poppins', sans-serif; margin: 40px; text-align: center; }
+    h1 { font-size: 36px; margin-bottom: 5px; }
+    h2 { font-size: 20px; margin-bottom: 20px; }
+
+    .table-section { border: 2px solid #000; padding: 20px; margin: 12px auto; width: fit-content; box-sizing: border-box; text-align: left; }
+    .section-label { font-weight: 600; font-size: 18px; margin-bottom: 12px; text-align: center; }
+
+    .skill-button-grid { display: flex; flex-direction: column; gap: 12px; }
+    .skill-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .skill-row-label { font-weight: 600; margin-right: 8px; }
+
+    .skill-button {
+      border: 2px solid #000; padding: 6px 12px; border-radius: 6px;
+      font-weight: 600; font-size: 14px; cursor: pointer;
+      transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+    .skill-button.selected { background-color: #007bff; color: white; box-shadow: 0 0 4px rgba(0, 123, 255, 0.5); }
+
+    .option-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+    .option-box { padding: 10px 14px; border: 2px solid #000; border-radius: 8px; cursor: pointer; transition: background-color 0.3s, color 0.3s; }
+    .option-box.selected { background-color: #d9c9ff; }
+
+    /* Worksheet Layout */
+    .page { display: flex; justify-content: space-between; page-break-after: always; margin-top: 30px; }
+    .column { display: flex; flex-direction: column; justify-content: space-around; }
+    .block { margin-bottom: 40px; text-align: center; }
+    .word { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+    .pattern { font-size: 100px; font-family: 'BoxesFont', monospace; font-weight: normal; line-height: 1; display: block; margin-top: 12px; }
+
+    .worksheet-title { font-size: 40px; margin-bottom: 5px; font-weight: 700; }
+    .worksheet-directions { font-size: 22px; margin-bottom: 20px; }
+
+    @media print {
+      body { margin: 0; }
+      h1, h2, .table-section, button { display: none; }
+      #output { margin: 0; }
+      .worksheet-title, .worksheet-directions { display: block; text-align: center; }
+      .pattern { font-size: 70px; line-height: 0.9; margin-top: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Word Mapping Generator</h1>
+  <h2>Skills: <span id="selected-skills"></span></h2>
+
+  <!-- Step 1: Skill Selection -->
+  <div class="table-section">
+    <div class="section-label">Step 1: Select Skills (3 sounds unless blends are included)</div>
+    <div class="skill-button-grid">
+
+      <!-- CVC Short Vowels -->
+      <div class="skill-row">
+        <span class="skill-row-label">CVC Short Vowels:</span>
+        <button class="skill-button" data-skill="Short A">Short A</button>
+        <button class="skill-button" data-skill="Short E">Short E</button>
+        <button class="skill-button" data-skill="Short I">Short I</button>
+        <button class="skill-button" data-skill="Short O">Short O</button>
+        <button class="skill-button" data-skill="Short U">Short U</button>
+        <button class="skill-button" data-skill="Mixed CVC">Mixed CVC</button>
+        <button class="skill-button" data-skill="FLSZ Words">FLSZ</button>
+      </div>
+
+      <!-- Digraphs -->
+      <div class="skill-row">
+        <span class="skill-row-label">Digraphs:</span>
+        <button class="skill-button" data-skill="Digraph(ck)">ck</button>
+        <button class="skill-button" data-skill="Digraph(sh)">sh</button>
+        <button class="skill-button" data-skill="Digraph(th)">th</button>
+        <button class="skill-button" data-skill="Digraph(ch)">ch</button>
+        <button class="skill-button" data-skill="Digraph(wh)">wh</button>
+        <button class="skill-button" data-skill="Digraphs Mixed">Digraphs Mixed</button>
+      </div>
+
+      <!-- Glued Sounds -->
+      <div class="skill-row">
+        <span class="skill-row-label">Glued Sounds:</span>
+        <button class="skill-button" data-skill="Glued(all)">-all</button>
+        <button class="skill-button" data-skill="Glued(-ng)">-ng</button>
+        <button class="skill-button" data-skill="Glued(-nk)">-nk</button>
+        <button class="skill-button" data-skill="Glued Mixed">Glued Mixed</button>
+      </div>
+
+      <!-- Silent E -->
+      <div class="skill-row">
+        <span class="skill-row-label">Silent E (VCe):</span>
+        <button class="skill-button" data-skill="VCe(a_e)">a_e</button>
+        <button class="skill-button" data-skill="VCe(i_e)">i_e</button>
+        <button class="skill-button" data-skill="VCe(o_e)">o_e</button>
+        <button class="skill-button" data-skill="VCe(u_e)">u_e</button>
+        <button class="skill-button" data-skill="Mixed VCe">Mixed VCe</button>
+      </div>
+
+      <!-- R-Controlled -->
+      <div class="skill-row">
+        <span class="skill-row-label">R-Controlled:</span>
+        <button class="skill-button" data-skill="R-Controlled(ar)">ar</button>
+        <button class="skill-button" data-skill="R-Controlled(or)">or</button>
+        <button class="skill-button" data-skill="R-Controlled(er,ir,ur)">er/ir/ur</button>
+        <button class="skill-button" data-skill="Mixed R-Controlled">Mixed R-Controlled</button>
+      </div>
+
+      <!-- Vowel Teams -->
+      <div class="skill-row">
+        <span class="skill-row-label">Vowel Teams:</span>
+        <button class="skill-button" data-skill="Long A(ay/ai)">ay / ai</button>
+        <button class="skill-button" data-skill="Long E(ee/ea)">ee / ea</button>
+        <button class="skill-button" data-skill="Long I(igh/y/ie)">igh / y / ie</button>
+        <button class="skill-button" data-skill="Long O(oa/ow/oe)">oa / ow / oe</button>
+        <button class="skill-button" data-skill="Long U(oo/ew/ue)">oo / ew / ue</button>
+      </div>
+
+      <!-- Diphthongs -->
+      <div class="skill-row">
+        <span class="skill-row-label">Diphthongs:</span>
+        <button class="skill-button" data-skill="Diphthong(oi/oy)">oi / oy</button>
+        <button class="skill-button" data-skill="Diphthong(ou/ow)">ou / ow</button>
+      </div>
+
+      <!-- Variant Vowels -->
+      <div class="skill-row">
+        <span class="skill-row-label">Variant Vowels:</span>
+        <button class="skill-button" data-skill="Variant Vowel(au/aw)">au / aw</button>
+        <button class="skill-button" data-skill="Variant Vowel(oo)">oo</button>
+      </div>
+
+      <!-- Soft C & G Endings -->
+      <div class="skill-row" style="margin-top:12px;">
+        <span class="skill-row-label">Soft C & G Endings:</span>
+        <button class="skill-button" data-skill="Soft Ending(-ce)">-ce</button>
+        <button class="skill-button" data-skill="Soft Ending(-ge)">-ge</button>
+        <button class="skill-button" data-skill="Soft Ending(-dge)">-dge</button>
+      </div>
+
+      <!-- Soft C & G -->
+      <div class="skill-row">
+        <span class="skill-row-label">Soft C & G:</span>
+        <button class="skill-button" data-skill="Soft C(ce,ci,cy)">Soft C</button>
+        <button class="skill-button" data-skill="Soft G(ge,gi,gy)">Soft G</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Step 2: Include Blends -->
+  <div class="table-section">
+    <div class="section-label">Step 2: Include Blends?</div>
+    <div class="option-grid">
+      <div class="option-box" id="includeBlendsYes">Yes (4+ sounds)</div>
+      <div class="option-box" id="includeBlendsNo">No (3 sounds)</div>
+    </div>
+  </div>
+
+  <!-- Step 3: Generate & Print -->
+  <div class="table-section">
+    <div class="section-label">Step 3: Generate & Print</div>
+    <button onclick="generatePage()" style="font-size: 18px; padding: 10px 24px;">Generate</button>
+    <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
+  </div>
+
+  <div id="output"></div>
+
+  <script>
+    let selectedSkills = new Set();
+    let includeBlends = null;
+
+    // Skill button toggle
+    document.querySelectorAll('.skill-button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const skill = btn.dataset.skill;
+        if (selectedSkills.has(skill)) {
+          selectedSkills.delete(skill);
+          btn.classList.remove('selected');
+        } else {
+          selectedSkills.add(skill);
+          btn.classList.add('selected');
+        }
+        document.getElementById('selected-skills').innerText = Array.from(selectedSkills).join(', ');
+      });
+    });
+
+    // Blends toggle
+    document.getElementById('includeBlendsYes').addEventListener('click', function () {
+      includeBlends = true;
+      this.classList.add('selected');
+      document.getElementById('includeBlendsNo').classList.remove('selected');
+    });
+    document.getElementById('includeBlendsNo').addEventListener('click', function () {
+      includeBlends = false;
+      this.classList.add('selected');
+      document.getElementById('includeBlendsYes').classList.remove('selected');
+    });
+
+    // Generate Page
+    function generatePage() {
+      if (selectedSkills.size === 0) return alert("Select at least one skill!");
+      if (includeBlends === null) return alert("Please choose Include Blends: Yes or No");
+
+      const source = soundBoxWords; // Always use one source
+      const blends = includeBlends;
+      let allWords = [];
+
+      selectedSkills.forEach(skill => {
+        allWords = allWords.concat(getWordsForSkill(skill, source, blends));
+      });
+
+      if (allWords.length === 0) return alert("No words found for the selected skills.");
+
+      while (allWords.length < 8) allWords = allWords.concat(allWords);
+      allWords = shuffle(allWords).slice(0, 8);
+
+      const output = document.getElementById('output');
+      output.innerHTML = '';
+
+      const title = document.createElement('div');
+      title.className = 'worksheet-title';
+      title.textContent = `${Array.from(selectedSkills).join(', ')} Word Mapping`;
+
+      const directions = document.createElement('div');
+      directions.className = 'worksheet-directions';
+      directions.textContent = "Read each word, write it in the sound boxes correctly, read it again.";
+
+      const page = document.createElement('div');
+      page.className = 'page';
+
+      const col1 = document.createElement('div'); col1.className = "column";
+      const col2 = document.createElement('div'); col2.className = "column";
+
+      allWords.forEach((entry, idx) => {
+        const block = document.createElement('div');
+        block.className = 'block';
+        block.innerHTML = `
+          <div class="word">${entry.word}</div>
+          <div class="pattern">${entry.pattern}</div>
+        `;
+        if (idx < 4) col1.appendChild(block); else col2.appendChild(block);
+      });
+
+      page.appendChild(col1); page.appendChild(col2);
+
+      output.appendChild(title);
+      output.appendChild(directions);
+      output.appendChild(page);
+    }
+
+    function getWordsForSkill(skill, source, blends) {
+      const blendSuffixes = [" with Blends", " with Digraphs and Blends"];
+
+      function fetchSet(base) {
+        if (!blends) return source[base] || [];
+        let result = [];
+        let foundBlends = false;
+        blendSuffixes.forEach(suffix => {
+          const key = `${base}${suffix}`;
+          if (source[key]) {
+            result = result.concat(source[key]);
+            foundBlends = true;
+          }
+        });
+        if (!foundBlends && source[base]) return source[base];
+        return result;
+      }
+
+      switch (skill) {
+        // Mixed and Glued logic
+        case "Mixed CVC": return [].concat(
+          fetchSet("Short A"), fetchSet("Short E"), fetchSet("Short I"), fetchSet("Short O"), fetchSet("Short U")
+        );
+        case "Digraphs Mixed": return [].concat(
+          fetchSet("Digraph(ck)"), fetchSet("Digraph(sh)"), fetchSet("Digraph(th)"), fetchSet("Digraph(ch)"), fetchSet("Digraph(wh)")
+        );
+        case "Glued(-ng)": return [].concat(
+          fetchSet("Glued(ang,ing)"), fetchSet("Glued(ong,ung)")
+        );
+        case "Glued(-nk)": return [].concat(
+          fetchSet("Glued(ank,ink)"), fetchSet("Glued(onk,unk)")
+        );
+        case "Glued Mixed": return [].concat(
+          fetchSet("Glued(all)"), fetchSet("Glued(ang,ing)"), fetchSet("Glued(ong,ung)"), fetchSet("Glued(ank,ink)"), fetchSet("Glued(onk,unk)")
+        );
+        case "Mixed VCe": return [].concat(
+          fetchSet("VCe(a_e)"), fetchSet("VCe(i_e)"), fetchSet("VCe(o_e)"), fetchSet("VCe(u_e)")
+        );
+        case "Mixed R-Controlled": return [].concat(
+          fetchSet("R-Controlled(ar)"), fetchSet("R-Controlled(or)"), fetchSet("R-Controlled(er,ir,ur)")
+        );
+
+        // Vowel Teams
+        case "Long A(ay/ai)": return [].concat(
+          fetchSet("Long A(ay)"), fetchSet("Long A(ai)")
+        );
+        case "Long E(ee/ea)": return [].concat(
+          fetchSet("Long E(ee)"), fetchSet("Long E(ea)")
+        );
+        case "Long I(igh/y/ie)": return [].concat(
+          fetchSet("Long I(igh)"), fetchSet("Long I(y)"), fetchSet("Long I(ie)")
+        );
+        case "Long O(oa/ow/oe)": return [].concat(
+          fetchSet("Long O(oa)"), fetchSet("Long O(ow)"), fetchSet("Long O(oe)")
+        );
+        case "Long U(oo/ew/ue)": return [].concat(
+          fetchSet("Long U(oo)"), fetchSet("Long U(ew)"), fetchSet("Long U(ue)")
+        );
+
+        // Diphthongs
+        case "Diphthong(oi/oy)": return [].concat(
+          fetchSet("Diphthong(oi)"), fetchSet("Diphthong(oy)")
+        );
+        case "Diphthong(ou/ow)": return [].concat(
+          fetchSet("Diphthong(ou)"), fetchSet("Diphthong(ow)")
+        );
+
+        // Variant Vowels
+        case "Variant Vowel(au/aw)": return [].concat(
+          fetchSet("Variant Vowel(au)"), fetchSet("Variant Vowel(aw)")
+        );
+        case "Variant Vowel(oo)":
