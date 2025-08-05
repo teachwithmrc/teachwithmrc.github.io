@@ -417,7 +417,7 @@ const soundBoxWords = {
 { word: "Ash", pattern: "12", split: ["A","sh"] },
 { word: "Dash", pattern: "112", split: ["D","a","sh"] }
   ],
-  "Digraph(sh) with Blends)": [
+  "Digraph(sh) with Blends": [
 { word: "brash", pattern: "1112", split: ["sh","e"] },
 { word: "brush", pattern: "1112", split: ["w","i","sh"] },
 { word: "crash", pattern: "1112", split: ["sh","u","t"] },
