@@ -1113,7 +1113,7 @@ const soundBoxWords = {
 { word: "depth",  pattern: "1112", split: ["d","e","p","th"] },
 { word: "tenth",  pattern: "1112", split: ["t","e","n","th"] }
   ],
-   "FLSZ with Digraphs and Blends": [
+   "FLSZ Words with Digraphs and Blends": [
 { word: "bluff",  pattern: "1112",  split: ["sh","i","f","t"] },
 { word: "sniff",  pattern: "1112",  split: ["ch","i","m","p"] },
 { word: "snuff",  pattern: "1112",  split: ["wh","i","s","k"] },
