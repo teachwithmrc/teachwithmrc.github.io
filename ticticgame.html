@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Interactive Tic Tac Toe Game</title>
+  <title>Phonics Tic Tac Toe Game</title>
   <script src="fluencyDataFull_v3.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <style>
@@ -29,20 +29,9 @@
       margin-bottom: 12px;
     }
 
-    /* Step 1 skill buttons */
-    .skill-button-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      justify-content: center;
-    }
-
-    .skill-button-grid .row {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
+    /* Step 1 Buttons */
+    .skill-button-grid { display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+    .skill-button-grid .row { display: flex; justify-content: center; gap: 8px; margin-bottom: 6px; }
 
     .skill-button {
       border: 2px solid #000;
@@ -52,22 +41,14 @@
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
     }
-
     .skill-button.selected {
       background-color: #007bff;
       color: white;
       box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
     }
 
-    /* Step 2 option boxes */
-    .option-grid {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 10px;
-    }
-
+    /* Step 2 Options */
+    .option-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
     .option-box {
       padding: 10px 14px;
       border: 2px solid #000;
@@ -75,69 +56,75 @@
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s;
     }
+    .option-box.selected-step2 { background-color: #d9c9ff; }
 
-    .option-box.selected-step2 {
-      background-color: #d9c9ff;
-    }
-
-    /* ✅ Interactive Tic Tac Toe Styles */
+    /* Tic Tac Toe */
     .tic-tac-toe-board {
       display: grid;
-      grid-template-columns: repeat(3, 120px);
-      grid-template-rows: repeat(3, 120px);
+      grid-template-columns: repeat(3, 160px);
+      grid-template-rows: repeat(3, 100px);
       gap: 5px;
       margin: 30px auto;
       justify-content: center;
     }
-
     .tic-tac-toe-cell {
       background-color: #f0f0f0;
       border-radius: 12px;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 60px;
+      font-size: 18px;
       font-weight: bold;
       cursor: pointer;
+      padding: 5px;
+      text-align: center;
       transition: background-color 0.3s, transform 0.2s;
     }
+    .tic-tac-toe-cell:hover { background-color: #d9e8ff; transform: scale(1.05); }
+    .winner { background-color: #ffeb3b !important; }
+    #winnerMessage { font-size: 20px; font-weight: bold; margin-top: 20px; color: #007bff; }
 
-    .tic-tac-toe-cell:hover {
-      background-color: #d9e8ff;
-      transform: scale(1.05);
+    /* Player Selection Popup */
+    #playerPopup {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.7);
+      display: none; justify-content: center; align-items: center; flex-direction: column;
+      z-index: 999;
     }
-
-    .winner {
-      background-color: #ffeb3b !important;
+    #playerPopup h2 { color: white; font-size: 28px; margin-bottom: 20px; }
+    .player-choice {
+      font-size: 60px;
+      background: white;
+      border: 4px solid black;
+      border-radius: 12px;
+      padding: 20px 50px;
+      margin: 20px;
+      cursor: pointer;
+      transition: transform 0.2s;
     }
-
-    #winnerMessage {
-      font-size: 20px;
-      font-weight: bold;
-      margin-top: 20px;
-      color: #007bff;
-    }
+    .player-choice:hover { transform: scale(1.1); }
   </style>
 </head>
 <body>
-  <h1>Interactive Tic Tac Toe Game</h1>
-  <div class="subtitle">Play a fun and colorful game of Tic Tac Toe online!</div>
+  <h1>Phonics Tic Tac Toe Game</h1>
+  <div class="subtitle">Play Tic Tac Toe with phonics words or sentences!</div>
 
   <!-- Step 1 -->
   <div class="table-section">
     <div class="section-label">Step 1: Select Skills</div>
     <div class="skill-button-grid">
       <div class="row">
-        <div class="skill-button" data-skill="0.1">Short A</div>
-        <div class="skill-button" data-skill="0.2">Short O</div>
-        <div class="skill-button" data-skill="0.3">Short I</div>
-        <div class="skill-button" data-skill="0.4">Short U</div>
-        <div class="skill-button" data-skill="0.5">Short E</div>
+        <div class="skill-button" data-skill="0.1 - Short A">Short A</div>
+        <div class="skill-button" data-skill="0.2 - Short O">Short O</div>
+        <div class="skill-button" data-skill="0.3 - Short I">Short I</div>
+        <div class="skill-button" data-skill="0.4 - Short U">Short U</div>
+        <div class="skill-button" data-skill="0.5 - Short E">Short E</div>
       </div>
       <div class="row">
-        <div class="skill-button" data-skill="0.6">FLSZ</div>
-        <div class="skill-button" data-skill="0.7">CVC & FLSZ</div>
-        <div class="skill-button" data-skill="mixed">Mixed CVC</div>
+        <div class="skill-button" data-skill="0.6 - FLSZ">FLSZ</div>
+        <div class="skill-button" data-skill="0.7 - FLSZ and CVC">CVC & FLSZ</div>
+        <div class="skill-button" data-skill="Mixed CVC">Mixed CVC</div>
       </div>
     </div>
   </div>
@@ -145,7 +132,7 @@
   <!-- Step 2 -->
   <div class="table-section">
     <div class="section-label">Step 2: What would you like in the grid?</div>
-    <div class="option-grid" id="contentOptions">
+    <div class="option-grid">
       <div class="option-box" data-value="words">Only Words</div>
       <div class="option-box" data-value="sentences">Only Sentences</div>
       <div class="option-box" data-value="both">Both</div>
@@ -154,54 +141,86 @@
 
   <!-- Step 3 -->
   <div class="table-section">
-    <div class="section-label">Step 3: Play Interactive Tic Tac Toe</div>
-    <button onclick="startTicTacToe()" style="font-size: 18px; padding: 10px 24px;">Start Game</button>
+    <div class="section-label">Step 3: Play Tic Tac Toe</div>
+    <button onclick="showPlayerPopup()" style="font-size: 18px; padding: 10px 24px;">Start Game</button>
   </div>
 
   <div id="gameContainer"></div>
   <div id="winnerMessage"></div>
 
+  <!-- Player Popup -->
+  <div id="playerPopup">
+    <h2>Who goes first?</h2>
+    <div>
+      <div class="player-choice" onclick="choosePlayer('X')">X</div>
+      <div class="player-choice" onclick="choosePlayer('O')">O</div>
+    </div>
+  </div>
+
   <script>
-    // Track selections
     const selectedSkills = new Set();
     let selectedContent = null;
+    let currentPlayer = 'X';
+    let gameBoard = Array(9).fill('');
+    let gameOver = false;
+    let cellContent = [];
 
-    // Skill button toggle
+    // Skill selection
     document.querySelectorAll('.skill-button').forEach(btn => {
       btn.addEventListener('click', () => {
         btn.classList.toggle('selected');
-        const skill = btn.getAttribute('data-skill');
-        if (btn.classList.contains('selected')) {
-          selectedSkills.add(skill);
-        } else {
-          selectedSkills.delete(skill);
-        }
-        console.log('Selected skills:', [...selectedSkills]);
+        const skill = btn.dataset.skill;
+        btn.classList.contains('selected') ? selectedSkills.add(skill) : selectedSkills.delete(skill);
       });
     });
 
-    // Step 2 option select
+    // Content selection
     document.querySelectorAll('.option-box').forEach(box => {
       box.addEventListener('click', () => {
         document.querySelectorAll('.option-box').forEach(b => b.classList.remove('selected-step2'));
         box.classList.add('selected-step2');
         selectedContent = box.dataset.value;
-        console.log('Selected content type:', selectedContent);
       });
     });
 
-    // === Tic Tac Toe Logic ===
-    let currentPlayer = 'X';
-    let gameBoard = Array(9).fill('');
-    let gameOver = false;
+    // Popup controls
+    function showPlayerPopup() {
+      if (selectedSkills.size === 0 || !selectedContent) {
+        alert("Please select at least one skill and a content type first!");
+        return;
+      }
+      document.getElementById('playerPopup').style.display = 'flex';
+    }
+    function choosePlayer(player) {
+      currentPlayer = player;
+      document.getElementById('playerPopup').style.display = 'none';
+      startTicTacToe();
+    }
 
     function startTicTacToe() {
-      const first = prompt("Who goes first? Enter X or O").toUpperCase();
-      currentPlayer = (first === 'O') ? 'O' : 'X';
       gameBoard = Array(9).fill('');
       gameOver = false;
       document.getElementById('winnerMessage').textContent = '';
+      fillCellContent();
       renderBoard();
+    }
+
+    // Fill board with words/sentences
+    function fillCellContent() {
+      let options = [];
+      const skills = [...selectedSkills];
+
+      if (selectedContent === 'words' || selectedContent === 'both') {
+        skills.forEach(skill => options.push(...(fluencyData.words[skill] || [])));
+      }
+      if (selectedContent === 'sentences' || selectedContent === 'both') {
+        skills.forEach(skill => options.push(...(fluencyData.sentences[skill] || [])));
+      }
+      if (options.length < 9) options = options.concat(options); // ensure enough
+
+      // Randomize 9 unique choices
+      options.sort(() => Math.random() - 0.5);
+      cellContent = options.slice(0,9);
     }
 
     function renderBoard() {
@@ -213,7 +232,7 @@
       for (let i = 0; i < 9; i++) {
         const cell = document.createElement('div');
         cell.className = 'tic-tac-toe-cell';
-        cell.textContent = gameBoard[i];
+        cell.textContent = cellContent[i];
         cell.addEventListener('click', () => handleMove(i, cell));
         board.appendChild(cell);
       }
@@ -224,7 +243,7 @@
     function handleMove(index, cell) {
       if (gameBoard[index] !== '' || gameOver) return;
       gameBoard[index] = currentPlayer;
-      cell.textContent = currentPlayer;
+      cell.style.color = currentPlayer === 'X' ? 'red' : 'blue';
 
       if (checkWinner()) {
         document.getElementById('winnerMessage').textContent = `${currentPlayer} Wins! 🎉`;
@@ -232,13 +251,11 @@
         gameOver = true;
         return;
       }
-
       if (!gameBoard.includes('')) {
         document.getElementById('winnerMessage').textContent = `It's a Tie! 🤝`;
         gameOver = true;
         return;
       }
-
       currentPlayer = (currentPlayer === 'X') ? 'O' : 'X';
     }
 
