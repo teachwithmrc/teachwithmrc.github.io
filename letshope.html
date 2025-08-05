@@ -162,8 +162,8 @@
       <!-- Soft C & G -->
       <div class="skill-row">
         <span class="skill-row-label">Soft C & G Endings:</span>
-        <button class="skill-button" data-skill="Soft C(ce)"-ce</button>
-        <button class="skill-button" data-skill="Soft G(ge)"-ge</button>
+        <button class="skill-button" data-skill="Soft C(ce)">-ce</button>
+        <button class="skill-button" data-skill="Soft G(ge)">-ge</button>
         <button class="skill-button" data-skill="Soft G(dge)">-dge</button>
       </div>
     </div>
@@ -317,12 +317,28 @@
         case "Glued Mixed": return [].concat(
           fetchSet("Glued(all)"), fetchSet("Glued(ang,ing)"), fetchSet("Glued(ong,ung)"), fetchSet("Glued(ank,ink)"), fetchSet("Glued(onk,unk)")
         );
-        case "Mixed VCe": return [].concat(
-          fetchSet("VCe(a_e)"), fetchSet("VCe(i_e)"), fetchSet("VCe(o_e)"), fetchSet("VCe(u_e)")
-        );
-        case "Mixed R-Controlled": return [].concat(
-          fetchSet("R-Controlled(ar)"), fetchSet("R-Controlled(or)"), fetchSet("R-Controlled(er,ir,ur)")
-        );
+  
+// VCe
+case "VCe(a_e)": return fetchSet("VCe(a_e)");
+case "VCe(i_e)": return fetchSet("VCe(i_e)");
+case "VCe(o_e)": return fetchSet("VCe(o_e)");
+case "VCe(u_e)": return fetchSet("VCe(u_e)");
+case "Mixed VCe":
+  return [].concat(
+    fetchSet("VCe(a_e)"), fetchSet("VCe(i_e)"),
+    fetchSet("VCe(o_e)"), fetchSet("VCe(u_e)")
+  );
+        // R-Controlled
+case "R-Controlled(ar)": return fetchSet("R-Controlled(ar)");
+case "R-Controlled(or)": return fetchSet("R-Controlled(or)");
+case "R-Controlled(er,ir,ur)": return fetchSet("R-Controlled(er,ir,ur)");
+case "Mixed R-Controlled":
+  return [].concat(
+    fetchSet("R-Controlled(ar)"),
+    fetchSet("R-Controlled(or)"),
+    fetchSet("R-Controlled(er,ir,ur)")
+  );
+  
 
         // Vowel Teams
         case "Long A": return fetchSet("Long A");
