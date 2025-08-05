@@ -327,4 +327,21 @@
         case "Variant Vowel(au/aw)": return [].concat(
           fetchSet("Variant Vowel(au)"), fetchSet("Variant Vowel(aw)")
         );
-        case "Variant Vowel(oo)":
+     case "Variant Vowel(oo)":
+          return fetchSet("Variant Vowel(oo)");
+
+        // Soft Endings & Soft C/G
+        case "Soft Ending(-ce)": return fetchSet("Soft C(ce)");
+        case "Soft Ending(-ge)": return fetchSet("Soft G(ge)");
+        case "Soft Ending(-dge)": return fetchSet("Soft G(dge)");
+        case "Soft C(ce,ci,cy)": return fetchSet("Soft C(ce,ci,cy)");
+        case "Soft G(ge,gi,gy)": return fetchSet("Soft G(ge,gi,gy)");
+
+        default: return fetchSet(skill);
+      }
+    }
+
+    function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+  </script>
+</body>
+</html>
