@@ -72,8 +72,7 @@ const soundBoxWords = {
 { word: "Tad", pattern: "111", split: ["T","a","d"] },
 { word: "Jan", pattern: "111", split: ["J","a","n"] },
 { word: "Max", pattern: "111", split: ["M","a","x"] },
-{ word: "Hal", pattern: "111", split: ["H","a","l"] },
-],
+{ word: "Hal", pattern: "111", split: ["H","a","l"] }],
 "Short O": [
 { word: "bod", pattern: "111", split: ["b","o","d"] },
 { word: "bog", pattern: "111", split: ["b","o","g"] },
@@ -119,8 +118,7 @@ const soundBoxWords = {
 { word: "Rob", pattern: "111", split: ["R","o","b"] },
 { word: "Tom", pattern: "111", split: ["T","o","m"] },
 { word: "Jon", pattern: "111", split: ["J","o","n"] },
-{ word: "Doc", pattern: "111", split: ["D","o","c"] },
-],
+{ word: "Doc", pattern: "111", split: ["D","o","c"] }],
 "Short I": [
 { word: "bib", pattern: "111", split: ["b","i","b"] },
 { word: "bid", pattern: "111", split: ["b","i","d"] },
@@ -177,8 +175,7 @@ const soundBoxWords = {
 { word: "Sid", pattern: "111", split: ["S","i","d"] },
 { word: "Tim", pattern: "111", split: ["T","i","m"] },
 { word: "quiz", pattern: "211", split: ["qu","i","z"] },
-{ word: "quit", pattern: "211", split: ["qu","i","t"] },
-],
+{ word: "quit", pattern: "211", split: ["qu","i","t"] }],
 "Short U": [
 { word: "bud", pattern: "111", split: ["b","u","d"] },
 { word: "bug", pattern: "111", split: ["b","u","g"] },
@@ -217,8 +214,7 @@ const soundBoxWords = {
 { word: "Gus", pattern: "111", split: ["G","u","s"] },
 { word: "Tug", pattern: "111", split: ["T","u","g"] },
 { word: "Pug", pattern: "111", split: ["P","u","g"] },
-{ word: "Cub", pattern: "111", split: ["C","u","b"] },
-],
+{ word: "Cub", pattern: "111", split: ["C","u","b"] }],
 "Short E": [
 { word: "bed", pattern: "111", split: ["b","e","d"] },
 { word: "beg", pattern: "111", split: ["b","e","g"] },
@@ -266,8 +262,7 @@ const soundBoxWords = {
 { word: "Bev", pattern: "111", split: ["B","e","v"] },
 { word: "Ren", pattern: "111", split: ["R","e","n"] },
 { word: "Ted", pattern: "111", split: ["T","e","d"] },
-{ word: "Jed", pattern: "111", split: ["J","e","d"] },
-],
+{ word: "Jed", pattern: "111", split: ["J","e","d"] }],
 // --------------------
 // 0.6 - FLSZ Words
 // --------------------
@@ -378,8 +373,7 @@ const soundBoxWords = {
 { word: "stick", pattern: "1112", split: ["s","u","ck"] },
 { word: "stock", pattern: "1112", split: ["l","a","ck"] },
 { word: "stuck", pattern: "1112", split: ["s","i","ck"] },
-{ word: "stack", pattern: "1112", split: ["h","a","ck"] },
- ],
+{ word: "stack", pattern: "1112", split: ["h","a","ck"] }],
   "Digraph(sh)": [
 { word: "she", pattern: "21", split: ["sh","e"] },
 { word: "wish", pattern: "112", split: ["w","i","sh"] },
@@ -428,8 +422,7 @@ const soundBoxWords = {
 { word: "smash", pattern: "1112", split: ["sh","e","d"] },
 { word: "splash", pattern: "11112", split: ["sh","o","p"] },
     { word: "stash", pattern: "1112", split: ["d","i","sh"] },
-{ word: "shelf", pattern: "2111", split: ["sh","e","d"] },
-],
+{ word: "shelf", pattern: "2111", split: ["sh","e","d"] }],
   "Digraph(th)": [
 { word: "than", pattern: "211", split: ["th","a","n"] },
 { word: "that", pattern: "211", split: ["th","a","t"] },
@@ -451,8 +444,7 @@ const soundBoxWords = {
 
   "Digraph(th) with Blends": [
 { word: "froth", pattern: "1112", split: ["th","a","n"] },
-{ word: "sloth", pattern: "1112", split: ["th","a","t"] },
-    ],
+{ word: "sloth", pattern: "1112", split: ["th","a","t"] }],
   "Digraph(ch)": [
 { word: "chap", pattern: "211", split: ["ch","a","p"] },
 { word: "such", pattern: "111", split: ["s","u","ch"] },
@@ -473,15 +465,12 @@ const soundBoxWords = {
 { word: "Chuck", pattern: "212", split: ["Ch","u","ck"] },
 { word: "Rich", pattern: "112", split: ["R","i","ch"] },
 { word: "Chip", pattern: "211", split: ["Ch","i","p"] },
-{ word: "Chaz", pattern: "211", split: ["Ch","a","z"] },
-  ],
+{ word: "Chaz", pattern: "211", split: ["Ch","a","z"] }],
    "Digraph(ch) with Blends": [
-{ word: "champ", pattern: "2111", split: ["ch","a","p"] },
-],
+{ word: "champ", pattern: "2111", split: ["ch","a","p"] }],
   "Digraph(wh) with Blends": [
 { word: "whisk", pattern: "2111", split: ["wh","a","ck"] },
-    { word: "whisp", pattern: "2111", split: ["wh","a","ck"] },
-    ],
+    { word: "whisp", pattern: "2111", split: ["wh","a","ck"] }],
   "Digraph(wh)": [
 { word: "whack", pattern: "212", split: ["wh","a","ck"] },
 { word: "whip", pattern: "211", split: ["wh","i","p"] },
@@ -695,7 +684,7 @@ const soundBoxWords = {
 { word: "lung",  pattern: "13", split: ["l","ung"] },
 { word: "hung",  pattern: "13", split: ["h","ung"] }
   ],
-  "Glued(ank,ink) ": [
+  "Glued(ank,ink)": [
 { word: "bank",  pattern: "13", split: ["b","ank"] },
 { word: "tank",  pattern: "13", split: ["t","ank"] },
 { word: "rank",  pattern: "13", split: ["r","ank"] },
@@ -1089,8 +1078,7 @@ const soundBoxWords = {
 { word: "smack",  pattern: "1112", split: ["s","m","a","ck"] },
 { word: "snack",  pattern: "1112", split: ["s","n","a","ck"] },
 { word: "stack",  pattern: "1112", split: ["s","t","a","ck"] },
-{ word: "track",  pattern: "1112", split: ["t","r","a","ck"] },
-  ],
+{ word: "track",  pattern: "1112", split: ["t","r","a","ck"] }],
   "Short O with Digraphs and Blends": [
 { word: "chomp", pattern: "2111", split: ["ch","o","m","p"] },
 { word: "whomp", pattern: "2111", split: ["wh","o","m","p"] },
@@ -1173,8 +1161,7 @@ const soundBoxWords = {
 { word: "bless", pattern: "1112", split: ["th","r","i","f","t"] },
 { word: "dress", pattern: "1112", split: ["f","l","i","n","ch"] },
      { word: "press",  pattern: "1112",  split: ["f","i","l","th"] },
-{ word: "frizz",  pattern: "1112",  split: ["p","i","n","ch"] },
-  ],
+{ word: "frizz",  pattern: "1112",  split: ["p","i","n","ch"] }],
   "VCe(a_e) with Blends": [
 { word: "blade", pattern: "1112", split: ["b","l","a_e","d"] },
 { word: "blame", pattern: "1112", split: ["b","l","a_e","m"] },
@@ -1749,8 +1736,7 @@ const soundBoxWords = {
 { word: "glue", pattern: "112", split: ["sp","ew"] },
 { word: "true", pattern: "112", split: ["st","ew"] },
 { word: "flue", pattern: "112", split: ["bl","ew"] },
-{ word: "clue", pattern: "112", split: ["br","ew"] },
-  ],
+{ word: "clue", pattern: "112", split: ["br","ew"] }],
   "Diphthong(ou)": [
 { word: "out", pattern: "21", split: ["ou","t"] },
 { word: "our", pattern: "21", split: ["ou","r"] },
@@ -1927,11 +1913,9 @@ const soundBoxWords = {
 { word: "rage", pattern: "112", split: ["d","i","ce"] },
 { word: "sage", pattern: "112", split: ["m","i","ce"] },
 { word: "wage", pattern: "112", split: ["r","i","ce"] },
-{ word: "huge", pattern: "112", split: ["l","i","ce"] },
-  ],
+{ word: "huge", pattern: "112", split: ["l","i","ce"] }],
   "Soft G(ge) with Blends": [
-{ word: "stage", pattern: "1112", split: ["br","a","ce"] },
-  ],
+{ word: "stage", pattern: "1112", split: ["br","a","ce"] }],
   "Soft G(dge)": [
 { word: "edge", pattern: "13", split: ["a","ce"] },
 { word: "badge", pattern: "113", split: ["i","ce"] },
@@ -1941,15 +1925,13 @@ const soundBoxWords = {
 { word: "fudge", pattern: "113", split: ["r","i","ce"] },
 { word: "judge", pattern: "113", split: ["l","i","ce"] },
     { word: "lodge", pattern: "113", split: ["m","i","ce"] },
-{ word: "nudge", pattern: "113", split: ["r","i","ce"] },
-  ],
+{ word: "nudge", pattern: "113", split: ["r","i","ce"] }],
     "Soft G(dge) with Blends": [
 { word: "bridge", pattern: "1113", split: ["a","ce"] },
 { word: "fridge", pattern: "1113", split: ["i","ce"] },
 { word: "grudge", pattern: "1113", split: ["f","a","ce"] },
 { word: "sludge", pattern: "1113", split: ["d","i","ce"] },
-{ word: "smudge", pattern: "1113", split: ["r","i","ce"] },
-  ],
+{ word: "smudge", pattern: "1113", split: ["r","i","ce"] }],
 
 };
 window.soundBoxWords = soundBoxWords;
