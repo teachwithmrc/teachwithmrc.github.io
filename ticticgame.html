@@ -12,15 +12,8 @@
       text-align: center;
     }
 
-    h1 {
-      font-size: 26px;
-      margin-bottom: 10px;
-    }
-
-    .subtitle {
-      font-size: 16px;
-      margin-bottom: 30px;
-    }
+    h1 { font-size: 26px; margin-bottom: 10px; }
+    .subtitle { font-size: 16px; margin-bottom: 30px; }
 
     .table-section {
       border: 2px solid #000;
@@ -36,6 +29,7 @@
       margin-bottom: 12px;
     }
 
+    /* Step 1 skill buttons */
     .skill-button-grid {
       display: flex;
       flex-direction: column;
@@ -65,6 +59,7 @@
       box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
     }
 
+    /* Step 2 option boxes */
     .option-grid {
       display: flex;
       justify-content: center;
@@ -128,6 +123,7 @@
   <h1>Interactive Tic Tac Toe Game</h1>
   <div class="subtitle">Play a fun and colorful game of Tic Tac Toe online!</div>
 
+  <!-- Step 1 -->
   <div class="table-section">
     <div class="section-label">Step 1: Select Skills</div>
     <div class="skill-button-grid">
@@ -146,24 +142,17 @@
     </div>
   </div>
 
+  <!-- Step 2 -->
   <div class="table-section">
     <div class="section-label">Step 2: What would you like in the grid?</div>
     <div class="option-grid" id="contentOptions">
-      <label class="option-box">
-        <input type="radio" name="contentType" value="words" />
-        Only Words
-      </label>
-      <label class="option-box">
-        <input type="radio" name="contentType" value="sentences" />
-        Only Sentences
-      </label>
-      <label class="option-box">
-        <input type="radio" name="contentType" value="both" />
-        Both
-      </label>
+      <div class="option-box" data-value="words">Only Words</div>
+      <div class="option-box" data-value="sentences">Only Sentences</div>
+      <div class="option-box" data-value="both">Both</div>
     </div>
   </div>
 
+  <!-- Step 3 -->
   <div class="table-section">
     <div class="section-label">Step 3: Play Interactive Tic Tac Toe</div>
     <button onclick="startTicTacToe()" style="font-size: 18px; padding: 10px 24px;">Start Game</button>
@@ -173,6 +162,35 @@
   <div id="winnerMessage"></div>
 
   <script>
+    // Track selections
+    const selectedSkills = new Set();
+    let selectedContent = null;
+
+    // Skill button toggle
+    document.querySelectorAll('.skill-button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('selected');
+        const skill = btn.getAttribute('data-skill');
+        if (btn.classList.contains('selected')) {
+          selectedSkills.add(skill);
+        } else {
+          selectedSkills.delete(skill);
+        }
+        console.log('Selected skills:', [...selectedSkills]);
+      });
+    });
+
+    // Step 2 option select
+    document.querySelectorAll('.option-box').forEach(box => {
+      box.addEventListener('click', () => {
+        document.querySelectorAll('.option-box').forEach(b => b.classList.remove('selected-step2'));
+        box.classList.add('selected-step2');
+        selectedContent = box.dataset.value;
+        console.log('Selected content type:', selectedContent);
+      });
+    });
+
+    // === Tic Tac Toe Logic ===
     let currentPlayer = 'X';
     let gameBoard = Array(9).fill('');
     let gameOver = false;
@@ -230,10 +248,7 @@
         [0,3,6],[1,4,7],[2,5,8],
         [0,4,8],[2,4,6]
       ];
-      return wins.some(combination => {
-        const [a,b,c] = combination;
-        return gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c];
-      });
+      return wins.some(([a,b,c]) => gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]);
     }
 
     function highlightWinner() {
@@ -243,8 +258,7 @@
         [0,4,8],[2,4,6]
       ];
       const cells = document.querySelectorAll('.tic-tac-toe-cell');
-      wins.forEach(combination => {
-        const [a,b,c] = combination;
+      wins.forEach(([a,b,c]) => {
         if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
           cells[a].classList.add('winner');
           cells[b].classList.add('winner');
