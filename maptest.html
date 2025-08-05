@@ -195,17 +195,16 @@
       document.getElementById('includeBlendsYes').classList.remove('selected');
     });
 
-    function generatePage() {
-      if (selectedSkills.size === 0) return alert("Select at least one skill!");
-      if (includeBlends === null) return alert("Please choose Include Blends: Yes or No");
+function generatePage() {
+  if (selectedSkills.size === 0) return alert("Select at least one skill!");
+  if (includeBlends === null) return alert("Please choose Include Blends: Yes or No");
 
-      const source = includeBlends ? soundBoxWordsBlends : soundBoxWords;
-      let allWords = [];
+  const source = soundBoxWords; // ✅ Always use the same object
+  let allWords = [];
 
-      selectedSkills.forEach(skill => {
-        allWords = allWords.concat(getWordsForSkill(skill, source, includeBlends));
-      });
-
+  selectedSkills.forEach(skill => {
+    allWords = allWords.concat(getWordsForSkill(skill, source, includeBlends));
+  });
       if (allWords.length === 0) return alert("No words found for the selected skills.");
 
       while (allWords.length < 8) allWords = allWords.concat(allWords);
