@@ -1542,7 +1542,7 @@ const soundBoxWords = {
 { word: "spleen", pattern: "11121", split: ["spl","ee","n"] },
 { word: "streak", pattern: "11121", split: ["str","ea","k"] }
   ],
-  "Long I (igh)": [
+  "Long I(igh)": [
 { word: "high", pattern: "13", split: ["h","igh"] },
 { word: "thigh", pattern: "23", split: ["th","igh"] },
 { word: "sigh", pattern: "13", split: ["s","igh"] },
@@ -1715,7 +1715,7 @@ const soundBoxWords = {
 { word: "sew", pattern: "12", split: ["s","ew"] },
 { word: "chew", pattern: "22", split: ["ch","ew"] }
   ],
-  "Long U(ew) with Blends ": [
+  "Long U(ew) with Blends": [
 { word: "skew", pattern: "112", split: ["sk","ew"] },
 { word: "spew", pattern: "112", split: ["sp","ew"] },
 { word: "stew", pattern: "112", split: ["st","ew"] },
@@ -1728,6 +1728,28 @@ const soundBoxWords = {
 { word: "slew", pattern: "112", split: ["sl","ew"] },
 { word: "threw", pattern: "212", split: ["th","r","ew"] },
 { word: "screw", pattern: "1112", split: ["scr","ew"] }
+  ],
+  "Long U(ue)": [
+{ word: "hue", pattern: "12", split: ["sk","ew"] },
+{ word: "cue", pattern: "12", split: ["sp","ew"] },
+{ word: "due", pattern: "12", split: ["st","ew"] },
+{ word: "rue", pattern: "12", split: ["bl","ew"] },
+{ word: "brew", pattern: "112", split: ["br","ew"] },
+{ word: "crew", pattern: "112", split: ["cr","ew"] },
+{ word: "drew", pattern: "112", split: ["dr","ew"] },
+{ word: "flew", pattern: "112", split: ["fl","ew"] },
+{ word: "grew", pattern: "112", split: ["gr","ew"] },
+{ word: "slew", pattern: "112", split: ["sl","ew"] },
+{ word: "threw", pattern: "212", split: ["th","r","ew"] },
+{ word: "screw", pattern: "1112", split: ["scr","ew"] }
+  ],
+  
+  "Long U(ue) with Blends": [
+{ word: "blue", pattern: "112", split: ["sk","ew"] },
+{ word: "glue", pattern: "112", split: ["sp","ew"] },
+{ word: "true", pattern: "112", split: ["st","ew"] },
+{ word: "flue", pattern: "112", split: ["bl","ew"] },
+{ word: "clue", pattern: "112", split: ["br","ew"] },
   ],
   "Diphthong(ou)": [
 { word: "out", pattern: "21", split: ["ou","t"] },
@@ -1865,7 +1887,7 @@ const soundBoxWords = {
 { word: "crook", pattern: "1121", split: ["cr","oo","k"] },
 { word: "stood", pattern: "1121", split: ["st","oo","d"] }
   ],
-  "Soft C (ce) ": [
+  "Soft C(ce)": [
 { word: "ace", pattern: "12", split: ["a","ce"] },
 { word: "ice", pattern: "12", split: ["i","ce"] },
 { word: "face", pattern: "112", split: ["f","a","ce"] },
@@ -1880,7 +1902,7 @@ const soundBoxWords = {
 { word: "nice", pattern: "112", split: ["n","i","ce"] },
 { word: "vice", pattern: "112", split: ["v","i","ce"] }
   ],
-  "Soft C (ce) with Blends": [
+  "Soft C(ce) with Blends": [
 { word: "brace", pattern: "1112", split: ["br","a","ce"] },
 { word: "grace", pattern: "1112", split: ["gr","a","ce"] },
 { word: "place", pattern: "1112", split: ["pl","a","ce"] },
@@ -1897,6 +1919,36 @@ const soundBoxWords = {
 { word: "since", pattern: "1112", split: ["s","i","nce"] },
 { word: "Vince", pattern: "1112", split: ["V","i","nce"] },
 { word: "truce", pattern: "1112", split: ["tr","u","ce"] }
+  ],
+  "Soft G(ge)": [
+{ word: "age", pattern: "12", split: ["a","ce"] },
+{ word: "page", pattern: "112", split: ["i","ce"] },
+{ word: "cage", pattern: "112", split: ["f","a","ce"] },
+{ word: "rage", pattern: "112", split: ["d","i","ce"] },
+{ word: "sage", pattern: "112", split: ["m","i","ce"] },
+{ word: "wage", pattern: "112", split: ["r","i","ce"] },
+{ word: "huge", pattern: "112", split: ["l","i","ce"] },
+  ],
+  "Soft G(ge) with Blends": [
+{ word: "stage", pattern: "1112", split: ["br","a","ce"] },
+  ],
+  "Soft G(dge)": [
+{ word: "edge", pattern: "13", split: ["a","ce"] },
+{ word: "badge", pattern: "113", split: ["i","ce"] },
+{ word: "hedge", pattern: "113", split: ["f","a","ce"] },
+{ word: "dodge", pattern: "113", split: ["d","i","ce"] },
+{ word: "budge", pattern: "113", split: ["m","i","ce"] },
+{ word: "fudge", pattern: "113", split: ["r","i","ce"] },
+{ word: "judge", pattern: "113", split: ["l","i","ce"] },
+    { word: "lodge", pattern: "113", split: ["m","i","ce"] },
+{ word: "nudge", pattern: "113", split: ["r","i","ce"] },
+  ],
+    "Soft G(dge) with Blends": [
+{ word: "bridge", pattern: "1113", split: ["a","ce"] },
+{ word: "fridge", pattern: "1113", split: ["i","ce"] },
+{ word: "grudge", pattern: "1113", split: ["f","a","ce"] },
+{ word: "sludge", pattern: "1113", split: ["d","i","ce"] },
+{ word: "smudge", pattern: "1113", split: ["r","i","ce"] },
   ],
 
 };
