@@ -9,11 +9,15 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-  <!-- Load custom Boxes2 font -->
+  <!-- Load custom fonts -->
   <style>
     @font-face {
       font-family: 'BoxesFont';
       src: url('boxes2.otf') format('opentype');
+    }
+    @font-face {
+      font-family: 'UnderlineFont';
+      src: url('fonts/underlines.otf') format('opentype');
     }
 
     body { 
@@ -57,6 +61,11 @@
     <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
   </p>
 
+  <div style="margin-bottom:8px;">
+    <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
+    <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
+  </div>
+
   <div>
     <button onclick="generateLadder()">Generate Ladder</button>
     <button onclick="window.print()">Print Page</button>
@@ -92,6 +101,9 @@
         return;
       }
 
+      const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
+      const useFont = cellStyle === 'underlines' ? 'UnderlineFont' : 'BoxesFont';
+
       const randomIndex = Math.floor(Math.random() * cvcWordLadders.length);
       const ladder = cvcWordLadders[randomIndex];
 
@@ -109,25 +121,24 @@
               const isLast = idx === ladder.length - 1;
               const isFirst = idx === 0;
 
-              // FIRST word is normal, readable font
-              let wordCell;
+              // Word display
+              let wordDisplay;
               if (isFirst) {
-                wordCell = `<div style="font-size:30px;font-weight:600;letter-spacing:4px;font-family:'Poppins', sans-serif;">
-                              ${word}
-                            </div>`;
+                // First word is readable
+                wordDisplay = `<div style="font-size:30px;font-weight:600;letter-spacing:4px;font-family:'Poppins', sans-serif;">
+                                 ${word}
+                               </div>`;
               } else {
-                // All other steps use BoxesFont with 111 placeholders
+                // All other rows: 111 in selected font, gray for changed letter
                 const prev = ladder[idx - 1];
                 let lettersHTML = '';
                 for (let i = 0; i < word.length; i++) {
                   const isChanged = prev[i] !== word[i];
-                  lettersHTML += `<span style="color:${isChanged ? '#aaa' : '#000'};font-family:'BoxesFont', sans-serif;">
+                  lettersHTML += `<span style="color:${isChanged ? '#aaa' : '#000'};font-family:'${useFont}', sans-serif;">
                                     1
                                   </span>`;
                 }
-                wordCell = `<div style="font-size:30px;letter-spacing:4px;font-weight:600;">
-                              ${lettersHTML}
-                            </div>`;
+                wordDisplay = `<div style="font-size:30px;letter-spacing:4px;font-weight:600;">${lettersHTML}</div>`;
               }
 
               const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/110?text=?';
@@ -139,6 +150,13 @@
               const imageTD = `<td style="padding:5px 7px; width: 140px; ${imageBorderStyle}">
                                  <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
                                </td>`;
+
+              const wordTD = `<td style="padding:5px 7px;
+                                        ${!isLast 
+                                          ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
+                                          : 'border-left:4px solid #000;border-right:4px solid #000;'}">
+                                ${wordDisplay}
+                              </td>`;
 
               // Hint column
               let hintTD = '<td style="padding:5px 7px; width: 200px;"></td>';
@@ -167,11 +185,6 @@
               } else if (isFirst) {
                 hintTD = `<td style="padding:5px 7px;width:200px;border-top-right-radius:12px;"></td>`;
               }
-
-              const borderStyle = !isLast
-                ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
-                : 'border-left:4px solid #000;border-right:4px solid #000;';
-              const wordTD = `<td style="padding:5px 7px;${borderStyle}">${wordCell}</td>`;
 
               return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
             }).join('')}
