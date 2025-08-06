@@ -68,6 +68,11 @@
     <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
   </div>
 
+  <div style="margin-bottom:8px;">
+    <label><input type="checkbox" id="showHints" checked> Show Hints</label>
+    <label><input type="checkbox" id="highlightChanges" checked> Highlight Changes (Bold)</label>
+  </div>
+
   <div>
     <button onclick="generateLadder()">Generate Ladder</button>
     <button onclick="window.print()">Print Page</button>
@@ -92,14 +97,15 @@
       }
     }
 
-    function highlightChangedLetters(word, prevWord, useFont) {
+    function highlightChangedLetters(word, prevWord, useFont, highlight) {
       let lettersHTML = '';
       for (let i = 0; i < word.length; i++) {
         const isChanged = prevWord[i] !== word[i];
+        const weight = (highlight && isChanged) ? '900' : '400';
         lettersHTML += `<span style="
                           font-family:'${useFont}', sans-serif;
                           font-size:90px;
-                          font-weight:${isChanged ? '900' : '400'};
+                          font-weight:${weight};
                           letter-spacing:-2px;
                         ">1</span>`;
       }
@@ -119,6 +125,8 @@
 
       const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
       const useFont = cellStyle === 'underlines' ? 'UnderlineFont' : 'BoxesFont';
+      const showHints = document.getElementById('showHints').checked;
+      const highlightChanges = document.getElementById('highlightChanges').checked;
 
       const randomIndex = Math.floor(Math.random() * cvcWordLadders.length);
       const ladder = cvcWordLadders[randomIndex];
@@ -138,7 +146,7 @@
                                </div>`;
               } else {
                 const prev = ladder[idx - 1];
-                const lettersHTML = highlightChangedLetters(word, prev, useFont);
+                const lettersHTML = highlightChangedLetters(word, prev, useFont, highlightChanges);
                 wordDisplay = `<div style="display:flex;justify-content:center;gap:0;">${lettersHTML}</div>`;
               }
 
@@ -154,29 +162,33 @@
                                 ${wordDisplay}
                               </td>`;
 
-              // Hint column
-              let hintTD = '<td style="padding:3px 5px; width: 170px;"></td>';
-              if (idx > 0) {
-                const prev = ladder[idx - 1];
-                let hint = '? → ?';
-                for (let i = 0; i < word.length; i++) {
-                  if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
+              // Optional hint column
+              let hintTD = '';
+              if (showHints) {
+                if (idx > 0) {
+                  const prev = ladder[idx - 1];
+                  let hint = '? → ?';
+                  for (let i = 0; i < word.length; i++) {
+                    if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
+                  }
+                  hintTD = `<td style="padding:3px 5px;width:170px;">
+                              <div style="
+                                display:flex;
+                                justify-content:center;
+                                align-items:center;
+                                background:#f0f0f0;
+                                border:3px solid #000;
+                                border-radius:12px;
+                                padding:4px 8px;
+                                font-size:18px;
+                                text-align:center;
+                              ">
+                                ${hint}
+                              </div>
+                            </td>`;
+                } else {
+                  hintTD = '<td style="padding:3px 5px;width:170px;"></td>';
                 }
-                hintTD = `<td style="padding:3px 5px;width:170px;">
-                            <div style="
-                              display:flex;
-                              justify-content:center;
-                              align-items:center;
-                              background:#f0f0f0;
-                              border:3px solid #000;
-                              border-radius:12px;
-                              padding:4px 8px;
-                              font-size:18px;
-                              text-align:center;
-                            ">
-                              ${hint}
-                            </div>
-                          </td>`;
               }
 
               return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
