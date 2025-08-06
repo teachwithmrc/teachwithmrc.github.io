@@ -9,15 +9,15 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-  <!-- Load custom fonts -->
+  <!-- Load custom fonts for both screen and print -->
   <style>
     @font-face {
       font-family: 'BoxesFont';
-      src: url('fonts/boxes2.otf') format('opentype');
+      src: local('BoxesFont'), url('fonts/boxes2.otf') format('opentype');
     }
     @font-face {
       font-family: 'UnderlineFont';
-      src: url('fonts/underlines.otf') format('opentype');
+      src: local('UnderlineFont'), url('fonts/underlines.otf') format('opentype');
     }
 
     body { 
@@ -38,7 +38,17 @@
 
     label { margin: 0 5px; font-size: 14px; }
 
+    /* Ensure fonts work in print */
     @media print {
+      @font-face {
+        font-family: 'BoxesFont';
+        src: local('BoxesFont'), url('boxes2.otf') format('opentype');
+      }
+      @font-face {
+        font-family: 'UnderlineFont';
+        src: local('UnderlineFont'), url('fonts/underlines.otf') format('opentype');
+      }
+
       body * { visibility: hidden; }
       #ladderOutput, #ladderOutput * { visibility: visible; }
       #ladderOutput { 
@@ -144,6 +154,7 @@
                                  display:flex;
                                  justify-content:center;
                                  gap:0;
+                                 font-family:'${useFont}', sans-serif;
                                  font-size:40px;
                                  letter-spacing:-2px;
                                  font-weight:600;
