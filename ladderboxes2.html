@@ -76,6 +76,11 @@
     <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
   </div>
 
+  <!-- NEW: Toggle highlighting -->
+  <div style="margin-bottom:8px;">
+    <label><input type="checkbox" id="highlightToggle" checked> Highlight Changed Letters</label>
+  </div>
+
   <div>
     <button onclick="generateLadder()">Generate Ladder</button>
     <button onclick="window.print()">Print Page</button>
@@ -113,6 +118,7 @@
 
       const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
       const useFont = cellStyle === 'underlines' ? 'UnderlineFont' : 'BoxesFont';
+      const highlightChanges = document.getElementById('highlightToggle').checked;
 
       const randomIndex = Math.floor(Math.random() * cvcWordLadders.length);
       const ladder = cvcWordLadders[randomIndex];
@@ -131,7 +137,6 @@
               const isLast = idx === ladder.length - 1;
               const isFirst = idx === 0;
 
-              // Define hintBorderStyle for every row
               const hintBorderStyle = isLast 
                 ? 'border-bottom-right-radius:12px;' 
                 : isFirst 
@@ -141,20 +146,19 @@
               // Word display
               let wordDisplay;
               if (isFirst) {
-                // First word is readable
                 wordDisplay = `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">
                                  ${word}
                                </div>`;
               } else {
-                // All other rows: 111 in selected font, bold for changed letter
                 const prev = ladder[idx - 1];
                 let lettersHTML = '';
                 for (let i = 0; i < word.length; i++) {
                   const isChanged = prev[i] !== word[i];
+                  const weight = highlightChanges && isChanged ? 'font-weight:bold;' : 'font-weight:normal;';
                   lettersHTML += `<span style="
                                     font-family:'${useFont}', sans-serif;
                                     font-size:90px;
-                                    ${isChanged ? 'font-weight:bold;' : 'font-weight:normal;'}
+                                    ${weight}
                                   ">1</span>`;
                 }
                 wordDisplay = `<div style="
