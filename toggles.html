@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ultimate Word Mapping Generator</title>
+  <script src="newtry_FULL.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: 'BoxesFont';
+      src: url('fonts/boxes.ttf') format('truetype');
+    }
+
+    body { font-family: 'Poppins', sans-serif; margin: 40px; text-align: center; }
+    h1 { font-size: 36px; margin-bottom: 5px; }
+    h2 { font-size: 20px; margin-bottom: 20px; }
+
+    .table-section { border: 2px solid #000; padding: 20px; margin: 12px auto; width: fit-content; box-sizing: border-box; text-align: left; }
+    .section-label { font-weight: 600; font-size: 18px; margin-bottom: 12px; text-align: center; }
+
+    .skill-button-grid { display: flex; flex-direction: column; gap: 12px; }
+    .skill-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .skill-row-label { font-weight: 600; margin-right: 8px; }
+
+    .skill-button {
+      border: 2px solid #000; padding: 6px 12px; border-radius: 6px;
+      font-weight: 600; font-size: 14px; cursor: pointer;
+      transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+    .skill-button.selected { background-color: #007bff; color: white; box-shadow: 0 0 4px rgba(0, 123, 255, 0.5); }
+
+    .option-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+    .option-box { padding: 10px 14px; border: 2px solid #000; border-radius: 8px; cursor: pointer; transition: background-color 0.3s, color 0.3s; }
+    .option-box.selected { background-color: #d9c9ff; }
+
+    /* Worksheet Layout */
+    .word-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid black; }
+    .word-table td { width: 50%; text-align: center; vertical-align: middle; padding: 10px 0; border: 2px solid black; }
+
+    .worksheet-title { font-size: 40px; margin-bottom: 5px; font-weight: 700; }
+    .worksheet-directions { font-size: 22px; margin-bottom: 20px; }
+
+    .word { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+    .pattern {
+      font-size: 60px;
+      transform: scale(1.5);
+      display: inline-block;
+      font-family: 'BoxesFont', monospace;
+      font-weight: normal;
+      line-height: 1;
+    }
+
+    /* Collapsible Toggles */
+    .toggle-section {
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 4px 8px;
+    }
+    .toggle-section summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 4px;
+    }
+    .toggle-section[open] {
+      border-color: #007bff;
+      background-color: #f0f7ff;
+    }
+
+    /* Print Formatting */
+    @media print {
+      body { margin: 0; }
+      h1, h2, .table-section, button, .toggle-section summary { display: none; }
+      #output { margin: 0; }
+      .worksheet-title, .worksheet-directions { display: block; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Word Mapping Generator</h1>
+  <h2>Skills: <span id="selected-skills"></span></h2>
+
+  <!-- Step 1: Skill Selection -->
+  <div class="table-section">
+    <div class="section-label">Step 1: Select Skills (3 sounds unless blends are included)</div>
+    <div class="skill-button-grid">
+
+      <!-- Always Visible Rows -->
+      <div class="skill-row">
+        <span class="skill-row-label">CVC Short Vowels:</span>
+        <button class="skill-button" data-skill="Short A">Short A</button>
+        <button class="skill-button" data-skill="Short E">Short E</button>
+        <button class="skill-button" data-skill="Short I">Short I</button>
+        <button class="skill-button" data-skill="Short O">Short O</button>
+        <button class="skill-button" data-skill="Short U">Short U</button>
+        <button class="skill-button" data-skill="Mixed CVC">Mixed CVC</button>
+        <button class="skill-button" data-skill="FLSZ Words">FLSZ</button>
+      </div>
+
+      <div class="skill-row">
+        <span class="skill-row-label">Digraphs:</span>
+        <button class="skill-button" data-skill="Digraph(ck)">ck</button>
+        <button class="skill-button" data-skill="Digraph(sh)">sh</button>
+        <button class="skill-button" data-skill="Digraph(th)">th</button>
+        <button class="skill-button" data-skill="Digraph(ch)">ch</button>
+        <button class="skill-button" data-skill="Digraph(wh)">wh</button>
+        <button class="skill-button" data-skill="Digraphs Mixed">Digraphs Mixed</button>
+      </div>
+
+      <div class="skill-row">
+        <span class="skill-row-label">Glued Sounds:</span>
+        <button class="skill-button" data-skill="Glued(all)">-all</button>
+        <button class="skill-button" data-skill="Glued(-ng)">-ng</button>
+        <button class="skill-button" data-skill="Glued(-nk)">-nk</button>
+        <button class="skill-button" data-skill="Glued Mixed">Glued Mixed</button>
+      </div>
+
+      <div class="skill-row">
+        <span class="skill-row-label">Silent E (VCe):</span>
+        <button class="skill-button" data-skill="VCe(a_e)">a_e</button>
+        <button class="skill-button" data-skill="VCe(i_e)">i_e</button>
+        <button class="skill-button" data-skill="VCe(o_e)">o_e</button>
+        <button class="skill-button" data-skill="VCe(u_e)">u_e</button>
+        <button class="skill-button" data-skill="Mixed VCe">Mixed VCe</button>
+      </div>
+
+      <div class="skill-row">
+        <span class="skill-row-label">R-Controlled:</span>
+        <button class="skill-button" data-skill="R-Controlled(ar)">ar</button>
+        <button class="skill-button" data-skill="R-Controlled(or)">or</button>
+        <button class="skill-button" data-skill="R-Controlled(er,ir,ur)">er/ir/ur</button>
+        <button class="skill-button" data-skill="Mixed R-Controlled">Mixed R-Controlled</button>
+      </div>
+
+      <!-- Collapsible Advanced Skills -->
+      <details class="toggle-section">
+        <summary>Vowel Teams</summary>
+        <div class="skill-row">
+          <span class="skill-row-label">Vowel Teams:</span>
+          <button class="skill-button" data-skill="Long A(ai)">Long A (ai)</button>
+          <button class="skill-button" data-skill="Long A(ay)">Long A (ay)</button>
+          <button class="skill-button" data-skill="Long E(ee)">Long E (ee)</button>
+          <button class="skill-button" data-skill="Long E(ea)">Long E (ea)</button>
+          <button class="skill-button" data-skill="Long I(ie)">Long I (ie)</button>
+          <button class="skill-button" data-skill="Long I(igh)">Long I (igh)</button>
+          <button class="skill-button" data-skill="Long I(y)">Long I (y)</button>
+          <button class="skill-button" data-skill="Long O(oa)">Long O (oa)</button>
+          <button class="skill-button" data-skill="Long O(ow)">Long O (ow)</button>
+          <button class="skill-button" data-skill="Long O(oe)">Long O (oe)</button>
+          <button class="skill-button" data-skill="Long U(oo)">Long U (oo)</button>
+          <button class="skill-button" data-skill="Long U(ew)">Long U (ew)</button>
+          <button class="skill-button" data-skill="Long U(ue)">Long U (ue)</button>
+          <button class="skill-button" data-skill="Mixed Vowel Teams">Mixed Vowel Teams</button>
+        </div>
+      </details>
+
+      <details class="toggle-section">
+        <summary>Diphthongs</summary>
+        <div class="skill-row">
+          <span class="skill-row-label">Diphthongs:</span>
+          <button class="skill-button" data-skill="Diphthong(oi)">oi</button>
+          <button class="skill-button" data-skill="Diphthong(oy)">oy</button>
+          <button class="skill-button" data-skill="Diphthong(ou)">ou</button>
+          <button class="skill-button" data-skill="Diphthong(ow)">ow</button>
+        </div>
+      </details>
+
+      <details class="toggle-section">
+        <summary>Variant Vowels</summary>
+        <div class="skill-row">
+          <span class="skill-row-label">Variant Vowels:</span>
+          <button class="skill-button" data-skill="Variant Vowel(aw)">aw</button>
+          <button class="skill-button" data-skill="Variant Vowel(au)">au</button>
+          <button class="skill-button" data-skill="Variant Vowel(oo)">oo</button>
+        </div>
+      </details>
+
+      <details class="toggle-section">
+        <summary>Soft C & G</summary>
+        <div class="skill-row">
+          <span class="skill-row-label">Soft C & G:</span>
+          <button class="skill-button" data-skill="Soft C(ce)">Soft C (ce)</button>
+          <button class="skill-button" data-skill="Soft G(ge)">Soft G (ge)</button>
+          <button class="skill-button" data-skill="Soft G(dge)">Soft G (dge)</button>
+        </div>
+      </details>
+
+    </div>
+  </div>
+
+  <!-- Step 2: Include Blends -->
+  <div class="table-section">
+    <div class="section-label">Step 2: Include Blends?</div>
+    <div class="option-grid">
+      <div class="option-box" id="includeBlendsYes">Yes (4+ sounds)</div>
+      <div class="option-box" id="includeBlendsNo">No (3 sounds)</div>
+    </div>
+  </div>
+
+  <!-- Step 3: Generate & Print -->
+  <div class="table-section">
+    <div class="section-label">Step 3: Generate & Print</div>
+    <button onclick="generatePage()" style="font-size: 18px; padding: 10px 24px;">Generate</button>
+    <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
+  </div>
+
+  <div id="output"></div>
+</body>
+</html>
