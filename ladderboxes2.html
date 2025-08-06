@@ -9,21 +9,23 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-  <!-- Custom Fonts -->
   <style>
+    /* Custom Fonts */
     @font-face {
       font-family: 'BoxesFont';
-      src: local('BoxesFont'), url('fonts/boxes2.otf') format('opentype');
+      src: url('fonts/boxes2.otf') format('opentype');
     }
     @font-face {
       font-family: 'UnderlineFont';
-      src: local('UnderlineFont'), url('fonts/underlines.otf') format('opentype');
+      src: url('fonts/underlines.otf') format('opentype');
     }
 
     body { 
       font-family: 'Poppins', sans-serif; 
-      margin: 10px; 
+      margin: 10px auto; 
       text-align: center; 
+      max-width: 1000px;
+      overflow-x: hidden;
     }
 
     h1 { font-size: 32px; margin-bottom: 2px; }
@@ -38,11 +40,11 @@
 
     label { margin: 0 5px; font-size: 14px; }
 
-    /* Subtle highlight for changed letters */
-    .changed-bg {
-      background-color: #f0f0f0;
-      border-radius: 3px;
-      padding: 0 2px;
+    /* Fonts for ladder letters */
+    .ladder-font {
+      font-size: 90px;
+      letter-spacing: -2px;
+      font-weight: 600;
     }
 
     /* Print Settings */
@@ -98,12 +100,16 @@
       }
     }
 
+    // Changed letters appear as very dark gray for copier-friendly visibility
     function highlightChangedLetters(word, prevWord, useFont) {
       let lettersHTML = '';
       for (let i = 0; i < word.length; i++) {
         const isChanged = prevWord[i] !== word[i];
-        lettersHTML += `<span class="${isChanged ? 'changed-bg' : ''}" 
-                             style="font-family:'${useFont}', sans-serif;">1</span>`;
+        const color = isChanged ? '#222222' : '#000000';
+        lettersHTML += `<span style="
+                          font-family:'${useFont}', sans-serif;
+                          color:${color};
+                        ">1</span>`;
       }
       return lettersHTML;
     }
@@ -126,7 +132,7 @@
       const ladder = cvcWordLadders[randomIndex];
 
       const ladderHTML = `
-        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center; width:98%; margin:0 auto;">
+        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center; width:100%; margin:0 auto;">
           <div style="text-align:center;margin-bottom:4px;">
             <h2 style="margin-bottom:1px;font-size:24px;">CVC Word Ladder</h2>
             <p style="margin-top:0;font-size:12px;">
@@ -148,14 +154,9 @@
               } else {
                 const prev = ladder[idx - 1];
                 const lettersHTML = highlightChangedLetters(word, prev, useFont);
-                wordDisplay = `<div style="
-                                 display:flex;
-                                 justify-content:center;
-                                 gap:0;
-                                 font-size:90px;
-                                 letter-spacing:3px;
-                                 font-weight:600;
-                               ">${lettersHTML}</div>`;
+                wordDisplay = `<div class="ladder-font" style="font-family:'${useFont}', sans-serif;">
+                                 ${lettersHTML}
+                               </div>`;
               }
 
               const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/110?text=?';
@@ -170,6 +171,7 @@
                                 ${wordDisplay}
                               </td>`;
 
+              // Hint column
               let hintTD = '<td style="padding:3px 5px; width: 170px;"></td>';
               if (idx > 0) {
                 const prev = ladder[idx - 1];
