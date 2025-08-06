@@ -68,12 +68,13 @@
         font-size: 18px !important;
       }
 
-      /* Add copyright bottom-right */
-      #copyright {
+      /* Add copyright bottom-right in print */
+      #ladderOutput #copyright {
+        visibility: visible;
         position: absolute;
-        bottom: 8px;
-        right: 12px;
-        font-size: 12px;
+        bottom: 4px;
+        right: 8px;
+        font-size: 10px;
         font-style: italic;
       }
 
@@ -103,9 +104,11 @@
     <button onclick="window.print()">Print Page</button>
   </div>
 
-  <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px;"></div>
-
-  <div id="copyright">© InterventionStation.com - @TeachwithMrC</div>
+  <!-- Ladder Output with Copyright inside for printing -->
+  <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px; position:relative;">
+    <!-- Ladder content is generated here -->
+    <div id="copyright">© InterventionStation.com - @TeachwithMrC</div>
+  </div>
 
   <script>
     function initializeLadderData() {
@@ -143,20 +146,22 @@
       const ladder = cvcWordLadders[randomIndex];
 
       const ladderHTML = `
-        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center; width:98%; margin:0 auto;">
-          
+        <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
+
           <!-- Name Line -->
-          <div style="align-self:flex-start;margin:10px 0 20px 0;font-size:16px;">
+          <div style="align-self:flex-start;margin:4px 0;font-size:16px;">
             Name: _____________________________
           </div>
 
-          <div style="text-align:center;margin-bottom:4px;">
-            <h2 style="margin-bottom:1px;font-size:24px;">CVC Word Ladder</h2>
-            <p style="margin-top:0;font-size:12px;">
+          <!-- Title and Directions -->
+          <div style="text-align:center;margin:2px 0 6px 0;">
+            <h2 style="margin:0;font-size:24px;">CVC Word Ladder</h2>
+            <p style="margin:2px 0;font-size:12px;">
               <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
             </p>
           </div>
 
+          <!-- Word Ladder Table -->
           <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
             ${ladder.map((word, idx) => {
               const isLast = idx === ladder.length - 1;
