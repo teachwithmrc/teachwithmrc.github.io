@@ -2,254 +2,225 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Ultimate Word Mapping Generator</title>
-  <script src="newtry_FULL-4.js" defer></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <title>CVC Word Ladder</title>
 
+  <script src="cvcLadderData.js" defer></script>
+  <script src="cvcWordLadders_6words.js" defer></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Load custom fonts for both screen and print -->
   <style>
-    body { font-family: 'Poppins', sans-serif; margin: 40px; text-align: center; }
-    h1 { font-size: 36px; margin-bottom: 5px; }
-    h2 { font-size: 20px; margin-bottom: 20px; }
-
-    .table-section { border: 2px solid #000; padding: 20px; margin: 12px auto; width: fit-content; box-sizing: border-box; text-align: left; }
-    .section-label { font-weight: 600; font-size: 18px; margin-bottom: 12px; text-align: center; }
-
-    .skill-button { 
-      border: 2px solid #000; padding: 6px 12px; margin: 4px; border-radius: 6px;
-      font-weight: 600; font-size: 14px; cursor: pointer; 
-      transition: background-color 0.3s, color 0.3s;
+    @font-face {
+      font-family: 'BoxesFont';
+      src: local('BoxesFont'), url('fonts/boxes2.otf') format('opentype');
     }
-    .skill-button.selected { background-color: #007bff; color: white; }
+    @font-face {
+      font-family: 'UnderlineFont';
+      src: local('UnderlineFont'), url('fonts/underlines.otf') format('opentype');
+    }
 
-    .option-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
-    .option-box { padding: 10px 14px; border: 2px solid #000; border-radius: 8px; cursor: pointer; }
-    .option-box.selected { background-color: #d9c9ff; }
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      margin: 10px; 
+      text-align: center; 
+    }
 
-    /* Accordion */
-    .accordion-item { border: 1px solid #ccc; border-radius: 6px; margin-bottom: 8px; }
-    .accordion-header { background: #f0f0f0; padding: 10px; cursor: pointer; font-weight: 600; }
-    .accordion-content { display: none; padding: 10px; }
-    .accordion-content.show { display: block; }
+    h1 { font-size: 32px; margin-bottom: 2px; }
+    .subtitle { font-size: 16px; margin-bottom: 8px; }
 
-    /* Worksheet */
-    .word-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid black; }
-    .word-table td { width: 50%; text-align: center; vertical-align: middle; padding: 10px 0; border: 2px solid black; }
+    button { 
+      font-size: 16px; 
+      padding: 4px 8px; 
+      margin: 4px; 
+      cursor: pointer; 
+    }
 
-    .worksheet-title { font-size: 40px; margin-bottom: 5px; font-weight: 700; }
-    .worksheet-directions { font-size: 22px; margin-bottom: 20px; }
+    label { margin: 0 5px; font-size: 14px; }
 
-    .word { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
-    .pattern { font-size: 60px; display: inline-block; font-family: monospace; line-height: 1; }
-
+    /* Ensure fonts work in print */
     @media print {
-      body { margin: 0; }
-      h1, h2, .table-section, button { display: none; }
-      #output { margin: 0; }
-      .worksheet-title, .worksheet-directions { display: block; text-align: center; }
+      @font-face {
+        font-family: 'BoxesFont';
+        src: local('BoxesFont'), url('boxes2.otf') format('opentype');
+      }
+      @font-face {
+        font-family: 'UnderlineFont';
+        src: local('UnderlineFont'), url('fonts/underlines.otf') format('opentype');
+      }
+
+      body * { visibility: hidden; }
+      #ladderOutput, #ladderOutput * { visibility: visible; }
+      #ladderOutput { 
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        margin: 0; 
+        padding: 10px; 
+        box-sizing: border-box; 
+      }
+      @page { margin: 0.5in; }
     }
   </style>
 </head>
 <body>
-  <h1>Word Mapping Generator</h1>
-  <h2>Skills: <span id="selected-skills"></span></h2>
 
-  <!-- Step 1: Skill Selection with Accordion -->
-  <div class="table-section">
-    <div class="section-label">Step 1: Select Skills</div>
+  <h1>CVC Word Ladder</h1>
+  <p class="subtitle">
+    <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
+  </p>
 
-    <div class="accordion-item">
-      <div class="accordion-header">CVC through R-Controlled</div>
-      <div class="accordion-content show">
-        <button class="skill-button" data-skill="Short A">Short A</button>
-        <button class="skill-button" data-skill="Short E">Short E</button>
-        <button class="skill-button" data-skill="Short I">Short I</button>
-        <button class="skill-button" data-skill="Short O">Short O</button>
-        <button class="skill-button" data-skill="Short U">Short U</button>
-        <button class="skill-button" data-skill="Mixed CVC">Mixed CVC</button>
-        <button class="skill-button" data-skill="FLSZ Words">FLSZ</button>
-        <br>
-        <button class="skill-button" data-skill="Digraph(ck)">ck</button>
-        <button class="skill-button" data-skill="Digraph(sh)">sh</button>
-        <button class="skill-button" data-skill="Digraph(th)">th</button>
-        <button class="skill-button" data-skill="Digraph(ch)">ch</button>
-        <button class="skill-button" data-skill="Digraph(wh)">wh</button>
-        <button class="skill-button" data-skill="Digraphs Mixed">Digraphs Mixed</button>
-        <br>
-        <button class="skill-button" data-skill="Glued(all)">-all</button>
-        <button class="skill-button" data-skill="Glued(-ng)">-ng</button>
-        <button class="skill-button" data-skill="Glued(-nk)">-nk</button>
-        <button class="skill-button" data-skill="Glued Mixed">Glued Mixed</button>
-        <br>
-        <button class="skill-button" data-skill="VCe(a_e)">a_e</button>
-        <button class="skill-button" data-skill="VCe(i_e)">i_e</button>
-        <button class="skill-button" data-skill="VCe(o_e)">o_e</button>
-        <button class="skill-button" data-skill="VCe(u_e)">u_e</button>
-        <button class="skill-button" data-skill="Mixed VCe">Mixed VCe</button>
-        <br>
-        <button class="skill-button" data-skill="R-Controlled(ar)">ar</button>
-        <button class="skill-button" data-skill="R-Controlled(or)">or</button>
-        <button class="skill-button" data-skill="R-Controlled(er,ir,ur)">er/ir/ur</button>
-        <button class="skill-button" data-skill="Mixed R-Controlled">Mixed R-Controlled</button>
-      </div>
-    </div>
-
-    <div class="accordion-item">
-      <div class="accordion-header">Vowel Teams, Diphthongs & Variant Vowels</div>
-      <div class="accordion-content">
-        <button class="skill-button" data-skill="Long A(ai)">Long A (ai)</button>
-        <button class="skill-button" data-skill="Long A(ay)">Long A (ay)</button>
-        <button class="skill-button" data-skill="Long E(ee)">Long E (ee)</button>
-        <button class="skill-button" data-skill="Long E(ea)">Long E (ea)</button>
-        <button class="skill-button" data-skill="Long I(igh)">Long I (igh)</button>
-        <button class="skill-button" data-skill="Long I(ie)">Long I (ie)</button>
-        <button class="skill-button" data-skill="Long I(y)">Long I (y)</button>
-        <button class="skill-button" data-skill="Long O(oa)">Long O (oa)</button>
-        <button class="skill-button" data-skill="Long O(ow)">Long O (ow)</button>
-        <button class="skill-button" data-skill="Long O(oe)">Long O (oe)</button>
-        <button class="skill-button" data-skill="Long U(oo)">Long U (oo)</button>
-        <button class="skill-button" data-skill="Long U(ew)">Long U (ew)</button>
-        <button class="skill-button" data-skill="Long U(ue)">Long U (ue)</button>
-        <button class="skill-button" data-skill="Diphthong(oi)">oi</button>
-        <button class="skill-button" data-skill="Diphthong(oy)">oy</button>
-        <button class="skill-button" data-skill="Diphthong(ou)">ou</button>
-        <button class="skill-button" data-skill="Diphthong(ow)">ow</button>
-        <button class="skill-button" data-skill="Variant Vowel(aw)">aw</button>
-        <button class="skill-button" data-skill="Variant Vowel(au)">au</button>
-        <button class="skill-button" data-skill="Variant Vowel(oo)">oo</button>
-      </div>
-    </div>
-
-    <div class="accordion-item">
-      <div class="accordion-header">Soft C & G</div>
-      <div class="accordion-content">
-        <button class="skill-button" data-skill="Soft C(ce)">Soft C (ce)</button>
-        <button class="skill-button" data-skill="Soft G(ge)">Soft G (ge)</button>
-        <button class="skill-button" data-skill="Soft G(dge)">Soft G (dge)</button>
-      </div>
-    </div>
+  <div style="margin-bottom:8px;">
+    <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
+    <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
   </div>
 
-  <!-- Step 2: Include Blends -->
-  <div class="table-section">
-    <div class="section-label">Step 2: Include Blends?</div>
-    <div class="option-grid">
-      <div class="option-box" id="includeBlendsYes">Yes (4+ sounds)</div>
-      <div class="option-box" id="includeBlendsNo">No (3 sounds)</div>
-    </div>
+  <div>
+    <button onclick="generateLadder()">Generate Ladder</button>
+    <button onclick="window.print()">Print Page</button>
   </div>
 
-  <!-- Step 3: Generate & Print -->
-  <div class="table-section">
-    <div class="section-label">Step 3: Generate & Print</div>
-    <button onclick="generatePage()" style="font-size: 18px; padding: 10px 24px;">Generate</button>
-    <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
-  </div>
-
-  <div id="output"></div>
+  <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px;"></div>
 
   <script>
-    let selectedSkills = new Set();
-    let includeBlends = null;
-
-    // Accordion logic
-    document.querySelectorAll(".accordion-header").forEach(header => {
-      header.addEventListener("click", () => {
-        header.nextElementSibling.classList.toggle("show");
-      });
-    });
-
-    // Skill button toggle
-    document.querySelectorAll('.skill-button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const skill = btn.dataset.skill;
-        if (selectedSkills.has(skill)) {
-          selectedSkills.delete(skill);
-          btn.classList.remove('selected');
-        } else {
-          selectedSkills.add(skill);
-          btn.classList.add('selected');
-        }
-        document.getElementById('selected-skills').innerText = Array.from(selectedSkills).join(', ');
-      });
-    });
-
-    // Blends yes/no
-    document.getElementById('includeBlendsYes').addEventListener('click', function () {
-      includeBlends = true;
-      this.classList.add('selected');
-      document.getElementById('includeBlendsNo').classList.remove('selected');
-    });
-    document.getElementById('includeBlendsNo').addEventListener('click', function () {
-      includeBlends = false;
-      this.classList.add('selected');
-      document.getElementById('includeBlendsYes').classList.remove('selected');
-    });
-
-    // --- Generator Function with Balanced Distribution ---
-    function generatePage() {
-      if (selectedSkills.size === 0) return alert("Select at least one skill!");
-      if (includeBlends === null) return alert("Please choose Include Blends: Yes or No");
-
-      const source = soundBoxWords; 
-      let allWords = [];
-
-      const skillsArray = Array.from(selectedSkills);
-      const perSkill = Math.floor(8 / skillsArray.length);
-
-      skillsArray.forEach(skill => {
-        let skillWords = getWordsForSkill(skill, source, includeBlends);
-
-        // If blends are selected but not enough, add base words
-        if (includeBlends && skillWords.length < perSkill) {
-          skillWords = skillWords.concat(getWordsForSkill(skill, source, false));
-        }
-
-        // Shuffle and take perSkill
-        skillWords = shuffle(skillWords).slice(0, perSkill);
-        allWords = allWords.concat(skillWords);
-      });
-
-      // Fill remaining spots if < 8
-      while (allWords.length < 8) {
-        allWords.push(...allWords);
+    function initializeLadderData() {
+      if (typeof cvcLadderImages === 'undefined') {
+        console.error('cvcLadderImages is not defined. Ensure cvcLadderData.js is loaded correctly.');
+        return false;
       }
-      allWords = shuffle(allWords).slice(0, 8);
-
-      const output = document.getElementById('output');
-      output.innerHTML = '';
-
-      const title = document.createElement('div');
-      title.className = 'worksheet-title';
-      title.textContent = `${skillsArray.join(', ')} Word Mapping`;
-
-      const directions = document.createElement('div');
-      directions.className = 'worksheet-directions';
-      directions.textContent = "Read each word, write it in the sound boxes correctly, read it again.";
-
-      output.appendChild(title);
-      output.appendChild(directions);
-
-      const table = document.createElement('table');
-      table.className = 'word-table';
-      for (let r = 0; r < 4; r++) {
-        const tr = document.createElement('tr');
-        for (let c = 0; c < 2; c++) {
-          const td = document.createElement('td');
-          const idx = r * 2 + c;
-          if (idx < allWords.length) {
-            td.innerHTML = `
-              <div class="word">${allWords[idx].word}</div>
-              <div class="pattern">${allWords[idx].pattern}</div>
-            `;
-          }
-          tr.appendChild(td);
+      try {
+        for (const key in cvcLadderImages) {
+          if (key.includes('2')) delete cvcLadderImages[key];
         }
-        table.appendChild(tr);
+        return true;
+      } catch (e) {
+        console.error('Error processing cvcLadderImages:', e);
+        return false;
       }
-      output.appendChild(table);
     }
 
-    function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+    function generateLadder() {
+      if (!initializeLadderData()) {
+        alert('❌ Error: Ladder data not available. Check console for details.');
+        return;
+      }
+
+      if (typeof cvcWordLadders === 'undefined' || !cvcWordLadders || cvcWordLadders.length === 0) {
+        alert('❌ No 6-word ladders found! Ensure cvcWordLadders_6words.js is loaded correctly.');
+        return;
+      }
+
+      const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
+      const useFont = cellStyle === 'underlines' ? 'UnderlineFont' : 'BoxesFont';
+
+      const randomIndex = Math.floor(Math.random() * cvcWordLadders.length);
+      const ladder = cvcWordLadders[randomIndex];
+
+      const ladderHTML = `
+        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center; width:98%; margin:0 auto;">
+          <div style="text-align:center;margin-bottom:4px;">
+            <h2 style="margin-bottom:1px;font-size:24px;">CVC Word Ladder</h2>
+            <p style="margin-top:0;font-size:12px;">
+              <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
+            </p>
+          </div>
+
+          <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
+            ${ladder.map((word, idx) => {
+              const isLast = idx === ladder.length - 1;
+              const isFirst = idx === 0;
+
+              // Word display
+              let wordDisplay;
+              if (isFirst) {
+                // First word is readable
+                wordDisplay = `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">
+                                 ${word}
+                               </div>`;
+              } else {
+                // All other rows: 111 in selected font, gray for changed letter
+                const prev = ladder[idx - 1];
+                let lettersHTML = '';
+                for (let i = 0; i < word.length; i++) {
+                  const isChanged = prev[i] !== word[i];
+                  lettersHTML += `<span style="
+                                    color:${isChanged ? '#aaa' : '#000'};
+                                    font-family:'${useFont}', sans-serif;
+                                  ">1</span>`;
+                }
+                // Tight flex layout
+                wordDisplay = `<div style="
+                                 display:flex;
+                                 justify-content:center;
+                                 gap:0;
+                                 font-family:'${useFont}', sans-serif;
+                                 font-size:90px;
+                                 letter-spacing:3px;
+                                 font-weight:600;
+                               ">${lettersHTML}</div>`;
+              }
+
+              const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/110?text=?';
+              const imageBorderStyle = isFirst
+                ? 'border-top-left-radius:12px;'
+                : isLast
+                ? 'border-bottom-left-radius:12px;'
+                : '';
+              const imageTD = `<td style="padding:5px 7px; width: 140px; ${imageBorderStyle}">
+                                 <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
+                               </td>`;
+
+              const wordTD = `<td style="padding:5px 7px;
+                                        ${!isLast 
+                                          ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
+                                          : 'border-left:4px solid #000;border-right:4px solid #000;'}">
+                                ${wordDisplay}
+                              </td>`;
+
+              // Hint column smaller and tighter
+              let hintTD = '<td style="padding:3px 5px; width: 170px;"></td>';
+              if (idx > 0) {
+                const prev = ladder[idx - 1];
+                let hint = '? → ?';
+                for (let i = 0; i < word.length; i++) {
+                  if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
+                }
+                const hintBorderStyle = isLast ? 'border-bottom-right-radius:12px;' : '';
+                hintTD = `<td style="padding:3px 5px;width:170px;${hintBorderStyle}">
+                            <div style="
+                              display:flex;
+                              justify-content:center;
+                              align-items:center;
+                              background:#f0f0f0;
+                              border:3px solid #000;
+                              border-radius:12px;
+                              padding:6px 10px;
+                              font-size:22px;
+                              text-align:center;
+                            ">
+                              ${hint}
+                            </div>
+                          </td>`;
+              } else if (isFirst) {
+                hintTD = `<td style="padding:3px 5px;width:170px;border-top-right-radius:12px;"></td>`;
+              }
+
+              return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
+            }).join('')}
+          </table>
+        </div>
+      `;
+
+      document.getElementById('ladderOutput').innerHTML = ladderHTML;
+    }
+
+    window.addEventListener('load', () => {
+      if (!initializeLadderData()) {
+        console.error('Initialization failed. Check script files and variable definitions.');
+      }
+    });
   </script>
+
 </body>
 </html>
