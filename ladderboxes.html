@@ -125,7 +125,7 @@
               let wordDisplay;
               if (isFirst) {
                 // First word is readable
-                wordDisplay = `<div style="font-size:30px;font-weight:600;letter-spacing:4px;font-family:'Poppins', sans-serif;">
+                wordDisplay = `<div style="font-size:30px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">
                                  ${word}
                                </div>`;
               } else {
@@ -134,11 +134,11 @@
                 let lettersHTML = '';
                 for (let i = 0; i < word.length; i++) {
                   const isChanged = prev[i] !== word[i];
-                  lettersHTML += `<span style="color:${isChanged ? '#aaa' : '#000'};font-family:'${useFont}', sans-serif;">
+                  lettersHTML += `<span style="color:${isChanged ? '#aaa' : '#000'};font-family:'${useFont}', sans-serif;font-size:28px;letter-spacing:0;">
                                     1
                                   </span>`;
                 }
-                wordDisplay = `<div style="font-size:30px;letter-spacing:4px;font-weight:600;">${lettersHTML}</div>`;
+                wordDisplay = `<div style="font-weight:600;">${lettersHTML}</div>`;
               }
 
               const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/110?text=?';
@@ -158,8 +158,8 @@
                                 ${wordDisplay}
                               </td>`;
 
-              // Hint column
-              let hintTD = '<td style="padding:5px 7px; width: 200px;"></td>';
+              // Hint column smaller and tighter
+              let hintTD = '<td style="padding:3px 5px; width: 170px;"></td>';
               if (idx > 0) {
                 const prev = ladder[idx - 1];
                 let hint = '? → ?';
@@ -167,7 +167,7 @@
                   if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
                 }
                 const hintBorderStyle = isLast ? 'border-bottom-right-radius:12px;' : '';
-                hintTD = `<td style="padding:5px 7px;width:200px;${hintBorderStyle}">
+                hintTD = `<td style="padding:3px 5px;width:170px;${hintBorderStyle}">
                             <div style="
                               display:flex;
                               justify-content:center;
@@ -175,15 +175,15 @@
                               background:#f0f0f0;
                               border:3px solid #000;
                               border-radius:12px;
-                              padding:10px 14px;
-                              font-size:28px;
+                              padding:6px 10px;
+                              font-size:22px;
                               text-align:center;
                             ">
                               ${hint}
                             </div>
                           </td>`;
               } else if (isFirst) {
-                hintTD = `<td style="padding:5px 7px;width:200px;border-top-right-radius:12px;"></td>`;
+                hintTD = `<td style="padding:3px 5px;width:170px;border-top-right-radius:12px;"></td>`;
               }
 
               return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
