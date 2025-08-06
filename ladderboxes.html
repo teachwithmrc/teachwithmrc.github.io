@@ -13,7 +13,7 @@
   <style>
     @font-face {
       font-family: 'BoxesFont';
-      src: url('fonts/boxes2.otf') format('opentype');
+      src: url('boxes2.otf') format('opentype');
     }
     @font-face {
       font-family: 'UnderlineFont';
@@ -125,7 +125,7 @@
               let wordDisplay;
               if (isFirst) {
                 // First word is readable
-                wordDisplay = `<div style="font-size:30px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">
+                wordDisplay = `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">
                                  ${word}
                                </div>`;
               } else {
@@ -134,11 +134,20 @@
                 let lettersHTML = '';
                 for (let i = 0; i < word.length; i++) {
                   const isChanged = prev[i] !== word[i];
-                  lettersHTML += `<span style="color:${isChanged ? '#aaa' : '#000'};font-family:'${useFont}', sans-serif;font-size:28px;letter-spacing:0;">
-                                    1
-                                  </span>`;
+                  lettersHTML += `<span style="
+                                    color:${isChanged ? '#aaa' : '#000'};
+                                    font-family:'${useFont}', sans-serif;
+                                  ">1</span>`;
                 }
-                wordDisplay = `<div style="font-weight:600;">${lettersHTML}</div>`;
+                // Tight flex layout
+                wordDisplay = `<div style="
+                                 display:flex;
+                                 justify-content:center;
+                                 gap:0;
+                                 font-size:40px;
+                                 letter-spacing:-2px;
+                                 font-weight:600;
+                               ">${lettersHTML}</div>`;
               }
 
               const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/110?text=?';
