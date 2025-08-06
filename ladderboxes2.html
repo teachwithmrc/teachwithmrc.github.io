@@ -189,21 +189,21 @@
                 for (let i = 0; i < word.length; i++) {
                   if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
                 }
-                hintTD = `<td style="padding:3px 5px;width:170px;">
-                            <div style="
-                              display:flex;
-                              justify-content:center;
-                              align-items:center;
-                              background:#f0f0f0;
-                              border:3px solid #000;
-                              border-radius:12px;
-                              padding:6px 10px;
-                              font-size:22px;
-                              text-align:center;
-                            ">
-                              ${hint}
-                            </div>
-                          </td>`;
+            hintTD = `<td style="padding:3px 5px;width:170px;${hintBorderStyle}">
+            <div style="
+              display:flex;
+              justify-content:center;
+              align-items:center;
+              background:#f0f0f0;
+              border:3px solid #000;
+              border-radius:12px;
+              padding:3px 6px;   /* smaller padding */
+              font-size:28px;    /* bigger font size */
+              text-align:center;
+            ">
+              ${hint}
+            </div>
+          </td>`;
               }
 
               return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
