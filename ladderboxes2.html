@@ -9,7 +9,6 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-  <!-- Load custom fonts for both screen and print -->
   <style>
     @font-face {
       font-family: 'BoxesFont';
@@ -38,7 +37,7 @@
 
     label { margin: 0 5px; font-size: 14px; }
 
-    /* Ensure fonts work in print */
+    /* Print styling */
     @media print {
       @font-face {
         font-family: 'BoxesFont';
@@ -60,6 +59,24 @@
         padding: 10px; 
         box-sizing: border-box; 
       }
+
+      /* Make title and directions bigger for print */
+      #ladderOutput h2 {
+        font-size: 36px !important;
+      }
+      #ladderOutput p {
+        font-size: 18px !important;
+      }
+
+      /* Add copyright bottom-right */
+      #copyright {
+        position: absolute;
+        bottom: 8px;
+        right: 12px;
+        font-size: 12px;
+        font-style: italic;
+      }
+
       @page { margin: 0.5in; }
     }
   </style>
@@ -76,7 +93,7 @@
     <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
   </div>
 
-  <!-- NEW: Toggle highlighting -->
+  <!-- Highlight toggle -->
   <div style="margin-bottom:8px;">
     <label><input type="checkbox" id="highlightToggle" checked> Highlight Changed Letters</label>
   </div>
@@ -87,6 +104,8 @@
   </div>
 
   <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px;"></div>
+
+  <div id="copyright">© InterventionStation.com - @TeachwithMrC</div>
 
   <script>
     function initializeLadderData() {
@@ -125,6 +144,12 @@
 
       const ladderHTML = `
         <div style="display:flex;justify-content:center;flex-direction:column;align-items:center; width:98%; margin:0 auto;">
+          
+          <!-- Name Line -->
+          <div style="align-self:flex-start;margin:10px 0 20px 0;font-size:16px;">
+            Name: _____________________________
+          </div>
+
           <div style="text-align:center;margin-bottom:4px;">
             <h2 style="margin-bottom:1px;font-size:24px;">CVC Word Ladder</h2>
             <p style="margin-top:0;font-size:12px;">
