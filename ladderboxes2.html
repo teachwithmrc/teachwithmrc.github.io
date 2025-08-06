@@ -9,6 +9,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
+  <!-- Custom Fonts -->
   <style>
     @font-face {
       font-family: 'BoxesFont';
@@ -37,11 +38,11 @@
 
     label { margin: 0 5px; font-size: 14px; }
 
-    /* Print styling */
+    /* Ensure fonts and footer work in print */
     @media print {
       @font-face {
         font-family: 'BoxesFont';
-        src: local('BoxesFont'), url('boxes2.otf') format('opentype');
+        src: local('BoxesFont'), url('fonts/boxes2.otf') format('opentype');
       }
       @font-face {
         font-family: 'UnderlineFont';
@@ -59,24 +60,13 @@
         padding: 10px; 
         box-sizing: border-box; 
       }
-
-      /* Make title and directions bigger for print */
-      #ladderOutput h2 {
-        font-size: 36px !important;
-      }
-      #ladderOutput p {
-        font-size: 18px !important;
-      }
-
-      /* Add copyright bottom-right */
-      #copyright {
+      #ladderOutput .print-footer {
+        visibility: visible;
         position: absolute;
-        bottom: 8px;
-        right: 12px;
+        bottom: 0;
+        right: 0;
         font-size: 12px;
-        font-style: italic;
       }
-
       @page { margin: 0.5in; }
     }
   </style>
@@ -91,10 +81,6 @@
   <div style="margin-bottom:8px;">
     <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
     <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
-  </div>
-
-  <!-- Highlight toggle -->
-  <div style="margin-bottom:8px;">
     <label><input type="checkbox" id="highlightToggle" checked> Highlight Changed Letters</label>
   </div>
 
@@ -103,9 +89,9 @@
     <button onclick="window.print()">Print Page</button>
   </div>
 
-  <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px;"></div>
-
-  <div id="copyright">© InterventionStation.com - @TeachwithMrC</div>
+  <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px; position:relative;">
+    <div class="print-footer">© InterventionStation.com - @TeachwithMrC</div>
+  </div>
 
   <script>
     function initializeLadderData() {
@@ -131,54 +117,38 @@
       }
 
       if (typeof cvcWordLadders === 'undefined' || !cvcWordLadders || cvcWordLadders.length === 0) {
-        alert('❌ No 6-word ladders found! Ensure cvcWordLadders_6words.js is loaded correctly.');
+        alert('❌ No 6-word ladders found! Ensure cvcWordLadders_6words.js is loaded.');
         return;
       }
 
       const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
       const useFont = cellStyle === 'underlines' ? 'UnderlineFont' : 'BoxesFont';
-      const highlightChanges = document.getElementById('highlightToggle').checked;
+      const highlight = document.getElementById('highlightToggle').checked;
 
       const randomIndex = Math.floor(Math.random() * cvcWordLadders.length);
       const ladder = cvcWordLadders[randomIndex];
 
       const ladderHTML = `
-        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center; width:98%; margin:0 auto;">
-          
-  <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
+        <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
 
-  <!-- Name Line -->
-  <div style="align-self:flex-start;margin:4px 0;font-size:16px;">
-    Name: _____________________________
-  </div>
+          <!-- Name Line -->
+          <div style="align-self:flex-start;margin:4px 0;font-size:16px;">
+            Name: _____________________________
+          </div>
 
-  <!-- Title and Directions -->
-  <div style="text-align:center;margin:2px 0 6px 0;">
-    <h2 style="margin:0;font-size:24px;">CVC Word Ladder</h2>
-    <p style="margin:2px 0;font-size:12px;">
-      <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
-    </p>
-  </div>
-
-  <!-- Word Ladder Table -->
-  <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
-    <!-- table rows here -->
-  </table>
-
-</div>
+          <!-- Title and Directions -->
+          <div style="text-align:center;margin:2px 0 6px 0;">
+            <h2 style="margin:0;font-size:28px;">CVC Word Ladder</h2>
+            <p style="margin:2px 0;font-size:14px;">
+              <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
+            </p>
+          </div>
 
           <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
             ${ladder.map((word, idx) => {
               const isLast = idx === ladder.length - 1;
               const isFirst = idx === 0;
 
-              const hintBorderStyle = isLast 
-                ? 'border-bottom-right-radius:12px;' 
-                : isFirst 
-                ? 'border-top-right-radius:12px;' 
-                : '';
-
-              // Word display
               let wordDisplay;
               if (isFirst) {
                 wordDisplay = `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">
@@ -189,49 +159,45 @@
                 let lettersHTML = '';
                 for (let i = 0; i < word.length; i++) {
                   const isChanged = prev[i] !== word[i];
-                  const weight = highlightChanges && isChanged ? 'font-weight:bold;' : 'font-weight:normal;';
-                  lettersHTML += `<span style="
-                                    font-family:'${useFont}', sans-serif;
-                                    font-size:90px;
-                                    ${weight}
-                                  ">1</span>`;
+                  if (highlight && isChanged) {
+                    lettersHTML += `<span style="font-weight:bold;font-family:'${useFont}', sans-serif;">1</span>`;
+                  } else {
+                    lettersHTML += `<span style="font-weight:normal;font-family:'${useFont}', sans-serif;">1</span>`;
+                  }
                 }
                 wordDisplay = `<div style="
                                  display:flex;
                                  justify-content:center;
                                  gap:0;
+                                 font-family:'${useFont}', sans-serif;
+                                 font-size:90px;
                                  letter-spacing:3px;
                                ">${lettersHTML}</div>`;
               }
 
-              // Image cell
               const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/110?text=?';
-              const imageBorderStyle = isFirst
-                ? 'border-top-left-radius:12px;'
-                : isLast
-                ? 'border-bottom-left-radius:12px;'
-                : '';
-              const imageTD = `<td style="padding:5px 7px; width: 140px; ${imageBorderStyle}">
+              const imageTD = `<td style="padding:4px 6px; width: 140px;">
                                  <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
                                </td>`;
 
-              // Word cell
-              const wordTD = `<td style="padding:5px 7px;
+              const wordTD = `<td style="padding:4px 6px;
                                         ${!isLast 
                                           ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
                                           : 'border-left:4px solid #000;border-right:4px solid #000;'}">
                                 ${wordDisplay}
                               </td>`;
 
-              // Hint cell
-              let hintTD = '<td style="padding:3px 5px; width: 170px;"></td>';
+              const hintBorderStyle = isLast ? 'border-bottom-right-radius:12px;' 
+                                             : isFirst ? 'border-top-right-radius:12px;' 
+                                             : '';
+              let hintTD = '<td style="padding:2px 4px; width: 170px;"></td>';
               if (idx > 0) {
                 const prev = ladder[idx - 1];
                 let hint = '? → ?';
                 for (let i = 0; i < word.length; i++) {
                   if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
                 }
-                hintTD = `<td style="padding:3px 5px;width:170px;${hintBorderStyle}">
+                hintTD = `<td style="padding:2px 4px;width:170px;${hintBorderStyle}">
                             <div style="
                               display:flex;
                               justify-content:center;
@@ -239,9 +205,9 @@
                               background:#f0f0f0;
                               border:3px solid #000;
                               border-radius:12px;
-                              padding:4px 6px;
+                              padding:2px 4px;
                               font-size:28px;
-                              font-weight:bold;
+                              font-weight:600;
                               text-align:center;
                             ">
                               ${hint}
@@ -252,6 +218,8 @@
               return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
             }).join('')}
           </table>
+
+          <div class="print-footer">© InterventionStation.com - @TeachwithMrC</div>
         </div>
       `;
 
