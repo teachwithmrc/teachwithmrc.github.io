@@ -10,7 +10,9 @@ const cvcLadderWords = [
   "pup", "rag", "ram", "rat", "rib", "rig", "rim", "rip", "rob", "rod",
   "rug", "run", "sad", "sap", "sip", "sit", "sob", "sub", "sun", "tag",
   "tap", "ten", "tin", "top", "tub", "tug", "tux", "van", "vet", "wag",
-  "wax", "web", "wed", "wig", "win", "zap", "zip"
+  "wax", "web", "wed", "wig", "win", "zap", "zip", "fix", "fox", "six",
+  "sax", "men"
+
 ];
 
 const cvcLadderImages = {
@@ -130,5 +132,10 @@ const cvcLadderImages = {
   "wig": "images/wig.png",
   "win": "images/win.png",
   "zap": "images/zap.png",
+  "fox": "images/fox.png",
+  "fix": "images/fix.png",
+  "six": "images/six.png",
+  "men": "images/men.png",
+  "sax": "images/sax.png",
   "zip": "images/zip.png"
 };
