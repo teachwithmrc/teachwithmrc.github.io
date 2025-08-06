@@ -55,9 +55,9 @@
         top: 0; 
         left: 0; 
         width: 100%; 
-        margin: 0; 
-        padding: 10px; 
-        box-sizing: border-box; 
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
       /* Make title and directions bigger for print */
@@ -68,7 +68,7 @@
         font-size: 18px !important;
       }
 
-      /* Add copyright bottom-right in print */
+      /* Copyright bottom-right on print */
       #ladderOutput #copyright {
         visibility: visible;
         position: absolute;
@@ -78,7 +78,8 @@
         font-style: italic;
       }
 
-      @page { margin: 0.5in; }
+      /* Reduce page margin to fix huge gap */
+      @page { margin: 0.25in; }
     }
   </style>
 </head>
@@ -104,11 +105,7 @@
     <button onclick="window.print()">Print Page</button>
   </div>
 
-  <!-- Ladder Output with Copyright inside for printing -->
-  <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px; position:relative;">
-    <!-- Ladder content is generated here -->
-    <div id="copyright">© InterventionStation.com - @TeachwithMrC</div>
-  </div>
+  <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px; position:relative;"></div>
 
   <script>
     function initializeLadderData() {
@@ -247,6 +244,17 @@
               return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
             }).join('')}
           </table>
+
+          <!-- Copyright inside ladderOutput -->
+          <div id="copyright" style="
+            position:absolute;
+            bottom:4px;
+            right:8px;
+            font-size:10px;
+            font-style:italic;
+          ">
+            © InterventionStation.com - @TeachwithMrC
+          </div>
         </div>
       `;
 
