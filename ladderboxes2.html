@@ -9,22 +9,21 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-  <!-- Custom Fonts -->
+  <!-- Load custom fonts for both screen and print -->
   <style>
     @font-face {
       font-family: 'BoxesFont';
-      src: url('fonts/boxes2.otf') format('opentype');
+      src: local('BoxesFont'), url('fonts/boxes2.otf') format('opentype');
     }
     @font-face {
       font-family: 'UnderlineFont';
-      src: url('fonts/underlines.otf') format('opentype');
+      src: local('UnderlineFont'), url('fonts/underlines.otf') format('opentype');
     }
 
     body { 
       font-family: 'Poppins', sans-serif; 
-      margin: 10px auto; 
+      margin: 10px; 
       text-align: center; 
-      max-width: 900px;
     }
 
     h1 { font-size: 32px; margin-bottom: 2px; }
@@ -39,8 +38,17 @@
 
     label { margin: 0 5px; font-size: 14px; }
 
-    /* Print Settings */
+    /* Ensure fonts work in print */
     @media print {
+      @font-face {
+        font-family: 'BoxesFont';
+        src: local('BoxesFont'), url('boxes2.otf') format('opentype');
+      }
+      @font-face {
+        font-family: 'UnderlineFont';
+        src: local('UnderlineFont'), url('fonts/underlines.otf') format('opentype');
+      }
+
       body * { visibility: hidden; }
       #ladderOutput, #ladderOutput * { visibility: visible; }
       #ladderOutput { 
@@ -69,8 +77,7 @@
   </div>
 
   <div style="margin-bottom:8px;">
-    <label><input type="checkbox" id="showHints" checked> Show Hints</label>
-    <label><input type="checkbox" id="highlightChanges" checked> Highlight Changes (Bold)</label>
+    <label><input type="checkbox" id="highlightChanges" checked> Highlight Changed Letter (Bold)</label>
   </div>
 
   <div>
@@ -118,21 +125,27 @@
         return;
       }
 
-      if (!cvcWordLadders || cvcWordLadders.length === 0) {
-        alert('❌ No 6-word ladders found! Ensure cvcWordLadders_6words.js is loaded.');
+      if (typeof cvcWordLadders === 'undefined' || !cvcWordLadders || cvcWordLadders.length === 0) {
+        alert('❌ No 6-word ladders found! Ensure cvcWordLadders_6words.js is loaded correctly.');
         return;
       }
 
       const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
       const useFont = cellStyle === 'underlines' ? 'UnderlineFont' : 'BoxesFont';
-      const showHints = document.getElementById('showHints').checked;
       const highlightChanges = document.getElementById('highlightChanges').checked;
 
       const randomIndex = Math.floor(Math.random() * cvcWordLadders.length);
       const ladder = cvcWordLadders[randomIndex];
 
       const ladderHTML = `
-        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center;width:100%;margin:0 auto;">
+        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center; width:98%; margin:0 auto;">
+          <div style="text-align:center;margin-bottom:4px;">
+            <h2 style="margin-bottom:1px;font-size:24px;">CVC Word Ladder</h2>
+            <p style="margin-top:0;font-size:12px;">
+              <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
+            </p>
+          </div>
+
           <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
             ${ladder.map((word, idx) => {
               const isLast = idx === ladder.length - 1;
@@ -141,13 +154,19 @@
               // Word display
               let wordDisplay;
               if (isFirst) {
+                // First word is readable
                 wordDisplay = `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">
                                  ${word}
                                </div>`;
               } else {
+                // All other rows: 111 in selected font
                 const prev = ladder[idx - 1];
                 const lettersHTML = highlightChangedLetters(word, prev, useFont, highlightChanges);
-                wordDisplay = `<div style="display:flex;justify-content:center;gap:0;">${lettersHTML}</div>`;
+                wordDisplay = `<div style="
+                                 display:flex;
+                                 justify-content:center;
+                                 gap:0;
+                               ">${lettersHTML}</div>`;
               }
 
               const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/110?text=?';
@@ -162,33 +181,29 @@
                                 ${wordDisplay}
                               </td>`;
 
-              // Optional hint column
-              let hintTD = '';
-              if (showHints) {
-                if (idx > 0) {
-                  const prev = ladder[idx - 1];
-                  let hint = '? → ?';
-                  for (let i = 0; i < word.length; i++) {
-                    if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
-                  }
-                  hintTD = `<td style="padding:3px 5px;width:170px;">
-                              <div style="
-                                display:flex;
-                                justify-content:center;
-                                align-items:center;
-                                background:#f0f0f0;
-                                border:3px solid #000;
-                                border-radius:12px;
-                                padding:4px 8px;
-                                font-size:18px;
-                                text-align:center;
-                              ">
-                                ${hint}
-                              </div>
-                            </td>`;
-                } else {
-                  hintTD = '<td style="padding:3px 5px;width:170px;"></td>';
+              // Hints are always shown
+              let hintTD = '<td style="padding:3px 5px; width: 170px;"></td>';
+              if (idx > 0) {
+                const prev = ladder[idx - 1];
+                let hint = '? → ?';
+                for (let i = 0; i < word.length; i++) {
+                  if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
                 }
+                hintTD = `<td style="padding:3px 5px;width:170px;">
+                            <div style="
+                              display:flex;
+                              justify-content:center;
+                              align-items:center;
+                              background:#f0f0f0;
+                              border:3px solid #000;
+                              border-radius:12px;
+                              padding:6px 10px;
+                              font-size:22px;
+                              text-align:center;
+                            ">
+                              ${hint}
+                            </div>
+                          </td>`;
               }
 
               return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
