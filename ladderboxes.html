@@ -9,7 +9,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-  <!-- Load custom fonts for both screen and print -->
+  <!-- Load custom fonts -->
   <style>
     @font-face {
       font-family: 'BoxesFont';
@@ -38,11 +38,11 @@
 
     label { margin: 0 5px; font-size: 14px; }
 
-    /* Ensure fonts work in print */
+    /* Ensure fonts load for print */
     @media print {
       @font-face {
         font-family: 'BoxesFont';
-        src: local('BoxesFont'), url('boxes2.otf') format('opentype');
+        src: local('BoxesFont'), url('fonts/boxes2.otf') format('opentype');
       }
       @font-face {
         font-family: 'UnderlineFont';
@@ -106,13 +106,14 @@
         return;
       }
 
-      if (typeof cvcWordLadders === 'undefined' || !cvcWordLadders || cvcWordLadders.length === 0) {
+      if (!cvcWordLadders || cvcWordLadders.length === 0) {
         alert('❌ No 6-word ladders found! Ensure cvcWordLadders_6words.js is loaded correctly.');
         return;
       }
 
       const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
       const useFont = cellStyle === 'underlines' ? 'UnderlineFont' : 'BoxesFont';
+      const fontSize = 60; // <<< Change this number to make boxes/underlines bigger or smaller
 
       const randomIndex = Math.floor(Math.random() * cvcWordLadders.length);
       const ladder = cvcWordLadders[randomIndex];
@@ -135,32 +136,22 @@
               let wordDisplay;
               if (isFirst) {
                 // First word is readable
-                wordDisplay = `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">
-                                 ${word}
-                               </div>`;
-              } else {
-                // All other rows: 111 in selected font, gray for changed letter
-                const prev = ladder[idx - 1];
-                let lettersHTML = '';
-                for (let i = 0; i < word.length; i++) {
-                  const isChanged = prev[i] !== word[i];
-                  lettersHTML += `<span style="
-                                    color:${isChanged ? '#aaa' : '#000'};
-                                    font-family:'${useFont}', sans-serif;
-                                  ">1</span>`;
-                }
-                // Tight flex layout
                 wordDisplay = `<div style="
-                                 display:flex;
-                                 justify-content:center;
-                                 gap:0;
-                                 font-family:'${useFont}', sans-serif;
-                                 font-size:90px;
-                                 letter-spacing:0px;
+                                 font-size:32px;
                                  font-weight:600;
-                               ">${lettersHTML}</div>`;
+                                 font-family:'Poppins', sans-serif;
+                               ">${word}</div>`;
+              } else {
+                // Show "111" in the chosen font, no spans = no spacing issues
+                wordDisplay = `<div style="
+                                 font-size:${fontSize}px;
+                                 font-weight:600;
+                                 font-family:'${useFont}', sans-serif;
+                                 line-height:1;
+                               ">111</div>`;
               }
 
+              // Image column
               const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/110?text=?';
               const imageBorderStyle = isFirst
                 ? 'border-top-left-radius:12px;'
@@ -171,6 +162,7 @@
                                  <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
                                </td>`;
 
+              // Word column
               const wordTD = `<td style="padding:5px 7px;
                                         ${!isLast 
                                           ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
@@ -178,7 +170,7 @@
                                 ${wordDisplay}
                               </td>`;
 
-              // Hint column smaller and tighter
+              // Hint column
               let hintTD = '<td style="padding:3px 5px; width: 170px;"></td>';
               if (idx > 0) {
                 const prev = ladder[idx - 1];
@@ -216,9 +208,7 @@
     }
 
     window.addEventListener('load', () => {
-      if (!initializeLadderData()) {
-        console.error('Initialization failed. Check script files and variable definitions.');
-      }
+      initializeLadderData();
     });
   </script>
 
