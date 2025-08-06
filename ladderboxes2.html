@@ -9,8 +9,8 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
+  <!-- Custom Fonts -->
   <style>
-    /* Custom Fonts */
     @font-face {
       font-family: 'BoxesFont';
       src: url('fonts/boxes2.otf') format('opentype');
@@ -24,8 +24,7 @@
       font-family: 'Poppins', sans-serif; 
       margin: 10px auto; 
       text-align: center; 
-      max-width: 1000px;
-      overflow-x: hidden;
+      max-width: 900px;
     }
 
     h1 { font-size: 32px; margin-bottom: 2px; }
@@ -39,13 +38,6 @@
     }
 
     label { margin: 0 5px; font-size: 14px; }
-
-    /* Fonts for ladder letters */
-    .ladder-font {
-      font-size: 90px;
-      letter-spacing: -2px;
-      font-weight: 600;
-    }
 
     /* Print Settings */
     @media print {
@@ -100,15 +92,15 @@
       }
     }
 
-    // Changed letters appear as very dark gray for copier-friendly visibility
     function highlightChangedLetters(word, prevWord, useFont) {
       let lettersHTML = '';
       for (let i = 0; i < word.length; i++) {
         const isChanged = prevWord[i] !== word[i];
-        const color = isChanged ? '#222222' : '#000000';
         lettersHTML += `<span style="
                           font-family:'${useFont}', sans-serif;
-                          color:${color};
+                          font-size:90px;
+                          font-weight:${isChanged ? '900' : '400'};
+                          letter-spacing:-2px;
                         ">1</span>`;
       }
       return lettersHTML;
@@ -132,14 +124,7 @@
       const ladder = cvcWordLadders[randomIndex];
 
       const ladderHTML = `
-        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center; width:100%; margin:0 auto;">
-          <div style="text-align:center;margin-bottom:4px;">
-            <h2 style="margin-bottom:1px;font-size:24px;">CVC Word Ladder</h2>
-            <p style="margin-top:0;font-size:12px;">
-              <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
-            </p>
-          </div>
-
+        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center;width:100%;margin:0 auto;">
           <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
             ${ladder.map((word, idx) => {
               const isLast = idx === ladder.length - 1;
@@ -154,9 +139,7 @@
               } else {
                 const prev = ladder[idx - 1];
                 const lettersHTML = highlightChangedLetters(word, prev, useFont);
-                wordDisplay = `<div class="ladder-font" style="font-family:'${useFont}', sans-serif;">
-                                 ${lettersHTML}
-                               </div>`;
+                wordDisplay = `<div style="display:flex;justify-content:center;gap:0;">${lettersHTML}</div>`;
               }
 
               const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/110?text=?';
@@ -187,8 +170,8 @@
                               background:#f0f0f0;
                               border:3px solid #000;
                               border-radius:12px;
-                              padding:6px 10px;
-                              font-size:22px;
+                              padding:4px 8px;
+                              font-size:18px;
                               text-align:center;
                             ">
                               ${hint}
