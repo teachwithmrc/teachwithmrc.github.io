@@ -11,12 +11,13 @@ const cvcLadderWords = [
   "rug", "run", "sad", "sap", "sip", "sit", "sob", "sub", "sun", "tag",
   "tap", "ten", "tin", "top", "tub", "tug", "tux", "van", "vet", "wag",
   "wax", "web", "wed", "wig", "win", "zap", "zip", "fix", "fox", "six",
-  "sax", "men"
+  "sax", "men", "mix"
 
 ];
 
 const cvcLadderImages = {
   "bag": "images/bag.png",
+  "mix": "images/mix.png",
   "bat": "images/bat.png",
   "bed": "images/bed.png",
   "beg": "images/beg.png",
