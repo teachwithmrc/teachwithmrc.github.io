@@ -1,4 +1,4 @@
-const digraphWordLadders_6words_variety = [
+const digraphWordLadders = [
   [
     "puck",
     "buck",
