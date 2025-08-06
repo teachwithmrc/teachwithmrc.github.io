@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CVC Word Ladder</title>
+
+  <script src="cvcLadderData.js" defer></script>
+  <script src="cvcWordLadders_6words.js" defer></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Load custom Boxes2 font -->
+  <style>
+    @font-face {
+      font-family: 'BoxesFont';
+      src: url('fonts/boxes2.otf') format('opentype');
+    }
+
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      margin: 10px; 
+      text-align: center; 
+    }
+
+    h1 { font-size: 32px; margin-bottom: 2px; }
+    .subtitle { font-size: 16px; margin-bottom: 8px; }
+
+    button { 
+      font-size: 16px; 
+      padding: 4px 8px; 
+      margin: 4px; 
+      cursor: pointer; 
+    }
+
+    label { margin: 0 5px; font-size: 14px; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #ladderOutput, #ladderOutput * { visibility: visible; }
+      #ladderOutput { 
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        margin: 0; 
+        padding: 10px; 
+        box-sizing: border-box; 
+      }
+      @page { margin: 0.5in; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>CVC Word Ladder</h1>
+  <p class="subtitle">
+    <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
+  </p>
+
+  <div style="margin-bottom:8px;">
+    <label><input type="radio" name="cellStyle" value="lines" checked> Writing Lines</label>
+    <label><input type="radio" name="cellStyle" value="boxes"> Boxes2 Font</label>
+  </div>
+
+  <div>
+    <button onclick="generateLadder()">Generate Ladder</button>
+    <button onclick="window.print()">Print Page</button>
+  </div>
+
+  <!-- Added bottom spacing -->
+  <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px;"></div>
+
+  <script>
+    function initializeLadderData() {
+      if (typeof cvcLadderImages === 'undefined') {
+        console.error('cvcLadderImages is not defined. Ensure cvcLadderData.js is loaded correctly.');
+        return false;
+      }
+      try {
+        for (const key in cvcLadderImages) {
+          if (key.includes('2')) delete cvcLadderImages[key];
+        }
+        return true;
+      } catch (e) {
+        console.error('Error processing cvcLadderImages:', e);
+        return false;
+      }
+    }
+
+    function generateLadder() {
+      if (!initializeLadderData()) {
+        alert('❌ Error: Ladder data not available. Check console for details.');
+        return;
+      }
+
+      if (typeof cvcWordLadders === 'undefined' || !cvcWordLadders || cvcWordLadders.length === 0) {
+        alert('❌ No 6-word ladders found! Ensure cvcWordLadders_6words.js is loaded correctly.');
+        return;
+      }
+
+      const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
+      const randomIndex = Math.floor(Math.random() * cvcWordLadders.length);
+      const ladder = cvcWordLadders[randomIndex];
+
+      const ladderHTML = `
+        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center; width:98%; margin:0 auto;">
+          <div style="text-align:center;margin-bottom:4px;">
+            <h2 style="margin-bottom:1px;font-size:24px;">CVC Word Ladder</h2>
+            <p style="margin-top:0;font-size:12px;">
+              <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
+            </p>
+          </div>
+
+          <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
+            ${ladder.map((word, idx) => {
+              const isLast = idx === ladder.length - 1;
+              const isFirst = idx === 0;
+
+              // Generate word cell with gray letter for changed letter
+              let wordCell;
+              if (idx === 0) {
+                wordCell = `<div style="font-size:30px;font-weight:600;letter-spacing:4px;font-family:'${cellStyle === 'boxes' ? 'BoxesFont' : 'Poppins'}', sans-serif;">
+                              ${word}
+                            </div>`;
+              } else {
+                const prev = ladder[idx - 1];
+                let lettersHTML = '';
+                for (let i = 0; i < word.length; i++) {
+                  const isChanged = prev[i] !== word[i];
+                  lettersHTML += `<span style="color:${isChanged ? '#aaa' : '#000'};font-family:'${cellStyle === 'boxes' ? 'BoxesFont' : 'Poppins'}', sans-serif;">
+                                    ${word[i]}
+                                  </span>`;
+                }
+                wordCell = `<div style="font-size:30px;letter-spacing:4px;font-weight:600;">
+                              ${lettersHTML}
+                            </div>`;
+              }
+
+              const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/110?text=?';
+              const imageBorderStyle = isFirst
+                ? 'border-top-left-radius:12px;'
+                : isLast
+                ? 'border-bottom-left-radius:12px;'
+                : '';
+              const imageTD = `<td style="padding:5px 7px; width: 140px; ${imageBorderStyle}">
+                                 <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
+                               </td>`;
+
+              // Create hint TD
+              let hintTD = '<td style="padding:5px 7px; width: 200px;"></td>';
+              if (idx > 0) {
+                const prev = ladder[idx - 1];
+                let hint = '? → ?';
+                for (let i = 0; i < word.length; i++) {
+                  if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
+                }
+                const hintBorderStyle = isLast ? 'border-bottom-right-radius:12px;' : '';
+                hintTD = `<td style="padding:5px 7px;width:200px;${hintBorderStyle}">
+                            <div style="
+                              display:flex;
+                              justify-content:center;
+                              align-items:center;
+                              background:#f0f0f0;
+                              border:3px solid #000;
+                              border-radius:12px;
+                              padding:10px 14px;
+                              font-size:28px;
+                              text-align:center;
+                            ">
+                              ${hint}
+                            </div>
+                          </td>`;
+              } else if (isFirst) {
+                hintTD = `<td style="padding:5px 7px;width:200px;border-top-right-radius:12px;"></td>`;
+              }
+
+              const borderStyle = !isLast
+                ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
+                : 'border-left:4px solid #000;border-right:4px solid #000;';
+              const wordTD = `<td style="padding:5px 7px;${borderStyle}">${wordCell}</td>`;
+
+              return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
+            }).join('')}
+          </table>
+        </div>
+      `;
+
+      document.getElementById('ladderOutput').innerHTML = ladderHTML;
+    }
+
+    window.addEventListener('load', () => {
+      if (!initializeLadderData()) {
+        console.error('Initialization failed. Check script files and variable definitions.');
+      }
+    });
+  </script>
+
+</body>
+</html>
