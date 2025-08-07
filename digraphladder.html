@@ -11,11 +11,12 @@
   <style>
     @font-face {
       font-family: 'BoxesFont';
-      src: local('BoxesFont'), url('fonts/boxes2.otf') format('opentype');
+      src: url('fonts/boxes2.otf') format('opentype');
     }
+
     @font-face {
       font-family: 'UnderlineFont';
-      src: local('UnderlineFont'), url('fonts/underlines.otf') format('opentype');
+      src: url('fonts/underlines.otf') format('opentype');
     }
 
     body {
@@ -24,15 +25,44 @@
       text-align: center;
     }
 
-    h1 { font-size: 32px; margin-bottom: 2px; }
-    .subtitle { font-size: 16px; margin-bottom: 8px; }
+    h1 {
+      font-size: 32px;
+      margin-bottom: 2px;
+    }
 
-    button { font-size: 16px; padding: 4px 8px; margin: 4px; cursor: pointer; }
-    label { margin: 0 5px; font-size: 14px; }
+    .subtitle {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    button {
+      font-size: 16px;
+      padding: 4px 8px;
+      margin: 4px;
+      cursor: pointer;
+    }
+
+    label {
+      margin: 0 5px;
+      font-size: 14px;
+    }
+
+    .pattern {
+      font-size: 100px;
+      line-height: 1;
+      margin-top: 4px;
+    }
 
     @media print {
-      body * { visibility: hidden; }
-      #ladderOutput, #ladderOutput * { visibility: visible; }
+      body * {
+        visibility: hidden;
+      }
+
+      #ladderOutput,
+      #ladderOutput * {
+        visibility: visible;
+      }
+
       #ladderOutput {
         position: absolute;
         top: 0;
@@ -42,7 +72,10 @@
         padding: 10px;
         box-sizing: border-box;
       }
-      @page { margin: 0.5in; }
+
+      @page {
+        margin: 0.5in;
+      }
     }
   </style>
 </head>
@@ -54,7 +87,6 @@
   <div style="margin-bottom:8px;">
     <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
     <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
-    <label><input type="checkbox" id="boldChanged" checked> Bold Changed Letter</label>
   </div>
 
   <div>
@@ -73,7 +105,6 @@
 
       const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
       const useFont = cellStyle === 'underlines' ? 'UnderlineFont' : 'BoxesFont';
-      const boldChanged = document.getElementById('boldChanged').checked;
 
       const randomIndex = Math.floor(Math.random() * digraphWordLadders.length);
       const ladder = digraphWordLadders[randomIndex];
@@ -91,57 +122,15 @@
             ${ladder.map((word, idx) => {
               const isFirst = idx === 0;
               const isLast = idx === ladder.length - 1;
-              const prev = ladder[idx - 1] || '';
               const pattern = digraphWordPatterns[word] || '?';
-              const showPattern = `<div style="font-size:14px;margin-top:2px;color:#333;">Pattern: ${pattern}</div>`;
 
-              let wordDisplay = '';
-
-              if (isFirst) {
-                wordDisplay = `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">
-                                 ${word}
-                               </div>`;
-              } else {
-                let lettersHTML = '';
-                let letterIndex = 0;
-                for (let i = 0; i < pattern.length; i++) {
-                  const unit = pattern[i];
-                  let segment = '';
-                  let isChanged = false;
-
-                  if (unit === '1') {
-                    segment = word[letterIndex];
-                    isChanged = prev && prev[letterIndex] !== word[letterIndex];
-                    letterIndex += 1;
-                  } else if (unit === '2') {
-                    segment = word.slice(letterIndex, letterIndex + 2);
-                    isChanged = prev && prev.slice(letterIndex, letterIndex + 2) !== segment;
-                    letterIndex += 2;
-                  } else {
-                    segment = '?';
-                    letterIndex += 1;
-                  }
-
-                  lettersHTML += `<span style="
-                    font-weight:${isChanged && boldChanged ? 'bold' : 'normal'};
-                    font-family:'${useFont}', sans-serif;
-                    margin-right:2px;
-                  ">${segment}</span>`;
-                }
-
-                wordDisplay = `
-                  <div style="display:flex;flex-direction:column;align-items:center;">
-                    <div style="
-                      display:flex;
-                      justify-content:center;
-                      font-family:'${useFont}', sans-serif;
-                      font-size:90px;
-                      letter-spacing:3px;
-                      font-weight:600;
-                    ">${lettersHTML}</div>
-                    ${showPattern}
-                  </div>`;
-              }
+              const wordDisplay = isFirst
+                ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">
+                     ${word}
+                   </div>`
+                : `<div style="display:flex;flex-direction:column;align-items:center;">
+                     <div class="pattern" style="font-family: '${useFont}', monospace;">${pattern}</div>
+                   </div>`;
 
               const imgSrc = (typeof digraphWordImages !== 'undefined' && digraphWordImages[word])
                 ? digraphWordImages[word]
@@ -158,11 +147,11 @@
 
               const hintTD = (() => {
                 if (isFirst) return `<td style="padding:3px 5px; width: 170px;"></td>`;
+                const prev = ladder[idx - 1];
                 let hint = '? → ?';
-                const prevWord = ladder[idx - 1];
-                for (let i = 0; i < word.length; i++) {
-                  if (prevWord[i] !== word[i]) {
-                    hint = `${prevWord[i]} → ${word[i]}`;
+                for (let i = 0; i < Math.min(word.length, prev.length); i++) {
+                  if (prev[i] !== word[i]) {
+                    hint = `${prev[i]} → ${word[i]}`;
                     break;
                   }
                 }
@@ -190,5 +179,6 @@
       document.getElementById('ladderOutput').innerHTML = ladderHTML;
     }
   </script>
+
 </body>
 </html>
