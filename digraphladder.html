@@ -109,10 +109,27 @@
         if (isFirst) {
           wordDisplay = `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">${word}</div>`;
         } else {
-          let lettersHTML = '';
-          for (let i = 0; i < word.length; i++) {
-            const isChanged = word[i] !== prev[i];
-            lettersHTML += `<span style="font-weight:${isChanged && boldChanged ? 'bold' : 'normal'};font-family:'${useFont}'">1</span>`;
+        const pattern = digraphWordPatterns[word] || '1'.repeat(word.length);
+const prevPattern = digraphWordPatterns[prev] || '1'.repeat(prev.length);
+
+let lettersHTML = '';
+let currentIndex = 0;
+
+for (let j = 0; j < pattern.length; j++) {
+  const unitLength = parseInt(pattern[j]);
+  const currentChunk = word.substring(currentIndex, currentIndex + unitLength);
+  const prevChunk = prev.substring(currentIndex, currentIndex + unitLength);
+  const isChanged = currentChunk !== prevChunk;
+
+  lettersHTML += `<span style="
+    font-weight:${isChanged && boldChanged ? 'bold' : 'normal'};
+    font-family:'${useFont}';
+    display:inline-block;
+    margin:0 2px;
+  ">${'1'.repeat(unitLength)}</span>`;
+
+  currentIndex += unitLength;
+}
           }
           wordDisplay = `<div style="display:flex;justify-content:center;font-family:'${useFont}';font-size:90px;letter-spacing:3px;">${lettersHTML}</div>`;
         }
