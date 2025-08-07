@@ -76,6 +76,7 @@
         return;
       }
 
+      const DIGRAPHS = ['sh', 'ch', 'th', 'wh', 'ck'];
       const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
       const useFont = cellStyle === 'underlines' ? 'UnderlineFont' : 'BoxesFont';
       const boldChanged = document.getElementById('boldChanged').checked;
@@ -138,18 +139,26 @@
                 const prev = ladder[idx - 1];
 
                 let hint = '? → ?';
+                let found = false;
 
                 for (let i = 0; i < Math.max(prev.length, word.length); i++) {
                   const prev2 = prev.slice(i, i + 2);
                   const word2 = word.slice(i, i + 2);
-                  if (prev2 !== word2) {
+
+                  // Only use 2-letter hint if both are valid digraphs
+                  if (
+                    prev2 !== word2 &&
+                    DIGRAPHS.includes(prev2) &&
+                    DIGRAPHS.includes(word2)
+                  ) {
                     hint = `${prev2} → ${word2}`;
+                    found = true;
                     break;
                   }
 
                   const prev1 = prev[i];
                   const word1 = word[i];
-                  if (prev1 !== word1) {
+                  if (!found && prev1 !== word1) {
                     hint = `${prev1} → ${word1}`;
                     break;
                   }
