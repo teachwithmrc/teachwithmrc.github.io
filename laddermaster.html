@@ -48,14 +48,20 @@
         src: local('UnderlineFont'), url('fonts/underlines.otf') format('opentype');
       }
 
-      @page { margin: 0; }
+      @page { 
+        size: letter; /* Explicitly set to Letter size */
+        margin: 0.5in; /* Small margin to avoid printer cutoff */
+      }
 
       body {
         margin: 0 !important;
         padding: 0 !important;
+        font-size: 100% !important; /* Prevent browser scaling issues */
       }
 
-      body * { visibility: hidden; }
+      body * { 
+        visibility: hidden; 
+      }
 
       #ladderOutput, 
       #ladderOutput * {
@@ -63,41 +69,56 @@
       }
 
       #ladderOutput { 
-        position: absolute;
-        top: 0;
-        left: 0;
+        position: relative; /* Changed from absolute to avoid blank space */
         width: 100%; 
-        margin: 0 !important;
-        padding: 0 !important;
+        margin: 0 auto;
+        padding: 0.25in; /* Small padding to align content */
         box-sizing: border-box;
+        transform-origin: top left;
+        transform: scale(0.85); /* Scale down slightly to fit content */
       }
 
       #ladderOutput h2 {
-        font-size: 36px !important;
-        margin-top: 0 !important;
+        font-size: 24px !important; /* Reduced for print */
+        margin: 0 0 4px 0 !important;
       }
 
       #ladderOutput p {
-        font-size: 18px !important;
-        margin-top: 2px !important;
-        margin-bottom: 6px !important;
+        font-size: 14px !important; /* Reduced for print */
+        margin: 2px 0 4px 0 !important;
       }
 
       #ladderOutput #copyright {
         visibility: visible;
         position: absolute;
-        bottom: 4px;
-        right: 8px;
-        font-size: 10px;
+        bottom: 0.25in;
+        right: 0.25in;
+        font-size: 8px !important; /* Reduced for print */
         font-style: italic;
+      }
+
+      /* Ensure table and images scale appropriately */
+      #ladderOutput table {
+        width: 100% !important;
+        max-width: 600px !important;
+      }
+
+      #ladderOutput img {
+        width: 80px !important; /* Reduced image size for print */
+        height: 80px !important;
+      }
+
+      #ladderOutput td {
+        padding: 3px 5px !important; /* Reduced padding for tighter layout */
+      }
+
+      #ladderOutput span {
+        font-size: 60px !important; /* Reduced font size for ladder cells */
       }
     }
   </style>
 </head>
 <body>
-
-  <!-- Moved to top so it prints immediately -->
-  <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px; position:relative;"></div>
 
   <h1>CVC Word Ladder</h1>
   <p class="subtitle">
@@ -117,6 +138,8 @@
     <button onclick="generateLadder()">Generate Ladder</button>
     <button onclick="window.print()">Print Page</button>
   </div>
+
+  <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px; position:relative;"></div>
 
   <script>
     function initializeLadderData() {
@@ -155,17 +178,13 @@
 
       const ladderHTML = `
         <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
-
-          <!-- Top Spacer -->
-          <div style="height:20px;"></div>
-
           <!-- Name Line -->
-          <div style="align-self:flex-start;margin:4px 0;font-size:16px;">
+          <div style="align-self:flex-start;margin:2px 0;font-size:14px;">
             Name: _____________________________
           </div>
 
           <!-- Title and Directions -->
-          <div style="text-align:center;margin:2px 0 6px 0;">
+          <div style="text-align:center;margin:2px 0 4px 0;">
             <h2 style="margin:0;font-size:24px;">CVC Word Ladder</h2>
             <p style="margin:2px 0;font-size:12px;">
               <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
@@ -186,7 +205,7 @@
 
               let wordDisplay;
               if (isFirst) {
-                wordDisplay = `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">
+                wordDisplay = `<div style="font-size:28px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">
                                  ${word}
                                </div>`;
               } else {
@@ -197,7 +216,7 @@
                   const weight = highlightChanges && isChanged ? 'font-weight:bold;' : 'font-weight:normal;';
                   lettersHTML += `<span style="
                                     font-family:'${useFont}', sans-serif;
-                                    font-size:90px;
+                                    font-size:60px;
                                     ${weight}
                                   ">1</span>`;
                 }
@@ -215,25 +234,25 @@
                 : isLast
                 ? 'border-bottom-left-radius:12px;'
                 : '';
-              const imageTD = `<td style="padding:5px 7px; width: 140px; ${imageBorderStyle}">
-                                 <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
+              const imageTD = `<td style="padding:3px 5px; width: 100px; ${imageBorderStyle}">
+                                 <img src="${imgSrc}" alt="${word}" style="width:80px;height:80px;object-fit:contain;">
                                </td>`;
 
-              const wordTD = `<td style="padding:5px 7px;
+              const wordTD = `<td style="padding:3px 5px;
                                         ${!isLast 
                                           ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
                                           : 'border-left:4px solid #000;border-right:4px solid #000;'}">
                                 ${wordDisplay}
                               </td>`;
 
-              let hintTD = '<td style="padding:3px 5px; width: 170px;"></td>';
+              let hintTD = '<td style="padding:3px 5px; width: 140px;"></td>';
               if (idx > 0) {
                 const prev = ladder[idx - 1];
                 let hint = '? → ?';
                 for (let i = 0; i < word.length; i++) {
                   if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
                 }
-                hintTD = `<td style="padding:3px 5px;width:170px;${hintBorderStyle}">
+                hintTD = `<td style="padding:3px 5px;width:140px;${hintBorderStyle}">
                             <div style="
                               display:flex;
                               justify-content:center;
@@ -242,7 +261,7 @@
                               border:3px solid #000;
                               border-radius:12px;
                               padding:4px 6px;
-                              font-size:28px;
+                              font-size:24px;
                               font-weight:bold;
                               text-align:center;
                             ">
@@ -259,7 +278,7 @@
             position:absolute;
             bottom:4px;
             right:8px;
-            font-size:10px;
+            font-size:8px;
             font-style:italic;
           ">
             © InterventionStation.com - @TeachwithMrC
