@@ -38,60 +38,59 @@
     label { margin: 0 5px; font-size: 14px; }
 
     /* Print styling */
-   @media print {
-    @font-face {
-      font-family: 'BoxesFont';
-      src: local('BoxesFont'), url('boxes2.otf') format('opentype');
-    }
-    @font-face {
-      font-family: 'UnderlineFont';
-      src: local('UnderlineFont'), url('fonts/underlines.otf') format('opentype');
-    }
+    @media print {
+      @font-face {
+        font-family: 'BoxesFont';
+        src: local('BoxesFont'), url('boxes2.otf') format('opentype');
+      }
+      @font-face {
+        font-family: 'UnderlineFont';
+        src: local('UnderlineFont'), url('fonts/underlines.otf') format('opentype');
+      }
 
-    @page { margin: 0; }
+      @page { margin: 0; }
 
-    body {
-      margin: 0 !important;
-      padding: 0 !important;
-    }
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+      }
 
-    body * { visibility: hidden; }
+      body * { visibility: hidden; }
 
-    #ladderOutput, 
-    #ladderOutput * {
-      visibility: visible;
-    }
+      #ladderOutput, 
+      #ladderOutput * {
+        visibility: visible;
+      }
 
-    #ladderOutput { 
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%; 
-      margin: 0 !important;
-      padding: 0 !important;
-      box-sizing: border-box;
-    }
+      #ladderOutput { 
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%; 
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box;
+      }
 
-    #ladderOutput h2 {
-      font-size: 36px !important;
-      margin-top: 0 !important;
-    }
+      #ladderOutput h2 {
+        font-size: 36px !important;
+        margin-top: 0 !important;
+      }
 
-    #ladderOutput p {
-      font-size: 18px !important;
-      margin-top: 2px !important;
-      margin-bottom: 6px !important;
-    }
+      #ladderOutput p {
+        font-size: 18px !important;
+        margin-top: 2px !important;
+        margin-bottom: 6px !important;
+      }
 
-    #ladderOutput #copyright {
-      visibility: visible;
-      position: absolute;
-      bottom: 4px;
-      right: 8px;
-      font-size: 10px;
-      font-style: italic;
-    }
-  }
+      #ladderOutput #copyright {
+        visibility: visible;
+        position: absolute;
+        bottom: 4px;
+        right: 8px;
+        font-size: 10px;
+        font-style: italic;
+      }
     }
   </style>
 </head>
@@ -107,7 +106,6 @@
     <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
   </div>
 
-  <!-- Highlight toggle -->
   <div style="margin-bottom:8px;">
     <label><input type="checkbox" id="highlightToggle" checked> Highlight Changed Letters</label>
   </div>
@@ -157,6 +155,9 @@
       const ladderHTML = `
         <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
 
+          <!-- Top Spacer for Print -->
+          <div style="height:20px;"></div>
+
           <!-- Name Line -->
           <div style="align-self:flex-start;margin:4px 0;font-size:16px;">
             Name: _____________________________
@@ -182,7 +183,6 @@
                 ? 'border-top-right-radius:12px;' 
                 : '';
 
-              // Word display
               let wordDisplay;
               if (isFirst) {
                 wordDisplay = `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">
@@ -208,7 +208,6 @@
                                ">${lettersHTML}</div>`;
               }
 
-              // Image cell
               const imgSrc = cvcLadderImages[word] || 'https://via.placeholder.com/110?text=?';
               const imageBorderStyle = isFirst
                 ? 'border-top-left-radius:12px;'
@@ -219,7 +218,6 @@
                                  <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
                                </td>`;
 
-              // Word cell
               const wordTD = `<td style="padding:5px 7px;
                                         ${!isLast 
                                           ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
@@ -227,7 +225,6 @@
                                 ${wordDisplay}
                               </td>`;
 
-              // Hint cell
               let hintTD = '<td style="padding:3px 5px; width: 170px;"></td>';
               if (idx > 0) {
                 const prev = ladder[idx - 1];
@@ -257,7 +254,6 @@
             }).join('')}
           </table>
 
-          <!-- Copyright inside ladderOutput -->
           <div id="copyright" style="
             position:absolute;
             bottom:4px;
