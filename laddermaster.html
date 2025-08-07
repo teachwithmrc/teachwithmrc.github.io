@@ -96,6 +96,9 @@
 </head>
 <body>
 
+  <!-- Moved to top so it prints immediately -->
+  <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px; position:relative;"></div>
+
   <h1>CVC Word Ladder</h1>
   <p class="subtitle">
     <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
@@ -114,8 +117,6 @@
     <button onclick="generateLadder()">Generate Ladder</button>
     <button onclick="window.print()">Print Page</button>
   </div>
-
-  <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px; position:relative;"></div>
 
   <script>
     function initializeLadderData() {
@@ -155,7 +156,7 @@
       const ladderHTML = `
         <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
 
-          <!-- Top Spacer for Print -->
+          <!-- Top Spacer -->
           <div style="height:20px;"></div>
 
           <!-- Name Line -->
