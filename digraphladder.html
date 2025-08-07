@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,7 +77,6 @@
         return;
       }
 
-      const DIGRAPHS = ['sh', 'ch', 'th', 'wh', 'ck'];
       const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
       const useFont = cellStyle === 'underlines' ? 'UnderlineFont' : 'BoxesFont';
       const boldChanged = document.getElementById('boldChanged').checked;
@@ -137,33 +137,10 @@
               const hintTD = (() => {
                 if (idx === 0) return `<td style="padding:3px 5px; width: 170px;"></td>`;
                 const prev = ladder[idx - 1];
-
                 let hint = '? → ?';
-                let found = false;
-
-                for (let i = 0; i < Math.max(prev.length, word.length); i++) {
-                  const prev2 = prev.slice(i, i + 2);
-                  const word2 = word.slice(i, i + 2);
-
-                  // Only use 2-letter hint if both are valid digraphs
-                  if (
-                    prev2 !== word2 &&
-                    DIGRAPHS.includes(prev2) &&
-                    DIGRAPHS.includes(word2)
-                  ) {
-                    hint = `${prev2} → ${word2}`;
-                    found = true;
-                    break;
-                  }
-
-                  const prev1 = prev[i];
-                  const word1 = word[i];
-                  if (!found && prev1 !== word1) {
-                    hint = `${prev1} → ${word1}`;
-                    break;
-                  }
+                for (let i = 0; i < word.length; i++) {
+                  if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
                 }
-
                 return `<td style="padding:3px 5px;width:170px;">
                           <div style="
                             display:flex;
@@ -191,3 +168,6 @@
 
 </body>
 </html>
+
+
+or from back to bath that is says ck -> th, does that make sense? 
