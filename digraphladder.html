@@ -87,6 +87,7 @@
   <div style="margin-bottom:8px;">
     <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
     <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
+    <label><input type="checkbox" id="boldChanged" checked> Bold Changed Part</label>
   </div>
 
   <div>
@@ -105,6 +106,7 @@
 
       const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
       const useFont = cellStyle === 'underlines' ? 'UnderlineFont' : 'BoxesFont';
+      const boldChanged = document.getElementById('boldChanged').checked;
 
       const randomIndex = Math.floor(Math.random() * digraphWordLadders.length);
       const ladder = digraphWordLadders[randomIndex];
@@ -124,12 +126,29 @@
               const isLast = idx === ladder.length - 1;
               const pattern = digraphWordPatterns[word] || '?';
 
+              let patternDisplay = pattern;
+
+              if (!isFirst && boldChanged) {
+                const prevPattern = digraphWordPatterns[ladder[idx - 1]] || '';
+                let result = '';
+                for (let i = 0; i < pattern.length; i++) {
+                  const curChar = pattern[i] || '';
+                  const prevChar = prevPattern[i] || '';
+                  if (curChar !== prevChar) {
+                    result += `<b>${curChar}</b>`;
+                  } else {
+                    result += curChar;
+                  }
+                }
+                patternDisplay = result;
+              }
+
               const wordDisplay = isFirst
                 ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">
                      ${word}
                    </div>`
                 : `<div style="display:flex;flex-direction:column;align-items:center;">
-                     <div class="pattern" style="font-family: '${useFont}', monospace;">${pattern}</div>
+                     <div class="pattern" style="font-family: '${useFont}', monospace;">${patternDisplay}</div>
                    </div>`;
 
               const imgSrc = (typeof digraphWordImages !== 'undefined' && digraphWordImages[word])
