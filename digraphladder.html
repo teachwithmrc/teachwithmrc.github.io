@@ -136,10 +136,25 @@
               const hintTD = (() => {
                 if (idx === 0) return `<td style="padding:3px 5px; width: 170px;"></td>`;
                 const prev = ladder[idx - 1];
+
                 let hint = '? → ?';
-                for (let i = 0; i < word.length; i++) {
-                  if (prev[i] !== word[i]) { hint = `${prev[i]} → ${word[i]}`; break; }
+
+                for (let i = 0; i < Math.max(prev.length, word.length); i++) {
+                  const prev2 = prev.slice(i, i + 2);
+                  const word2 = word.slice(i, i + 2);
+                  if (prev2 !== word2) {
+                    hint = `${prev2} → ${word2}`;
+                    break;
+                  }
+
+                  const prev1 = prev[i];
+                  const word1 = word[i];
+                  if (prev1 !== word1) {
+                    hint = `${prev1} → ${word1}`;
+                    break;
+                  }
                 }
+
                 return `<td style="padding:3px 5px;width:170px;">
                           <div style="
                             display:flex;
