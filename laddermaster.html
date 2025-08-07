@@ -38,64 +38,60 @@
     label { margin: 0 5px; font-size: 14px; }
 
     /* Print styling */
-  @media print {
-  @font-face {
-    font-family: 'BoxesFont';
-    src: local('BoxesFont'), url('boxes2.otf') format('opentype');
-  }
-  @font-face {
-    font-family: 'UnderlineFont';
-    src: local('UnderlineFont'), url('fonts/underlines.otf') format('opentype');
-  }
+   @media print {
+    @font-face {
+      font-family: 'BoxesFont';
+      src: local('BoxesFont'), url('boxes2.otf') format('opentype');
+    }
+    @font-face {
+      font-family: 'UnderlineFont';
+      src: local('UnderlineFont'), url('fonts/underlines.otf') format('opentype');
+    }
 
-  /* Reset page margins to remove the top gap */
-  @page { margin: 0; }
+    @page { margin: 0; }
 
-  /* Remove all body margins/padding in print */
-  body {
-    margin: 0;
-    padding: 0;
-  }
+    body {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
 
-  body * { visibility: hidden; }
+    body * { visibility: hidden; }
 
-  #ladderOutput, 
-  #ladderOutput * {
-    visibility: visible;
-  }
+    #ladderOutput, 
+    #ladderOutput * {
+      visibility: visible;
+    }
 
-  /* Force the ladder to start at the very top of the printed page */
-  #ladderOutput { 
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%; 
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+    #ladderOutput { 
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%; 
+      margin: 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box;
+    }
 
-  /* Make title and directions bigger for print */
-  #ladderOutput h2 {
-    font-size: 36px !important;
-    margin-top: 0 !important;
-  }
-  #ladderOutput p {
-    font-size: 18px !important;
-    margin-top: 2px !important;
-    margin-bottom: 6px !important;
-  }
+    #ladderOutput h2 {
+      font-size: 36px !important;
+      margin-top: 0 !important;
+    }
 
-  /* Copyright bottom-right on print */
-  #ladderOutput #copyright {
-    visibility: visible;
-    position: fixed;
-    bottom: 4px;
-    right: 8px;
-    font-size: 10px;
-    font-style: italic;
+    #ladderOutput p {
+      font-size: 18px !important;
+      margin-top: 2px !important;
+      margin-bottom: 6px !important;
+    }
+
+    #ladderOutput #copyright {
+      visibility: visible;
+      position: absolute;
+      bottom: 4px;
+      right: 8px;
+      font-size: 10px;
+      font-style: italic;
+    }
   }
-}
     }
   </style>
 </head>
