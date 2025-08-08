@@ -4149,5 +4149,3 @@ const rWordImages = {
   "yard": "images/yard.png",
   "yarn": "images/yarn.png"
 };
-
-export { rWordLadders, rWordPatterns, rWordImages };
