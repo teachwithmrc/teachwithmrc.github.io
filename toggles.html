@@ -44,14 +44,13 @@
       width: 50%;
       text-align: center;
       vertical-align: middle;
-      padding: 24px 0;    /* increased top/bottom padding for more breathing room */
+      padding: 24px 0;    /* extra breathing room top/bottom */
       border: 2px solid black;
     }
 
     .worksheet-title { font-size: 40px; margin-bottom: 5px; font-weight: 700; }
     .worksheet-directions { font-size: 22px; margin-bottom: 20px; }
 
-    /* More room above/below the writing area */
     .word {
       font-size: 28px;
       font-weight: 700;
@@ -65,10 +64,19 @@
       font-weight: normal;
       line-height: 1;
       margin-top: 8px;      /* space above pattern */
-      margin-bottom: 14px;  /* space below pattern so descenders don't collide */
+      margin-bottom: 14px;  /* space below so descenders don't collide */
     }
-    /* Underlines spacing: tightened so digits nearly touch */
-    .pattern.underlines span { display: inline-block; margin: 0 1px; }
+
+    /* Underlines style: unbold + a tiny gap between marks */
+    .pattern.underlines {
+      font-family: 'UnderlineFont', monospace;
+      font-weight: normal;           /* ensure not bold */
+      letter-spacing: 0;             /* no extra spacing */
+    }
+    .pattern.underlines span {
+      display: inline-block;
+      margin: 0 3px;                 /* subtle, consistent gap */
+    }
 
     /* Collapsible Toggles — only for Step 1 layout */
     .toggle-section {
@@ -117,7 +125,6 @@
     <div class="section-label">Step 1: Select Skills (3 sounds unless blends are included)</div>
     <div class="skill-button-grid">
 
-      <!-- Always Visible Rows -->
       <div class="skill-row">
         <span class="skill-row-label">CVC Short Vowels:</span>
         <button class="skill-button" data-skill="Short A">Short A</button>
