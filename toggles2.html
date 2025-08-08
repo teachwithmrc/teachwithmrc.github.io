@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
       chip.innerHTML = `<span>${skill}</span><span class="x" title="Remove">×</span>`;
       chip.querySelector('.x').addEventListener('click', () => {
         selectedSkills.delete(skill);
-        const btn = document.querySelector(\`.skill-button[data-skill="\${CSS.escape(skill)}"]\`);
+        const btn = document.querySelector(`.skill-button[data-skill="${CSS.escape(skill)}"]`);
         if (btn) btn.classList.remove('selected');
         renderChips();
       });
