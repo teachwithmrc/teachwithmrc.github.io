@@ -36,6 +36,8 @@
       margin-top: 4px;
     }
 
+    .print-only { display: none; }
+
     #copyright {
       font-size: 12px;
       text-align: right;
@@ -52,15 +54,12 @@
         margin: 0; padding: 10px;
         box-sizing: border-box;
       }
+      .print-only { display: block; }
       @page { margin: 0.5in; }
     }
   </style>
 </head>
 <body>
-
-  <div style="text-align:left; font-size:16px; margin-bottom:4px;">
-    Name _____________________
-  </div>
 
   <h1>VCe Word Generator</h1>
   <p class="subtitle"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
@@ -188,6 +187,7 @@
 
       const ladderHTML = `
         <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
+          <div class="print-only" style="text-align:left; font-size:16px; margin-bottom:4px; width:100%;">Name _____________________</div>
           <div style="text-align:center;margin-bottom:4px;">
             <h2 style="margin-bottom:1px;font-size:24px;">VCe Word Generator</h2>
             <p style="margin-top:0;font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
