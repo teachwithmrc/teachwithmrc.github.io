@@ -9,7 +9,11 @@
   <style>
     @font-face {
       font-family: 'BoxesFont';
-      src: url('fonts/boxes2.otf') format('truetype');
+      src: url('fonts/boxes2.otf') format('opentype');
+    }
+    @font-face {
+      font-family: 'UnderlineFont';
+      src: url('fonts/underlines.otf') format('opentype');
     }
 
     body { font-family: 'Poppins', sans-serif; margin: 40px; text-align: center; }
@@ -50,6 +54,8 @@
       font-weight: normal;
       line-height: 1;
     }
+    /* Underlines spacing so digits look like separate “boxes” */
+    .pattern.underlines span { display: inline-block; margin: 0 6px; }
 
     /* Collapsible Toggles — only for Step 1 layout */
     .toggle-section {
@@ -69,6 +75,10 @@
       background-color: #f0f7ff;
     }
 
+    /* Hide Soft C and Soft G buttons (keep Soft Endings) */
+    .skill-button[data-skill="Soft C"],
+    .skill-button[data-skill="Soft G"] { display: none; }
+
     /* Print Formatting */
     @media print {
       body { margin: 0; }
@@ -82,7 +92,7 @@
   <h1>Word Mapping Generator</h1>
   <h2>Skills: <span id="selected-skills"></span></h2>
 
-  <!-- Step 1: Skill Selection (NEW LAYOUT ONLY) -->
+  <!-- Step 1: Skill Selection -->
   <div class="table-section">
     <div class="section-label">Step 1: Select Skills (3 sounds unless blends are included)</div>
     <div class="skill-button-grid">
@@ -133,6 +143,7 @@
         <button class="skill-button" data-skill="R-Controlled(er,ir,ur)">er/ir/ur</button>
         <button class="skill-button" data-skill="Mixed R-Controlled">Mixed R-Controlled</button>
       </div>
+
       <!-- Collapsible Advanced Skills -->
       <details class="toggle-section">
         <summary>Vowel Teams</summary>
@@ -170,8 +181,10 @@
         <div class="skill-row">
           <span class="skill-row-label">Soft C & G:</span>
           <button class="skill-button" data-skill="Soft Endings">-ce/-ge/-dge</button>
+          <!-- Hidden via CSS:
           <button class="skill-button" data-skill="Soft C">Soft C (ce/ci/cy)</button>
           <button class="skill-button" data-skill="Soft G">Soft G (ge/gi/gy)</button>
+          -->
         </div>
       </details>
 
@@ -190,6 +203,17 @@
   <!-- Step 3: Generate & Print -->
   <div class="table-section">
     <div class="section-label">Step 3: Generate & Print</div>
+
+    <!-- NEW: Boxes vs Underlines toggle -->
+    <div style="margin:6px 0 12px;">
+      <label style="margin-right:8px;">
+        <input type="radio" name="cellStyle" value="boxes" checked> Elkonin Boxes
+      </label>
+      <label>
+        <input type="radio" name="cellStyle" value="underlines"> Underlines
+      </label>
+    </div>
+
     <button onclick="generatePage()" style="font-size: 18px; padding: 10px 24px;">Generate</button>
     <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
   </div>
@@ -200,7 +224,7 @@
   let selectedSkills = new Set();
   let includeBlends = null;
 
-  // Skill button toggle (works inside <details> too)
+  // Skill button toggle
   document.querySelectorAll('.skill-button').forEach(btn => {
     btn.addEventListener('click', () => {
       const skill = btn.dataset.skill;
@@ -228,6 +252,20 @@
   });
 
   function shuffle(arr){ return [...arr].sort(() => Math.random() - 0.5); }
+
+  // Helpers for Boxes vs Underlines
+  function currentCellFont() {
+    const val = document.querySelector('input[name="cellStyle"]:checked')?.value || 'boxes';
+    return val === 'underlines' ? 'UnderlineFont' : 'BoxesFont';
+  }
+  function currentCellClass() {
+    const val = document.querySelector('input[name="cellStyle"]:checked')?.value || 'boxes';
+    return val === 'underlines' ? 'underlines' : 'boxes';
+  }
+  function renderPatternHTML(pattern, useUnderlines) {
+    if (!useUnderlines) return pattern; // BoxesFont: just show digits
+    return Array.from(pattern).map(d => `<span>${d}</span>`).join(''); // Underlines: spaced digits
+  }
 
   // Expose on window so the onclick finds it
   window.generatePage = function generatePage() {
@@ -265,15 +303,23 @@
 
     const table = document.createElement('table');
     table.className = 'word-table';
+
+    const useUnder = (document.querySelector('input[name="cellStyle"]:checked')?.value === 'underlines');
+    const fontName = currentCellFont();
+    const patternClass = currentCellClass();
+
     for (let r = 0; r < 4; r++) {
       const tr = document.createElement('tr');
       for (let c = 0; c < 2; c++) {
         const td = document.createElement('td');
         const idx = r * 2 + c;
         if (idx < allWords.length) {
+          const patternHTML = renderPatternHTML(allWords[idx].pattern, useUnder);
           td.innerHTML = `
             <div class="word">${allWords[idx].word}</div>
-            <div class="pattern">${allWords[idx].pattern}</div>
+            <div class="pattern ${patternClass}" style="font-family:'${fontName}', monospace;">
+              ${patternHTML}
+            </div>
           `;
         }
         tr.appendChild(td);
@@ -344,7 +390,7 @@
       case "Mixed R-Controlled":
         return [].concat(fetchSet("R-Controlled(ar)"), fetchSet("R-Controlled(or)"), fetchSet("R-Controlled(er,ir,ur)"));
 
-           // Vowel Teams
+      // Vowel Teams
       case "Long A (ai/ay)":
         return [].concat(
           fetchSet("Long A(ai)"),
@@ -390,7 +436,7 @@
           fetchSet("Long U(ue)")
         );
 
-      // Diphthongs (match the button text exactly)
+      // Diphthongs
       case "Diphthongs (oy/oi)":
         return [].concat(
           fetchSet("Diphthong(oy)"),
@@ -418,14 +464,11 @@
           fetchSet("Soft G(ge)"),
           fetchSet("Soft G(dge)")
         );
-      case "Soft C":
-        return fetchSet("Soft C"); // if your data uses subkeys, split like Soft C(ce/ci/cy)
-      case "Soft G":
-        return fetchSet("Soft G");
-default:
+
+      default:
         return fetchSet(skill);
-  } // closes switch
-}   // closes function getWordsForSkill
+    } // switch
+  } // getWordsForSkill
 </script>
 </body>
 </html>
