@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Digraph Word Ladder</title>
 
+  <!-- Data source with digraphWordLadders, digraphWordPatterns, digraphWordImages -->
   <script src="digraphWordLadders_6words_full.js" defer></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -13,7 +14,6 @@
       font-family: 'BoxesFont';
       src: url('fonts/boxes2.otf') format('opentype');
     }
-
     @font-face {
       font-family: 'UnderlineFont';
       src: url('fonts/underlines.otf') format('opentype');
@@ -25,27 +25,11 @@
       text-align: center;
     }
 
-    h1 {
-      font-size: 32px;
-      margin-bottom: 2px;
-    }
+    h1 { font-size: 32px; margin-bottom: 2px; }
+    .subtitle { font-size: 16px; margin-bottom: 8px; }
 
-    .subtitle {
-      font-size: 16px;
-      margin-bottom: 8px;
-    }
-
-    button {
-      font-size: 16px;
-      padding: 4px 8px;
-      margin: 4px;
-      cursor: pointer;
-    }
-
-    label {
-      margin: 0 5px;
-      font-size: 14px;
-    }
+    button { font-size: 16px; padding: 4px 8px; margin: 4px; cursor: pointer; }
+    label { margin: 0 5px; font-size: 14px; }
 
     .pattern {
       font-size: 100px;
@@ -54,28 +38,16 @@
     }
 
     @media print {
-      body * {
-        visibility: hidden;
-      }
-
-      #ladderOutput,
-      #ladderOutput * {
-        visibility: visible;
-      }
-
+      body * { visibility: hidden; }
+      #ladderOutput, #ladderOutput * { visibility: visible; }
       #ladderOutput {
         position: absolute;
-        top: 0;
-        left: 0;
+        top: 0; left: 0;
         width: 100%;
-        margin: 0;
-        padding: 10px;
+        margin: 0; padding: 10px;
         box-sizing: border-box;
       }
-
-      @page {
-        margin: 0.5in;
-      }
+      @page { margin: 0.5in; }
     }
   </style>
 </head>
@@ -98,6 +70,7 @@
   <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px;"></div>
 
   <script>
+    // --- helpers ---
     function splitWordByPattern(word, pattern) {
       const chunks = [];
       let i = 0;
@@ -109,36 +82,43 @@
       return chunks;
     }
 
-    function getBoldedPatternDisplay(word, prevWord, pattern, prevPattern) {
-      const wordChunks = splitWordByPattern(word, pattern);
+    // boolean map per digit position: did this chunk change vs previous word?
+    function getChangedMap(prevWord, word, prevPattern, pattern) {
       const prevChunks = splitWordByPattern(prevWord, prevPattern);
-      let result = '';
-
-      for (let i = 0; i < pattern.length; i++) {
-        const digit = pattern[i];
-        const curChunk = wordChunks[i] || '';
-        const prevChunk = prevChunks[i] || '';
-        result += (curChunk !== prevChunk) ? `<b>${digit}</b>` : digit;
+      const wordChunks = splitWordByPattern(word, pattern);
+      const n = Math.max(pattern.length, prevPattern.length);
+      const changed = new Array(n);
+      for (let i = 0; i < n; i++) {
+        changed[i] = (prevChunks[i] || '') !== (wordChunks[i] || '');
       }
+      return changed;
+    }
 
-      return result;
+    // Render pattern digits as spans so we can space/bold safely
+    function renderPatternHTML({ pattern, useFont, boldChanged, changedMap }) {
+      const isUnderline = useFont === 'UnderlineFont';
+      return Array.from(pattern).map((digit, i) => {
+        const makeBold = boldChanged && changedMap && changedMap[i];
+        const spacing = isUnderline ? 'display:inline-block;margin:0 6px;' : '';
+        const weight = makeBold ? 'font-weight:700;' : '';
+        return `<span style="${spacing}${weight}">${digit}</span>`;
+      }).join('');
     }
 
     function getChunkHint(prevWord, word, prevPattern, pattern) {
       const prevChunks = splitWordByPattern(prevWord, prevPattern);
       const wordChunks = splitWordByPattern(word, pattern);
-
       for (let i = 0; i < Math.min(prevChunks.length, wordChunks.length); i++) {
         if (prevChunks[i] !== wordChunks[i]) {
           return `${prevChunks[i]} → ${wordChunks[i]}`;
         }
       }
-
       return '? → ?';
     }
 
+    // --- main ---
     function generateLadder() {
-      if (typeof digraphWordLadders === 'undefined' || digraphWordLadders.length === 0) {
+      if (typeof digraphWordLadders === 'undefined' || !Array.isArray(digraphWordLadders) || digraphWordLadders.length === 0) {
         alert('❌ Error: Word ladders not found!');
         return;
       }
@@ -150,78 +130,65 @@
       const randomIndex = Math.floor(Math.random() * digraphWordLadders.length);
       const ladder = digraphWordLadders[randomIndex];
 
+      const rowsHTML = ladder.map((word, idx) => {
+        const isFirst = idx === 0;
+        const isLast = idx === ladder.length - 1;
+        const prevWord = ladder[idx - 1] || '';
+
+        const pattern = (typeof digraphWordPatterns !== 'undefined' && digraphWordPatterns[word]) ? digraphWordPatterns[word] : '?';
+        const prevPattern = (typeof digraphWordPatterns !== 'undefined' && digraphWordPatterns[prevWord]) ? digraphWordPatterns[prevWord] : '?';
+
+        const changedMap = (!isFirst && boldChanged) ? getChangedMap(prevWord, word, prevPattern, pattern) : null;
+
+        const patternHTML = isFirst
+          ? ''
+          : renderPatternHTML({ pattern, useFont, boldChanged, changedMap });
+
+        const wordDisplay = isFirst
+          ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">${word}</div>`
+          : `<div class="pattern" style="
+               font-family:'${useFont}', monospace;
+               font-size:${useFont === 'UnderlineFont' ? '85px' : '100px'};
+               letter-spacing:0px;
+             ">${patternHTML}</div>`;
+
+        const imgSrc = (typeof digraphWordImages !== 'undefined' && digraphWordImages[word])
+          ? digraphWordImages[word]
+          : 'https://via.placeholder.com/110?text=?';
+
+        const imageTD = `<td style="padding:5px 7px;width:140px;">
+                           <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
+                         </td>`;
+
+        const borders = !isLast
+          ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
+          : 'border-left:4px solid #000;border-right:4px solid #000;';
+
+        const wordTD = `<td style="padding:5px 7px;${borders}">${wordDisplay}</td>`;
+
+        const hintTD = (() => {
+          if (isFirst) return `<td style="padding:3px 5px;width:170px;"></td>`;
+          const hint = getChunkHint(prevWord, word, prevPattern, pattern);
+          return `<td style="padding:3px 5px;width:170px;">
+                    <div style="
+                      display:flex;justify-content:center;align-items:center;
+                      background:#f0f0f0;border:3px solid #000;border-radius:12px;
+                      padding:6px 10px;font-size:22px;text-align:center;
+                    ">${hint}</div>
+                  </td>`;
+        })();
+
+        return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
+      }).join('');
+
       const ladderHTML = `
-        <div style="display:flex;flex-direction:column;align-items:center; width:98%; margin:0 auto;">
+        <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
           <div style="text-align:center;margin-bottom:4px;">
             <h2 style="margin-bottom:1px;font-size:24px;">Digraph Word Ladder</h2>
-            <p style="margin-top:0;font-size:12px;">
-              <strong>Directions:</strong> Start at the top of the ladder and spell the correct words.
-            </p>
+            <p style="margin-top:0;font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
           </div>
-
           <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
-            ${ladder.map((word, idx) => {
-              const isFirst = idx === 0;
-              const isLast = idx === ladder.length - 1;
-              const prevWord = ladder[idx - 1] || '';
-              const pattern = digraphWordPatterns[word] || '?';
-              const prevPattern = digraphWordPatterns[prevWord] || '?';
-
-              let patternDisplay = pattern;
-              if (!isFirst && boldChanged) {
-                patternDisplay = getBoldedPatternDisplay(word, prevWord, pattern, prevPattern);
-              }
-
-              // Add spacing for UnderlineFont only
-              patternDisplay = useFont === 'UnderlineFont'
-                ? patternDisplay.split('').join(' ')
-                : patternDisplay;
-
-              const wordDisplay = isFirst
-                ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">
-                     ${word}
-                   </div>`
-                : `<div style="display:flex;flex-direction:column;align-items:center;">
-                     <div class="pattern" style="
-                       font-family: '${useFont}', monospace;
-                       font-size: ${useFont === 'UnderlineFont' ? '85px' : '100px'};
-                       letter-spacing: ${useFont === 'UnderlineFont' ? '8px' : '0px'};
-                     ">${patternDisplay}</div>
-                   </div>`;
-
-              const imgSrc = (typeof digraphWordImages !== 'undefined' && digraphWordImages[word])
-                ? digraphWordImages[word]
-                : 'https://via.placeholder.com/110?text=?';
-
-              const imageTD = `<td style="padding:5px 7px; width: 140px;">
-                                 <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
-                               </td>`;
-
-              const wordTD = `<td style="padding:5px 7px;
-                ${!isLast ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;' : 'border-left:4px solid #000;border-right:4px solid #000;'}">
-                ${wordDisplay}
-              </td>`;
-
-              const hintTD = (() => {
-                if (isFirst) return `<td style="padding:3px 5px; width: 170px;"></td>`;
-                const hint = getChunkHint(prevWord, word, prevPattern, pattern);
-                return `<td style="padding:3px 5px;width:170px;">
-                          <div style="
-                            display:flex;
-                            justify-content:center;
-                            align-items:center;
-                            background:#f0f0f0;
-                            border:3px solid #000;
-                            border-radius:12px;
-                            padding:6px 10px;
-                            font-size:22px;
-                            text-align:center;
-                          ">${hint}</div>
-                        </td>`;
-              })();
-
-              return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
-            }).join('')}
+            ${rowsHTML}
           </table>
         </div>
       `;
@@ -229,6 +196,5 @@
       document.getElementById('ladderOutput').innerHTML = ladderHTML;
     }
   </script>
-
 </body>
 </html>
