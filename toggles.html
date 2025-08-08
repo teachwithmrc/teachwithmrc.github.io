@@ -346,20 +346,43 @@
         return [].concat(fetchSet("R-Controlled(ar)"), fetchSet("R-Controlled(or)"), fetchSet("R-Controlled(er,ir,ur)"));
 
       // Vowel Teams
-      case "Long A": return fetchSet("Long A");
-      case "Long E": return fetchSet("Long E");
-      case "Long I": return fetchSet("Long I");
-      case "Long O": return fetchSet("Long O");
-      case "Long U": return fetchSet("Long U");
-      case "Mixed Vowel Teams":
-        return [].concat(fetchSet("Long A"), fetchSet("Long E"), fetchSet("Long I"), fetchSet("Long O"), fetchSet("Long U"));
+      case "Long A (ai/ay)":
+  return [].concat(
+    fetchSet("Long A(ai)"),
+    fetchSet("Long A(ay)")
+  );
+        case "Long E (ee/ea)":
+  return [].concat(
+    fetchSet("Long E(ee)"),
+    fetchSet("Long E(ea)")
+  );
+        case "Long I (igh/y/ie)":
+  return [].concat(
+    fetchSet("Long I(igh)"),
+    fetchSet("Long I(y)")
+    fetchSet("Long I(ie)")
+  );
+            case "Long O (oa,ow,oe)":
+  return [].concat(
+    fetchSet("Long O(oa)"),
+    fetchSet("Long O(ow)")
+    fetchSet("Long O(oe)")
+  );
+
+          case "Long U (oo/ew/ue)":
+  return [].concat(
+    fetchSet("Long U(oo)"),
+    fetchSet("Long U(ew)")
+    fetchSet("Long U(ue)")
+  );
+
 
       // Diphthongs / Variant vowels / Soft C & G
       case "oy/oi": return fetchSet("oy/oi");
       case "ow/ou": return fetchSet("ow/ou");
       case "au/aw": return fetchSet("au/aw");
       case "oo": return fetchSet("oo");
-      case "Soft Endings": return fetchSet("Soft Endings");
+      case "Soft Endings": return fetchSet("Soft C(ce)"), fetchset("Soft G(ge)"), fetchset("Soft G(dge");
       case "Soft C": return fetchSet("Soft C");
       case "Soft G": return fetchSet("Soft G");
 
