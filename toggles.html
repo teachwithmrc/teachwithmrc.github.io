@@ -378,10 +378,22 @@
 
 
       // Diphthongs / Variant vowels / Soft C & G
-      case "oy/oi": return fetchSet("oy/oi");
-      case "ow/ou": return fetchSet("ow/ou");
-      case "au/aw": return fetchSet("au/aw");
-      case "oo": return fetchSet("oo");
+                case "Dipthongs (oy/oi)":
+  return [].concat(
+    fetchSet("Diphthong(oy)"),
+    fetchSet("Diphthong(oi)")
+  );
+                   case "Dipthongs (ow/ou)":
+  return [].concat(
+    fetchSet("Diphthong(ow)"),
+    fetchSet("Diphthong(ou)")
+  );
+                   case "Variant Vowel (oy/oi)":
+  return [].concat(
+    fetchSet("Variant Vowel(aw)"),
+    fetchSet("Variant Vowel(au)")
+  );
+      case "Variant Vowel (oo)": return fetchSet("Variant Vowel(oo)");
       case "Soft Endings": return fetchSet("Soft C(ce)"), fetchset("Soft G(ge)"), fetchset("Soft G(dge");
       case "Soft C": return fetchSet("Soft C");
       case "Soft G": return fetchSet("Soft G");
