@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>R-Controlled Word Generator</title>
+
+ <script src="rControlled_full_max.js" defer></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: 'BoxesFont';
+      src: url('fonts/boxes2.otf') format('opentype');
+    }
+    @font-face {
+      font-family: 'UnderlineFont';
+      src: url('fonts/underlines.otf') format('opentype');
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 10px;
+      text-align: center;
+    }
+
+    h1 { font-size: 32px; margin-bottom: 2px; }
+    .subtitle { font-size: 16px; margin-bottom: 8px; }
+
+    button { font-size: 16px; padding: 4px 8px; margin: 4px; cursor: pointer; }
+    label { margin: 0 5px; font-size: 14px; }
+
+    .pattern {
+      font-size: 100px;
+      line-height: 1;
+      margin-top: 4px;
+    }
+
+    #copyright {
+      font-size: 12px;
+      text-align: right;
+      width: 100%;
+    }
+
+    @media print {
+      body * { visibility: hidden; }
+      #ladderOutput, #ladderOutput * { visibility: visible; }
+      #ladderOutput {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%;
+        margin: 0; padding: 10px;
+        box-sizing: border-box;
+      }
+      #ladderOutput br { display: none !important; }
+      @page { margin: 0.5in; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>R-Controlled Word Generator</h1>
+  <p class="subtitle"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
+
+  <div style="margin-bottom:8px;">
+    <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
+    <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
+    <label><input type="checkbox" id="boldChanged" checked> Bold Changed Part</label>
+  </div>
+
+  <div>
+    <button onclick="generateLadder()">Generate Ladder</button>
+    <button onclick="window.print()">Print Page</button>
+  </div>
+
+  <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px;"></div>
+
+  <script>
+    function splitWordByPattern(word, pattern) {
+      const chunks = [];
+      let i = 0;
+      for (let j = 0; j < pattern.length; j++) {
+        const len = pattern[j] === '2' ? 2 : 1;
+        chunks.push(word.slice(i, i + len));
+        i += len;
+      }
+      return chunks;
+    }
+
+    function getChangedMap(prevWord, word, prevPattern, pattern) {
+      const prevChunks = splitWordByPattern(prevWord, prevPattern);
+      const wordChunks = splitWordByPattern(word, pattern);
+      const n = Math.max(pattern.length, prevPattern.length);
+      const changed = new Array(n);
+      for (let i = 0; i < n; i++) {
+        changed[i] = (prevChunks[i] || '') !== (wordChunks[i] || '');
+      }
+      return changed;
+    }
+
+    function renderPatternHTML({ pattern, useFont, boldChanged, changedMap }) {
+      const isUnderline = useFont === 'UnderlineFont';
+      return Array.from(pattern).map((digit, i) => {
+        const makeBold = boldChanged && changedMap && changedMap[i];
+        const spacing = isUnderline ? 'display:inline-block;margin:0 6px;' : '';
+        const weight = makeBold ? 'font-weight:700;' : '';
+        return `<span style="${spacing}${weight}">${digit}</span>`;
+      }).join('');
+    }
+
+    function getChunkHint(prevWord, word, prevPattern, pattern) {
+      const prevChunks = splitWordByPattern(prevWord, prevPattern);
+      const wordChunks = splitWordByPattern(word, pattern);
+      for (let i = 0; i < Math.min(prevChunks.length, wordChunks.length); i++) {
+        if (prevChunks[i] !== wordChunks[i]) {
+          return `${prevChunks[i]} → ${wordChunks[i]}`;
+        }
+      }
+      return '? → ?';
+    }
+
+    function generateLadder() {
+      if (typeof rWordLadders === 'undefined' || !Array.isArray(rWordLadders) || rWordLadders.length === 0) {
+        alert('❌ Error: Word ladders not found!');
+        return;
+      }
+
+      const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
+      const useFont = cellStyle === 'underlines' ? 'UnderlineFont' : 'BoxesFont';
+      const boldChanged = document.getElementById('boldChanged').checked;
+
+      const randomIndex = Math.floor(Math.random() * rWordLadders.length);
+      const ladder = rWordLadders[randomIndex];
+
+      const rowsHTML = ladder.map((word, idx) => {
+        const isFirst = idx === 0;
+        const isLast = idx === ladder.length - 1;
+        const prevWord = ladder[idx - 1] || '';
+
+        const pattern = (typeof rWordPatterns !== 'undefined' && rWordPatterns[word]) ? rWordPatterns[word] : '?';
+        const prevPattern = (typeof rWordPatterns !== 'undefined' && rWordPatterns[prevWord]) ? rWordPatterns[prevWord] : '?';
+
+        const changedMap = (!isFirst && boldChanged) ? getChangedMap(prevWord, word, prevPattern, pattern) : null;
+
+        const patternHTML = isFirst
+          ? ''
+          : renderPatternHTML({ pattern, useFont, boldChanged, changedMap });
+
+        const wordDisplay = isFirst
+          ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">${word}</div>`
+          : `<div class="pattern" style="
+               font-family:'${useFont}', monospace;
+               font-size:${useFont === 'UnderlineFont' ? '85px' : '100px'};
+               letter-spacing:0px;
+             ">${patternHTML}</div>`;
+
+        const imgSrc = (typeof rWordImages !== 'undefined' && rWordImages[word])
+          ? rWordImages[word]
+          : 'https://via.placeholder.com/110?text=?';
+
+        const imageTD = `<td style="padding:5px 7px;width:140px;">
+                           <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
+                         </td>`;
+
+        const borders = !isLast
+          ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
+          : 'border-left:4px solid #000;border-right:4px solid #000;';
+
+        const wordTD = `<td style="padding:5px 7px;${borders}">${wordDisplay}</td>`;
+
+        const hintTD = (() => {
+          if (isFirst) return `<td style="padding:3px 5px;width:170px;"></td>`;
+          const hint = getChunkHint(prevWord, word, prevPattern, pattern);
+          return `<td style="padding:3px 5px;width:170px;">
+                    <div style="
+                      display:flex;justify-content:center;align-items:center;
+                      background:#f0f0f0;border:3px solid #000;border-radius:12px;
+                      padding:6px 10px;font-size:22px;text-align:center;
+                    ">${hint}</div>
+                  </td>`;
+        })();
+
+        return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
+      }).join('');
+
+      const ladderHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
+          <div id="titleBlock" style="text-align:center;">
+            <h2 style="font-size:24px;">R-Controlled Word Generator</h2>
+            <p style="font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
+          </div>
+          <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
+            ${rowsHTML}
+          </table>
+          <br><br>
+          <div id="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+        </div>
+      `;
+
+      document.getElementById('ladderOutput').innerHTML = ladderHTML;
+    }
+  </script>
+</body>
+</html>
