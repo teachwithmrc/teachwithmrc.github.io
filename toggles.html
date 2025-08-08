@@ -133,17 +133,16 @@
         <button class="skill-button" data-skill="R-Controlled(er,ir,ur)">er/ir/ur</button>
         <button class="skill-button" data-skill="Mixed R-Controlled">Mixed R-Controlled</button>
       </div>
-
       <!-- Collapsible Advanced Skills -->
       <details class="toggle-section">
         <summary>Vowel Teams</summary>
         <div class="skill-row">
           <span class="skill-row-label">Vowel Teams:</span>
-          <button class="skill-button" data-skill="Long A">Long A (ai/ay)</button>
-          <button class="skill-button" data-skill="Long E">Long E (ee/ea)</button>
-          <button class="skill-button" data-skill="Long I">Long I (igh/-y/ie)</button>
-          <button class="skill-button" data-skill="Long O">Long O (oa/ow/oe)</button>
-          <button class="skill-button" data-skill="Long U">Long U (oo/ew/ue)</button>
+          <button class="skill-button" data-skill="Long A (ai/ay)">Long A (ai/ay)</button>
+          <button class="skill-button" data-skill="Long E (ee/ea)">Long E (ee/ea)</button>
+          <button class="skill-button" data-skill="Long I (igh/y/ie)">Long I (igh/-y/ie)</button>
+          <button class="skill-button" data-skill="Long O (oa/ow/oe)">Long O (oa/ow/oe)</button>
+          <button class="skill-button" data-skill="Long U (oo/ew/ue)">Long U (oo/ew/ue)</button>
           <button class="skill-button" data-skill="Mixed Vowel Teams">Mixed Vowel Teams</button>
         </div>
       </details>
@@ -152,8 +151,8 @@
         <summary>Diphthongs</summary>
         <div class="skill-row">
           <span class="skill-row-label">Diphthongs:</span>
-          <button class="skill-button" data-skill="oy/oi">oy/oi</button>
-          <button class="skill-button" data-skill="ow/ou">ow/ou</button>
+          <button class="skill-button" data-skill="Diphthongs (oy/oi)">oy/oi</button>
+          <button class="skill-button" data-skill="Diphthongs (ow/ou)">ow/ou</button>
         </div>
       </details>
 
@@ -161,8 +160,8 @@
         <summary>Variant Vowels</summary>
         <div class="skill-row">
           <span class="skill-row-label">Variant Vowels:</span>
-          <button class="skill-button" data-skill="au/aw">au/aw</button>
-          <button class="skill-button" data-skill="oo">oo</button>
+          <button class="skill-button" data-skill="Variant Vowels (au/aw)">au/aw</button>
+          <button class="skill-button" data-skill="Variant Vowel (oo)">oo</button>
         </div>
       </details>
 
@@ -373,8 +372,10 @@
   return [].concat(
     fetchSet("Long U(oo)"),
     fetchSet("Long U(ew)"),
-    fetchSet("Long U(ue)")
-  );
+    fetchSet("Long U(ue)");
+    case "Mixed Vowel Teams":
+        return [].concat(fetchset(Long A(ai)"), fetchset("Long A(ay)"), fetchset("Long E(ee)"), fetchset("Long E(ea"), fetchset("Long I(igh)"), fetchset("Long I(y)"), fetchset("Long I(ie)"), fetchset("Long O(oa)"), fetchset("Long O(ow)"), fetchset("Long O(oe)"),
+                         fetchset("Long U(oo)"), fetchset("Long U(ew)"), fetchset("Long U(ue)")));
 
 
       // Diphthongs / Variant vowels / Soft C & G
@@ -388,7 +389,7 @@
     fetchSet("Diphthong(ow)"),
     fetchSet("Diphthong(ou)")
   );
-                   case "Variant Vowel (oy/oi)":
+                   case "Variant Vowels (oy/oi)":
   return [].concat(
     fetchSet("Variant Vowel(aw)"),
     fetchSet("Variant Vowel(au)")
