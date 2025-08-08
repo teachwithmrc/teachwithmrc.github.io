@@ -344,63 +344,87 @@
       case "Mixed R-Controlled":
         return [].concat(fetchSet("R-Controlled(ar)"), fetchSet("R-Controlled(or)"), fetchSet("R-Controlled(er,ir,ur)"));
 
-      // Vowel Teams
+           // Vowel Teams
       case "Long A (ai/ay)":
-  return [].concat(
-    fetchSet("Long A(ai)"),
-    fetchSet("Long A(ay)")
-  );
-        case "Long E (ee/ea)":
-  return [].concat(
-    fetchSet("Long E(ee)"),
-    fetchSet("Long E(ea)")
-  );
-        case "Long I (igh/y/ie)":
-  return [].concat(
-    fetchSet("Long I(igh)"),
-    fetchSet("Long I(y)"),
-    fetchSet("Long I(ie)")
-  );
-            case "Long O (oa,ow,oe)":
-  return [].concat(
-    fetchSet("Long O(oa)"),
-    fetchSet("Long O(ow)"),
-    fetchSet("Long O(oe)")
-  );
+        return [].concat(
+          fetchSet("Long A(ai)"),
+          fetchSet("Long A(ay)")
+        );
+      case "Long E (ee/ea)":
+        return [].concat(
+          fetchSet("Long E(ee)"),
+          fetchSet("Long E(ea)")
+        );
+      case "Long I (igh/y/ie)":
+        return [].concat(
+          fetchSet("Long I(igh)"),
+          fetchSet("Long I(y)"),
+          fetchSet("Long I(ie)")
+        );
+      case "Long O (oa/ow/oe)":
+        return [].concat(
+          fetchSet("Long O(oa)"),
+          fetchSet("Long O(ow)"),
+          fetchSet("Long O(oe)")
+        );
+      case "Long U (oo/ew/ue)":
+        return [].concat(
+          fetchSet("Long U(oo)"),
+          fetchSet("Long U(ew)"),
+          fetchSet("Long U(ue)")
+        );
+      case "Mixed Vowel Teams":
+        return [].concat(
+          fetchSet("Long A(ai)"),
+          fetchSet("Long A(ay)"),
+          fetchSet("Long E(ee)"),
+          fetchSet("Long E(ea)"),
+          fetchSet("Long I(igh)"),
+          fetchSet("Long I(y)"),
+          fetchSet("Long I(ie)"),
+          fetchSet("Long O(oa)"),
+          fetchSet("Long O(ow)"),
+          fetchSet("Long O(oe)"),
+          fetchSet("Long U(oo)"),
+          fetchSet("Long U(ew)"),
+          fetchSet("Long U(ue)")
+        );
 
-          case "Long U (oo/ew/ue)":
-  return [].concat(
-    fetchSet("Long U(oo)"),
-    fetchSet("Long U(ew)"),
-    fetchSet("Long U(ue)");
-    case "Mixed Vowel Teams":
-        return [].concat(fetchset(Long A(ai)"), fetchset("Long A(ay)"), fetchset("Long E(ee)"), fetchset("Long E(ea"), fetchset("Long I(igh)"), fetchset("Long I(y)"), fetchset("Long I(ie)"), fetchset("Long O(oa)"), fetchset("Long O(ow)"), fetchset("Long O(oe)"),
-                         fetchset("Long U(oo)"), fetchset("Long U(ew)"), fetchset("Long U(ue)")));
+      // Diphthongs (match the button text exactly)
+      case "Diphthongs (oy/oi)":
+        return [].concat(
+          fetchSet("Diphthong(oy)"),
+          fetchSet("Diphthong(oi)")
+        );
+      case "Diphthongs (ow/ou)":
+        return [].concat(
+          fetchSet("Diphthong(ow)"),
+          fetchSet("Diphthong(ou)")
+        );
 
+      // Variant Vowels
+      case "Variant Vowels (au/aw)":
+        return [].concat(
+          fetchSet("Variant Vowel(aw)"),
+          fetchSet("Variant Vowel(au)")
+        );
+      case "Variant Vowel (oo)":
+        return fetchSet("Variant Vowel(oo)");
 
-      // Diphthongs / Variant vowels / Soft C & G
-                case "Dipthongs (oy/oi)":
-  return [].concat(
-    fetchSet("Diphthong(oy)"),
-    fetchSet("Diphthong(oi)")
-  );
-                   case "Dipthongs (ow/ou)":
-  return [].concat(
-    fetchSet("Diphthong(ow)"),
-    fetchSet("Diphthong(ou)")
-  );
-                   case "Variant Vowels (oy/oi)":
-  return [].concat(
-    fetchSet("Variant Vowel(aw)"),
-    fetchSet("Variant Vowel(au)")
-  );
-      case "Variant Vowel (oo)": return fetchSet("Variant Vowel(oo)");
-      case "Soft Endings": return fetchSet("Soft C(ce)"), fetchset("Soft G(ge)"), fetchset("Soft G(dge");
-      case "Soft C": return fetchSet("Soft C");
-      case "Soft G": return fetchSet("Soft G");
+      // Soft C & G
+      case "Soft Endings":
+        return [].concat(
+          fetchSet("Soft C(ce)"),
+          fetchSet("Soft G(ge)"),
+          fetchSet("Soft G(dge)")
+        );
+      case "Soft C":
+        return fetchSet("Soft C"); // if your data uses subkeys, split like Soft C(ce/ci/cy)
+      case "Soft G":
+        return fetchSet("Soft G");
 
-      default: return fetchSet(skill);
-    }
+      default:
+        return fetchSet(skill);
   }
 </script>
 </body>
