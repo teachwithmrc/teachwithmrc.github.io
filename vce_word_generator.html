@@ -54,13 +54,20 @@
         margin: 0; padding: 10px;
         box-sizing: border-box;
       }
-      .print-only { display: block; }
       @page { margin: 0.5in; }
+
+      /* Print tweaks: show name line and remove all gaps above title */
+      .print-only { display: block; }
+      .name-line { margin: 0 !important; padding: 0 !important; line-height: 1 !important; }
+      #titleBlock { margin: 0 !important; padding: 0 !important; }
+      #titleBlock h2, #titleBlock p { margin: 0 !important; padding: 0 !important; }
+      #ladderOutput br { display: none !important; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Screen-only header -->
   <h1>VCe Word Generator</h1>
   <p class="subtitle"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
 
@@ -172,7 +179,7 @@
 
         const hintTD = (() => {
           if (isFirst) return `<td style="padding:3px 5px;width:170px;"></td>`;
-          const hint = getChunkHint(prevWord, word, prevPattern, pattern);
+        const hint = getChunkHint(prevWord, word, prevPattern, pattern);
           return `<td style="padding:3px 5px;width:170px;">
                     <div style="
                       display:flex;justify-content:center;align-items:center;
@@ -187,10 +194,10 @@
 
       const ladderHTML = `
         <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
-          <div class="print-only" style="text-align:left; font-size:16px; margin-bottom:4px; width:100%;">Name _____________________</div>
-          <div style="text-align:center;margin-bottom:4px;">
-            <h2 style="margin-bottom:1px;font-size:24px;">VCe Word Generator</h2>
-            <p style="margin-top:0;font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
+          <div class="print-only name-line" style="text-align:left; font-size:16px; width:100%;">Name _____________________</div>
+          <div id="titleBlock" style="text-align:center;">
+            <h2 style="font-size:24px;">VCe Word Generator</h2>
+            <p style="font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
           </div>
           <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
             ${rowsHTML}
