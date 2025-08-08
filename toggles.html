@@ -422,10 +422,10 @@
         return fetchSet("Soft C"); // if your data uses subkeys, split like Soft C(ce/ci/cy)
       case "Soft G":
         return fetchSet("Soft G");
-
-      default:
+default:
         return fetchSet(skill);
-  }
+  } // closes switch
+}   // closes function getWordsForSkill
 </script>
 </body>
 </html>
