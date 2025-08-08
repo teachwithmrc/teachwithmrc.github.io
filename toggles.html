@@ -40,12 +40,17 @@
 
     /* Worksheet Layout */
     .word-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid black; }
-    .word-table td { width: 50%; text-align: center; vertical-align: middle; padding: 10px 0; border: 2px solid black; }
+    .word-table td { width: 50%; text-align: center; vertical-align: middle; padding: 16px 0; border: 2px solid black; }
 
     .worksheet-title { font-size: 40px; margin-bottom: 5px; font-weight: 700; }
     .worksheet-directions { font-size: 22px; margin-bottom: 20px; }
 
-    .word { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+    /* More room above/below the writing area */
+    .word {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 12px; /* space before boxes/underlines */
+    }
     .pattern {
       font-size: 60px;
       transform: scale(1.5);
@@ -53,6 +58,8 @@
       font-family: 'BoxesFont', monospace;
       font-weight: normal;
       line-height: 1;
+      margin-top: 8px;       /* space above pattern */
+      margin-bottom: 14px;   /* space below pattern so descenders don't collide */
     }
     /* Underlines spacing so digits look like separate “boxes” */
     .pattern.underlines span { display: inline-block; margin: 0 6px; }
@@ -80,11 +87,18 @@
     .skill-button[data-skill="Soft G"] { display: none; }
 
     /* Print Formatting */
+    #copyright {
+      font-size: 12px;
+      text-align: right;
+      margin-top: 12px;
+      display: none; /* hidden on screen */
+    }
     @media print {
       body { margin: 0; }
       h1, h2, .table-section, button, .toggle-section summary { display: none; }
       #output { margin: 0; }
       .worksheet-title, .worksheet-directions { display: block; text-align: center; }
+      #copyright { display: block; } /* show only when printing */
     }
   </style>
 </head>
@@ -177,10 +191,10 @@
       </details>
 
       <details class="toggle-section">
-        <summary>Soft C & G</summary>
+        <summary>Soft C/G Endings</summary>
         <div class="skill-row">
-          <span class="skill-row-label">Soft C & G:</span>
-          <button class="skill-button" data-skill="Soft Endings">-ce/-ge/-dge</button>
+          <span class="skill-row-label">Soft C/G Endings:</span>
+          <button class="skill-button" data-skill="Soft Endings">Soft C/G Endings (-ce/-ge/-dge)</button>
           <!-- Hidden via CSS:
           <button class="skill-button" data-skill="Soft C">Soft C (ce/ci/cy)</button>
           <button class="skill-button" data-skill="Soft G">Soft G (ge/gi/gy)</button>
@@ -204,7 +218,7 @@
   <div class="table-section">
     <div class="section-label">Step 3: Generate & Print</div>
 
-    <!-- NEW: Boxes vs Underlines toggle -->
+    <!-- Boxes vs Underlines toggle -->
     <div style="margin:6px 0 12px;">
       <label style="margin-right:8px;">
         <input type="radio" name="cellStyle" value="boxes" checked> Elkonin Boxes
@@ -276,7 +290,7 @@
       return;
     }
 
-    const source = soundBoxWords; // ✅ from newtry_FULL.js
+    const source = soundBoxWords; // from newtry_FULL.js
     let allWords = [];
 
     selectedSkills.forEach(skill => {
@@ -327,9 +341,15 @@
       table.appendChild(tr);
     }
     output.appendChild(table);
+
+    // Print-only copyright, directly under the table with spacing
+    const copyright = document.createElement('div');
+    copyright.id = 'copyright';
+    copyright.innerHTML = '<br><br><br>Copyright - InterventionStation.com - @TeachwithMrC';
+    output.appendChild(copyright);
   };
 
-  /** Same skill fetch logic you were using */
+  // Skill fetch logic
   function getWordsForSkill(skill, source, blends) {
     const blendSuffixes = [" with Blends", " with Digraphs and Blends"];
     const glueNgParts = ["ang", "ing", "ong", "ung"];
@@ -392,33 +412,15 @@
 
       // Vowel Teams
       case "Long A (ai/ay)":
-        return [].concat(
-          fetchSet("Long A(ai)"),
-          fetchSet("Long A(ay)")
-        );
+        return [].concat(fetchSet("Long A(ai)"), fetchSet("Long A(ay)"));
       case "Long E (ee/ea)":
-        return [].concat(
-          fetchSet("Long E(ee)"),
-          fetchSet("Long E(ea)")
-        );
+        return [].concat(fetchSet("Long E(ee)"), fetchSet("Long E(ea)"));
       case "Long I (igh/y/ie)":
-        return [].concat(
-          fetchSet("Long I(igh)"),
-          fetchSet("Long I(y)"),
-          fetchSet("Long I(ie)")
-        );
+        return [].concat(fetchSet("Long I(igh)"), fetchSet("Long I(y)"), fetchSet("Long I(ie)"));
       case "Long O (oa/ow/oe)":
-        return [].concat(
-          fetchSet("Long O(oa)"),
-          fetchSet("Long O(ow)"),
-          fetchSet("Long O(oe)")
-        );
+        return [].concat(fetchSet("Long O(oa)"), fetchSet("Long O(ow)"), fetchSet("Long O(oe)"));
       case "Long U (oo/ew/ue)":
-        return [].concat(
-          fetchSet("Long U(oo)"),
-          fetchSet("Long U(ew)"),
-          fetchSet("Long U(ue)")
-        );
+        return [].concat(fetchSet("Long U(oo)"), fetchSet("Long U(ew)"), fetchSet("Long U(ue)"));
       case "Mixed Vowel Teams":
         return [].concat(
           fetchSet("Long A(ai)"),
@@ -438,26 +440,17 @@
 
       // Diphthongs
       case "Diphthongs (oy/oi)":
-        return [].concat(
-          fetchSet("Diphthong(oy)"),
-          fetchSet("Diphthong(oi)")
-        );
+        return [].concat(fetchSet("Diphthong(oy)"), fetchSet("Diphthong(oi)"));
       case "Diphthongs (ow/ou)":
-        return [].concat(
-          fetchSet("Diphthong(ow)"),
-          fetchSet("Diphthong(ou)")
-        );
+        return [].concat(fetchSet("Diphthong(ow)"), fetchSet("Diphthong(ou)"));
 
       // Variant Vowels
       case "Variant Vowels (au/aw)":
-        return [].concat(
-          fetchSet("Variant Vowel(aw)"),
-          fetchSet("Variant Vowel(au)")
-        );
+        return [].concat(fetchSet("Variant Vowel(aw)"), fetchSet("Variant Vowel(au)"));
       case "Variant Vowel (oo)":
         return fetchSet("Variant Vowel(oo)");
 
-      // Soft C & G
+      // Soft C/G Endings
       case "Soft Endings":
         return [].concat(
           fetchSet("Soft C(ce)"),
@@ -467,8 +460,8 @@
 
       default:
         return fetchSet(skill);
-    } // switch
-  } // getWordsForSkill
+    }
+  }
 </script>
 </body>
 </html>
