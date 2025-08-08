@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Digraph Word Ladder</title>
+  <title>VCe Word Generator</title>
 
-  <script src="digraphWordLadders_6words_full.js" defer></script>
+  <script src="vceWordLadders_6words_full.js" defer></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
@@ -52,17 +52,14 @@
         margin: 0; padding: 10px;
         box-sizing: border-box;
       }
+      #ladderOutput br { display: none !important; }
       @page { margin: 0.5in; }
     }
   </style>
 </head>
 <body>
 
-  <div style="text-align:left; font-size:16px; margin-bottom:4px;">
-    Name _____________________
-  </div>
-
-  <h1>Digraph Word Ladder</h1>
+  <h1>VCe Word Generator</h1>
   <p class="subtitle"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
 
   <div style="margin-bottom:8px;">
@@ -123,7 +120,7 @@
     }
 
     function generateLadder() {
-      if (typeof digraphWordLadders === 'undefined' || !Array.isArray(digraphWordLadders) || digraphWordLadders.length === 0) {
+      if (typeof vceWordLadders === 'undefined' || !Array.isArray(vceWordLadders) || vceWordLadders.length === 0) {
         alert('❌ Error: Word ladders not found!');
         return;
       }
@@ -132,16 +129,16 @@
       const useFont = cellStyle === 'underlines' ? 'UnderlineFont' : 'BoxesFont';
       const boldChanged = document.getElementById('boldChanged').checked;
 
-      const randomIndex = Math.floor(Math.random() * digraphWordLadders.length);
-      const ladder = digraphWordLadders[randomIndex];
+      const randomIndex = Math.floor(Math.random() * vceWordLadders.length);
+      const ladder = vceWordLadders[randomIndex];
 
       const rowsHTML = ladder.map((word, idx) => {
         const isFirst = idx === 0;
         const isLast = idx === ladder.length - 1;
         const prevWord = ladder[idx - 1] || '';
 
-        const pattern = (typeof digraphWordPatterns !== 'undefined' && digraphWordPatterns[word]) ? digraphWordPatterns[word] : '?';
-        const prevPattern = (typeof digraphWordPatterns !== 'undefined' && digraphWordPatterns[prevWord]) ? digraphWordPatterns[prevWord] : '?';
+        const pattern = (typeof vceWordPatterns !== 'undefined' && vceWordPatterns[word]) ? vceWordPatterns[word] : '?';
+        const prevPattern = (typeof vceWordPatterns !== 'undefined' && vceWordPatterns[prevWord]) ? vceWordPatterns[prevWord] : '?';
 
         const changedMap = (!isFirst && boldChanged) ? getChangedMap(prevWord, word, prevPattern, pattern) : null;
 
@@ -157,8 +154,8 @@
                letter-spacing:0px;
              ">${patternHTML}</div>`;
 
-        const imgSrc = (typeof digraphWordImages !== 'undefined' && digraphWordImages[word])
-          ? digraphWordImages[word]
+        const imgSrc = (typeof vceWordImages !== 'undefined' && vceWordImages[word])
+          ? vceWordImages[word]
           : 'https://via.placeholder.com/110?text=?';
 
         const imageTD = `<td style="padding:5px 7px;width:140px;">
@@ -188,9 +185,9 @@
 
       const ladderHTML = `
         <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
-          <div style="text-align:center;margin-bottom:4px;">
-            <h2 style="margin-bottom:1px;font-size:24px;">Digraph Word Ladder</h2>
-            <p style="margin-top:0;font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
+          <div id="titleBlock" style="text-align:center;">
+            <h2 style="font-size:24px;">VCe Word Generator</h2>
+            <p style="font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
           </div>
           <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
             ${rowsHTML}
