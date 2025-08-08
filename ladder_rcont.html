@@ -76,48 +76,72 @@
   <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px;"></div>
 
   <script>
-    function splitWordByPattern(word, pattern) {
-      const chunks = [];
-      let i = 0;
-      for (let j = 0; j < pattern.length; j++) {
-        const len = pattern[j] === '2' ? 2 : 1;
-        chunks.push(word.slice(i, i + len));
-        i += len;
-      }
-      return chunks;
-    }
+  function splitWordByPattern(word, pattern) {
+  // Supports chunk sizes: 1, 2, and 3
+  const chunks = [];
+  let i = 0;
+  for (let j = 0; j < pattern.length; j++) {
+    const d = pattern[j];
+    const len = d === '3' ? 3 : (d === '2' ? 2 : 1);
+    chunks.push(word.slice(i, i + len));
+    i += len;
+  }
+  return chunks;
+}
 
-    function getChangedMap(prevWord, word, prevPattern, pattern) {
-      const prevChunks = splitWordByPattern(prevWord, prevPattern);
-      const wordChunks = splitWordByPattern(word, pattern);
-      const n = Math.max(pattern.length, prevPattern.length);
-      const changed = new Array(n);
-      for (let i = 0; i < n; i++) {
-        changed[i] = (prevChunks[i] || '') !== (wordChunks[i] || '');
-      }
-      return changed;
-    }
+function getChangedMap(prevWord, word, prevPattern, pattern) {
+  const prevChunks = splitWordByPattern(prevWord, prevPattern);
+  const wordChunks = splitWordByPattern(word, pattern);
+  const n = Math.max(pattern.length, prevPattern.length);
+  const changed = new Array(n);
+  for (let i = 0; i < n; i++) {
+    changed[i] = (prevChunks[i] || '') !== (wordChunks[i] || '');
+  }
+  return changed;
+}
 
-    function renderPatternHTML({ pattern, useFont, boldChanged, changedMap }) {
-      const isUnderline = useFont === 'UnderlineFont';
-      return Array.from(pattern).map((digit, i) => {
-        const makeBold = boldChanged && changedMap && changedMap[i];
-        const spacing = isUnderline ? 'display:inline-block;margin:0 6px;' : '';
-        const weight = makeBold ? 'font-weight:700;' : '';
-        return `<span style="${spacing}${weight}">${digit}</span>`;
-      }).join('');
-    }
+function renderPatternHTML({ pattern, useFont, boldChanged, changedMap }) {
+  const isUnderline = useFont === 'UnderlineFont';
+  return Array.from(pattern).map((digit, i) => {
+    const makeBold = boldChanged && changedMap && changedMap[i];
+    const spacing = isUnderline ? 'display:inline-block;margin:0 6px;' : '';
+    const weight = makeBold ? 'font-weight:700;' : '';
+    return `<span style="${spacing}${weight}">${digit}</span>`;
+  }).join('');
+}
 
-    function getChunkHint(prevWord, word, prevPattern, pattern) {
-      const prevChunks = splitWordByPattern(prevWord, prevPattern);
-      const wordChunks = splitWordByPattern(word, pattern);
-      for (let i = 0; i < Math.min(prevChunks.length, wordChunks.length); i++) {
-        if (prevChunks[i] !== wordChunks[i]) {
-          return `${prevChunks[i]} → ${wordChunks[i]}`;
-        }
+function getChunkHint(prevWord, word, prevPattern, pattern) {
+  const prevChunks = splitWordByPattern(prevWord, prevPattern);
+  const wordChunks = splitWordByPattern(word, pattern);
+
+  // Same number of chunks → substitution
+  if (prevChunks.length === wordChunks.length) {
+    for (let i = 0; i < prevChunks.length; i++) {
+      if (prevChunks[i] !== wordChunks[i]) {
+        return `${prevChunks[i]} → ${wordChunks[i]}`;
       }
-      return '? → ?';
     }
+    return '? → ?';
+  }
+
+  // Insertion at end
+  if (wordChunks.length === prevChunks.length + 1) {
+    for (let i = 0; i < prevChunks.length; i++) {
+      if (prevChunks[i] !== wordChunks[i]) return '? → ?';
+    }
+    return `+ ${wordChunks[wordChunks.length - 1]}`;
+  }
+
+  // Deletion at end
+  if (prevChunks.length === wordChunks.length + 1) {
+    for (let i = 0; i < wordChunks.length; i++) {
+      if (prevChunks[i] !== wordChunks[i]) return '? → ?';
+    }
+    return `- ${prevChunks[prevChunks.length - 1]}`;
+  }
+
+  return '? → ?';
+}
 
     function generateLadder() {
       if (typeof rWordLadders === 'undefined' || !Array.isArray(rWordLadders) || rWordLadders.length === 0) {
