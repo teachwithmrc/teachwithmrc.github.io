@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>Digraph Word Ladder</title>
 
-  <!-- Data source with digraphWordLadders, digraphWordPatterns, digraphWordImages -->
   <script src="digraphWordLadders_6words_full.js" defer></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -37,6 +36,12 @@
       margin-top: 4px;
     }
 
+    #copyright {
+      font-size: 12px;
+      text-align: right;
+      width: 100%;
+    }
+
     @media print {
       body * { visibility: hidden; }
       #ladderOutput, #ladderOutput * { visibility: visible; }
@@ -52,6 +57,10 @@
   </style>
 </head>
 <body>
+
+  <div style="text-align:left; font-size:16px; margin-bottom:4px;">
+    Name _____________________
+  </div>
 
   <h1>Digraph Word Ladder</h1>
   <p class="subtitle"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
@@ -70,7 +79,6 @@
   <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px;"></div>
 
   <script>
-    // --- helpers ---
     function splitWordByPattern(word, pattern) {
       const chunks = [];
       let i = 0;
@@ -82,7 +90,6 @@
       return chunks;
     }
 
-    // boolean map per digit position: did this chunk change vs previous word?
     function getChangedMap(prevWord, word, prevPattern, pattern) {
       const prevChunks = splitWordByPattern(prevWord, prevPattern);
       const wordChunks = splitWordByPattern(word, pattern);
@@ -94,7 +101,6 @@
       return changed;
     }
 
-    // Render pattern digits as spans so we can space/bold safely
     function renderPatternHTML({ pattern, useFont, boldChanged, changedMap }) {
       const isUnderline = useFont === 'UnderlineFont';
       return Array.from(pattern).map((digit, i) => {
@@ -116,7 +122,6 @@
       return '? → ?';
     }
 
-    // --- main ---
     function generateLadder() {
       if (typeof digraphWordLadders === 'undefined' || !Array.isArray(digraphWordLadders) || digraphWordLadders.length === 0) {
         alert('❌ Error: Word ladders not found!');
@@ -190,6 +195,8 @@
           <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
             ${rowsHTML}
           </table>
+          <br><br>
+          <div id="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
         </div>
       `;
 
