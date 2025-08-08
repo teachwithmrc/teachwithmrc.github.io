@@ -1915,10 +1915,13 @@ const soundBoxWords = {
 { word: "wage", pattern: "112", split: ["r","i","ce"] },
 { word: "huge", pattern: "112", split: ["l","i","ce"] }],
   "Soft G(ge) with Blends": [
+    { word: "fringe", pattern: "11112", split: ["i","ce"] },
 { word: "stage", pattern: "1112", split: ["br","a","ce"] }],
+  
   "Soft G(dge)": [
 { word: "edge", pattern: "13", split: ["a","ce"] },
 { word: "badge", pattern: "113", split: ["i","ce"] },
+    { word: "ledge", pattern: "113", split: ["i","ce"] },
 { word: "hedge", pattern: "113", split: ["f","a","ce"] },
 { word: "dodge", pattern: "113", split: ["d","i","ce"] },
 { word: "budge", pattern: "113", split: ["m","i","ce"] },
@@ -1931,7 +1934,38 @@ const soundBoxWords = {
 { word: "fridge", pattern: "1113", split: ["i","ce"] },
 { word: "grudge", pattern: "1113", split: ["f","a","ce"] },
 { word: "sludge", pattern: "1113", split: ["d","i","ce"] },
+      { word: "pledge", pattern: "1113", split: ["i","ce"] },
+      { word: "smidge", pattern: "1113", split: ["i","ce"] },
+      { word: "fringe", pattern: "111", split: ["i","ce"] },
 { word: "smudge", pattern: "1113", split: ["r","i","ce"] }],
+  
+
+   "Soft C(ce/cy/ci)": [
+{ word: "cent", pattern: "1111", split: ["a","ce"] },
+{ word: "cell", pattern: "112", split: ["i","ce"] },
+{ word: "cyst", pattern: "1111", split: ["f","a","ce"] }],
+
+        "Soft C(ce/cy/ci) with Blends": [
+{ word: "glance", pattern: "11112", split: ["a","ce"] },
+{ word: "France", pattern: "11112", split: ["i","ce"] },
+{ word: "stance", pattern: "11112", split: ["i","ce"] },
+{ word: "spice", pattern: "1112", split: ["i","ce"] },
+{ word: "price", pattern: "1112", split: ["i","ce"] },
+{ word: "brace", pattern: "1112", split: ["i","ce"] },
+          { word: "trace", pattern: "1112", split: ["i","ce"] },
+          { word: "grace", pattern: "1112", split: ["i","ce"] },
+          { word: "place", pattern: "1112", split: ["i","ce"] },
+          { word: "space", pattern: "1112", split: ["i","ce"] },
+{ word: "trance", pattern: "11112", split: ["f","a","ce"] }],
+
+        "Soft G(ge/gy/gi)": [
+{ word: "gent", pattern: "1111", split: ["a","ce"] },
+{ word: "gym", pattern: "111", split: ["i","ce"] },
+{ word: "gem", pattern: "111", split: ["f","a","ce"] },
+{ word: "germ", pattern: "121", split: ["f","a","ce"] }],
+
+      "Soft G(ge/gy/gi)": [
+{ word: "gist", pattern: "1111", split: ["f","a","ce"] }],
 
 };
 window.soundBoxWords = soundBoxWords;
