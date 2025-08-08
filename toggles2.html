@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Ultimate Word Mapping Generator</title>
+  <title>Word Mapping Generator</title>
   <script src="newtry_FULL.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
@@ -54,7 +54,7 @@
     .bg-variant .skill-header{ background:var(--variant); }
     .bg-soft  .skill-header { background:var(--soft); }
 
-    /* Skill buttons (desktop default smaller), mobile bigger below */
+    /* Skill buttons (desktop default) — mobile bigger below */
     .skill-button{
       border:2px solid #000; padding:10px 16px; border-radius:16px;
       font-weight:700; font-size:16px; cursor:pointer; background:#fff;
@@ -111,10 +111,10 @@
     .pattern {
       font-size:60px; transform:scale(1.5); display:inline-block;
       font-family:'BoxesFont', monospace; font-weight:normal; line-height:1;
-      margin-top:12px; margin-bottom:16px; /* extra top/bottom room */
+      margin-top:12px; margin-bottom:16px; /* extra room */
     }
     .pattern.underlines { font-family:'UnderlineFont', monospace; font-weight:normal; letter-spacing:0; }
-    .pattern.underlines span { display:inline-block; margin:0 2px; } /* tiny spacing between underline marks */
+    .pattern.underlines span { display:inline-block; margin:0 2px; } /* tiny spacing */
 
     /* Hide individual Soft C / Soft G buttons, keep Soft Endings */
     .skill-button[data-skill="Soft C"], .skill-button[data-skill="Soft G"] { display:none; }
@@ -139,6 +139,38 @@
       .chip { font-size:16px; padding:10px 14px; }
       .option-box { font-size:18px; padding:14px 18px; }
       .row-2-3 { flex-direction:column; }
+    }
+
+    /* ===== Compact Desktop Overrides ===== */
+    @media (min-width: 992px) {
+      h1 { font-size: 28px; margin-bottom: 4px; }
+      .table-section { padding:12px; }
+      .section-label { font-size:16px; margin-bottom:8px; }
+
+      .skill-block { margin-bottom:8px; border-radius:10px; }
+      .skill-header { padding:8px 10px; font-size:16px; }
+      .skill-header .arrow { font-size:18px; margin:0 8px; width:18px; }
+
+      .skills-inner { padding:8px; gap:8px; }
+
+      .skill-button {
+        padding:6px 10px;
+        font-size:14px;
+        min-height:34px;
+        border-radius:10px;
+      }
+
+      .chips-title { font-size:14px; margin-top:8px; }
+      .chip { padding:6px 10px; font-size:12px; gap:8px; }
+      .chip .x { width:16px; height:16px; font-size:11px; }
+
+      .option-box { padding:10px 12px; font-size:14px; }
+
+      .worksheet-title { font-size:34px; }
+      .worksheet-directions { font-size:18px; }
+      .word { font-size:24px; }
+      .pattern { font-size:52px; margin-top:10px; margin-bottom:14px; }
+      .pattern.underlines span { margin:0 1.5px; }
     }
   </style>
 </head>
@@ -306,12 +338,22 @@
     </div>
   </div>
 
-  <!-- OUTPUT comes AFTER Step 2/3 so buttons never get pushed below it -->
+  <!-- OUTPUT comes AFTER Step 2/3 -->
   <div id="output"></div>
+
+  <!-- Desktop-only floating actions -->
+  <div id="floatingActions" style="
+    position: fixed; right: 16px; bottom: 16px; z-index: 1000;
+    background:#ffffff; border:2px solid #000; border-radius:12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.15); padding:10px 12px;
+    display:none; gap:8px; align-items:center;">
+    <button id="fabGenerate" style="font-size:14px; padding:8px 12px;">Generate</button>
+    <button id="fabPrint" style="font-size:14px; padding:8px 12px;">Print</button>
+  </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Simple CSS.escape polyfill for older browsers
+  // CSS.escape polyfill
   if (typeof CSS === 'undefined' || typeof CSS.escape !== 'function') {
     window.CSS = window.CSS || {};
     CSS.escape = CSS.escape || function(sel){ return (sel+'').replace(/[^a-zA-Z0-9_-]/g,'\\\\$&'); };
@@ -320,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let selectedSkills = new Set();
   let includeBlends = null;
 
-  // Section header toggles (down = closed, up = open)
+  // Toggle headers (▼ closed, ▲ open)
   document.querySelectorAll('.skill-header').forEach(header => {
     header.addEventListener('click', () => {
       const target = header.getAttribute('data-target');
@@ -329,10 +371,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const isCollapsed = inner.classList.contains('collapsed');
       if (isCollapsed) {
         inner.classList.remove('collapsed');
-        arrows.forEach(a => a.textContent = '▲'); // open
+        arrows.forEach(a => a.textContent = '▲');
       } else {
         inner.classList.add('collapsed');
-        arrows.forEach(a => a.textContent = '▼'); // closed
+        arrows.forEach(a => a.textContent = '▼');
       }
     });
   });
@@ -340,7 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Skill button toggle
   document.querySelectorAll('.skill-button').forEach(btn => {
     btn.addEventListener('click', (e) => {
-      e.stopPropagation(); // don't collapse section
+      e.stopPropagation();
       const skill = btn.dataset.skill;
       if (selectedSkills.has(skill)) {
         selectedSkills.delete(skill);
@@ -378,20 +420,30 @@ document.addEventListener('DOMContentLoaded', () => {
   yes.addEventListener('click', function(){ includeBlends = true; yes.classList.add('selected'); no.classList.remove('selected'); });
   no .addEventListener('click', function(){ includeBlends = false; no.classList.add('selected'); yes.classList.remove('selected'); });
 
-  // Helpers for boxes vs underlines
+  // Floating action bar (desktop only)
+  function toggleFloatingBar(){
+    const el = document.getElementById('floatingActions');
+    if (!el) return;
+    const isDesktop = window.matchMedia('(min-width: 992px)').matches;
+    el.style.display = isDesktop ? 'flex' : 'none';
+  }
+  toggleFloatingBar();
+  window.addEventListener('resize', toggleFloatingBar);
+  document.getElementById('fabGenerate')?.addEventListener('click', () => {
+    document.getElementById('btnGenerate')?.click();
+  });
+  document.getElementById('fabPrint')?.addEventListener('click', () => window.print());
+
+  // Helpers
   function currentCellFont(){ return (document.querySelector('input[name="cellStyle"]:checked')?.value === 'underlines') ? 'UnderlineFont' : 'BoxesFont'; }
   function currentCellClass(){ return (document.querySelector('input[name="cellStyle"]:checked')?.value === 'underlines') ? 'underlines' : 'boxes'; }
   function renderPatternHTML(pattern, useUnder){ return useUnder ? Array.from(pattern).map(d=>`<span>${d}</span>`).join('') : pattern; }
   function shuffle(arr){ return [...arr].sort(() => Math.random() - 0.5); }
 
-  // Generate button
-  document.getElementById('btnGenerate').addEventListener('click', generatePage);
-
-  // ====== WORD LOOKUP LOGIC (with -ng / -nk / Mix combo handling) ======
+  // ===== Data fetch with -ng / -nk / Mix handling =====
   function getWordsForSkill(skill, source, blends) {
     const blendSuffixes = [" with Blends", " with Digraphs and Blends"];
 
-    // fetchBase: returns array for a single base key, respecting blends
     function fetchBase(base){
       if (!blends) return source[base] || [];
       let result = [];
@@ -402,7 +454,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return result;
     }
 
-    // dedupe by 'word|pattern'
     function dedupe(list){
       const seen = new Set();
       const out = [];
@@ -439,23 +490,21 @@ document.addEventListener('DOMContentLoaded', () => {
           fetchBase("Digraph(wh)")
         );
 
-      // ===== Glued Sounds (reduced UI) =====
-      // -all direct
+      // Glued Sounds (reduced UI)
       case "Glued(all)": return fetchBase("Glued(all)");
 
-      // -ng = (ang, ing) + (ong, ung)
       case "Glued(-ng)":
         return dedupe([].concat(
-          fetchBase("Glued(ang,ing)"), fetchBase("Glued(ong,ung)")
+          fetchBase("Glued(ang)"), fetchBase("Glued(ing)"),
+          fetchBase("Glued(ong)"), fetchBase("Glued(ung)")
         ));
 
-      // -nk = (ank, ink) + (onk, unk)
       case "Glued(-nk)":
         return dedupe([].concat(
-          fetchBase("Glued(ank,ink)"), fetchBase("Glued(onk,unk)")
+          fetchBase("Glued(ank)"), fetchBase("Glued(ink)"),
+          fetchBase("Glued(onk)"), fetchBase("Glued(unk)")
         ));
 
-      // Glued Mixed = all glued (-all + -ng + -nk)
       case "Glued Mixed":
         return dedupe([].concat(
           fetchBase("Glued(all)"),
@@ -509,7 +558,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case "Variant Vowels (au/aw)": return [].concat(fetchBase("Variant Vowel(aw)"), fetchBase("Variant Vowel(au)"));
       case "Variant Vowel (oo)": return fetchBase("Variant Vowel(oo)");
 
-      // Soft C/G endings only (keep)
+      // Soft C/G endings only
       case "Soft Endings":
         return [].concat(fetchBase("Soft C(ce)"), fetchBase("Soft G(ge)"), fetchBase("Soft G(dge)"));
 
@@ -517,7 +566,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ====== Generate worksheet ======
+  // Generate worksheet
   function generatePage() {
     if (selectedSkills.size === 0) return alert("Select at least one skill!");
     if (includeBlends === null) return alert("Please choose Include Blends: Yes or No");
@@ -570,17 +619,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     output.appendChild(table);
 
-    // print-only copyright (after the table)
     const copy = document.createElement('div');
     copy.id = 'copyright';
     copy.innerHTML = '<br><br><br>Copyright - InterventionStation.com - @TeachwithMrC';
     output.appendChild(copy);
 
-    // Smooth-scroll to worksheet (buttons remain visible thanks to sticky Step 3)
     output.scrollIntoView({ behavior:'smooth', block:'start' });
   }
 
-  // Wire up Generate
   document.getElementById('btnGenerate').addEventListener('click', generatePage);
 });
 </script>
