@@ -18,9 +18,7 @@
       --variant:#fff8e1;      --variant-selected:#f9a825;
       --soft:#eef4ff;         --soft-selected:#455a64;
 
-      --chip-bg:#eef2f7;
-      --chip-text:#263238;
-      --chip-x:#546e7a;
+      --chip-bg:#eef2f7; --chip-text:#263238; --chip-x:#546e7a;
     }
 
     @font-face { font-family: 'BoxesFont'; src: url('fonts/boxes2.otf') format('opentype'); }
@@ -30,103 +28,92 @@
     h1 { font-size: 36px; margin-bottom: 6px; }
     .subtitle { color:#555; margin:0 0 14px; }
 
-    /* Container cards */
-    .table-section { border: 2px solid #000; padding: 16px; margin: 12px auto; width: 100%; max-width: 1100px; box-sizing: border-box; text-align: left; border-radius:12px; }
-    .section-label { font-weight: 600; font-size: 18px; margin-bottom: 12px; text-align: center; }
+    /* container cards */
+    .table-section { border:2px solid #000; padding:16px; margin:12px auto; width:100%; max-width:1100px; box-sizing:border-box; text-align:left; border-radius:12px; }
+    .section-label { font-weight:600; font-size:18px; margin-bottom:12px; text-align:center; }
 
-    /* Step 1 rows (details = collapsible) */
+    /* step 1 rows */
     .skill-stack { display:flex; flex-direction:column; gap:12px; }
     details.skill-row { border:1px solid #bbb; border-radius:10px; overflow:hidden; }
     details.skill-row summary {
-      list-style:none;
-      cursor:pointer;
-      padding:10px 12px;
-      text-align:center;
-      font-weight:600;
-      font-size:16px;
+      list-style:none; cursor:pointer; padding:10px 40px 10px 12px; text-align:center; font-weight:600; font-size:16px; position:relative;
     }
-    /* center the buttons area */
-    .skills-inner { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; padding:12px; }
-
-    /* Category backgrounds */
-    .bg-cvc summary { background:var(--cvc); }
-    .bg-dig summary { background:var(--dig); }
-    .bg-glued summary { background:var(--glued); }
-    .bg-vce summary { background:var(--vce); }
-    .bg-rctrl summary { background:var(--rctrl); }
-    .bg-vteams summary { background:var(--vteams); }
-    .bg-dip summary { background:var(--dip); }
-    .bg-variant summary { background:var(--variant); }
-    .bg-soft summary { background:var(--soft); }
-
-    /* Skill buttons */
-    .skill-button {
-      border:2px solid #000; padding:6px 12px; border-radius:999px;
-      font-weight:600; font-size:14px; cursor:pointer; background:#fff;
-      transition: transform .08s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease;
-      user-select:none;
+    /* arrows */
+    details.skill-row summary::after{
+      content:"▸"; position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:18px;
     }
-    .skill-button:active { transform:translateY(1px); }
-    /* Selected colors by category */
-    .skill-button.cvc.selected { background:var(--cvc-selected); color:#fff; }
-    .skill-button.dig.selected { background:var(--dig-selected); color:#fff; }
-    .skill-button.glued.selected { background:var(--glued-selected); color:#fff; }
-    .skill-button.vce.selected { background:var(--vce-selected); color:#fff; }
-    .skill-button.rctrl.selected { background:var(--rctrl-selected); color:#fff; }
-    .skill-button.vteams.selected { background:var(--vteams-selected); color:#fff; }
-    .skill-button.dip.selected { background:var(--dip-selected); color:#fff; }
-    .skill-button.variant.selected { background:var(--variant-selected); color:#fff; }
-    .skill-button.soft.selected { background:var(--soft-selected); color:#fff; }
+    details.skill-row[open] summary::after{ content:"▾"; }
+    .skills-inner { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; padding:14px; }
 
-    /* Step 2 + Step 3 row */
+    /* category headers bg */
+    .bg-cvc summary{ background:var(--cvc); }
+    .bg-dig summary{ background:var(--dig); }
+    .bg-glued summary{ background:var(--glued); }
+    .bg-vce summary{ background:var(--vce); }
+    .bg-rctrl summary{ background:var(--rctrl); }
+    .bg-vteams summary{ background:var(--vteams); }
+    .bg-dip summary{ background:var(--dip); }
+    .bg-variant summary{ background:var(--variant); }
+    .bg-soft summary{ background:var(--soft); }
+
+    /* bigger buttons (≈1.5x) and taller */
+    .skill-button{
+      border:2px solid #000; padding:12px 18px; border-radius:14px;
+      font-weight:600; font-size:18px; cursor:pointer; background:#fff;
+      transition:transform .08s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease;
+      user-select:none; line-height:1.2; min-height:48px;
+    }
+    .skill-button:active{ transform:translateY(1px); }
+    .skill-button.cvc.selected{ background:var(--cvc-selected); color:#fff; }
+    .skill-button.dig.selected{ background:var(--dig-selected); color:#fff; }
+    .skill-button.glued.selected{ background:var(--glued-selected); color:#fff; }
+    .skill-button.vce.selected{ background:var(--vce-selected); color:#fff; }
+    .skill-button.rctrl.selected{ background:var(--rctrl-selected); color:#fff; }
+    .skill-button.vteams.selected{ background:var(--vteams-selected); color:#fff; }
+    .skill-button.dip.selected{ background:var(--dip-selected); color:#fff; }
+    .skill-button.variant.selected{ background:var(--variant-selected); color:#fff; }
+    .skill-button.soft.selected{ background:var(--soft-selected); color:#fff; }
+
+    /* forced wrap element for "new line after Long I" */
+    .skills-inner .break{ flex-basis:100%; height:0; }
+
+    /* step 2 + 3 row (moved below table & chips per request) */
     .row-2-3 { display:flex; gap:12px; align-items:stretch; }
     .row-2-3 .table-section { margin:0; flex:1; }
 
     .option-grid { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-top:10px; }
-    .option-box { padding:10px 14px; border:2px solid #000; border-radius:10px; cursor:pointer; transition: background-color 0.2s, color 0.2s, transform .08s; }
+    .option-box { padding:12px 16px; border:2px solid #000; border-radius:12px; cursor:pointer; transition: background-color 0.2s, color 0.2s, transform .08s; font-size:16px; }
     .option-box:active { transform:translateY(1px); }
     .option-box.selected { background-color:#d9c9ff; }
 
-    /* Chips for selected skills */
-    .chips-wrap { margin-top:10px; display:flex; justify-content:center; flex-wrap:wrap; gap:8px; }
-    .chip {
-      background:var(--chip-bg); color:var(--chip-text);
-      border:1px solid #cfd8dc; border-radius:999px; padding:6px 10px; font-size:13px; display:flex; align-items:center; gap:8px;
-    }
-    .chip .x {
-      width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-      font-weight:700; font-size:12px; cursor:pointer; background:#e8edf2; color:var(--chip-x); transition: background .15s;
-    }
+    /* chips */
+    .chips-title { margin-top:12px; text-align:center; font-weight:600; }
+    .chips-wrap { margin-top:8px; display:flex; justify-content:center; flex-wrap:wrap; gap:8px; }
+    .chip { background:var(--chip-bg); color:var(--chip-text); border:1px solid #cfd8dc; border-radius:999px; padding:8px 12px; font-size:14px; display:flex; align-items:center; gap:8px; }
+    .chip .x { width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; cursor:pointer; background:#e8edf2; color:var(--chip-x); transition:background .15s; }
     .chip .x:hover { background:#dfe7ee; }
 
-    /* Worksheet Layout */
-    .word-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid black; }
-    .word-table td { width: 50%; text-align: center; vertical-align: middle; padding: 24px 0; border: 2px solid black; }
-
-    .worksheet-title { font-size: 40px; margin-bottom: 5px; font-weight: 700; }
-    .worksheet-directions { font-size: 22px; margin-bottom: 20px; }
-
-    .word { font-size: 28px; font-weight: 700; margin-bottom: 12px; }
-    .pattern {
-      font-size: 60px; transform: scale(1.5); display: inline-block;
-      font-family: 'BoxesFont', monospace; font-weight: normal; line-height: 1;
-      margin-top: 8px; margin-bottom: 14px;
-    }
-    /* Underlines style: unbold + tiny gap */
+    /* worksheet layout */
+    .word-table { width:100%; border-collapse:collapse; margin-top:20px; border:2px solid black; }
+    .word-table td { width:50%; text-align:center; vertical-align:middle; padding:24px 0; border:2px solid black; }
+    .worksheet-title { font-size:40px; margin-bottom:5px; font-weight:700; }
+    .worksheet-directions { font-size:22px; margin-bottom:20px; }
+    .word { font-size:28px; font-weight:700; margin-bottom:12px; }
+    .pattern { font-size:60px; transform:scale(1.5); display:inline-block; font-family:'BoxesFont', monospace; font-weight:normal; line-height:1; margin-top:8px; margin-bottom:14px; }
     .pattern.underlines { font-family:'UnderlineFont', monospace; font-weight:normal; letter-spacing:0; }
     .pattern.underlines span { display:inline-block; margin:0 3px; }
 
-    /* Soft C / Soft G hidden */
     .skill-button[data-skill="Soft C"], .skill-button[data-skill="Soft G"] { display:none; }
 
-    /* Print Formatting */
-    #copyright { font-size: 12px; text-align: right; margin-top: 12px; display: none; }
+    /* print tweaks: smaller title/directions to prevent overflow */
+    #copyright { font-size:12px; text-align:right; margin-top:12px; display:none; }
     @media print {
-      body { margin: 0; }
-      .table-section, button, .toggle-section summary, .row-2-3, .chips-wrap, .subtitle { display: none !important; }
-      #output { margin: 0; }
-      .worksheet-title, .worksheet-directions { display: block; text-align: center; }
-      #copyright { display: block; }
+      body { margin:0; }
+      .table-section, button, .row-2-3, .chips-title, .chips-wrap, .subtitle { display:none !important; }
+      #output { margin:0; }
+      .worksheet-title { font-size:20px; margin-bottom:2px; }
+      .worksheet-directions { font-size:14px; margin-bottom:8px; }
+      #copyright { display:block; }
     }
   </style>
 </head>
@@ -135,10 +122,10 @@
   <div class="subtitle">Build targeted sound-mapping worksheets in one click.</div>
 
   <!-- STEP 1 -->
-  <div class="table-section">
+  <div id="step1" class="table-section">
     <div class="section-label">Step 1: Select Skills</div>
-
     <div class="skill-stack">
+
       <details class="skill-row bg-cvc" open>
         <summary>CVC Short Vowels</summary>
         <div class="skills-inner">
@@ -152,7 +139,7 @@
         </div>
       </details>
 
-      <details class="skill-row bg-dig" open>
+      <details class="skill-row bg-dig">
         <summary>Digraphs</summary>
         <div class="skills-inner">
           <button class="skill-button dig" data-skill="Digraph(ck)">ck</button>
@@ -201,6 +188,7 @@
           <button class="skill-button vteams" data-skill="Long A (ai/ay)">Long A (ai/ay)</button>
           <button class="skill-button vteams" data-skill="Long E (ee/ea)">Long E (ee/ea)</button>
           <button class="skill-button vteams" data-skill="Long I (igh/y/ie)">Long I (igh/-y/ie)</button>
+          <span class="break"></span> <!-- force new line AFTER Long I -->
           <button class="skill-button vteams" data-skill="Long O (oa/ow/oe)">Long O (oa/ow/oe)</button>
           <button class="skill-button vteams" data-skill="Long U (oo/ew/ue)">Long U (oo/ew/ue)</button>
           <button class="skill-button vteams" data-skill="Mixed Vowel Teams">Mixed Vowel Teams</button>
@@ -227,22 +215,23 @@
         <summary>Soft C/G Endings</summary>
         <div class="skills-inner">
           <button class="skill-button soft" data-skill="Soft Endings">Soft C/G Endings (-ce/-ge/-dge)</button>
-          <!-- hidden via CSS:
-          <button class="skill-button soft" data-skill="Soft C">Soft C (ce/ci/cy)</button>
-          <button class="skill-button soft" data-skill="Soft G">Soft G (ge/gi/gy)</button>
-          -->
+          <!-- hidden: Soft C / Soft G individual -->
         </div>
       </details>
     </div>
+  </div>
 
-    <!-- Chips -->
-    <div style="margin-top:10px; text-align:center; font-weight:600;">Skills Selected:</div>
+  <!-- GENERATED OUTPUT -->
+  <div id="output"></div>
+
+  <!-- CHIPS (now between table and Step 2/3) -->
+  <div class="table-section" id="chipSection">
+    <div class="chips-title">Skills Selected:</div>
     <div id="chips" class="chips-wrap"></div>
   </div>
 
-  <!-- STEP 2 + STEP 3 side-by-side -->
+  <!-- STEP 2 + STEP 3 -->
   <div class="row-2-3">
-    <!-- Step 2 -->
     <div class="table-section">
       <div class="section-label">Step 2: Include Blends?</div>
       <div class="option-grid">
@@ -251,7 +240,6 @@
       </div>
     </div>
 
-    <!-- Step 3 -->
     <div class="table-section">
       <div class="section-label">Step 3: Generate & Print</div>
       <div style="margin:6px 0 12px; text-align:center;">
@@ -265,28 +253,21 @@
     </div>
   </div>
 
-  <div id="output"></div>
-
 <script>
   let selectedSkills = new Set();
   let includeBlends = null;
 
-  // ---------- Skill buttons ----------
+  // skill buttons
   document.querySelectorAll('.skill-button').forEach(btn => {
     btn.addEventListener('click', () => {
       const skill = btn.dataset.skill;
-      if (selectedSkills.has(skill)) {
-        selectedSkills.delete(skill);
-        btn.classList.remove('selected');
-      } else {
-        selectedSkills.add(skill);
-        btn.classList.add('selected');
-      }
+      if (selectedSkills.has(skill)) { selectedSkills.delete(skill); btn.classList.remove('selected'); }
+      else { selectedSkills.add(skill); btn.classList.add('selected'); }
       renderChips();
     });
   });
 
-  // ---------- Chips ----------
+  // chips
   function renderChips(){
     const wrap = document.getElementById('chips');
     wrap.innerHTML = '';
@@ -295,10 +276,8 @@
       chip.className = 'chip';
       chip.innerHTML = `<span>${skill}</span><span class="x" title="Remove">×</span>`;
       chip.querySelector('.x').addEventListener('click', () => {
-        // remove from set
         selectedSkills.delete(skill);
-        // unselect the button if present
-        const btn = document.querySelector(`.skill-button[data-skill="${CSS.escape(skill)}"]`);
+        const btn = document.querySelector(\`.skill-button[data-skill="\${CSS.escape(skill)}"]\`);
         if (btn) btn.classList.remove('selected');
         renderChips();
       });
@@ -306,22 +285,20 @@
     });
   }
 
-  // ---------- Include Blends toggles ----------
+  // blends toggles (default No)
   const yes = document.getElementById('includeBlendsYes');
   const no  = document.getElementById('includeBlendsNo');
-  // Default to No to reduce clicks
   includeBlends = false; no.classList.add('selected');
+  yes.addEventListener('click', ()=>{ includeBlends = true; yes.classList.add('selected'); no.classList.remove('selected'); });
+  no .addEventListener('click', ()=>{ includeBlends = false; no.classList.add('selected'); yes.classList.remove('selected'); });
 
-  yes.addEventListener('click', function(){ includeBlends = true; yes.classList.add('selected'); no.classList.remove('selected'); });
-  no .addEventListener('click', function(){ includeBlends = false; no.classList.add('selected'); yes.classList.remove('selected'); });
-
-  // ---------- Helpers ----------
+  // helpers
   function shuffle(arr){ return [...arr].sort(() => Math.random() - 0.5); }
   function currentCellFont(){ return (document.querySelector('input[name="cellStyle"]:checked')?.value === 'underlines') ? 'UnderlineFont' : 'BoxesFont'; }
   function currentCellClass(){ return (document.querySelector('input[name="cellStyle"]:checked')?.value === 'underlines') ? 'underlines' : 'boxes'; }
   function renderPatternHTML(pattern, useUnder){ return useUnder ? Array.from(pattern).map(d=>`<span>${d}</span>`).join('') : pattern; }
 
-  // ---------- Generate ----------
+  // generate
   window.generatePage = function generatePage() {
     if (selectedSkills.size === 0) return alert("Select at least one skill!");
     if (includeBlends === null) return alert("Please choose Include Blends: Yes or No");
@@ -374,13 +351,14 @@
     }
     output.appendChild(table);
 
-    const copyright = document.createElement('div');
-    copyright.id = 'copyright';
-    copyright.innerHTML = '<br><br><br>Copyright - InterventionStation.com - @TeachwithMrC';
-    output.appendChild(copyright);
+    // print-only copyright
+    const copy = document.createElement('div');
+    copy.id = 'copyright';
+    copy.innerHTML = '<br><br><br>Copyright - InterventionStation.com - @TeachwithMrC';
+    output.appendChild(copy);
   };
 
-  // ---------- Word source mapping ----------
+  // skill fetch logic
   function getWordsForSkill(skill, source, blends) {
     const blendSuffixes = [" with Blends", " with Digraphs and Blends"];
     const glueNgParts = ["ang","ing","ong","ung"];
@@ -394,7 +372,6 @@
     }
 
     switch (skill) {
-      // Short vowels & Mixed CVC
       case "Short A": return fetchSet("Short A");
       case "Short E": return fetchSet("Short E");
       case "Short I": return fetchSet("Short I");
@@ -402,7 +379,6 @@
       case "Short U": return fetchSet("Short U");
       case "Mixed CVC": return [].concat(fetchSet("Short A"), fetchSet("Short E"), fetchSet("Short I"), fetchSet("Short O"), fetchSet("Short U"));
 
-      // Digraphs
       case "Digraph(ck)": return fetchSet("Digraph(ck)");
       case "Digraph(sh)": return fetchSet("Digraph(sh)");
       case "Digraph(th)": return fetchSet("Digraph(th)");
@@ -410,26 +386,22 @@
       case "Digraph(wh)": return fetchSet("Digraph(wh)");
       case "Digraphs Mixed": return [].concat(fetchSet("Digraph(ck)"), fetchSet("Digraph(sh)"), fetchSet("Digraph(th)"), fetchSet("Digraph(ch)"), fetchSet("Digraph(wh)"));
 
-      // Glued
       case "Glued(all)": return fetchSet("Glued(all)");
       case "Glued(-ng)": return glueNgParts.flatMap(p => fetchSet(`Glued(${p})`));
       case "Glued(-nk)": return glueNkParts.flatMap(p => fetchSet(`Glued(${p})`));
       case "Glued Mixed": return [].concat(fetchSet("Glued(all)"), glueNgParts.flatMap(p => fetchSet(`Glued(${p})`)), glueNkParts.flatMap(p => fetchSet(`Glued(${p})`)));
 
-      // VCe
       case "VCe(a_e)": return fetchSet("VCe(a_e)");
       case "VCe(i_e)": return fetchSet("VCe(i_e)");
       case "VCe(o_e)": return fetchSet("VCe(o_e)");
       case "VCe(u_e)": return fetchSet("VCe(u_e)");
       case "Mixed VCe": return [].concat(fetchSet("VCe(a_e)"), fetchSet("VCe(i_e)"), fetchSet("VCe(o_e)"), fetchSet("VCe(u_e)"));
 
-      // R-Controlled
       case "R-Controlled(ar)": return fetchSet("R-Controlled(ar)");
       case "R-Controlled(or)": return fetchSet("R-Controlled(or)");
       case "R-Controlled(er,ir,ur)": return fetchSet("R-Controlled(er,ir,ur)");
       case "Mixed R-Controlled": return [].concat(fetchSet("R-Controlled(ar)"), fetchSet("R-Controlled(or)"), fetchSet("R-Controlled(er,ir,ur)"));
 
-      // Vowel Teams
       case "Long A (ai/ay)": return [].concat(fetchSet("Long A(ai)"), fetchSet("Long A(ay)"));
       case "Long E (ee/ea)": return [].concat(fetchSet("Long E(ee)"), fetchSet("Long E(ea)"));
       case "Long I (igh/y/ie)": return [].concat(fetchSet("Long I(igh)"), fetchSet("Long I(y)"), fetchSet("Long I(ie)"));
@@ -443,7 +415,6 @@
         fetchSet("Long U(oo)"), fetchSet("Long U(ew)"), fetchSet("Long U(ue)")
       );
 
-      // Diphthongs / Variant / Soft endings
       case "Diphthongs (oy/oi)": return [].concat(fetchSet("Diphthong(oy)"), fetchSet("Diphthong(oi)"));
       case "Diphthongs (ow/ou)": return [].concat(fetchSet("Diphthong(ow)"), fetchSet("Diphthong(ou)"));
       case "Variant Vowels (au/aw)": return [].concat(fetchSet("Variant Vowel(aw)"), fetchSet("Variant Vowel(au)"));
