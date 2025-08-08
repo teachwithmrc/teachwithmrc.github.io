@@ -107,7 +107,7 @@
         const makeBold = boldChanged && changedMap && changedMap[i];
         const spacing = isUnderline ? 'display:inline-block;margin:0 6px;' : '';
         const weight = makeBold ? 'font-weight:700;' : '';
-        return `<span style="\${spacing}\${weight}">\${digit}</span>`;
+        return `<span style="${spacing}${weight}">${digit}</span>`;
       }).join('');
     }
 
@@ -116,7 +116,7 @@
       const wordChunks = splitWordByPattern(word, pattern);
       for (let i = 0; i < Math.min(prevChunks.length, wordChunks.length); i++) {
         if (prevChunks[i] !== wordChunks[i]) {
-          return `\${prevChunks[i]} → \${wordChunks[i]}`;
+          return `${prevChunks[i]} → ${wordChunks[i]}`;
         }
       }
       return '? → ?';
@@ -150,26 +150,26 @@
           : renderPatternHTML({ pattern, useFont, boldChanged, changedMap });
 
         const wordDisplay = isFirst
-          ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">\${word}</div>`
+          ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">${word}</div>`
           : `<div class="pattern" style="
-               font-family:'\${useFont}', monospace;
-               font-size:\${useFont === 'UnderlineFont' ? '85px' : '100px'};
+               font-family:'${useFont}', monospace;
+               font-size:${useFont === 'UnderlineFont' ? '85px' : '100px'};
                letter-spacing:0px;
-             ">\${patternHTML}</div>`;
+             ">${patternHTML}</div>`;
 
         const imgSrc = (typeof vceWordImages !== 'undefined' && vceWordImages[word])
           ? vceWordImages[word]
           : 'https://via.placeholder.com/110?text=?';
 
         const imageTD = `<td style="padding:5px 7px;width:140px;">
-                           <img src="\${imgSrc}" alt="\${word}" style="width:110px;height:110px;object-fit:contain;">
+                           <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
                          </td>`;
 
         const borders = !isLast
           ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
           : 'border-left:4px solid #000;border-right:4px solid #000;';
 
-        const wordTD = `<td style="padding:5px 7px;\${borders}">\${wordDisplay}</td>`;
+        const wordTD = `<td style="padding:5px 7px;${borders}">${wordDisplay}</td>`;
 
         const hintTD = (() => {
           if (isFirst) return `<td style="padding:3px 5px;width:170px;"></td>`;
@@ -179,11 +179,11 @@
                       display:flex;justify-content:center;align-items:center;
                       background:#f0f0f0;border:3px solid #000;border-radius:12px;
                       padding:6px 10px;font-size:22px;text-align:center;
-                    ">\${hint}</div>
+                    ">${hint}</div>
                   </td>`;
         })();
 
-        return `<tr>\${imageTD}\${wordTD}\${hintTD}</tr>`;
+        return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
       }).join('');
 
       const ladderHTML = `
@@ -193,7 +193,7 @@
             <p style="margin-top:0;font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
           </div>
           <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
-            \${rowsHTML}
+            ${rowsHTML}
           </table>
           <br><br>
           <div id="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
