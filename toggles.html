@@ -51,7 +51,7 @@
       line-height: 1;
     }
 
-    /* Collapsible Toggles */
+    /* Collapsible Toggles — only for Step 1 layout */
     .toggle-section {
       margin-top: 8px;
       border: 1px solid #ccc;
@@ -82,7 +82,7 @@
   <h1>Word Mapping Generator</h1>
   <h2>Skills: <span id="selected-skills"></span></h2>
 
-  <!-- Step 1: Skill Selection -->
+  <!-- Step 1: Skill Selection (NEW LAYOUT ONLY) -->
   <div class="table-section">
     <div class="section-label">Step 1: Select Skills (3 sounds unless blends are included)</div>
     <div class="skill-button-grid">
@@ -139,19 +139,11 @@
         <summary>Vowel Teams</summary>
         <div class="skill-row">
           <span class="skill-row-label">Vowel Teams:</span>
-          <button class="skill-button" data-skill="Long A(ai)">Long A (ai)</button>
-          <button class="skill-button" data-skill="Long A(ay)">Long A (ay)</button>
-          <button class="skill-button" data-skill="Long E(ee)">Long E (ee)</button>
-          <button class="skill-button" data-skill="Long E(ea)">Long E (ea)</button>
-          <button class="skill-button" data-skill="Long I(ie)">Long I (ie)</button>
-          <button class="skill-button" data-skill="Long I(igh)">Long I (igh)</button>
-          <button class="skill-button" data-skill="Long I(y)">Long I (y)</button>
-          <button class="skill-button" data-skill="Long O(oa)">Long O (oa)</button>
-          <button class="skill-button" data-skill="Long O(ow)">Long O (ow)</button>
-          <button class="skill-button" data-skill="Long O(oe)">Long O (oe)</button>
-          <button class="skill-button" data-skill="Long U(oo)">Long U (oo)</button>
-          <button class="skill-button" data-skill="Long U(ew)">Long U (ew)</button>
-          <button class="skill-button" data-skill="Long U(ue)">Long U (ue)</button>
+          <button class="skill-button" data-skill="Long A">Long A (ai/ay)</button>
+          <button class="skill-button" data-skill="Long E">Long E (ee/ea)</button>
+          <button class="skill-button" data-skill="Long I">Long I (igh/-y/ie)</button>
+          <button class="skill-button" data-skill="Long O">Long O (oa/ow/oe)</button>
+          <button class="skill-button" data-skill="Long U">Long U (oo/ew/ue)</button>
           <button class="skill-button" data-skill="Mixed Vowel Teams">Mixed Vowel Teams</button>
         </div>
       </details>
@@ -160,10 +152,8 @@
         <summary>Diphthongs</summary>
         <div class="skill-row">
           <span class="skill-row-label">Diphthongs:</span>
-          <button class="skill-button" data-skill="Diphthong(oi)">oi</button>
-          <button class="skill-button" data-skill="Diphthong(oy)">oy</button>
-          <button class="skill-button" data-skill="Diphthong(ou)">ou</button>
-          <button class="skill-button" data-skill="Diphthong(ow)">ow</button>
+          <button class="skill-button" data-skill="oy/oi">oy/oi</button>
+          <button class="skill-button" data-skill="ow/ou">ow/ou</button>
         </div>
       </details>
 
@@ -171,9 +161,8 @@
         <summary>Variant Vowels</summary>
         <div class="skill-row">
           <span class="skill-row-label">Variant Vowels:</span>
-          <button class="skill-button" data-skill="Variant Vowel(aw)">aw</button>
-          <button class="skill-button" data-skill="Variant Vowel(au)">au</button>
-          <button class="skill-button" data-skill="Variant Vowel(oo)">oo</button>
+          <button class="skill-button" data-skill="au/aw">au/aw</button>
+          <button class="skill-button" data-skill="oo">oo</button>
         </div>
       </details>
 
@@ -181,9 +170,9 @@
         <summary>Soft C & G</summary>
         <div class="skill-row">
           <span class="skill-row-label">Soft C & G:</span>
-          <button class="skill-button" data-skill="Soft C(ce)">Soft C (ce)</button>
-          <button class="skill-button" data-skill="Soft G(ge)">Soft G (ge)</button>
-          <button class="skill-button" data-skill="Soft G(dge)">Soft G (dge)</button>
+          <button class="skill-button" data-skill="Soft Endings">-ce/-ge/-dge</button>
+          <button class="skill-button" data-skill="Soft C">Soft C (ce/ci/cy)</button>
+          <button class="skill-button" data-skill="Soft G">Soft G (ge/gi/gy)</button>
         </div>
       </details>
 
@@ -207,5 +196,40 @@
   </div>
 
   <div id="output"></div>
+
+  <script>
+    let selectedSkills = new Set();
+    let includeBlends = null;
+
+    // (unchanged) — hookup for skill buttons
+    document.querySelectorAll('.skill-button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const skill = btn.dataset.skill;
+        if (selectedSkills.has(skill)) {
+          selectedSkills.delete(skill);
+          btn.classList.remove('selected');
+        } else {
+          selectedSkills.add(skill);
+          btn.classList.add('selected');
+        }
+        document.getElementById('selected-skills').innerText = Array.from(selectedSkills).join(', ');
+      });
+    });
+
+    // (unchanged) — blends toggles
+    document.getElementById('includeBlendsYes').addEventListener('click', function () {
+      includeBlends = true;
+      this.classList.add('selected');
+      document.getElementById('includeBlendsNo').classList.remove('selected');
+    });
+    document.getElementById('includeBlendsNo').addEventListener('click', function () {
+      includeBlends = false;
+      this.classList.add('selected');
+      document.getElementById('includeBlendsYes').classList.remove('selected');
+    });
+
+    // (UNCHANGED) — your generatePage(), getWordsForSkill(), shuffle(), etc.
+    // Keep the rest of your existing JS below this point exactly as you had it.
+  </script>
 </body>
 </html>
