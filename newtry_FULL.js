@@ -1964,8 +1964,9 @@ const soundBoxWords = {
 { word: "gem", pattern: "111", split: ["f","a","ce"] },
 { word: "germ", pattern: "121", split: ["f","a","ce"] }],
 
-      "Soft G(ge/gy/gi)": [
-{ word: "gist", pattern: "1111", split: ["f","a","ce"] }],
-
+    "Soft G(ge/gy/gi)": [
+  { word: "gist", pattern: "1111", split: ["g","i","s","t"] }
+]
 };
+
 window.soundBoxWords = soundBoxWords;
