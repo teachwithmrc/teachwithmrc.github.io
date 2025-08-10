@@ -30,7 +30,21 @@
 
     /* Overall table layout */
     /* Overall grid layout */
-    .layout { width:100%; max-width:1100px; margin:0 auto 14px auto; display:grid; grid-template-columns: minmax(260px,1fr) max-content; grid-template-rows: 1fr 1fr; gap:12px; align-items:stretch; }
+  .layout {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto 14px auto;
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) max-content; /* <-- right col only as wide as content */
+  grid-template-rows: 1fr 1fr;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.right-top,
+.right-bottom {
+  justify-self: start; /* <-- this stops the card from stretching to full col width */
+}
     .layout .left { grid-column:1; grid-row:1 / span 2; }
     .layout .right-top { grid-column:2; grid-row:1; }
     .layout .right-bottom { grid-column:2; grid-row:2; }
