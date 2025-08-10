@@ -27,22 +27,21 @@
       --border2:#f2d8bd;
     }
 
+    * { box-sizing: border-box; }
+
     body {
       font-family: 'Poppins', sans-serif;
       margin: 10px;
-      text-align: center;
       color: var(--ink);
       background: var(--bg);
     }
 
-    h1 { font-size: 32px; margin-bottom: 6px; }
-    .subtitle { font-size: 16px; margin-bottom: 8px; }
+    h1 { font-size: 32px; margin: 0 0 8px; text-align: center; }
 
     button { font-size: 16px; padding: 6px 10px; margin: 6px; cursor: pointer; }
     label { margin: 0 6px; font-size: 18px; }
 
     .pattern {
-      font-size: 100px;
       line-height: 1;
       margin-top: 4px;
     }
@@ -53,20 +52,11 @@
       width: 100%;
     }
 
-    .groupTitle {
-      font-weight: 600;
-      margin-top: 6px;
-    }
-
-    /* Cards (centered, light background, bigger text) */
     .card {
-      display: inline-block;
-      text-align: center;
       background: var(--card);
       border: 2px solid var(--border);
       border-radius: 14px;
       padding: 14px 18px;
-      margin: 10px auto;
       font-size: 18px;
     }
     .card.alt {
@@ -77,30 +67,54 @@
       margin: 0 0 8px;
       font-size: 20px;
     }
+
+    /* Layout: Step 1 left, Steps 2 & 3 stacked right */
+    .layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 14px;
+      align-items: start;
+      max-width: 1200px;
+      margin: 10px auto 0;
+    }
+
+    .left { position: sticky; top: 10px; align-self: start; }
+    .right { display: grid; grid-template-rows: auto auto; gap: 14px; }
+
     .controls {
       display: flex;
-      justify-content: center;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
       flex-wrap: wrap;
       font-size: 18px;
     }
 
-    /* Teacher-only directions (don’t print) */
-    .screenOnly { display: block; font-size: 18px; }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      justify-content: center;
+    }
+
+    #ladderOutput { margin-top: 8px; margin-bottom: 60px; }
+
+    .screenOnly { display: block; font-size: 16px; max-width: 1000px; margin: 6px auto 10px; text-align: center; }
+
     @media print {
-      body * { visibility: hidden; }
-      #ladderOutput, #ladderOutput * { visibility: visible; }
+      body * { visibility: hidden !important; }
+      #ladderOutput, #ladderOutput * { visibility: visible !important; }
       #ladderOutput {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%;
-        margin: 0; padding: 10px;
-        box-sizing: border-box;
+        position: absolute; top: 0; left: 0;
+        width: 100%; margin: 0; padding: 10px;
       }
-      .screenOnly { display: none !important; }
-      #ladderOutput br { display: none !important; }
       @page { margin: 0.5in; }
+    }
+
+    @media (max-width: 820px) {
+      .layout { grid-template-columns: 1fr; }
+      .left { position: static; }
     }
   </style>
 </head>
@@ -108,44 +122,49 @@
 
   <h1>Short Vowel Word Ladders</h1>
 
-  <!-- Teacher directions (screen only, not printed) -->
-  <div class="screenOnly" style="max-width:920px;margin:0 auto 12px;">
+  <div class="screenOnly">
     <strong>Directions:</strong>
-    Generate a Short Vowel Ladder in seconds. Select if you want
-    <em>CVC</em> (e.g., <strong>bat → hat</strong>),
-    <em>Blends included</em> (e.g., <strong>pan → pant</strong>), or
-    <em>Blends Only</em> (e.g., <strong>send → bend</strong>).
+    Choose your format on the left (Step 1). On the right, pick display (Step 2), then Generate/Print (Step 3).
   </div>
 
-  <!-- FORMAT (Mode) -->
-  <div class="card">
-    <h2>Format</h2>
-    <div class="controls">
-      <label><input type="radio" name="ladderMode" value="CVC" checked> 1. CVC</label>
-      <label><input type="radio" name="ladderMode" value="Include Blends"> 2. Include Blends</label>
-      <label><input type="radio" name="ladderMode" value="Only Blends"> 3. Only Blends</label>
+  <div class="layout">
+    <!-- STEP 1: LEFT -->
+    <div class="left">
+      <div class="card">
+        <h2>STEP 1 · Format</h2>
+        <div class="controls" style="flex-direction:column; align-items:flex-start;">
+          <label><input type="radio" name="ladderMode" value="CVC" checked> 1. CVC</label>
+          <label><input type="radio" name="ladderMode" value="Include Blends"> 2. Include Blends</label>
+          <label><input type="radio" name="ladderMode" value="Only Blends"> 3. Only Blends</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: STEP 2 on top, STEP 3 below -->
+    <div class="right">
+      <div class="card alt">
+        <h2>STEP 2 · Display</h2>
+        <div class="controls">
+          <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
+          <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
+          <label><input type="checkbox" id="boldChanged" checked> Bold Changed Part</label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>STEP 3 · Generate & Print</h2>
+        <div class="actions">
+          <button onclick="generateLadder()">Generate Ladder</button>
+          <button onclick="window.print()">Print Page</button>
+        </div>
+        <div id="ladderOutput"></div>
+      </div>
     </div>
   </div>
-
-  <!-- DISPLAY -->
-  <div class="card alt">
-    <h2>Display</h2>
-    <div class="controls">
-      <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
-      <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
-      <label><input type="checkbox" id="boldChanged" checked> Bold Changed Part</label>
-    </div>
-  </div>
-
-  <!-- ACTIONS -->
-  <div style="margin: 8px 0 10px;">
-    <button onclick="generateLadder()">Generate Ladder</button>
-    <button onclick="window.print()">Print Page</button>
-  </div>
-
-  <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px;"></div>
 
   <script>
+  /* --- helpers --- */
+
   function splitWordByPattern(word, pattern) {
     const chunks = [];
     let i = 0;
@@ -158,84 +177,157 @@
     return chunks;
   }
 
-  function getChangedMap(prevWord, word, prevPattern, pattern) {
+  /* Compute a per-UNIT change map (letter-by-letter), not per chunk.
+     Returns an array of booleans the length of the *current* pattern's total units. */
+  function getUnitChangeMap(prevWord, word, prevPattern, pattern) {
     const prevChunks = splitWordByPattern(prevWord, prevPattern);
-    const wordChunks = splitWordByPattern(word, pattern);
-    const n = Math.max(pattern.length, prevPattern.length);
-    const changed = new Array(n);
-    for (let i = 0; i < n; i++) {
-      changed[i] = (prevChunks[i] || '') !== (wordChunks[i] || '');
+    const curChunks  = splitWordByPattern(word, pattern);
+
+    function unitLen(str) { return str ? str.length : 0; }
+    function pushMany(arr, count, val) { for (let i=0;i<count;i++) arr.push(val); }
+
+    const maxChunks = Math.max(prevChunks.length, curChunks.length);
+    const unitChanges = [];
+
+    for (let i = 0; i < maxChunks; i++) {
+      const a = prevChunks[i] || '';
+      const b = curChunks[i]  || '';
+      const aLen = unitLen(a);
+      const bLen = unitLen(b);
+
+      if (b === '') {
+        // current has no chunk here → nothing to render, so skip
+        continue;
+      }
+
+      if (a === b) {
+        // identical chunk → no unit changes
+        pushMany(unitChanges, bLen, false);
+        continue;
+      }
+
+      // Single-letter insert (prefix/suffix): highlight only the added unit
+      if (bLen === aLen + 1 && (b.indexOf(a) === 0 || b.lastIndexOf(a) === bLen - aLen)) {
+        if (b.indexOf(a) === 0) {
+          // a → a + X (added at end) → last unit bold
+          pushMany(unitChanges, aLen, false);
+          unitChanges.push(true);
+        } else {
+          // a → X + a (added at start) → first unit bold
+          unitChanges.push(true);
+          pushMany(unitChanges, aLen, false);
+        }
+        continue;
+      }
+
+      // Same length → mark only the positions that changed
+      if (aLen === bLen) {
+        for (let k = 0; k < bLen; k++) {
+          unitChanges.push(a.charAt(k) !== b.charAt(k));
+        }
+        continue;
+      }
+
+      // Whole new chunk or complex change → bold the entire chunk
+      pushMany(unitChanges, bLen, true);
     }
-    return changed;
+
+    return unitChanges;
   }
 
-  function renderPatternHTML({ pattern, useFont, boldChanged, changedMap }) {
-    const isUnderline = useFont === 'UnderlineFont';
-    return Array.from(pattern).map((digit, i) => {
-      const makeBold = boldChanged && changedMap && changedMap[i];
-      const spacing = isUnderline ? 'display:inline-block;margin:0 6px;' : '';
-      const weight = makeBold ? 'font-weight:700;' : '';
-      return `<span style="${spacing}${weight}">${digit}</span>`;
-    }).join('');
+  /* Render boxes/underlines per UNIT so we can bold a single letter within a multi-unit chunk.
+     We expand '2' into '11' and '3' into '111' visually. */
+  function renderPatternHTMLUnits(pattern, useFont, boldUnits) {
+    var isUnderline = (useFont === 'UnderlineFont');
+
+    // Build chunk lengths from pattern digits
+    var lens = [];
+    for (var i = 0; i < pattern.length; i++) {
+      var d = pattern[i];
+      lens.push(d === '3' ? 3 : (d === '2' ? 2 : 1));
+    }
+
+    var html = '';
+    var unitIndex = 0;
+
+    for (var c = 0; c < lens.length; c++) {
+      var L = lens[c];
+
+      // wrapper per CHUNK (gives chunk spacing for underlines)
+      var wrapperOpen = '<span style="' + (isUnderline ? 'display:inline-block;margin:0 6px;' : '') + '">';
+      var wrapperClose = '</span>';
+
+      var chunkHTML = '';
+      for (var u = 0; u < L; u++) {
+        var isBold = boldUnits && !!boldUnits[unitIndex];
+        var weight = isBold ? 'font-weight:700;' : '';
+        // One unit is always glyph "1" in the custom fonts
+        chunkHTML += '<span style="' + weight + '">1</span>';
+        unitIndex++;
+      }
+
+      html += wrapperOpen + chunkHTML + wrapperClose;
+    }
+
+    return html;
   }
 
-  // Upgraded: returns "+ n" / "- n" and shows a micro-diff like s → s<b>n</b>
+  /* Hint: "+ n" / "- n" and tiny micro-diff (e.g., s → s<b>n</b>) */
   function getChunkHint(prevWord, word, prevPattern, pattern) {
     const prevChunks = splitWordByPattern(prevWord, prevPattern);
     const wordChunks = splitWordByPattern(word, pattern);
 
-    const arraysEqual = (a, b) => a.length === b.length && a.every((v,i)=>v===b[i]);
-
-    // 1) Same number of chunks → allow a single differing chunk
-    if (prevChunks.length === wordChunks.length) {
-      let idx = -1;
-      for (let i = 0; i < prevChunks.length; i++) {
-        if (prevChunks[i] !== wordChunks[i]) {
-          if (idx !== -1) return '? → ?';
-          idx = i;
-        }
-      }
-      if (idx === -1) return '? → ?';
-
-      const a = prevChunks[idx];
-      const b = wordChunks[idx];
-
-      // Intra-chunk single-letter INSERT (prefix or suffix)
-      if (b.length === a.length + 1 && (b.startsWith(a) || b.endsWith(a))) {
-        const added = b.startsWith(a) ? b.slice(-1) : b.slice(0, b.length - a.length);
-        const micro = b.startsWith(a)
-          ? `${a} → ${a}<b>${added}</b>`
-          : `${a} → <b>${added}</b>${a}`;
-        return `+ ${added} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
-      }
-
-      // Intra-chunk single-letter DELETE (prefix or suffix)
-      if (a.length === b.length + 1 && (a.startsWith(b) || a.endsWith(b))) {
-        const removed = a.startsWith(b) ? a.slice(-1) : a.slice(0, a.length - b.length);
-        const micro = a.startsWith(b)
-          ? `${a.slice(0, -1)}<b>${removed}</b> → ${b}`
-          : `<b>${removed}</b>${a.slice(1)} → ${b}`;
-        return `- ${removed} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
-      }
-
-      // Generic substitution
-      return `${a} → ${b}`;
+    function arraysEqual(a, b) {
+      if (a.length !== b.length) return false;
+      for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+      return true;
     }
 
-    // 2) Insertion of a whole chunk anywhere
+    if (prevChunks.length === wordChunks.length) {
+      let diffIdx = -1;
+      for (let i = 0; i < prevChunks.length; i++) {
+        if (prevChunks[i] !== wordChunks[i]) {
+          if (diffIdx !== -1) return '? → ?';
+          diffIdx = i;
+        }
+      }
+      if (diffIdx === -1) return '? → ?';
+
+      const a = prevChunks[diffIdx];
+      const b = wordChunks[diffIdx];
+
+      if (b.length === a.length + 1 && (b.indexOf(a) === 0 || b.lastIndexOf(a) === b.length - a.length)) {
+        const added = (b.indexOf(a) === 0) ? b.charAt(b.length - 1) : b.substring(0, b.length - a.length);
+        const micro = (b.indexOf(a) === 0)
+          ? a + ' → ' + a + '<b>' + added + '</b>'
+          : a + ' → <b>' + added + '</b>' + a;
+        return '+ ' + added + ' <span style="font-size:16px;opacity:.8;margin-left:8px;">' + micro + '</span>';
+      }
+
+      if (a.length === b.length + 1 && (a.indexOf(b) === 0 || a.lastIndexOf(b) === a.length - b.length)) {
+        const removed = (a.indexOf(b) === 0) ? a.charAt(a.length - 1) : a.substring(0, a.length - b.length);
+        const before = (a.indexOf(b) === 0)
+          ? a.slice(0, -1) + '<b>' + removed + '</b>'
+          : '<b>' + removed + '</b>' + a.slice(1);
+        const micro = before + ' → ' + b;
+        return '- ' + removed + ' <span style="font-size:16px;opacity:.8;margin-left:8px;">' + micro + '</span>';
+      }
+
+      return a + ' → ' + b;
+    }
+
     if (wordChunks.length === prevChunks.length + 1) {
       for (let k = 0; k < wordChunks.length; k++) {
         const test = wordChunks.slice(0, k).concat(wordChunks.slice(k + 1));
-        if (arraysEqual(prevChunks, test)) return `+ ${wordChunks[k]}`;
+        if (arraysEqual(prevChunks, test)) return '+ ' + wordChunks[k];
       }
       return '? → ?';
     }
 
-    // 3) Deletion of a whole chunk anywhere
     if (prevChunks.length === wordChunks.length + 1) {
       for (let k = 0; k < prevChunks.length; k++) {
         const test = prevChunks.slice(0, k).concat(prevChunks.slice(k + 1));
-        if (arraysEqual(wordChunks, test)) return `- ${prevChunks[k]}`;
+        if (arraysEqual(wordChunks, test)) return '- ' + prevChunks[k];
       }
       return '? → ?';
     }
@@ -243,86 +335,85 @@
     return '? → ?';
   }
 
+  /* --- main --- */
+
   function generateLadder() {
     if (typeof getLaddersByMode !== 'function' || typeof rWordPatterns === 'undefined' || typeof rWordImages === 'undefined') {
       alert('❌ Error: Data not loaded. Check blendsmaster.js');
       return;
     }
 
-    const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
-    const useFont = cellStyle === 'underlines' ? 'UnderlineFont' : 'BoxesFont';
-    const boldChanged = document.getElementById('boldChanged').checked;
+    var cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
+    var useFont = (cellStyle === 'underlines') ? 'UnderlineFont' : 'BoxesFont';
+    var boldChanged = document.getElementById('boldChanged').checked;
 
-    const mode = document.querySelector('input[name="ladderMode"]:checked').value;
-    const ladders = getLaddersByMode(mode);
+    var mode = document.querySelector('input[name="ladderMode"]:checked').value;
+    var ladders = getLaddersByMode(mode);
     if (!ladders || !Array.isArray(ladders) || ladders.length === 0) {
       alert('❌ No ladders available for this mode.');
       return;
     }
 
-    const randomIndex = Math.floor(Math.random() * ladders.length);
-    const ladder = ladders[randomIndex];
+    var randomIndex = Math.floor(Math.random() * ladders.length);
+    var ladder = ladders[randomIndex];
 
-    const rowsHTML = ladder.map((word, idx) => {
-      const isFirst = idx === 0;
-      const isLast = idx === ladder.length - 1;
-      const prevWord = ladder[idx - 1] || '';
+    var rowsHTML = ladder.map(function(word, idx) {
+      var isFirst = (idx === 0);
+      var isLast  = (idx === ladder.length - 1);
+      var prevWord = ladder[idx - 1] || '';
 
-      const pattern = rWordPatterns[word] || '?';
-      const prevPattern = rWordPatterns[prevWord] || '?';
+      var pattern = rWordPatterns[word] || '?';
+      var prevPattern = rWordPatterns[prevWord] || '?';
 
-      const changedMap = (!isFirst && boldChanged) ? getChangedMap(prevWord, word, prevPattern, pattern) : null;
+      var boldUnits = (!isFirst && boldChanged) ? getUnitChangeMap(prevWord, word, prevPattern, pattern) : null;
 
-      const patternHTML = isFirst ? '' : renderPatternHTML({ pattern, useFont, boldChanged, changedMap });
+      var patternHTML = isFirst ? '' : renderPatternHTMLUnits(pattern, useFont, boldUnits);
 
-      const wordDisplay = isFirst
-        ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">${word}</div>`
-        : `<div class="pattern" style="
-             font-family:'${useFont}', monospace;
-             font-size:${useFont === 'UnderlineFont' ? '85px' : '100px'};
-             letter-spacing:0px;
-           ">${patternHTML}</div>`;
+      var wordDisplay = isFirst
+        ? '<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:\'Poppins\', sans-serif;">' + word + '</div>'
+        : '<div class="pattern" style="font-family:\'' + useFont + '\', monospace; font-size:' + (useFont === 'UnderlineFont' ? '85px' : '100px') + '; letter-spacing:0px;">' + patternHTML + '</div>';
 
-      const imgSrc = rWordImages[word] || 'https://via.placeholder.com/110?text=?';
+      var imgSrc = rWordImages[word] || 'https://via.placeholder.com/110?text=?';
 
-      const imageTD = `<td style="padding:5px 7px;width:140px;">
-                         <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
-                       </td>`;
+      var imageTD =
+        '<td style="padding:5px 7px;width:140px;">' +
+          '<img src="' + imgSrc + '" alt="' + word + '" style="width:110px;height:110px;object-fit:contain;">' +
+        '</td>';
 
-      const borders = !isLast
+      var borders = !isLast
         ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
         : 'border-left:4px solid #000;border-right:4px solid #000;';
 
-      const wordTD = `<td style="padding:5px 7px;${borders}">${wordDisplay}</td>`;
+      var wordTD = '<td style="padding:5px 7px;' + borders + '">' + wordDisplay + '</td>';
 
-      const hintTD = (() => {
-        if (isFirst) return `<td style="padding:3px 5px;width:170px;"></td>`;
-        const hint = getChunkHint(prevWord, word, prevPattern, pattern);
-        return `<td style="padding:3px 5px;width:170px;">
-                  <div style="
-                    display:flex;justify-content:center;align-items:center;
-                    background:#f0f0f0;border:3px solid #000;border-radius:12px;
-                    padding:6px 10px;font-size:22px;text-align:center;
-                  ">${hint}</div>
-                </td>`;
-      })();
+      var hintTD;
+      if (isFirst) {
+        hintTD = '<td style="padding:3px 5px;width:170px;"></td>';
+      } else {
+        var hint = getChunkHint(prevWord, word, prevPattern, pattern);
+        hintTD =
+          '<td style="padding:3px 5px;width:170px;">' +
+            '<div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">' +
+              hint +
+            '</div>' +
+          '</td>';
+      }
 
-      return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
+      return '<tr>' + imageTD + wordTD + hintTD + '</tr>';
     }).join('');
 
-    const ladderHTML = `
-      <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
-        <div id="titleBlock" style="text-align:center;">
-          <h2 style="font-size:24px;">Short Vowel Word Ladders</h2>
-          <p style="font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
-        </div>
-        <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
-          ${rowsHTML}
-        </table>
-        <br><br>
-        <div id="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
-      </div>
-    `;
+    var ladderHTML =
+      '<div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">' +
+        '<div id="titleBlock" style="text-align:center;">' +
+          '<h2 style="font-size:24px;margin:4px 0 2px;">Short Vowel Word Ladders</h2>' +
+          '<p style="font-size:12px;margin:0 0 8px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>' +
+        '</div>' +
+        '<table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">' +
+          rowsHTML +
+        '</table>' +
+        '<br><br>' +
+        '<div id="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>' +
+      '</div>';
 
     document.getElementById('ladderOutput').innerHTML = ladderHTML;
   }
