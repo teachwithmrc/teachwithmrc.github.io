@@ -179,38 +179,69 @@
     }).join('');
   }
 
-function getChunkHint(prevWord, word, prevPattern, pattern) {
-  const prevChunks = splitWordByPattern(prevWord, prevPattern);
-  const wordChunks = splitWordByPattern(word, pattern);
+  // Upgraded: returns "+ n" / "- n" and shows a micro-diff like s → s<b>n</b>
+  function getChunkHint(prevWord, word, prevPattern, pattern) {
+    const prevChunks = splitWordByPattern(prevWord, prevPattern);
+    const wordChunks = splitWordByPattern(word, pattern);
 
-  // Same number of chunks → substitution
-  if (prevChunks.length === wordChunks.length) {
-    for (let i = 0; i < prevChunks.length; i++) {
-      if (prevChunks[i] !== wordChunks[i]) {
-        return `${prevChunks[i]} → ${wordChunks[i]}`;
+    const arraysEqual = (a, b) => a.length === b.length && a.every((v,i)=>v===b[i]);
+
+    // 1) Same number of chunks → allow a single differing chunk
+    if (prevChunks.length === wordChunks.length) {
+      let idx = -1;
+      for (let i = 0; i < prevChunks.length; i++) {
+        if (prevChunks[i] !== wordChunks[i]) {
+          if (idx !== -1) return '? → ?';
+          idx = i;
+        }
       }
+      if (idx === -1) return '? → ?';
+
+      const a = prevChunks[idx];
+      const b = wordChunks[idx];
+
+      // Intra-chunk single-letter INSERT (prefix or suffix)
+      if (b.length === a.length + 1 && (b.startsWith(a) || b.endsWith(a))) {
+        const added = b.startsWith(a) ? b.slice(-1) : b.slice(0, b.length - a.length);
+        const micro = b.startsWith(a)
+          ? `${a} → ${a}<b>${added}</b>`
+          : `${a} → <b>${added}</b>${a}`;
+        return `+ ${added} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
+      }
+
+      // Intra-chunk single-letter DELETE (prefix or suffix)
+      if (a.length === b.length + 1 && (a.startsWith(b) || a.endsWith(b))) {
+        const removed = a.startsWith(b) ? a.slice(-1) : a.slice(0, a.length - b.length);
+        const micro = a.startsWith(b)
+          ? `${a.slice(0, -1)}<b>${removed}</b> → ${b}`
+          : `<b>${removed}</b>${a.slice(1)} → ${b}`;
+        return `- ${removed} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
+      }
+
+      // Generic substitution
+      return `${a} → ${b}`;
     }
+
+    // 2) Insertion of a whole chunk anywhere
+    if (wordChunks.length === prevChunks.length + 1) {
+      for (let k = 0; k < wordChunks.length; k++) {
+        const test = wordChunks.slice(0, k).concat(wordChunks.slice(k + 1));
+        if (arraysEqual(prevChunks, test)) return `+ ${wordChunks[k]}`;
+      }
+      return '? → ?';
+    }
+
+    // 3) Deletion of a whole chunk anywhere
+    if (prevChunks.length === wordChunks.length + 1) {
+      for (let k = 0; k < prevChunks.length; k++) {
+        const test = prevChunks.slice(0, k).concat(prevChunks.slice(k + 1));
+        if (arraysEqual(wordChunks, test)) return `- ${prevChunks[k]}`;
+      }
+      return '? → ?';
+    }
+
     return '? → ?';
   }
-
-  // Insertion at end
-  if (wordChunks.length === prevChunks.length + 1) {
-    for (let i = 0; i < prevChunks.length; i++) {
-      if (prevChunks[i] !== wordChunks[i]) return '? → ?';
-    }
-    return `+ ${wordChunks[wordChunks.length - 1]}`;
-  }
-
-  // Deletion at end
-  if (prevChunks.length === wordChunks.length + 1) {
-    for (let i = 0; i < wordChunks.length; i++) {
-      if (prevChunks[i] !== wordChunks[i]) return '? → ?';
-    }
-    return `- ${prevChunks[prevChunks.length - 1]}`;
-  }
-
-  return '? → ?';
-}
 
   function generateLadder() {
     if (typeof getLaddersByMode !== 'function' || typeof rWordPatterns === 'undefined' || typeof rWordImages === 'undefined') {
