@@ -158,35 +158,70 @@
     return chunks;
   }
 
-  function getChangedMap(prevWord, word, prevPattern, pattern) {
+  // New: per-letter (unit-level) change map
+  function getUnitChangeMap(prevWord, word, prevPattern, pattern) {
     const prevChunks = splitWordByPattern(prevWord, prevPattern);
-    const wordChunks = splitWordByPattern(word, pattern);
-    const n = Math.max(pattern.length, prevPattern.length);
-    const changed = new Array(n);
-    for (let i = 0; i < n; i++) {
-      changed[i] = (prevChunks[i] || '') !== (wordChunks[i] || '');
+    const curChunks  = splitWordByPattern(word, pattern);
+
+    function pushMany(arr, n, v){ for (let i=0;i<n;i++) arr.push(v); }
+
+    const maxChunks = Math.max(prevChunks.length, curChunks.length);
+    const unitChanges = [];
+
+    for (let i = 0; i < maxChunks; i++) {
+      const a = prevChunks[i] || '';
+      const b = curChunks[i]  || '';
+      const aLen = a.length, bLen = b.length;
+
+      if (!bLen) continue;
+
+      if (a === b) { pushMany(unitChanges, bLen, false); continue; }
+
+      if (bLen === aLen + 1 && (b.startsWith(a) || b.endsWith(a))) {
+        if (b.startsWith(a)) { pushMany(unitChanges, aLen, false); unitChanges.push(true); }
+        else { unitChanges.push(true); pushMany(unitChanges, aLen, false); }
+        continue;
+      }
+
+      if (aLen === bLen) {
+        for (let k = 0; k < bLen; k++) unitChanges.push(a[k] !== b[k]);
+        continue;
+      }
+
+      pushMany(unitChanges, bLen, true);
     }
-    return changed;
+
+    return unitChanges;
   }
 
-  function renderPatternHTML({ pattern, useFont, boldChanged, changedMap }) {
+  // New: render pattern per unit so we can bold only changed letters
+  function renderPatternHTMLUnits(pattern, useFont, boldUnits) {
     const isUnderline = useFont === 'UnderlineFont';
-    return Array.from(pattern).map((digit, i) => {
-      const makeBold = boldChanged && changedMap && changedMap[i];
-      const spacing = isUnderline ? 'display:inline-block;margin:0 6px;' : '';
-      const weight = makeBold ? 'font-weight:700;' : '';
-      return `<span style="${spacing}${weight}">${digit}</span>`;
-    }).join('');
+    const lens = Array.from(pattern).map(d => d === '3' ? 3 : (d === '2' ? 2 : 1));
+
+    let html = '';
+    let unitIndex = 0;
+
+    for (let c = 0; c < lens.length; c++) {
+      const L = lens[c];
+      html += `<span style="${isUnderline ? 'display:inline-block;margin:0 6px;' : ''}">`;
+      for (let u = 0; u < L; u++) {
+        const bold = boldUnits && !!boldUnits[unitIndex];
+        html += `<span style="${bold ? 'font-weight:700;' : ''}">1</span>`;
+        unitIndex++;
+      }
+      html += `</span>`;
+    }
+    return html;
   }
 
-  // Upgraded: returns "+ n" / "- n" and shows a micro-diff like s → s<b>n</b>
+  // Existing getChunkHint unchanged
   function getChunkHint(prevWord, word, prevPattern, pattern) {
     const prevChunks = splitWordByPattern(prevWord, prevPattern);
     const wordChunks = splitWordByPattern(word, pattern);
 
     const arraysEqual = (a, b) => a.length === b.length && a.every((v,i)=>v===b[i]);
 
-    // 1) Same number of chunks → allow a single differing chunk
     if (prevChunks.length === wordChunks.length) {
       let idx = -1;
       for (let i = 0; i < prevChunks.length; i++) {
@@ -200,7 +235,6 @@
       const a = prevChunks[idx];
       const b = wordChunks[idx];
 
-      // Intra-chunk single-letter INSERT (prefix or suffix)
       if (b.length === a.length + 1 && (b.startsWith(a) || b.endsWith(a))) {
         const added = b.startsWith(a) ? b.slice(-1) : b.slice(0, b.length - a.length);
         const micro = b.startsWith(a)
@@ -209,7 +243,6 @@
         return `+ ${added} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
       }
 
-      // Intra-chunk single-letter DELETE (prefix or suffix)
       if (a.length === b.length + 1 && (a.startsWith(b) || a.endsWith(b))) {
         const removed = a.startsWith(b) ? a.slice(-1) : a.slice(0, a.length - b.length);
         const micro = a.startsWith(b)
@@ -218,11 +251,9 @@
         return `- ${removed} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
       }
 
-      // Generic substitution
       return `${a} → ${b}`;
     }
 
-    // 2) Insertion of a whole chunk anywhere
     if (wordChunks.length === prevChunks.length + 1) {
       for (let k = 0; k < wordChunks.length; k++) {
         const test = wordChunks.slice(0, k).concat(wordChunks.slice(k + 1));
@@ -231,7 +262,6 @@
       return '? → ?';
     }
 
-    // 3) Deletion of a whole chunk anywhere
     if (prevChunks.length === wordChunks.length + 1) {
       for (let k = 0; k < prevChunks.length; k++) {
         const test = prevChunks.slice(0, k).concat(prevChunks.slice(k + 1));
@@ -271,9 +301,9 @@
       const pattern = rWordPatterns[word] || '?';
       const prevPattern = rWordPatterns[prevWord] || '?';
 
-      const changedMap = (!isFirst && boldChanged) ? getChangedMap(prevWord, word, prevPattern, pattern) : null;
+      const boldUnits = (!isFirst && boldChanged) ? getUnitChangeMap(prevWord, word, prevPattern, pattern) : null;
 
-      const patternHTML = isFirst ? '' : renderPatternHTML({ pattern, useFont, boldChanged, changedMap });
+      const patternHTML = isFirst ? '' : renderPatternHTMLUnits(pattern, useFont, boldUnits);
 
       const wordDisplay = isFirst
         ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">${word}</div>`
