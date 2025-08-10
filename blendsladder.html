@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <title>Short Vowel Word Ladders</title>
 
-  <script src="blendsmaster.js" defer></script>
+  <!-- Update this filename if you use a stable name -->
+  <script src="shortVowel_full_max_20250810_124123.js" defer></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
@@ -18,17 +19,53 @@
       src: url('fonts/underlines.otf') format('opentype');
     }
 
+    :root{
+      --ink:#1f365f;
+      --bg:#ffffff;
+      --muted:#f4f7ff;
+      --muted-2:#f9f5ff;
+      --border:#cfd7ef;
+      --border-2:#e2d9ff;
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
       margin: 10px;
       text-align: center;
+      color: var(--ink);
+      background: var(--bg);
     }
 
-    h1 { font-size: 32px; margin-bottom: 2px; }
+    h1 { font-size: 32px; margin: 8px 0 6px; }
     .subtitle { font-size: 16px; margin-bottom: 8px; }
 
-    button { font-size: 16px; padding: 4px 8px; margin: 4px; cursor: pointer; }
-    label { margin: 0 5px; font-size: 14px; }
+    .card {
+      max-width: 920px;
+      margin: 0 auto 8px;
+      padding: 10px 14px;
+      text-align: left;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      background: var(--muted);
+    }
+    .card.alt {
+      border-color: var(--border-2);
+      background: var(--muted-2);
+    }
+    .card h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-size: 14px;
+    }
+    label { cursor: pointer; }
+
+    button { font-size: 16px; padding: 6px 10px; margin: 6px; cursor: pointer; }
 
     .pattern {
       font-size: 100px;
@@ -42,11 +79,8 @@
       width: 100%;
     }
 
-    .groupTitle {
-      font-weight: 600;
-      margin-top: 6px;
-    }
-
+    /* Teacher-only directions (don’t print) */
+    .screenOnly { display: block; }
     @media print {
       body * { visibility: hidden; }
       #ladderOutput, #ladderOutput * { visibility: visible; }
@@ -57,6 +91,7 @@
         margin: 0; padding: 10px;
         box-sizing: border-box;
       }
+      .screenOnly { display: none !important; }
       #ladderOutput br { display: none !important; }
       @page { margin: 0.5in; }
     }
@@ -65,24 +100,40 @@
 <body>
 
   <h1>Short Vowel Word Ladders</h1>
-  <p class="subtitle"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
 
-  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:8px;">
-    <div>
-      <div class="groupTitle">Display</div>
-      <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
-      <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
-      <label><input type="checkbox" id="boldChanged" checked> Bold Changed Part</label>
+  <!-- Teacher directions (not printed) -->
+  <div class="screenOnly" style="max-width:920px;margin:0 auto 10px;text-align:left;">
+    <div class="card">
+      <strong>Directions:</strong> Generate a Short Vowel Ladder in seconds. Select if you want
+      <em>CVC</em> (e.g., <strong>bat → hat</strong>),
+      <em>Blends included</em> (e.g., <strong>pan → pant</strong>), or
+      <em>Blends Only</em> (e.g., <strong>send → bend</strong>).
     </div>
-    <div>
-      <div class="groupTitle">Mode</div>
+    <div style="height:8px;"></div>
+  </div>
+
+  <!-- FORMAT (Mode) -->
+  <div class="card">
+    <h2>Format</h2>
+    <div class="controls">
       <label><input type="radio" name="ladderMode" value="CVC" checked> 1. CVC</label>
       <label><input type="radio" name="ladderMode" value="Include Blends"> 2. Include Blends</label>
       <label><input type="radio" name="ladderMode" value="Only Blends"> 3. Only Blends</label>
     </div>
   </div>
 
-  <div>
+  <!-- DISPLAY -->
+  <div class="card alt">
+    <h2>Display</h2>
+    <div class="controls">
+      <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
+      <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
+      <label><input type="checkbox" id="boldChanged" checked> Bold Changed Part</label>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div style="margin: 8px 0 10px;">
     <button onclick="generateLadder()">Generate Ladder</button>
     <button onclick="window.print()">Print Page</button>
   </div>
@@ -225,7 +276,6 @@
       <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
         <div id="titleBlock" style="text-align:center;">
           <h2 style="font-size:24px;">Short Vowel Word Ladders</h2>
-          <p style="font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
         </div>
         <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
           ${rowsHTML}
