@@ -102,16 +102,22 @@
     .chip .x:hover { background:#dfe7ee; }
 
     /* Actions */
- .option-grid {
+.option-grid {
   display: flex;
-  flex-direction: column;  /* stack vertically */
-  gap: 12px;
-  align-items: flex-start; /* stops stretching to full width */
+  flex-direction: column;    /* stack vertically */
+  align-items: center;       /* center in the parent */
+  gap: 12px;                  /* spacing between buttons */
 }
 
 .option-box {
-  display: inline-block;   /* makes width fit text */
-  width: auto;             /* ignore grid cell width */
+  display: inline-block;      /* shrink to fit text */
+  padding: 8px 14px;          /* border spacing */
+  border: 2px solid #000;     /* keep the nice border */
+  border-radius: 12px;        /* rounded corners */
+  font-weight: 600;
+  font-size: 14px;            /* adjust text size */
+  background: #fff;           /* makes the border stand out */
+  cursor: pointer;
 }
     .option-box:active { transform:translateY(1px); }
     .option-box.selected { background-color:#d9c9ff; }
