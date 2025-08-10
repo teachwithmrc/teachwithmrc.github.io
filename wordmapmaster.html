@@ -102,7 +102,11 @@
     .chip .x:hover { background:#dfe7ee; }
 
     /* Actions */
-    .option-grid { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-top:10px; }
+    .option-grid {
+  display: flex;
+  flex-direction: column; /* stack vertically */
+  gap: 12px;               /* space between Yes & No */
+}
     .option-box { padding:12px 16px; border:2px solid #000; border-radius:12px; cursor:pointer; transition: background-color 0.2s, color 0.2s, transform .08s; font-size:16px; font-weight:600; }
     .option-box:active { transform:translateY(1px); }
     .option-box.selected { background-color:#d9c9ff; }
