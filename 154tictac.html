@@ -3,8 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <title>Tic Tac Toe Phonics Generator</title>
-  <!-- New data source -->
+
+  <!-- 🔗 DATA SOURCE: this must load BEFORE the inline script below.
+       It defines fluencyWords and fluencySentences (or fluencyData.words/sentences). -->
   <script src="fluencyDataFull_v8-2_clean.js"></script>
+
+  <!-- Fonts / styles -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -26,28 +30,25 @@
     h1 { font-size: 36px; margin-bottom: 6px; }
     .subtitle { color:#555; margin:0 0 14px; }
 
-    /* Grid layout */
+    /* Layout */
     .layout { width:100%; max-width:1100px; margin:0 auto 14px auto; display:grid; grid-template-columns: minmax(260px,1fr) max-content; grid-template-rows: 1fr 1fr; gap:12px; align-items:stretch; }
     .layout .left { grid-column:1; grid-row:1 / span 2; }
     .layout .right-top { grid-column:2; grid-row:1; }
     .layout .right-bottom { grid-column:2; grid-row:2; }
 
-    /* Card containers */
+    /* Cards */
     .table-section { border:2px solid #000; padding:16px; width:100%; box-sizing:border-box; text-align:left; border-radius:12px; background:#fff; height:100%; }
     .section-label { font-weight:700; font-size:20px; margin-bottom:12px; text-align:center; }
 
-    /* Step 1 blocks with headers + arrows */
+    /* Step 1: skill blocks */
     .skill-block { border:1px solid #bbb; border-radius:12px; overflow:hidden; margin-bottom:12px; background:#fff; }
-    .skill-header {
-      display:flex; align-items:center; justify-content:center;
-      padding:12px 16px; font-weight:700; font-size:22px; cursor:pointer; user-select:none;
-    }
+    .skill-header { display:flex; align-items:center; justify-content:center; padding:12px 16px; font-weight:700; font-size:22px; cursor:pointer; user-select:none; }
     .skill-header .arrow { font-size:30px; line-height:1; margin:0 14px; width:30px; text-align:center; }
     .skill-header .title { white-space:nowrap; }
     .skills-inner { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; padding:14px; }
     .skills-inner.collapsed { display:none; }
 
-    /* Category backgrounds */
+    /* Category header colors */
     .bg-cvc   .skill-header { background:var(--cvc); }
     .bg-dig   .skill-header { background:var(--dig); }
     .bg-glued .skill-header { background:var(--glued); }
@@ -64,11 +65,8 @@
       font-weight:700; font-size:16px; cursor:pointer; background:#fff;
       transition:transform .08s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease;
       user-select:none; line-height:1.2; min-height:44px;
-      position: relative;
     }
     .skill-button:active{ transform:translateY(1px); }
-
-    /* Selected colors by category */
     .skill-button.cvc.selected{ background:var(--cvc-selected); color:#fff; }
     .skill-button.dig.selected{ background:var(--dig-selected); color:#fff; }
     .skill-button.glued.selected{ background:var(--glued-selected); color:#fff; }
@@ -82,26 +80,18 @@
     /* Chips */
     .chips-title { margin-top:12px; text-align:center; font-weight:700; font-size:16px; }
     .chips-wrap { margin-top:8px; display:flex; justify-content:center; flex-wrap:wrap; gap:8px; }
-    .chip {
-      background:var(--chip-bg); color:var(--chip-text);
-      border:none; border-radius:999px; padding:8px 12px; font-size:20px;
-      display:flex; align-items:center; gap:10px; box-shadow:inset 0 0 0 1px rgba(0,0,0,0.06);
-    }
-    .chip .x {
-      width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-      font-weight:700; font-size:12px; cursor:pointer; background:#e8edf2; color:var(--chip-x); transition:background .15s;
-    }
+    .chip { background:var(--chip-bg); color:var(--chip-text); border:none; border-radius:999px; padding:8px 12px; font-size:20px; display:flex; align-items:center; gap:10px; box-shadow:inset 0 0 0 1px rgba(0,0,0,0.06); }
+    .chip .x { width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; cursor:pointer; background:#e8edf2; color:var(--chip-x); transition:background .15s; }
     .chip .x:hover { background:#dfe7ee; }
 
-    /* Option boxes */
+    /* Options */
     .option-grid { display:flex; flex-direction:column; align-items:center; gap:12px; }
     .option-box { display:inline-block; padding:8px 14px; border:2px solid #000; border-radius:12px; font-weight:600; font-size:14px; background:#fff; cursor:pointer; }
     .option-box:active { transform:translateY(1px); }
     .option-box.selected { background-color:#d0f0ff; }
-
     .actions-sticky { position:sticky; top:8px; z-index:50; background:#fff; }
 
-    /* OUTPUT (tic tac toe boards) */
+    /* Output sheet + boards */
     #output { display:flex; justify-content:center; padding:16px 0; flex-direction:column; gap:20px; }
     .page { width:8.5in; max-width:calc(100% - 32px); background:#fff; box-shadow:0 6px 20px rgba(0,0,0,.12); padding:0.5in; border:2px solid #000; border-radius:8px; margin:0 auto; }
     .worksheet-title { font-size:34px; margin-bottom:6px; font-weight:700; text-align:center; }
@@ -114,7 +104,6 @@
 
     #copyright { font-size:12px; text-align:right; margin-top:12px; display:none; }
 
-    /* PRINT */
     @media print {
       body { margin:0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       .table-section, button, .chips-title, .chips-wrap, .subtitle, .layout, #floatingActions { display:none !important; }
@@ -125,7 +114,6 @@
       .page { width:auto; padding:0; box-shadow:none; border:none; }
     }
 
-    /* Mobile / Compact */
     @media (max-width: 900px) {
       .layout { display:block; }
       .option-box { font-size:16px; padding:12px 16px; }
@@ -310,20 +298,19 @@
   </div>
 
 <script>
-/* ========= CORE WIRING ========= */
-// CSS.escape polyfill
+/* ===========================================================
+   CORE JS — all connections to your data are commented clearly
+   =========================================================== */
+
+/* Polyfill so we can safely query by text (chip removal) */
 if (typeof CSS === 'undefined' || typeof CSS.escape !== 'function') {
   window.CSS = window.CSS || {};
   CSS.escape = CSS.escape || function(sel){ return (sel+'').replace(/[^a-zA-Z0-9_-]/g,'\\\\$&'); };
 }
 
-/* 
-  SUPPORTED skill codes → base keys in your data.
-  We align to known keys present in fluencyWords/fluencySentences.
-  You can expand this map over time; everything is clickable either way.
-*/
+/* 🔢 UI label → internal code map
+   Example: clicking "Short A" maps to code "0.1" */
 const SUPPORTED = {
-  // Level 0 (CVC) + FLSZ
   "Short A": "0.1",
   "Short O": "0.2",
   "Short I": "0.3",
@@ -332,19 +319,18 @@ const SUPPORTED = {
   "FLSZ": "0.6",
   "Mixed CVC": "mixed",
 
-  // R-controlled (Level 4 examples present in v8-2)
+  // Optional extras wired up for growth
   "ar": "4.1",
   "or": "4.2",
   "er/ir/ur": "4.3",
   "Mixed R-Controlled": "4.4",
-
-  // A few blend-heavy sets (examples from v8-2, words only)
   "ck": "1.1-ck",
   "sh": "1.2-sh",
   "th": "1.3-th",
   "ch": "1.4-ch"
 };
 
+/* 🏷️ Pretty labels for chips/page title */
 const SKILL_LABEL = {
   "0.1": "Short A",
   "0.2": "Short O",
@@ -353,65 +339,57 @@ const SKILL_LABEL = {
   "0.5": "Short E",
   "0.6": "FLSZ",
   "mixed": "Mixed CVC",
-  "4.1": "ar",
-  "4.2": "or",
-  "4.3": "er/ir/ur",
-  "4.4": "R-Controlled (Mixed)",
-  "1.1-ck": "ck",
-  "1.2-sh": "sh",
-  "1.3-th": "th",
-  "1.4-ch": "ch"
+  "4.1": "ar", "4.2": "or", "4.3": "er/ir/ur", "4.4": "R-Controlled (Mixed)",
+  "1.1-ck": "ck", "1.2-sh": "sh", "1.3-th": "th", "1.4-ch": "ch"
 };
 
-/* 
-  DATA KEY RESOLVER
-  For v8-2, the data lives in:
-   - fluencyWords       (keys like "0.1 - Short A Words", "0.1 - Short A with Blends Words", ...)
-   - fluencySentences   (keys like "0.1 - Short A Sentences", "Mixed CVC Sentences", ...)
-*/
+/* 📎 EXPLICIT base keys that must match your data file (non-blends)
+   These are the exact strings your JS uses for base lists */
 const DATA_KEYS = {
   words: {
-    "0.1": '0.1 - Short A Words',
-    "0.2": '0.2 - Short O Words',
-    "0.3": '0.3 - Short I Words',
-    "0.4": '0.4 - Short U Words',
-    "0.5": '0.5 - Short E Words',
-    "0.6": '0.6 - FLSZ',
-    "mixed": 'Mixed CVC Words',
-    "4.1": '4.1 - ar Words',
-    "4.2": '4.2 - or Words',
-    "4.3": '4.3 - er, ir, ur Words',
-    "4.4": '4.4 - R-Controlled Words',
-    "1.1-ck": '1.1 - ck with Blends Words',
-    "1.2-sh": '1.2 - sh with Blends Words',
-    "1.3-th": '1.3 - th with Blends Words',
-    "1.4-ch": '1.4 - ch with Blends Words'
+    "0.1": "0.1 - Short A Words",
+    "0.2": "0.2 - Short O Words",
+    "0.3": "0.3 - Short I Words",
+    "0.4": "0.4 - Short U Words",
+    "0.5": "0.5 - Short E Words",
+    "0.6": "0.6 - FLSZ",
+    "mixed": "Mixed CVC Words",
+    "4.1": "4.1 - ar Words",
+    "4.2": "4.2 - or Words",
+    "4.3": "4.3 - er, ir, ur Words",
+    "4.4": "4.4 - R-Controlled Words",
+    "1.1-ck": "1.1 - ck with Blends Words",
+    "1.2-sh": "1.2 - sh with Blends Words",
+    "1.3-th": "1.3 - th with Blends Words",
+    "1.4-ch": "1.4 - ch with Blends Words"
   },
   sentences: {
-    "0.1": '0.1 - Short A Sentences',
-    "0.2": '0.2 - Short O Sentences',
-    "0.3": '0.3 - Short I Sentences',
-    "0.4": '0.4 - Short U Sentences',
-    "0.5": '0.5 - Short E Sentences',
-    "0.6": '0.6 - FLSZ Sentences',
-    "mixed": 'Mixed CVC Sentences',
-    // Some higher levels may not have sentences in v8-2; the resolver falls back if missing
-    "4.1": '4.1 - ar Sentences',
-    "4.2": '4.2 - or Sentences',
-    "4.3": '4.3 - er, ir, ur Sentences',
-    "4.4": '4.4 - R-Controlled Sentences',
-    "1.1-ck": '1.1 - ck Sentences',
-    "1.2-sh": '1.2 - sh Sentences',
-    "1.3-th": '1.3 - th Sentences',
-    "1.4-ch": '1.4 - ch Sentences'
+    "0.1": "0.1 - Short A Sentences",
+    "0.2": "0.2 - Short O Sentences",
+    "0.3": "0.3 - Short I Sentences",
+    "0.4": "0.4 - Short U Sentences",
+    "0.5": "0.5 - Short E Sentences",
+    "0.6": "0.6 - FLSZ Sentences",
+    "mixed": "Mixed CVC Sentences",
+    "4.1": "4.1 - ar Sentences",
+    "4.2": "4.2 - or Sentences",
+    "4.3": "4.3 - er, ir, ur Sentences",
+    "4.4": "4.4 - R-Controlled Sentences",
+    "1.1-ck": "1.1 - ck Sentences",
+    "1.2-sh": "1.2 - sh Sentences",
+    "1.3-th": "1.3 - th Sentences",
+    "1.4-ch": "1.4 - ch Sentences"
   }
 };
 
+/* ✅ UI State */
 const selectedCodes = new Set();
-let mode = null;           // 'words' | 'sentences' | 'both'
-let includeBlends = false; // Step 2 toggle
+let mode = null;            // 'words' | 'sentences' | 'both'
+let includeBlends = false;  // Step 2 toggle
 
-/* expand/collapse blocks */
+/* =============== UI Wiring (click handlers) =============== */
+
+/* Expand/collapse category buckets */
 document.querySelectorAll('.skill-header').forEach(header => {
   header.addEventListener('click', () => {
     const target = header.getAttribute('data-target');
@@ -419,33 +397,26 @@ document.querySelectorAll('.skill-header').forEach(header => {
     const arrows = header.querySelectorAll('.arrow');
     const isCollapsed = inner.classList.contains('collapsed');
     if (isCollapsed) {
-      inner.classList.remove('collapsed');
-      arrows.forEach(a => a.textContent = '▲');
+      inner.classList.remove('collapsed'); arrows.forEach(a => a.textContent = '▲');
     } else {
-      inner.classList.add('collapsed');
-      arrows.forEach(a => a.textContent = '▼');
+      inner.classList.add('collapsed');    arrows.forEach(a => a.textContent = '▼');
     }
   });
 });
 
-/* step 1 selection (all buttons are enabled) */
+/* Step 1 — select skills (ALL buttons enabled) */
 document.querySelectorAll('.skill-button').forEach(btn => {
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
     const label = btn.dataset.skill;
-    const code = SUPPORTED[label] || label; // allow ad-hoc labels; resolver will try best
-    if (selectedCodes.has(code)) {
-      selectedCodes.delete(code);
-      btn.classList.remove('selected');
-    } else {
-      selectedCodes.add(code);
-      btn.classList.add('selected');
-    }
+    const code = SUPPORTED[label] || label; // fallback lets you test new labels fast
+    if (selectedCodes.has(code)) { selectedCodes.delete(code); btn.classList.remove('selected'); }
+    else { selectedCodes.add(code); btn.classList.add('selected'); }
     renderChips();
   });
 });
 
-/* chips render/remove */
+/* Chips display/remove */
 function renderChips(){
   const wrap = document.getElementById('chips');
   wrap.innerHTML = '';
@@ -464,7 +435,7 @@ function renderChips(){
   });
 }
 
-/* Step 2: blends toggle */
+/* Step 2 — blends toggle */
 document.querySelectorAll('#blendOptions .option-box').forEach(box => {
   box.addEventListener('click', () => {
     document.querySelectorAll('#blendOptions .option-box').forEach(b => b.classList.remove('selected'));
@@ -473,16 +444,16 @@ document.querySelectorAll('#blendOptions .option-box').forEach(box => {
   });
 });
 
-/* Step 3: mode selection */
+/* Step 3 — content type */
 document.querySelectorAll('#contentOptions .option-box').forEach(box => {
   box.addEventListener('click', () => {
     document.querySelectorAll('#contentOptions .option-box').forEach(b => b.classList.remove('selected'));
     box.classList.add('selected');
-    mode = box.dataset.mode; // words | sentences | both
+    mode = box.dataset.mode;
   });
 });
 
-/* floating actions (desktop) */
+/* Floating actions */
 function toggleFloatingBar(){
   const el = document.getElementById('floatingActions');
   const isDesktop = window.matchMedia('(min-width: 992px)').matches;
@@ -490,122 +461,106 @@ function toggleFloatingBar(){
 }
 toggleFloatingBar();
 window.addEventListener('resize', toggleFloatingBar);
-document.getElementById('fabGenerate')?.addEventListener('click', () => {
-  document.getElementById('btnGenerate')?.click();
-});
+document.getElementById('fabGenerate')?.addEventListener('click', () => document.getElementById('btnGenerate')?.click());
 document.getElementById('fabPrint')?.addEventListener('click', () => window.print());
 
-/* ===== Data helpers (v8-2 aware) ===== */
-
-/* Safely access global data even if not on window */
-function hasGlobal(name){
-  try { return (typeof self[name] !== 'undefined'); } catch(e){ return false; }
+/* ===================== DATA ACCESS ===================== */
+/* 📦 These functions are the ONLY place we read your JS data.
+   They look first for fluencyWords/fluencySentences, then fluencyData.words/sentences. */
+function getWordsDict() {
+  if (typeof window.fluencyWords === 'object') return window.fluencyWords;
+  if (window.fluencyData?.words) return window.fluencyData.words;
+  return {};
 }
-function getWordsDict(){ return hasGlobal('fluencyWords') ? self['fluencyWords'] : {}; }
-function getSentencesDict(){ return hasGlobal('fluencySentences') ? self['fluencySentences'] : {}; }
+function getSentencesDict() {
+  if (typeof window.fluencySentences === 'object') return window.fluencySentences;
+  if (window.fluencyData?.sentences) return window.fluencyData.sentences;
+  return {};
+}
 
-/* Build the most likely key for a base code */
+/* 🔑 code → base key string (must match your data file exactly) */
 function baseKeyFor(code, type){
-  const dict = (type === 'words') ? DATA_KEYS.words : DATA_KEYS.sentences;
-  return dict[code];
+  const map = (type === 'words') ? DATA_KEYS.words : DATA_KEYS.sentences;
+  return map[code] || null;
 }
 
-/* When blends are ON, try to find a "... with Blends ..." key in fluencyWords/fluencySentences */
+/* 🧠 If blends = YES, try a “… with Blends …” variant before falling back */
 function resolveDataKey(code, type){
   const base = baseKeyFor(code, type);
   if (!base) return null;
-
   if (!includeBlends) return base;
 
-  // Only attempt blends-special keys where it makes sense (usually words).
+  const tail = (type === 'words') ? ' Words' : ' Sentences';
+  const candidate = base.replace(tail, ` with Blends${tail}`); // e.g., "0.1 - Short A with Blends Words"
   const dict = (type === 'words') ? getWordsDict() : getSentencesDict();
-  const candidates = [];
 
-  // Common naming patterns in v8-2
-  if (type === 'words'){
-    // e.g., "0.1 - Short A with Blends Words"
-    candidates.push(base.replace(' Words', ' with Blends Words'));
-    // R-controlled variants: "4.1 - ar with Blends Words"
-    if (!/with Blends/.test(base) && / Words$/.test(base)) {
-      const before = base.replace(/ Words$/, '');
-      candidates.push(before + ' with Blends Words');
-    }
-  } else {
-    // sentences rarely have blends; still check a couple of variants and fall back
-    candidates.push(base.replace(' Sentences', ' with Blends Sentences'));
-  }
-
-  for (const cand of candidates){
-    if (dict && Object.prototype.hasOwnProperty.call(dict, cand)) return cand;
-  }
-  return base; // fallback to base if no blends list exists
+  if (Object.prototype.hasOwnProperty.call(dict, candidate)) return candidate;
+  return base; // fallback if no blends list exists
 }
 
-/* 🔎 DATA CALL */
+/* 🔎 ACTUAL DATA READ — returns an ARRAY (or empty if missing) */
 function listFor(code, type){
   const key = resolveDataKey(code, type);
-  if (!key) return [];
-
-  if (type === 'words') {
-    const src = getWordsDict();
-    const arr = src[key];
-    return Array.isArray(arr) ? arr : [];
-  } else {
-    const src = getSentencesDict();
-    const arr = src[key];
-    return Array.isArray(arr) ? arr : [];
-  }
+  const dict = (type === 'words') ? getWordsDict() : getSentencesDict();
+  const arr = key ? dict[key] : null;
+  return Array.isArray(arr) ? arr : [];
 }
 
-function pick(arr, n){ return arr.slice().sort(()=>Math.random()-0.5).slice(0, n); }
+/* ============== CONTENT BUILDERS (36 cells total) ============== */
 
-function gatherBalanced(codes, mode, totalCells){
-  // Filter codes that actually have data for the chosen mode
-  const available = codes.filter(c => listFor(c, mode === 'sentences' ? 'sentences' : 'words').length > 0);
-  if (available.length === 0) return [];
-
-  if (mode !== 'both'){
-    const per = Math.max(1, Math.floor(totalCells / available.length));
-    let pool = [];
-    for (const c of available) pool = pool.concat(pick(listFor(c, mode), per));
-    for (const c of available){
-      if (pool.length >= totalCells) break;
-      pool = pool.concat(pick(listFor(c, mode), totalCells - pool.length));
-    }
-    return pick(pool, totalCells);
-  }
-
-  // both
-  const targetW = Math.floor(totalCells/2);
-  const targetS = totalCells - targetW;
-
-  const availableW = available.filter(c => listFor(c, 'words').length);
-  const availableS = available.filter(c => listFor(c, 'sentences').length);
-
-  // if no sentences exist for selected codes, fall back to words
-  if (availableS.length === 0) {
-    return gatherBalanced(availableW, 'words', totalCells);
-  }
-
-  const perW = Math.max(1, Math.floor(targetW / Math.max(1, availableW.length)));
-  const perS = Math.max(1, Math.floor(targetS / Math.max(1, availableS.length)));
-  let words = [], sents = [];
-
-  for (const c of availableW) words = words.concat(pick(listFor(c, 'words'), perW));
-  for (const c of availableS) sents = sents.concat(pick(listFor(c, 'sentences'), perS));
-
-  for (const c of availableW){
-    if (words.length >= targetW) break;
-    words = words.concat(pick(listFor(c, 'words'), targetW - words.length));
-  }
-  for (const c of availableS){
-    if (sents.length >= targetS) break;
-    sents = sents.concat(pick(listFor(c, 'sentences'), targetS - sents.length));
-  }
-  return pick(words.concat(sents), totalCells);
+/* Helpers */
+function shuffle(a){ return a.slice().sort(()=>Math.random()-0.5); }
+function pickWithRepeats(array, n){
+  if (!array.length) return [];
+  const bag = shuffle(array);
+  const out = [];
+  let i = 0;
+  while (out.length < n) { out.push(bag[i % bag.length]); i++; }
+  return out;
 }
 
-/* build a single 3x3 board */
+/* Words-only OR Sentences-only:
+   - Combine all selected lists for that type into a pool
+   - Fill exactly 36, repeating items if needed */
+function gatherSingleType(codes, type, totalCells){
+  let pool = [];
+  for (const c of codes) {
+    const list = listFor(c, type);
+    if (list.length) pool = pool.concat(list);
+  }
+  if (!pool.length) return [];
+  return pickWithRepeats(pool, totalCells);
+}
+
+/* BOTH:
+   - For each of the 4 boards, randomly choose 5/4 or 4/5 words/sentences
+   - Fill each 9-cell board from the global pools (repeats allowed)
+   - Concatenate 4 boards = 36 items */
+function gatherBothPerBoard(codes){
+  let wordsPool = [], sentsPool = [];
+  for (const c of codes) {
+    const w = listFor(c, 'words');      if (w.length) wordsPool = wordsPool.concat(w);
+    const s = listFor(c, 'sentences');  if (s.length) sentsPool = sentsPool.concat(s);
+  }
+  // If one pool is empty, mirror from the other so we still fill the board
+  if (!wordsPool.length && !sentsPool.length) return [];
+  if (!wordsPool.length) wordsPool = sentsPool.slice();
+  if (!sentsPool.length) sentsPool = wordsPool.slice();
+
+  const out = [];
+  for (let b = 0; b < 4; b++) {
+    const fiveWords = Math.random() < 0.5;      // per-board 5/4 or 4/5
+    const wCount = fiveWords ? 5 : 4;
+    const sCount = 9 - wCount;
+    const wPick = pickWithRepeats(wordsPool, wCount);
+    const sPick = pickWithRepeats(sentsPool, sCount);
+    const board = shuffle(wPick.concat(sPick));
+    out.push(...board);
+  }
+  return out;
+}
+
+/* 3x3 board DOM */
 function buildBoard(cells){
   const tbl = document.createElement('table');
   tbl.className = 'tic-tac-toe';
@@ -626,24 +581,31 @@ function buildBoard(cells){
   wrap.className = 'board-shell';
   const label = document.createElement('div');
   label.className = 'board-label';
-  label.textContent = ''; // set by caller
+  label.textContent = ''; // caller sets "Game 1", etc.
   wrap.appendChild(label);
   wrap.appendChild(tbl);
   return wrap;
 }
 
-/* GENERATE */
+/* ========================= GENERATE ========================= */
 function generateBoards(){
   if (selectedCodes.size === 0) return alert('Select at least one skill in Step 1.');
   if (!mode) return alert('Choose Words Only / Sentences Only / Both in Step 3.');
 
-  // get data presence check
   const codes = Array.from(selectedCodes);
-  const TOTAL = 36; // 4 x 9
-  const content = gatherBalanced(codes, mode, TOTAL);
+  const TOTAL = 36;
+  let content = [];
+
+  if (mode === 'both') {
+    content = gatherBothPerBoard(codes); // 36 items (4 boards × 9)
+  } else if (mode === 'words') {
+    content = gatherSingleType(codes, 'words', TOTAL);
+  } else {
+    content = gatherSingleType(codes, 'sentences', TOTAL);
+  }
 
   if (content.length < TOTAL) {
-    return alert('Not enough content from the selected skills for the chosen settings. Try adding more skills or changing blends/content options.');
+    return alert('Not enough content from the selected skills. Add more skills or switch modes.');
   }
 
   const output = document.getElementById('output');
@@ -682,6 +644,7 @@ function generateBoards(){
   output.scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
+/* Hook up Generate button */
 document.getElementById('btnGenerate').addEventListener('click', generateBoards);
 </script>
 </body>
