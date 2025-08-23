@@ -1,3 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tic Tac Toe Generator</title>
+  <script src="fluencyDataFull_v6.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --cvc:#e9f2ff;          --cvc-selected:#1976d2;
+      --dig:#f3e9ff;          --dig-selected:#8e24aa;
+      --glued:#e8fff4;        --glued-selected:#2e7d32;
+      --vce:#fff5e6;          --vce-selected:#ef6c00;
+      --rctrl:#f0f5ff;        --rctrl-selected:#3f51b5;
+      --vteams:#fff0f6;       --vteams-selected:#d81b60;
+      --dip:#eefcfb;          --dip-selected:#00897b;
+      --variant:#fff8e1;      --variant-selected:#f9a825;
+      --soft:#eef4ff;         --soft-selected:#455a64;
+
+      --chip-bg:#f3f6fb; --chip-text:#263238; --chip-x:#546e7a;
+    }
+
+    body { font-family:'Poppins',sans-serif; margin:28px; text-align:center; background:#fafafa; }
+    h1 { font-size: 36px; margin-bottom: 6px; }
+    .subtitle { color:#555; margin:0 0 14px; }
+
+    /* Layout: left column + 3 stacked cards on right */
+    .layout { width:100%; max-width:1100px; margin:0 auto 14px auto; display:grid; grid-template-columns: minmax(260px,1fr) max-content; grid-template-rows: auto auto auto; gap:12px; align-items:stretch; }
+    .layout .left { grid-column:1; grid-row:1 / span 3; }
+    .layout .right-top { grid-column:2; grid-row:1; }
+    .layout .right-mid { grid-column:2; grid-row:2; }
+    .layout .right-bottom { grid-column:2; grid-row:3; }
+
+    /* Card containers */
+    .table-section { border:2px solid #000; padding:16px; width:100%; box-sizing:border-box; text-align:left; border-radius:12px; background:#fff; height:100%; }
+    .section-label { font-weight:700; font-size:20px; margin-bottom:12px; text-align:center; }
+
+    /* Step 1 blocks */
+    .skill-block { border:1px solid #bbb; border-radius:12px; overflow:hidden; margin-bottom:12px; background:#fff; }
+    .skill-header { display:flex; align-items:center; justify-content:center; padding:12px 16px; font-weight:700; font-size:22px; cursor:pointer; user-select:none; }
+    .skill-header .arrow { font-size:30px; line-height:1; margin:0 14px; width:30px; text-align:center; }
+    .skill-header .title { white-space:nowrap; }
+    .skills-inner { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; padding:14px; }
+    .skills-inner.collapsed { display:none; }
+
+    /* Category backgrounds */
+    .bg-cvc   .skill-header { background:var(--cvc); }
+    .bg-dig   .skill-header { background:var(--dig); }
+    .bg-glued .skill-header { background:var(--glued); }
+    .bg-vce   .skill-header { background:var(--vce); }
+    .bg-rctrl .skill-header { background:var(--rctrl); }
+    .bg-vteams .skill-header{ background:var(--vteams); }
+    .bg-dip   .skill-header { background:var(--dip); }
+    .bg-variant .skill-header{ background:var(--variant); }
+    .bg-soft  .skill-header { background:var(--soft); }
+
+    /* Skill buttons */
+    .skill-button{ border:2px solid #000; padding:10px 16px; border-radius:16px; font-weight:700; font-size:16px; cursor:pointer; background:#fff; transition:transform .08s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease; user-select:none; line-height:1.2; min-height:44px; position: relative; }
+    .skill-button:active{ transform:translateY(1px); }
+    .skill-button.disabled { opacity:.45; cursor:not-allowed; }
+    .skill-button.disabled::after{ content:"Coming soon"; position:absolute; inset:auto 6px 6px auto; background:#000; color:#fff; font-size:10px; padding:2px 6px; border-radius:10px; }
+
+    /* Selected colors by category */
+    .skill-button.cvc.selected{ background:var(--cvc-selected); color:#fff; }
+    .skill-button.dig.selected{ background:var(--dig-selected); color:#fff; }
+    .skill-button.glued.selected{ background:var(--glued-selected); color:#fff; }
+    .skill-button.vce.selected{ background:var(--vce-selected); color:#fff; }
+    .skill-button.rctrl.selected{ background:var(--rctrl-selected); color:#fff; }
+    .skill-button.vteams.selected{ background:var(--vteams-selected); color:#fff; }
+    .skill-button.dip.selected{ background:var(--dip-selected); color:#fff; }
+    .skill-button.variant.selected{ background:var(--variant-selected); color:#fff; }
+    .skill-button.soft.selected{ background:var(--soft-selected); color:#fff; }
+
+    /* Force wrap after Long I in Vowel Teams */
+    .skills-inner .break { flex-basis:100%; height:0; }
+
+    /* Chips */
+    .chips-title { margin-top:12px; text-align:center; font-weight:700; font-size:16px; }
+    .chips-wrap { margin-top:8px; display:flex; justify-content:center; flex-wrap:wrap; gap:8px; }
+    .chip { background:var(--chip-bg); color:var(--chip-text); border:none; border-radius:999px; padding:8px 12px; font-size:20px; display:flex; align-items:center; gap:10px; box-shadow:inset 0 0 0 1px rgba(0,0,0,0.06); }
+    .chip .x { width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; cursor:pointer; background:#e8edf2; color:var(--chip-x); transition:background .15s; }
+    .chip .x:hover { background:#dfe7ee; }
+
+    /* Options */
+    .option-grid { display:flex; flex-direction:column; align-items:center; gap:12px; }
+    .option-box { display:inline-block; padding:8px 14px; border:2px solid #000; border-radius:12px; font-weight:600; font-size:14px; background:#fff; cursor:pointer; }
+    .option-box:active { transform:translateY(1px); }
+    .option-box.selected { background-color:#d0f0ff; }
+
+    .actions-sticky { position:sticky; top:8px; z-index:50; background:#fff; }
+
+    /* OUTPUT (tic tac toe boards) */
+    #output { display:flex; justify-content:center; padding:16px 0; flex-direction:column; gap:20px; }
+    .page { width:8.5in; max-width:calc(100% - 32px); background:#fff; box-shadow:0 6px 20px rgba(0,0,0,.12); padding:0.5in; border:2px solid #000; border-radius:8px; margin:0 auto; }
+    .worksheet-title { font-size:34px; margin-bottom:6px; font-weight:700; text-align:center; }
+    .worksheet-directions { font-size:18px; margin-bottom:14px; text-align:center; }
+    .board-wrap { display:grid; grid-template-columns: 1fr 1fr; gap:30px; justify-content:center; max-width:900px; margin:0 auto; }
+
+    .tic-tac-toe { border-collapse:collapse; width:100%; table-layout: fixed; }
+    .tic-tac-toe td { border:none; width:100px; height:80px; vertical-align:middle; text-align:center; padding:6px; }
+    .cell-text.word { white-space: nowrap; }
+    .cell-text.sentence { white-space: normal; overflow-wrap: anywhere; }
+
+    .board-shell { display:flex; flex-direction:column; align-items:center; width:100%; border:3px solid #000; border-radius:16px; padding:12px; background:#fff; box-sizing:border-box; }
+    .board-label { font-weight:700; font-size:22px; margin-bottom:10px; }
+
+    #copyright { font-size:12px; text-align:right; margin-top:12px; display:none; }
+
+    /* PRINT */
+    @media print {
+      body { margin:0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .table-section, button, .chips-title, .chips-wrap, .subtitle, .layout, #floatingActions { display:none !important; }
+      #output { margin:0; }
+      .worksheet-title { font-size:20px; margin-bottom:2px; }
+      .worksheet-directions { font-size:14px; margin-bottom:8px; }
+      #copyright { display:block; }
+      .page { width:auto; padding:0; box-shadow:none; border:none; }
+    }
+
+    /* Mobile / Compact */
+    @media (max-width: 900px) {
+      .layout { display:block; }
+      .option-box { font-size:16px; padding:12px 16px; }
+    }
+    @media (min-width: 992px) {
+      h1 { font-size: 22px; margin-bottom: 2px; }
+      .table-section { padding:12px; }
+      .section-label { font-size:16px; margin-bottom:8px; }
+      .skill-block { margin-bottom:8px; border-radius:10px; }
+      .skill-header { padding:8px 10px; font-size:16px; }
+      .skill-header .arrow { font-size:18px; margin:0 8px; width:18px; }
+      .skills-inner { padding:8px; gap:8px; }
+      .skill-button { padding:6px 10px; font-size:14px; min-height:34px; border-radius:10px; }
+      .chips-title { font-size:14px; margin-top:8px; }
+      .chip { padding:6px 10px; font-size:12px; gap:8px; }
+      .chip .x { width:16px; height:16px; font-size:11px; }
+      .worksheet-title { font-size:28px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Tic Tac Toe Generator</h1>
+  <div class="subtitle">Step 1: Pick skills on the left. Step 2: choose blends. Step 3: choose words/sentences. Step 4: generate four printable Tic-Tac-Toe boards.</div>
+
+  <div class="layout">
+    <div class="left">
+      <!-- STEP 1 -->
+      <div id="step1" class="table-section">
+        <div class="section-label">Step 1: Select Skills</div>
+
+        <!-- CVC Short Vowels -->
+        <div class="skill-block bg-cvc">
+          <div class="skill-header" data-target="cvc"><span class="arrow">▲</span><span class="title">CVC Short Vowels</span><span class="arrow">▲</span></div>
+          <div class="skills-inner" id="section-cvc">
+            <button class="skill-button cvc" data-skill="Short A">Short A</button>
+            <button class="skill-button cvc" data-skill="Short E">Short E</button>
+            <button class="skill-button cvc" data-skill="Short I">Short I</button>
+            <button class="skill-button cvc" data-skill="Short O">Short O</button>
+            <button class="skill-button cvc" data-skill="Short U">Short U</button>
+            <button class="skill-button cvc" data-skill="Mixed CVC">Mixed CVC</button>
+            <button class="skill-button cvc" data-skill="FLSZ">FLSZ</button>
+          </div>
+        </div>
+
+        <!-- Digraphs (coming soon) -->
+        <div class="skill-block bg-dig">
+          <div class="skill-header" data-target="dig"><span class="arrow">▼</span><span class="title">Digraphs</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-dig">
+            <button class="skill-button dig disabled" data-skill="Digraph(ck)">ck</button>
+            <button class="skill-button dig disabled" data-skill="Digraph(sh)">sh</button>
+            <button class="skill-button dig disabled" data-skill="Digraph(th)">th</button>
+            <button class="skill-button dig disabled" data-skill="Digraph(ch)">ch</button>
+            <button class="skill-button dig disabled" data-skill="Digraph(wh)">wh</button>
+            <button class="skill-button dig disabled" data-skill="Digraphs Mixed">Digraphs Mixed</button>
+          </div>
+        </div>
+
+        <!-- Glued (coming soon) -->
+        <div class="skill-block bg-glued">
+          <div class="skill-header" data-target="glued"><span class="arrow">▼</span><span class="title">Glued Sounds</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-glued">
+            <button class="skill-button glued disabled" data-skill="Glued(all)">-all</button>
+            <button class="skill-button glued disabled" data-skill="Glued(-ng)">-ng</button>
+            <button class="skill-button glued disabled" data-skill="Glued(-nk)">-nk</button>
+            <button class="skill-button glued disabled" data-skill="Glued Mixed">Glued Mixed</button>
+          </div>
+        </div>
+
+        <!-- VCe (coming soon) -->
+        <div class="skill-block bg-vce">
+          <div class="skill-header" data-target="vce"><span class="arrow">▼</span><span class="title">Silent E (VCe)</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-vce">
+            <button class="skill-button vce disabled" data-skill="VCe(a_e)">a_e</button>
+            <button class="skill-button vce disabled" data-skill="VCe(i_e)">i_e</button>
+            <button class="skill-button vce disabled" data-skill="VCe(o_e)">o_e</button>
+            <button class="skill-button vce disabled" data-skill="VCe(u_e)">u_e</button>
+            <button class="skill-button vce disabled" data-skill="Mixed VCe">Mixed VCe</button>
+          </div>
+        </div>
+
+        <!-- R-Controlled (ACTIVE) -->
+        <div class="skill-block bg-rctrl">
+          <div class="skill-header" data-target="rctrl"><span class="arrow">▲</span><span class="title">R-Controlled</span><span class="arrow">▲</span></div>
+          <div class="skills-inner" id="section-rctrl">
+            <button class="skill-button rctrl" data-skill="R-Controlled(ar)">ar</button>
+            <button class="skill-button rctrl" data-skill="R-Controlled(or)">or</button>
+            <button class="skill-button rctrl" data-skill="R-Controlled(er,ir,ur)">er/ir/ur</button>
+            <button class="skill-button rctrl" data-skill="Mixed R-Controlled">Mixed</button>
+          </div>
+        </div>
+
+        <!-- Others (coming soon) -->
+        <div class="skill-block bg-vteams">
+          <div class="skill-header" data-target="vteams"><span class="arrow">▼</span><span class="title">Vowel Teams</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-vteams">
+            <button class="skill-button vteams disabled" data-skill="Long A (ai/ay)">Long A (ai/ay)</button>
+            <button class="skill-button vteams disabled" data-skill="Long E (ee/ea)">Long E (ee/ea)</button>
+            <button class="skill-button vteams disabled" data-skill="Long I (igh/y/ie)">Long I (igh/y/ie)</button>
+            <span class="break"></span>
+            <button class="skill-button vteams disabled" data-skill="Long O (oa/ow/oe)">Long O (oa/ow/oe)</button>
+            <button class="skill-button vteams disabled" data-skill="Long U (oo/ew/ue)">Long U (oo/ew/ue)</button>
+            <button class="skill-button vteams disabled" data-skill="Mixed Vowel Teams">Mixed Vowel Teams</button>
+          </div>
+        </div>
+
+        <div class="skill-block bg-dip">
+          <div class="skill-header" data-target="dip"><span class="arrow">▼</span><span class="title">Diphthongs</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-dip">
+            <button class="skill-button dip disabled" data-skill="Diphthongs (oy/oi)">oy/oi</button>
+            <button class="skill-button dip disabled" data-skill="Diphthongs (ow/ou)">ow/ou</button>
+          </div>
+        </div>
+
+        <div class="skill-block bg-variant">
+          <div class="skill-header" data-target="variant"><span class="arrow">▼</span><span class="title">Variant Vowels</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-variant">
+            <button class="skill-button variant disabled" data-skill="Variant Vowels (au/aw)">au/aw</button>
+            <button class="skill-button variant disabled" data-skill="Variant Vowel (oo)">oo</button>
+          </div>
+        </div>
+
+        <div class="skill-block bg-soft">
+          <div class="skill-header" data-target="soft"><span class="arrow">▼</span><span class="title">Soft C/G Endings</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-soft">
+            <button class="skill-button soft disabled" data-skill="Soft Endings">Soft C/G Endings (-ce/-ge/-dge)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Blends -->
+    <div class="right-top">
+      <div class="table-section tight">
+        <div class="section-label">Step 2: Include Blends?</div>
+        <div class="option-grid" id="blendsOptions">
+          <div class="option-box" data-blends="yes">Yes (4+ sounds)</div>
+          <div class="option-box" data-blends="no">No (3 sounds)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Words/Sentences/Both -->
+    <div class="right-mid">
+      <div class="table-section tight">
+        <div class="section-label">Step 3: What would you like in the grid?</div>
+        <div class="option-grid" id="contentOptions">
+          <div class="option-box" data-mode="words">Words Only</div>
+          <div class="option-box" data-mode="sentences">Sentences Only</div>
+          <div class="option-box" data-mode="both">Both</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: Generate & Print -->
+    <div class="right-bottom">
+      <div class="table-section actions-sticky tight">
+        <div class="section-label">Step 4: Generate & Print</div>
+
+        <div class="chips-title">Skills Selected:</div>
+        <div id="chips" class="chips-wrap"></div>
+
+        <div style="text-align:center; margin-top:10px;">
+          <button id="btnGenerate" style="font-size: 18px; padding: 10px 24px;">Generate</button>
+          <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTPUT -->
+  <div id="output"></div>
+
+  <!-- Desktop-only floating actions -->
+  <div id="floatingActions" style="position: fixed; right: 16px; bottom: 16px; z-index: 1000; background:#ffffff; border:2px solid #000; border-radius:12px; box-shadow: 0 6px 20px rgba(0,0,0,.15); padding:10px 12px; display:none; gap:8px; align-items:center;">
+    <button id="fabGenerate" style="font-size:14px; padding:8px 12px;">Generate</button>
+    <button id="fabPrint" style="font-size:14px; padding:8px 12px;">Print</button>
+  </div>
+
 <script>
 window.addEventListener('DOMContentLoaded', function () {
   /* ========= CORE WIRING ========= */
@@ -9,6 +307,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
   /* Supported skills */
   const SUPPORTED = {
+    // Existing CVC
     "Short A": "0.1",
     "Short O": "0.2",
     "Short I": "0.3",
@@ -38,7 +337,7 @@ window.addEventListener('DOMContentLoaded', function () {
     "4.4": "Mixed R-Controlled"
   };
 
-  /* Data keys (base + blends variants where applicable) */
+  /* Data keys — make sure your fluencyDataFull_v6.js contains arrays with these exact names */
   const DATA_KEYS = {
     words: {
       "0.1": "0.1 - Short A Words",
@@ -49,7 +348,7 @@ window.addEventListener('DOMContentLoaded', function () {
       "0.6": "0.6 - FLSZ",
       "mixed": "Mixed CVC Words",
 
-      // R-Controlled
+      // R-Controlled (base + blends)
       "4.1": "4.1 - ar Words",
       "4.1_blends": "4.1 - ar Words with Blends",
       "4.2": "4.2 - or Words",
@@ -68,8 +367,233 @@ window.addEventListener('DOMContentLoaded', function () {
       "0.6": "0.6 - FLSZ Sentences",
       "mixed": "Mixed CVC Sentences",
 
-      // R-Controlled
+      // R-Controlled (base + blends)
       "4.1": "4.1 - ar Sentences",
+      "4.1_blends": "4.1 - ar Sentences with Blends",
+      "4.2": "4.2 - or Sentences",
+      "4.2_blends": "4.2 - or Sentences with Blends",
+      "4.3": "4.3 - er, ir, ur Sentences",
+      "4.3_blends": "4.3 - er, ir, ur Sentences with Blends",
+      "4.4": "4.4 - R-Controlled Sentences",
+      "4.4_blends": "4.4 - R-Controlled Sentences with Blends"
+    }
+  };
+
+  const selectedCodes = new Set();
+  let mode = null;               // 'words' | 'sentences' | 'both'
+  let includeBlends = false;     // blends toggle
+
+  /* Expand/Collapse headers (delegated) */
+  document.getElementById('step1').addEventListener('click', function(e){
+    const header = e.target.closest('.skill-header');
+    if (!header) return;
+    const target = header.getAttribute('data-target');
+    const inner = document.getElementById('section-' + target);
+    if (!inner) return;
+    const arrows = header.querySelectorAll('.arrow');
+    const isCollapsed = inner.classList.contains('collapsed');
+    if (isCollapsed) {
+      inner.classList.remove('collapsed');
+      arrows.forEach(a => a.textContent = '▲');
+    } else {
+      inner.classList.add('collapsed');
+      arrows.forEach(a => a.textContent = '▼');
+    }
+  });
+
+  /* Step 1: skill button toggle (delegated) */
+  document.getElementById('step1').addEventListener('click', function(e){
+    const btn = e.target.closest('.skill-button');
+    if (!btn) return;
+    const label = btn.getAttribute('data-skill');
+    if (!label || !(label in SUPPORTED) || btn.classList.contains('disabled')) {
+      if (btn && btn.classList.contains('disabled')) alert('Coming soon for this category.');
+      return;
+    }
+    const code = SUPPORTED[label];
+    if (selectedCodes.has(code)) {
+      selectedCodes.delete(code);
+      btn.classList.remove('selected');
+    } else {
+      selectedCodes.add(code);
+      btn.classList.add('selected');
+    }
+    renderChips();
+  });
+
+  /* Step 2: blends toggle */
+  const blendsContainer = document.getElementById('blendsOptions');
+  if (blendsContainer) {
+    blendsContainer.addEventListener('click', function(e){
+      const box = e.target.closest('.option-box');
+      if (!box) return;
+      blendsContainer.querySelectorAll('.option-box').forEach(b => b.classList.remove('selected'));
+      box.classList.add('selected');
+      includeBlends = (box.getAttribute('data-blends') === 'yes');
+    });
+    // default: No (3 sounds)
+    const noBox = blendsContainer.querySelector('.option-box[data-blends="no"]');
+    if (noBox) noBox.classList.add('selected');
+  }
+
+  /* Step 3: content mode */
+  const contentContainer = document.getElementById('contentOptions');
+  if (contentContainer) {
+    contentContainer.addEventListener('click', function(e){
+      const box = e.target.closest('.option-box');
+      if (!box) return;
+      contentContainer.querySelectorAll('.option-box').forEach(b => b.classList.remove('selected'));
+      box.classList.add('selected');
+      mode = box.getAttribute('data-mode'); // words | sentences | both
+    });
+  }
+
+  /* Floating bar */
+  function toggleFloatingBar(){
+    const el = document.getElementById('floatingActions');
+    if (!el) return;
+    const isDesktop = window.matchMedia('(min-width: 992px)').matches;
+    el.style.display = isDesktop ? 'flex' : 'none';
+  }
+  toggleFloatingBar();
+  window.addEventListener('resize', toggleFloatingBar);
+  const fabGen = document.getElementById('fabGenerate');
+  if (fabGen) fabGen.addEventListener('click', () => document.getElementById('btnGenerate').click());
+  const fabPrint = document.getElementById('fabPrint');
+  if (fabPrint) fabPrint.addEventListener('click', () => window.print());
+
+  /* ===== Data helpers ===== */
+  function listFor(code, type){
+    const src = (window.fluencyData && window.fluencyData[type]) ? window.fluencyData[type] : {};
+    const blendsKeyName = DATA_KEYS[type][code + '_blends'];
+    const baseKeyName   = DATA_KEYS[type][code];
+    const key = (includeBlends && blendsKeyName) ? blendsKeyName : baseKeyName;
+    const arr = src[key];
+    return Array.isArray(arr) ? arr : [];
+  }
+  function pick(arr, n){ return arr.slice().sort(() => Math.random()-0.5).slice(0, n); }
+
+  function gatherBalanced(codes, mode, totalCells){
+    if (mode !== 'both'){
+      const per = Math.max(1, Math.floor(totalCells / codes.length));
+      let pool = [];
+      codes.forEach(c => pool = pool.concat(pick(listFor(c, mode), per)));
+      codes.forEach(c => { if (pool.length < totalCells) pool = pool.concat(pick(listFor(c, mode), totalCells - pool.length)); });
+      return pick(pool, totalCells);
+    }
+    // both
+    const targetW = Math.floor(totalCells/2);
+    const targetS = totalCells - targetW;
+    const perW = Math.max(1, Math.floor(targetW / codes.length));
+    const perS = Math.max(1, Math.floor(targetS / codes.length));
+    let words = [], sents = [];
+    codes.forEach(c => words = words.concat(pick(listFor(c, 'words'), perW)));
+    codes.forEach(c => sents = sents.concat(pick(listFor(c, 'sentences'), perS)));
+    codes.forEach(c => { if (words.length < targetW) words = words.concat(pick(listFor(c, 'words'), targetW - words.length)); });
+    codes.forEach(c => { if (sents.length < targetS) sents = sents.concat(pick(listFor(c, 'sentences'), targetS - sents.length)); });
+    return pick(words.concat(sents), totalCells);
+  }
+
+  /* Build a single 3x3 board */
+  function buildBoard(cells){
+    const tbl = document.createElement('table');
+    tbl.className = 'tic-tac-toe';
+    for (let r=0;r<3;r++){
+      const row = tbl.insertRow();
+      for (let c=0;c<3;c++){
+        const td = row.insertCell();
+        const val = cells[r*3+c] || '';
+        const isSentence = (typeof val === 'string') && /\s/.test(val);
+        if (r<2) td.style.borderBottom = '6px solid black';
+        if (c<2) td.style.borderRight  = '6px solid black';
+        const span = document.createElement('span');
+        span.className = 'cell-text ' + (isSentence ? 'sentence' : 'word');
+        span.textContent = val;
+        span.style.fontSize = isSentence ? '20px' : '24px';
+        span.style.lineHeight = isSentence ? '22px' : '28px';
+        td.appendChild(span);
+      }
+    }
+    const wrap = document.createElement('div');
+    wrap.className = 'board-shell';
+    const label = document.createElement('div');
+    label.className = 'board-label';
+    label.textContent = '';
+    wrap.appendChild(label);
+    wrap.appendChild(tbl);
+    return wrap;
+  }
+
+  function renderChips(){
+    const wrap = document.getElementById('chips');
+    wrap.innerHTML = '';
+    Array.from(selectedCodes).forEach(code => {
+      const chip = document.createElement('div');
+      chip.className = 'chip';
+      chip.innerHTML = '<span>'+ (SKILL_LABEL[code] || code) +'</span><span class="x" title="Remove">×</span>';
+      chip.querySelector('.x').addEventListener('click', () => {
+        selectedCodes.delete(code);
+        const label = SKILL_LABEL[code] || code;
+        const btn = document.querySelector('.skill-button[data-skill="'+ CSS.escape(label) +'"]');
+        if (btn) btn.classList.remove('selected');
+        renderChips();
+      });
+      wrap.appendChild(chip);
+    });
+  }
+
+  /* GENERATE */
+  function generateBoards(){
+    if (selectedCodes.size === 0) { alert('Select at least one skill in Step 1.'); return; }
+    if (!mode) { alert('Choose Words Only / Sentences Only / Both in Step 3.'); return; }
+    if (!window.fluencyData) { alert('Missing fluencyData (fluencyDataFull_v6.js).'); return; }
+
+    const codes = Array.from(selectedCodes);
+    const TOTAL = 36; // 4 x 9
+    const content = gatherBalanced(codes, mode, TOTAL);
+    if (content.length < TOTAL) { alert('Not enough content for 4 boards from the selected skills.'); return; }
+
+    const output = document.getElementById('output');
+    output.innerHTML = '';
+
+    const page = document.createElement('div');
+    page.className = 'page';
+
+    const title = document.createElement('div');
+    title.className = 'worksheet-title';
+    const picked = codes.map(c => SKILL_LABEL[c] || c).join(' • ');
+    title.textContent = picked + ' Tic Tac Toe Game';
+
+    const directions = document.createElement('div');
+    directions.className = 'worksheet-directions';
+    directions.innerHTML = '<strong>Directions:</strong> Read the word or sentence in the space you’d like to go, then put an X or O. Your opponent does the same. If you get 3 in a row…you win!';
+
+    const grid = document.createElement('div');
+    grid.className = 'board-wrap';
+    [0,9,18,27].forEach((i, idx) => {
+      const nine = content.slice(i, i+9);
+      const group = buildBoard(nine);
+      group.querySelector('.board-label').textContent = 'Game ' + (idx+1);
+      grid.appendChild(group);
+    });
+
+    const copy = document.createElement('div');
+    copy.id = 'copyright';
+    copy.innerHTML = 'Copyright - InterventionStation.com - @TeachwithMrC';
+
+    page.appendChild(title);
+    page.appendChild(directions);
+    page.appendChild(grid);
+    page.appendChild(copy);
+    output.appendChild(page);
+    if (page.scrollIntoView) page.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  document.getElementById('btnGenerate').addEventListener('click', generateBoards);
+});
+</script>
+</body>
+</html>      "4.1": "4.1 - ar Sentences",
       "4.1_blends": "4.1 - ar Sentences with Blends",
       "4.2": "4.2 - or Sentences",
       "4.2_blends": "4.2 - or Sentences with Blends",
