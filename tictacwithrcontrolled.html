@@ -1,75 +1,316 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Phonics Tic-Tac-Toe Generator</title>
-  <script src="fluencyDataFull_v6.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script>
+window.addEventListener('DOMContentLoaded', function () {
+  /* ========= CORE WIRING ========= */
+  // CSS.escape polyfill
+  if (typeof CSS === 'undefined' || typeof CSS.escape !== 'function') {
+    window.CSS = window.CSS || {};
+    CSS.escape = CSS.escape || function(sel){ return (sel+'').replace(/[^a-zA-Z0-9_-]/g,'\\$&'); };
+  }
 
-  <style>
-    :root{
-      --cvc:#e9f2ff;          --cvc-selected:#1976d2;
-      --dig:#f3e9ff;          --dig-selected:#8e24aa;
-      --glued:#e8fff4;        --glued-selected:#2e7d32;
-      --vce:#fff5e6;          --vce-selected:#ef6c00;
-      --rctrl:#f0f5ff;        --rctrl-selected:#3f51b5;
-      --vteams:#fff0f6;       --vteams-selected:#d81b60;
-      --dip:#eefcfb;          --dip-selected:#00897b;
-      --variant:#fff8e1;      --variant-selected:#f9a825;
-      --soft:#eef4ff;         --soft-selected:#455a64;
+  /* Supported skills */
+  const SUPPORTED = {
+    "Short A": "0.1",
+    "Short O": "0.2",
+    "Short I": "0.3",
+    "Short U": "0.4",
+    "Short E": "0.5",
+    "FLSZ": "0.6",
+    "Mixed CVC": "mixed",
 
-      --chip-bg:#f3f6fb; --chip-text:#263238; --chip-x:#546e7a;
+    // R-Controlled (ACTIVE)
+    "R-Controlled(ar)": "4.1",
+    "R-Controlled(or)": "4.2",
+    "R-Controlled(er,ir,ur)": "4.3",
+    "Mixed R-Controlled": "4.4"
+  };
+
+  const SKILL_LABEL = {
+    "0.1": "Short A",
+    "0.2": "Short O",
+    "0.3": "Short I",
+    "0.4": "Short U",
+    "0.5": "Short E",
+    "0.6": "FLSZ",
+    "mixed": "Mixed CVC",
+    "4.1": "R-Controlled (ar)",
+    "4.2": "R-Controlled (or)",
+    "4.3": "R-Controlled (er/ir/ur)",
+    "4.4": "Mixed R-Controlled"
+  };
+
+  /* Data keys (base + blends variants where applicable) */
+  const DATA_KEYS = {
+    words: {
+      "0.1": "0.1 - Short A Words",
+      "0.2": "0.2 - Short O Words",
+      "0.3": "0.3 - Short I Words",
+      "0.4": "0.4 - Short U Words",
+      "0.5": "0.5 - Short E Words",
+      "0.6": "0.6 - FLSZ",
+      "mixed": "Mixed CVC Words",
+
+      // R-Controlled
+      "4.1": "4.1 - ar Words",
+      "4.1_blends": "4.1 - ar Words with Blends",
+      "4.2": "4.2 - or Words",
+      "4.2_blends": "4.2 - or Words with Blends",
+      "4.3": "4.3 - er, ir, ur Words",
+      "4.3_blends": "4.3 - er, ir, ur Words with Blends",
+      "4.4": "4.4 - R-Controlled Words",
+      "4.4_blends": "4.4 - R-Controlled Words with Blends"
+    },
+    sentences: {
+      "0.1": "0.1 - Short A Sentences",
+      "0.2": "0.2 - Short O Sentences",
+      "0.3": "0.3 - Short I Sentences",
+      "0.4": "0.4 - Short U Sentences",
+      "0.5": "0.5 - Short E Sentences",
+      "0.6": "0.6 - FLSZ Sentences",
+      "mixed": "Mixed CVC Sentences",
+
+      // R-Controlled
+      "4.1": "4.1 - ar Sentences",
+      "4.1_blends": "4.1 - ar Sentences with Blends",
+      "4.2": "4.2 - or Sentences",
+      "4.2_blends": "4.2 - or Sentences with Blends",
+      "4.3": "4.3 - er, ir, ur Sentences",
+      "4.3_blends": "4.3 - er, ir, ur Sentences with Blends",
+      "4.4": "4.4 - R-Controlled Sentences",
+      "4.4_blends": "4.4 - R-Controlled Sentences with Blends"
     }
+  };
 
-    body { font-family:'Poppins',sans-serif; margin:28px; text-align:center; background:#fafafa; }
-    h1 { font-size: 36px; margin-bottom: 6px; }
-    .subtitle { color:#555; margin:0 0 14px; }
+  const selectedCodes = new Set();
+  let mode = null;               // 'words' | 'sentences' | 'both'
+  let includeBlends = false;     // blends toggle
 
-    /* Grid layout */
-    .layout {
-      width:100%; max-width:1100px; margin:0 auto 14px auto;
-      display:grid; grid-template-columns: minmax(260px,1fr) 360px; grid-template-rows: auto auto;
-      gap:12px; align-items:start;
+  /* ========== EVENT DELEGATION (bulletproof) ========== */
+
+  // Expand/Collapse headers
+  document.getElementById('step1').addEventListener('click', function(e){
+    const header = e.target.closest('.skill-header');
+    if (!header) return;
+    const target = header.getAttribute('data-target');
+    const inner = document.getElementById('section-' + target);
+    if (!inner) return;
+    const arrows = header.querySelectorAll('.arrow');
+    const isCollapsed = inner.classList.contains('collapsed');
+    if (isCollapsed) {
+      inner.classList.remove('collapsed');
+      for (var i=0;i<arrows.length;i++) arrows[i].textContent = '▲';
+    } else {
+      inner.classList.add('collapsed');
+      for (var j=0;j<arrows.length;j++) arrows[j].textContent = '▼';
     }
-    .layout .left { grid-column:1; grid-row:1 / span 2; }
-    .layout .right-top { grid-column:2; grid-row:1; display:flex; flex-direction:column; gap:12px; }
-    .layout .right-bottom { grid-column:2; grid-row:2; display:flex; flex-direction:column; gap:12px; }
+  });
 
-    /* Card containers */
-    .table-section { border:2px solid #000; padding:16px; width:100%; box-sizing:border-box; text-align:left; border-radius:12px; background:#fff; }
-    .section-label { font-weight:700; font-size:20px; margin-bottom:12px; text-align:center; }
-
-    /* Step 1 blocks */
-    .skill-block { border:1px solid #bbb; border-radius:12px; overflow:hidden; margin-bottom:12px; background:#fff; }
-    .skill-header {
-      display:flex; align-items:center; justify-content:center;
-      padding:12px 16px; font-weight:700; font-size:22px; cursor:pointer; user-select:none;
+  // Step 1: skill button toggle
+  document.getElementById('step1').addEventListener('click', function(e){
+    const btn = e.target.closest('.skill-button');
+    if (!btn) return;
+    const label = btn.getAttribute('data-skill');
+    if (!label || !(label in SUPPORTED) || btn.classList.contains('disabled')) {
+      if (btn && btn.classList.contains('disabled')) alert('Coming soon for this category.');
+      return;
     }
-    .skill-header .arrow { font-size:30px; line-height:1; margin:0 14px; width:30px; text-align:center; }
-    .skill-header .title { white-space:nowrap; }
-    .skills-inner { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; padding:14px; }
-    .skills-inner.collapsed { display:none; }
-
-    /* Category backgrounds */
-    .bg-cvc   .skill-header { background:var(--cvc); }
-    .bg-dig   .skill-header { background:var(--dig); }
-    .bg-glued .skill-header { background:var(--glued); }
-    .bg-vce   .skill-header { background:var(--vce); }
-    .bg-rctrl .skill-header { background:var(--rctrl); }
-    .bg-vteams .skill-header{ background:var(--vteams); }
-    .bg-dip   .skill-header { background:var(--dip); }
-    .bg-variant .skill-header{ background:var(--variant); }
-    .bg-soft  .skill-header { background:var(--soft); }
-
-    /* Skill buttons */
-    .skill-button{
-      border:2px solid #000; padding:10px 16px; border-radius:16px;
-      font-weight:700; font-size:16px; cursor:pointer; background:#fff;
-      transition:transform .08s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease;
-      user-select:none; line-height:1.2; min-height:44px;
-      position: relative;
+    const code = SUPPORTED[label];
+    if (selectedCodes.has(code)) {
+      selectedCodes.delete(code);
+      btn.classList.remove('selected');
+    } else {
+      selectedCodes.add(code);
+      btn.classList.add('selected');
     }
-    .skill-button:active{ transform:translateY(1px); }
+    renderChips();
+  });
+
+  // Step 2: blends toggle
+  var blendsContainer = document.getElementById('blendsOptions');
+  if (blendsContainer) {
+    blendsContainer.addEventListener('click', function(e){
+      const box = e.target.closest('.option-box');
+      if (!box) return;
+      const boxes = blendsContainer.querySelectorAll('.option-box');
+      for (var i=0;i<boxes.length;i++) boxes[i].classList.remove('selected');
+      box.classList.add('selected');
+      includeBlends = (box.getAttribute('data-blends') === 'yes');
+    });
+    // default select "No"
+    var noBox = blendsContainer.querySelector('.option-box[data-blends="no"]');
+    if (noBox) noBox.classList.add('selected');
+  }
+
+  // Step 3: mode selection
+  var contentContainer = document.getElementById('contentOptions');
+  if (contentContainer) {
+    contentContainer.addEventListener('click', function(e){
+      const box = e.target.closest('.option-box');
+      if (!box) return;
+      const boxes = contentContainer.querySelectorAll('.option-box');
+      for (var i=0;i<boxes.length;i++) boxes[i].classList.remove('selected');
+      box.classList.add('selected');
+      mode = box.getAttribute('data-mode');
+    });
+  }
+
+  // Floating actions (desktop)
+  function toggleFloatingBar(){
+    var el = document.getElementById('floatingActions');
+    if (!el) return;
+    var isDesktop = window.matchMedia('(min-width: 992px)').matches;
+    el.style.display = isDesktop ? 'flex' : 'none';
+  }
+  toggleFloatingBar();
+  window.addEventListener('resize', toggleFloatingBar);
+
+  var fabGen = document.getElementById('fabGenerate');
+  if (fabGen) fabGen.addEventListener('click', function(){
+    var btn = document.getElementById('btnGenerate');
+    if (btn) btn.click();
+  });
+  var fabPrint = document.getElementById('fabPrint');
+  if (fabPrint) fabPrint.addEventListener('click', function(){ window.print(); });
+
+  /* ===== Data helpers ===== */
+  function listFor(code, type){
+    var src = (window.fluencyData && window.fluencyData[type]) ? window.fluencyData[type] : {};
+    var blendsKeyName = DATA_KEYS[type][code + '_blends'];
+    var baseKeyName   = DATA_KEYS[type][code];
+    var key = (includeBlends && blendsKeyName) ? blendsKeyName : baseKeyName;
+    var arr = src[key];
+    return Array.isArray(arr) ? arr : [];
+  }
+  function pick(arr, n){
+    return arr.slice().sort(function(){ return Math.random()-0.5; }).slice(0, n);
+  }
+
+  function gatherBalanced(codes, mode, totalCells){
+    if (mode !== 'both'){
+      var per = Math.max(1, Math.floor(totalCells / codes.length));
+      var pool = [];
+      codes.forEach(function(c){ pool = pool.concat(pick(listFor(c, mode), per)); });
+      codes.forEach(function(c){
+        if (pool.length >= totalCells) return;
+        pool = pool.concat(pick(listFor(c, mode), totalCells - pool.length));
+      });
+      return pick(pool, totalCells);
+    }
+    // both
+    var targetW = Math.floor(totalCells/2);
+    var targetS = totalCells - targetW;
+    var perW = Math.max(1, Math.floor(targetW / codes.length));
+    var perS = Math.max(1, Math.floor(targetS / codes.length));
+    var words = [], sents = [];
+    codes.forEach(function(c){ words = words.concat(pick(listFor(c, 'words'), perW)); });
+    codes.forEach(function(c){ sents = sents.concat(pick(listFor(c, 'sentences'), perS)); });
+    codes.forEach(function(c){
+      if (words.length < targetW) words = words.concat(pick(listFor(c, 'words'), targetW - words.length));
+    });
+    codes.forEach(function(c){
+      if (sents.length < targetS) sents = sents.concat(pick(listFor(c, 'sentences'), targetS - sents.length));
+    });
+    return pick(words.concat(sents), totalCells);
+  }
+
+  function buildBoard(cells){
+    var tbl = document.createElement('table');
+    tbl.className = 'tic-tac-toe';
+    for (var r=0;r<3;r++){
+      var row = tbl.insertRow();
+      for (var c=0;c<3;c++){
+        var td = row.insertCell();
+        var val = cells[r*3+c] || '';
+        var isSentence = (typeof val === 'string') && /\s/.test(val);
+        if (r<2) td.style.borderBottom = '6px solid black';
+        if (c<2) td.style.borderRight  = '6px solid black';
+        var span = document.createElement('span');
+        span.className = 'cell-text ' + (isSentence ? 'sentence' : 'word');
+        span.textContent = val;
+        span.style.fontSize = isSentence ? '20px' : '24px';
+        span.style.lineHeight = isSentence ? '22px' : '28px';
+        td.appendChild(span);
+      }
+    }
+    var wrap = document.createElement('div');
+    wrap.className = 'board-shell';
+    var label = document.createElement('div');
+    label.className = 'board-label';
+    label.textContent = '';
+    wrap.appendChild(label);
+    wrap.appendChild(tbl);
+    return wrap;
+  }
+
+  function renderChips(){
+    var wrap = document.getElementById('chips');
+    if (!wrap) return;
+    wrap.innerHTML = '';
+    Array.from(selectedCodes).forEach(function(code){
+      var chip = document.createElement('div');
+      chip.className = 'chip';
+      chip.innerHTML = '<span>'+ (SKILL_LABEL[code] || code) +'</span><span class="x" title="Remove">×</span>';
+      chip.querySelector('.x').addEventListener('click', function(){
+        selectedCodes.delete(code);
+        var label = SKILL_LABEL[code] || code;
+        var btn = document.querySelector('.skill-button[data-skill="'+ CSS.escape(label) +'"]');
+        if (btn) btn.classList.remove('selected');
+        renderChips();
+      });
+      wrap.appendChild(chip);
+    });
+  }
+
+  /* GENERATE */
+  function generateBoards(){
+    if (selectedCodes.size === 0) { alert('Select at least one skill in Step 1.'); return; }
+    if (!mode) { alert('Choose Words Only / Sentences Only / Both in Step 3.'); return; }
+    if (!window.fluencyData) { alert('Missing fluencyData (fluencyDataFull_v6.js).'); return; }
+
+    var codes = Array.from(selectedCodes);
+    var TOTAL = 36; // 4 x 9
+    var content = gatherBalanced(codes, mode, TOTAL);
+    if (content.length < TOTAL) { alert('Not enough content for 4 boards from the selected skills.'); return; }
+
+    var output = document.getElementById('output');
+    output.innerHTML = '';
+
+    var page = document.createElement('div');
+    page.className = 'page';
+
+    var title = document.createElement('div');
+    title.className = 'worksheet-title';
+    var picked = codes.map(function(c){ return SKILL_LABEL[c] || c; }).join(' • ');
+    title.textContent = picked + ' Tic Tac Toe Game';
+
+    var directions = document.createElement('div');
+    directions.className = 'worksheet-directions';
+    directions.innerHTML = '<strong>Directions:</strong> Read the word or sentence in the space you’d like to go, then put an X or O. Your opponent does the same. If you get 3 in a row…you win!';
+
+    var grid = document.createElement('div');
+    grid.className = 'board-wrap';
+    [0,9,18,27].forEach(function(i, idx){
+      var nine = content.slice(i, i+9);
+      var group = buildBoard(nine);
+      group.querySelector('.board-label').textContent = 'Game ' + (idx+1);
+      grid.appendChild(group);
+    });
+
+    var copy = document.createElement('div');
+    copy.id = 'copyright';
+    copy.innerHTML = 'Copyright - InterventionStation.com - @TeachwithMrC';
+
+    page.appendChild(title);
+    page.appendChild(directions);
+    page.appendChild(grid);
+    page.appendChild(copy);
+    output.appendChild(page);
+    if (page.scrollIntoView) page.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  var genBtn = document.getElementById('btnGenerate');
+  if (genBtn) genBtn.addEventListener('click', generateBoards);
+});
+</script>    .skill-button:active{ transform:translateY(1px); }
     .skill-button.disabled { opacity:.45; cursor:not-allowed; }
     .skill-button.disabled::after{
       content:"Coming soon";
