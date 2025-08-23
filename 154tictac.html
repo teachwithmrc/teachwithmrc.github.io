@@ -4,13 +4,15 @@
   <meta charset="UTF-8" />
   <title>Tic Tac Toe Phonics Generator</title>
 
-  <!-- 🔗 DATA SOURCE: this must load BEFORE the inline script below.
-       It defines fluencyWords and fluencySentences (or fluencyData.words/sentences). -->
-  <script src="fluencyDataFull_v8-2_clean.js"></script>
+  <!-- 🔗 DATA SOURCE (must sit next to this HTML file) -->
+  <!-- All words/sentences are loaded from this file into the global objects:
+       - fluencyWords
+       - fluencySentences
+       - trickyWords (not used here, but available)
+       See the “DATA ACCESS” section in the script for how keys are resolved. -->
+  <script src="fluencyDataFull_v8-2_clean-2.js"></script>
 
-  <!-- Fonts / styles -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
   <style>
     :root{
       --cvc:#e9f2ff;          --cvc-selected:#1976d2;
@@ -40,9 +42,12 @@
     .table-section { border:2px solid #000; padding:16px; width:100%; box-sizing:border-box; text-align:left; border-radius:12px; background:#fff; height:100%; }
     .section-label { font-weight:700; font-size:20px; margin-bottom:12px; text-align:center; }
 
-    /* Step 1: skill blocks */
+    /* Step 1 blocks */
     .skill-block { border:1px solid #bbb; border-radius:12px; overflow:hidden; margin-bottom:12px; background:#fff; }
-    .skill-header { display:flex; align-items:center; justify-content:center; padding:12px 16px; font-weight:700; font-size:22px; cursor:pointer; user-select:none; }
+    .skill-header {
+      display:flex; align-items:center; justify-content:center;
+      padding:12px 16px; font-weight:700; font-size:22px; cursor:pointer; user-select:none;
+    }
     .skill-header .arrow { font-size:30px; line-height:1; margin:0 14px; width:30px; text-align:center; }
     .skill-header .title { white-space:nowrap; }
     .skills-inner { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; padding:14px; }
@@ -65,6 +70,7 @@
       font-weight:700; font-size:16px; cursor:pointer; background:#fff;
       transition:transform .08s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease;
       user-select:none; line-height:1.2; min-height:44px;
+      position: relative;
     }
     .skill-button:active{ transform:translateY(1px); }
     .skill-button.cvc.selected{ background:var(--cvc-selected); color:#fff; }
@@ -80,18 +86,24 @@
     /* Chips */
     .chips-title { margin-top:12px; text-align:center; font-weight:700; font-size:16px; }
     .chips-wrap { margin-top:8px; display:flex; justify-content:center; flex-wrap:wrap; gap:8px; }
-    .chip { background:var(--chip-bg); color:var(--chip-text); border:none; border-radius:999px; padding:8px 12px; font-size:20px; display:flex; align-items:center; gap:10px; box-shadow:inset 0 0 0 1px rgba(0,0,0,0.06); }
-    .chip .x { width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; cursor:pointer; background:#e8edf2; color:var(--chip-x); transition:background .15s; }
+    .chip {
+      background:var(--chip-bg); color:var(--chip-text);
+      border:none; border-radius:999px; padding:8px 12px; font-size:20px;
+      display:flex; align-items:center; gap:10px; box-shadow:inset 0 0 0 1px rgba(0,0,0,0.06);
+    }
+    .chip .x { width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+      font-weight:700; font-size:12px; cursor:pointer; background:#e8edf2; color:var(--chip-x); transition:background .15s; }
     .chip .x:hover { background:#dfe7ee; }
 
-    /* Options */
+    /* Option boxes */
     .option-grid { display:flex; flex-direction:column; align-items:center; gap:12px; }
     .option-box { display:inline-block; padding:8px 14px; border:2px solid #000; border-radius:12px; font-weight:600; font-size:14px; background:#fff; cursor:pointer; }
     .option-box:active { transform:translateY(1px); }
     .option-box.selected { background-color:#d0f0ff; }
+
     .actions-sticky { position:sticky; top:8px; z-index:50; background:#fff; }
 
-    /* Output sheet + boards */
+    /* OUTPUT */
     #output { display:flex; justify-content:center; padding:16px 0; flex-direction:column; gap:20px; }
     .page { width:8.5in; max-width:calc(100% - 32px); background:#fff; box-shadow:0 6px 20px rgba(0,0,0,.12); padding:0.5in; border:2px solid #000; border-radius:8px; margin:0 auto; }
     .worksheet-title { font-size:34px; margin-bottom:6px; font-weight:700; text-align:center; }
@@ -104,6 +116,7 @@
 
     #copyright { font-size:12px; text-align:right; margin-top:12px; display:none; }
 
+    /* PRINT */
     @media print {
       body { margin:0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       .table-section, button, .chips-title, .chips-wrap, .subtitle, .layout, #floatingActions { display:none !important; }
@@ -114,6 +127,7 @@
       .page { width:auto; padding:0; box-shadow:none; border:none; }
     }
 
+    /* Mobile / Compact */
     @media (max-width: 900px) {
       .layout { display:block; }
       .option-box { font-size:16px; padding:12px 16px; }
@@ -136,7 +150,7 @@
 </head>
 <body>
   <h1>Fluency Grid Generator</h1>
-  <div class="subtitle">Pick skills on top. Step 2 toggles blends (3 sounds vs 4+ sounds). Then choose content, then generate four printable Tic-Tac-Toe boards.</div>
+  <div class="subtitle">Step 1 pick skills ➜ Step 2 toggle blends (3 sounds vs 4+ sounds) ➜ Step 3 choose content ➜ Step 4 generate four printable Tic-Tac-Toe boards.</div>
 
   <div class="layout">
     <div class="left">
@@ -171,13 +185,14 @@
           </div>
         </div>
 
-        <!-- Glued Sounds -->
+        <!-- Glued Sounds (common clusters: -all/-ng/-nk/ing etc.) -->
         <div class="skill-block bg-glued">
           <div class="skill-header" data-target="glued"><span class="arrow">▼</span><span class="title">Glued Sounds</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-glued">
             <button class="skill-button glued" data-skill="-all">-all</button>
             <button class="skill-button glued" data-skill="-ng">-ng</button>
             <button class="skill-button glued" data-skill="-nk">-nk</button>
+            <button class="skill-button glued" data-skill="ing">ing</button>
             <button class="skill-button glued" data-skill="Glued Mixed">Glued Mixed</button>
           </div>
         </div>
@@ -205,7 +220,7 @@
           </div>
         </div>
 
-        <!-- Vowel Teams -->
+        <!-- Vowel Teams (ready for data expansion) -->
         <div class="skill-block bg-vteams">
           <div class="skill-header" data-target="vteams"><span class="arrow">▼</span><span class="title">Vowel Teams</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-vteams">
@@ -216,32 +231,6 @@
             <button class="skill-button vteams" data-skill="Long O (oa/ow/oe)">Long O (oa/ow/oe)</button>
             <button class="skill-button vteams" data-skill="Long U (oo/ew/ue)">Long U (oo/ew/ue)</button>
             <button class="skill-button vteams" data-skill="Mixed Vowel Teams">Mixed Vowel Teams</button>
-          </div>
-        </div>
-
-        <!-- Diphthongs -->
-        <div class="skill-block bg-dip">
-          <div class="skill-header" data-target="dip"><span class="arrow">▼</span><span class="title">Diphthongs</span><span class="arrow">▼</span></div>
-          <div class="skills-inner collapsed" id="section-dip">
-            <button class="skill-button dip" data-skill="oy/oi">oy/oi</button>
-            <button class="skill-button dip" data-skill="ow/ou">ow/ou</button>
-          </div>
-        </div>
-
-        <!-- Variant Vowels -->
-        <div class="skill-block bg-variant">
-          <div class="skill-header" data-target="variant"><span class="arrow">▼</span><span class="title">Variant Vowels</span><span class="arrow">▼</span></div>
-          <div class="skills-inner collapsed" id="section-variant">
-            <button class="skill-button variant" data-skill="au/aw">au/aw</button>
-            <button class="skill-button variant" data-skill="oo">oo</button>
-          </div>
-        </div>
-
-        <!-- Soft Endings -->
-        <div class="skill-block bg-soft">
-          <div class="skill-header" data-target="soft"><span class="arrow">▼</span><span class="title">Soft C/G Endings</span><span class="arrow">▼</span></div>
-          <div class="skills-inner collapsed" id="section-soft">
-            <button class="skill-button soft" data-skill="Soft C/G Endings">Soft C/G Endings (-ce/-ge/-dge)</button>
           </div>
         </div>
       </div>
@@ -298,136 +287,92 @@
   </div>
 
 <script>
-/* ===========================================================
-   CORE JS — all connections to your data are commented clearly
-   =========================================================== */
+/* ============================================================
+   CORE WIRING
+   ============================================================ */
 
-/* Polyfill so we can safely query by text (chip removal) */
 if (typeof CSS === 'undefined' || typeof CSS.escape !== 'function') {
   window.CSS = window.CSS || {};
   CSS.escape = CSS.escape || function(sel){ return (sel+'').replace(/[^a-zA-Z0-9_-]/g,'\\\\$&'); };
 }
 
-/* 🔢 UI label → internal code map
-   Example: clicking "Short A" maps to code "0.1" */
-const SUPPORTED = {
-  "Short A": "0.1",
-  "Short O": "0.2",
-  "Short I": "0.3",
-  "Short U": "0.4",
-  "Short E": "0.5",
-  "FLSZ": "0.6",
-  "Mixed CVC": "mixed",
+/* 
+  🧭 LABEL ➜ CODE MAP
+  Left-panel button labels map to abstract "codes" we use below
+  to resolve one or MORE data lists from your JS file.
+*/
+const CODE = {
+  // CVC
+  "Short A": "0.1", "Short O": "0.2", "Short I": "0.3", "Short U": "0.4", "Short E": "0.5",
+  "FLSZ": "0.6", "Mixed CVC": "mixed",
 
-  // Optional extras wired up for growth
-  "ar": "4.1",
-  "or": "4.2",
-  "er/ir/ur": "4.3",
-  "Mixed R-Controlled": "4.4",
-  "ck": "1.1-ck",
-  "sh": "1.2-sh",
-  "th": "1.3-th",
-  "ch": "1.4-ch"
+  // Digraphs (Level 1)
+  "ck": "1.1-ck", "sh": "1.2-sh", "th": "1.3-th", "ch": "1.4-ch", "wh": "1.5-wh",
+  "Digraphs Mixed": "1.x-mixed",
+
+  // Glued sounds (Level 3 style buckets present in your file for blends)
+  "-all": "3.1-all", "-nk": "3.2-nk", "-ng": "3.3-ng", "ing": "3.4-ing",
+  "Glued Mixed": "3.x-mixed",
+
+  // VCe (Level 2)
+  "a_e": "2.1-ae", "i_e": "2.2-ie", "o_e": "2.3-oe", "u_e": "2.4-ue", "Mixed VCe": "2.x-mixed",
+
+  // R-controlled (Level 4)
+  "ar": "4.1-ar", "or": "4.2-or", "er/ir/ur": "4.3-erirur", "Mixed R-Controlled": "4.x-mixed",
+
+  // Vowel teams placeholders (name patterns you’ll add in your data file later)
+  "Long A (ai/ay)": "5.1-longA", "Long E (ee/ea)": "5.2-longE",
+  "Long I (igh/y/ie)": "5.3-longI", "Long O (oa/ow/oe)": "5.4-longO",
+  "Long U (oo/ew/ue)": "5.5-longU", "Mixed Vowel Teams": "5.x-mixed"
 };
 
-/* 🏷️ Pretty labels for chips/page title */
-const SKILL_LABEL = {
-  "0.1": "Short A",
-  "0.2": "Short O",
-  "0.3": "Short I",
-  "0.4": "Short U",
-  "0.5": "Short E",
-  "0.6": "FLSZ",
-  "mixed": "Mixed CVC",
-  "4.1": "ar", "4.2": "or", "4.3": "er/ir/ur", "4.4": "R-Controlled (Mixed)",
-  "1.1-ck": "ck", "1.2-sh": "sh", "1.3-th": "th", "1.4-ch": "ch"
-};
-
-/* 📎 EXPLICIT base keys that must match your data file (non-blends)
-   These are the exact strings your JS uses for base lists */
-const DATA_KEYS = {
-  words: {
-    "0.1": "0.1 - Short A Words",
-    "0.2": "0.2 - Short O Words",
-    "0.3": "0.3 - Short I Words",
-    "0.4": "0.4 - Short U Words",
-    "0.5": "0.5 - Short E Words",
-    "0.6": "0.6 - FLSZ",
-    "mixed": "Mixed CVC Words",
-    "4.1": "4.1 - ar Words",
-    "4.2": "4.2 - or Words",
-    "4.3": "4.3 - er, ir, ur Words",
-    "4.4": "4.4 - R-Controlled Words",
-    "1.1-ck": "1.1 - ck with Blends Words",
-    "1.2-sh": "1.2 - sh with Blends Words",
-    "1.3-th": "1.3 - th with Blends Words",
-    "1.4-ch": "1.4 - ch with Blends Words"
-  },
-  sentences: {
-    "0.1": "0.1 - Short A Sentences",
-    "0.2": "0.2 - Short O Sentences",
-    "0.3": "0.3 - Short I Sentences",
-    "0.4": "0.4 - Short U Sentences",
-    "0.5": "0.5 - Short E Sentences",
-    "0.6": "0.6 - FLSZ Sentences",
-    "mixed": "Mixed CVC Sentences",
-    "4.1": "4.1 - ar Sentences",
-    "4.2": "4.2 - or Sentences",
-    "4.3": "4.3 - er, ir, ur Sentences",
-    "4.4": "4.4 - R-Controlled Sentences",
-    "1.1-ck": "1.1 - ck Sentences",
-    "1.2-sh": "1.2 - sh Sentences",
-    "1.3-th": "1.3 - th Sentences",
-    "1.4-ch": "1.4 - ch Sentences"
+/* Pretty names for chips/title from codes */
+const NAME = new Proxy({}, {
+  get(_, code){ 
+    for (const [k,v] of Object.entries(CODE)) if (v===code) return k;
+    return code;
   }
-};
+});
 
-/* ✅ UI State */
 const selectedCodes = new Set();
-let mode = null;            // 'words' | 'sentences' | 'both'
-let includeBlends = false;  // Step 2 toggle
+let mode = null;           // 'words' | 'sentences' | 'both'
+let includeBlends = false; // Step 2 toggle
 
-/* =============== UI Wiring (click handlers) =============== */
-
-/* Expand/collapse category buckets */
+/* Expand/collapse category */
 document.querySelectorAll('.skill-header').forEach(header => {
   header.addEventListener('click', () => {
     const target = header.getAttribute('data-target');
     const inner = document.getElementById('section-' + target);
     const arrows = header.querySelectorAll('.arrow');
     const isCollapsed = inner.classList.contains('collapsed');
-    if (isCollapsed) {
-      inner.classList.remove('collapsed'); arrows.forEach(a => a.textContent = '▲');
-    } else {
-      inner.classList.add('collapsed');    arrows.forEach(a => a.textContent = '▼');
-    }
+    if (isCollapsed) { inner.classList.remove('collapsed'); arrows.forEach(a => a.textContent='▲'); }
+    else { inner.classList.add('collapsed'); arrows.forEach(a => a.textContent='▼'); }
   });
 });
 
-/* Step 1 — select skills (ALL buttons enabled) */
+/* Step 1: select (nothing disabled — all clickable) */
 document.querySelectorAll('.skill-button').forEach(btn => {
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
     const label = btn.dataset.skill;
-    const code = SUPPORTED[label] || label; // fallback lets you test new labels fast
+    const code = CODE[label] || label; // allow unknowns gracefully
     if (selectedCodes.has(code)) { selectedCodes.delete(code); btn.classList.remove('selected'); }
     else { selectedCodes.add(code); btn.classList.add('selected'); }
     renderChips();
   });
 });
 
-/* Chips display/remove */
+/* Chips UI */
 function renderChips(){
   const wrap = document.getElementById('chips');
   wrap.innerHTML = '';
   Array.from(selectedCodes).forEach(code => {
     const chip = document.createElement('div');
     chip.className = 'chip';
-    chip.innerHTML = `<span>${SKILL_LABEL[code] || code}</span><span class="x" title="Remove">×</span>`;
+    chip.innerHTML = `<span>${NAME[code]}</span><span class="x" title="Remove">×</span>`;
     chip.querySelector('.x').addEventListener('click', () => {
       selectedCodes.delete(code);
-      const label = SKILL_LABEL[code] || code;
-      const btn = document.querySelector(`.skill-button[data-skill="${CSS.escape(label)}"]`);
+      const btn = [...document.querySelectorAll('.skill-button')].find(b => (CODE[b.dataset.skill]||b.dataset.skill)===code);
       if (btn) btn.classList.remove('selected');
       renderChips();
     });
@@ -435,7 +380,7 @@ function renderChips(){
   });
 }
 
-/* Step 2 — blends toggle */
+/* Step 2: blends on/off */
 document.querySelectorAll('#blendOptions .option-box').forEach(box => {
   box.addEventListener('click', () => {
     document.querySelectorAll('#blendOptions .option-box').forEach(b => b.classList.remove('selected'));
@@ -444,7 +389,7 @@ document.querySelectorAll('#blendOptions .option-box').forEach(box => {
   });
 });
 
-/* Step 3 — content type */
+/* Step 3: content mode */
 document.querySelectorAll('#contentOptions .option-box').forEach(box => {
   box.addEventListener('click', () => {
     document.querySelectorAll('#contentOptions .option-box').forEach(b => b.classList.remove('selected'));
@@ -453,7 +398,7 @@ document.querySelectorAll('#contentOptions .option-box').forEach(box => {
   });
 });
 
-/* Floating actions */
+/* Floating actions (desktop) */
 function toggleFloatingBar(){
   const el = document.getElementById('floatingActions');
   const isDesktop = window.matchMedia('(min-width: 992px)').matches;
@@ -464,103 +409,301 @@ window.addEventListener('resize', toggleFloatingBar);
 document.getElementById('fabGenerate')?.addEventListener('click', () => document.getElementById('btnGenerate')?.click());
 document.getElementById('fabPrint')?.addEventListener('click', () => window.print());
 
-/* ===================== DATA ACCESS ===================== */
-/* 📦 These functions are the ONLY place we read your JS data.
-   They look first for fluencyWords/fluencySentences, then fluencyData.words/sentences. */
-function getWordsDict() {
-  if (typeof window.fluencyWords === 'object') return window.fluencyWords;
-  if (window.fluencyData?.words) return window.fluencyData.words;
-  return {};
+/* ============================================================
+   DATA ACCESS — EXACTLY WHERE WE CALL INTO YOUR JS FILE
+   ------------------------------------------------------------
+   Your data file defines (globals):
+     - fluencyWords:    { "<key>": [ ...words... ] }
+     - fluencySentences:{ "<key>": [ ...sentences... ] }
+
+   We generate the correct <key> (or multiple keys for combos) by:
+     1) building base labels (e.g., "0.1 - Short A Words"),
+     2) switching to “with Blends” variants when includeBlends is true,
+     3) unioning across ranges (e.g., Mixed CVC with blends = 0.1..0.5 with Blends),
+     4) falling back gently if a requested list is missing.
+   ============================================================ */
+
+/* Convenience guards */
+function dictWords(){ return (typeof fluencyWords === 'object' && fluencyWords) ? fluencyWords : {}; }
+function dictSents(){ return (typeof fluencySentences === 'object' && fluencySentences) ? fluencySentences : {}; }
+
+/* Build a single label by parts */
+function labelWords(prefix, name, opts={}) {
+  // prefix: "0.1", "1.4", "Mixed CVC", "nk", etc.
+  // name:   "Short A", "ch", "R-Controlled", etc. (purely cosmetic in many files)
+  // opts.blends: boolean -> inject " with Blends"
+  const base = prefix ? `${prefix} - ${name} Words` : `${name} Words`;
+  return opts.blends ? base.replace(' Words',' with Blends Words') : base;
 }
-function getSentencesDict() {
-  if (typeof window.fluencySentences === 'object') return window.fluencySentences;
-  if (window.fluencyData?.sentences) return window.fluencyData.sentences;
-  return {};
-}
-
-/* 🔑 code → base key string (must match your data file exactly) */
-function baseKeyFor(code, type){
-  const map = (type === 'words') ? DATA_KEYS.words : DATA_KEYS.sentences;
-  return map[code] || null;
-}
-
-/* 🧠 If blends = YES, try a “… with Blends …” variant before falling back */
-function resolveDataKey(code, type){
-  const base = baseKeyFor(code, type);
-  if (!base) return null;
-  if (!includeBlends) return base;
-
-  const tail = (type === 'words') ? ' Words' : ' Sentences';
-  const candidate = base.replace(tail, ` with Blends${tail}`); // e.g., "0.1 - Short A with Blends Words"
-  const dict = (type === 'words') ? getWordsDict() : getSentencesDict();
-
-  if (Object.prototype.hasOwnProperty.call(dict, candidate)) return candidate;
-  return base; // fallback if no blends list exists
+function labelSents(prefix, name, opts={}) {
+  const base = prefix ? `${prefix} - ${name} Sentences` : `${name} Sentences`;
+  // Some sets don’t have “with Blends Sentences”; we try it then fall back.
+  return opts.blends ? base.replace(' Sentences',' with Blends Sentences') : base;
 }
 
-/* 🔎 ACTUAL DATA READ — returns an ARRAY (or empty if missing) */
-function listFor(code, type){
-  const key = resolveDataKey(code, type);
-  const dict = (type === 'words') ? getWordsDict() : getSentencesDict();
-  const arr = key ? dict[key] : null;
-  return Array.isArray(arr) ? arr : [];
+/* Low-level fetch for a single key; returns [] if not found */
+function fetchListOne(type, key){
+  const d = (type==='words') ? dictWords() : dictSents();
+  const arr = d[key];
+  return Array.isArray(arr) ? arr.slice() : [];
 }
 
-/* ============== CONTENT BUILDERS (36 cells total) ============== */
-
-/* Helpers */
-function shuffle(a){ return a.slice().sort(()=>Math.random()-0.5); }
-function pickWithRepeats(array, n){
-  if (!array.length) return [];
-  const bag = shuffle(array);
-  const out = [];
-  let i = 0;
-  while (out.length < n) { out.push(bag[i % bag.length]); i++; }
-  return out;
+/* Try blends key first (if requested), fall back to non-blends automatically */
+function fetchKeySmart(type, baseKey, blendsKey){
+  if (blendsKey) {
+    const b = fetchListOne(type, blendsKey);
+    if (b.length) return b;
+  }
+  return fetchListOne(type, baseKey);
 }
 
-/* Words-only OR Sentences-only:
-   - Combine all selected lists for that type into a pool
-   - Fill exactly 36, repeating items if needed */
-function gatherSingleType(codes, type, totalCells){
+/* Find keys loosely (used for things like “wh” if exact index differs).
+   Looks for keys containing a marker (e.g., "1.5 - wh"). */
+function findKeysContaining(type, substrings){
+  const d = (type==='words') ? dictWords() : dictSents();
+  const keys = Object.keys(d);
+  const want = Array.isArray(substrings) ? substrings : [substrings];
+  return keys.filter(k => want.some(s => k.toLowerCase().includes(String(s).toLowerCase())));
+}
+
+/* ========== CODE ➜ ONE OR MORE LABEL KEYS (the “router”) ========== */
+function keysForCode(code, type, blends){
+  const keys = [];
+
+  // Helpers to push (base, blends) label variations:
+  const add = (prefix, name, opts={}) => {
+    const base  = (type==='words') ? labelWords(prefix, name) : labelSents(prefix, name);
+    const blend = (type==='words') ? labelWords(prefix, name, {blends:true}) : labelSents(prefix, name, {blends:true});
+    // if blends requested, try blends key first, else base
+    if (blends) keys.push({base, blend});
+    else keys.push({base});
+  };
+
+  switch(code){
+
+    /* ---------- Level 0 (CVC) ---------- */
+    case "0.1-0.5-withblends": // internal meta for Mixed CVC + blends
+      ["0.1","0.2","0.3","0.4","0.5"].forEach(p => add(p, {
+        "0.1":"Short A","0.2":"Short O","0.3":"Short I","0.4":"Short U","0.5":"Short E"
+      }[p]));
+      break;
+
+    case "0.1": add("0.1","Short A"); break;
+    case "0.2": add("0.2","Short O"); break;
+    case "0.3": add("0.3","Short I"); break;
+    case "0.4": add("0.4","Short U"); break;
+    case "0.5": add("0.5","Short E"); break;
+
+    case "0.6": // FLSZ lists in your file are titled just "0.6 - FLSZ"
+      // Words key doesn’t end with “Words” in some sheets; catch both forms:
+      if (type==='words') {
+        keys.push({ base: "0.6 - FLSZ", blend: "0.6 - FLSZ with Blends Words" });
+      } else { add("0.6","FLSZ"); }
+      break;
+
+    case "mixed":
+      if (includeBlends) {
+        // Mix = all 0.1..0.5 with Blends
+        return keysForCode("0.1-0.5-withblends", type, true);
+      } else {
+        // Use provided “Mixed CVC Words/Sentences”
+        const base = (type==='words') ? "Mixed CVC Words" : "Mixed CVC Sentences";
+        keys.push({base});
+      }
+      break;
+
+    /* ---------- Level 1 (Digraphs) ---------- */
+    case "1.1-ck": add("1.1","ck with Blends"); if(!includeBlends){ add("1.1","ck"); } break;
+    case "1.2-sh": add("1.2","sh with Blends"); if(!includeBlends){ add("1.2","sh"); } break;
+    case "1.3-th": add("1.3","th with Blends"); if(!includeBlends){ add("1.3","th"); } break;
+    case "1.4-ch": add("1.4","ch with Blends"); if(!includeBlends){ add("1.4","ch"); } break;
+    case "1.5-wh":
+      // Your words list is likely "1.5 - wh with Blends Words" and sentences "1.5 - wh Sentences"
+      if (type==='words'){
+        keys.push({ base:"1.5 - wh Words", blend:"1.5 - wh with Blends Words" });
+        // Loose find if file uses a slightly different key text:
+        findKeysContaining('words', ['1.5',' wh ']).forEach(k => keys.push({base:k}));
+      } else {
+        keys.push({ base:"1.5 - wh Sentences" });
+        findKeysContaining('sentences', ['1.5',' wh ']).forEach(k => keys.push({base:k}));
+      }
+      break;
+
+    case "1.x-mixed":
+      // Mix Digraphs = 1.1..1.5 (ck,sh,th,ch,wh) (+blends if requested)
+      ["1.1-ck","1.2-sh","1.3-th","1.4-ch","1.5-wh"].forEach(sub => {
+        keys.push(...keysForCode(sub, type, includeBlends));
+      });
+      break;
+
+    /* ---------- Level 3 (Glued) ---------- */
+    case "3.1-all":
+      // file shows "3.1 - all with Blends Words" (words), sentences may be absent
+      if (type==='words'){
+        keys.push({base:"3.1 - all Words", blend:"3.1 - all with Blends Words"});
+      } else {
+        keys.push({base:"3.1 - all Sentences", blend:"3.1 - all with Blends Sentences"});
+      }
+      break;
+    case "3.2-nk":
+      if (type==='words'){
+        // seen as: "nk with Blends Words"
+        keys.push({base:"nk Words", blend:"nk with Blends Words"});
+      } else {
+        keys.push({base:"nk Sentences", blend:"nk with Blends Sentences"});
+      }
+      break;
+    case "3.3-ng":
+      if (type==='words'){
+        keys.push({base:"-ng Words", blend:"-ng with Blends Words"});
+      } else {
+        keys.push({base:"-ng Sentences", blend:"-ng with Blends Sentences"});
+      }
+      break;
+    case "3.4-ing":
+      if (type==='words'){
+        keys.push({base:"ing Words", blend:"ing with Blends Words"});
+      } else {
+        keys.push({base:"ing Sentences", blend:"ing with Blends Sentences"});
+      }
+      break;
+    case "3.x-mixed":
+      ["3.1-all","3.2-nk","3.4-ing","3.3-ng"].forEach(sub => {
+        keys.push(...keysForCode(sub, type, includeBlends));
+      });
+      break;
+
+    /* ---------- Level 2 (VCe) ---------- */
+    case "2.1-ae": add("2.1","a_e"); add("2.1","a_e with blends"); break;
+    case "2.2-ie": add("2.2","i_e"); add("2.2","i_e with blends"); break;
+    case "2.3-oe": add("2.3","o_e"); add("2.3","o_e with blends"); break;
+    case "2.4-ue": add("2.4","u_e"); add("2.4","u_e with blends"); break;
+    case "2.x-mixed":
+      ["2.1-ae","2.2-ie","2.3-oe","2.4-ue"].forEach(sub => {
+        keys.push(...keysForCode(sub, type, includeBlends));
+      });
+      break;
+
+    /* ---------- Level 4 (R-controlled) ---------- */
+    case "4.1-ar": add("4.1","ar"); add("4.1","ar with Blends"); break;
+    case "4.2-or": add("4.2","or"); add("4.2","or with Blends"); break;
+    case "4.3-erirur": add("4.3","er, ir, ur"); add("4.3","er, ir, ur with Blends"); break;
+    case "4.x-mixed":
+      ["4.1-ar","4.2-or","4.3-erirur"].forEach(sub => {
+        keys.push(...keysForCode(sub, type, includeBlends));
+      });
+      // also include any combined list like "4.4 - R-Controlled Words/Sentences" if present:
+      if (type==='words') keys.push({base:"4.4 - R-Controlled Words", blend:"4.4 - R-Controlled with Blends Words"});
+      else keys.push({base:"4.4 - R-Controlled Sentences", blend:"4.4 - R-Controlled with Blends Sentences"});
+      break;
+
+    /* ---------- Vowel Teams (name placeholders; patterns to match later) ---------- */
+    case "5.1-longA":
+    case "5.2-longE":
+    case "5.3-longI":
+    case "5.4-longO":
+    case "5.5-longU":
+    case "5.x-mixed":
+      // We’ll pick up by loose pattern search until you commit exact keys in your JS.
+      // Example target names you can use in your data file:
+      //   "5.1 - Long A (ai/ay) Words", "5.1 - Long A (ai/ay) Sentences", etc.
+      const patterns = {
+        "5.1-longA": ["5.1","Long A"],
+        "5.2-longE": ["5.2","Long E"],
+        "5.3-longI": ["5.3","Long I"],
+        "5.4-longO": ["5.4","Long O"],
+        "5.5-longU": ["5.5","Long U"],
+        "5.x-mixed": ["5.","Long "]
+      }[code];
+      findKeysContaining(type, patterns).forEach(k => keys.push({base:k}));
+      break;
+
+    default:
+      // Unknown code -> loose match on label text
+      findKeysContaining(type, code).forEach(k => keys.push({base:k}));
+  }
+  return keys;
+}
+
+/* Fetch array(s) for a code, union them, allow repeats to fill */
+function getListForCode(code, type){
+  const pairs = keysForCode(code, type, includeBlends);
   let pool = [];
-  for (const c of codes) {
-    const list = listFor(c, type);
-    if (list.length) pool = pool.concat(list);
+  pairs.forEach(({base, blend}) => {
+    const arr = fetchKeySmart(type, base, blend);
+    if (arr.length) pool = pool.concat(arr);
+  });
+
+  // If requested non-blend set is empty but a blend-only list exists in file (common for glued),
+  // auto-fallback to any seen blend-like keys by loose match:
+  if (!pool.length) {
+    const loose = findKeysContaining(type, NAME[code]);
+    loose.forEach(k => { pool = pool.concat(fetchListOne(type,k)); });
   }
-  if (!pool.length) return [];
-  return pickWithRepeats(pool, totalCells);
+  return pool;
 }
 
-/* BOTH:
-   - For each of the 4 boards, randomly choose 5/4 or 4/5 words/sentences
-   - Fill each 9-cell board from the global pools (repeats allowed)
-   - Concatenate 4 boards = 36 items */
-function gatherBothPerBoard(codes){
-  let wordsPool = [], sentsPool = [];
-  for (const c of codes) {
-    const w = listFor(c, 'words');      if (w.length) wordsPool = wordsPool.concat(w);
-    const s = listFor(c, 'sentences');  if (s.length) sentsPool = sentsPool.concat(s);
-  }
-  // If one pool is empty, mirror from the other so we still fill the board
-  if (!wordsPool.length && !sentsPool.length) return [];
-  if (!wordsPool.length) wordsPool = sentsPool.slice();
-  if (!sentsPool.length) sentsPool = wordsPool.slice();
-
+/* Shuffle-sample with automatic repetition to meet N cells */
+function fillN(arr, n){
+  if (!arr.length) return [];
   const out = [];
-  for (let b = 0; b < 4; b++) {
-    const fiveWords = Math.random() < 0.5;      // per-board 5/4 or 4/5
-    const wCount = fiveWords ? 5 : 4;
-    const sCount = 9 - wCount;
-    const wPick = pickWithRepeats(wordsPool, wCount);
-    const sPick = pickWithRepeats(sentsPool, sCount);
-    const board = shuffle(wPick.concat(sPick));
-    out.push(...board);
+  const bag = arr.slice();
+  while (out.length < n){
+    // reshuffle bag when exhausted
+    if (!bag.length) bag.push(...arr.slice().sort(()=>Math.random()-0.5));
+    out.push(bag.shift());
   }
   return out;
 }
 
-/* 3x3 board DOM */
+/* Balanced gather across multiple selected codes */
+function gatherBalanced(codes, mode, total){
+  if (mode !== 'both'){
+    const per = Math.max(1, Math.floor(total / Math.max(1,codes.length)));
+    let pool = [];
+    for (const c of codes){
+      const list = getListForCode(c, mode);
+      pool = pool.concat(fillN(list, per));
+    }
+    if (pool.length < total){
+      // top-up by revisiting lists
+      for (const c of codes){
+        if (pool.length >= total) break;
+        const list = getListForCode(c, mode);
+        const need = total - pool.length;
+        pool = pool.concat(fillN(list, need));
+      }
+    }
+    return pool.slice(0,total).sort(()=>Math.random()-0.5);
+  }
+
+  // both = ~half words, half sentences (5/4 split handled by math)
+  const targetW = Math.floor(total/2);
+  const targetS = total - targetW;
+
+  let wordsPool = [], sentsPool = [];
+  const perW = Math.max(1, Math.floor(targetW / Math.max(1,codes.length)));
+  const perS = Math.max(1, Math.floor(targetS / Math.max(1,codes.length)));
+
+  for (const c of codes){
+    wordsPool = wordsPool.concat(fillN(getListForCode(c,'words'), perW));
+    sentsPool = sentsPool.concat(fillN(getListForCode(c,'sentences'), perS));
+  }
+  // top-ups
+  for (const c of codes){
+    if (wordsPool.length >= targetW) break;
+    wordsPool = wordsPool.concat(fillN(getListForCode(c,'words'), targetW - wordsPool.length));
+  }
+  for (const c of codes){
+    if (sentsPool.length >= targetS) break;
+    sentsPool = sentsPool.concat(fillN(getListForCode(c,'sentences'), targetS - sentsPool.length));
+  }
+
+  const merged = wordsPool.slice(0,targetW).concat(sentsPool.slice(0,targetS));
+  return merged.slice(0,total).sort(()=>Math.random()-0.5);
+}
+
+/* Build a single 3x3 board */
 function buildBoard(cells){
   const tbl = document.createElement('table');
   tbl.className = 'tic-tac-toe';
@@ -581,31 +724,22 @@ function buildBoard(cells){
   wrap.className = 'board-shell';
   const label = document.createElement('div');
   label.className = 'board-label';
-  label.textContent = ''; // caller sets "Game 1", etc.
+  label.textContent = ''; // set by caller
   wrap.appendChild(label);
   wrap.appendChild(tbl);
   return wrap;
 }
 
-/* ========================= GENERATE ========================= */
+/* Generate 4 boards x 9 cells = 36 items */
 function generateBoards(){
   if (selectedCodes.size === 0) return alert('Select at least one skill in Step 1.');
   if (!mode) return alert('Choose Words Only / Sentences Only / Both in Step 3.');
 
   const codes = Array.from(selectedCodes);
   const TOTAL = 36;
-  let content = [];
-
-  if (mode === 'both') {
-    content = gatherBothPerBoard(codes); // 36 items (4 boards × 9)
-  } else if (mode === 'words') {
-    content = gatherSingleType(codes, 'words', TOTAL);
-  } else {
-    content = gatherSingleType(codes, 'sentences', TOTAL);
-  }
-
+  const content = gatherBalanced(codes, mode, TOTAL);
   if (content.length < TOTAL) {
-    return alert('Not enough content from the selected skills. Add more skills or switch modes.');
+    return alert('Not enough content for the chosen settings. Try toggling blends, adding skills, or switching content type.');
   }
 
   const output = document.getElementById('output');
@@ -616,12 +750,12 @@ function generateBoards(){
 
   const title = document.createElement('div');
   title.className = 'worksheet-title';
-  const picked = codes.map(c=>SKILL_LABEL[c] || c).join(' • ');
+  const picked = codes.map(c=>NAME[c]).join(' • ');
   title.textContent = `${picked} Tic Tac Toe Game`;
 
   const directions = document.createElement('div');
   directions.className = 'worksheet-directions';
-  directions.innerHTML = '<strong>Directions:</strong> Read the word or sentence in the space you’d like to go, then put an X or O. Your opponent does the same. If you get 3 in a row…you win!';
+  directions.innerHTML = '<strong>Directions:</strong> Read the word or sentence in the space you’d like to go, then put an X or O. Your opponent does the same. Win with 3 in a row!';
 
   const grid = document.createElement('div');
   grid.className = 'board-wrap';
@@ -644,7 +778,6 @@ function generateBoards(){
   output.scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
-/* Hook up Generate button */
 document.getElementById('btnGenerate').addEventListener('click', generateBoards);
 </script>
 </body>
