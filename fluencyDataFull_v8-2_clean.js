@@ -819,7 +819,7 @@ const fluencySentences = {
   'Rose can wave at the pole.', 'Chad can bake a cake.', 
   'Jake will pose by the cone.', 'Luke will save the note.', 
   'Mike will hike up the dune.'
-]
+],
 
   // === Level 3 R-Controlled/Blends SENTENCES ===
 "3.1 - all Sentences with Blends": ['The cat is small.', 'Pam had a small bag.', 'We saw a small dog.', 'The bug is small.', 'Ben met a small pig.', 'Meg sat by a small pup.', 'The fish is small.', 'Sam had a small cup.', 'The doll is small.', 'We put a small box on the mat.', 'The man will stall the job.', 'Pam did stall at the mall.', 'The bus will stall on the hill.', 'The car did stall at the lot.', 'The man will stall at the shop.', 'Meg saw the bus stall.', 'The job will stall at the mall.', 'The pup will stall at the pen.', 'The cat did stall at the wall.', 'We saw the van stall.'],
