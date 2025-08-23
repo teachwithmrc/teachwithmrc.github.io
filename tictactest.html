@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Tic Tac Toe Phonics Generator</title>
+  <title>Fluency Grid Generator (Unified UI)</title>
   <script src="fluencyDataFull_v6.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
@@ -114,8 +114,21 @@
     .worksheet-title { font-size:34px; margin-bottom:6px; font-weight:700; text-align:center; }
     .worksheet-directions { font-size:18px; margin-bottom:14px; text-align:center; }
     .board-wrap { display:grid; grid-template-columns: 1fr 1fr; gap:30px; justify-content:center; max-width:900px; margin:0 auto; }
-    .tic-tac-toe { border-collapse:collapse; width:100%; }
-    .tic-tac-toe td { border:none; height:80px; vertical-align:middle; text-align:center; padding:6px; font-size:24px; line-height:28px; word-break:break-word; }
+
+    /* >>> FIXES FOR WRAPPING <<< */
+    .tic-tac-toe { border-collapse:collapse; width:100%; table-layout: fixed; }
+    .tic-tac-toe td {
+      border:none;
+      width:100px;               /* fixed box like the “perfect” file */
+      height:80px;
+      vertical-align:middle;
+      text-align:center;
+      padding:6px;
+      /* removed word-break: break-word; */
+    }
+    .cell-text.word { white-space: nowrap; }                 /* never split single words */
+    .cell-text.sentence { white-space: normal; overflow-wrap: anywhere; } /* sentences may wrap */
+
     .board-shell { display:flex; flex-direction:column; align-items:center; width:100%; border:3px solid #000; border-radius:16px; padding:12px; background:#fff; box-sizing:border-box; }
     .board-label { font-weight:700; font-size:22px; margin-bottom:10px; }
 
@@ -471,7 +484,7 @@ function gatherBalanced(codes, mode, totalCells){
   return pick(words.concat(sents), totalCells);
 }
 
-/* build a single 3x3 board */
+/* build a single 3x3 board (uses span for wrap control) */
 function buildBoard(cells){
   const tbl = document.createElement('table');
   tbl.className = 'tic-tac-toe';
@@ -480,12 +493,19 @@ function buildBoard(cells){
     for (let c=0;c<3;c++){
       const td = row.insertCell();
       const val = cells[r*3+c] ?? '';
-      const isSentence = (typeof val === 'string') && val.trim().includes(' ');
-      td.textContent = val;
+      const isSentence = (typeof val === 'string') && /\s/.test(val);
+
+      // borders
       if (r<2) td.style.borderBottom = '6px solid black';
       if (c<2) td.style.borderRight  = '6px solid black';
-      td.style.fontSize = isSentence ? '20px' : '24px';
-      td.style.lineHeight = isSentence ? '22px' : '28px';
+
+      // text span controls wrapping
+      const span = document.createElement('span');
+      span.className = 'cell-text ' + (isSentence ? 'sentence' : 'word');
+      span.textContent = val;
+      span.style.fontSize = isSentence ? '20px' : '24px';
+      span.style.lineHeight = isSentence ? '22px' : '28px';
+      td.appendChild(span);
     }
   }
   const wrap = document.createElement('div');
