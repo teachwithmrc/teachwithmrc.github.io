@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fluency Skill Selector (Clean)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="/mnt/data/fluencyDataFull_v8-2_clean.js"></script>
+  <style>
+    :root{
+      --bg:#ffffff; --ink:#111; --muted:#6b7280; --accent:#111827; --chip:#f3f4f6; --chipOn:#111827; --chipOnTxt:#fff;
+      --ring: rgba(17,24,39,.2);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Poppins,system-ui,Arial,sans-serif}
+    header{padding:16px 20px;border-bottom:1px solid #eee;display:flex;gap:14px;align-items:center;justify-content:space-between}
+    header h1{font-size:18px;margin:0;font-weight:600}
+    .wrap{max-width:1100px;margin:20px auto;padding:0 16px}
+    .steps{display:grid;gap:14px}
+    .step{background:#fff;border:1px solid #eee;border-radius:14px;padding:14px 14px 10px;box-shadow:0 1px 0 var(--ring)}
+    .step h2{font-size:14px;margin:0 0 10px 0;font-weight:600;letter-spacing:.2px}
+    .seg{display:flex;flex-wrap:wrap;gap:10px}
+    .seg button{appearance:none;border:1px solid #ddd;background:var(--chip);padding:8px 12px;border-radius:999px;font-weight:600;cursor:pointer}
+    .seg button[aria-pressed="true"]{background:var(--chipOn);color:var(--chipOnTxt);border-color:var(--chipOn)}
+    .skills{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{appearance:none;border:1px solid #e5e7eb;background:#fff;padding:8px 10px;border-radius:999px;cursor:pointer}
+    .chip[aria-pressed="true"]{background:#111827;color:#fff;border-color:#111827}
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-top:8px}
+    .toolbar .right{display:flex;gap:10px}
+    .btn{appearance:none;border:1px solid #111827;background:#111827;color:#fff;padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer}
+    .btn.ghost{background:#fff;color:#111827}
+    .muted{color:var(--muted);font-size:12px}
+    .out{margin-top:16px;border:1px dashed #e5e7eb;border-radius:12px;padding:14px;min-height:80px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+    .cell{aspect-ratio:1/1;border:2px solid #111;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600}
+    @media (max-width:720px){ .grid{grid-template-columns:repeat(2,1fr)} }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Fluency Selector</h1>
+    <div class="muted">Data source: <code>fluencyDataFull_v8-2_clean.js</code></div>
+  </header>
+
+  <main class="wrap">
+    <section class="steps">
+      <!-- STEP 1: Content Type -->
+      <div class="step" id="step1">
+        <h2>Step 1 — Choose content</h2>
+        <div class="seg" role="tablist" aria-label="Content Type">
+          <button class="seg-btn" data-type="words" aria-pressed="true">Words</button>
+          <button class="seg-btn" data-type="sentences" aria-pressed="false">Sentences</button>
+          <button class="seg-btn" data-type="tricky" aria-pressed="false">Tricky</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Skills (auto from JS keys; nothing disabled) -->
+      <div class="step" id="step2">
+        <h2>Step 2 — Pick skills (from JS)</h2>
+        <div class="toolbar">
+          <div class="muted" id="skillCount">0 selected</div>
+          <div class="right">
+            <button class="btn ghost" id="selectAll">Select All</button>
+            <button class="btn ghost" id="clearAll">Clear</button>
+          </div>
+        </div>
+        <div class="skills" id="skills"></div>
+      </div>
+
+      <!-- STEP 3: Example Output (simple Tic-Tac-Toe preview area you can swap for your generator) -->
+      <div class="step" id="step3">
+        <h2>Step 3 — Generate</h2>
+        <div class="seg">
+          <button class="btn" id="generate">Generate Sample Board</button>
+        </div>
+        <div class="out" id="out">
+          <div class="muted">Your output will appear here.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Expecting globals from your JS file:
+    //   fluencyWords: { "<skill label>": [ ... ] }
+    //   fluencySentences: { "<skill label>": [ ... ] }
+    //   trickyWords: { "<skill label>": [ ... ] }
+    // We’ll gracefully handle if any are missing.
+
+    const state = {
+      type: 'words',              // words | sentences | tricky
+      skills: [],                 // all skill labels for the current type
+      selected: new Set(),        // selected skill labels
+    };
+
+    const els = {
+      typeButtons: Array.from(document.querySelectorAll('.seg-btn')),
+      skills: document.getElementById('skills'),
+      skillCount: document.getElementById('skillCount'),
+      selectAll: document.getElementById('selectAll'),
+      clearAll: document.getElementById('clearAll'),
+      generate: document.getElementById('generate'),
+      out: document.getElementById('out'),
+    };
+
+    function getKeysForType(type) {
+      if (type === 'words' && typeof fluencyWords === 'object') {
+        return Object.keys(fluencyWords);
+      }
+      if (type === 'sentences' && typeof fluencySentences === 'object') {
+        return Object.keys(fluencySentences);
+      }
+      if (type === 'tricky' && typeof trickyWords === 'object') {
+        return Object.keys(trickyWords);
+      }
+      return [];
+    }
+
+    function setType(type) {
+      state.type = type;
+      state.skills = getKeysForType(type).sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
+      // Do NOT disable anything—just rebuild from the JS keys.
+      rebuildSkillChips();
+      updateCount();
+      els.typeButtons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.type === type)));
+      // Keep selections if skill labels still exist; remove ones that no longer exist.
+      for (const key of Array.from(state.selected)) {
+        if (!state.skills.includes(key)) state.selected.delete(key);
+      }
+    }
+
+    function rebuildSkillChips() {
+      els.skills.innerHTML = '';
+      if (!state.skills.length) {
+        els.skills.innerHTML = '<span class="muted">No keys found for this content type in the JS.</span>';
+        return;
+      }
+      for (const label of state.skills) {
+        const btn = document.createElement('button');
+        btn.className = 'chip';
+        btn.type = 'button';
+        btn.textContent = label;
+        btn.dataset.label = label;
+        btn.setAttribute('aria-pressed', String(state.selected.has(label)));
+        btn.addEventListener('click', () => {
+          if (state.selected.has(label)) state.selected.delete(label);
+          else state.selected.add(label);
+          btn.setAttribute('aria-pressed', String(state.selected.has(label)));
+          updateCount();
+        });
+        els.skills.appendChild(btn);
+      }
+    }
+
+    function updateCount() {
+      els.skillCount.textContent = `${state.selected.size} selected`;
+    }
+
+    function selectAll() {
+      state.selected = new Set(state.skills);
+      document.querySelectorAll('.chip').forEach(ch => ch.setAttribute('aria-pressed','true'));
+      updateCount();
+    }
+
+    function clearAll() {
+      state.selected.clear();
+      document.querySelectorAll('.chip').forEach(ch => ch.setAttribute('aria-pressed','false'));
+      updateCount();
+    }
+
+    function sampleFrom(arr, n) {
+      if (!Array.isArray(arr) || arr.length === 0) return [];
+      const copy = arr.slice();
+      const out = [];
+      while (out.length < n && copy.length) {
+        const idx = Math.floor(Math.random()*copy.length);
+        out.push(copy.splice(idx,1)[0]);
+      }
+      return out;
+    }
+
+    function getPoolForLabel(label) {
+      if (state.type === 'words' && fluencyWords && fluencyWords[label]) return fluencyWords[label];
+      if (state.type === 'sentences' && fluencySentences && fluencySentences[label]) return fluencySentences[label];
+      if (state.type === 'tricky' && trickyWords && trickyWords[label]) return trickyWords[label];
+      return [];
+    }
+
+    // Very simple 3×3 preview so you can instantly verify data is wired.
+    function generateBoard() {
+      els.out.innerHTML = '';
+      if (state.selected.size === 0) {
+        els.out.innerHTML = '<div class="muted">Select at least one skill to generate.</div>';
+        return;
+      }
+      const labels = Array.from(state.selected);
+      const pool = [];
+      for (const label of labels) {
+        pool.push(...getPoolForLabel(label));
+      }
+      if (pool.length === 0) {
+        els.out.innerHTML = '<div class="muted">No items found under the selected skills.</div>';
+        return;
+      }
+      const nine = sampleFrom(pool, 9);
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      nine.forEach(item => {
+        const c = document.createElement('div');
+        c.className = 'cell';
+        c.textContent = typeof item === 'string' ? item : String(item);
+        grid.appendChild(c);
+      });
+      els.out.appendChild(grid);
+    }
+
+    // Wire up UI
+    els.typeButtons.forEach(b=>{
+      b.addEventListener('click', ()=> setType(b.dataset.type));
+    });
+    els.selectAll.addEventListener('click', selectAll);
+    els.clearAll.addEventListener('click', clearAll);
+    els.generate.addEventListener('click', generateBoard);
+
+    // Init
+    setType('words');
+  </script>
+</body>
+</html>
