@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>Tic Tac Toe Phonics Generator</title>
 
-  <!-- 1) LOAD YOUR DATA FIRST (must match your actual filename/path) -->
+  <!-- Load your data (make sure the filename is correct) -->
   <script src="fluencyDataFull_v8-2_clean.js"></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -96,14 +96,44 @@
     .worksheet-title { font-size:28px; margin-bottom:6px; font-weight:700; text-align:center; }
     .worksheet-directions { font-size:16px; margin-bottom:14px; text-align:center; }
     .board-wrap { display:grid; grid-template-columns: 1fr 1fr; gap:24px; justify-content:center; max-width:900px; margin:0 auto; }
-    .tic-tac-toe { border-collapse:collapse; width:100%; }
-    .tic-tac-toe td {
-      border:none; height:80px; vertical-align:middle; text-align:center; padding:6px;
-      font-size:22px; line-height:26px;
-      /* prevent mid-word splits */
-      word-break: normal;
-      overflow-wrap: anywhere; /* sentences wrap at spaces, not inside words */
+
+    /* ======= GRID FIXES ======= */
+    .tic-tac-toe{
+      table-layout: fixed;
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
     }
+    .tic-tac-toe td{
+      border: none;           /* borders added via classes below */
+      height: 100px;          /* tweak if you want taller/shorter cells */
+      padding: 0;
+      vertical-align: middle;
+      word-break: normal;
+      overflow-wrap: anywhere;
+    }
+    .tic-tac-toe td .cell{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      height: 100%;
+      width: 100%;
+      line-height: 1.25;
+    }
+    .tic-tac-toe td .cell.word{
+      font-size: 22px;
+      text-align: center;
+      white-space: nowrap;    /* prevents mid-word breaks like ca↵p */
+    }
+    .tic-tac-toe td .cell.sentence{
+      font-size: 18px;
+      text-align: left;
+      white-space: normal;
+    }
+    .tic-tac-toe td.has-bottom { border-bottom: 6px solid #000; }
+    .tic-tac-toe td.has-right  { border-right:  6px solid #000; }
+
     .board-shell { display:flex; flex-direction:column; align-items:center; width:100%; border:3px solid #000; border-radius:16px; padding:12px; background:#fff; box-sizing:border-box; }
     .board-label { font-weight:700; font-size:18px; margin-bottom:10px; }
 
@@ -285,9 +315,9 @@
   </div>
 
 <script>
-// ===============================
-// Utilities & Polyfills
-// ===============================
+/* ===============================
+   Utilities & Polyfills
+   =============================== */
 if (typeof CSS === 'undefined' || typeof CSS.escape !== 'function') {
   window.CSS = window.CSS || {};
   CSS.escape = CSS.escape || function(sel){
@@ -295,7 +325,6 @@ if (typeof CSS === 'undefined' || typeof CSS.escape !== 'function') {
   };
 }
 
-// Fisher–Yates shuffle
 function shuffle(arr){
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -305,7 +334,6 @@ function shuffle(arr){
   return a;
 }
 
-// Fill to N with randomness, reshuffling when recycling
 function fillToN(list, n){
   if (!Array.isArray(list) || list.length === 0) return [];
   const out = [];
@@ -321,9 +349,9 @@ function chunk36ToFour(cells){
   return [0,9,18,27].map(i => cells.slice(i, i+9));
 }
 
-// ===============================
-// Data key mapping
-// ===============================
+/* ===============================
+   Data key mapping
+   =============================== */
 const PREFIX = {
   // CVC
   "Short A": "0.1 - Short A",
@@ -364,7 +392,7 @@ const PREFIX = {
   "Long O (oa/ow/oe)": "5.4 - Long O (oa/ow/oe)",
   "Long U (oo/ew/ue)": "5.5 - Long U (oo/ew/ue)",
 
-  // Variant & Soft Endings (match button labels exactly)
+  // Variant & Soft Endings
   "Variant Vowels (au/aw)": "6.1 - au/aw",
   "Variant Vowel (oo)":     "6.2 - oo",
   "Soft Endings":           "7.x - Soft Endings"
@@ -385,9 +413,9 @@ const MIXED_RULES = {
   ]
 };
 
-// ===============================
-// Access to global data dicts
-// ===============================
+/* ===============================
+   Access to data dicts
+   =============================== */
 function wordsDict(){ return (typeof fluencyWords !== 'undefined') ? fluencyWords : {}; }
 function sentsDict(){ return (typeof fluencySentences !== 'undefined') ? fluencySentences : {}; }
 function readDict(dict, key){ return Array.isArray(dict[key]) ? dict[key] : []; }
@@ -406,60 +434,48 @@ function getList(label, type, blends){
   const dict = (type === 'Words') ? wordsDict() : sentsDict();
 
   if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)){
-    var all = [];
-    var parts = MIXED_RULES[label];
-    for (var i=0;i<parts.length;i++){
-      all = all.concat(readWithBlends(dict, parts[i], type, blends));
+    let all = [];
+    for (const p of MIXED_RULES[label]){
+      all = all.concat(readWithBlends(dict, p, type, blends));
     }
     return all;
   }
 
-  var prefix = PREFIX[label];
-  if (prefix){
-    return readWithBlends(dict, prefix, type, blends);
-  }
+  const prefix = PREFIX[label];
+  if (prefix) return readWithBlends(dict, prefix, type, blends);
 
-  var tail = " " + type;
-  var keys = Object.keys(dict);
-  var want = label.toLowerCase();
-  for (var k=0;k<keys.length;k++){
-    var key = keys[k];
-    if (key.toLowerCase().indexOf(want) !== -1 && key.slice(-tail.length) === tail){
-      return readDict(dict, key);
-    }
-  }
-  return [];
+  // Fallback: loose match if a custom label was typed
+  const tail = " " + type;
+  const want = label.toLowerCase();
+  const keys = Object.keys(dict);
+  const guess = keys.find(k => k.toLowerCase().includes(want) && k.endsWith(tail));
+  return guess ? readDict(dict, guess) : [];
 }
 
-// ===============================
-// UI wiring
-// ===============================
-var selected = new Set();
-var includeBlends = false;
-var mode = null;
+/* ===============================
+   UI wiring
+   =============================== */
+const selected = new Set();
+let includeBlends = false;
+let mode = null;
 
 // Expand/Collapse
-document.querySelectorAll('.skill-header').forEach(function(header){
-  header.addEventListener('click', function(){
-    var target = header.getAttribute('data-target');
-    var inner = document.getElementById('section-' + target);
-    var arrows = header.querySelectorAll('.arrow');
-    var isCollapsed = inner.classList.contains('collapsed');
-    if (isCollapsed) {
-      inner.classList.remove('collapsed');
-      arrows.forEach(function(a){ a.textContent = '▲'; });
-    } else {
-      inner.classList.add('collapsed');
-      arrows.forEach(function(a){ a.textContent = '▼'; });
-    }
+document.querySelectorAll('.skill-header').forEach(header=>{
+  header.addEventListener('click', ()=>{
+    const target = header.getAttribute('data-target');
+    const inner = document.getElementById('section-' + target);
+    const arrows = header.querySelectorAll('.arrow');
+    const isCollapsed = inner.classList.contains('collapsed');
+    if (isCollapsed) { inner.classList.remove('collapsed'); arrows.forEach(a=>a.textContent='▲'); }
+    else { inner.classList.add('collapsed'); arrows.forEach(a=>a.textContent='▼'); }
   });
 });
 
 // Step 1: toggle skill buttons
-document.querySelectorAll('.skill-button').forEach(function(btn){
-  btn.addEventListener('click', function(e){
+document.querySelectorAll('.skill-button').forEach(btn=>{
+  btn.addEventListener('click', (e)=>{
     e.stopPropagation();
-    var label = btn.dataset.skill;
+    const label = btn.dataset.skill;
     if (selected.has(label)) { selected.delete(label); btn.classList.remove('selected'); }
     else { selected.add(label); btn.classList.add('selected'); }
     renderChips();
@@ -467,15 +483,15 @@ document.querySelectorAll('.skill-button').forEach(function(btn){
 });
 
 function renderChips(){
-  var wrap = document.getElementById('chips');
+  const wrap = document.getElementById('chips');
   wrap.innerHTML = '';
-  Array.from(selected).forEach(function(label){
-    var chip = document.createElement('div');
+  Array.from(selected).forEach(label=>{
+    const chip = document.createElement('div');
     chip.className = 'chip';
-    chip.innerHTML = '<span>' + label + '</span><span class="x" title="Remove">\u00D7</span>'; // ×
-    chip.querySelector('.x').addEventListener('click', function(){
+    chip.innerHTML = '<span>'+label+'</span><span class="x" title="Remove">\u00D7</span>';
+    chip.querySelector('.x').addEventListener('click', ()=>{
       selected.delete(label);
-      var btn = document.querySelector('.skill-button[data-skill="' + CSS.escape(label) + '"]');
+      const btn = document.querySelector('.skill-button[data-skill="'+CSS.escape(label)+'"]');
       if (btn) btn.classList.remove('selected');
       renderChips();
     });
@@ -484,18 +500,18 @@ function renderChips(){
 }
 
 // Step 2: blends
-document.querySelectorAll('#blendOptions .option-box').forEach(function(box){
-  box.addEventListener('click', function(){
-    document.querySelectorAll('#blendOptions .option-box').forEach(function(b){ b.classList.remove('selected'); });
+document.querySelectorAll('#blendOptions .option-box').forEach(box=>{
+  box.addEventListener('click', ()=>{
+    document.querySelectorAll('#blendOptions .option-box').forEach(b=>b.classList.remove('selected'));
     box.classList.add('selected');
     includeBlends = (box.dataset.blends === 'yes');
   });
 });
 
 // Step 3: content mode
-document.querySelectorAll('#contentOptions .option-box').forEach(function(box){
-  box.addEventListener('click', function(){
-    document.querySelectorAll('#contentOptions .option-box').forEach(function(b){ b.classList.remove('selected'); });
+document.querySelectorAll('#contentOptions .option-box').forEach(box=>{
+  box.addEventListener('click', ()=>{
+    document.querySelectorAll('#contentOptions .option-box').forEach(b=>b.classList.remove('selected'));
     box.classList.add('selected');
     mode = box.dataset.mode;
   });
@@ -503,43 +519,42 @@ document.querySelectorAll('#contentOptions .option-box').forEach(function(box){
 
 // Floating bar
 function toggleFloatingBar(){
-  var el = document.getElementById('floatingActions');
-  var isDesktop = window.matchMedia('(min-width: 992px)').matches;
+  const el = document.getElementById('floatingActions');
+  const isDesktop = window.matchMedia('(min-width: 992px)').matches;
   el.style.display = isDesktop ? 'flex' : 'none';
 }
 toggleFloatingBar();
 window.addEventListener('resize', toggleFloatingBar);
+document.getElementById('fabGenerate')?.addEventListener('click', ()=>document.getElementById('btnGenerate')?.click());
+document.getElementById('fabPrint')?.addEventListener('click', ()=>window.print());
 
-var fabGen = document.getElementById('fabGenerate');
-if (fabGen) fabGen.addEventListener('click', function(){
-  var gen = document.getElementById('btnGenerate');
-  if (gen) gen.click();
-});
-var fabPrint = document.getElementById('fabPrint');
-if (fabPrint) fabPrint.addEventListener('click', function(){ window.print(); });
-
-// Build a single 3x3 board
+/* Build a single 3x3 board (with inner cell wrapper & clean borders) */
 function buildBoard(cells){
-  var tbl = document.createElement('table');
+  const tbl = document.createElement('table');
   tbl.className = 'tic-tac-toe';
-  for (var r=0;r<3;r++){
-    var row = tbl.insertRow();
-    for (var c=0;c<3;c++){
-      var td = row.insertCell();
-      var idx = r*3+c;
-      var val = (cells[idx] != null) ? String(cells[idx]) : '';
-      var isSentence = (val.indexOf(' ') !== -1);
-      td.textContent = val;
-      if (r<2) td.style.borderBottom = '6px solid black';
-      if (c<2) td.style.borderRight  = '6px solid black';
-      td.style.fontSize  = isSentence ? '18px' : '22px';
-      td.style.lineHeight = isSentence ? '22px' : '26px';
-      td.style.whiteSpace = isSentence ? 'normal' : 'nowrap'; // no mid-word breaks
+
+  for (let r=0; r<3; r++){
+    const row = tbl.insertRow();
+    for (let c=0; c<3; c++){
+      const td = row.insertCell();
+      const idx = r*3+c;
+      const val = (cells[idx] != null) ? String(cells[idx]) : '';
+      const isSentence = val.includes(' ');
+
+      if (r < 2) td.classList.add('has-bottom');
+      if (c < 2) td.classList.add('has-right');
+
+      const inner = document.createElement('div');
+      inner.className = 'cell ' + (isSentence ? 'sentence' : 'word');
+      inner.textContent = val;
+
+      td.appendChild(inner);
     }
   }
-  var wrap = document.createElement('div');
+
+  const wrap = document.createElement('div');
   wrap.className = 'board-shell';
-  var label = document.createElement('div');
+  const label = document.createElement('div');
   label.className = 'board-label';
   label.textContent = '';
   wrap.appendChild(label);
@@ -547,70 +562,59 @@ function buildBoard(cells){
   return wrap;
 }
 
-// Generate all four boards
+/* Generate all four boards */
 function generateBoards(){
-  if (selected.size === 0) { alert('Select at least one skill in Step 1.'); return; }
-  if (!mode) { alert('Choose Words Only / Sentences Only / Both in Step 3.'); return; }
-  if (!wordsDict() && !sentsDict()) { alert('Data not loaded. Check the <script src="..."> file name.'); return; }
+  if (selected.size === 0) return alert('Select at least one skill in Step 1.');
+  if (!mode) return alert('Choose Words Only / Sentences Only / Both in Step 3.');
+  if (!wordsDict() && !sentsDict()) return alert('Data not loaded. Check the <script src="..."> file name.');
 
-  var labels = Array.from(selected);
-  var TOTAL = 36;
-  var content = [];
+  const labels = Array.from(selected);
+  const TOTAL = 36;
+  let content = [];
 
   if (mode === 'words'){
-    var unionW = [];
-    for (var i=0;i<labels.length;i++){
-      unionW = unionW.concat(getList(labels[i], 'Words', includeBlends));
-    }
+    const unionW = labels.flatMap(lbl => getList(lbl, 'Words', includeBlends));
     content = fillToN(shuffle(unionW), TOTAL);
   } else if (mode === 'sentences'){
-    var unionS = [];
-    for (var j=0;j<labels.length;j++){
-      unionS = unionS.concat(getList(labels[j], 'Sentences', includeBlends));
-    }
+    const unionS = labels.flatMap(lbl => getList(lbl, 'Sentences', includeBlends));
     content = fillToN(shuffle(unionS), TOTAL);
   } else {
-    var words = [];
-    var sents = [];
-    for (var k=0;k<labels.length;k++){
-      words = words.concat(getList(labels[k], 'Words', includeBlends));
-      sents = sents.concat(getList(labels[k], 'Sentences', includeBlends));
-    }
-    var w = fillToN(shuffle(words), Math.floor(TOTAL/2));
-    var s = fillToN(shuffle(sents), TOTAL - w.length);
+    const words = labels.flatMap(lbl => getList(lbl, 'Words', includeBlends));
+    const sents = labels.flatMap(lbl => getList(lbl, 'Sentences', includeBlends));
+    const w = fillToN(shuffle(words), Math.floor(TOTAL/2));
+    const s = fillToN(shuffle(sents), TOTAL - w.length);
     content = shuffle(w.concat(s));
   }
 
-  if (content.length < TOTAL) {
-    alert('Not enough content found using these settings. Add more skills or change blends/content options.');
-    return;
+  if (content.length < TOTAL){
+    return alert('Not enough content found using these settings. Add more skills or change blends/content options.');
   }
 
-  var output = document.getElementById('output');
+  const output = document.getElementById('output');
   output.innerHTML = '';
 
-  var page = document.createElement('div');
+  const page = document.createElement('div');
   page.className = 'page';
 
-  var title = document.createElement('div');
+  const title = document.createElement('div');
   title.className = 'worksheet-title';
   title.textContent = labels.join(' • ') + ' Tic Tac Toe Game';
 
-  var directions = document.createElement('div');
+  const directions = document.createElement('div');
   directions.className = 'worksheet-directions';
   directions.innerHTML = '<strong>Directions:</strong> Read the word or sentence, then place your X or O. First to 3 in a row wins!';
 
-  var grid = document.createElement('div');
+  const grid = document.createElement('div');
   grid.className = 'board-wrap';
 
-  var boards = chunk36ToFour(content);
-  for (var b=0;b<boards.length;b++){
-    var group = buildBoard(boards[b]);
-    group.querySelector('.board-label').textContent = 'Game ' + (b+1);
+  const boards = chunk36ToFour(content);
+  boards.forEach((cells, i)=>{
+    const group = buildBoard(cells);
+    group.querySelector('.board-label').textContent = 'Game ' + (i+1);
     grid.appendChild(group);
-  }
+  });
 
-  var copy = document.createElement('div');
+  const copy = document.createElement('div');
   copy.id = 'copyright';
   copy.textContent = 'Copyright - InterventionStation.com - @TeachwithMrC';
 
