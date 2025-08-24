@@ -329,12 +329,20 @@
             <button class="skill-button variant" data-skill="Variant Vowel (oo)">oo</button>
           </div>
         </div>
-
+  "Variant Vowels (ou,ow)":  ["7.1 - ou", "7.2 - ow"],
+  "Variant Vowels (oi,oy)":  ["7.3 - oi", "7.4 - oy"],
+  "Variant Vowels (au/aw)":  ["7.5 - aw", "7.6 - au"],
+  "Variant Vowel (oo)":     "7.7 - oo variant",
+  "Soft C (-ce)":           "10.1 - ce Words", 
+  "Soft G (-ge)":           "10.2 - ge Words",
+  "Soft G (-dge):           "10.3 - dge", 
         <!-- Soft Endings -->
         <div class="skill-block bg-soft">
           <div class="skill-header" data-target="soft"><span class="arrow">▼</span><span class="title">Soft C/G Endings</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-soft">
-            <button class="skill-button soft" data-skill="Soft Endings">Soft C/G Endings (-ce/-ge/-dge)</button>
+  <button class="skill-button variant" data-skill="Soft C -ce">Soft C -ce</button>
+            <button class="skill-button variant" data-skill="Soft G -ge"">Soft G (-ge)</button>
+               <button class="skill-button variant" data-skill="Soft G -dge"">Soft G (-dge)</button>
           </div>
         </div>
       </div>
@@ -458,16 +466,20 @@ const PREFIX = {
   "er/ir/ur": "4.3 - er, ir, ur",
 
   // Vowel Teams
-  "Long A (ai/ay)": "5.1 - Long A (ai/ay)",
-  "Long E (ee/ea)": "5.2 - Long E (ee/ea)",
-  "Long I (igh/y/ie)": "5.3 - Long I (igh/y/ie)",
-  "Long O (oa/ow/oe)": "5.4 - Long O (oa/ow/oe)",
-  "Long U (oo/ew/ue)": "5.5 - Long U (oo/ew/ue)",
+"Long A (ai/ay)": ["6.1 - ay", "6.2 - ai"],
+  "Long E (ee/ea)": ["6.4 - ee", "6.5 - ea"],
+  "Long I (igh/y/ie)": "["6.6 - igh","6.7 - Final y","6.8 - ie"]",
+  "Long O (oa/ow/oe)":  ["6.9 - oa","6.10 - ow","6.11 - oe"],
+  "Long U (oo/ew/ue)": ["6.12 - oo (long u)","6.13 - ew","6.14 - ue"],
 
   // Variant & Soft Endings
-  "Variant Vowels (au/aw)": "6.1 - au/aw",
-  "Variant Vowel (oo)":     "6.2 - oo",
-  "Soft Endings":           "7.x - Soft Endings"
+  "Variant Vowels (ou,ow)":  ["7.1 - ou", "7.2 - ow"],
+  "Variant Vowels (oi,oy)":  ["7.3 - oi", "7.4 - oy"],
+  "Variant Vowels (au/aw)":  ["7.5 - aw", "7.6 - au"],
+  "Variant Vowel (oo)":     "7.7 - oo variant",
+  "Soft C (-ce)":           "10.1 - ce Words", 
+  "Soft G (-ge)":           "10.2 - ge Words",
+  "Soft G (-dge):           "10.3 - dge", 
 };
 
 const MIXED_RULES = {
@@ -477,11 +489,7 @@ const MIXED_RULES = {
   "Mixed VCe": ["2.1 - a_e","2.2 - i_e","2.3 - o_e","2.4 - u_e"],
   "Mixed R-Controlled": ["4.1 - ar","4.2 - or","4.3 - er, ir, ur"],
   "Mixed Vowel Teams": [
-    "5.1 - Long A (ai/ay)",
-    "5.2 - Long E (ee/ea)",
-    "5.3 - Long I (igh/y/ie)",
-    "5.4 - Long O (oa/ow/oe)",
-    "5.5 - Long U (oo/ew/ue)"
+   "6.1 - ay", "6.2 - ai", "6.4 - ee", "6.5 - ea", "6.6 - igh","6.7 - Final y","6.8 - ie", "6.9 - oa","6.10 - ow","6.11 - oe", "6.12 - oo (long u)","6.13 - ew","6.14 - ue"
   ]
 };
 
