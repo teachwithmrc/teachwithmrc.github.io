@@ -105,40 +105,42 @@
 .layout {
   align-items: start; /* instead of stretch */
 }
-    /* ======= GRID FIXES ======= */
-    .tic-tac-toe{
-      table-layout: fixed;
-      border-collapse: separate;
-      border-spacing: 0;
-      width: 100%;
-    }
-    .tic-tac-toe td{
-      border: none;           /* borders added via classes below */
-      height: 100px;          /* tweak if you want taller/shorter cells */
-      padding: 0;
-      vertical-align: middle;
-      word-break: normal;
-      overflow-wrap: anywhere;
-    }
-    .tic-tac-toe td .cell{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 14px;
-      height: 100%;
-      width: 100%;
-      line-height: 1.25;
-    }
-    .tic-tac-toe td .cell.word{
-      font-size: 22px;
-      text-align: center;
-      white-space: nowrap;    /* prevents mid-word breaks like ca↵p */
-    }
-    .tic-tac-toe td .cell.sentence{
-      font-size: 18px;
-      text-align: center;
-      white-space: normal;
-    }
+/* ======= GRID – perfectly centered, symmetric lines ======= */
+.tic-tac-toe{
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;       /* collapse so inner lines are single width */
+}
+.tic-tac-toe td{
+  border: 6px solid #000;          /* equal lines on all sides */
+  height: 96px;                    /* adjust to taste */
+  padding: 0;
+}
+
+/* center everything in the box */
+.tic-tac-toe td .cell{
+  display: grid;
+  place-items: center;             /* vertical + horizontal centering */
+  width: 100%;
+  height: 100%;
+  padding: 8px 10px;
+  text-align: center;
+  line-height: 1.25;
+}
+
+/* words never break mid-letter; sentences can wrap at spaces */
+.tic-tac-toe td .cell.word{
+  font-size: 22px;
+  white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+.tic-tac-toe td .cell.sentence{
+  font-size: 18px;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;       /* wrap long sentences at spaces */
+}
     .tic-tac-toe td.has-bottom { border-bottom: 6px solid #000; }
     .tic-tac-toe td.has-right  { border-right:  6px solid #000; }
 
@@ -536,21 +538,18 @@ window.addEventListener('resize', toggleFloatingBar);
 document.getElementById('fabGenerate')?.addEventListener('click', ()=>document.getElementById('btnGenerate')?.click());
 document.getElementById('fabPrint')?.addEventListener('click', ()=>window.print());
 
-/* Build a single 3x3 board (with inner cell wrapper & clean borders) */
+/* Build a single 3x3 board (centered content, symmetric lines) */
 function buildBoard(cells){
   const tbl = document.createElement('table');
   tbl.className = 'tic-tac-toe';
 
-  for (let r=0; r<3; r++){
+  for (let r = 0; r < 3; r++){
     const row = tbl.insertRow();
-    for (let c=0; c<3; c++){
+    for (let c = 0; c < 3; c++){
       const td = row.insertCell();
-      const idx = r*3+c;
-      const val = (cells[idx] != null) ? String(cells[idx]) : '';
-      const isSentence = val.includes(' ');
 
-      if (r < 2) td.classList.add('has-bottom');
-      if (c < 2) td.classList.add('has-right');
+      const val = (cells[r*3 + c] ?? '').toString();
+      const isSentence = /\s/.test(val);
 
       const inner = document.createElement('div');
       inner.className = 'cell ' + (isSentence ? 'sentence' : 'word');
@@ -559,6 +558,18 @@ function buildBoard(cells){
       td.appendChild(inner);
     }
   }
+
+  const wrap = document.createElement('div');
+  wrap.className = 'board-shell';
+
+  const label = document.createElement('div');
+  label.className = 'board-label';
+  label.textContent = ''; // caller sets "Game 1/2/3/4"
+
+  wrap.appendChild(label);
+  wrap.appendChild(tbl);
+  return wrap;
+}
 
   const wrap = document.createElement('div');
   wrap.className = 'board-shell';
