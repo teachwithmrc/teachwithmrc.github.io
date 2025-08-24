@@ -216,7 +216,7 @@ const fluencyWords = {
 "6.13 - ew Words": ['few', 'new', 'pew', 'sew', 'chew'],
 "6.13b - ew with Blends Words": ['skew', 'spew', 'stew', 'blew', 'brew', 'crew', 'drew', 'flew', 'grew', 'skew', 'slew', 'spew', 'stew', 'threw', 'screw'],
 "6.14 - ue Words": ['cue', 'hue', 'due', 'cue'],
-"6.14 - ue with Blends Words": ['blue', 'flue', 'clue', 'glue'],
+"6.14 - ue with Blends Words": ['blue', 'flue', 'clue', 'glue']
 };
 
 
