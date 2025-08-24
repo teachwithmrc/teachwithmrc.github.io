@@ -120,25 +120,69 @@
     .tic-tac-toe td.has-right { border-right: 6px solid #000; }
 
     #copyright { font-size:12px; text-align:right; margin-top:8px; display:none; }
+@media print {
+  /* Remove UI */
+  .table-section, button, .chips-title, .chips-wrap, .subtitle, .layout, #floatingActions { 
+    display:none !important; 
+  }
 
-    @media print {
-      body { margin:0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .table-section, button, .chips-title, .chips-wrap, .subtitle, .layout, #floatingActions { display:none !important; }
-      #output { margin:0; }
-      .worksheet-title { font-size:20px; margin-bottom:2px; }
-      .worksheet-directions { font-size:13px; margin-bottom:6px; }
-      .page { width:auto; padding:0.35in; box-shadow:none; border:none; page-break-inside: avoid; }
-      .board-wrap { gap:14px; }
-      .board-label { font-size:14px; margin-bottom:4px; }
-      /* Slightly smaller board in print to guarantee single page */
-      .tic-tac-toe { width: 280px; height: 280px; }
-      .tic-tac-toe td { width: 93.33px; height: 93.33px; }
-      .tic-tac-toe td .cell.word { font-size: 22px; }
-      .tic-tac-toe td .cell.sentence { font-size: 21px; }
-      .tic-tac-toe td .cell.sentence.long { font-size: 17px; }
-      .tic-tac-toe td .cell.sentence.very-long { font-size: 15px; }
-      #copyright { display:block; font-size:10px; margin-top:6px; }
-    }
+  /* Shrink page padding + prevent internal page breaks */
+  #output { margin:0; }
+  .page { 
+    position: relative;         /* allow absolute copyright */
+    width:auto; 
+    padding:0.35in;             /* tighter than before */
+    box-shadow:none; 
+    border:none; 
+    page-break-inside: avoid; 
+    break-inside: avoid;
+  }
+
+  .worksheet-title { font-size:20px; margin-bottom:2px; }
+  .worksheet-directions { font-size:13px; margin-bottom:6px; }
+
+  /* Compact the board grid */
+  .board-wrap { 
+    gap:12px;                   /* smaller vertical/horizontal gap */
+    break-inside: avoid; 
+  }
+  .board-shell { 
+    padding:6px 0;              /* no left/right padding; tiny top/bottom */
+    break-inside: avoid; 
+  }
+  .board-label { font-size:14px; margin-bottom:4px; }
+
+  /* Guarantee four boards fit on one letter page */
+  .tic-tac-toe { 
+    width: 268px;               /* down from 280 */
+    height: 268px; 
+    margin:0;
+  }
+  .tic-tac-toe td { 
+    width: 89.33px; 
+    height: 89.33px; 
+  }
+
+  /* Font tuning: words a bit smaller, sentences larger but autoshrink */
+  .tic-tac-toe td .cell.word { font-size: 21px; }
+  .tic-tac-toe td .cell.sentence { font-size: 21px; }
+  .tic-tac-toe td .cell.sentence.long { font-size: 17px; }
+  .tic-tac-toe td .cell.sentence.very-long { font-size: 15px; }
+
+  /* Copyright: small + pinned so it never creates a second page */
+  #copyright { 
+    display:block; 
+    position:absolute; 
+    right:0.35in; 
+    bottom:0.20in; 
+    margin:0; 
+    font-size:10px; 
+  }
+
+  /* Ask the browser for small page margins (still recommend turning off headers/footers) */
+  @page { margin: 0.25in; }
+}
+    
   </style>
 </head>
 <body>
