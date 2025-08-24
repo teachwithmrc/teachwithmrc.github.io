@@ -28,13 +28,45 @@
     h1 { font-size: 32px; margin-bottom: 6px; }
     .subtitle { color:#555; margin:0 0 14px; }
 
-    .layout { width:100%; max-width:1100px; margin:0 auto 14px auto; display:grid; grid-template-columns: minmax(260px,1fr) max-content; grid-template-rows: 1fr 1fr; gap:12px; align-items:start; }
+    .layout { 
+      width:100%; 
+      max-width:1100px; 
+      margin:0 auto 14px auto; 
+      display:grid; 
+      grid-template-columns: minmax(260px,1fr) max-content; 
+      grid-template-rows: auto auto; /* Use auto to size based on content */
+      gap:12px; 
+      align-items:start; 
+    }
     .layout .left { grid-column:1; grid-row:1 / span 2; }
-    .layout .right-top { grid-column:2; grid-row:1; }
-    .layout .right-bottom { grid-column:2; grid-row:2; }
+    .layout .right-top { 
+      grid-column:2; 
+      grid-row:1; 
+      align-self:start; /* Ensure tight packing */
+    }
+    .layout .right-bottom { 
+      grid-column:2; 
+      grid-row:2; 
+      align-self:start; /* Ensure tight packing */
+      margin-top:8px; /* Controlled spacing between Step 2 and Step 3 */
+    }
 
-    .table-section { border:2px solid #000; padding:16px; width:100%; box-sizing:border-box; text-align:left; border-radius:12px; background:#fff; height:auto; }
-    .section-label { font-weight:700; font-size:18px; margin-bottom:12px; text-align:center; }
+    .table-section { 
+      border:2px solid #000; 
+      padding:16px; 
+      width:100%; 
+      box-sizing:border-box; 
+      text-align:left; 
+      border-radius:12px; 
+      background:#fff; 
+      height:auto; 
+    }
+    .section-label { 
+      font-weight:700; 
+      font-size:18px; 
+      margin-bottom:12px; 
+      text-align:center; 
+    }
 
     .skill-block { border:1px solid #bbb; border-radius:12px; overflow:hidden; margin-bottom:12px; background:#fff; }
     .skill-header {
@@ -89,7 +121,10 @@
     .option-box { display:inline-block; padding:8px 12px; border:2px solid #000; border-radius:12px; font-weight:600; font-size:14px; background:#fff; cursor:pointer; }
     .option-box.selected { background-color:#d0f0ff; }
 
-    .actions-sticky { position:sticky; top:8px; z-index:50; background:#fff; }
+    .actions-sticky { 
+      position:static; /* Remove sticky to prevent spacing issues */
+      background:#fff; 
+    }
 
     #output { display:flex; justify-content:center; padding:16px 0; flex-direction:column; gap:20px; }
     .page { width:8.5in; max-width:calc(100% - 32px); background:#fff; box-shadow:0 6px 20px rgba(0,0,0,.12); padding:0.5in; border:2px solid #000; border-radius:8px; margin:0 auto; }
@@ -554,7 +589,7 @@ function buildBoard(cells){
       const td = row.insertCell();
       const idx = r*3+c;
       const val = (cells[idx] != null) ? String(cells[idx]) : '';
-      const isSentence Barney = val.includes(' ');
+      const isSentence = val.includes(' ');
 
       if (r < 2) td.classList.add('has-bottom');
       if (c < 2) td.classList.add('has-right');
@@ -579,7 +614,7 @@ function buildBoard(cells){
   const wrap = document.createElement('div');
   wrap.className = 'board-shell';
   const label = document.createElement('div');
-  label.className = 'board-libel';
+  label.className = 'board-label';
   label.textContent = '';
   wrap.appendChild(label);
   wrap.appendChild(tbl);
