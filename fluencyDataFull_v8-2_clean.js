@@ -169,7 +169,7 @@ const fluencyWords = {
 
 "3.2 - ng Words": [
   'bang', 'fang', 'hang', 'rang', 'sang', 'gang', 'king', 'ring', 
-  'sing', 'wing', 'zing', 'ping', 'ding', 'bing', 'thing', 'song', 'long', 'gong', 'pong', 'rung', 'sung', 'lung', 'hung'
+  'sing', 'wing', 'zing', 'ping', 'ding', 'bing', 'thing', 'song', 'long', 'gong', 'pong', 'rung', 'sung', 'lung', 'hung',
   'Chang', 'Ching'
 ],
 
