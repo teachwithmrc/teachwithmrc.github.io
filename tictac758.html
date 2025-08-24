@@ -285,23 +285,45 @@
   </div>
 
 <script>
-/* ============================================================
-   2) MINIMAL, CLEAR DATA WIRING — READ THIS PART IF STUCK
-   ------------------------------------------------------------
-   - Buttons use human labels (e.g., "Short A", "wh", "Mixed CVC").
-   - We build the exact key string your JS uses and fetch directly.
-   - Mixed sets are just unions of base lists.
-   - If a "... with Blends ..." key is missing, we fall back to base.
-   ============================================================ */
-
-/* --- Safety polyfill for CSS.escape --- */
+// ===============================
+// Utilities & Polyfills
+// ===============================
 if (typeof CSS === 'undefined' || typeof CSS.escape !== 'function') {
   window.CSS = window.CSS || {};
-  CSS.escape = CSS.escape || function(sel){ return (sel+'').replace(/[^a-zA-Z0-9_-]/g,'\\\\$&'); };
+  CSS.escape = CSS.escape || function(sel){
+    return (sel + '').replace(/[^a-zA-Z0-9_-]/g, '\\$&');
+  };
 }
 
-/* === 2.1 Where to edit labels → key prefixes
-   If a skill isn’t pulling, fix the prefix here to match your JS keys exactly. */
+// Fisher–Yates shuffle
+function shuffle(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+// Fill to N with randomness, reshuffling when recycling
+function fillToN(list, n){
+  if (!Array.isArray(list) || list.length === 0) return [];
+  const out = [];
+  let bag = shuffle(list);
+  while (out.length < n){
+    if (bag.length === 0) bag = shuffle(list);
+    out.push(bag.shift());
+  }
+  return out.slice(0, n);
+}
+
+function chunk36ToFour(cells){
+  return [0,9,18,27].map(i => cells.slice(i, i+9));
+}
+
+// ===============================
+// Data key mapping
+// ===============================
 const PREFIX = {
   // CVC
   "Short A": "0.1 - Short A",
@@ -318,7 +340,7 @@ const PREFIX = {
   "ch": "1.4 - ch",
   "wh": "1.5 - wh",
 
-  // Glued (match your data keys)
+  // Glued (match dataset keys)
   "-all": "3.1 - all",
   "-ng":  "3.2 - ang, ing",
   "-nk":  "3.4 - ank, ink",
@@ -342,13 +364,12 @@ const PREFIX = {
   "Long O (oa/ow/oe)": "5.4 - Long O (oa/ow/oe)",
   "Long U (oo/ew/ue)": "5.5 - Long U (oo/ew/ue)",
 
-  // Variant & Soft Endings
-  "au/aw": "6.1 - au/aw",
-  "oo":    "6.2 - oo",
-  "Soft Endings": "7.x - Soft Endings"
+  // Variant & Soft Endings (match button labels exactly)
+  "Variant Vowels (au/aw)": "6.1 - au/aw",
+  "Variant Vowel (oo)":     "6.2 - oo",
+  "Soft Endings":           "7.x - Soft Endings"
 };
 
-/* --- Mixed buckets → which prefixes they union --- */
 const MIXED_RULES = {
   "Mixed CVC": ["0.1 - Short A","0.5 - Short E","0.3 - Short I","0.2 - Short O","0.4 - Short U","0.6 - FLSZ"],
   "Digraphs Mixed": ["1.1 - ck","1.2 - sh","1.3 - th","1.4 - ch","1.5 - wh"],
@@ -364,17 +385,16 @@ const MIXED_RULES = {
   ]
 };
 
-/* --- Handy accessors to your global dictionaries --- */
+// ===============================
+// Access to global data dicts
+// ===============================
 function wordsDict(){ return (typeof fluencyWords !== 'undefined') ? fluencyWords : {}; }
 function sentsDict(){ return (typeof fluencySentences !== 'undefined') ? fluencySentences : {}; }
-
-/* --- Return an array by exact key or empty if missing --- */
 function readDict(dict, key){ return Array.isArray(dict[key]) ? dict[key] : []; }
 
-/* --- Try blends key first, then base key --- */
-function readWithBlends(dict, prefix, type /* 'Words'|'Sentences' */, blends){
-  const baseKey   = `${prefix} ${type}`;
-  const blendsKey = `${prefix} with Blends ${type}`;
+function readWithBlends(dict, prefix, type, blends){
+  const baseKey   = prefix + " " + type;
+  const blendsKey = prefix + " with Blends " + type;
   if (blends){
     const got = readDict(dict, blendsKey);
     if (got.length) return got;
@@ -382,87 +402,64 @@ function readWithBlends(dict, prefix, type /* 'Words'|'Sentences' */, blends){
   return readDict(dict, baseKey);
 }
 
-/* --- shuffle helper (Fisher–Yates) --- */
-function shuffle(arr){
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-/* --- Fill with randomness to reach N --- */
-function fillToN(list, n){
-  if (!Array.isArray(list) || list.length === 0) return [];
-  const out = [];
-  let bag = shuffle(list);
-  while (out.length < n){
-    if (bag.length === 0) bag = shuffle(list);
-    out.push(bag.shift());
-  }
-  return out.slice(0, n);
-}
-
-/* --- Split into four 9-cell boards --- */
-function chunk36ToFour(cells){
-  return [0,9,18,27].map(i => cells.slice(i, i+9));
-}
-
-/* --- FINAL FETCHER you’ll use everywhere ---
-   label: button text (e.g., "Short A", "wh", "Mixed CVC")
-   type:  'Words' | 'Sentences'
-   blends: boolean
-*/
 function getList(label, type, blends){
   const dict = (type === 'Words') ? wordsDict() : sentsDict();
 
-  // Mixed sets: union children
-  if (MIXED_RULES[label]){
-    let all = [];
-    for (const p of MIXED_RULES[label]){
-      all = all.concat(readWithBlends(dict, p, type, blends));
+  if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)){
+    var all = [];
+    var parts = MIXED_RULES[label];
+    for (var i=0;i<parts.length;i++){
+      all = all.concat(readWithBlends(dict, parts[i], type, blends));
     }
     return all;
   }
 
-  // Normal: use PREFIX table
-  const prefix = PREFIX[label];
+  var prefix = PREFIX[label];
   if (prefix){
     return readWithBlends(dict, prefix, type, blends);
   }
 
-  // Fallback: loose match
-  const tail = ` ${type}`;
-  const keys = Object.keys(dict);
-  const guess = keys.find(k => k.toLowerCase().includes(label.toLowerCase()) && k.endsWith(tail));
-  if (guess) return readDict(dict, guess);
-
+  var tail = " " + type;
+  var keys = Object.keys(dict);
+  var want = label.toLowerCase();
+  for (var k=0;k<keys.length;k++){
+    var key = keys[k];
+    if (key.toLowerCase().indexOf(want) !== -1 && key.slice(-tail.length) === tail){
+      return readDict(dict, key);
+    }
+  }
   return [];
 }
 
-/* --- UI wiring below (clicks, chips, generate) --- */
-const selected = new Set();
-let includeBlends = false;           // Step 2
-let mode = null;                     // 'words'|'sentences'|'both'
+// ===============================
+// UI wiring
+// ===============================
+var selected = new Set();
+var includeBlends = false;
+var mode = null;
 
-/* Expand/Collapse */
-document.querySelectorAll('.skill-header').forEach(header => {
-  header.addEventListener('click', () => {
-    const target = header.getAttribute('data-target');
-    const inner = document.getElementById('section-' + target);
-    const arrows = header.querySelectorAll('.arrow');
-    const isCollapsed = inner.classList.contains('collapsed');
-    if (isCollapsed) { inner.classList.remove('collapsed'); arrows.forEach(a => a.textContent = '▲'); }
-    else { inner.classList.add('collapsed'); arrows.forEach(a => a.textContent = '▼'); }
+// Expand/Collapse
+document.querySelectorAll('.skill-header').forEach(function(header){
+  header.addEventListener('click', function(){
+    var target = header.getAttribute('data-target');
+    var inner = document.getElementById('section-' + target);
+    var arrows = header.querySelectorAll('.arrow');
+    var isCollapsed = inner.classList.contains('collapsed');
+    if (isCollapsed) {
+      inner.classList.remove('collapsed');
+      arrows.forEach(function(a){ a.textContent = '▲'; });
+    } else {
+      inner.classList.add('collapsed');
+      arrows.forEach(function(a){ a.textContent = '▼'; });
+    }
   });
 });
 
-/* Step 1: toggle skill buttons */
-document.querySelectorAll('.skill-button').forEach(btn => {
-  btn.addEventListener('click', (e) => {
+// Step 1: toggle skill buttons
+document.querySelectorAll('.skill-button').forEach(function(btn){
+  btn.addEventListener('click', function(e){
     e.stopPropagation();
-    const label = btn.dataset.skill;
+    var label = btn.dataset.skill;
     if (selected.has(label)) { selected.delete(label); btn.classList.remove('selected'); }
     else { selected.add(label); btn.classList.add('selected'); }
     renderChips();
@@ -470,15 +467,15 @@ document.querySelectorAll('.skill-button').forEach(btn => {
 });
 
 function renderChips(){
-  const wrap = document.getElementById('chips');
+  var wrap = document.getElementById('chips');
   wrap.innerHTML = '';
-  Array.from(selected).forEach(label => {
-    const chip = document.createElement('div');
+  Array.from(selected).forEach(function(label){
+    var chip = document.createElement('div');
     chip.className = 'chip';
-    chip.innerHTML = `<span>${label}</span><span class="x" title="Remove">×</span>`;
-    chip.querySelector('.x').addEventListener('click', () => {
+    chip.innerHTML = '<span>' + label + '</span><span class="x" title="Remove">\u00D7</span>'; // ×
+    chip.querySelector('.x').addEventListener('click', function(){
       selected.delete(label);
-      const btn = document.querySelector(\`.skill-button[data-skill="\${CSS.escape(label)}"]\`);
+      var btn = document.querySelector('.skill-button[data-skill="' + CSS.escape(label) + '"]');
       if (btn) btn.classList.remove('selected');
       renderChips();
     });
@@ -486,123 +483,136 @@ function renderChips(){
   });
 }
 
-/* Step 2: blends */
-document.querySelectorAll('#blendOptions .option-box').forEach(box => {
-  box.addEventListener('click', () => {
-    document.querySelectorAll('#blendOptions .option-box').forEach(b => b.classList.remove('selected'));
+// Step 2: blends
+document.querySelectorAll('#blendOptions .option-box').forEach(function(box){
+  box.addEventListener('click', function(){
+    document.querySelectorAll('#blendOptions .option-box').forEach(function(b){ b.classList.remove('selected'); });
     box.classList.add('selected');
     includeBlends = (box.dataset.blends === 'yes');
   });
 });
 
-/* Step 3: content mode */
-document.querySelectorAll('#contentOptions .option-box').forEach(box => {
-  box.addEventListener('click', () => {
-    document.querySelectorAll('#contentOptions .option-box').forEach(b => b.classList.remove('selected'));
+// Step 3: content mode
+document.querySelectorAll('#contentOptions .option-box').forEach(function(box){
+  box.addEventListener('click', function(){
+    document.querySelectorAll('#contentOptions .option-box').forEach(function(b){ b.classList.remove('selected'); });
     box.classList.add('selected');
-    mode = box.dataset.mode; // words | sentences | both
+    mode = box.dataset.mode;
   });
 });
 
-/* Floating buttons */
+// Floating bar
 function toggleFloatingBar(){
-  const el = document.getElementById('floatingActions');
-  const isDesktop = window.matchMedia('(min-width: 992px)').matches;
+  var el = document.getElementById('floatingActions');
+  var isDesktop = window.matchMedia('(min-width: 992px)').matches;
   el.style.display = isDesktop ? 'flex' : 'none';
 }
 toggleFloatingBar();
 window.addEventListener('resize', toggleFloatingBar);
-document.getElementById('fabGenerate')?.addEventListener('click', () => {
-  document.getElementById('btnGenerate')?.click();
-});
-document.getElementById('fabPrint')?.addEventListener('click', () => window.print());
 
-/* Build a single 3x3 board */
+var fabGen = document.getElementById('fabGenerate');
+if (fabGen) fabGen.addEventListener('click', function(){
+  var gen = document.getElementById('btnGenerate');
+  if (gen) gen.click();
+});
+var fabPrint = document.getElementById('fabPrint');
+if (fabPrint) fabPrint.addEventListener('click', function(){ window.print(); });
+
+// Build a single 3x3 board
 function buildBoard(cells){
-  const tbl = document.createElement('table');
+  var tbl = document.createElement('table');
   tbl.className = 'tic-tac-toe';
-  for (let r=0;r<3;r++){
-    const row = tbl.insertRow();
-    for (let c=0;c<3;c++){
-      const td = row.insertCell();
-      const val = cells[r*3+c] ?? '';
-      const isSentence = (typeof val === 'string') && val.trim().includes(' ');
+  for (var r=0;r<3;r++){
+    var row = tbl.insertRow();
+    for (var c=0;c<3;c++){
+      var td = row.insertCell();
+      var idx = r*3+c;
+      var val = (cells[idx] != null) ? String(cells[idx]) : '';
+      var isSentence = (val.indexOf(' ') !== -1);
       td.textContent = val;
       if (r<2) td.style.borderBottom = '6px solid black';
       if (c<2) td.style.borderRight  = '6px solid black';
       td.style.fontSize  = isSentence ? '18px' : '22px';
       td.style.lineHeight = isSentence ? '22px' : '26px';
-      /* no mid-word splits: keep single words on one line */
-      td.style.whiteSpace = isSentence ? 'normal' : 'nowrap';
+      td.style.whiteSpace = isSentence ? 'normal' : 'nowrap'; // no mid-word breaks
     }
   }
-  const wrap = document.createElement('div');
+  var wrap = document.createElement('div');
   wrap.className = 'board-shell';
-  const label = document.createElement('div');
+  var label = document.createElement('div');
   label.className = 'board-label';
-  label.textContent = ''; // set by caller
+  label.textContent = '';
   wrap.appendChild(label);
   wrap.appendChild(tbl);
   return wrap;
 }
 
-/* Generate all four boards */
+// Generate all four boards
 function generateBoards(){
-  if (selected.size === 0) return alert('Select at least one skill in Step 1.');
-  if (!mode) return alert('Choose Words Only / Sentences Only / Both in Step 3.');
-  if (!wordsDict() && !sentsDict()) return alert('Data not loaded. Check the <script src="..."> file name.');
+  if (selected.size === 0) { alert('Select at least one skill in Step 1.'); return; }
+  if (!mode) { alert('Choose Words Only / Sentences Only / Both in Step 3.'); return; }
+  if (!wordsDict() && !sentsDict()) { alert('Data not loaded. Check the <script src="..."> file name.'); return; }
 
-  const labels = Array.from(selected);
-  const TOTAL = 36;
-
-  let content = [];
+  var labels = Array.from(selected);
+  var TOTAL = 36;
+  var content = [];
 
   if (mode === 'words'){
-    const union = labels.flatMap(lbl => getList(lbl, 'Words', includeBlends));
-    content = fillToN(shuffle(union), TOTAL);
+    var unionW = [];
+    for (var i=0;i<labels.length;i++){
+      unionW = unionW.concat(getList(labels[i], 'Words', includeBlends));
+    }
+    content = fillToN(shuffle(unionW), TOTAL);
   } else if (mode === 'sentences'){
-    const union = labels.flatMap(lbl => getList(lbl, 'Sentences', includeBlends));
-    content = fillToN(shuffle(union), TOTAL);
+    var unionS = [];
+    for (var j=0;j<labels.length;j++){
+      unionS = unionS.concat(getList(labels[j], 'Sentences', includeBlends));
+    }
+    content = fillToN(shuffle(unionS), TOTAL);
   } else {
-    // BOTH: half words, half sentences (18/18)
-    const words = labels.flatMap(lbl => getList(lbl, 'Words', includeBlends));
-    const sents = labels.flatMap(lbl => getList(lbl, 'Sentences', includeBlends));
-    const w = fillToN(shuffle(words), Math.floor(TOTAL/2));
-    const s = fillToN(shuffle(sents), TOTAL - w.length);
-    content = shuffle([...w, ...s]); // keep this extra shuffle
+    var words = [];
+    var sents = [];
+    for (var k=0;k<labels.length;k++){
+      words = words.concat(getList(labels[k], 'Words', includeBlends));
+      sents = sents.concat(getList(labels[k], 'Sentences', includeBlends));
+    }
+    var w = fillToN(shuffle(words), Math.floor(TOTAL/2));
+    var s = fillToN(shuffle(sents), TOTAL - w.length);
+    content = shuffle(w.concat(s));
   }
 
   if (content.length < TOTAL) {
-    return alert('Not enough content found using these settings. Add more skills or change blends/content options.');
+    alert('Not enough content found using these settings. Add more skills or change blends/content options.');
+    return;
   }
 
-  const output = document.getElementById('output');
+  var output = document.getElementById('output');
   output.innerHTML = '';
 
-  const page = document.createElement('div');
+  var page = document.createElement('div');
   page.className = 'page';
 
-  const title = document.createElement('div');
+  var title = document.createElement('div');
   title.className = 'worksheet-title';
-  title.textContent = `${labels.join(' • ')} Tic Tac Toe Game`;
+  title.textContent = labels.join(' • ') + ' Tic Tac Toe Game';
 
-  const directions = document.createElement('div');
+  var directions = document.createElement('div');
   directions.className = 'worksheet-directions';
   directions.innerHTML = '<strong>Directions:</strong> Read the word or sentence, then place your X or O. First to 3 in a row wins!';
 
-  const grid = document.createElement('div');
+  var grid = document.createElement('div');
   grid.className = 'board-wrap';
 
-  const boards = chunk36ToFour(content);
-  boards.forEach((cells, i) => {
-    const group = buildBoard(cells);
-    group.querySelector('.board-label').textContent = `Game ${i+1}`;
+  var boards = chunk36ToFour(content);
+  for (var b=0;b<boards.length;b++){
+    var group = buildBoard(boards[b]);
+    group.querySelector('.board-label').textContent = 'Game ' + (b+1);
     grid.appendChild(group);
-  });
+  }
 
-  const copy = document.createElement('div');
+  var copy = document.createElement('div');
   copy.id = 'copyright';
-  copy.innerHTML = 'Copyright - InterventionStation.com - @TeachwithMrC';
+  copy.textContent = 'Copyright - InterventionStation.com - @TeachwithMrC';
 
   page.appendChild(title);
   page.appendChild(directions);
