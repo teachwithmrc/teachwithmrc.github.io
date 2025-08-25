@@ -4,28 +4,26 @@
   <meta charset="UTF-8" />
   <title>Tic Tac Toe Phonics Generator</title>
 
-  <!-- Make sure this matches your actual file name -->
   <script src="fluencyDataFull_v8-2_clean.js"></script>
-
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --cvc:#e9f2ff;          --cvc-selected:#1976d2;
-      --dig:#f3e9ff;          --dig-selected:#8e24aa;
-      --glued:#e8fff4;        --glued-selected:#2e7d32;
-      --vce:#fff5e6;          --vce-selected:#ef6c00;
-      --rctrl:#f0f5ff;        --rctrl-selected:#3f51b5;
-      --vteams:#fff0f6;       --vteams-selected:#d81b60;
-      --dip:#eefcfb;          --dip-selected:#00897b;
-      --variant:#fff8e1;      --variant-selected:#f9a825;
-      --soft:#eef4ff;         --soft-selected:#455a64;
+      --cvc:#e9f2ff; --cvc-selected:#1976d2;
+      --dig:#f3e9ff; --dig-selected:#8e24aa;
+      --glued:#e8fff4; --glued-selected:#2e7d32;
+      --vce:#fff5e6;  --vce-selected:#ef6c00;
+      --rctrl:#f0f5ff;--rctrl-selected:#3f51b5;
+      --vteams:#fff0f6;--vteams-selected:#d81b60;
+      --dip:#eefcfb;  --dip-selected:#00897b;
+      --variant:#fff8e1;--variant-selected:#f9a825;
+      --soft:#eef4ff; --soft-selected:#455a64;
+
       --chip-bg:#f3f6fb; --chip-text:#263238; --chip-x:#546e7a;
 
-      /* Grid sizing knobs */
-      --board: 300px;                 /* screen size */
-      --cell-gap: 0px;                /* internal gap (we draw lines manually) */
-      --line: 6px;                    /* grid line thickness */
+      /* Board sizing controls */
+      --board: 300px;      /* screen size */
+      --line: 6px;         /* grid line thickness */
     }
 
     body { font-family:'Poppins',sans-serif; margin:28px; text-align:center; background:#fafafa; }
@@ -84,62 +82,58 @@
     .chips-title { margin-top:12px; text-align:center; font-weight:700; font-size:14px; }
     .chips-wrap { margin-top:8px; display:flex; justify-content:center; flex-wrap:wrap; gap:8px; }
     .chip { background:var(--chip-bg); color:var(--chip-text); border:none; border-radius:999px; padding:6px 10px; font-size:14px; display:flex; align-items:center; gap:8px; }
-    .chip .x { width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:11px; cursor:pointer; background:#e8edf2; color:var(--chip-x); }
-
-    .option-grid { display:flex; flex-direction:column; align-items:center; gap:8px; }
-    .option-box { display:inline-block; padding:8px 12px; border:2px solid #000; border-radius:12px; font-weight:600; font-size:16px; background:#fff; cursor:pointer; }
-    .option-box.selected { background-color:#d0f0ff; }
+    .chip .x { width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:11px; cursor:pointer; background:#e8edf2; color:#546e7a; }
 
     #output { display:flex; justify-content:center; padding:16px 0; flex-direction:column; gap:20px; }
 
     .page { width:8.5in; max-width:calc(100% - 32px); background:#fff; box-shadow:0 6px 20px rgba(0,0,0,.12); padding:0.5in; border:2px solid #000; border-radius:8px; margin:0 auto; position:relative; }
-
     .worksheet-title { font-size:28px; margin-bottom:6px; font-weight:700; text-align:center; }
     .worksheet-directions { font-size:16px; margin-bottom:12px; text-align:center; }
 
     .board-wrap { display:grid; grid-template-columns: 1fr 1fr; gap:20px; justify-content:center; max-width:900px; margin:0 auto; }
 
-    /* Board shell: no left/right padding so the grid can maximize width */
     .board-shell {
       display:flex; flex-direction:column; align-items:center; width:100%;
-      border:3px solid #000; border-radius:16px;
-      padding:8px 0; background:#fff; box-sizing:border-box;
+      border:3px solid #000; border-radius:16px; padding:8px 0; background:#fff; box-sizing:border-box;
       break-inside: avoid;
     }
     .board-label { font-weight:700; font-size:16px; margin-bottom:6px; }
 
-    /* === NEW: Grid-based Tic Tac Toe with square cells === */
+    /* === Aspect-ratio grid (cells stay square) === */
     .ttt-grid{
       width: var(--board);
       margin: 0;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: var(--cell-gap);
     }
     .cell-box{
       position: relative;
-      aspect-ratio: 1 / 1;          /* guarantees squares on screen & print */
-      overflow: hidden;
-      /* draw the thick grid lines on the "inner" edges only */
-      box-sizing: border-box;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;               /* HARD CLIP */
     }
-    /* draw right/bottom lines for the 3x3 lattice */
-    .cell-box.has-right{ border-right: var(--line) solid #000; }
-    .cell-box.has-bottom{ border-bottom: var(--line) solid #000; }
-
-    /* actual content layer fills the square */
     .cell{
       position: absolute; inset: 0;
       display: flex; align-items: center; justify-content: center;
       padding: 6px;
-      text-align: center; line-height: 1.15;
-      overflow-wrap: anywhere; word-break: break-word;
+      text-align: center; line-height: 1.12;
+      overflow: hidden;               /* HARD CLIP */
+      overflow-wrap: break-word;
+      word-break: normal;
       hyphens: none;
+      z-index: 1;                      /* below the line overlays */
     }
     .cell.word{ font-size: 24px; white-space: nowrap; }
     .cell.sentence{ font-size: 22px; white-space: normal; }
     .cell.sentence.long{ font-size: 18px; }
     .cell.sentence.very-long{ font-size: 16px; }
+
+    /* Draw grid lines ABOVE content so text can’t “cross” */
+    .cell-box.has-right::after{
+      content:""; position:absolute; top:0; right:0; bottom:0; width:var(--line); background:#000; z-index:2;
+    }
+    .cell-box.has-bottom::before{
+      content:""; position:absolute; left:0; right:0; bottom:0; height:var(--line); background:#000; z-index:2;
+    }
 
     #copyright { font-size:12px; text-align:right; margin-top:8px; display:none; }
 
@@ -158,11 +152,11 @@
       .board-shell { padding:6px 0; border-radius:14px; }
       .board-label { font-size:14px; margin-bottom:4px; }
 
-      /* SAFE width for 2x2 boards with headers/footers enabled */
+      /* Safe width for 2×2 boards with browser headers/footers ON */
       :root { --board: 246px; --line: 5px; }
 
-      .cell.word{ font-size: 21px; }
-      .cell.sentence{ font-size: 21px; }
+      .cell.word{ font-size: 20px; }
+      .cell.sentence{ font-size: 20px; }
       .cell.sentence.long{ font-size: 17px; }
       .cell.sentence.very-long{ font-size: 15px; }
 
@@ -183,7 +177,6 @@
       <div id="step1" class="table-section">
         <div class="section-label">Step 1: Select Skills</div>
 
-        <!-- CVC Short Vowels -->
         <div class="skill-block bg-cvc">
           <div class="skill-header" data-target="cvc"><span class="arrow">▲</span><span class="title">CVC Short Vowels</span><span class="arrow">▲</span></div>
           <div class="skills-inner" id="section-cvc">
@@ -197,7 +190,6 @@
           </div>
         </div>
 
-        <!-- Digraphs -->
         <div class="skill-block bg-dig">
           <div class="skill-header" data-target="dig"><span class="arrow">▼</span><span class="title">Digraphs</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-dig">
@@ -210,7 +202,6 @@
           </div>
         </div>
 
-        <!-- Glued Sounds -->
         <div class="skill-block bg-glued">
           <div class="skill-header" data-target="glued"><span class="arrow">▼</span><span class="title">Glued Sounds</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-glued">
@@ -221,7 +212,6 @@
           </div>
         </div>
 
-        <!-- VCe -->
         <div class="skill-block bg-vce">
           <div class="skill-header" data-target="vce"><span class="arrow">▼</span><span class="title">Silent E (VCe)</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-vce">
@@ -233,7 +223,6 @@
           </div>
         </div>
 
-        <!-- R-Controlled -->
         <div class="skill-block bg-rctrl">
           <div class="skill-header" data-target="rctrl"><span class="arrow">▼</span><span class="title">R-Controlled</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-rctrl">
@@ -244,7 +233,6 @@
           </div>
         </div>
 
-        <!-- Vowel Teams -->
         <div class="skill-block bg-vteams">
           <div class="skill-header" data-target="vteams"><span class="arrow">▼</span><span class="title">Vowel Teams</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-vteams">
@@ -258,7 +246,6 @@
           </div>
         </div>
 
-        <!-- Diphthongs -->
         <div class="skill-block bg-dip">
           <div class="skill-header" data-target="dip"><span class="arrow">▼</span><span class="title">Diphthongs</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-dip">
@@ -267,7 +254,6 @@
           </div>
         </div>
 
-        <!-- Variant Vowels -->
         <div class="skill-block bg-variant">
           <div class="skill-header" data-target="variant"><span class="arrow">▼</span><span class="title">Variant Vowels</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-variant">
@@ -276,7 +262,6 @@
           </div>
         </div>
 
-        <!-- Soft Endings -->
         <div class="skill-block bg-soft">
           <div class="skill-header" data-target="soft"><span class="arrow">▼</span><span class="title">Soft C/G Endings</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-soft">
@@ -318,36 +303,25 @@
     </div>
   </div>
 
-  <!-- OUTPUT -->
   <div id="output"></div>
 
-  <!-- Desktop-only floating actions -->
   <div id="floatingActions" style="position: fixed; right: 16px; bottom: 16px; z-index: 1000; background:#ffffff; border:2px solid #000; border-radius:12px; box-shadow: 0 6px 20px rgba(0,0,0,.15); padding:10px 12px; display:none; gap:8px; align-items:center;">
     <button id="fabGenerate" style="font-size:14px; padding:8px 12px;">Generate</button>
     <button id="fabPrint" style="font-size:14px; padding:8px 12px;">Print</button>
   </div>
 
 <script>
-/* ===============================
-   Utilities & Polyfills
-   =============================== */
 if (typeof CSS === 'undefined' || typeof CSS.escape !== 'function') {
   window.CSS = window.CSS || {};
-  CSS.escape = CSS.escape || function(sel){
-    return (sel + '').replace(/[^a-zA-Z0-9_-]/g, '\\$&');
-  };
+  CSS.escape = CSS.escape || function(sel){ return (sel + '').replace(/[^a-zA-Z0-9_-]/g, '\\$&'); };
 }
 
-// Helpers
 function toArray(x){ if (Array.isArray(x)) return x.slice(); if (x==null) return []; try{ return Array.from(x);}catch{return[];} }
 function shuffle(list){ const a=toArray(list); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
 function uniqueByLowercase(list){ const seen=new Set(), out=[]; for(const it of toArray(list)){ const k=String(it).toLowerCase(); if(!seen.has(k)){seen.add(k); out.push(it);} } return out; }
 function fillToN(list,n){ const base=toArray(list); if(base.length===0||!Number.isFinite(n)||n<=0) return []; const out=[]; let bag=shuffle(base); while(out.length<n){ if(bag.length===0){ bag=shuffle(base); if(bag.length===0) break; } out.push(bag.shift()); } return out.slice(0,n); }
 function chunk36ToFour(cells){ return [0,9,18,27].map(i=>cells.slice(i,i+9)); }
 
-/* ===============================
-   Data key mapping
-   =============================== */
 const PREFIX = {
   "Short A":"0.1 - Short A","Short O":"0.2 - Short O","Short I":"0.3 - Short I","Short U":"0.4 - Short U","Short E":"0.5 - Short E","FLSZ":"0.6 - FLSZ",
   "ck":"1.1 - ck","sh":"1.2 - sh","th":"1.3 - th","ch":"1.4 - ch","wh":"1.5 - wh",
@@ -363,13 +337,11 @@ const MIXED_RULES = {
   "Glued Mixed":["3.1 - all","3.2 - ng","3.3 - nk"],
   "Mixed VCe":["2.1 - a_e","2.2 - i_e","2.3 - o_e","2.4 - u_e"],
   "Mixed R-Controlled":["4.1 - ar","4.2 - or","4.3 - er, ir, ur"],
-
   "Long A (ai/ay)":["6.1 - ay","6.2 - ai"],
   "Long E (ee/ea)":["6.4 - ee","6.5 - ea"],
   "Long I (igh/y/ie)":["6.6 - igh","6.7 - Final y","6.8 - ie"],
   "Long O (oa/ow/oe)":["6.9 - oa","6.10 - ow","6.11 - oe"],
   "Long U (oo/ew/ue)":["6.12 - oo (long u)","6.13 - ew","6.14 - ue"],
-
   "Mixed Vowel Teams":[
     "6.1 - ay","6.2 - ai","6.4 - ee","6.5 - ea",
     "6.6 - igh","6.7 - Final y","6.8 - ie",
@@ -386,7 +358,6 @@ function wordsDict(){ return (typeof fluencyWords!=='undefined')?fluencyWords:{}
 function sentsDict(){ return (typeof fluencySentences!=='undefined')?fluencySentences:{}; }
 function readDict(dict,key){ return Array.isArray(dict[key])?dict[key]:[]; }
 
-/* Flexible key reader (supports case and “b -” blends) */
 function readWithBlends(dict, prefix, type, blends){
   const typeLower = type.toLowerCase();
   const baseKeys = [`${prefix} ${type}`,`${prefix} ${typeLower}`,`${prefix}`];
@@ -430,9 +401,6 @@ function getList(label, type, blends){
   return guess?readDict(dict,guess):[];
 }
 
-/* ===============================
-   UI wiring
-   =============================== */
 const selected=new Set();
 let includeBlends=false;
 let mode=null;
@@ -501,7 +469,6 @@ window.addEventListener('resize',toggleFloatingBar);
 document.getElementById('fabGenerate')?.addEventListener('click',()=>document.getElementById('btnGenerate')?.click());
 document.getElementById('fabPrint')?.addEventListener('click',()=>window.print());
 
-/* Build a single 3x3 board using aspect-ratio grid */
 function buildBoard(cells){
   const grid=document.createElement('div');
   grid.className='ttt-grid';
@@ -512,9 +479,8 @@ function buildBoard(cells){
 
     const box=document.createElement('div');
     box.className='cell-box';
-    // add grid lines on inner edges
-    if((i%3)!==2) box.classList.add('has-right');    // col 0,1
-    if(i<6) box.classList.add('has-bottom');         // row 0,1
+    if((i%3)!==2) box.classList.add('has-right');   // col 0,1
+    if(i<6)       box.classList.add('has-bottom');  // row 0,1
 
     const inner=document.createElement('div');
     inner.className='cell '+(isSentence?'sentence':'word');
@@ -524,6 +490,7 @@ function buildBoard(cells){
       else if(n>24) inner.classList.add('long');
     }
     inner.textContent=val;
+
     box.appendChild(inner);
     grid.appendChild(box);
   }
@@ -538,9 +505,6 @@ function buildBoard(cells){
   return wrap;
 }
 
-function chunk36ToFour(cells){ return [0,9,18,27].map(i=>cells.slice(i,i+9)); }
-
-/* Generate four boards */
 function generateBoards(){
   if(selected.size===0) return alert('Select at least one skill in Step 1.');
   if(!mode) return alert('Choose Words Only / Sentences Only / Both in Step 3.');
@@ -580,7 +544,7 @@ function generateBoards(){
 
   const gridWrap=document.createElement('div'); gridWrap.className='board-wrap';
 
-  const boards=chunk36ToFour(content);
+  const boards=[0,9,18,27].map(i=>content.slice(i,i+9));
   boards.forEach((cells,i)=>{
     const group=buildBoard(cells);
     group.querySelector('.board-label').textContent='Game '+(i+1);
@@ -591,7 +555,7 @@ function generateBoards(){
   copy.textContent='Copyright - InterventionStation.com - @TeachwithMrC';
 
   page.appendChild(title); page.appendChild(directions); page.appendChild(gridWrap); page.appendChild(copy);
-  document.getElementById('output').appendChild(page);
+  output.appendChild(page);
   page.scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
