@@ -4,26 +4,24 @@
   <meta charset="UTF-8" />
   <title>Tic Tac Toe Phonics Generator</title>
 
+  <!-- Make sure this matches your actual file name -->
   <script src="fluencyDataFull_v8-2_clean.js"></script>
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --cvc:#e9f2ff; --cvc-selected:#1976d2;
-      --dig:#f3e9ff; --dig-selected:#8e24aa;
-      --glued:#e8fff4; --glued-selected:#2e7d32;
-      --vce:#fff5e6;  --vce-selected:#ef6c00;
-      --rctrl:#f0f5ff;--rctrl-selected:#3f51b5;
-      --vteams:#fff0f6;--vteams-selected:#d81b60;
-      --dip:#eefcfb;  --dip-selected:#00897b;
-      --variant:#fff8e1;--variant-selected:#f9a825;
-      --soft:#eef4ff; --soft-selected:#455a64;
+      --cvc:#e9f2ff;          --cvc-selected:#1976d2;
+      --dig:#f3e9ff;          --dig-selected:#8e24aa;
+      --glued:#e8fff4;        --glued-selected:#2e7d32;
+      --vce:#fff5e6;          --vce-selected:#ef6c00;
+      --rctrl:#f0f5ff;        --rctrl-selected:#3f51b5;
+      --vteams:#fff0f6;       --vteams-selected:#d81b60;
+      --dip:#eefcfb;          --dip-selected:#00897b;
+      --variant:#fff8e1;      --variant-selected:#f9a825;
+      --soft:#eef4ff;         --soft-selected:#455a64;
 
       --chip-bg:#f3f6fb; --chip-text:#263238; --chip-x:#546e7a;
-
-      /* Board sizing controls */
-      --board: 300px;      /* screen size */
-      --line: 6px;         /* grid line thickness */
     }
 
     body { font-family:'Poppins',sans-serif; margin:28px; text-align:center; background:#fafafa; }
@@ -82,90 +80,112 @@
     .chips-title { margin-top:12px; text-align:center; font-weight:700; font-size:14px; }
     .chips-wrap { margin-top:8px; display:flex; justify-content:center; flex-wrap:wrap; gap:8px; }
     .chip { background:var(--chip-bg); color:var(--chip-text); border:none; border-radius:999px; padding:6px 10px; font-size:14px; display:flex; align-items:center; gap:8px; }
-    .chip .x { width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:11px; cursor:pointer; background:#e8edf2; color:#546e7a; }
+    .chip .x { width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:11px; cursor:pointer; background:#e8edf2; color:var(--chip-x); }
+
+    .option-grid { display:flex; flex-direction:column; align-items:center; gap:8px; }
+    .option-box { display:inline-block; padding:8px 12px; border:2px solid #000; border-radius:12px; font-weight:600; font-size:16px; background:#fff; cursor:pointer; }
+    .option-box.selected { background-color:#d0f0ff; }
 
     #output { display:flex; justify-content:center; padding:16px 0; flex-direction:column; gap:20px; }
 
-    .page { width:8.5in; max-width:calc(100% - 32px); background:#fff; box-shadow:0 6px 20px rgba(0,0,0,.12); padding:0.5in; border:2px solid #000; border-radius:8px; margin:0 auto; position:relative; }
-    .worksheet-title { font-size:28px; margin-bottom:6px; font-weight:700; text-align:center; }
-    .worksheet-directions { font-size:16px; margin-bottom:12px; text-align:center; }
+    .page { width:8.5in; max-width:calc(100% - 16px); background:#fff; box-shadow:0 6px 20px rgba(0,0,0,.12); padding:0.3in; border:2px solid #000; border-radius:8px; margin:0 auto; page-break-inside: avoid; break-inside: avoid; }
+    .worksheet-title { font-size:26px; margin-bottom:4px; font-weight:700; text-align:center; }
+    .worksheet-directions { font-size:15px; margin-bottom:8px; text-align:center; }
 
-    .board-wrap { display:grid; grid-template-columns: 1fr 1fr; gap:20px; justify-content:center; max-width:900px; margin:0 auto; }
+    .board-wrap { display:grid; grid-template-columns: 1fr 1fr; gap:10px; justify-content:center; max-width:100%; margin:0 auto; }
 
+    /* Board shell: remove L/R padding so grid touches borders */
     .board-shell {
       display:flex; flex-direction:column; align-items:center; width:100%;
-      border:3px solid #000; border-radius:16px; padding:8px 0; background:#fff; box-sizing:border-box;
-      break-inside: avoid;
+      border:3px solid #000; border-radius:12px;
+      padding:6px 0; /* <- no left/right padding */
+      background:#fff; box-sizing:border-box;
     }
-    .board-label { font-weight:700; font-size:16px; margin-bottom:6px; }
+    .board-label { font-weight:700; font-size:15px; margin-bottom:4px; }
 
-    /* === Aspect-ratio grid (cells stay square) === */
-    .ttt-grid{
-      width: var(--board);
-      margin: 0;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+    /* Fixed Tic-Tac-Toe grid size for screen */
+    .tic-tac-toe { table-layout: fixed; border-collapse: separate; border-spacing: 0; width: 300px; height: 300px; margin:0; }
+    .tic-tac-toe td { border: none; width: 100px; height: 100px; padding: 0; vertical-align: middle; overflow: hidden; }
+    .tic-tac-toe td .cell {
+      display:flex; align-items:center; justify-content:center;
+      padding: 6px; /* tighter padding to favor font size */
+      width:100%; height:100%; line-height:1.2; box-sizing:border-box; text-align:center;
+      overflow-wrap:anywhere; word-break:break-word;
     }
-    .cell-box{
-      position: relative;
-      aspect-ratio: 1 / 1;
-      overflow: hidden;               /* HARD CLIP */
-    }
-    .cell{
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      padding: 6px;
-      text-align: center; line-height: 1.12;
-      overflow: hidden;               /* HARD CLIP */
-      overflow-wrap: break-word;
-      word-break: normal;
-      hyphens: none;
-      z-index: 1;                      /* below the line overlays */
-    }
-    .cell.word{ font-size: 24px; white-space: nowrap; }
-    .cell.sentence{ font-size: 22px; white-space: normal; }
-    .cell.sentence.long{ font-size: 18px; }
-    .cell.sentence.very-long{ font-size: 16px; }
-
-    /* Draw grid lines ABOVE content so text can’t “cross” */
-    .cell-box.has-right::after{
-      content:""; position:absolute; top:0; right:0; bottom:0; width:var(--line); background:#000; z-index:2;
-    }
-    .cell-box.has-bottom::before{
-      content:""; position:absolute; left:0; right:0; bottom:0; height:var(--line); background:#000; z-index:2;
-    }
+    .tic-tac-toe td .cell.word { font-size: 24px; white-space: nowrap; } /* smaller to prevent clipping */
+    .tic-tac-toe td .cell.sentence { font-size: 22px; white-space: normal; flex-wrap: wrap; overflow: hidden; line-height: 1.12; }
+    .tic-tac-toe td .cell.sentence.long { font-size: 18px; line-height: 1.08; }
+    .tic-tac-toe td .cell.sentence.very-long { font-size: 16px; line-height: 1.05; }
+    .tic-tac-toe td.has-bottom { border-bottom: 6px solid #000; }
+    .tic-tac-toe td.has-right { border-right: 6px solid #000; }
 
     #copyright { font-size:12px; text-align:right; margin-top:8px; display:none; }
+@media print {
+  /* Remove UI */
+  .table-section, button, .chips-title, .chips-wrap, .subtitle, .layout, #floatingActions { 
+    display:none !important; 
+  }
 
-    /* ---------- PRINT ---------- */
-    @media print {
-      .table-section, button, .chips-title, .chips-wrap, .subtitle, .layout, #floatingActions { display:none !important; }
-      #output { margin:0; }
+  /* Shrink page padding + prevent internal page breaks */
+  #output { margin:0; }
+  .page { 
+    position: relative;         /* allow absolute copyright */
+    width:100%; 
+    max-width:8.5in;           /* use full page width */
+    padding:0.2in;             /* reduced padding */
+    box-shadow:none; 
+    border:none; 
+    page-break-inside: avoid; 
+    break-inside: avoid;
+    box-sizing: border-box;
+  }
 
-      .page {
-        width:auto; padding:0.32in 0.30in 0.28in; border:none; box-shadow:none;
-        break-inside: avoid-page; page-break-inside: avoid;
-      }
-      .worksheet-title { font-size:19px; margin-bottom:2px; }
-      .worksheet-directions { font-size:13px; margin-bottom:6px; }
-      .board-wrap { gap:12px; }
-      .board-shell { padding:6px 0; border-radius:14px; }
-      .board-label { font-size:14px; margin-bottom:4px; }
+  .worksheet-title { font-size:18px; margin-bottom:2px; }
+  .worksheet-directions { font-size:12px; margin-bottom:4px; }
 
-      /* Safe width for 2×2 boards with browser headers/footers ON */
-      :root { --board: 246px; --line: 5px; }
+  /* Compact the board grid */
+  .board-wrap { 
+    gap:8px;                   /* smaller gap */
+    max-width:8.1in;           /* maximize width within margins */
+    break-inside: avoid; 
+  }
+  .board-shell { 
+    padding:4px 0;             /* even tighter top/bottom */
+    break-inside: avoid; 
+  }
+  .board-label { font-size:13px; margin-bottom:2px; }
 
-      .cell.word{ font-size: 20px; }
-      .cell.sentence{ font-size: 20px; }
-      .cell.sentence.long{ font-size: 17px; }
-      .cell.sentence.very-long{ font-size: 15px; }
+  /* Guarantee four boards fit on one letter page */
+  .tic-tac-toe { 
+    width: 250px;              /* reduced from 268px */
+    height: 250px; 
+    margin:0;
+  }
+  .tic-tac-toe td { 
+    width: 83.33px; 
+    height: 83.33px; 
+  }
 
-      #copyright {
-        display:block; position:absolute; right:0.30in; bottom:0.18in; margin:0; font-size:10px;
-      }
+  /* Font tuning: words a bit smaller, sentences larger but autoshrink */
+  .tic-tac-toe td .cell.word { font-size: 20px; }
+  .tic-tac-toe td .cell.sentence { font-size: 20px; }
+  .tic-tac-toe td .cell.sentence.long { font-size: 16px; }
+  .tic-tac-toe td .cell.sentence.very-long { font-size: 14px; }
 
-      @page { margin: 0.40in; }
-    }
+  /* Copyright: small + pinned so it never creates a second page */
+  #copyright { 
+    display:block; 
+    position:absolute; 
+    right:0.2in; 
+    bottom:0.15in; 
+    margin:0; 
+    font-size:9px; 
+  }
+
+  /* Ask the browser for minimal page margins */
+  @page { margin: 0.15in; }
+}
+    
   </style>
 </head>
 <body>
@@ -177,6 +197,7 @@
       <div id="step1" class="table-section">
         <div class="section-label">Step 1: Select Skills</div>
 
+        <!-- CVC Short Vowels -->
         <div class="skill-block bg-cvc">
           <div class="skill-header" data-target="cvc"><span class="arrow">▲</span><span class="title">CVC Short Vowels</span><span class="arrow">▲</span></div>
           <div class="skills-inner" id="section-cvc">
@@ -190,6 +211,7 @@
           </div>
         </div>
 
+        <!-- Digraphs -->
         <div class="skill-block bg-dig">
           <div class="skill-header" data-target="dig"><span class="arrow">▼</span><span class="title">Digraphs</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-dig">
@@ -202,6 +224,7 @@
           </div>
         </div>
 
+        <!-- Glued Sounds -->
         <div class="skill-block bg-glued">
           <div class="skill-header" data-target="glued"><span class="arrow">▼</span><span class="title">Glued Sounds</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-glued">
@@ -212,6 +235,7 @@
           </div>
         </div>
 
+        <!-- VCe -->
         <div class="skill-block bg-vce">
           <div class="skill-header" data-target="vce"><span class="arrow">▼</span><span class="title">Silent E (VCe)</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-vce">
@@ -223,6 +247,7 @@
           </div>
         </div>
 
+        <!-- R-Controlled -->
         <div class="skill-block bg-rctrl">
           <div class="skill-header" data-target="rctrl"><span class="arrow">▼</span><span class="title">R-Controlled</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-rctrl">
@@ -233,6 +258,7 @@
           </div>
         </div>
 
+        <!-- Vowel Teams -->
         <div class="skill-block bg-vteams">
           <div class="skill-header" data-target="vteams"><span class="arrow">▼</span><span class="title">Vowel Teams</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-vteams">
@@ -246,6 +272,7 @@
           </div>
         </div>
 
+        <!-- Diphthongs -->
         <div class="skill-block bg-dip">
           <div class="skill-header" data-target="dip"><span class="arrow">▼</span><span class="title">Diphthongs</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-dip">
@@ -254,6 +281,7 @@
           </div>
         </div>
 
+        <!-- Variant Vowels -->
         <div class="skill-block bg-variant">
           <div class="skill-header" data-target="variant"><span class="arrow">▼</span><span class="title">Variant Vowels</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-variant">
@@ -262,6 +290,7 @@
           </div>
         </div>
 
+        <!-- Soft Endings -->
         <div class="skill-block bg-soft">
           <div class="skill-header" data-target="soft"><span class="arrow">▼</span><span class="title">Soft C/G Endings</span><span class="arrow">▼</span></div>
           <div class="skills-inner collapsed" id="section-soft">
@@ -303,260 +332,393 @@
     </div>
   </div>
 
+  <!-- OUTPUT -->
   <div id="output"></div>
 
+  <!-- Desktop-only floating actions -->
   <div id="floatingActions" style="position: fixed; right: 16px; bottom: 16px; z-index: 1000; background:#ffffff; border:2px solid #000; border-radius:12px; box-shadow: 0 6px 20px rgba(0,0,0,.15); padding:10px 12px; display:none; gap:8px; align-items:center;">
     <button id="fabGenerate" style="font-size:14px; padding:8px 12px;">Generate</button>
     <button id="fabPrint" style="font-size:14px; padding:8px 12px;">Print</button>
   </div>
 
 <script>
+/* ===============================
+   Utilities & Polyfills
+   =============================== */
 if (typeof CSS === 'undefined' || typeof CSS.escape !== 'function') {
   window.CSS = window.CSS || {};
-  CSS.escape = CSS.escape || function(sel){ return (sel + '').replace(/[^a-zA-Z0-9_-]/g, '\\$&'); };
+  CSS.escape = CSS.escape || function(sel){
+    return (sel + '').replace(/[^a-zA-Z0-9_-]/g, '\\$&');
+  };
 }
 
-function toArray(x){ if (Array.isArray(x)) return x.slice(); if (x==null) return []; try{ return Array.from(x);}catch{return[];} }
-function shuffle(list){ const a=toArray(list); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
-function uniqueByLowercase(list){ const seen=new Set(), out=[]; for(const it of toArray(list)){ const k=String(it).toLowerCase(); if(!seen.has(k)){seen.add(k); out.push(it);} } return out; }
-function fillToN(list,n){ const base=toArray(list); if(base.length===0||!Number.isFinite(n)||n<=0) return []; const out=[]; let bag=shuffle(base); while(out.length<n){ if(bag.length===0){ bag=shuffle(base); if(bag.length===0) break; } out.push(bag.shift()); } return out.slice(0,n); }
-function chunk36ToFour(cells){ return [0,9,18,27].map(i=>cells.slice(i,i+9)); }
+// Normalize to an array
+function toArray(x){
+  if (Array.isArray(x)) return x.slice();
+  if (x == null) return [];
+  try { return Array.from(x); } catch { return []; }
+}
 
+// Robust Fisher–Yates
+function shuffle(list){
+  const a = toArray(list);
+  const n = a.length >>> 0;
+  for (let i = n - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function uniqueByLowercase(list){
+  const seen = new Set();
+  const out = [];
+  for (const item of toArray(list)){
+    const key = String(item).toLowerCase();
+    if (!seen.has(key)) { seen.add(key); out.push(item); }
+  }
+  return out;
+}
+
+function fillToN(list, n){
+  const base = toArray(list);
+  if (base.length === 0 || !Number.isFinite(n) || n <= 0) return [];
+  const out = [];
+  let bag = shuffle(base);
+  while (out.length < n){
+    if (bag.length === 0){
+      bag = shuffle(base);
+      if (bag.length === 0) break;
+    }
+    out.push(bag.shift());
+  }
+  return out.slice(0, n);
+}
+
+function chunk36ToFour(cells){
+  return [0,9,18,27].map(i => cells.slice(i, i+9));
+}
+
+/* ===============================
+   Data key mapping
+   =============================== */
 const PREFIX = {
-  "Short A":"0.1 - Short A","Short O":"0.2 - Short O","Short I":"0.3 - Short I","Short U":"0.4 - Short U","Short E":"0.5 - Short E","FLSZ":"0.6 - FLSZ",
-  "ck":"1.1 - ck","sh":"1.2 - sh","th":"1.3 - th","ch":"1.4 - ch","wh":"1.5 - wh",
-  "-all":"3.1 - all","-ng":"3.2 - ng","-nk":"3.3 - nk",
-  "a_e":"2.1 - a_e","i_e":"2.2 - i_e","o_e":"2.3 - o_e","u_e":"2.4 - u_e",
-  "ar":"4.1 - ar","or":"4.2 - or","er/ir/ur":"4.3 - er, ir, ur",
-  "Soft C (-ce)":"10.1 - ce","Soft G (-ge)":"10.2 - ge","Soft G (-dge)":"10.3 - dge"
+  // CVC
+  "Short A": "0.1 - Short A",
+  "Short O": "0.2 - Short O",
+  "Short I": "0.3 - Short I",
+  "Short U": "0.4 - Short U",
+  "Short E": "0.5 - Short E",
+  "FLSZ":    "0.6 - FLSZ",
+
+  // Digraphs
+  "ck": "1.1 - ck",
+  "sh": "1.2 - sh",
+  "th": "1.3 - th",
+  "ch": "1.4 - ch",
+  "wh": "1.5 - wh",
+
+  // Glued
+  "-all": "3.1 - all",
+  "-ng":  "3.2 - ng",
+  "-nk":  "3.3 - nk",
+
+  // VCe
+  "a_e": "2.1 - a_e",
+  "i_e": "2.2 - i_e",
+  "o_e": "2.3 - o_e",
+  "u_e": "2.4 - u_e",
+
+  // R-controlled
+  "ar": "4.1 - ar",
+  "or": "4.2 - or",
+  "er/ir/ur": "4.3 - er, ir, ur",
+
+  // Soft endings
+  "Soft C (-ce)": "10.1 - ce",
+  "Soft G (-ge)": "10.2 - ge",
+  "Soft G (-dge)": "10.3 - dge"
 };
 
 const MIXED_RULES = {
-  "Mixed CVC":["0.1 - Short A","0.5 - Short E","0.3 - Short I","0.2 - Short O","0.4 - Short U","0.6 - FLSZ"],
-  "Digraphs Mixed":["1.1 - ck","1.2 - sh","1.3 - th","1.4 - ch","1.5 - wh"],
-  "Glued Mixed":["3.1 - all","3.2 - ng","3.3 - nk"],
-  "Mixed VCe":["2.1 - a_e","2.2 - i_e","2.3 - o_e","2.4 - u_e"],
-  "Mixed R-Controlled":["4.1 - ar","4.2 - or","4.3 - er, ir, ur"],
-  "Long A (ai/ay)":["6.1 - ay","6.2 - ai"],
-  "Long E (ee/ea)":["6.4 - ee","6.5 - ea"],
-  "Long I (igh/y/ie)":["6.6 - igh","6.7 - Final y","6.8 - ie"],
-  "Long O (oa/ow/oe)":["6.9 - oa","6.10 - ow","6.11 - oe"],
-  "Long U (oo/ew/ue)":["6.12 - oo (long u)","6.13 - ew","6.14 - ue"],
-  "Mixed Vowel Teams":[
+  "Mixed CVC": ["0.1 - Short A","0.5 - Short E","0.3 - Short I","0.2 - Short O","0.4 - Short U","0.6 - FLSZ"],
+  "Digraphs Mixed": ["1.1 - ck","1.2 - sh","1.3 - th","1.4 - ch","1.5 - wh"],
+  "Glued Mixed": ["3.1 - all","3.2 - ng","3.3 - nk"],
+  "Mixed VCe": ["2.1 - a_e","2.2 - i_e","2.3 - o_e","2.4 - u_e"],
+  "Mixed R-Controlled": ["4.1 - ar","4.2 - or","4.3 - er, ir, ur"],
+
+  // Vowel Teams (6.x)
+  "Long A (ai/ay)": ["6.1 - ay","6.2 - ai"],
+  "Long E (ee/ea)": ["6.4 - ee","6.5 - ea"],
+  "Long I (igh/y/ie)": ["6.6 - igh","6.7 - Final y","6.8 - ie"],
+  "Long O (oa/ow/oe)": ["6.9 - oa","6.10 - ow","6.11 - oe"],
+  "Long U (oo/ew/ue)": ["6.12 - oo (long u)","6.13 - ew","6.14 - ue"],
+
+  "Mixed Vowel Teams": [
     "6.1 - ay","6.2 - ai","6.4 - ee","6.5 - ea",
     "6.6 - igh","6.7 - Final y","6.8 - ie",
     "6.9 - oa","6.10 - ow","6.11 - oe",
     "6.12 - oo (long u)","6.13 - ew","6.14 - ue"
   ],
-  "Diphthongs (oy/oi)":["7.4 - oy","7.3 - oi"],
-  "Diphthongs (ow/ou)":["7.2 - ow","7.1 - ou"],
-  "Variant Vowels (au/aw)":["7.5 - aw","7.6 - au"],
-  "Variant Vowel (oo)":["7.7 - oo variant"]
+
+  // Diphthongs (7.x)
+  "Diphthongs (oy/oi)": ["7.4 - oy","7.3 - oi"],
+  "Diphthongs (ow/ou)": ["7.2 - ow","7.1 - ou"],
+
+  // Variant vowels
+  "Variant Vowels (au/aw)": ["7.5 - aw","7.6 - au"],
+  "Variant Vowel (oo)": ["7.7 - oo variant"]
 };
 
-function wordsDict(){ return (typeof fluencyWords!=='undefined')?fluencyWords:{}; }
-function sentsDict(){ return (typeof fluencySentences!=='undefined')?fluencySentences:{}; }
-function readDict(dict,key){ return Array.isArray(dict[key])?dict[key]:[]; }
+/* ===============================
+   Access to data dicts
+   =============================== */
+function wordsDict(){ return (typeof fluencyWords !== 'undefined') ? fluencyWords : {}; }
+function sentsDict(){ return (typeof fluencySentences !== 'undefined') ? fluencySentences : {}; }
+function readDict(dict, key){ return Array.isArray(dict[key]) ? dict[key] : []; }
 
+/* Case-flex blends + type/case fallbacks (Words/Sentences vs words/sentences) */
 function readWithBlends(dict, prefix, type, blends){
-  const typeLower = type.toLowerCase();
-  const baseKeys = [`${prefix} ${type}`,`${prefix} ${typeLower}`,`${prefix}`];
-  let base=[]; for(const k of baseKeys){ base=base.concat(readDict(dict,k)); }
+  const typeLower = type.toLowerCase();  // "words" / "sentences"
+  const baseKeys = [
+    `${prefix} ${type}`,
+    `${prefix} ${typeLower}`,
+    `${prefix}` // some datasets omit the type suffix entirely
+  ];
 
-  if(blends){
-    const cands=[
-      `${prefix} with Blends ${type}`,`${prefix} with blends ${type}`,
-      `${prefix} with Blends ${typeLower}`,`${prefix} with blends ${typeLower}`,
+  let base = [];
+  for (const k of baseKeys){ base = base.concat(readDict(dict, k)); }
+
+  if (blends){
+    const candidates = [
+      `${prefix} with Blends ${type}`,
+      `${prefix} with blends ${type}`,
+      `${prefix} with Blends ${typeLower}`,
+      `${prefix} with blends ${typeLower}`,
       `${prefix} with BLENDS ${type}`
     ];
-    const bPrefix = prefix.replace(' - ','b - ');
-    cands.push(
-      `${bPrefix} with Blends ${type}`,`${bPrefix} with blends ${type}`,
-      `${bPrefix} with Blends ${typeLower}`,`${bPrefix} with blends ${typeLower}`
+    // also support the "b" variant (e.g., "6.4b - ee with Blends ...")
+    const bPrefix = prefix.replace(' - ', 'b - ');
+    candidates.push(
+      `${bPrefix} with Blends ${type}`,
+      `${bPrefix} with blends ${type}`,
+      `${bPrefix} with Blends ${typeLower}`,
+      `${bPrefix} with blends ${typeLower}`
     );
 
-    for(const k of cands){
-      const got = readDict(dict,k);
-      if(got.length){
-        const MIN_BACKFILL=9;
-        return (got.length<MIN_BACKFILL)?uniqueByLowercase(got.concat(base)):got;
+    for (const k of candidates){
+      const got = readDict(dict, k);
+      if (got.length){
+        const MIN_BACKFILL = 9;
+        return (got.length < MIN_BACKFILL) ? uniqueByLowercase(got.concat(base)) : got;
       }
     }
   }
+
   return base;
 }
 
 function getList(label, type, blends){
-  const dict = (type==='Words')?wordsDict():sentsDict();
-  if(Object.prototype.hasOwnProperty.call(MIXED_RULES,label)){
-    let all=[]; for(const p of MIXED_RULES[label]){ all=all.concat(readWithBlends(dict,p,type,blends)); }
+  const dict = (type === 'Words') ? wordsDict() : sentsDict();
+
+  if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)){
+    let all = [];
+    for (const p of MIXED_RULES[label]){
+      all = all.concat(readWithBlends(dict, p, type, blends));
+    }
     return all;
   }
-  const prefix = PREFIX[label];
-  if(prefix) return readWithBlends(dict,prefix,type,blends);
 
-  const tail1=" "+type, tail2=" "+type.toLowerCase(), want=label.toLowerCase();
-  const keys=Object.keys(dict);
-  const guess=keys.find(k=>k.toLowerCase().includes(want)&&(k.endsWith(tail1)||k.endsWith(tail2)));
-  return guess?readDict(dict,guess):[];
+  const prefix = PREFIX[label];
+  if (prefix) return readWithBlends(dict, prefix, type, blends);
+
+  // Loose fallback: try to find a key containing the label text and ending with the desired type
+  const tail1 = " " + type;
+  const tail2 = " " + type.toLowerCase();
+  const want = label.toLowerCase();
+  const keys = Object.keys(dict);
+  const guess = keys.find(k => k.toLowerCase().includes(want) && (k.endsWith(tail1) || k.endsWith(tail2)));
+  return guess ? readDict(dict, guess) : [];
 }
 
-const selected=new Set();
-let includeBlends=false;
-let mode=null;
+/* ===============================
+   UI wiring
+   =============================== */
+const selected = new Set();
+let includeBlends = false;
+let mode = null;
 
+// Expand/Collapse
 document.querySelectorAll('.skill-header').forEach(header=>{
-  header.addEventListener('click',()=>{
-    const target=header.getAttribute('data-target');
-    const inner=document.getElementById('section-'+target);
-    const arrows=header.querySelectorAll('.arrow');
-    const isCollapsed=inner.classList.contains('collapsed');
-    if(isCollapsed){ inner.classList.remove('collapsed'); arrows.forEach(a=>a.textContent='▲'); }
+  header.addEventListener('click', ()=>{
+    const target = header.getAttribute('data-target');
+    const inner = document.getElementById('section-' + target);
+    const arrows = header.querySelectorAll('.arrow');
+    const isCollapsed = inner.classList.contains('collapsed');
+    if (isCollapsed) { inner.classList.remove('collapsed'); arrows.forEach(a=>a.textContent='▲'); }
     else { inner.classList.add('collapsed'); arrows.forEach(a=>a.textContent='▼'); }
   });
 });
 
+// Step 1: toggle skill buttons
 document.querySelectorAll('.skill-button').forEach(btn=>{
-  btn.addEventListener('click',e=>{
+  btn.addEventListener('click', (e)=>{
     e.stopPropagation();
-    const label=btn.dataset.skill;
-    if(selected.has(label)){ selected.delete(label); btn.classList.remove('selected'); }
+    const label = btn.dataset.skill;
+    if (selected.has(label)) { selected.delete(label); btn.classList.remove('selected'); }
     else { selected.add(label); btn.classList.add('selected'); }
     renderChips();
   });
 });
 
 function renderChips(){
-  const wrap=document.getElementById('chips');
-  wrap.innerHTML='';
+  const wrap = document.getElementById('chips');
+  wrap.innerHTML = '';
   Array.from(selected).forEach(label=>{
-    const chip=document.createElement('div');
-    chip.className='chip';
-    chip.innerHTML='<span>'+label+'</span><span class="x" title="Remove">\u00D7</span>';
-    chip.querySelector('.x').addEventListener('click',()=>{
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.innerHTML = '<span>'+label+'</span><span class="x" title="Remove">\u00D7</span>';
+    chip.querySelector('.x').addEventListener('click', ()=>{
       selected.delete(label);
-      const btn=document.querySelector('.skill-button[data-skill="'+CSS.escape(label)+'"]');
-      if(btn) btn.classList.remove('selected');
+      const btn = document.querySelector('.skill-button[data-skill="'+CSS.escape(label)+'"]');
+      if (btn) btn.classList.remove('selected');
       renderChips();
     });
     wrap.appendChild(chip);
   });
 }
 
+// Step 2: blends
 document.querySelectorAll('#blendOptions .option-box').forEach(box=>{
-  box.addEventListener('click',()=>{
+  box.addEventListener('click', ()=>{
     document.querySelectorAll('#blendOptions .option-box').forEach(b=>b.classList.remove('selected'));
     box.classList.add('selected');
-    includeBlends = (box.dataset.blends==='yes');
+    includeBlends = (box.dataset.blends === 'yes');
   });
 });
 
+// Step 3: content mode
 document.querySelectorAll('#contentOptions .option-box').forEach(box=>{
-  box.addEventListener('click',()=>{
+  box.addEventListener('click', ()=>{
     document.querySelectorAll('#contentOptions .option-box').forEach(b=>b.classList.remove('selected'));
     box.classList.add('selected');
-    mode=box.dataset.mode;
+    mode = box.dataset.mode;
   });
 });
 
+// Floating bar
 function toggleFloatingBar(){
-  const el=document.getElementById('floatingActions');
-  const isDesktop=window.matchMedia('(min-width: 992px)').matches;
-  el.style.display=isDesktop?'flex':'none';
+  const el = document.getElementById('floatingActions');
+  const isDesktop = window.matchMedia('(min-width: 992px)').matches;
+  el.style.display = isDesktop ? 'flex' : 'none';
 }
 toggleFloatingBar();
-window.addEventListener('resize',toggleFloatingBar);
-document.getElementById('fabGenerate')?.addEventListener('click',()=>document.getElementById('btnGenerate')?.click());
-document.getElementById('fabPrint')?.addEventListener('click',()=>window.print());
+window.addEventListener('resize', toggleFloatingBar);
+document.getElementById('fabGenerate')?.addEventListener('click', ()=>document.getElementById('btnGenerate')?.click());
+document.getElementById('fabPrint')?.addEventListener('click', ()=>window.print());
 
+/* Build a single 3x3 board */
 function buildBoard(cells){
-  const grid=document.createElement('div');
-  grid.className='ttt-grid';
+  const tbl = document.createElement('table');
+  tbl.className = 'tic-tac-toe';
 
-  for(let i=0;i<9;i++){
-    const val=(cells[i]!=null)?String(cells[i]):'';
-    const isSentence=val.includes(' ');
+  for (let r=0; r<3; r++){
+    const row = tbl.insertRow();
+    for (let c=0; c<3; c++){
+      const td = row.insertCell();
+      const idx = r*3+c;
+      const val = (cells[idx] != null) ? String(cells[idx]) : '';
+      const isSentence = val.includes(' ');
 
-    const box=document.createElement('div');
-    box.className='cell-box';
-    if((i%3)!==2) box.classList.add('has-right');   // col 0,1
-    if(i<6)       box.classList.add('has-bottom');  // row 0,1
+      if (r < 2) td.classList.add('has-bottom');
+      if (c < 2) td.classList.add('has-right');
 
-    const inner=document.createElement('div');
-    inner.className='cell '+(isSentence?'sentence':'word');
-    if(isSentence){
-      const n=val.length;
-      if(n>40) inner.classList.add('very-long');
-      else if(n>24) inner.classList.add('long');
+      const inner = document.createElement('div');
+      inner.className = 'cell ' + (isSentence ? 'sentence' : 'word');
+      if (isSentence) {
+        const charCount = val.length;
+        if (charCount > 40) inner.classList.add('very-long');
+        else if (charCount > 24) inner.classList.add('long');
+      }
+      inner.textContent = val;
+      td.appendChild(inner);
     }
-    inner.textContent=val;
-
-    box.appendChild(inner);
-    grid.appendChild(box);
   }
 
-  const wrap=document.createElement('div');
-  wrap.className='board-shell';
-  const label=document.createElement('div');
-  label.className='board-label';
-  label.textContent='';
+  const wrap = document.createElement('div');
+  wrap.className = 'board-shell';
+  const label = document.createElement('div');
+  label.className = 'board-label';
+  label.textContent = '';
   wrap.appendChild(label);
-  wrap.appendChild(grid);
+  wrap.appendChild(tbl);
   return wrap;
 }
 
+/* Generate all four boards */
 function generateBoards(){
-  if(selected.size===0) return alert('Select at least one skill in Step 1.');
-  if(!mode) return alert('Choose Words Only / Sentences Only / Both in Step 3.');
-  if(!wordsDict() && !sentsDict()) return alert('Data not loaded. Check the <script src="..."> file name.');
+  if (selected.size === 0) return alert('Select at least one skill in Step 1.');
+  if (!mode) return alert('Choose Words Only / Sentences Only / Both in Step 3.');
+  if (!wordsDict() && !sentsDict()) return alert('Data not loaded. Check the <script src="..."> file name.');
 
-  const labels=Array.from(selected);
-  const TOTAL=36;
-  let content=[];
+  const labels = Array.from(selected);
+  const TOTAL = 36;
+  let content = [];
 
-  if(mode==='words'){
-    const pool=uniqueByLowercase(labels.flatMap(lbl=>getList(lbl,'Words',includeBlends)));
-    content=fillToN(pool, TOTAL);
-  }else if(mode==='sentences'){
-    const pool=uniqueByLowercase(labels.flatMap(lbl=>getList(lbl,'Sentences',includeBlends)));
-    content=fillToN(pool, TOTAL);
-  }else{
-    const words=uniqueByLowercase(labels.flatMap(lbl=>getList(lbl,'Words',includeBlends)));
-    const sents=uniqueByLowercase(labels.flatMap(lbl=>getList(lbl,'Sentences',includeBlends)));
-    const w=fillToN(words, Math.floor(TOTAL/2));
-    const s=fillToN(sents, TOTAL-w.length);
-    content=shuffle(w.concat(s));
+  if (mode === 'words'){
+    const unionW = labels.flatMap(lbl => getList(lbl, 'Words', includeBlends));
+    const pool = uniqueByLowercase(unionW);
+    content = fillToN(shuffle(pool), TOTAL);
+  } else if (mode === 'sentences'){
+    const unionS = labels.flatMap(lbl => getList(lbl, 'Sentences', includeBlends));
+    const pool = uniqueByLowercase(unionS);
+    content = fillToN(shuffle(pool), TOTAL);
+  } else {
+    const words = uniqueByLowercase(labels.flatMap(lbl => getList(lbl, 'Words', includeBlends)));
+    const sents = uniqueByLowercase(labels.flatMap(lbl => getList(lbl, 'Sentences', includeBlends)));
+    const w = fillToN(shuffle(words), Math.floor(TOTAL/2));
+    const s = fillToN(shuffle(sents), TOTAL - w.length);
+    content = shuffle(w.concat(s));
   }
 
-  if(content.length<TOTAL){
+  if (content.length < TOTAL){
     return alert('Not enough content found using these settings. Add more skills or change blends/content options.');
   }
 
-  const output=document.getElementById('output');
-  output.innerHTML='';
+  const output = document.getElementById('output');
+  output.innerHTML = '';
 
-  const page=document.createElement('div'); page.className='page';
-  const title=document.createElement('div'); title.className='worksheet-title';
-  title.textContent=labels.join(' • ')+' Tic Tac Toe Game';
+  const page = document.createElement('div');
+  page.className = 'page';
 
-  const directions=document.createElement('div'); directions.className='worksheet-directions';
-  directions.innerHTML='<strong>Directions:</strong> Read the word or sentence, then place your X or O. First to 3 in a row wins!';
+  const title = document.createElement('div');
+  title.className = 'worksheet-title';
+  title.textContent = labels.join(' • ') + ' Tic Tac Toe Game';
 
-  const gridWrap=document.createElement('div'); gridWrap.className='board-wrap';
+  const directions = document.createElement('div');
+  directions.className = 'worksheet-directions';
+  directions.innerHTML = '<strong>Directions:</strong> Read the word or sentence, then place your X or O. First to 3 in a row wins!';
 
-  const boards=[0,9,18,27].map(i=>content.slice(i,i+9));
-  boards.forEach((cells,i)=>{
-    const group=buildBoard(cells);
-    group.querySelector('.board-label').textContent='Game '+(i+1);
-    gridWrap.appendChild(group);
+  const grid = document.createElement('div');
+  grid.className = 'board-wrap';
+
+  const boards = chunk36ToFour(content);
+  boards.forEach((cells, i)=>{
+    const group = buildBoard(cells);
+    group.querySelector('.board-label').textContent = 'Game ' + (i+1);
+    grid.appendChild(group);
   });
 
-  const copy=document.createElement('div'); copy.id='copyright';
-  copy.textContent='Copyright - InterventionStation.com - @TeachwithMrC';
+  const copy = document.createElement('div');
+  copy.id = 'copyright';
+  copy.textContent = 'Copyright - InterventionStation.com - @TeachwithMrC';
 
-  page.appendChild(title); page.appendChild(directions); page.appendChild(gridWrap); page.appendChild(copy);
+  page.appendChild(title);
+  page.appendChild(directions);
+  page.appendChild(grid);
+  page.appendChild(copy);
   output.appendChild(page);
-  page.scrollIntoView({ behavior:'smooth', block:'start' });
+  output.scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
 document.getElementById('btnGenerate').addEventListener('click', generateBoards);
