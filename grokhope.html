@@ -80,7 +80,7 @@
     .chips-title { margin-top:12px; text-align:center; font-weight:700; font-size:14px; }
     .chips-wrap { margin-top:8px; display:flex; justify-content:center; flex-wrap:wrap; gap:8px; }
     .chip { background:var(--chip-bg); color:var(--chip-text); border:none; border-radius:999px; padding:6px 10px; font-size:14px; display:flex; align-items:center; gap:8px; }
-    .chip .x { width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:11px; cursor:pointer; background:#e8edf2; color:var(--chip-x); }
+    .chip .x { width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:11px; cursor:pointer; background:#e8edf2; color:#546e7a; }
 
     .option-grid { display:flex; flex-direction:column; align-items:center; gap:8px; }
     .option-box { display:inline-block; padding:8px 12px; border:2px solid #000; border-radius:12px; font-weight:600; font-size:16px; background:#fff; cursor:pointer; }
@@ -94,25 +94,23 @@
 
     .board-wrap { display:grid; grid-template-columns: 1fr 1fr; gap:20px; justify-content:center; max-width:900px; margin:0 auto; }
 
-    /* Board shell: remove L/R padding so grid touches borders */
     .board-shell {
       display:flex; flex-direction:column; align-items:center; width:100%;
       border:3px solid #000; border-radius:16px;
-      padding:8px 0; /* <- no left/right padding */
+      padding:8px 0; /* no left/right padding so grid can be bigger */
       background:#fff; box-sizing:border-box;
     }
     .board-label { font-weight:700; font-size:16px; margin-bottom:6px; }
 
-    /* Fixed Tic-Tac-Toe grid size for screen */
+    /* On-screen grid */
     .tic-tac-toe { table-layout: fixed; border-collapse: separate; border-spacing: 0; width: 300px; height: 300px; margin:0; }
-    .tic-tac-toe td { border: none; width: 100px; height: 100px; padding: 0; vertical-align: middle; overflow: hidden; }
+    .tic-tac-toe td { border: none; width: 100px; height: 100px; padding: 0; vertical-align: middle; overflow: hidden; box-sizing: border-box; }
     .tic-tac-toe td .cell {
       display:flex; align-items:center; justify-content:center;
-      padding: 6px; /* tighter padding to favor font size */
-      width:100%; height:100%; line-height:1.2; box-sizing:border-box; text-align:center;
+      padding: 6px; width:100%; height:100%; line-height:1.2; box-sizing:border-box; text-align:center;
       overflow-wrap:anywhere; word-break:break-word;
     }
-    .tic-tac-toe td .cell.word { font-size: 24px; white-space: nowrap; } /* smaller to prevent clipping */
+    .tic-tac-toe td .cell.word { font-size: 24px; white-space: nowrap; }
     .tic-tac-toe td .cell.sentence { font-size: 22px; white-space: normal; flex-wrap: wrap; overflow: hidden; line-height: 1.12; }
     .tic-tac-toe td .cell.sentence.long { font-size: 18px; line-height: 1.08; }
     .tic-tac-toe td .cell.sentence.very-long { font-size: 16px; line-height: 1.05; }
@@ -120,103 +118,89 @@
     .tic-tac-toe td.has-right { border-right: 6px solid #000; }
 
     #copyright { font-size:12px; text-align:right; margin-top:8px; display:none; }
-@media print {
-  /* 0) Page setup: letter, tight side margins (edit 0.12in to taste) */
-  @page {
-    size: letter portrait;
-    /* top, right, bottom, left */
-    margin: 0.45in 0.12in 0.42in 0.12in;
-  }
 
-  /* 1) Hide the app UI for print */
-  .table-section, button, .chips-title, .chips-wrap, .subtitle, .layout, #floatingActions {
-    display: none !important;
-  }
+    /* Print rules */
+    @media print {
+      /* Letter, tight side margins */
+      @page {
+        size: letter portrait;
+        /* top, right, bottom, left */
+        margin: 0.45in 0.12in 0.42in 0.12in;
+      }
 
-  /* 2) Page container — remove border on print, keep tight padding */
-  #output { margin: 0; }
-  .page {
-    position: relative;           /* for absolute copyright */
-    width: auto;
-    padding-block: 0.30in 0.22in; /* top / bottom */
-    padding-inline: 0.10in;       /* left / right inside padding */
-    border: none;                 /* <-- no outer border when printing */
-    box-shadow: none;
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
+      /* Hide app UI */
+      .table-section, button, .chips-title, .chips-wrap, .subtitle, .layout, #floatingActions {
+        display: none !important;
+      }
 
-  .worksheet-title { font-size: 19px; margin-bottom: 0.05in; }
-  .worksheet-directions { font-size: 12px; margin-bottom: 0.12in; }
+      /* Page container — remove border on print, keep tight padding */
+      #output { margin: 0; }
+      .page {
+        position: relative;
+        width: auto;
+        padding-block: 0.30in 0.22in; /* top / bottom */
+        padding-inline: 0.10in;       /* left / right inside padding */
+        border: none;                 /* no outer border when printing */
+        box-shadow: none;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
 
-  /* 3) Exact sizing in INCHES so nothing stretches on print */
-  :root {
-    --board: 3.00in;                /* board size (bump up if you tighten margins further) */
-    --cell: calc(var(--board) / 3); /* cell size */
-    --gap: 0.16in;                  /* gap between boards */
-  }
+      .worksheet-title { font-size: 19px; margin-bottom: 0.05in; }
+      .worksheet-directions { font-size: 12px; margin-bottom: 0.12in; }
 
-  .board-wrap {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--gap);
-    break-inside: avoid;
-  }
-  .board-shell {
-    padding: 0.05in 0;              /* no left/right padding */
-    break-inside: avoid;
-  }
-  .board-label { font-size: 12px; margin-bottom: 0.04in; }
+      /* Exact sizing in INCHES (prevents vertical stretch) */
+      :root {
+        --board: 2.95in;               /* board size; JS may trim slightly if needed */
+        --cell: calc(var(--board) / 3);
+        --gap: 0.16in;                 /* gap between boards */
+      }
 
-  /* 4) Grid + cells (fixed squares, prevent bleed into neighbors) */
-  .tic-tac-toe {
-    table-layout: fixed;
-    border-collapse: separate;
-    border-spacing: 0;
-    width: var(--board);
-    height: var(--board);
-    margin: 0;
-  }
-  .tic-tac-toe td {
-    width: var(--cell);
-    height: var(--cell);
-    padding: 0;
-    vertical-align: middle;
-    overflow: hidden;              /* hard stop at cell edge */
-    box-sizing: border-box;
-  }
-  .tic-tac-toe td .cell {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.06in;               /* small inner padding */
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    line-height: 1.12;
-    overflow: hidden;              /* clip anything too tall */
-    word-break: break-word;        /* wrap between words if needed */
-    overflow-wrap: anywhere;
-    box-sizing: border-box;
-  }
-  .tic-tac-toe td .cell.word { font-size: 18px; white-space: nowrap; }
-  .tic-tac-toe td .cell.sentence { font-size: 20px; }
-  .tic-tac-toe td .cell.sentence.long { font-size: 17px; }
-  .tic-tac-toe td .cell.sentence.very-long { font-size: 15px; }
+      .board-wrap {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--gap);
+        break-inside: avoid;
+      }
+      .board-shell {
+        padding: 0.05in 0;             /* no left/right padding */
+        break-inside: avoid;
+        border-width: 2px;             /* thinner shell on print */
+      }
+      .board-label { font-size: 12px; margin-bottom: 0.04in; }
 
-  .tic-tac-toe td.has-bottom { border-bottom: 6px solid #000; }
-  .tic-tac-toe td.has-right  { border-right: 6px solid #000; }
+      .tic-tac-toe {
+        table-layout: fixed; border-collapse: separate; border-spacing: 0;
+        width: var(--board); height: var(--board); margin: 0;
+      }
+      .tic-tac-toe td {
+        width: var(--cell); height: var(--cell);
+        padding: 0; vertical-align: middle; overflow: hidden; box-sizing: border-box;
+      }
+      .tic-tac-toe td .cell {
+        display: flex; align-items: center; justify-content: center;
+        padding: 0.06in; width: 100%; height: 100%;
+        text-align: center; line-height: 1.12;
+        overflow: hidden; word-break: break-word; overflow-wrap: anywhere; box-sizing: border-box;
+      }
+      .tic-tac-toe td .cell.word { font-size: 18px; white-space: nowrap; }
+      .tic-tac-toe td .cell.sentence { font-size: 20px; }
+      .tic-tac-toe td .cell.sentence.long { font-size: 17px; }
+      .tic-tac-toe td .cell.sentence.very-long { font-size: 15px; }
 
-  /* 5) Copyright pinned so it never spills to page 2 */
-  #copyright {
-    display: block;
-    position: absolute;
-    right: 0.10in;
-    bottom: 0.10in;
-    margin: 0;
-    font-size: 9.5px;
-  }
-}
-    
+      /* Grid lines as borders (box-sizing keeps width fixed) */
+      .tic-tac-toe td.has-bottom { border-bottom: 6px solid #000; }
+      .tic-tac-toe td.has-right  { border-right: 6px solid #000; }
+
+      /* Copyright pinned inside the page */
+      #copyright {
+        display: block;
+        position: absolute;
+        right: 0.10in;
+        bottom: 0.10in;
+        margin: 0;
+        font-size: 9.5px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -383,14 +367,13 @@ if (typeof CSS === 'undefined' || typeof CSS.escape !== 'function') {
   };
 }
 
-// Normalize to an array
 function toArray(x){
   if (Array.isArray(x)) return x.slice();
   if (x == null) return [];
   try { return Array.from(x); } catch { return []; }
 }
 
-// Robust Fisher–Yates
+/* Fisher–Yates with guards */
 function shuffle(list){
   const a = toArray(list);
   const n = a.length >>> 0;
@@ -508,7 +491,7 @@ function wordsDict(){ return (typeof fluencyWords !== 'undefined') ? fluencyWord
 function sentsDict(){ return (typeof fluencySentences !== 'undefined') ? fluencySentences : {}; }
 function readDict(dict, key){ return Array.isArray(dict[key]) ? dict[key] : []; }
 
-/* Case-flex blends + type/case fallbacks (Words/Sentences vs words/sentences) */
+/* Case-flex blends + type/case fallbacks */
 function readWithBlends(dict, prefix, type, blends){
   const typeLower = type.toLowerCase();  // "words" / "sentences"
   const baseKeys = [
@@ -528,7 +511,7 @@ function readWithBlends(dict, prefix, type, blends){
       `${prefix} with blends ${typeLower}`,
       `${prefix} with BLENDS ${type}`
     ];
-    // also support the "b" variant (e.g., "6.4b - ee with Blends ...")
+    // "b" variant (e.g., "6.4b - ee with Blends ...")
     const bPrefix = prefix.replace(' - ', 'b - ');
     candidates.push(
       `${bPrefix} with Blends ${type}`,
@@ -542,7 +525,7 @@ function readWithBlends(dict, prefix, type, blends){
       if (got.length){
         const MIN_BACKFILL = 9;
         return (got.length < MIN_BACKFILL) ? uniqueByLowercase(got.concat(base)) : got;
-      }
+        }
     }
   }
 
@@ -563,7 +546,7 @@ function getList(label, type, blends){
   const prefix = PREFIX[label];
   if (prefix) return readWithBlends(dict, prefix, type, blends);
 
-  // Loose fallback: try to find a key containing the label text and ending with the desired type
+  // Loose fallback
   const tail1 = " " + type;
   const tail2 = " " + type.toLowerCase();
   const want = label.toLowerCase();
@@ -753,6 +736,55 @@ function generateBoards(){
 }
 
 document.getElementById('btnGenerate').addEventListener('click', generateBoards);
+
+/* ====== Print-time auto-fit: trims --board slightly if needed ====== */
+(function(){
+  function cssDPI(){
+    const probe = document.createElement('div');
+    probe.style.width = '1in';
+    probe.style.height = '1in';
+    probe.style.position = 'absolute';
+    probe.style.left = '-9999px';
+    document.body.appendChild(probe);
+    const dpi = probe.offsetWidth || 96;
+    probe.remove();
+    return dpi;
+  }
+
+  // Keep in sync with @page margins (inches)
+  const MARGINS = { top: 0.45, right: 0.12, bottom: 0.42, left: 0.12 };
+  const PAGE = { width: 8.5, height: 11 };
+
+  function fitToOnePage(){
+    const pageEl = document.querySelector('#output .page');
+    if (!pageEl) return;
+
+    const dpi = cssDPI();
+    const usableH = (PAGE.height - MARGINS.top - MARGINS.bottom) * dpi;
+
+    // With print styles applied (triggered by beforeprint / matchMedia)
+    const total = pageEl.scrollHeight;
+    const slack = 8; // px tolerance
+
+    if (total > usableH - slack){
+      const ratio = (usableH - slack) / total;
+      const root = document.documentElement;
+      const curStr = getComputedStyle(root).getPropertyValue('--board').trim();
+      const cur = parseFloat(curStr); // inches, because we set it that way in print CSS
+      if (!isNaN(cur) && ratio < 1){
+        root.style.setProperty('--board', (cur * ratio).toFixed(3) + 'in');
+      }
+    }
+  }
+
+  const mq = window.matchMedia && window.matchMedia('print');
+  if (mq && mq.addEventListener) {
+    mq.addEventListener('change', e => { if (e.matches) fitToOnePage(); });
+  } else if (mq && mq.addListener) {
+    mq.addListener(e => { if (e.matches) fitToOnePage(); });
+  }
+  window.addEventListener('beforeprint', fitToOnePage);
+})();
 </script>
 </body>
 </html>
