@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>Roll and Read Generator</title>
 
-  <!-- Make sure this filename matches your data file -->
+  <!-- Data file -->
   <script src="fluencyDataFull_v8-2_clean.js"></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -96,6 +96,7 @@
       padding:0.5in; border:2px solid #000; border-radius:8px; 
       margin:0 auto; page-break-inside: avoid;
       text-align:center;
+      position: relative; /* so absolute footer can anchor inside on screen if needed */
     }
     .worksheet-title { font-size:28px; margin-bottom:6px; font-weight:700; }
     .skills-line{ font-size:14px; margin:6px 0 10px; }
@@ -108,42 +109,49 @@
     .word-cell { font-size:28px; }
     .sentence-cell { font-size:18px; text-align:left; padding:6px; }
 
-    #copyright { font-size:12px; text-align:right; margin-top:8px; display:none; }
+    /* On screen, copyright sits below the table, right-aligned */
+    #copyright { font-size:12px; text-align:right; margin-top:8px; display:block; }
 
-    /* Print rules: portrait */
+    /* Print rules: LANDSCAPE */
     @media print {
-      /* Hide the app header on print */
+      /* Hide the builder UI on print */
       body > h1 { display:none !important; }
-      @page { size: letter portrait; margin: 0.45in 0.30in 0.42in 0.30in; }
+      @page { size: letter landscape; margin: 0.3in; }
 
       .table-section, button, .chips-title, .chips-wrap, .subtitle, .layout, #floatingActions { display:none !important; }
 
       #output { margin:0; }
       .page {
-        position:relative; width:auto;
-        padding-block:0.30in 0.22in; padding-inline:0.20in;
-        border:none; box-shadow:none; page-break-inside:avoid; break-inside:avoid;
+        width:auto; padding:0.30in 0.35in; border:none; box-shadow:none;
+        page-break-inside:avoid; break-inside:avoid;
+        position: relative; /* anchor for absolute footer */
       }
 
       .worksheet-title { font-size:20px; margin-bottom:0.06in; }
       .skills-line{ font-size:12px; margin:0 0 0.10in; }
       .worksheet-directions { font-size:12px; margin-bottom:0.12in; }
 
-      /* slightly tighter cells for print fit */
-      .roll td { width:1.3in; height:0.75in; }
-      .word-cell { font-size:20px; }
-      .sentence-cell { font-size:16px; }
+      /* Wider cells for landscape page */
+      .roll td { width: 1.6in; height: 0.8in; }
+      .word-cell { font-size:22px; }
+      .sentence-cell { font-size:17px; }
 
+      /* Pin copyright to bottom-right of the printed page */
       #copyright {
-        display:block;
-        position:absolute; right:0.20in; bottom:0.20in; margin:0; font-size:10px;
+        position: absolute;
+        right: 0.35in;
+        bottom: 0.30in;
+        margin: 0;
+        font-size: 10px;
+        text-align: right;
+        display: block !important;
       }
     }
   </style>
 </head>
 <body>
   <h1>Roll and Read Generator</h1>
-  <div class="subtitle">Step 1: skills → Step 2: blends → Step 3: words/sentences/both → Step 4: (optional) grid size → Generate a portrait Roll & Read page.</div>
+  <div class="subtitle">Step 1: skills → Step 2: blends → Step 3: words/sentences/both → Step 4: (optional) grid size → Generate a **landscape** Roll & Read page.</div>
 
   <div class="layout">
     <div class="left">
@@ -424,11 +432,7 @@ function readDict(dict, key){ return Array.isArray(dict[key]) ? dict[key] : []; 
 /* Case-flex blends + type/case fallbacks */
 function readWithBlends(dict, prefix, type, blends){
   const typeLower = type.toLowerCase();
-  const baseKeys = [
-    `${prefix} ${type}`,
-    `${prefix} ${typeLower}`,
-    `${prefix}`
-  ];
+  const baseKeys = [`${prefix} ${type}`, `${prefix} ${typeLower}`, `${prefix}`];
   let base = [];
   for (const k of baseKeys){ base = base.concat(readDict(dict, k)); }
 
