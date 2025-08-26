@@ -129,6 +129,10 @@
 
     /* Print rules: exact inches, tight margins, no outer border, keep on one page */
     @media print {
+      /* Hide the big app header on print */
+  body > h1 { 
+    display: none !important; 
+  }
       @page {
         size: letter portrait;
         /* top right bottom left */
