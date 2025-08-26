@@ -137,14 +137,14 @@
       .sentence-cell { font-size:17px; }
 
       /* Pin copyright to bottom-right of the printed page */
-      #copyright {
-        position: absolute;
-        right: 0.35in;
-        bottom: 0.30in;
-        margin: 0;
-        font-size: 10px;
-        text-align: right;
-        display: block !important;
+     #copyright {
+  position: static !important;  /* let it flow naturally */
+  margin-top: 20px !important;  /* add space below table */
+  font-size: 10px !important;
+  text-align: right !important;
+  display: block !important;
+  page-break-inside: avoid;     /* never split away from the table */
+}
       }
     }
   </style>
