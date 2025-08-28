@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Master Word Ladders</title>
+
+  <!-- Data sources -->
+  <script src="blendsmaster.js" defer></script> <!-- CVC -->
+  <script src="digraphs_master_FINAL_v2.js" defer></script> <!-- Digraphs -->
+  <script src="glued_sounds_full.js" defer></script> <!-- Glued Sounds -->
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: 'BoxesFont';
+      src: url('fonts/boxes2.otf') format('opentype');
+    }
+    @font-face {
+      font-family: 'UnderlineFont';
+      src: url('fonts/underlines.otf') format('opentype');
+    }
+
+    body { font-family:'Poppins',sans-serif; margin:12px; text-align:center; background:#fafafa; }
+    h1 { font-size:32px; margin-bottom:6px; }
+    .subtitle { font-size:16px; margin-bottom:10px; }
+
+    .layout { display:grid; grid-template-columns:1fr 1fr; gap:12px; max-width:1100px; margin:0 auto; }
+    @media(max-width:900px){ .layout{ display:block; } }
+
+    .section { border:2px solid #000; background:#fff; border-radius:14px; padding:14px; }
+
+    .skill-button {
+      display:block; width:100%; margin:6px 0;
+      padding:10px; font-size:18px; font-weight:700; cursor:pointer;
+      border:2px solid #000; border-radius:12px; background:#f0f0f0;
+    }
+    .skill-button.selected { background:#1976d2; color:#fff; }
+
+    .controls { display:flex; justify-content:center; flex-wrap:wrap; gap:14px; margin:8px 0; }
+    button { font-size:16px; padding:8px 12px; cursor:pointer; }
+
+    #ladderOutput{ margin-top:12px; margin-bottom:60px; }
+    #copyright{ font-size:12px; text-align:right; margin-top:8px; }
+
+    @media print {
+      body * { visibility:hidden; }
+      #ladderOutput, #ladderOutput * { visibility:visible; }
+      #ladderOutput{ position:absolute; top:0; left:0; width:100%; margin:0; padding:10px; }
+      @page { margin:0.5in; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Master Word Ladders</h1>
+  <div class="subtitle">Choose a skill • Pick blends • Generate</div>
+
+  <div class="layout">
+    <!-- LEFT: Skill buttons -->
+    <div class="section">
+      <button class="skill-button" data-skill="CVC">Short Vowels (CVC)</button>
+      <button class="skill-button" data-skill="Digraphs">Digraphs</button>
+      <button class="skill-button" data-skill="Glued">Glued Sounds</button>
+    </div>
+
+    <!-- RIGHT: Options -->
+    <div class="section">
+      <div><strong>Step 2: Blends</strong></div>
+      <div class="controls" id="blendOptions">
+        <label><input type="radio" name="blendMode" value="no" checked> No Blends</label>
+        <label><input type="radio" name="blendMode" value="with"> With Blends</label>
+        <label id="onlyBlendsLabel"><input type="radio" name="blendMode" value="only"> Only Blends</label>
+      </div>
+
+      <div><strong>Display</strong></div>
+      <div class="controls">
+        <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
+        <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
+        <label><input type="checkbox" id="boldChanged" checked> Bold Changed Part</label>
+      </div>
+
+      <div class="controls">
+        <button id="btnGenerate">Generate Ladder</button>
+        <button onclick="window.print()">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="ladderOutput"></div>
+
+  <script>
+    let selectedSkill = null;
+    document.querySelectorAll('.skill-button').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        document.querySelectorAll('.skill-button').forEach(b=>b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedSkill = btn.dataset.skill;
+
+        // Disable "Only Blends" for Digraphs + Glued
+        const only = document.querySelector('#onlyBlendsLabel input');
+        if (selectedSkill==="CVC"){ only.disabled=false; }
+        else { only.disabled=true; if(only.checked) document.querySelector('input[name="blendMode"][value="with"]').checked=true; }
+      });
+    });
+
+    // === Shared helpers (patterns, hints, rendering) ===
+    function splitWordByPattern(word, pattern){
+      const chunks=[]; let i=0;
+      for(let d of pattern){ const len=d==='3'?3:(d==='2'?2:1); chunks.push(word.slice(i,i+len)); i+=len; }
+      return chunks;
+    }
+    function getChangedMap(prevWord,word,prevPattern,pattern){
+      const prev=splitWordByPattern(prevWord,prevPattern), cur=splitWordByPattern(word,pattern);
+      return cur.map((c,i)=>c!== (prev[i]||''));
+    }
+    function renderPattern(pattern,useFont,boldChanged,changedMap){
+      const isU=useFont==='UnderlineFont';
+      return [...pattern].map((d,i)=>{
+        const bold=boldChanged&&changedMap&&changedMap[i];
+        return `<span style="${isU?'display:inline-block;margin:0 6px;':''}${bold?'font-weight:700;':''}">${d}</span>`;
+      }).join('');
+    }
+    function getChunkHint(prevWord,word,prevPattern,pattern){
+      const prev=splitWordByPattern(prevWord,prevPattern),cur=splitWordByPattern(word,pattern);
+      for(let i=0;i<Math.min(prev.length,cur.length);i++) if(prev[i]!==cur[i]) return `${prev[i]} → ${cur[i]}`;
+      return '? → ?';
+    }
+    function renderLadder(ladder,title,useFont,boldChanged,patterns,images){
+      const rows=ladder.map((w,i)=>{
+        const prev=ladder[i-1]||'',p=patterns[w]||'?',pp=patterns[prev]||'?';
+        const changedMap=(!i&&false)?null:getChangedMap(prev,w,pp,p);
+        const disp=i===0
+          ? `<div style="font-size:32px;font-weight:600;">${w}</div>`
+          : `<div style="font-family:${useFont};font-size:${useFont==='UnderlineFont'?'85px':'100px'};">${renderPattern(p,useFont,boldChanged,changedMap)}</div>`;
+        const img=images[w]||'https://via.placeholder.com/110?text=?';
+        return `<tr>
+          <td><img src="${img}" style="width:110px;height:110px;object-fit:contain;"></td>
+          <td style="border-left:4px solid #000;border-right:4px solid #000;${i<ladder.length-1?'border-bottom:4px solid #000;':''}">${disp}</td>
+          <td>${i===0?'':getChunkHint(prev,w,pp,p)}</td>
+        </tr>`;
+      }).join('');
+      document.getElementById('ladderOutput').innerHTML=`
+        <div><h2>${title}</h2>
+        <table style="margin:0 auto;border-collapse:collapse;">${rows}</table>
+        <div id="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div></div>`;
+    }
+
+    // === Generate ===
+    document.getElementById('btnGenerate').addEventListener('click',()=>{
+      if(!selectedSkill){ alert('Pick a skill first'); return; }
+      const blendSel=document.querySelector('input[name="blendMode"]:checked').value;
+      const cellStyle=document.querySelector('input[name="cellStyle"]:checked').value;
+      const useFont=(cellStyle==='underlines')?'UnderlineFont':'BoxesFont';
+      const bold=document.getElementById('boldChanged').checked;
+
+      if(selectedSkill==='CVC'){
+        const modeMap={no:'CVC',with:'Include Blends',only:'Only Blends'};
+        const ladders=getLaddersByMode(modeMap[blendSel]);
+        const ladder=ladders[Math.floor(Math.random()*ladders.length)];
+        renderLadder(ladder,'Short Vowel Word Ladders',useFont,bold,rWordPatterns,rWordImages);
+      }
+      if(selectedSkill==='Digraphs'){
+        const mode=(blendSel==='with')?'Include Blends':'Digraphs';
+        const ladders=getLaddersByMode(mode);
+        const ladder=ladders[Math.floor(Math.random()*ladders.length)];
+        renderLadder(ladder,'Digraph Word Ladders',useFont,bold,rWordPatterns,rWordImages);
+      }
+      if(selectedSkill==='Glued'){
+        const ladder=gluedWordLadders[Math.floor(Math.random()*gluedWordLadders.length)];
+        renderLadder(ladder,'Glued Sounds Word Ladders',useFont,bold,gluedWordPatterns,gluedWordImages);
+      }
+    });
+  </script>
+</body>
+</html>
