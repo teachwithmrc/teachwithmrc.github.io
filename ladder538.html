@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Master Word Ladders</title>
+
+  <!-- Preload the one with unique names -->
+  <script src="glued_sounds_full.js" defer></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    @font-face { font-family:'BoxesFont'; src:local('BoxesFont'), url('fonts/boxes2.otf') format('opentype'); }
+    @font-face { font-family:'UnderlineFont'; src:local('UnderlineFont'), url('fonts/underlines.otf') format('opentype'); }
+
+    :root{
+      --cvc:#e9f2ff;          --cvc-selected:#1976d2;
+      --dig:#f3e9ff;          --dig-selected:#8e24aa;
+      --glued:#e8fff4;        --glued-selected:#2e7d32;
+      --rctrl:#f0f5ff;        --rctrl-selected:#3f51b5;
+      --vce:#fff5e6;          --vce-selected:#ef6c00;
+    }
+
+    body { font-family:'Poppins',sans-serif; margin:10px; text-align:center; background:#fafafa; }
+    h1 { font-size:32px; margin-bottom:2px; }
+    .subtitle { font-size:16px; margin-bottom:8px; }
+
+    .layout { display:grid; grid-template-columns:1fr 1fr; gap:12px; max-width:1100px; margin:0 auto; }
+    @media(max-width:900px){ .layout{ display:block; } }
+
+    .section { border:2px solid #000; background:#fff; border-radius:14px; padding:14px; }
+
+    .skill-button{
+      display:block; width:100%; margin:8px 0; padding:12px;
+      font-size:18px; font-weight:700; cursor:pointer; border:2px solid #000; border-radius:12px;
+      transition:filter .15s ease;
+    }
+    .skill-button:hover{ filter:brightness(.97); }
+    .skill-button.cvc   { background:var(--cvc); }
+    .skill-button.dig   { background:var(--dig); }
+    .skill-button.glued { background:var(--glued); }
+    .skill-button.rctrl { background:var(--rctrl); }
+    .skill-button.vce   { background:var(--vce); }
+
+    .skill-button.cvc.selected   { background:var(--cvc-selected); color:#fff; }
+    .skill-button.dig.selected   { background:var(--dig-selected); color:#fff; }
+    .skill-button.glued.selected { background:var(--glued-selected); color:#fff; }
+    .skill-button.rctrl.selected { background:var(--rctrl-selected); color:#fff; }
+    .skill-button.vce.selected   { background:var(--vce-selected); color:#fff; }
+
+    .controls { display:flex; justify-content:center; align-items:center; gap:14px; flex-wrap:wrap; margin:8px 0; }
+    label { margin:0 5px; font-size:14px; }
+    button { font-size:16px; padding:8px 12px; cursor:pointer; }
+
+    #ladderOutput { margin-top:8px; margin-bottom:60px; }
+    #copyright { font-size:12px; text-align:right; width:100%; }
+
+    @media print {
+      @font-face { font-family:'BoxesFont'; src:local('BoxesFont'), url('fonts/boxes2.otf') format('opentype'); }
+      @font-face { font-family:'UnderlineFont'; src:local('UnderlineFont'), url('fonts/underlines.otf') format('opentype'); }
+      body * { visibility:hidden; }
+      #ladderOutput, #ladderOutput * { visibility:visible; }
+      #ladderOutput { position:absolute; top:0; left:0; width:100%; margin:0; padding:10px; box-sizing:border-box; }
+      @page { margin:0.5in; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Master Word Ladders</h1>
+  <p class="subtitle"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
+
+  <div class="layout">
+    <!-- LEFT: Color-coded buttons (act as headings) -->
+    <div class="section">
+      <button class="skill-button cvc"   data-skill="CVC">Short Vowels (CVC)</button>
+      <button class="skill-button dig"   data-skill="Digraphs">Digraphs</button>
+      <button class="skill-button glued" data-skill="Glued">Glued Sounds</button>
+      <button class="skill-button rctrl" data-skill="RControlled">R-Controlled</button>
+      <button class="skill-button vce"   data-skill="VCe">VCe (Silent E)</button>
+    </div>
+
+    <!-- RIGHT: Options -->
+    <div class="section">
+      <div style="font-weight:700; margin-bottom:4px;">Blends</div>
+      <div class="controls" id="blendOptions">
+        <label id="blend-no"><input type="radio" name="blendMode" value="no" checked> No Blends</label>
+        <label id="blend-with"><input type="radio" name="blendMode" value="with"> With Blends</label>
+        <label id="blend-only"><input type="radio" name="blendMode" value="only"> Only Blends</label>
+      </div>
+
+      <div style="font-weight:700; margin-top:6px;">Display</div>
+      <div class="controls">
+        <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
+        <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
+        <label><input type="checkbox" id="boldChanged" checked> Bold Changed Part</label>
+      </div>
+
+      <div class="controls">
+        <button id="btnGenerate">Generate Ladder</button>
+        <button onclick="window.print()">Print Page</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="ladderOutput"></div>
+
+  <script>
+    /* ===================== Lazy loaders with namespacing (avoid collisions) ===================== */
+    // Each entry: src, how to snapshot, and capability flags
+    const Datasets = {
+      CVC: {
+        src: 'blendsmaster.js',
+        loaded: false, ns: null,
+        supportsBlends: { no:true, with:true, only:true },
+        async snapshot(){
+          this.ns = {
+            // typical API from blendsmaster.js
+            getLaddersByMode: window.getLaddersByMode,
+            images: ()=> window.rWordImages || {},
+            patterns: ()=> window.rWordPatterns || {}
+          };
+        }
+      },
+      Digraphs: {
+        src: 'digraphs_master_FINAL_v2.js',
+        loaded: false, ns: null,
+        supportsBlends: { no:true, with:true, only:false },
+        async snapshot(){
+          this.ns = {
+            getLaddersByMode: window.getLaddersByMode, // Digraphs | Include Blends
+            images: ()=> window.rWordImages || {},
+            patterns: ()=> window.rWordPatterns || {}
+          };
+        }
+      },
+      Glued: {
+        src: null, // preloaded
+        loaded: true, ns: {
+          getLadders: ()=> window.gluedWordLadders || [],
+          images: ()=> window.gluedWordImages || {},
+          patterns: ()=> window.gluedWordPatterns || {}
+        },
+        supportsBlends: { no:true, with:false, only:false }
+      },
+      RControlled: {
+        src: 'rControlled_full_max.js',
+        loaded: false, ns: null,
+        supportsBlends: { no:true, with:false, only:false },
+        async snapshot(){
+          // Try flexible signatures
+          const ns = {};
+          if (typeof window.getLaddersByMode === 'function') {
+            ns.getLaddersByMode = window.getLaddersByMode;
+          }
+          ns.images = ()=> window.rWordImages || window.rControlledImages || {};
+          ns.patterns = ()=> window.rWordPatterns || window.rControlledPatterns || {};
+          // arrays fallbacks
+          ns.list = ()=> window.rControlledWordLadders || window.rControlledLadders || [];
+          this.ns = ns;
+        }
+      },
+      VCe: {
+        src: 'vceWordLadders_6words_full.js',
+        loaded: false, ns: null,
+        supportsBlends: { no:true, with:false, only:false },
+        async snapshot(){
+          const ns = {};
+          if (typeof window.getLaddersByMode === 'function') {
+            ns.getLaddersByMode = window.getLaddersByMode;
+          }
+          ns.images = ()=> window.rWordImages || window.vceWordImages || {};
+          ns.patterns = ()=> window.rWordPatterns || window.vceWordPatterns || {};
+          ns.list = ()=> window.vceWordLadders || [];
+          this.ns = ns;
+        }
+      }
+    };
+
+    function loadDataset(key){
+      const entry = Datasets[key];
+      if (entry.loaded || !entry.src) return Promise.resolve();
+      return new Promise((resolve, reject)=>{
+        const s = document.createElement('script');
+        s.src = entry.src; s.defer = true;
+        s.onload = async ()=>{ try { await entry.snapshot(); entry.loaded = true; resolve(); } catch(e){ reject(e); } };
+        s.onerror = ()=>reject(new Error('Failed to load '+entry.src));
+        document.head.appendChild(s);
+      });
+    }
+
+    /* ===================== Menu & blends enable/disable ===================== */
+    let selectedSkill = null;
+
+    function setBlendAvailability(support){
+      const withLbl = document.getElementById('blend-with');
+      const onlyLbl = document.getElementById('blend-only');
+      const withInp = withLbl.querySelector('input');
+      const onlyInp = onlyLbl.querySelector('input');
+
+      withInp.disabled = !support.with;
+      onlyInp.disabled = !support.only;
+      withLbl.style.opacity = support.with ? 1 : 0.4;
+      onlyLbl.style.opacity = support.only ? 1 : 0.4;
+
+      // if current selection is disabled, fall back to allowed option
+      const cur = document.querySelector('input[name="blendMode"]:checked').value;
+      if (cur==='with' && !support.with) document.querySelector('input[name="blendMode"][value="no"]').checked = true;
+      if (cur==='only' && !support.only) document.querySelector('input[name="blendMode"][value="no"]').checked = true;
+    }
+
+    function selectSkill(btn){
+      document.querySelectorAll('.skill-button').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedSkill = btn.dataset.skill;
+
+      const support = Datasets[selectedSkill]?.supportsBlends || { no:true, with:false, only:false };
+      setBlendAvailability(support);
+    }
+
+    document.querySelectorAll('.skill-button').forEach(btn=>{
+      btn.addEventListener('click', ()=>selectSkill(btn));
+    });
+    // Default to CVC:
+    selectSkill(document.querySelector('.skill-button.cvc'));
+
+    /* ===================== Rendering (exact template chrome) ===================== */
+    function buildCvcRowHTML(word, prev, isFirst, isLast, useFont, boldChanged, imgSrc){
+      const imageBorderStyle = isFirst ? 'border-top-left-radius:12px;' : (isLast ? 'border-bottom-left-radius:12px;' : '');
+      const imageTD = `<td style="padding:5px 7px;width:140px;${imageBorderStyle}">
+        <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
+      </td>`;
+      const borders = !isLast
+        ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
+        : 'border-left:4px solid #000;border-right:4px solid #000;';
+      let wordDisplay;
+      if (isFirst){
+        wordDisplay = `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">${word}</div>`;
+      } else {
+        let lettersHTML = '';
+        for (let i=0;i<word.length;i++){
+          const changed = (prev[i]||'') !== (word[i]||'');
+          lettersHTML += `<span style="font-weight:${(changed && boldChanged)?'bold':'normal'}; font-family:'${useFont}', sans-serif;">1</span>`;
+        }
+        wordDisplay = `<div style="display:flex;justify-content:center;gap:0;font-family:'${useFont}', sans-serif;font-size:90px;letter-spacing:3px;font-weight:600;">${lettersHTML}</div>`;
+      }
+      const wordTD = `<td style="padding:5px 7px;${borders}">${wordDisplay}</td>`;
+      let hintTD = `<td style="padding:3px 5px;width:170px;${isFirst?'border-top-right-radius:12px;':''}${isLast?'border-bottom-right-radius:12px;':''}"></td>`;
+      if (!isFirst){
+        let hint='? → ?'; for (let i=0;i<word.length;i++){ if ((prev[i]||'') !== (word[i]||'')){ hint = `${prev[i]} → ${word[i]}`; break; } }
+        hintTD = `<td style="padding:3px 5px;width:170px;${isLast?'border-bottom-right-radius:12px;':''}">
+          <div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">${hint}</div>
+        </td>`;
+      }
+      return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
+    }
+
+    function splitWordByPattern(word, pattern){
+      const chunks=[]; let i=0;
+      for (let j=0;j<pattern.length;j++){
+        const d = pattern[j]; const len = d==='3'?3:(d==='2'?2:1);
+        chunks.push(word.slice(i,i+len)); i+=len;
+      }
+      return chunks;
+    }
+    function changedMapChunks(prevWord, word, prevPattern, pattern){
+      const a=splitWordByPattern(prevWord, prevPattern); const b=splitWordByPattern(word, pattern);
+      const n=Math.max(prevPattern.length, pattern.length); const out=new Array(n);
+      for (let i=0;i<n;i++) out[i]=(a[i]||'')!==(b[i]||''); return out;
+    }
+    function renderPatternDigits(pattern, useFont, boldChanged, map){
+      const isU = useFont==='UnderlineFont';
+      return Array.from(pattern).map((d,i)=>{
+        const bold = boldChanged && map && map[i];
+        return `<span style="${isU?'display:inline-block;margin:0 6px;':''}${bold?'font-weight:700;':''}">${d}</span>`;
+      }).join('');
+    }
+    function chunkHint(prevWord, word, prevPattern, pattern){
+      const A=splitWordByPattern(prevWord, prevPattern), B=splitWordByPattern(word, pattern);
+      if (A.length===B.length){ for (let i=0;i<A.length;i++){ if (A[i]!==B[i]) return `${A[i]} → ${B[i]}`; } return '? → ?'; }
+      if (B.length===A.length+1){ for (let i=0;i<A.length;i++){ if (A[i]!==B[i]) return '? → ?'; } return `+ ${B[B.length-1]}`; }
+      if (A.length===B.length+1){ for (let i=0;i<B.length;i++){ if (A[i]!==B[i]) return '? → ?'; } return `- ${A[A.length-1]}`; }
+      return '? → ?';
+    }
+    function buildPatternRowHTML(word, prev, isFirst, isLast, useFont, boldChanged, imgSrc, patterns){
+      const patt = patterns[word] || '?';
+      const prevP = patterns[prev] || '?';
+      const imageBorderStyle = isFirst ? 'border-top-left-radius:12px;' : (isLast ? 'border-bottom-left-radius:12px;' : '');
+      const imageTD = `<td style="padding:5px 7px;width:140px;${imageBorderStyle}">
+        <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
+      </td>`;
+      const borders = !isLast
+        ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
+        : 'border-left:4px solid #000;border-right:4px solid #000;';
+      const map = (!isFirst && boldChanged) ? changedMapChunks(prev, word, prevP, patt) : null;
+      const disp = isFirst
+        ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins',sans-serif;">${word}</div>`
+        : `<div class="pattern" style="font-family:'${useFont}', monospace; font-size:${useFont==='UnderlineFont'?'85px':'100px'}; letter-spacing:0px;">${renderPatternDigits(patt, useFont, boldChanged, map)}</div>`;
+      const wordTD = `<td style="padding:5px 7px;${borders}">${disp}</td>`;
+      let hintTD = `<td style="padding:3px 5px;width:170px;${isFirst?'border-top-right-radius:12px;':''}${isLast?'border-bottom-right-radius:12px;':''}"></td>`;
+      if (!isFirst){
+        const hint = chunkHint(prev, word, prevP, patt);
+        hintTD = `<td style="padding:3px 5px;width:170px;${isLast?'border-bottom-right-radius:12px;':''}">
+          <div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">${hint}</div>
+        </td>`;
+      }
+      return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
+    }
+
+    function renderLadder(ladder, title, useFont, boldChanged, images, patterns, type){
+      const rows = ladder.map((w,i)=>{
+        const isFirst = i===0, isLast = i===ladder.length-1, prev = ladder[i-1]||'';
+        const img = (images && images[w]) ? images[w] : 'https://via.placeholder.com/110?text=?';
+        return (type==='cvc')
+          ? buildCvcRowHTML(w, prev, isFirst, isLast, useFont, boldChanged, img)
+          : buildPatternRowHTML(w, prev, isFirst, isLast, useFont, boldChanged, img, patterns||{});
+      }).join('');
+
+      document.getElementById('ladderOutput').innerHTML = `
+        <div style="display:flex;justify-content:center;flex-direction:column;align-items:center; width:98%; margin:0 auto;">
+          <div style="text-align:center;margin-bottom:4px;">
+            <h2 style="margin-bottom:1px;font-size:24px;">${title}</h2>
+            <p style="margin-top:0;font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
+          </div>
+          <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
+            ${rows}
+          </table>
+          <br><br>
+          <div id="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+        </div>`;
+    }
+
+    /* ===================== Generate ===================== */
+    document.getElementById('btnGenerate').addEventListener('click', async ()=>{
+      if (!selectedSkill){ alert('Pick a skill first.'); return; }
+
+      const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
+      const useFont = (cellStyle==='underlines') ? 'UnderlineFont' : 'BoxesFont';
+      const bold = document.getElementById('boldChanged').checked;
+      const blendSel = document.querySelector('input[name="blendMode"]:checked')?.value || 'no';
+
+      try {
+        if (selectedSkill === 'CVC'){
+          await loadDataset('CVC'); const ns = Datasets.CVC.ns;
+          if (!ns || typeof ns.getLaddersByMode!=='function'){ alert('❌ CVC data not loaded.'); return; }
+          const modeMap = { no:'CVC', with:'Include Blends', only:'Only Blends' };
+          const ladders = ns.getLaddersByMode(modeMap[blendSel]||'CVC');
+          if (!ladders?.length){ alert('❌ No CVC ladders.'); return; }
+          const ladder = ladders[Math.floor(Math.random()*ladders.length)];
+          renderLadder(ladder, 'CVC Word Ladder', useFont, bold, ns.images(), null, 'cvc');
+          return;
+        }
+
+        if (selectedSkill === 'Digraphs'){
+          await loadDataset('Digraphs'); const ns = Datasets.Digraphs.ns;
+          if (!ns || typeof ns.getLaddersByMode!=='function'){ alert('❌ Digraphs data not loaded.'); return; }
+          const mode = (blendSel==='with') ? 'Include Blends' : 'Digraphs';
+          const ladders = ns.getLaddersByMode(mode);
+          if (!ladders?.length){ alert('❌ No Digraph ladders.'); return; }
+          const ladder = ladders[Math.floor(Math.random()*ladders.length)];
+          renderLadder(ladder, 'Digraph Word Ladders', useFont, bold, ns.images(), ns.patterns(), 'pattern');
+          return;
+        }
+
+        if (selectedSkill === 'Glued'){
+          const ns = Datasets.Glued.ns;
+          const ladders = ns.getLadders();
+          if (!ladders?.length){ alert('❌ No Glued ladders.'); return; }
+          const ladder = ladders[Math.floor(Math.random()*ladders.length)];
+          renderLadder(ladder, 'Glued Sounds Word Generator', useFont, bold, ns.images(), ns.patterns(), 'pattern');
+          return;
+        }
+
+        if (selectedSkill === 'RControlled'){
+          await loadDataset('RControlled'); const ns = Datasets.RControlled.ns;
+          // Prefer getLaddersByMode if present; otherwise use list()
+          let ladders = [];
+          if (typeof ns.getLaddersByMode==='function'){ ladders = ns.getLaddersByMode('RControlled') || []; }
+          if (!ladders.length && typeof ns.list==='function'){ ladders = ns.list() || []; }
+          if (!ladders?.length){ alert('❌ No R-Controlled ladders.'); return; }
+          const ladder = ladders[Math.floor(Math.random()*ladders.length)];
+          renderLadder(ladder, 'R-Controlled Word Ladders', useFont, bold, ns.images(), ns.patterns(), 'pattern');
+          return;
+        }
+
+        if (selectedSkill === 'VCe'){
+          await loadDataset('VCe'); const ns = Datasets.VCe.ns;
+          let ladders = [];
+          if (typeof ns.getLaddersByMode==='function'){ ladders = ns.getLaddersByMode('VCe') || []; }
+          if (!ladders.length && typeof ns.list==='function'){ ladders = ns.list() || []; }
+          if (!ladders?.length){ alert('❌ No VCe ladders.'); return; }
+          const ladder = ladders[Math.floor(Math.random()*ladders.length)];
+          renderLadder(ladder, 'VCe Word Ladders', useFont, bold, ns.images(), ns.patterns(), 'pattern');
+          return;
+        }
+      } catch (e){
+        console.error(e);
+        alert('❌ Problem loading data files. See console for details.');
+      }
+    });
+  </script>
+</body>
+</html>
