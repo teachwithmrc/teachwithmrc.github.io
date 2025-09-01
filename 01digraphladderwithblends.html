@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>Digraph Word Ladders</title>
 
-  <!-- DATA (must define: rWordPatterns, rWordImages, digraphWordLadders, digraphBlendLadders) -->
+  <!-- DATA: must define rWordPatterns, rWordImages, digraphWordLadders, digraphBlendLadders -->
   <script src="digraphs_master_FINAL_v2.js" defer></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -24,11 +24,13 @@
 
     body { font-family: 'Poppins', sans-serif; margin: 10px; text-align: center; color: var(--ink); background: var(--bg); }
     h1 { font-size: 32px; margin-bottom: 6px; }
+    .subtitle { font-size: 16px; margin-bottom: 8px; }
 
     button { font-size: 16px; padding: 6px 10px; margin: 6px; cursor: pointer; }
     label { margin: 0 6px; font-size: 18px; }
 
     .pattern { font-size: 100px; line-height: 1; margin-top: 4px; letter-spacing: 0; }
+
     #copyright { font-size: 12px; text-align: right; width: 100%; }
 
     .card {
@@ -104,81 +106,90 @@
   <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px;"></div>
 
   <script>
-    /* ===========================================================
-       Helpers
-    ============================================================*/
-    function splitWordByPattern(word, pattern) {
+    /* =========================
+       Utilities
+    ==========================*/
+    const safeLower = (w) => (w || '').toLowerCase();
+
+    function getPattern(word) {
+      const key = safeLower(word);
+      return (typeof rWordPatterns !== 'undefined' && rWordPatterns && rWordPatterns[key]) ? rWordPatterns[key] : '?';
+    }
+
+    function getImage(word) {
+      const key = safeLower(word);
+      return (typeof rWordImages !== 'undefined' && rWordImages && rWordImages[key]) ? rWordImages[key] : 'https://via.placeholder.com/110?text=%3F';
+    }
+
+    function splitByPattern(word, pattern) {
       const chunks = [];
       let i = 0;
       for (let j = 0; j < pattern.length; j++) {
         const d = pattern[j];
-        const len = (d === '3') ? 3 : (d === '2') ? 2 : 1; // supports 1/2/3
+        const len = (d === '3') ? 3 : (d === '2') ? 2 : 1;
         chunks.push(word.slice(i, i + len));
         i += len;
       }
       return chunks;
     }
 
-    function getUnitChangeMap(prevWord, word, prevPattern, pattern) {
-      const A = splitWordByPattern(prevWord, prevPattern);
-      const B = splitWordByPattern(word, pattern);
-      const unit = [];
-      const pushMany = (n, v)=>{ for (let i=0;i<n;i++) unit.push(v); };
+    // Returns the index of the changed chunk (or -1 if none/unclear).
+    function getChangedChunkIndex(prevWord, word, prevPat, pat) {
+      const A = splitByPattern(prevWord, prevPat);
+      const B = splitByPattern(word, pat);
+      const n = Math.max(A.length, B.length);
 
-      const N = Math.max(A.length, B.length);
-      for (let i = 0; i < N; i++) {
-        const a = A[i] || '', b = B[i] || '';
-        if (!b.length) continue;
-        if (a === b) { pushMany(b.length, false); continue; }
-
-        // handle a → b by append/prepend 1 char
-        if (b.length === a.length + 1 && (b.startsWith(a) || b.endsWith(a))) {
-          if (b.startsWith(a)) { pushMany(a.length, false); pushMany(1, true); }
-          else { pushMany(1, true); pushMany(a.length, false); }
-          continue;
+      // Same # chunks: find the one chunk that differs
+      if (A.length === B.length) {
+        let idx = -1;
+        for (let i = 0; i < n; i++) {
+          if ((A[i] || '') !== (B[i] || '')) {
+            if (idx !== -1) return -1; // more than one diff
+            idx = i;
+          }
         }
-
-        // same length: per-char diff
-        if (a.length === b.length) {
-          for (let k=0;k<b.length;k++) unit.push(a[k] !== b[k]);
-          continue;
-        }
-
-        // length change fallback
-        pushMany(b.length, true);
+        return idx; // -1 if identical
       }
-      return unit;
+
+      // One inserted/removed chunk → bold the new/removed position
+      if (B.length === A.length + 1) {
+        // Find insertion point
+        for (let i = 0; i < B.length; i++) {
+          const test = B.slice(0, i).concat(B.slice(i + 1));
+          if (arraysEqual(A, test)) return i;
+        }
+      }
+      if (A.length === B.length + 1) {
+        for (let i = 0; i < A.length; i++) {
+          const test = A.slice(0, i).concat(A.slice(i + 1));
+          if (arraysEqual(B, test)) return i; // removed from this index
+        }
+      }
+      return -1;
     }
 
-    // Renders chunk groups with a visible gap for BOTH fonts.
-    function renderPatternHTMLUnits(pattern, useFont, boldUnits) {
-      const isUnderline = (useFont === 'UnderlineFont');
-      const lens = Array.from(pattern).map(d => d === '3' ? 3 : (d === '2' ? 2 : 1));
-      let html = '', u = 0;
-      for (let c = 0; c < lens.length; c++) {
-        const L = lens[c];
-        const chunkGap = isUnderline ? 'margin:0 8px;' : 'margin:0 5px;';
-        html += `<span style="display:inline-block;${chunkGap}">`;
-        for (let i=0;i<L;i++) {
-          const bold = boldUnits && !!boldUnits[u++];
-          html += `<span style="${bold ? 'font-weight:700;' : ''}">1</span>`;
-        }
-        html += `</span>`;
-      }
-      return html;
+    function arraysEqual(a,b){ return a.length===b.length && a.every((v,i)=>v===b[i]); }
+
+    function pickLaddersForMode(mode) {
+      const base = (typeof digraphWordLadders !== 'undefined' && Array.isArray(digraphWordLadders)) ? digraphWordLadders : [];
+      const blends = (typeof digraphBlendLadders !== 'undefined' && Array.isArray(digraphBlendLadders)) ? digraphBlendLadders : [];
+      if (mode === 'with') return blends.length ? blends : base;
+      if (mode === 'only') return blends;
+      return base;
     }
 
-    function getChunkHint(prevWord, word, prevPattern, pattern) {
-      const A = splitWordByPattern(prevWord, prevPattern);
-      const B = splitWordByPattern(word, pattern);
+    function getHint(prevWord, word, prevPat, pat) {
+      const A = splitByPattern(prevWord, prevPat);
+      const B = splitByPattern(word, pat);
       const eq = (x,y)=>x.length===y.length && x.every((v,i)=>v===y[i]);
+
+      if (!prevWord) return '';
 
       if (A.length === B.length) {
         let idx = -1;
         for (let i=0;i<A.length;i++){ if (A[i]!==B[i]){ if(idx!==-1) return '? → ?'; idx=i; } }
         if (idx === -1) return '? → ?';
         const a=A[idx], b=B[idx];
-
         if (b.length === a.length + 1 && (b.startsWith(a) || b.endsWith(a))) {
           const add = b.startsWith(a) ? b.slice(-1) : b.slice(0, b.length - a.length);
           const micro = b.startsWith(a) ? `${a} → ${a}<b>${add}</b>` : `${a} → <b>${add}</b>${a}`;
@@ -207,49 +218,12 @@
         }
         return '? → ?';
       }
-
       return '? → ?';
     }
 
-    /* ===========================================================
-       Data access + safety
-    ============================================================*/
-    function pickLaddersForMode(mode) {
-      const base = (typeof digraphWordLadders !== 'undefined' && Array.isArray(digraphWordLadders)) ? digraphWordLadders : [];
-      const blends = (typeof digraphBlendLadders !== 'undefined' && Array.isArray(digraphBlendLadders)) ? digraphBlendLadders : [];
-      if (mode === 'with') return blends.length ? blends : base;
-      if (mode === 'only') return blends;
-      return base;
-    }
-
-    // Fallback pattern guess (covers common digraphs) if a word is missing in rWordPatterns
-    function guessPattern(word) {
-      const digraphs = ['sh','ch','th','wh','ck','qu'];
-      let i = 0, parts = [];
-      const w = (word || '').toLowerCase();
-      while (i < w.length) {
-        const two = w.slice(i, i+2);
-        if (digraphs.includes(two)) { parts.push(2); i += 2; }
-        else { parts.push(1); i += 1; }
-      }
-      return parts.join('');
-    }
-
-    const getPatternFor = (w) => {
-      const key = (w || '').toLowerCase();
-      if (typeof rWordPatterns !== 'undefined' && rWordPatterns && rWordPatterns[key]) return rWordPatterns[key];
-      return guessPattern(key); // graceful fallback
-    };
-
-    const getImageFor = (w) => {
-      const key = (w || '').toLowerCase();
-      if (typeof rWordImages !== 'undefined' && rWordImages && rWordImages[key]) return rWordImages[key];
-      return 'https://via.placeholder.com/110?text=%3F';
-    };
-
-    /* ===========================================================
+    /* =========================
        Main
-    ============================================================*/
+    ==========================*/
     function generateLadder() {
       if (typeof rWordPatterns === 'undefined' || typeof rWordImages === 'undefined') {
         alert('❌ Error: Patterns/Images not loaded. Check "digraphs_master_FINAL_v2-2.js" path.');
@@ -273,18 +247,36 @@
         const first = (i===0), last = (i===ladder.length-1);
         const prev = ladder[i-1] || '';
 
-        const patt = getPatternFor(word);
-        const prevP = getPatternFor(prev);
+        const patt = getPattern(word);      // e.g., "212"
+        const prevP = getPattern(prev);     // previous pattern
+        const imgSrc = getImage(word);
 
-        const boldUnits = (!first && boldChanged) ? getUnitChangeMap(prev, word, prevP, patt) : null;
-        const patternHTML = first ? '' : renderPatternHTMLUnits(patt, useFont, boldUnits);
+        // Build pattern HTML: output the exact DIGIT STRING (e.g., 212)
+        let patternHTML = '';
+        if (!first) {
+          const changedIdx = boldChanged ? getChangedChunkIndex(prev, word, prevP, patt) : -1;
+          if (changedIdx === -1) {
+            // No clear single change: print raw pattern.
+            patternHTML = patt;
+          } else {
+            // Wrap the changed chunk’s digit in <span style="font-weight:700">
+            // Example: patt="212" and changedIdx=1 -> "2<b>1</b>2"
+            let out = '';
+            for (let j=0;j<patt.length;j++) {
+              const ch = patt[j];
+              out += (j===changedIdx) ? `<span style="font-weight:700;">${ch}</span>` : ch;
+            }
+            patternHTML = out;
+          }
+        }
 
         const display = first
           ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins',sans-serif;">${word}</div>`
           : `<div class="pattern" style="font-family:'${useFont}',monospace;font-size:${useFont==='UnderlineFont'?'85px':'100px'};letter-spacing:0;">${patternHTML}</div>`;
 
-        const imgSrc = getImageFor(word);
-        const imgTD = `<td style="padding:5px 7px;width:140px;"><img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;"></td>`;
+        const imgTD = `<td style="padding:5px 7px;width:140px;">
+                         <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
+                       </td>`;
 
         const borders = !last
           ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
@@ -296,7 +288,7 @@
           ? `<td style="padding:3px 5px;width:170px;"></td>`
           : `<td style="padding:3px 5px;width:170px;">
                <div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">
-                 ${getChunkHint(prev, word, prevP, patt)}
+                 ${getHint(prev, word, prevP, patt)}
                </div>
              </td>`;
 
