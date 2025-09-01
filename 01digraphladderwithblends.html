@@ -4,9 +4,8 @@
   <meta charset="UTF-8" />
   <title>Digraph Word Ladders</title>
 
-  <!-- Uses the exact globals from your combined file: 
-       rWordPatterns, rWordImages, digraphWordLadders, digraphBlendLadders -->
-  <script src="digraphs_master_FINAL_v2.js" defer></script>
+  <!-- DATA (must define: rWordPatterns, rWordImages, digraphWordLadders, digraphBlendLadders) -->
+  <script src="digraphs_master_FINAL_v2-2.js" defer></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
@@ -29,7 +28,7 @@
     button { font-size: 16px; padding: 6px 10px; margin: 6px; cursor: pointer; }
     label { margin: 0 6px; font-size: 18px; }
 
-    .pattern { font-size: 100px; line-height: 1; margin-top: 4px; }
+    .pattern { font-size: 100px; line-height: 1; margin-top: 4px; letter-spacing: 0; }
     #copyright { font-size: 12px; text-align: right; width: 100%; }
 
     .card {
@@ -54,6 +53,7 @@
     }
 
     .screenOnly { display: block; font-size: 18px; }
+
     @media print {
       body * { visibility: hidden; }
       #ladderOutput, #ladderOutput * { visibility: visible; }
@@ -104,13 +104,17 @@
   <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px;"></div>
 
   <script>
-    /* ==== helpers (match your CVC logic) ==== */
+    /* ===========================================================
+       Helpers
+    ============================================================*/
     function splitWordByPattern(word, pattern) {
-      const chunks = []; let i = 0;
+      const chunks = [];
+      let i = 0;
       for (let j = 0; j < pattern.length; j++) {
         const d = pattern[j];
-        const len = (d === '3') ? 3 : (d === '2') ? 2 : 1; // supports 1/2 and the occasional 3
-        chunks.push(word.slice(i, i + len)); i += len;
+        const len = (d === '3') ? 3 : (d === '2') ? 2 : 1; // supports 1/2/3
+        chunks.push(word.slice(i, i + len));
+        i += len;
       }
       return chunks;
     }
@@ -126,27 +130,35 @@
         const a = A[i] || '', b = B[i] || '';
         if (!b.length) continue;
         if (a === b) { pushMany(b.length, false); continue; }
+
+        // handle a → b by append/prepend 1 char
         if (b.length === a.length + 1 && (b.startsWith(a) || b.endsWith(a))) {
           if (b.startsWith(a)) { pushMany(a.length, false); pushMany(1, true); }
           else { pushMany(1, true); pushMany(a.length, false); }
           continue;
         }
+
+        // same length: per-char diff
         if (a.length === b.length) {
           for (let k=0;k<b.length;k++) unit.push(a[k] !== b[k]);
           continue;
         }
+
+        // length change fallback
         pushMany(b.length, true);
       }
       return unit;
     }
 
+    // Renders chunk groups with a visible gap for BOTH fonts.
     function renderPatternHTMLUnits(pattern, useFont, boldUnits) {
       const isUnderline = (useFont === 'UnderlineFont');
       const lens = Array.from(pattern).map(d => d === '3' ? 3 : (d === '2' ? 2 : 1));
       let html = '', u = 0;
       for (let c = 0; c < lens.length; c++) {
         const L = lens[c];
-        html += `<span style="${isUnderline ? 'display:inline-block;margin:0 6px;' : ''}">`;
+        const chunkGap = isUnderline ? 'margin:0 8px;' : 'margin:0 5px;';
+        html += `<span style="display:inline-block;${chunkGap}">`;
         for (let i=0;i<L;i++) {
           const bold = boldUnits && !!boldUnits[u++];
           html += `<span style="${bold ? 'font-weight:700;' : ''}">1</span>`;
@@ -199,7 +211,9 @@
       return '? → ?';
     }
 
-    /* ==== data access aligned to your JS ==== */
+    /* ===========================================================
+       Data access + safety
+    ============================================================*/
     function pickLaddersForMode(mode) {
       const base = (typeof digraphWordLadders !== 'undefined' && Array.isArray(digraphWordLadders)) ? digraphWordLadders : [];
       const blends = (typeof digraphBlendLadders !== 'undefined' && Array.isArray(digraphBlendLadders)) ? digraphBlendLadders : [];
@@ -207,12 +221,36 @@
       if (mode === 'only') return blends;
       return base;
     }
-    const getPatternFor = w => (rWordPatterns && rWordPatterns[w]) ? rWordPatterns[w] : '?';
-    const getImageFor   = w => (rWordImages && rWordImages[w]) ? rWordImages[w] : 'https://via.placeholder.com/110?text=%3F';
 
-    /* ==== main ==== */
+    // Fallback pattern guess (covers common digraphs) if a word is missing in rWordPatterns
+    function guessPattern(word) {
+      const digraphs = ['sh','ch','th','wh','ck','qu'];
+      let i = 0, parts = [];
+      const w = (word || '').toLowerCase();
+      while (i < w.length) {
+        const two = w.slice(i, i+2);
+        if (digraphs.includes(two)) { parts.push(2); i += 2; }
+        else { parts.push(1); i += 1; }
+      }
+      return parts.join('');
+    }
+
+    const getPatternFor = (w) => {
+      const key = (w || '').toLowerCase();
+      if (typeof rWordPatterns !== 'undefined' && rWordPatterns && rWordPatterns[key]) return rWordPatterns[key];
+      return guessPattern(key); // graceful fallback
+    };
+
+    const getImageFor = (w) => {
+      const key = (w || '').toLowerCase();
+      if (typeof rWordImages !== 'undefined' && rWordImages && rWordImages[key]) return rWordImages[key];
+      return 'https://via.placeholder.com/110?text=%3F';
+    };
+
+    /* ===========================================================
+       Main
+    ============================================================*/
     function generateLadder() {
-      // Ensure required maps exist (per your digraphs file)
       if (typeof rWordPatterns === 'undefined' || typeof rWordImages === 'undefined') {
         alert('❌ Error: Patterns/Images not loaded. Check "digraphs_master_FINAL_v2-2.js" path.');
         return;
