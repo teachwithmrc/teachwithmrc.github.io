@@ -20,6 +20,7 @@
       --card2:#fff7f0;
       --border:#cfd7ef;
       --border2:#f2d8bd;
+      --disabled:#9aa6bf;
     }
 
     body { font-family: 'Poppins', sans-serif; margin: 10px; text-align: center; color: var(--ink); background: var(--bg); }
@@ -56,6 +57,13 @@
 
     .screenOnly { display: block; font-size: 18px; }
 
+    /* Grey-out disabled options */
+    .disabledOpt {
+      opacity: .45;
+      color: var(--disabled);
+      pointer-events: none;
+    }
+
     @media print {
       body * { visibility: hidden; }
       #ladderOutput, #ladderOutput * { visibility: visible; }
@@ -73,17 +81,20 @@
   <!-- Teacher directions (screen only) -->
   <div class="screenOnly" style="max-width:920px;margin:0 auto 12px;">
     <strong>Directions:</strong>
-    Choose <em>No Blends</em> (exclude blend ladders), <em>Include Blends</em> (allow any),
-    or <em>Only Blends</em> (restrict to ladders that include blend words).
+    Generate and print! (Blend-mode options are disabled on this version.)
   </div>
 
   <!-- FORMAT -->
   <div class="card">
     <h2>Format</h2>
     <div class="controls">
-      <label><input type="radio" name="ladderMode" value="base" checked> 1. No Blends</label>
-      <label><input type="radio" name="ladderMode" value="with"> 2. Include Blends</label>
-      <label><input type="radio" name="ladderMode" value="only"> 3. Only Blends</label>
+      <label title="Active"><input type="radio" name="ladderMode" value="base" checked> 1. Base</label>
+      <label class="disabledOpt" title="Disabled in this version">
+        <input type="radio" name="ladderMode" value="with" disabled> 2. Include Blends
+      </label>
+      <label class="disabledOpt" title="Disabled in this version">
+        <input type="radio" name="ladderMode" value="only" disabled> 3. Only Blends
+      </label>
     </div>
   </div>
 
@@ -105,80 +116,20 @@
 
   <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px;"></div>
 
-  <!-- ==== BLENDS ADD-ON: patterns + images + (optional) ladders ==== -->
-  <script>
-    (function ensureBlendWords(){
-      // Safeguard globals from data file
-      window.gluedWordPatterns = window.gluedWordPatterns || {};
-      window.gluedWordImages   = window.gluedWordImages   || {};
-      window.gluedWordLadders  = window.gluedWordLadders  || [];
-
-      // Your blend starters
-      const BLEND_WORDS = [
-        "small","blank","drank","plank","prank",
-        "bling","cling","fling","sling","swing",
-        "drink","shrink",
-        // useful intermediates we used in ladders
-        "think","thank","rink","ring","sing","sang","sank","pink","wink","wing","king","link","tank","yank","long","song","hung","honk","mall","wall","call","fall","ball","bank","bang","hang"
-      ];
-
-      // (1) Patterns — render DIGITS, not unit "1"s
-      Object.assign(gluedWordPatterns, {
-        small:"113", blank:"113", drank:"113", plank:"113", prank:"113",
-        bling:"113", cling:"113", fling:"113", sling:"113", swing:"113",
-        drink:"113", shrink:"213",
-        rink:"13", ring:"13", sing:"13", sang:"13", sank:"13",
-        pink:"13", wink:"13", wing:"13", king:"13", link:"13",
-        tank:"13", yank:"13", long:"13", song:"13", hung:"13", honk:"13",
-        mall:"13", wall:"13", call:"13", fall:"13", ball:"13",
-        bank:"13", bang:"13", hang:"13",
-        think:"23",  // th (2) + ink (3)
-        thank:"23"   // th (2) + ank (3)
-      });
-
-      // (2) Images
-      const toImg = (w)=>`images/${w}.png`;
-      const imgs = {};
-      BLEND_WORDS.forEach(w => imgs[w] = toImg(w));
-      Object.assign(gluedWordImages, imgs);
-
-      // (3) Optional: Add a few ladders that start with blend words (so "Only Blends" has content)
-      const newBlendLadders = [
-        ["drink","rink","ring","sing","sang","sank"],
-        ["shrink","rink","pink","wink","wing","sing"],
-        ["small","mall","wall","call","fall","ball"],
-        ["blank","bank","bang","hang","sang","sank"],
-        ["drank","rank","rink","wink","wing","sing"],
-        ["plank","bank","bang","hang","hung","honk"],
-        ["prank","rank","ring","sing","song","long"],
-        ["cling","ring","rink","pink","wink","link"],
-        ["fling","ring","rink","sink","think","thank"],
-        ["sling","sing","sang","sank","tank","yank"],
-        ["swing","wing","wink","rink","ring","king"],
-        ["bling","ring","rink","pink","wink","link"]
-      ];
-      const seen = new Set(gluedWordLadders.map(l => (l||[]).join('|')));
-      newBlendLadders.forEach(L => { const k=L.join('|'); if(!seen.has(k)) gluedWordLadders.push(L); });
-
-      // expose list for filtering
-      window.__GLUED_BLEND_SET__ = new Set(BLEND_WORDS);
-    })();
-  </script>
-
   <script>
     /* =========================
-       Utilities (mirror digraphs behavior)
+       Utilities (mirrors your working digraphs page)
     ==========================*/
     const safeLower = (w) => (w || '').toLowerCase();
 
     function getPattern(word) {
       const key = safeLower(word);
-      return (gluedWordPatterns && gluedWordPatterns[key]) ? gluedWordPatterns[key] : '?';
+      return (typeof gluedWordPatterns !== 'undefined' && gluedWordPatterns && gluedWordPatterns[key]) ? gluedWordPatterns[key] : '?';
     }
 
     function getImage(word) {
       const key = safeLower(word);
-      return (gluedWordImages && gluedWordImages[key]) ? gluedWordImages[key] : 'https://via.placeholder.com/110?text=%3F';
+      return (typeof gluedWordImages !== 'undefined' && gluedWordImages && gluedWordImages[key]) ? gluedWordImages[key] : 'https://via.placeholder.com/110?text=%3F';
     }
 
     function splitByPattern(word, pattern) {
@@ -195,7 +146,7 @@
 
     function arraysEqual(a,b){ return a.length===b.length && a.every((v,i)=>v===b[i]); }
 
-    // Return index of changed CHUNK (digit), or -1
+    // Returns the index of the changed chunk (or -1 if none/unclear).
     function getChangedChunkIndex(prevWord, word, prevPat, pat) {
       const A = splitByPattern(prevWord, prevPat);
       const B = splitByPattern(word, pat);
@@ -204,9 +155,9 @@
 
       if (A.length === B.length) {
         let idx = -1;
-        for (let i=0;i<A.length;i++){
-          if ((A[i]||'') !== (B[i]||'')) {
-            if (idx !== -1) return -1; // more than one difference
+        for (let i = 0; i < A.length; i++) {
+          if ((A[i] || '') !== (B[i] || '')) {
+            if (idx !== -1) return -1; // more than one diff
             idx = i;
           }
         }
@@ -214,16 +165,16 @@
       }
 
       if (B.length === A.length + 1) {
-        for (let i=0;i<B.length;i++){
-          const test = B.slice(0,i).concat(B.slice(i+1));
+        for (let i = 0; i < B.length; i++) {
+          const test = B.slice(0, i).concat(B.slice(i + 1));
           if (arraysEqual(A, test)) return i;
         }
         return -1;
       }
 
       if (A.length === B.length + 1) {
-        for (let i=0;i<A.length;i++){
-          const test = A.slice(0,i).concat(A.slice(i+1));
+        for (let i = 0; i < A.length; i++) {
+          const test = A.slice(0, i).concat(A.slice(i + 1));
           if (arraysEqual(B, test)) return i;
         }
         return -1;
@@ -232,7 +183,6 @@
       return -1;
     }
 
-    // Hints (same style as your digraphs page)
     function getHint(prevWord, word, prevPat, pat) {
       const A = splitByPattern(prevWord, prevPat);
       const B = splitByPattern(word, pat);
@@ -276,16 +226,9 @@
       return '? → ?';
     }
 
-    // Mode selection – mirror your digraphs semantics
-    function pickLaddersForMode(mode){
-      const all = Array.isArray(gluedWordLadders) ? gluedWordLadders : [];
-      const blendSet = window.__GLUED_BLEND_SET__ || new Set();
-
-      const containsBlend = (ladder) => ladder.some(w => blendSet.has(safeLower(w)));
-
-      if (mode === 'only') return all.filter(containsBlend);
-      if (mode === 'base') return all.filter(l => !containsBlend(l));
-      return all; // 'with' → include all ladders
+    // Mode is fixed to "base" here; keep function simple for parity
+    function pickLaddersForMode(_mode) {
+      return (typeof gluedWordLadders !== 'undefined' && Array.isArray(gluedWordLadders)) ? gluedWordLadders : [];
     }
 
     /* =========================
@@ -297,10 +240,9 @@
         return;
       }
 
-      const mode = document.querySelector('input[name="ladderMode"]:checked').value; // base | with | only
-      const ladders = pickLaddersForMode(mode);
+      const ladders = pickLaddersForMode('base');
       if (!ladders.length) {
-        alert(mode==='only' ? '❌ No glued-sound ladders that include blends.' : '❌ No glued-sound ladders available.');
+        alert('❌ No glued-sound ladders available.');
         return;
       }
 
@@ -314,11 +256,11 @@
         const first = (i===0), last = (i===ladder.length-1);
         const prev = ladder[i-1] || '';
 
-        const patt = getPattern(word);      // e.g., "23"
+        const patt = getPattern(word);      // e.g., "13", "23"
         const prevP = getPattern(prev);     // previous pattern
         const imgSrc = getImage(word);
 
-        // Render the exact DIGITS and bold the CHANGED CHUNK (if any)
+        // Build pattern HTML: output the exact DIGIT STRING (e.g., 13 / 23)
         let patternHTML = '';
         if (!first) {
           const changedIdx = boldChanged ? getChangedChunkIndex(prev, word, prevP, patt) : -1;
@@ -359,11 +301,10 @@
         return `<tr>${imgTD}${wordTD}${hintTD}</tr>`;
       }).join('');
 
-      const titleSuffix = (mode==='with') ? ' — Include Blends' : (mode==='only') ? ' — Only Blends' : ' — No Blends';
       const html = `
         <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
           <div id="titleBlock" style="text-align:center;">
-            <h2 style="font-size:24px;">Glued Sounds Word Ladders${titleSuffix}</h2>
+            <h2 style="font-size:24px;">Glued Sounds Word Ladders — Base</h2>
             <p style="font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
           </div>
           <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
