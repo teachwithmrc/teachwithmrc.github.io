@@ -64,7 +64,7 @@
   "third": "221",
   "turf": "121",
   "turn": "121",
-  "whirl": "221"
+  "whirl": "221",
     "spark": "1121",
   "smart": "1121",
   "start": "1121",
@@ -82,7 +82,7 @@
   "first": "1211",
   "stir":  "112",
   "blurt": "1121",
-  "slurp": "1121",
+  "slurp": "1121"
 };
   const rWordImages   = {
   "arch": "images/arch.png",
@@ -151,7 +151,7 @@
   "turn": "images/turn.png",
   "whirl": "images/whirl.png",
   "yard": "images/yard.png",
-  "yarn": "images/yarn.png"
+  "yarn": "images/yarn.png",
     "spark": "images/spark.png",
   "smart": "images/smart.png",
   "start": "images/start.png",
@@ -169,7 +169,7 @@
   "first": "images/first.png",
   "stir":  "images/stir.png",
   "blurt": "images/blurt.png",
-  "slurp": "images/slurp.png",
+  "slurp": "images/slurp.png"
     
 };
 
