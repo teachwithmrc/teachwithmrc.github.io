@@ -2,257 +2,295 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Fluency Grid Generator</title> 
+  <title>Fluency Grid Generator</title>
 
-  <!-- Data file (unchanged) -->
+  <!-- Data file -->
   <script src="fluencyDataFull_v8-2_clean.js"></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-  <style>
-    :root {
-      --ink:#1f365f; --bg:#fafafa; --card:#ffffff; --border:#101010;
-      --chip:#f3f6fb; --chip-x:#546e7a;
-      --cvc:#e9f2ff; --dig:#f3e9ff; --glued:#e8fff4; --vce:#fff5e6;
-      --rctrl:#f0f5ff; --vteams:#fff0f6; --dip:#eefcfb; --variant:#fff8e1; --soft:#eef4ff;
-    }
+ <style>
+  :root {
+    --cvc: #e9f2ff;          --cvc-selected: #1976d2;
+    --dig: #f3e9ff;          --dig-selected: #8e24aa;
+    --glued: #e8fff4;        --glued-selected: #2e7d32;
+    --vce: #fff5e6;          --vce-selected: #ef6c00;
+    --rctrl: #f0f5ff;        --rctrl-selected: #3f51b5;
+    --vteams: #fff0f6;       --vteams-selected: #d81b60;
+    --dip: #eefcfb;          --dip-selected: #00897b;
+    --variant: #fff8e1;      --variant-selected: #f9a825;
+    --soft: #eef4ff;         --soft-selected: #455a64;
+    --chip-bg: #f3f6fb;      --chip-text: #263238; 
+    --chip-x: #546e7a;
+  }
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body { font-family: 'Poppins', sans-serif; margin: 28px; background: var(--bg); color: var(--ink); }
+  body { font-family: 'Poppins', sans-serif; margin: 28px; text-align: center; background: #fafafa; }
+  h1 { font-size: 32px; margin-bottom: 6px; }
+  .subtitle { color: #555; margin: 0 0 14px; }
 
-    h1 { text-align:center; margin: 0 0 6px; font-size: 30px; }
-    .subtitle { text-align:center; color:#555; margin-bottom: 14px; }
+  .layout { 
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto 14px auto;
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) 380px;
+    gap: 8px;
+    align-items: start;
+  }
+  .layout .left { grid-column: 1; }
+  .layout .right { grid-column: 2; display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px; }
 
-    .layout {
-      width: 100%; max-width: 1100px; margin: 0 auto;
-      display: grid; grid-template-columns: minmax(260px, 1fr) 420px; gap: 10px;
-      align-items: start;
-    }
-    .table-section {
-      background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 12px;
-    }
-    .section-label { font-weight: 700; text-align: center; margin-bottom: 8px; }
+  .table-section { border: 2px solid #000; padding: 12px; width: 100%; box-sizing: border-box; text-align: left; border-radius: 12px; background: #fff; height: auto; }
+  .section-label { font-weight: 700; font-size: 18px; margin-bottom: 8px; text-align: center; }
 
-    .skill-block { border: 1px solid #cfd7ef; border-radius: 12px; overflow: hidden; margin-bottom: 12px; background:#fff; }
-    .skill-header { display:flex; align-items:center; justify-content:center; gap:10px; padding:10px; font-weight:700; cursor:pointer; user-select:none; }
-    .skills-inner { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; padding:12px; }
-    .skills-inner.collapsed { display:none; }
-    .bg-cvc .skill-header{background:var(--cvc)}
-    .bg-dig .skill-header{background:var(--dig)}
-    .bg-glued .skill-header{background:var(--glued)}
-    .bg-vce .skill-header{background:var(--vce)}
-    .bg-rctrl .skill-header{background:var(--rctrl)}
-    .bg-vteams .skill-header{background:var(--vteams)}
-    .bg-dip .skill-header{background:var(--dip)}
-    .bg-variant .skill-header{background:var(--variant)}
-    .bg-soft .skill-header{background:var(--soft)}
+  .skill-block { border: 1px solid #bbb; border-radius: 12px; overflow: hidden; margin-bottom: 12px; background: #fff; }
+  .skill-header { display: flex; align-items: center; justify-content: center; padding: 10px 14px; font-weight: 700; font-size: 18px; cursor: pointer; user-select: none; }
+  .skill-header .arrow { font-size: 22px; line-height: 1; margin: 0 10px; width: 22px; text-align: center; }
+  .skill-header .title { white-space: nowrap; }
+  .skills-inner { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; padding: 12px; }
+  .skills-inner.collapsed { display: none; }
 
-    .skill-button {
-      border:2px solid #000; border-radius:14px; background:#fff; padding:8px 12px;
-      font-weight:700; cursor:pointer; transition:transform .08s; min-height:36px;
-    }
-    .skill-button:active{ transform: translateY(1px); }
-    .skill-button.selected { background:#1f365f; color:#fff; }
+  .bg-cvc .skill-header { background: var(--cvc); }
+  .bg-dig .skill-header { background: var(--dig); }
+  .bg-glued .skill-header { background: var(--glued); }
+  .bg-vce .skill-header { background: var(--vce); }
+  .bg-rctrl .skill-header { background: var(--rctrl); }
+  .bg-vteams .skill-header { background: var(--vteams); }
+  .bg-dip .skill-header { background: var(--dip); }
+  .bg-variant .skill-header { background: var(--variant); }
+  .bg-soft .skill-header { background: var(--soft); }
 
-    .option-grid { display:flex; flex-direction:column; align-items:center; gap:8px; }
-    .option-row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
-    .option-box { border:2px solid #000; border-radius:12px; padding:8px 12px; font-weight:600; cursor:pointer; background:#fff; }
-    .option-box.selected { background:#d0f0ff; }
+  .skill-button {
+    border: 2px solid #000; padding: 8px 14px; border-radius: 14px;
+    font-weight: 700; font-size: 16px; cursor: pointer; background: #fff;
+    transition: transform .08s ease, background-color .2s ease, color .2s ease;
+    user-select: none; line-height: 1.2; min-height: 36px;
+  }
+  .skill-button:active { transform: translateY(1px); }
+  .skill-button.cvc.selected { background: var(--cvc-selected); color: #fff; }
+  .skill-button.dig.selected { background: var(--dig-selected); color: #fff; }
+  .skill-button.glued.selected { background: var(--glued-selected); color: #fff; }
+  .skill-button.vce.selected { background: var(--vce-selected); color: #fff; }
+  .skill-button.rctrl.selected { background: var(--rctrl-selected); color: #fff; }
+  .skill-button.vteams.selected { background: var(--vteams-selected); color: #fff; }
+  .skill-button.dip.selected { background: var(--dip-selected); color: #fff; }
+  .skill-button.variant.selected { background: var(--variant-selected); color: #fff; }
+  .skill-button.soft.selected { background: var(--soft-selected); color: #fff; }
 
-    .chips-title { text-align:center; font-weight:700; margin-top: 6px; }
-    .chips-wrap { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:6px; }
-    .chip { background:var(--chip); border-radius:999px; padding:6px 10px; display:flex; align-items:center; gap:8px; }
-    .chip .x { width:18px; height:18px; display:flex; align-items:center; justify-content:center; background:#e8edf2; border-radius:50%; cursor:pointer; color:var(--chip-x); font-weight:700; }
+  .chips-title { margin-top: 12px; text-align: center; font-weight: 700; font-size: 14px; }
+  .chips-wrap { margin-top: 8px; display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+  .chip { background: var(--chip-bg); color: var(--chip-text); border: none; border-radius: 999px; padding: 6px 10px; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+  .chip .x { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; cursor: pointer; background: #e8edf2; color: #546e7a; }
 
-    #output { margin-top: 14px; }
+  .option-grid { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .option-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .option-box { display: inline-block; padding: 8px 12px; border: 2px solid #000; border-radius: 12px; font-weight: 600; font-size: 16px; background: #fff; cursor: pointer; }
+  .option-box.selected { background-color: #d0f0ff; }
 
-    /* ===== Worksheet (ONE PAGE, PORTRAIT) ===== */
-    .page {
-      width: 8.5in; max-width: 100%;
-      border: 2px solid #000; background:#fff; margin: 0 auto;
-      padding: 0.5in; border-radius: 8px; page-break-inside: avoid; position: relative;
-      box-shadow: 0 6px 20px rgba(0,0,0,.12);
-    }
-    .worksheet-title { font-size: 26px; font-weight: 700; text-align:center; margin-bottom: 6px; }
-    .skills-line { font-size: 13px; text-align:center; margin-bottom: 8px; }
-    .worksheet-directions { font-size: 14px; text-align:center; margin-bottom: 10px; }
+  #output { display: flex; justify-content: center; padding: 16px 0; flex-direction: column; gap: 20px; }
 
-    /* Grid frame sits inside safe printable area */
-    .grid-wrap {
-      width: 100%;
-      /* Safe content box height so title + skills + directions + footer fit on ONE page */
-      /* ~10.2in (printable height) - ~0.5in padding top/bottom - header text - footer */
-      max-height: 8.6in;
-      display: grid;
-      align-items: stretch;
-    }
+  .page { 
+    width: 8.5in; max-width: calc(100% - 32px);
+    background: #fff; box-shadow: 0 6px 20px rgba(0,0,0,.12);
+    padding: 0.5in; border: 2px solid #000; border-radius: 8px; 
+    margin: 0 auto; page-break-inside: avoid;
+    text-align: center;
+    position: relative;
+  }
+  .worksheet-title { font-size: 28px; margin-bottom: 6px; font-weight: 700; }
+  .skills-line { font-size: 14px; margin: 6px 0 10px; }
+  .worksheet-directions { font-size: 16px; margin-bottom: 12px; }
 
-    table.grid {
-      width: 100%; border-collapse: collapse; table-layout: fixed;
-      border: 2px solid #000;
-    }
-    .grid td {
-      border: 1px solid #000;
-      padding: 4px;
-      text-align: center;
-      vertical-align: middle;
-      word-wrap: break-word;
-      overflow-wrap: anywhere;
-      line-height: 1.2;
-    }
-    /* Base (screen) font sizes; print will downscale a bit to guarantee fit */
-    .cell-word { font-size: clamp(16px, 2.4vw, 24px); }
-    .cell-sentence { font-size: clamp(12px, 1.8vw, 16px); text-align: left; }
+  /* We’ll reuse .roll styles for our grid so the print CSS below applies 1:1 */
+  table.roll { margin: auto; border-collapse: collapse; }
+  .roll td { border: 1px solid #000; width: 120px; height: 80px; text-align: center; vertical-align: middle; }
+  .word-cell { font-size: 28px; }
+  .sentence-cell { font-size: 18px; text-align: left; padding: 6px; }
 
-    .meta-row {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px;
-      font-size: 12px;
-    }
-    .name-line { text-align:left; }
-    .date-line { text-align:right; }
+  #copyright { font-size: 12px; text-align: right; margin-top: 8px; display: block; }
 
-    #copyright { font-size: 11px; text-align: right; margin-top: 6px; display:block; }
+/* ======= SAME PRINT CSS YOU GAVE ME (unchanged) ======= */
+@media print {
+  /* Force landscape orientation and use the whole page */
+  @page {
+    size: letter landscape;
+    margin: 0;
+  }
 
-    /* PRINT: lock to ONE portrait page with safe margins and sizes */
-    @media print {
-      @page { size: Letter portrait; margin: 0.4in; }
+  html, body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+    background: #fff !important;
+  }
 
-      body > h1, .subtitle, .layout, #floatingActions { display: none !important; }
-      #output { margin: 0 !important; }
+  /* Hide all controls, keep only the worksheet */
+  body > h1,
+  .subtitle,
+  .layout,
+  .table-section,
+  .chips-title,
+  .chips-wrap,
+  #floatingActions,
+  button,
+  #output ~ *:not(.page) {
+    display: none !important;
+  }
 
-      .page {
-        width: 7.7in !important;  /* 8.5in - (0.4in*2) = 7.7in content width */
-        height: 10.2in !important; /* 11in - (0.4in*2) = 10.2in content height */
-        padding: 0.35in !important;
-        border: none !important; box-shadow: none !important;
-      }
+  /* Make the worksheet fit the page perfectly */
+  #output, .page {
+    margin: 0 !important;
+    padding: 0.2in !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    box-sizing: border-box !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
 
-      .worksheet-title { font-size: 18px !important; margin-bottom: 0.08in !important; }
-      .skills-line { font-size: 10px !important; margin-bottom: 0.06in !important; }
-      .worksheet-directions { font-size: 11px !important; margin-bottom: 0.08in !important; }
-      .meta-row { font-size: 10px !important; margin-bottom: 0.06in !important; }
+  /* Prevent table from splitting */
+  table.roll {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
 
-      /* Tighten grid for print to guarantee one page */
-      .grid td { padding: 3px !important; }
-      .cell-word { font-size: 16px !important; }
-      .cell-sentence { font-size: 12px !important; line-height: 1.15 !important; }
-
-      #copyright { position: absolute; bottom: 0.25in; right: 0.35in; font-size: 9px !important; }
-    }
-  </style>
+  /* Prevent all elements from breaking across pages */
+  *, *:before, *:after {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+}
+</style>
 </head>
 <body>
   <h1>Fluency Grid Generator</h1>
-  <div class="subtitle">Step 1: skills → Step 2: blends → Step 3: words/sentences/both → Step 4: grid size → Generate a single-page fluency grid (portrait).</div>
+  <div class="subtitle">Step 1: skills → Step 2: blends → Step 3: words/sentences/both → Step 4: (optional) grid size → Generate a **landscape** fluency page.</div>
 
   <div class="layout">
-    <div class="left table-section">
-      <div class="section-label">Step 1: Select Skills</div>
+    <div class="left">
+      <div id="step1" class="table-section">
+        <div class="section-label">Step 1: Select Skills</div>
 
-      <!-- CVC -->
-      <div class="skill-block bg-cvc">
-        <div class="skill-header" data-target="cvc"><span>▲</span><span>CVC Short Vowels</span><span>▲</span></div>
-        <div class="skills-inner" id="section-cvc">
-          <button class="skill-button" data-skill="Short A">Short A</button>
-          <button class="skill-button" data-skill="Short E">Short E</button>
-          <button class="skill-button" data-skill="Short I">Short I</button>
-          <button class="skill-button" data-skill="Short O">Short O</button>
-          <button class="skill-button" data-skill="Short U">Short U</button>
-          <button class="skill-button" data-skill="Mixed CVC">Mixed CVC</button>
-          <button class="skill-button" data-skill="FLSZ">FLSZ</button>
+        <!-- CVC Short Vowels -->
+        <div class="skill-block bg-cvc">
+          <div class="skill-header" data-target="cvc"><span class="arrow">▲</span><span class="title">CVC Short Vowels</span><span class="arrow">▲</span></div>
+          <div class="skills-inner" id="section-cvc">
+            <button class="skill-button cvc" data-skill="Short A">Short A</button>
+            <button class="skill-button cvc" data-skill="Short E">Short E</button>
+            <button class="skill-button cvc" data-skill="Short I">Short I</button>
+            <button class="skill-button cvc" data-skill="Short O">Short O</button>
+            <button class="skill-button cvc" data-skill="Short U">Short U</button>
+            <button class="skill-button cvc" data-skill="Mixed CVC">Mixed CVC</button>
+            <button class="skill-button cvc" data-skill="FLSZ">FLSZ</button>
+          </div>
         </div>
-      </div>
 
-      <!-- Digraphs -->
-      <div class="skill-block bg-dig">
-        <div class="skill-header" data-target="dig"><span>▼</span><span>Digraphs</span><span>▼</span></div>
-        <div class="skills-inner collapsed" id="section-dig">
-          <button class="skill-button" data-skill="ck">ck</button>
-          <button class="skill-button" data-skill="sh">sh</button>
-          <button class="skill-button" data-skill="th">th</button>
-          <button class="skill-button" data-skill="ch">ch</button>
-          <button class="skill-button" data-skill="wh">wh</button>
-          <button class="skill-button" data-skill="Digraphs Mixed">Digraphs Mixed</button>
+        <!-- Digraphs -->
+        <div class="skill-block bg-dig">
+          <div class="skill-header" data-target="dig"><span class="arrow">▼</span><span class="title">Digraphs</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-dig">
+            <button class="skill-button dig" data-skill="ck">ck</button>
+            <button class="skill-button dig" data-skill="sh">sh</button>
+            <button class="skill-button dig" data-skill="th">th</button>
+            <button class="skill-button dig" data-skill="ch">ch</button>
+            <button class="skill-button dig" data-skill="wh">wh</button>
+            <button class="skill-button dig" data-skill="Digraphs Mixed">Digraphs Mixed</button>
+          </div>
         </div>
-      </div>
 
-      <!-- Glued -->
-      <div class="skill-block bg-glued">
-        <div class="skill-header" data-target="glued"><span>▼</span><span>Glued Sounds</span><span>▼</span></div>
-        <div class="skills-inner collapsed" id="section-glued">
-          <button class="skill-button" data-skill="-all">-all</button>
-          <button class="skill-button" data-skill="-ng">-ng</button>
-          <button class="skill-button" data-skill="-nk">-nk</button>
-          <button class="skill-button" data-skill="Glued Mixed">Glued Mixed</button>
+        <!-- Glued Sounds -->
+        <div class="skill-block bg-glued">
+          <div class="skill-header" data-target="glued"><span class="arrow">▼</span><span class="title">Glued Sounds</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-glued">
+            <button class="skill-button glued" data-skill="-all">-all</button>
+            <button class="skill-button glued" data-skill="-ng">-ng</button>
+            <button class="skill-button glued" data-skill="-nk">-nk</button>
+            <button class="skill-button glued" data-skill="Glued Mixed">Glued Mixed</button>
+          </div>
         </div>
-      </div>
 
-      <!-- VCe -->
-      <div class="skill-block bg-vce">
-        <div class="skill-header" data-target="vce"><span>▼</span><span>Silent E (VCe)</span><span>▼</span></div>
-        <div class="skills-inner collapsed" id="section-vce">
-          <button class="skill-button" data-skill="a_e">a_e</button>
-          <button class="skill-button" data-skill="i_e">i_e</button>
-          <button class="skill-button" data-skill="o_e">o_e</button>
-          <button class="skill-button" data-skill="u_e">u_e</button>
-          <button class="skill-button" data-skill="Mixed VCe">Mixed VCe</button>
+        <!-- VCe -->
+        <div class="skill-block bg-vce">
+          <div class="skill-header" data-target="vce"><span class="arrow">▼</span><span class="title">Silent E (VCe)</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-vce">
+            <button class="skill-button vce" data-skill="a_e">a_e</button>
+            <button class="skill-button vce" data-skill="i_e">i_e</button>
+            <button class="skill-button vce" data-skill="o_e">o_e</button>
+            <button class="skill-button vce" data-skill="u_e">u_e</button>
+            <button class="skill-button vce" data-skill="Mixed VCe">Mixed VCe</button>
+          </div>
         </div>
-      </div>
 
-      <!-- R-Controlled -->
-      <div class="skill-block bg-rctrl">
-        <div class="skill-header" data-target="rctrl"><span>▼</span><span>R-Controlled</span><span>▼</span></div>
-        <div class="skills-inner collapsed" id="section-rctrl">
-          <button class="skill-button" data-skill="ar">ar</button>
-          <button class="skill-button" data-skill="or">or</button>
-          <button class="skill-button" data-skill="er/ir/ur">er/ir/ur</button>
-          <button class="skill-button" data-skill="Mixed R-Controlled">Mixed R-Controlled</button>
+        <!-- R-Controlled -->
+        <div class="skill-block bg-rctrl">
+          <div class="skill-header" data-target="rctrl"><span class="arrow">▼</span><span class="title">R-Controlled</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-rctrl">
+            <button class="skill-button rctrl" data-skill="ar">ar</button>
+            <button class="skill-button rctrl" data-skill="or">or</button>
+            <button class="skill-button rctrl" data-skill="er/ir/ur">er/ir/ur</button>
+            <button class="skill-button rctrl" data-skill="Mixed R-Controlled">Mixed R-Controlled</button>
+          </div>
         </div>
-      </div>
 
-      <!-- Vowel Teams -->
-      <div class="skill-block bg-vteams">
-        <div class="skill-header" data-target="vteams"><span>▼</span><span>Vowel Teams</span><span>▼</span></div>
-        <div class="skills-inner collapsed" id="section-vteams">
-          <button class="skill-button" data-skill="Long A (ai/ay)">Long A (ai/ay)</button>
-          <button class="skill-button" data-skill="Long E (ee/ea)">Long E (ee/ea)</button>
-          <button class="skill-button" data-skill="Long I (igh/y/ie)">Long I (igh/y/ie)</button>
-          <button class="skill-button" data-skill="Long O (oa/ow/oe)">Long O (oa/ow/oe)</button>
-          <button class="skill-button" data-skill="Long U (oo/ew/ue)">Long U (oo/ew/ue)</button>
-          <button class="skill-button" data-skill="Mixed Vowel Teams">Mixed Vowel Teams</button>
+        <!-- Vowel Teams -->
+        <div class="skill-block bg-vteams">
+          <div class="skill-header" data-target="vteams"><span class="arrow">▼</span><span class="title">Vowel Teams</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-vteams">
+            <button class="skill-button vteams" data-skill="Long A (ai/ay)">Long A (ai/ay)</button>
+            <button class="skill-button vteams" data-skill="Long E (ee/ea)">Long E (ee/ea)</button>
+            <button class="skill-button vteams" data-skill="Long I (igh/y/ie)">Long I (igh/y/ie)</button>
+            <span class="break"></span>
+            <button class="skill-button vteams" data-skill="Long O (oa/ow/oe)">Long O (oa/ow/oe)</button>
+            <button class="skill-button vteams" data-skill="Long U (oo/ew/ue)">Long U (oo/ew/ue)</button>
+            <button class="skill-button vteams" data-skill="Mixed Vowel Teams">Mixed Vowel Teams</button>
+          </div>
         </div>
-      </div>
 
-      <!-- Diphthongs / Variant / Soft -->
-      <div class="skill-block bg-dip">
-        <div class="skill-header" data-target="dip"><span>▼</span><span>Diphthongs</span><span>▼</span></div>
-        <div class="skills-inner collapsed" id="section-dip">
-          <button class="skill-button" data-skill="Diphthongs (oy/oi)">oy/oi</button>
-          <button class="skill-button" data-skill="Diphthongs (ow/ou)">ow/ou</button>
+        <!-- Diphthongs -->
+        <div class="skill-block bg-dip">
+          <div class="skill-header" data-target="dip"><span class="arrow">▼</span><span class="title">Diphthongs</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-dip">
+            <button class="skill-button dip" data-skill="Diphthongs (oy/oi)">oy/oi</button>
+            <button class="skill-button dip" data-skill="Diphthongs (ow/ou)">ow/ou</button>
+          </div>
         </div>
-      </div>
 
-      <div class="skill-block bg-variant">
-        <div class="skill-header" data-target="variant"><span>▼</span><span>Variant Vowels</span><span>▼</span></div>
-        <div class="skills-inner collapsed" id="section-variant">
-          <button class="skill-button" data-skill="Variant Vowels (au/aw)">au/aw</button>
-          <button class="skill-button" data-skill="Variant Vowel (oo)">oo</button>
+        <!-- Variant Vowels -->
+        <div class="skill-block bg-variant">
+          <div class="skill-header" data-target="variant"><span class="arrow">▼</span><span class="title">Variant Vowels</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-variant">
+            <button class="skill-button variant" data-skill="Variant Vowels (au/aw)">au/aw</button>
+            <button class="skill-button variant" data-skill="Variant Vowel (oo)">oo</button>
+          </div>
         </div>
-      </div>
 
-      <div class="skill-block bg-soft">
-        <div class="skill-header" data-target="soft"><span>▼</span><span>Soft C/G Endings</span><span>▼</span></div>
-        <div class="skills-inner collapsed" id="section-soft">
-          <button class="skill-button" data-skill="Soft C (-ce)">Soft C (-ce)</button>
-          <button class="skill-button" data-skill="Soft G (-ge)">Soft G (-ge)</button>
-          <button class="skill-button" data-skill="Soft G (-dge)">Soft G (-dge)</button>
+        <!-- Soft Endings -->
+        <div class="skill-block bg-soft">
+          <div class="skill-header" data-target="soft"><span class="arrow">▼</span><span class="title">Soft C/G Endings</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-soft">
+            <button class="skill-button soft" data-skill="Soft C (-ce)">Soft C (-ce)</button>
+            <button class="skill-button soft" data-skill="Soft G (-ge)">Soft G (-ge)</button>
+            <button class="skill-button soft" data-skill="Soft G (-dge)">Soft G (-dge)</button>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="right">
-      <div class="table-section">
+      <div class="table-section tight">
         <div class="section-label">Step 2: Include Blends?</div>
         <div class="option-grid" id="blendOptions">
           <div class="option-row">
@@ -262,8 +300,8 @@
         </div>
       </div>
 
-      <div class="table-section">
-        <div class="section-label">Step 3: Grid Content</div>
+      <div class="table-section tight">
+        <div class="section-label">Step 3: What would you like in the grid?</div>
         <div class="option-grid" id="contentOptions">
           <div class="option-row">
             <div class="option-box" data-mode="words">Words Only</div>
@@ -273,18 +311,19 @@
         </div>
       </div>
 
-      <div class="table-section">
-        <div class="section-label">Step 4: Grid Size (columns × rows)</div>
+      <!-- Optional Grid Size (defaults to 30 if untouched) -->
+      <div class="table-section tight">
+        <div class="section-label">Step 4: Select Grid Size (optional)</div>
         <div class="option-grid" id="gridSize">
           <div class="option-row">
-            <div class="option-box" data-size="18" data-cols="6" data-rows="3">6 × 3 = 18</div>
-            <div class="option-box" data-size="24" data-cols="6" data-rows="4">6 × 4 = 24</div>
-            <div class="option-box selected" data-size="30" data-cols="6" data-rows="5">6 × 5 = 30</div>
+            <div class="option-box" data-size="18">6 × 3 = 18</div>
+            <div class="option-box" data-size="24">6 × 4 = 24</div>
+            <div class="option-box selected" data-size="30">6 × 5 = 30</div>
           </div>
         </div>
       </div>
 
-      <div class="table-section">
+      <div class="table-section actions-sticky tight">
         <div class="section-label">Step 5: Generate & Print</div>
         <div class="chips-title">Skills Selected:</div>
         <div id="chips" class="chips-wrap"></div>
@@ -299,7 +338,7 @@
   <!-- OUTPUT -->
   <div id="output"></div>
 
-  <!-- Optional floating actions (desktop) -->
+  <!-- Desktop-only floating actions -->
   <div id="floatingActions" style="position: fixed; right: 16px; bottom: 16px; z-index: 1000; background:#ffffff; border:2px solid #000; border-radius:12px; box-shadow: 0 6px 20px rgba(0,0,0,.15); padding:10px 12px; display:none; gap:8px; align-items:center;">
     <button id="fabGenerate" style="font-size:14px; padding:8px 12px;">Generate</button>
     <button id="fabPrint" style="font-size:14px; padding:8px 12px;">Print</button>
@@ -309,120 +348,213 @@
 /* ===== Utilities ===== */
 if (typeof CSS === 'undefined' || typeof CSS.escape !== 'function') {
   window.CSS = window.CSS || {};
-  CSS.escape = CSS.escape || function(sel){ return (sel + '').replace(/[^a-zA-Z0-9_-]/g, '\\$&'); };
+  CSS.escape = CSS.escape || function(sel){
+    return (sel + '').replace(/[^a-zA-Z0-9_-]/g, '\\$&');
+  };
 }
-const A = x => (Array.isArray(x) ? x.slice() : (x == null ? [] : Array.from(x)));
-function shuffle(arr){ const a=A(arr), n=a.length>>>0; for(let i=n-1;i>0;i--){const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]];} return a; }
-function uniqueLower(arr){ const seen=new Set(); const out=[]; for(const v of A(arr)){ const k=String(v).toLowerCase(); if(!seen.has(k)){seen.add(k); out.push(v);} } return out; }
-function fillToN(list, n){ const base=A(list); if(!base.length||!Number.isFinite(n)||n<=0) return []; const out=[]; let bag=shuffle(base); while(out.length<n){ if(!bag.length){ bag=shuffle(base); if(!bag.length) break; } out.push(bag.shift()); } return out.slice(0,n); }
+function toArray(x){
+  if (Array.isArray(x)) return x.slice();
+  if (x == null) return [];
+  try { return Array.from(x); } catch { return []; }
+}
+function shuffle(list){
+  const a = toArray(list);
+  const n = a.length >>> 0;
+  for (let i = n - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function uniqueByLowercase(list){
+  const seen = new Set();
+  const out = [];
+  for (const item of toArray(list)){
+    const key = String(item).toLowerCase();
+    if (!seen.has(key)) { seen.add(key); out.push(item); }
+  }
+  return out;
+}
+function fillToN(list, n){
+  const base = toArray(list);
+  if (base.length === 0 || !Number.isFinite(n) || n <= 0) return [];
+  const out = [];
+  let bag = shuffle(base);
+  while (out.length < n){
+    if (bag.length === 0){
+      bag = shuffle(base);
+      if (bag.length === 0) break;
+    }
+    out.push(bag.shift());
+  }
+  return out.slice(0, n);
+}
 
-/* ===== Data keys/mapping (same as your Roll & Read) ===== */
+/* ===== Data keys/mapping ===== */
 const PREFIX = {
-  "Short A": "0.1 - Short A", "Short O": "0.2 - Short O", "Short I": "0.3 - Short I",
-  "Short U": "0.4 - Short U", "Short E": "0.5 - Short E", "FLSZ": "0.6 - FLSZ",
-  "ck":"1.1 - ck","sh":"1.2 - sh","th":"1.3 - th","ch":"1.4 - ch","wh":"1.5 - wh",
-  "-all":"3.1 - all","-ng":"3.2 - ng","-nk":"3.3 - nk",
-  "a_e":"2.1 - a_e","i_e":"2.2 - i_e","o_e":"2.3 - o_e","u_e":"2.4 - u_e",
-  "ar":"4.1 - ar","or":"4.2 - or","er/ir/ur":"4.3 - er, ir, ur",
-  "Soft C (-ce)":"10.1 - ce","Soft G (-ge)":"10.2 - ge","Soft G (-dge)":"10.3 - dge"
-};
-const MIXED_RULES = {
-  "Mixed CVC":["0.1 - Short A","0.5 - Short E","0.3 - Short I","0.2 - Short O","0.4 - Short U","0.6 - FLSZ"],
-  "Digraphs Mixed":["1.1 - ck","1.2 - sh","1.3 - th","1.4 - ch","1.5 - wh"],
-  "Glued Mixed":["3.1 - all","3.2 - ng","3.3 - nk"],
-  "Mixed VCe":["2.1 - a_e","2.2 - i_e","2.3 - o_e","2.4 - u_e"],
-  "Mixed R-Controlled":["4.1 - ar","4.2 - or","4.3 - er, ir, ur"],
-  "Long A (ai/ay)":["6.1 - ay","6.2 - ai"],
-  "Long E (ee/ea)":["6.4 - ee","6.5 - ea"],
-  "Long I (igh/y/ie)":["6.6 - igh","6.7 - Final y","6.8 - ie"],
-  "Long O (oa/ow/oe)":["6.9 - oa","6.10 - ow","6.11 - oe"],
-  "Long U (oo/ew/ue)":["6.12 - oo (long u)","6.13 - ew","6.14 - ue"],
-  "Mixed Vowel Teams":["6.1 - ay","6.2 - ai","6.4 - ee","6.5 - ea","6.6 - igh","6.7 - Final y","6.8 - ie","6.9 - oa","6.10 - ow","6.11 - oe","6.12 - oo (long u)","6.13 - ew","6.14 - ue"],
-  "Diphthongs (oy/oi)":["7.4 - oy","7.3 - oi"],
-  "Diphthongs (ow/ou)":["7.2 - ow","7.1 - ou"],
-  "Variant Vowels (au/aw)":["7.5 - aw","7.6 - au"],
-  "Variant Vowel (oo)":["7.7 - oo variant"]
-};
-function wordsDict(){ return (typeof fluencyWords!=='undefined')?fluencyWords: (typeof fluencyData!=='undefined'?fluencyData.words:{}); }
-function sentsDict(){ return (typeof fluencySentences!=='undefined')?fluencySentences: (typeof fluencyData!=='undefined'?fluencyData.sentences:{}); }
-function readDict(dict,key){ return Array.isArray(dict[key])?dict[key]:[]; }
+  "Short A": "0.1 - Short A",
+  "Short O": "0.2 - Short O",
+  "Short I": "0.3 - Short I",
+  "Short U": "0.4 - Short U",
+  "Short E": "0.5 - Short E",
+  "FLSZ":    "0.6 - FLSZ",
 
+  "ck": "1.1 - ck",
+  "sh": "1.2 - sh",
+  "th": "1.3 - th",
+  "ch": "1.4 - ch",
+  "wh": "1.5 - wh",
+
+  "-all": "3.1 - all",
+  "-ng":  "3.2 - ng",
+  "-nk":  "3.3 - nk",
+
+  "a_e": "2.1 - a_e",
+  "i_e": "2.2 - i_e",
+  "o_e": "2.3 - o_e",
+  "u_e": "2.4 - u_e",
+
+  "ar": "4.1 - ar",
+  "or": "4.2 - or",
+  "er/ir/ur": "4.3 - er, ir, ur",
+
+  "Soft C (-ce)": "10.1 - ce",
+  "Soft G (-ge)": "10.2 - ge",
+  "Soft G (-dge)": "10.3 - dge"
+};
+
+const MIXED_RULES = {
+  "Mixed CVC": ["0.1 - Short A","0.5 - Short E","0.3 - Short I","0.2 - Short O","0.4 - Short U","0.6 - FLSZ"],
+  "Digraphs Mixed": ["1.1 - ck","1.2 - sh","1.3 - th","1.4 - ch","1.5 - wh"],
+  "Glued Mixed": ["3.1 - all","3.2 - ng","3.3 - nk"],
+
+  "Mixed VCe": ["2.1 - a_e","2.2 - i_e","2.3 - o_e","2.4 - u_e"],
+  "Mixed R-Controlled": ["4.1 - ar","4.2 - or","4.3 - er, ir, ur"],
+
+  "Long A (ai/ay)": ["6.1 - ay","6.2 - ai"],
+  "Long E (ee/ea)": ["6.4 - ee","6.5 - ea"],
+  "Long I (igh/y/ie)": ["6.6 - igh","6.7 - Final y","6.8 - ie"],
+  "Long O (oa/ow/oe)": ["6.9 - oa","6.10 - ow","6.11 - oe"],
+  "Long U (oo/ew/ue)": ["6.12 - oo (long u)","6.13 - ew","6.14 - ue"],
+
+  "Mixed Vowel Teams": [
+    "6.1 - ay","6.2 - ai","6.4 - ee","6.5 - ea",
+    "6.6 - igh","6.7 - Final y","6.8 - ie",
+    "6.9 - oa","6.10 - ow","6.11 - oe",
+    "6.12 - oo (long u)","6.13 - ew","6.14 - ue"
+  ],
+
+  "Diphthongs (oy/oi)": ["7.4 - oy","7.3 - oi"],
+  "Diphthongs (ow/ou)": ["7.2 - ow","7.1 - ou"],
+
+  "Variant Vowels (au/aw)": ["7.5 - aw","7.6 - au"],
+  "Variant Vowel (oo)": ["7.7 - oo variant"]
+};
+
+function wordsDict(){ return (typeof fluencyWords !== 'undefined') ? fluencyWords : (typeof fluencyData !== 'undefined' ? fluencyData.words : {}); }
+function sentsDict(){ return (typeof fluencySentences !== 'undefined') ? fluencySentences : (typeof fluencyData !== 'undefined' ? fluencyData.sentences : {}); }
+function readDict(dict, key){ return Array.isArray(dict[key]) ? dict[key] : []; }
+
+/* Case-flex blends + type/case fallbacks */
 function readWithBlends(dict, prefix, type, blends){
-  const t = type.toLowerCase();
-  const baseKeys = [`${prefix} ${type}`, `${prefix} ${t}`, `${prefix}`];
+  const typeLower = type.toLowerCase();
+  const baseKeys = [`${prefix} ${type}`, `${prefix} ${typeLower}`, `${prefix}`];
   let base = [];
-  for (const k of baseKeys) base = base.concat(readDict(dict,k));
+  for (const k of baseKeys){ base = base.concat(readDict(dict, k)); }
 
   if (blends){
     const candidates = [
-      `${prefix} with Blends ${type}`, `${prefix} with blends ${type}`,
-      `${prefix} with Blends ${t}`, `${prefix} with blends ${t}`, `${prefix} with BLENDS ${type}`
+      `${prefix} with Blends ${type}`,
+      `${prefix} with blends ${type}`,
+      `${prefix} with Blends ${typeLower}`,
+      `${prefix} with blends ${typeLower}`,
+      `${prefix} with BLENDS ${type}`
     ];
     const bPrefix = prefix.replace(' - ', 'b - ');
-    candidates.push(`${bPrefix} with Blends ${type}`, `${bPrefix} with blends ${type}`, `${bPrefix} with Blends ${t}`, `${bPrefix} with blends ${t}`);
+    candidates.push(
+      `${bPrefix} with Blends ${type}`,
+      `${bPrefix} with blends ${type}`,
+      `${bPrefix} with Blends ${typeLower}`,
+      `${bPrefix} with blends ${typeLower}`
+    );
+
     for (const k of candidates){
-      const got = readDict(dict,k);
+      const got = readDict(dict, k);
       if (got.length){
-        return (got.length < 30) ? uniqueLower(got.concat(base)) : got;
+        const MIN_BACKFILL = 30;
+        return (got.length < MIN_BACKFILL) ? uniqueByLowercase(got.concat(base)) : got;
       }
     }
   }
   return base;
 }
+
 function getList(label, type, blends){
   const dict = (type === 'Words') ? wordsDict() : sentsDict();
-  if (Object.prototype.hasOwnProperty.call(MIXED_RULES,label)){
-    let all=[]; for(const p of MIXED_RULES[label]) all=all.concat(readWithBlends(dict,p,type,blends)); return all;
-  }
-  const prefix = PREFIX[label];
-  if (prefix) return readWithBlends(dict,prefix,type,blends);
 
-  // Fallback fuzzy
-  const want = label.toLowerCase(), tail1=" "+type, tail2=" "+type.toLowerCase();
-  const keys = Object.keys(dict||{});
-  const guess = keys.find(k=>k.toLowerCase().includes(want)&&(k.endsWith(tail1)||k.endsWith(tail2)));
-  return guess?readDict(dict,guess):[];
+  if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)){
+    let all = [];
+    for (const p of MIXED_RULES[label]){
+      all = all.concat(readWithBlends(dict, p, type, blends));
+    }
+    return all;
+  }
+
+  const prefix = PREFIX[label];
+  if (prefix) return readWithBlends(dict, prefix, type, blends);
+
+  const tail1 = " " + type;
+  const tail2 = " " + type.toLowerCase();
+  const want = label.toLowerCase();
+  const keys = Object.keys(dict);
+  const guess = keys.find(k => k.toLowerCase().includes(want) && (k.endsWith(tail1) || k.endsWith(tail2)));
+  return guess ? readDict(dict, guess) : [];
 }
 
-/* ===== Selections ===== */
+/* ===== UI wiring ===== */
 const selected = new Set();
 let includeBlends = false;
 let mode = null;
-let gridSize = 30, gridCols = 6, gridRows = 5;
+let gridSize = 30; // default 6x5
 
-document.querySelectorAll('.skill-header').forEach(h=>{
-  h.addEventListener('click', ()=>{
-    const id = 'section-' + h.getAttribute('data-target');
-    const inner = document.getElementById(id);
-    const collapsed = inner.classList.contains('collapsed');
-    inner.classList.toggle('collapsed', !collapsed);
-    h.querySelectorAll('span')[0].textContent = collapsed? '▲' : '▼';
-    h.querySelectorAll('span')[2].textContent = collapsed? '▲' : '▼';
+document.querySelectorAll('.skill-header').forEach(header=>{
+  header.addEventListener('click', ()=>{
+    const target = header.getAttribute('data-target');
+    const inner = document.getElementById('section-' + target);
+    const arrows = header.querySelectorAll('.arrow');
+    const isCollapsed = inner.classList.contains('collapsed');
+    if (isCollapsed) { inner.classList.remove('collapsed'); arrows.forEach(a=>a.textContent='▲'); }
+    else { inner.classList.add('collapsed'); arrows.forEach(a=>a.textContent='▼'); }
   });
 });
+
 document.querySelectorAll('.skill-button').forEach(btn=>{
   btn.addEventListener('click', (e)=>{
     e.stopPropagation();
     const label = btn.dataset.skill;
-    if (selected.has(label)){ selected.delete(label); btn.classList.remove('selected'); }
+    if (selected.has(label)) { selected.delete(label); btn.classList.remove('selected'); }
     else { selected.add(label); btn.classList.add('selected'); }
     renderChips();
   });
 });
+
 function renderChips(){
-  const wrap = document.getElementById('chips'); wrap.innerHTML='';
+  const wrap = document.getElementById('chips');
+  wrap.innerHTML = '';
   Array.from(selected).forEach(label=>{
-    const c=document.createElement('div'); c.className='chip';
-    c.innerHTML = `<span>${label}</span><span class="x" title="Remove">&times;</span>`;
-    c.querySelector('.x').addEventListener('click', ()=>{
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.innerHTML = '<span>'+label+'</span><span class="x" title="Remove">\u00D7</span>';
+    chip.querySelector('.x').addEventListener('click', ()=>{
       selected.delete(label);
-      const b=document.querySelector(`.skill-button[data-skill="${CSS.escape(label)}"]`);
-      if (b) b.classList.remove('selected');
+      const btn = document.querySelector('.skill-button[data-skill="'+CSS.escape(label)+'"]');
+      if (btn) btn.classList.remove('selected');
       renderChips();
     });
-    wrap.appendChild(c);
+    wrap.appendChild(chip);
   });
 }
+
 document.querySelectorAll('#blendOptions .option-box').forEach(box=>{
   box.addEventListener('click', ()=>{
     document.querySelectorAll('#blendOptions .option-box').forEach(b=>b.classList.remove('selected'));
@@ -430,6 +562,7 @@ document.querySelectorAll('#blendOptions .option-box').forEach(box=>{
     includeBlends = (box.dataset.blends === 'yes');
   });
 });
+
 document.querySelectorAll('#contentOptions .option-box').forEach(box=>{
   box.addEventListener('click', ()=>{
     document.querySelectorAll('#contentOptions .option-box').forEach(b=>b.classList.remove('selected'));
@@ -437,107 +570,118 @@ document.querySelectorAll('#contentOptions .option-box').forEach(box=>{
     mode = box.dataset.mode;
   });
 });
+
 document.querySelectorAll('#gridSize .option-box').forEach(box=>{
   box.addEventListener('click', ()=>{
     document.querySelectorAll('#gridSize .option-box').forEach(b=>b.classList.remove('selected'));
     box.classList.add('selected');
-    gridSize = parseInt(box.dataset.size,10);
-    gridCols = parseInt(box.dataset.cols,10);
-    gridRows = parseInt(box.dataset.rows,10);
+    const v = parseInt(box.dataset.size, 10);
+    if (Number.isFinite(v)) gridSize = v;
   });
 });
 
-/* Floating actions on desktop */
-function toggleFab(){
-  const el=document.getElementById('floatingActions');
-  el.style.display = window.matchMedia('(min-width: 992px)').matches ? 'flex' : 'none';
+/* Show/hide floating bar on desktop */
+function toggleFloatingBar(){
+  const el = document.getElementById('floatingActions');
+  const isDesktop = window.matchMedia('(min-width: 992px)').matches;
+  el.style.display = isDesktop ? 'flex' : 'none';
 }
-toggleFab(); window.addEventListener('resize', toggleFab);
+toggleFloatingBar();
+window.addEventListener('resize', toggleFloatingBar);
 document.getElementById('fabGenerate')?.addEventListener('click', ()=>document.getElementById('btnGenerate')?.click());
 document.getElementById('fabPrint')?.addEventListener('click', ()=>window.print());
 
-/* ===== GRID BUILDER ===== */
-function buildGridTable(items, cols, rows){
-  const tbl = document.createElement('table'); tbl.className='grid';
-  let idx=0;
-  for (let r=0;r<rows;r++){
-    const tr = document.createElement('tr');
-    for (let c=0;c<cols;c++){
-      const td = document.createElement('td');
-      const val = items[idx++] || '';
-      const isSentence = (val.indexOf(' ') !== -1);
-      td.className = isSentence ? 'cell-sentence' : 'cell-word';
+/* ===== FLUENCY GRID (no dice) ===== */
+function buildFluencyGrid(cells){
+  const cols = 6; // keep 6 columns like Roll & Read, but no dice row
+  const rows = Math.ceil(cells.length / cols);
+  const tbl = document.createElement('table');
+  tbl.className = 'roll'; // reuse .roll styles so your print CSS applies
+
+  let idx = 0;
+  for (let r=0; r<rows; r++){
+    const row = tbl.insertRow();
+    for (let c=0; c<cols; c++){
+      const td = row.insertCell();
+      const val = cells[idx++] || '';
+      const isSentence = val.includes(' ');
+      td.className = isSentence ? 'sentence-cell' : 'word-cell';
       td.textContent = val;
-      tr.appendChild(td);
     }
-    tbl.appendChild(tr);
   }
   return tbl;
 }
 
-function generateFluencyPage(){
-  if (selected.size===0) return alert('Select at least one skill (Step 1).');
-  if (!mode) return alert('Choose Words Only / Sentences Only / Both (Step 3).');
-  if (!wordsDict() && !sentsDict()) return alert('Data not loaded. Check the data <script> tag.');
+/* Generate the Fluency Grid page */
+function generateFluencyGrid(){
+  if (selected.size === 0) return alert('Select at least one skill in Step 1.');
+  if (!mode) return alert('Choose Words Only / Sentences Only / Both in Step 3.');
+  if (!wordsDict() && !sentsDict()) return alert('Data not loaded. Check the <script src="..."> file name.');
 
   const labels = Array.from(selected);
-  const TOTAL = gridCols * gridRows;
+  const TOTAL = gridSize;
   let pool = [];
 
-  if (mode==='words'){
-    const W = labels.flatMap(lbl=>getList(lbl,'Words',includeBlends));
-    pool = uniqueLower(W);
-  } else if (mode==='sentences'){
-    const S = labels.flatMap(lbl=>getList(lbl,'Sentences',includeBlends));
-    pool = uniqueLower(S);
+  if (mode === 'words'){
+    const unionW = labels.flatMap(lbl => getList(lbl, 'Words', includeBlends));
+    pool = uniqueByLowercase(unionW);
+  } else if (mode === 'sentences'){
+    const unionS = labels.flatMap(lbl => getList(lbl, 'Sentences', includeBlends));
+    pool = uniqueByLowercase(unionS);
   } else {
-    const W = uniqueLower(labels.flatMap(lbl=>getList(lbl,'Words',includeBlends)));
-    const S = uniqueLower(labels.flatMap(lbl=>getList(lbl,'Sentences',includeBlends)));
+    const words = uniqueByLowercase(labels.flatMap(lbl => getList(lbl, 'Words', includeBlends)));
+    const sents = uniqueByLowercase(labels.flatMap(lbl => getList(lbl, 'Sentences', includeBlends)));
     const half = Math.floor(TOTAL/2);
-    const takeW = fillToN(shuffle(W), half);
-    const takeS = fillToN(shuffle(S), TOTAL - takeW.length);
-    pool = shuffle(takeW.concat(takeS));
+    const w = fillToN(shuffle(words), half);
+    const s = fillToN(shuffle(sents), TOTAL - w.length);
+    pool = shuffle(w.concat(s));
   }
 
-  let content = (mode==='both') ? pool : fillToN(shuffle(pool), TOTAL);
-  if (content.length < TOTAL) return alert('Not enough content for these settings. Add more skills or change options.');
+  let content = (mode === 'both') ? pool : fillToN(shuffle(pool), TOTAL);
+  if (content.length < TOTAL){
+    return alert('Not enough content found using these settings. Add more skills or change blends/content options.');
+  }
   content = content.slice(0, TOTAL);
 
-  /* Build single-page worksheet */
-  const out = document.getElementById('output'); out.innerHTML='';
-  const page = document.createElement('div'); page.className='page';
+  // Build output page
+  const output = document.getElementById('output');
+  output.innerHTML = '';
 
-  const meta = document.createElement('div'); meta.className='meta-row';
-  meta.innerHTML = `<div class="name-line"><strong>Name:</strong> ______________________</div>
-                    <div class="date-line"><strong>Date:</strong> _____________</div>`;
-  const title = document.createElement('div'); title.className='worksheet-title'; title.textContent='Fluency Grid';
-  const skills = document.createElement('div'); skills.className='skills-line';
+  const page = document.createElement('div');
+  page.className = 'page';
+
+  const title = document.createElement('div');
+  title.className = 'worksheet-title';
+  title.textContent = 'Fluency Grid';
+
+  const skills = document.createElement('div');
+  skills.className = 'skills-line';
   skills.innerHTML = '<strong>Skills:</strong> ' + (labels.length ? labels.join(' • ') : '—');
-  const dir = document.createElement('div'); dir.className='worksheet-directions';
-  dir.innerHTML = (mode==='words')
+
+  const directions = document.createElement('div');
+  directions.className = 'worksheet-directions';
+  directions.innerHTML = (mode === 'words')
     ? '<strong>Directions:</strong> Read each word. Try to read the whole grid!'
-    : (mode==='sentences')
+    : (mode === 'sentences')
       ? '<strong>Directions:</strong> Read each sentence smoothly and with expression.'
       : '<strong>Directions:</strong> Read each item. Words and sentences are mixed.';
 
-  const wrap = document.createElement('div'); wrap.className='grid-wrap';
-  const tbl = buildGridTable(content, gridCols, gridRows);
+  const table = buildFluencyGrid(content);
 
-  const copy = document.createElement('div'); copy.id='copyright';
+  const copy = document.createElement('div');
+  copy.id = 'copyright';
   copy.textContent = 'Copyright - InterventionStation.com - @TeachwithMrC';
 
-  wrap.appendChild(tbl);
-  page.appendChild(meta);
   page.appendChild(title);
   page.appendChild(skills);
-  page.appendChild(dir);
-  page.appendChild(wrap);
+  page.appendChild(directions);
+  page.appendChild(table);
   page.appendChild(copy);
-  out.appendChild(page);
-  out.scrollIntoView({behavior:'smooth', block:'start'});
+  output.appendChild(page);
+  output.scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
-document.getElementById('btnGenerate').addEventListener('click', generateFluencyPage);
+document.getElementById('btnGenerate').addEventListener('click', generateFluencyGrid);
 </script>
 </body>
 </html>
