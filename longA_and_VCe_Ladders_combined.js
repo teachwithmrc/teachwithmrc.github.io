@@ -1,10 +1,10 @@
 // ====== COMBINED LONG-A + VCe LADDERS (PNG-backed) ======
 // Generated for TeachwithMrC / Intervention Station
 // Includes word banks + ladders + VCe assets in one file.
-// One default export bundles all named exports.
+// One default const bundles all named consts.
 
 // ==== Long A (ay) — base, PNG-backed
-export const longA_ay = [
+const const longA_ay = [
   { word: "bay", pattern: "12", split: ["b","ay"] },
   { word: "day", pattern: "12", split: ["d","ay"] },
   { word: "lay", pattern: "12", split: ["l","ay"] },
@@ -13,7 +13,7 @@ export const longA_ay = [
 ];
 
 // ==== Long A (ai) — base, PNG-backed
-export const longA_ai = [
+const const longA_ai = [
   { word: "aid",  pattern: "21",  split: ["ai","d"] },
   { word: "ail",  pattern: "21",  split: ["ai","l"] },
   { word: "aim",  pattern: "21",  split: ["ai","m"] },
@@ -33,7 +33,7 @@ export const longA_ai = [
 ];
 
 // ==== Long A (ay) with blends — PNG-backed
-export const longA_ay_blends = [
+const const longA_ay_blends = [
   { word: "gray",  pattern: "112",  split: ["gr","ay"] },
   { word: "play",  pattern: "112",  split: ["pl","ay"] },
   { word: "pray",  pattern: "112",  split: ["pr","ay"] },
@@ -45,7 +45,7 @@ export const longA_ay_blends = [
 ];
 
 // ==== Long A (ai) with blends — PNG-backed
-export const longA_ai_blends = [
+const const longA_ai_blends = [
   { word: "claim",  pattern: "1121",  split: ["cl","ai","m"] },
   { word: "drain",  pattern: "1121",  split: ["dr","ai","n"] },
   { word: "faint",  pattern: "1211",  split: ["f","ai","nt"] },
@@ -61,7 +61,7 @@ export const longA_ai_blends = [
 ];
 
 // ==== AY Ladders (max 39) ====
-export const ayWordLadders = [
+const const ayWordLadders = [
   ["bay", "stay", "lay", "pray", "sway", "play"],
   ["bay", "play", "tray", "gray", "sway", "stay"],
   ["bay", "spray", "stray", "say", "pay", "play"],
@@ -104,7 +104,7 @@ export const ayWordLadders = [
 ];
 
 // ==== AI Ladders (max 36) ====
-export const aiWordLadders = [
+const const aiWordLadders = [
   ["fail", "sail", "hail", "rail", "tail", "jail"],
   ["fail", "nail", "jail", "tail", "pail", "rail"],
   ["fail", "nail", "hail", "mail", "jail", "wail"],
@@ -853,15 +853,23 @@ const vceWordImages = {
   "woke": "images/woke.png"
 };
 
-// ==== Bundle Default Export ====
-export default {
-  longA_ay,
-  longA_ai,
-  longA_ay_blends,
-  longA_ai_blends,
-  ayWordLadders,
-  aiWordLadders,
-  vceWordLadders,
-  vceWordPatterns,
-  vceWordImages,
+// ==== Bundle Default const ==
+
+// === Expose globals for non-module HTML (mirrors digraph file) ===
+if (typeof window !== 'undefined') {
+  // word banks used by your HTML to build patternByWord/splitByWord
+  window.longA_ai         = typeof longA_ai !== 'undefined' ? longA_ai : [];
+  window.longA_ay         = typeof longA_ay !== 'undefined' ? longA_ay : [];
+  window.longA_ai_blends  = typeof longA_ai_blends !== 'undefined' ? longA_ai_blends : [];
+  window.longA_ay_blends  = typeof longA_ay_blends !== 'undefined' ? longA_ay_blends : [];
+
+  // the two ladder pools your HTML selects with setTeam()
+  window.aiWordLadders    = typeof aiWordLadders !== 'undefined' ? aiWordLadders : [];
+  window.ayWordLadders    = typeof ayWordLadders !== 'undefined' ? ayWordLadders : [];
+
+  // (optional) expose VCe for future tabs if you add them in the UI
+  window.vceWordLadders   = typeof vceWordLadders !== 'undefined' ? vceWordLadders : [];
+  window.vceWordPatterns  = typeof vceWordPatterns !== 'undefined' ? vceWordPatterns : {};
+  window.vceWordImages    = typeof vceWordImages !== 'undefined' ? vceWordImages : {};
+}
 };
