@@ -238,3 +238,7 @@ const longEWordLadders = [
   ["wheel", "peel", "peek", "week", "seek", "cheek"],
   ["wheel", "peel", "peek", "week", "cheek", "seek"],
 ];
+
+// expose as globals for your HTML (non-module)
+window.longE_words = longE_words;
+window.longEWordLadders = longEWordLadders;
