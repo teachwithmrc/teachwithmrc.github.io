@@ -110,47 +110,54 @@
   #copyright { font-size: 12px; text-align: right; margin-top: 8px; display: block; }
 
   @media print {
-    @page { size: letter landscape; margin: 0.35in; }
+  @page { size: letter landscape; margin: 0.4in; }
 
-    body > h1,
-    .table-section,
-    button,
-    .chips-title,
-    .chips-wrap,
-    .subtitle,
-    .layout,
-    #floatingActions { display: none !important; }
+  body > h1,
+  .table-section,
+  button,
+  .chips-title,
+  .chips-wrap,
+  .subtitle,
+  .layout,
+  #floatingActions { display: none !important; }
 
-    #output { margin: 0; }
-    .page {
-      width: auto;
-      padding: 0.2in 0.25in !important;
-      border: none !important;
-      box-shadow: none !important;
-      page-break-inside: avoid; break-inside: avoid;
-      position: relative;
-      transform: scale(0.92);
-      transform-origin: top left;
-      width: calc(100% / 0.92);
-    }
+  #output { margin: 0; }
+  .page {
+    width: 10in !important;   /* landscape printable width */
+    height: 7.5in !important; /* landscape printable height */
+    padding: 0.4in !important;
+    border: none !important;
+    box-shadow: none !important;
+    page-break-inside: avoid; 
+    break-inside: avoid;
+    position: relative;
+    margin: 0 auto;
+  }
 
-    .worksheet-title { font-size: 16px !important; margin-bottom: 0.04in !important; }
-    .skills-line { font-size: 10px !important; margin: 0 0 0.06in !important; }
-    .worksheet-directions { font-size: 11px !important; margin-bottom: 0.07in !important; }
+  .worksheet-title { font-size: 18px !important; margin-bottom: 0.1in !important; }
+  .skills-line { font-size: 11px !important; margin: 0 0 0.1in !important; }
+  .worksheet-directions { font-size: 12px !important; margin-bottom: 0.15in !important; }
 
-    .dice-cell img { width: 40px !important; height: 40px !important; }
-    .roll td { height: 0.65in !important; width: 1.8in !important; }
-    .word-cell { font-size: 18px !important; }
-    .sentence-cell { font-size: 14px !important; line-height: 1.1 !important; padding: 4px !important; }
+  .roll { width: 100% !important; table-layout: fixed; }
+  .roll td { 
+    height: 0.8in !important; 
+    width: 1.6in !important; 
+    word-wrap: break-word;
+  }
 
-    #copyright {
-      position: static !important;
-      margin-top: 0.1in !important;
-      font-size: 9px !important;
-      text-align: right !important;
-      display: block !important;
-      page-break-inside: avoid !important;
-    }
+  .dice-cell img { width: 42px !important; height: 42px !important; }
+  .word-cell { font-size: 20px !important; }
+  .sentence-cell { font-size: 14px !important; line-height: 1.2 !important; padding: 4px !important; }
+
+  #copyright {
+    position: absolute !important;
+    bottom: 0.2in !important;
+    right: 0.3in !important;
+    font-size: 9px !important;
+    text-align: right !important;
+    display: block !important;
+    page-break-inside: avoid !important;
+  }
   }
 </style>
 </head>
