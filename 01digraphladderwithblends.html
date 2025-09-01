@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Digraph Word Ladder</title>
+  <title>Digraph Word Ladders</title>
 
-  <!-- Use the combined file that includes BOTH base and blend ladders -->
-  <script src="digraphs_master_FINAL_v2.js" defer></script>
+  <!-- Uses the exact globals from your combined file: 
+       rWordPatterns, rWordImages, digraphWordLadders, digraphBlendLadders -->
+  <script src="digraphs_master_FINAL_v2-2.js" defer></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
@@ -13,50 +14,89 @@
     @font-face { font-family: 'BoxesFont'; src: url('fonts/boxes2.otf') format('opentype'); }
     @font-face { font-family: 'UnderlineFont'; src: url('fonts/underlines.otf') format('opentype'); }
 
-    body { font-family: 'Poppins', sans-serif; margin: 10px; text-align: center; }
+    :root{
+      --ink:#1f365f;
+      --bg:#ffffff;
+      --card:#f6f9ff;
+      --card2:#fff7f0;
+      --border:#cfd7ef;
+      --border2:#f2d8bd;
+    }
 
-    h1 { font-size: 32px; margin-bottom: 2px; }
-    .subtitle { font-size: 16px; margin-bottom: 8px; }
+    body { font-family: 'Poppins', sans-serif; margin: 10px; text-align: center; color: var(--ink); background: var(--bg); }
+    h1 { font-size: 32px; margin-bottom: 6px; }
 
-    button { font-size: 16px; padding: 4px 8px; margin: 4px; cursor: pointer; }
-    label { margin: 0 6px; font-size: 16px; }
+    button { font-size: 16px; padding: 6px 10px; margin: 6px; cursor: pointer; }
+    label { margin: 0 6px; font-size: 18px; }
 
     .pattern { font-size: 100px; line-height: 1; margin-top: 4px; }
-
     #copyright { font-size: 12px; text-align: right; width: 100%; }
 
+    .card {
+      display: inline-block;
+      text-align: center;
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      margin: 10px auto;
+      font-size: 18px;
+    }
+    .card.alt { background: var(--card2); border-color: var(--border2); }
+    .card h2 { margin: 0 0 8px; font-size: 20px; }
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 18px;
+    }
+
+    .screenOnly { display: block; font-size: 18px; }
     @media print {
       body * { visibility: hidden; }
       #ladderOutput, #ladderOutput * { visibility: visible; }
       #ladderOutput { position: absolute; top: 0; left: 0; width: 100%; margin: 0; padding: 10px; box-sizing: border-box; }
+      .screenOnly { display: none !important; }
+      #ladderOutput br { display: none !important; }
       @page { margin: 0.5in; }
     }
   </style>
 </head>
 <body>
 
-  <div style="text-align:left; font-size:16px; margin-bottom:4px;">
-    Name _____________________
+  <h1>Digraph Word Ladders</h1>
+
+  <!-- Teacher directions (screen only) -->
+  <div class="screenOnly" style="max-width:920px;margin:0 auto 12px;">
+    <strong>Directions:</strong>
+    Choose <em>Base</em> (digraphs), <em>Include Blends</em> (digraphs may appear with blends),
+    or <em>Only Blends</em> (restrict to ladders that include blends).
   </div>
 
-  <h1>Digraph Word Ladder</h1>
-  <p class="subtitle"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
-
-  <!-- NEW: Mode selector -->
-  <div style="margin-bottom:8px;">
-    <strong>Format:</strong>
-    <label><input type="radio" name="ladderMode" value="base" checked> Base (Digraphs)</label>
-    <label><input type="radio" name="ladderMode" value="with"> Include Blends</label>
-    <label><input type="radio" name="ladderMode" value="only"> Only Blends</label>
+  <!-- FORMAT -->
+  <div class="card">
+    <h2>Format</h2>
+    <div class="controls">
+      <label><input type="radio" name="ladderMode" value="base" checked> 1. Base</label>
+      <label><input type="radio" name="ladderMode" value="with"> 2. Include Blends</label>
+      <label><input type="radio" name="ladderMode" value="only"> 3. Only Blends</label>
+    </div>
   </div>
 
-  <div style="margin-bottom:8px;">
-    <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
-    <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
-    <label><input type="checkbox" id="boldChanged" checked> Bold Changed Part</label>
+  <!-- DISPLAY -->
+  <div class="card alt">
+    <h2>Display</h2>
+    <div class="controls">
+      <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
+      <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
+      <label><input type="checkbox" id="boldChanged" checked> Bold Changed Part</label>
+    </div>
   </div>
 
-  <div>
+  <!-- ACTIONS -->
+  <div style="margin: 8px 0 10px;">
     <button onclick="generateLadder()">Generate Ladder</button>
     <button onclick="window.print()">Print Page</button>
   </div>
@@ -64,138 +104,182 @@
   <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px;"></div>
 
   <script>
-    // --- helpers (unchanged from your working page) ---
+    /* ==== helpers (match your CVC logic) ==== */
     function splitWordByPattern(word, pattern) {
-      const chunks = [];
-      let i = 0;
+      const chunks = []; let i = 0;
       for (let j = 0; j < pattern.length; j++) {
-        const len = pattern[j] === '2' ? 2 : 1; // your digraph file uses 1/2, not 1/2/3
-        chunks.push(word.slice(i, i + len));
-        i += len;
+        const d = pattern[j];
+        const len = (d === '3') ? 3 : (d === '2') ? 2 : 1; // supports 1/2 and the occasional 3
+        chunks.push(word.slice(i, i + len)); i += len;
       }
       return chunks;
     }
 
-    function getChangedMap(prevWord, word, prevPattern, pattern) {
-      const prevChunks = splitWordByPattern(prevWord, prevPattern);
-      const wordChunks = splitWordByPattern(word, pattern);
-      const n = Math.max(pattern.length, prevPattern.length);
-      const changed = new Array(n);
-      for (let i = 0; i < n; i++) changed[i] = (prevChunks[i] || '') !== (wordChunks[i] || '');
-      return changed;
+    function getUnitChangeMap(prevWord, word, prevPattern, pattern) {
+      const A = splitWordByPattern(prevWord, prevPattern);
+      const B = splitWordByPattern(word, pattern);
+      const unit = [];
+      const pushMany = (n, v)=>{ for (let i=0;i<n;i++) unit.push(v); };
+
+      const N = Math.max(A.length, B.length);
+      for (let i = 0; i < N; i++) {
+        const a = A[i] || '', b = B[i] || '';
+        if (!b.length) continue;
+        if (a === b) { pushMany(b.length, false); continue; }
+        if (b.length === a.length + 1 && (b.startsWith(a) || b.endsWith(a))) {
+          if (b.startsWith(a)) { pushMany(a.length, false); pushMany(1, true); }
+          else { pushMany(1, true); pushMany(a.length, false); }
+          continue;
+        }
+        if (a.length === b.length) {
+          for (let k=0;k<b.length;k++) unit.push(a[k] !== b[k]);
+          continue;
+        }
+        pushMany(b.length, true);
+      }
+      return unit;
     }
 
-    function renderPatternHTML({ pattern, useFont, boldChanged, changedMap }) {
-      const isUnderline = useFont === 'UnderlineFont';
-      return Array.from(pattern).map((digit, i) => {
-        const makeBold = boldChanged && changedMap && changedMap[i];
-        const spacing = isUnderline ? 'display:inline-block;margin:0 6px;' : '';
-        const weight = makeBold ? 'font-weight:700;' : '';
-        return `<span style="${spacing}${weight}">${digit}</span>`;
-      }).join('');
+    function renderPatternHTMLUnits(pattern, useFont, boldUnits) {
+      const isUnderline = (useFont === 'UnderlineFont');
+      const lens = Array.from(pattern).map(d => d === '3' ? 3 : (d === '2' ? 2 : 1));
+      let html = '', u = 0;
+      for (let c = 0; c < lens.length; c++) {
+        const L = lens[c];
+        html += `<span style="${isUnderline ? 'display:inline-block;margin:0 6px;' : ''}">`;
+        for (let i=0;i<L;i++) {
+          const bold = boldUnits && !!boldUnits[u++];
+          html += `<span style="${bold ? 'font-weight:700;' : ''}">1</span>`;
+        }
+        html += `</span>`;
+      }
+      return html;
     }
 
     function getChunkHint(prevWord, word, prevPattern, pattern) {
-      const prevChunks = splitWordByPattern(prevWord, prevPattern);
-      const wordChunks = splitWordByPattern(word, pattern);
-      for (let i = 0; i < Math.min(prevChunks.length, wordChunks.length); i++) {
-        if (prevChunks[i] !== wordChunks[i]) return `${prevChunks[i]} → ${wordChunks[i]}`;
+      const A = splitWordByPattern(prevWord, prevPattern);
+      const B = splitWordByPattern(word, pattern);
+      const eq = (x,y)=>x.length===y.length && x.every((v,i)=>v===y[i]);
+
+      if (A.length === B.length) {
+        let idx = -1;
+        for (let i=0;i<A.length;i++){ if (A[i]!==B[i]){ if(idx!==-1) return '? → ?'; idx=i; } }
+        if (idx === -1) return '? → ?';
+        const a=A[idx], b=B[idx];
+
+        if (b.length === a.length + 1 && (b.startsWith(a) || b.endsWith(a))) {
+          const add = b.startsWith(a) ? b.slice(-1) : b.slice(0, b.length - a.length);
+          const micro = b.startsWith(a) ? `${a} → ${a}<b>${add}</b>` : `${a} → <b>${add}</b>${a}`;
+          return `+ ${add} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
+        }
+        if (a.length === b.length + 1 && (a.startsWith(b) || a.endsWith(b))) {
+          const rem = a.startsWith(b) ? a.slice(-1) : a.slice(0, a.length - b.length);
+          const micro = a.startsWith(b) ? `${a.slice(0,-1)}<b>${rem}</b> → ${b}` : `<b>${rem}</b>${a.slice(1)} → ${b}`;
+          return `- ${rem} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
+        }
+        return `${a} → ${b}`;
       }
+
+      if (B.length === A.length + 1) {
+        for (let k=0;k<B.length;k++) {
+          const test = B.slice(0,k).concat(B.slice(k+1));
+          if (eq(A, test)) return `+ ${B[k]}`;
+        }
+        return '? → ?';
+      }
+
+      if (A.length === B.length + 1) {
+        for (let k=0;k<A.length;k++) {
+          const test = A.slice(0,k).concat(A.slice(k+1));
+          if (eq(B, test)) return `- ${A[k]}`;
+        }
+        return '? → ?';
+      }
+
       return '? → ?';
     }
 
-    // --- NEW: choose ladders for the selected mode ---
+    /* ==== data access aligned to your JS ==== */
     function pickLaddersForMode(mode) {
       const base = (typeof digraphWordLadders !== 'undefined' && Array.isArray(digraphWordLadders)) ? digraphWordLadders : [];
       const blends = (typeof digraphBlendLadders !== 'undefined' && Array.isArray(digraphBlendLadders)) ? digraphBlendLadders : [];
-
-      if (mode === 'base') return base;
-
-      // If Include Blends: prefer the blends set; if empty, fall back to base.
       if (mode === 'with') return blends.length ? blends : base;
-
-      // If Only Blends: require from the blends set; if none, show an error later.
       if (mode === 'only') return blends;
-
       return base;
     }
+    const getPatternFor = w => (rWordPatterns && rWordPatterns[w]) ? rWordPatterns[w] : '?';
+    const getImageFor   = w => (rWordImages && rWordImages[w]) ? rWordImages[w] : 'https://via.placeholder.com/110?text=%3F';
 
+    /* ==== main ==== */
     function generateLadder() {
-      // data check (both base and blends live in the combined file)
+      // Ensure required maps exist (per your digraphs file)
       if (typeof rWordPatterns === 'undefined' || typeof rWordImages === 'undefined') {
-        alert('❌ Error: Patterns/Images not loaded. Check your script src path.');
+        alert('❌ Error: Patterns/Images not loaded. Check "digraphs_master_FINAL_v2-2.js" path.');
         return;
       }
 
       const mode = document.querySelector('input[name="ladderMode"]:checked').value;
       const ladders = pickLaddersForMode(mode);
-      if (!ladders || !Array.isArray(ladders) || ladders.length === 0) {
-        const msg = (mode === 'only')
-          ? '❌ No digraph ladders available that include blends.'
-          : '❌ No digraph ladders available.';
-        alert(msg);
+      if (!ladders.length) {
+        alert(mode==='only' ? '❌ No digraph ladders that include blends.' : '❌ No digraph ladders available.');
         return;
       }
 
       const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
-      const useFont = cellStyle === 'underlines' ? 'UnderlineFont' : 'BoxesFont';
+      const useFont = (cellStyle === 'underlines') ? 'UnderlineFont' : 'BoxesFont';
       const boldChanged = document.getElementById('boldChanged').checked;
 
-      const ladder = ladders[Math.floor(Math.random() * ladders.length)];
+      const ladder = ladders[Math.floor(Math.random()*ladders.length)];
 
-      const rowsHTML = ladder.map((word, idx) => {
-        const isFirst = idx === 0;
-        const isLast = idx === ladder.length - 1;
-        const prevWord = ladder[idx - 1] || '';
+      const rows = ladder.map((word, i) => {
+        const first = (i===0), last = (i===ladder.length-1);
+        const prev = ladder[i-1] || '';
 
-        const pattern = (typeof digraphWordPatterns !== 'undefined' && digraphWordPatterns[word]) ? digraphWordPatterns[word] : '?';
-        const prevPattern = (typeof digraphWordPatterns !== 'undefined' && digraphWordPatterns[prevWord]) ? digraphWordPatterns[prevWord] : '?';
+        const patt = getPatternFor(word);
+        const prevP = getPatternFor(prev);
 
-        const changedMap = (!isFirst && boldChanged) ? getChangedMap(prevWord, word, prevPattern, pattern) : null;
+        const boldUnits = (!first && boldChanged) ? getUnitChangeMap(prev, word, prevP, patt) : null;
+        const patternHTML = first ? '' : renderPatternHTMLUnits(patt, useFont, boldUnits);
 
-        const patternHTML = isFirst ? '' : renderPatternHTML({ pattern, useFont, boldChanged, changedMap });
+        const display = first
+          ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins',sans-serif;">${word}</div>`
+          : `<div class="pattern" style="font-family:'${useFont}',monospace;font-size:${useFont==='UnderlineFont'?'85px':'100px'};letter-spacing:0;">${patternHTML}</div>`;
 
-        const wordDisplay = isFirst
-          ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">${word}</div>`
-          : `<div class="pattern" style="font-family:'${useFont}', monospace; font-size:${useFont === 'UnderlineFont' ? '85px' : '100px'}; letter-spacing:0px;">${patternHTML}</div>`;
+        const imgSrc = getImageFor(word);
+        const imgTD = `<td style="padding:5px 7px;width:140px;"><img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;"></td>`;
 
-        const imgSrc = (typeof digraphWordImages !== 'undefined' && digraphWordImages[word])
-          ? digraphWordImages[word]
-          : 'https://via.placeholder.com/110?text=?';
-
-        const imageTD = `<td style="padding:5px 7px;width:140px;"><img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;"></td>`;
-
-        const borders = !isLast
+        const borders = !last
           ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
           : 'border-left:4px solid #000;border-right:4px solid #000;';
 
-        const wordTD = `<td style="padding:5px 7px;${borders}">${wordDisplay}</td>`;
+        const wordTD = `<td style="padding:5px 7px;${borders}">${display}</td>`;
 
-        const hintTD = isFirst
+        const hintTD = first
           ? `<td style="padding:3px 5px;width:170px;"></td>`
           : `<td style="padding:3px 5px;width:170px;">
                <div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">
-                 ${getChunkHint(prevWord, word, prevPattern, pattern)}
+                 ${getChunkHint(prev, word, prevP, patt)}
                </div>
              </td>`;
 
-        return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
+        return `<tr>${imgTD}${wordTD}${hintTD}</tr>`;
       }).join('');
 
-      const ladderHTML = `
+      const titleSuffix = (mode==='with') ? ' — Include Blends' : (mode==='only') ? ' — Only Blends' : '';
+      const html = `
         <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
-          <div style="text-align:center;margin-bottom:4px;">
-            <h2 style="margin-bottom:1px;font-size:24px;">Digraph Word Ladder${mode==='with' ? ' — Include Blends' : mode==='only' ? ' — Only Blends' : ''}</h2>
-            <p style="margin-top:0;font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
+          <div id="titleBlock" style="text-align:center;">
+            <h2 style="font-size:24px;">Digraph Word Ladders${titleSuffix}</h2>
+            <p style="font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
           </div>
           <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
-            ${rowsHTML}
+            ${rows}
           </table>
           <br><br>
           <div id="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
         </div>
       `;
-      document.getElementById('ladderOutput').innerHTML = ladderHTML;
+      document.getElementById('ladderOutput').innerHTML = html;
     }
   </script>
 </body>
