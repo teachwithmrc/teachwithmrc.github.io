@@ -51,12 +51,64 @@ const longA_ai_blends = [
   { word: "paint",  pattern: "1211",  split: ["p","ai","nt"] },
   { word: "plain",  pattern: "1121",  split: ["pl","ai","n"] },
   { word: "snail",  pattern: "1121",  split: ["sn","ai","l"] },
-  { word: "Spain",  pattern: "1121",  split: ["Sp","ai","n"] }, // note: image should be spain.png (lowercase)
+  { word: "Spain",  pattern: "1121",  split: ["Sp","ai","n"] }, // note: image should be spain.png
   { word: "stain",  pattern: "1121",  split: ["st","ai","n"] },
   { word: "train",  pattern: "1121",  split: ["tr","ai","n"] },
   { word: "sprain", pattern: "11121", split: ["spr","ai","n"] },
   { word: "strain", pattern: "11121", split: ["str","ai","n"] },
 ];
+
+// ==== Long A (ai/ay) Images ====
+const longAImages = {
+  // ay base
+  "bay": "images/bay.png",
+  "day": "images/day.png",
+  "lay": "images/lay.png",
+  "pay": "images/pay.png",
+  "say": "images/say.png",
+
+  // ai base
+  "aid": "images/aid.png",
+  "ail": "images/ail.png",
+  "aim": "images/aim.png",
+  "fail": "images/fail.png",
+  "hail": "images/hail.png",
+  "jail": "images/jail.png",
+  "mail": "images/mail.png",
+  "nail": "images/nail.png",
+  "pail": "images/pail.png",
+  "pain": "images/pain.png",
+  "rain": "images/rain.png",
+  "rail": "images/rail.png",
+  "sail": "images/sail.png",
+  "tail": "images/tail.png",
+  "wail": "images/wail.png",
+  "chain": "images/chain.png",
+
+  // ay blends
+  "gray": "images/gray.png",
+  "play": "images/play.png",
+  "pray": "images/pray.png",
+  "spray": "images/spray.png",
+  "stay": "images/stay.png",
+  "stray": "images/stray.png",
+  "sway": "images/sway.png",
+  "tray": "images/tray.png",
+
+  // ai blends
+  "claim": "images/claim.png",
+  "drain": "images/drain.png",
+  "faint": "images/faint.png",
+  "grain": "images/grain.png",
+  "paint": "images/paint.png",
+  "plain": "images/plain.png",
+  "snail": "images/snail.png",
+  "spain": "images/spain.png", // lowercase filename
+  "stain": "images/stain.png",
+  "train": "images/train.png",
+  "sprain": "images/sprain.png",
+  "strain": "images/strain.png"
+};
 
 // ==== AY Ladders ====
 const ayWordLadders = [
@@ -143,13 +195,16 @@ const aiWordLadders = [
 
 // === Expose globals for non-module HTML (mirrors digraph file) ===
 if (typeof window !== 'undefined') {
-  // word banks used by your HTML to build patternByWord/splitByWord
-  window.longA_ai         = typeof longA_ai !== 'undefined' ? longA_ai : [];
-  window.longA_ay         = typeof longA_ay !== 'undefined' ? longA_ay : [];
-  window.longA_ai_blends  = typeof longA_ai_blends !== 'undefined' ? longA_ai_blends : [];
-  window.longA_ay_blends  = typeof longA_ay_blends !== 'undefined' ? longA_ay_blends : [];
+  // word banks
+  window.longA_ai         = longA_ai;
+  window.longA_ay         = longA_ay;
+  window.longA_ai_blends  = longA_ai_blends;
+  window.longA_ay_blends  = longA_ay_blends;
 
-  // the two ladder pools your HTML selects with setTeam()
-  window.aiWordLadders    = typeof aiWordLadders !== 'undefined' ? aiWordLadders : [];
-  window.ayWordLadders    = typeof ayWordLadders !== 'undefined' ? ayWordLadders : [];
+  // ladders
+  window.aiWordLadders    = aiWordLadders;
+  window.ayWordLadders    = ayWordLadders;
+
+  // images
+  window.longAImages      = longAImages;
 }
