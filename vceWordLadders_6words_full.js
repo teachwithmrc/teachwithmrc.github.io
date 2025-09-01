@@ -608,6 +608,8 @@ const vceWordPatterns = {
   "whale": "212",
   "wife": "112",
   "wise": "112",
+  "tube": "112",
+  "cute": "112",
   "woke": "112"
 };
 
