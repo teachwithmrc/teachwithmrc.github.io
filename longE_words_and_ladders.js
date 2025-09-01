@@ -1,7 +1,7 @@
 // ==== Long E Words + Ladders (auto-generated) ====
 // One change per step (letter or vowel team), ladders capped at 5 per start
 
-export const longE_words = [
+const longE_words = [
   { word: "bee", pattern: "12", split: ["b", "ee"] },
   { word: "fee", pattern: "12", split: ["f", "ee"] },
   { word: "see", pattern: "12", split: ["s", "ee"] },
@@ -71,7 +71,7 @@ export const longE_words = [
   { word: "streak", pattern: "11121", split: ["str", "ea", "k"] },
 ];
 
-export const longEWordLadders = [
+const longEWordLadders = [
   ["beach", "reach", "read", "bead", "beat", "seat"],
   ["beach", "reach", "read", "bead", "beat", "meat"],
   ["beach", "reach", "read", "bead", "beat", "heat"],
