@@ -4,39 +4,65 @@
   <meta charset="UTF-8" />
   <title>Glued Sounds Word Ladders</title>
 
-  <!-- Load the combined glued-sounds data (ladders + patterns + images) -->
+  <!-- DATA: must define gluedWordPatterns, gluedWordImages, gluedWordLadders -->
   <script src="glued_sounds_full.js" defer></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
   <style>
-    @font-face { font-family:'BoxesFont'; src:url('fonts/boxes2.otf') format('opentype'); }
-    @font-face { font-family:'UnderlineFont'; src:url('fonts/underlines.otf') format('opentype'); }
+    @font-face { font-family: 'BoxesFont'; src: url('fonts/boxes2.otf') format('opentype'); }
+    @font-face { font-family: 'UnderlineFont'; src: url('fonts/underlines.otf') format('opentype'); }
 
     :root{
-      --ink:#1f365f; --bg:#fff; --card:#f6f9ff; --card2:#fff7f0; --border:#cfd7ef; --border2:#f2d8bd;
+      --ink:#1f365f;
+      --bg:#ffffff;
+      --card:#f6f9ff;
+      --card2:#fff7f0;
+      --border:#cfd7ef;
+      --border2:#f2d8bd;
     }
-    body{ font-family:'Poppins',sans-serif; margin:10px; text-align:center; color:var(--ink); background:var(--bg); }
-    h1{ font-size:32px; margin-bottom:6px; }
-    button{ font-size:16px; padding:6px 10px; margin:6px; cursor:pointer; }
-    label{ margin:0 6px; font-size:18px; }
-    .pattern{ line-height:1; margin-top:4px; }
-    #copyright{ font-size:12px; text-align:right; width:100%; }
-    .card{
-      display:inline-block; text-align:center; background:var(--card);
-      border:2px solid var(--border); border-radius:14px; padding:14px 18px; margin:10px auto; font-size:18px;
-    }
-    .card.alt{ background:var(--card2); border-color:var(--border2); }
-    .card h2{ margin:0 0 8px; font-size:20px; }
-    .controls{ display:flex; justify-content:center; align-items:center; gap:16px; flex-wrap:wrap; font-size:18px; }
-    .screenOnly{ display:block; font-size:18px; }
 
-    @media print{
-      body *{ visibility:hidden; }
-      #ladderOutput, #ladderOutput *{ visibility:visible; }
-      #ladderOutput{ position:absolute; top:0; left:0; width:100%; margin:0; padding:10px; box-sizing:border-box; }
-      .screenOnly{ display:none !important; }
-      #ladderOutput br{ display:none !important; }
-      @page{ margin:0.5in; }
+    body { font-family: 'Poppins', sans-serif; margin: 10px; text-align: center; color: var(--ink); background: var(--bg); }
+    h1 { font-size: 32px; margin-bottom: 6px; }
+    .subtitle { font-size: 16px; margin-bottom: 8px; }
+
+    button { font-size: 16px; padding: 6px 10px; margin: 6px; cursor: pointer; }
+    label { margin: 0 6px; font-size: 18px; }
+
+    .pattern { font-size: 100px; line-height: 1; margin-top: 4px; letter-spacing: 0; }
+
+    #copyright { font-size: 12px; text-align: right; width: 100%; }
+
+    .card {
+      display: inline-block;
+      text-align: center;
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      margin: 10px auto;
+      font-size: 18px;
+    }
+    .card.alt { background: var(--card2); border-color: var(--border2); }
+    .card h2 { margin: 0 0 8px; font-size: 20px; }
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 18px;
+    }
+
+    .screenOnly { display: block; font-size: 18px; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #ladderOutput, #ladderOutput * { visibility: visible; }
+      #ladderOutput { position: absolute; top: 0; left: 0; width: 100%; margin: 0; padding: 10px; box-sizing: border-box; }
+      .screenOnly { display: none !important; }
+      #ladderOutput br { display: none !important; }
+      @page { margin: 0.5in; }
     }
   </style>
 </head>
@@ -44,18 +70,20 @@
 
   <h1>Glued Sounds Word Ladders</h1>
 
+  <!-- Teacher directions (screen only) -->
   <div class="screenOnly" style="max-width:920px;margin:0 auto 12px;">
     <strong>Directions:</strong>
-    Choose <em>No Blends</em>, <em>Include Blends</em>, or <em>Only Blends</em>. Generate and print!
+    Choose <em>No Blends</em> (exclude blend ladders), <em>Include Blends</em> (allow any),
+    or <em>Only Blends</em> (restrict to ladders that include blend words).
   </div>
 
   <!-- FORMAT -->
   <div class="card">
     <h2>Format</h2>
     <div class="controls">
-      <label><input type="radio" name="ladderMode" value="No Blends" checked> 1. No Blends</label>
-      <label><input type="radio" name="ladderMode" value="Include Blends"> 2. Include Blends</label>
-      <label><input type="radio" name="ladderMode" value="Only Blends"> 3. Only Blends</label>
+      <label><input type="radio" name="ladderMode" value="base" checked> 1. No Blends</label>
+      <label><input type="radio" name="ladderMode" value="with"> 2. Include Blends</label>
+      <label><input type="radio" name="ladderMode" value="only"> 3. Only Blends</label>
     </div>
   </div>
 
@@ -70,37 +98,51 @@
   </div>
 
   <!-- ACTIONS -->
-  <div style="margin:8px 0 10px;">
+  <div style="margin: 8px 0 10px;">
     <button onclick="generateLadder()">Generate Ladder</button>
     <button onclick="window.print()">Print Page</button>
   </div>
 
   <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px;"></div>
 
-  <!-- === BLENDS ADD-ON for glued_sounds_full.js === -->
+  <!-- ==== BLENDS ADD-ON: patterns + images + (optional) ladders ==== -->
   <script>
-    // 1) Add your blend words to the existing glued data (patterns + image paths)
-    (function addBlendWords(){
-      if (typeof gluedWordPatterns==='undefined') window.gluedWordPatterns = {};
-      if (typeof gluedWordImages==='undefined')   window.gluedWordImages   = {};
-      if (typeof gluedWordLadders==='undefined')  window.gluedWordLadders  = [];
+    (function ensureBlendWords(){
+      // Safeguard globals from data file
+      window.gluedWordPatterns = window.gluedWordPatterns || {};
+      window.gluedWordImages   = window.gluedWordImages   || {};
+      window.gluedWordLadders  = window.gluedWordLadders  || [];
 
-      // Patterns
+      // Your blend starters
+      const BLEND_WORDS = [
+        "small","blank","drank","plank","prank",
+        "bling","cling","fling","sling","swing",
+        "drink","shrink",
+        // useful intermediates we used in ladders
+        "think","thank","rink","ring","sing","sang","sank","pink","wink","wing","king","link","tank","yank","long","song","hung","honk","mall","wall","call","fall","ball","bank","bang","hang"
+      ];
+
+      // (1) Patterns — render DIGITS, not unit "1"s
       Object.assign(gluedWordPatterns, {
         small:"113", blank:"113", drank:"113", plank:"113", prank:"113",
         bling:"113", cling:"113", fling:"113", sling:"113", swing:"113",
-        drink:"113", shrink:"213"
+        drink:"113", shrink:"213",
+        rink:"13", ring:"13", sing:"13", sang:"13", sank:"13",
+        pink:"13", wink:"13", wing:"13", king:"13", link:"13",
+        tank:"13", yank:"13", long:"13", song:"13", hung:"13", honk:"13",
+        mall:"13", wall:"13", call:"13", fall:"13", ball:"13",
+        bank:"13", bang:"13", hang:"13",
+        think:"23",  // th (2) + ink (3)
+        thank:"23"   // th (2) + ank (3)
       });
 
-      // Images - images/NAME.png
-      Object.assign(gluedWordImages, {
-        small:"images/small.png", blank:"images/blank.png", drank:"images/drank.png",
-        plank:"images/plank.png", prank:"images/prank.png", bling:"images/bling.png",
-        cling:"images/cling.png", fling:"images/fling.png", sling:"images/sling.png",
-        swing:"images/swing.png", drink:"images/drink.png", shrink:"images/shrink.png"
-      });
+      // (2) Images
+      const toImg = (w)=>`images/${w}.png`;
+      const imgs = {};
+      BLEND_WORDS.forEach(w => imgs[w] = toImg(w));
+      Object.assign(gluedWordImages, imgs);
 
-      // Optional: seed a few ladders that start with the blend words (so "Only Blends" has options).
+      // (3) Optional: Add a few ladders that start with blend words (so "Only Blends" has content)
       const newBlendLadders = [
         ["drink","rink","ring","sing","sang","sank"],
         ["shrink","rink","pink","wink","wing","sing"],
@@ -115,157 +157,213 @@
         ["swing","wing","wink","rink","ring","king"],
         ["bling","ring","rink","pink","wink","link"]
       ];
-      // Push only if not already present to avoid duplicates.
-      const existing = new Set(gluedWordLadders.map(l => l.join("|")));
-      newBlendLadders.forEach(l => { const k=l.join("|"); if(!existing.has(k)) gluedWordLadders.push(l); });
+      const seen = new Set(gluedWordLadders.map(l => (l||[]).join('|')));
+      newBlendLadders.forEach(L => { const k=L.join('|'); if(!seen.has(k)) gluedWordLadders.push(L); });
+
+      // expose list for filtering
+      window.__GLUED_BLEND_SET__ = new Set(BLEND_WORDS);
     })();
+  </script>
 
-    // 2) Mode helper: which ladders qualify as "blend" ladders?
-    const BLEND_START_WORDS = new Set([
-      "small","blank","drank","plank","prank","bling","cling","fling","sling","swing","drink","shrink"
-    ]);
+  <script>
+    /* =========================
+       Utilities (mirror digraphs behavior)
+    ==========================*/
+    const safeLower = (w) => (w || '').toLowerCase();
 
-    function getLaddersByMode(mode){
-      const all = Array.isArray(gluedWordLadders) ? gluedWordLadders : [];
-      if (mode === "Only Blends"){
-        return all.filter(l => BLEND_START_WORDS.has((l[0]||"").toLowerCase()));
-      }
-      if (mode === "No Blends"){
-        return all.filter(l => !BLEND_START_WORDS.has((l[0]||"").toLowerCase()));
-      }
-      return all; // Include Blends
+    function getPattern(word) {
+      const key = safeLower(word);
+      return (gluedWordPatterns && gluedWordPatterns[key]) ? gluedWordPatterns[key] : '?';
     }
 
-    /* ===== helpers (unit-aware + hints, sized to avoid wrapping) ===== */
-    function splitWordByPattern(word, pattern){
-      const chunks=[]; let i=0;
-      for (let j=0;j<pattern.length;j++){
-        const d=pattern[j]; const L=(d==='3')?3:(d==='2')?2:1;
-        chunks.push(word.slice(i,i+L)); i+=L;
+    function getImage(word) {
+      const key = safeLower(word);
+      return (gluedWordImages && gluedWordImages[key]) ? gluedWordImages[key] : 'https://via.placeholder.com/110?text=%3F';
+    }
+
+    function splitByPattern(word, pattern) {
+      const chunks = [];
+      let i = 0;
+      for (let j = 0; j < pattern.length; j++) {
+        const d = pattern[j];
+        const len = (d === '3') ? 3 : (d === '2') ? 2 : 1;
+        chunks.push(word.slice(i, i + len));
+        i += len;
       }
       return chunks;
     }
-    function getUnitChangeMap(prevWord, word, prevPattern, pattern){
-      const A = splitWordByPattern(prevWord, prevPattern);
-      const B = splitWordByPattern(word, pattern);
-      const out=[]; const pushMany=(n,v)=>{ for(let i=0;i<n;i++) out.push(v); };
-      const N=Math.max(A.length,B.length);
-      for (let i=0;i<N;i++){
-        const a=A[i]||'', b=B[i]||'';
-        if (!b){ continue; }
-        if (a===b){ pushMany(b.length,false); continue; }
-        if (a.length===b.length){ for(let k=0;k<b.length;k++) out.push(a[k]!==b[k]); continue; }
-        if (b.length===a.length+1 && (b.startsWith(a)||b.endsWith(a))){
-          if (b.startsWith(a)){ pushMany(a.length,false); out.push(true); }
-          else { out.push(true); pushMany(a.length,false); }
-          continue;
-        }
-        pushMany(b.length,true);
-      }
-      return out;
-    }
-    function renderPatternHTMLUnits(pattern, useFont, boldUnits){
-      const isUnderline=(useFont==='UnderlineFont');
-      const lens = Array.from(pattern).map(d=>d==='3'?3:(d==='2'?2:1));
-      let html='', u=0;
-      for (let c=0;c<lens.length;c++){
-        const L=lens[c];
-        html += `<span style="${isUnderline ? 'display:inline-block;margin:0 6px;' : ''}">`;
-        for (let i=0;i<L;i++){
-          const bold = boldUnits && !!boldUnits[u++];
-          html += `<span style="${bold ? 'font-weight:700;' : ''}">1</span>`;
-        }
-        html += `</span>`;
-      }
-      return html;
-    }
-    function getChunkHint(prevWord, word, prevPattern, pattern){
-      const A=splitWordByPattern(prevWord, prevPattern);
-      const B=splitWordByPattern(word, pattern);
-      const eq=(x,y)=>x.length===y.length && x.every((v,i)=>v===y[i]);
 
-      if (A.length===B.length){
-        let idx=-1; for (let i=0;i<A.length;i++){ if (A[i]!==B[i]){ if (idx!==-1) return '? → ?'; idx=i; } }
-        if (idx===-1) return '? → ?';
+    function arraysEqual(a,b){ return a.length===b.length && a.every((v,i)=>v===b[i]); }
+
+    // Return index of changed CHUNK (digit), or -1
+    function getChangedChunkIndex(prevWord, word, prevPat, pat) {
+      const A = splitByPattern(prevWord, prevPat);
+      const B = splitByPattern(word, pat);
+
+      if (!prevWord) return -1;
+
+      if (A.length === B.length) {
+        let idx = -1;
+        for (let i=0;i<A.length;i++){
+          if ((A[i]||'') !== (B[i]||'')) {
+            if (idx !== -1) return -1; // more than one difference
+            idx = i;
+          }
+        }
+        return idx; // -1 if identical
+      }
+
+      if (B.length === A.length + 1) {
+        for (let i=0;i<B.length;i++){
+          const test = B.slice(0,i).concat(B.slice(i+1));
+          if (arraysEqual(A, test)) return i;
+        }
+        return -1;
+      }
+
+      if (A.length === B.length + 1) {
+        for (let i=0;i<A.length;i++){
+          const test = A.slice(0,i).concat(A.slice(i+1));
+          if (arraysEqual(B, test)) return i;
+        }
+        return -1;
+      }
+
+      return -1;
+    }
+
+    // Hints (same style as your digraphs page)
+    function getHint(prevWord, word, prevPat, pat) {
+      const A = splitByPattern(prevWord, prevPat);
+      const B = splitByPattern(word, pat);
+      const eq = (x,y)=>x.length===y.length && x.every((v,i)=>v===y[i]);
+
+      if (!prevWord) return '';
+
+      if (A.length === B.length) {
+        let idx = -1;
+        for (let i=0;i<A.length;i++){ if (A[i]!==B[i]){ if(idx!==-1) return '? → ?'; idx=i; } }
+        if (idx === -1) return '? → ?';
         const a=A[idx], b=B[idx];
-        if (b.length===a.length+1 && (b.startsWith(a)||b.endsWith(a))){
-          const add=b.startsWith(a)?b.slice(-1):b.slice(0,b.length-a.length);
-          const micro=b.startsWith(a)?`${a} → ${a}<b>${add}</b>`:`${a} → <b>${add}</b>${a}`;
+        if (b.length === a.length + 1 && (b.startsWith(a) || b.endsWith(a))) {
+          const add = b.startsWith(a) ? b.slice(-1) : b.slice(0, b.length - a.length);
+          const micro = b.startsWith(a) ? `${a} → ${a}<b>${add}</b>` : `${a} → <b>${add}</b>${a}`;
           return `+ ${add} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
         }
-        if (a.length===b.length+1 && (a.startsWith(b)||a.endsWith(b))){
-          const rem=a.startsWith(b)?a.slice(-1):a.slice(0,a.length-b.length);
-          const micro=a.startsWith(b)?`${a.slice(0,-1)}<b>${rem}</b> → ${b}`:`<b>${rem}</b>${a.slice(1)} → ${b}`;
+        if (a.length === b.length + 1 && (a.startsWith(b) || a.endsWith(b))) {
+          const rem = a.startsWith(b) ? a.slice(-1) : a.slice(0, a.length - b.length);
+          const micro = a.startsWith(b) ? `${a.slice(0,-1)}<b>${rem}</b> → ${b}` : `<b>${rem}</b>${a.slice(1)} → ${b}`;
           return `- ${rem} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
         }
         return `${a} → ${b}`;
       }
-      if (B.length===A.length+1){
-        for (let k=0;k<B.length;k++){ const test=B.slice(0,k).concat(B.slice(k+1)); if (eq(A,test)) return `+ ${B[k]}`; }
+
+      if (B.length === A.length + 1) {
+        for (let k=0;k<B.length;k++) {
+          const test = B.slice(0,k).concat(B.slice(k+1));
+          if (eq(A, test)) return `+ ${B[k]}`;
+        }
         return '? → ?';
       }
-      if (A.length===B.length+1){
-        for (let k=0;k<A.length;k++){ const test=A.slice(0,k).concat(A.slice(k+1)); if (eq(B,test)) return `- ${A[k]}`; }
+
+      if (A.length === B.length + 1) {
+        for (let k=0;k<A.length;k++) {
+          const test = A.slice(0,k).concat(A.slice(k+1));
+          if (eq(B, test)) return `- ${A[k]}`;
+        }
         return '? → ?';
       }
       return '? → ?';
     }
-    function totalUnitsFromPattern(p){ return Array.from(p).reduce((s,d)=>s+(d==='3'?3:(d==='2'?2:1)),0); }
-    function getPatternFontSize(pattern, useFont){
-      const units = totalUnitsFromPattern(pattern);
-      const base = (useFont==='UnderlineFont') ? 78 : 88; // Underlines slightly smaller
-      if (units >= 8) return base - 12;
-      if (units >= 7) return base - 8;
-      if (units >= 6) return base - 4;
-      return base;
+
+    // Mode selection – mirror your digraphs semantics
+    function pickLaddersForMode(mode){
+      const all = Array.isArray(gluedWordLadders) ? gluedWordLadders : [];
+      const blendSet = window.__GLUED_BLEND_SET__ || new Set();
+
+      const containsBlend = (ladder) => ladder.some(w => blendSet.has(safeLower(w)));
+
+      if (mode === 'only') return all.filter(containsBlend);
+      if (mode === 'base') return all.filter(l => !containsBlend(l));
+      return all; // 'with' → include all ladders
     }
 
-    /* ===== main ===== */
-    function generateLadder(){
-      if (typeof gluedWordLadders==='undefined' || typeof gluedWordPatterns==='undefined' || typeof gluedWordImages==='undefined'){
-        alert('❌ Error: glued_sounds_full.js not loaded.'); return;
+    /* =========================
+       Main
+    ==========================*/
+    function generateLadder() {
+      if (typeof gluedWordPatterns === 'undefined' || typeof gluedWordImages === 'undefined') {
+        alert('❌ Error: Patterns/Images not loaded. Check "glued_sounds_full.js" path.');
+        return;
       }
-      const mode = document.querySelector('input[name="ladderMode"]:checked').value; // "No Blends" | "Include Blends" | "Only Blends"
-      const ladders = getLaddersByMode(mode);
-      if (!Array.isArray(ladders) || !ladders.length){ alert('❌ No ladders available for this mode.'); return; }
+
+      const mode = document.querySelector('input[name="ladderMode"]:checked').value; // base | with | only
+      const ladders = pickLaddersForMode(mode);
+      if (!ladders.length) {
+        alert(mode==='only' ? '❌ No glued-sound ladders that include blends.' : '❌ No glued-sound ladders available.');
+        return;
+      }
 
       const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
-      const useFont = (cellStyle==='underlines') ? 'UnderlineFont' : 'BoxesFont';
+      const useFont = (cellStyle === 'underlines') ? 'UnderlineFont' : 'BoxesFont';
       const boldChanged = document.getElementById('boldChanged').checked;
 
       const ladder = ladders[Math.floor(Math.random()*ladders.length)];
 
-      const rows = ladder.map((word, idx)=>{
-        const isFirst=(idx===0), isLast=(idx===ladder.length-1), prev=ladder[idx-1]||'';
-        const patt  = gluedWordPatterns[word] || '?';
-        const prevP = gluedWordPatterns[prev] || '?';
+      const rows = ladder.map((word, i) => {
+        const first = (i===0), last = (i===ladder.length-1);
+        const prev = ladder[i-1] || '';
 
-        const boldUnits = (!isFirst && boldChanged) ? getUnitChangeMap(prev, word, prevP, patt) : null;
-        const patternHTML = isFirst ? '' : renderPatternHTMLUnits(patt, useFont, boldUnits);
+        const patt = getPattern(word);      // e.g., "23"
+        const prevP = getPattern(prev);     // previous pattern
+        const imgSrc = getImage(word);
 
-        const size = getPatternFontSize(patt, useFont);
-        const display = isFirst
+        // Render the exact DIGITS and bold the CHANGED CHUNK (if any)
+        let patternHTML = '';
+        if (!first) {
+          const changedIdx = boldChanged ? getChangedChunkIndex(prev, word, prevP, patt) : -1;
+          if (changedIdx === -1) {
+            patternHTML = patt;
+          } else {
+            let out = '';
+            for (let j=0;j<patt.length;j++) {
+              const ch = patt[j];
+              out += (j===changedIdx) ? `<span style="font-weight:700;">${ch}</span>` : ch;
+            }
+            patternHTML = out;
+          }
+        }
+
+        const display = first
           ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins',sans-serif;">${word}</div>`
-          : `<div class="pattern" style="font-family:'${useFont}',monospace;font-size:${size}px;letter-spacing:0;">${patternHTML}</div>`;
+          : `<div class="pattern" style="font-family:'${useFont}',monospace;font-size:${useFont==='UnderlineFont'?'85px':'100px'};letter-spacing:0;">${patternHTML}</div>`;
 
-        const imgSrc = gluedWordImages[word] || 'https://via.placeholder.com/110?text=%3F';
+        const imgTD = `<td style="padding:5px 7px;width:140px;">
+                         <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
+                       </td>`;
 
-        const imgTD = `<td style="padding:5px 7px;width:140px;"><img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;"></td>`;
-        const borders = !isLast
+        const borders = !last
           ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
           : 'border-left:4px solid #000;border-right:4px solid #000;';
-        const midTD = `<td style="padding:5px 7px;${borders}">${display}</td>`;
-        const hintTD = isFirst
-          ? `<td style="padding:3px 5px;width:170px;"></td>`
-          : `<td style="padding:3px 5px;width:170px;"><div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">${getChunkHint(prev, word, prevP, patt)}</div></td>`;
 
-        return `<tr>${imgTD}${midTD}${hintTD}</tr>`;
+        const wordTD = `<td style="padding:5px 7px;${borders}">${display}</td>`;
+
+        const hintTD = first
+          ? `<td style="padding:3px 5px;width:170px;"></td>`
+          : `<td style="padding:3px 5px;width:170px;">
+               <div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">
+                 ${getHint(prev, word, prevP, patt)}
+               </div>
+             </td>`;
+
+        return `<tr>${imgTD}${wordTD}${hintTD}</tr>`;
       }).join('');
 
+      const titleSuffix = (mode==='with') ? ' — Include Blends' : (mode==='only') ? ' — Only Blends' : ' — No Blends';
       const html = `
         <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
           <div id="titleBlock" style="text-align:center;">
-            <h2 style="font-size:24px;">Glued Sounds Word Ladders</h2>
+            <h2 style="font-size:24px;">Glued Sounds Word Ladders${titleSuffix}</h2>
             <p style="font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
           </div>
           <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
@@ -273,7 +371,8 @@
           </table>
           <br><br>
           <div id="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
-        </div>`;
+        </div>
+      `;
       document.getElementById('ladderOutput').innerHTML = html;
     }
   </script>
