@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <title>R-Controlled Word Ladders</title>
 
-  <!-- Only the master JS for R-controlled -->
-  <script src="rControlled_master_FINAL.js" defer></script>
+  <!-- Load your master JS (provides window.RCTRL_NS with patterns/images/ladders) -->
+  <script src="rControlled_master_FINAL.js" defer></script> <!-- keep this filename -->
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
@@ -85,7 +85,7 @@
   <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px;"></div>
 
   <script>
-    /* ===== helpers ===== */
+    // ===== utilities =====
     function splitWordByPattern(word, pattern){
       const chunks=[]; let i=0;
       for (let j=0;j<pattern.length;j++){
@@ -94,6 +94,7 @@
       }
       return chunks;
     }
+
     function getUnitChangeMap(prevWord, word, prevPattern, pattern){
       const A=splitWordByPattern(prevWord, prevPattern);
       const B=splitWordByPattern(word, pattern);
@@ -113,6 +114,7 @@
       }
       return out;
     }
+
     function renderPatternHTMLUnits(pattern, useFont, boldUnits){
       const isUnderline=(useFont==='UnderlineFont');
       const lens = Array.from(pattern).map(d=>d==='3'?3:(d==='2'?2:1));
@@ -128,14 +130,15 @@
       }
       return html;
     }
+
     function getChunkHint(prevWord, word, prevPattern, pattern){
       const A=splitWordByPattern(prevWord, prevPattern);
       const B=splitWordByPattern(word, pattern);
       const eq=(x,y)=>x.length===y.length && x.every((v,i)=>v===y[i]);
 
       if (A.length===B.length){
-        let idx=-1; for (let i=0;i<A.length;i++){ if (A[i]!==B[i]){ if(idx!==-1) return '? → ?'; idx=i; } }
-        if (idx===-1) return '? → ?';
+        let idx=-1; for (let i=0;i<A.length;i++){ if (A[i]!==B[i]){ if(idx!==-1) return ''; idx=i; } }
+        if (idx===-1) return '';
         const a=A[idx], b=B[idx];
         if (b.length===a.length+1 && (b.startsWith(a)||b.endsWith(a))){
           const add=b.startsWith(a)?b.slice(-1):b.slice(0,b.length-a.length);
@@ -151,16 +154,15 @@
       }
       if (B.length===A.length+1){
         for (let k=0;k<B.length;k++){ const test=B.slice(0,k).concat(B.slice(k+1)); if (eq(A,test)) return `+ ${B[k]}`; }
-        return '? → ?';
+        return '';
       }
       if (A.length===B.length+1){
         for (let k=0;k<A.length;k++){ const test=A.slice(0,k).concat(A.slice(k+1)); if (eq(B,test)) return `- ${A[k]}`; }
-        return '? → ?';
+        return '';
       }
-      return '? → ?';
+      return '';
     }
 
-    // Slightly smaller for Underlines; also shrink for lots of units to avoid wrapping
     function totalUnitsFromPattern(p){ return Array.from(p).reduce((s,d)=>s+(d==='3'?3:(d==='2'?2:1)),0); }
     function getPatternFontSize(pattern, useFont){
       const units = totalUnitsFromPattern(pattern);
@@ -171,17 +173,29 @@
       return base;
     }
 
-    /* ===== main ===== */
-    function generateLadder(){
-      const NS = window.RCTRL_NS;
-      if (!NS || typeof NS.getLaddersByMode!=='function'){
-        alert('❌ R-controlled data not loaded. Check rControlled_master_FULL.js path/name.');
-        return;
+    // ===== glue to your JS =====
+    function resolveNamespace() {
+      // Primary: use the namespace your master file exports
+      if (window.RCTRL_NS &&
+          typeof RCTRL_NS.getLaddersByMode === 'function' &&
+          typeof RCTRL_NS.patterns === 'function' &&
+          typeof RCTRL_NS.images === 'function') {
+        return window.RCTRL_NS;
       }
+      // Helpful error
+      throw new Error('RCTRL_NS not available. Check that rControlled_master_FINAL.js is present and loads without errors.');
+    }
+
+    function generateLadder(){
+      let NS;
+      try { NS = resolveNamespace(); }
+      catch (e) { alert('❌ ' + e.message); return; }
 
       const mode = document.querySelector('input[name="ladderMode"]:checked').value; // "No Blends" | "Include Blends" | "Only Blends"
-      const ladders = NS.getLaddersByMode(mode);
-      if (!Array.isArray(ladders) || !ladders.length){ alert('❌ No ladders available for this mode.'); return; }
+      const ladders = NS.getLaddersByMode(mode); // provided by your JS
+      if (!Array.isArray(ladders) || !ladders.length){
+        alert('❌ No ladders available for this mode.'); return;
+      }
 
       const patterns = NS.patterns();
       const images   = NS.images();
@@ -195,8 +209,8 @@
       const rows = ladder.map((word, idx)=>{
         const first = (idx===0), last=(idx===ladder.length-1);
         const prev  = ladder[idx-1] || '';
-        const patt  = patterns[word] || '?';
-        const prevP = patterns[prev] || '?';
+        const patt  = patterns[word] || '111';   // safe fallback
+        const prevP = patterns[prev] || '111';
 
         const boldUnits = (!first && boldChanged) ? getUnitChangeMap(prev, word, prevP, patt) : null;
         const patternHTML = first ? '' : renderPatternHTMLUnits(patt, useFont, boldUnits);
@@ -206,20 +220,19 @@
           ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins',sans-serif;">${word}</div>`
           : `<div class="pattern" style="font-family:'${useFont}',monospace;font-size:${size}px;letter-spacing:0;">${patternHTML}</div>`;
 
-        const imgSrc = images[word] || 'https://via.placeholder.com/110?text=%3F';
+        const imgSrc = images[word] || 'images/placeholder_110.png';
 
         const imgTD = `<td style="padding:5px 7px;width:140px;"><img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;"></td>`;
         const borders = !last
           ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
           : 'border-left:4px solid #000;border-right:4px solid #000;';
         const midTD = `<td style="padding:5px 7px;${borders}">${display}</td>`;
-        const hintTD = first
-          ? `<td style="padding:3px 5px;width:170px;"></td>`
-          : `<td style="padding:3px 5px;width:170px;">
-               <div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">
-                 ${getChunkHint(prev, word, prevP, patt)}
-               </div>
-             </td>`;
+        const hint = (!first) ? getChunkHint(prev, word, prevP, patt) : '';
+        const hintTD = `<td style="padding:3px 5px;width:170px;">${
+          hint
+            ? `<div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">${hint}</div>`
+            : ``
+        }</td>`;
 
         return `<tr>${imgTD}${midTD}${hintTD}</tr>`;
       }).join('');
@@ -239,8 +252,19 @@
       document.getElementById('ladderOutput').innerHTML = html;
     }
 
-    // hook up the button
-    document.getElementById('btnGenerate').addEventListener('click', generateLadder);
+    // Wait for your JS to attach RCTRL_NS, then wire up the button
+    window.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('btnGenerate');
+      btn.addEventListener('click', generateLadder);
+
+      // Optional: auto-generate one preview if your JS is ready
+      const readyCheck = setInterval(() => {
+        if (window.RCTRL_NS) {
+          clearInterval(readyCheck);
+          // generateLadder(); // uncomment if you want an automatic first ladder
+        }
+      }, 50);
+    });
   </script>
 </body>
 </html>
