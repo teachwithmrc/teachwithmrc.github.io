@@ -119,8 +119,11 @@
       splitByWord[key] = entry.split;
     });
 
-    // Fallback: lowercase filename e.g. "spain.png"
-    const imgFor = (w) => `${(w||'').toLowerCase()}.png`;
+   const imgFor = (w) => {
+  const k = (w || '').toLowerCase();
+  const map = (window.longAImages || {});
+  return map[k] || map[w] || `images/${k}.png`;
+};
 
     // Split a word into chunks by its pattern string (e.g., "1211")
     function splitByPattern(word, pattern) {
