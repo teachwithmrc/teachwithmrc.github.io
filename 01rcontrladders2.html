@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>R-Controlled Word Ladders</title>
 
-  <!-- DATA: must define rWordPatterns, rWordImages, rWordLadders, rWordLaddersWithBlends -->
+  <!-- Uses rladders.js which exposes window.RCTRL_NS -->
   <script src="rladders.js" defer></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -13,62 +13,47 @@
     @font-face { font-family: 'BoxesFont'; src: url('fonts/boxes2.otf') format('opentype'); }
     @font-face { font-family: 'UnderlineFont'; src: url('fonts/underlines.otf') format('opentype'); }
 
-    :root{
-      --ink:#1f365f; --bg:#ffffff; --card:#f6f9ff; --card2:#fff7f0; --border:#cfd7ef; --border2:#f2d8bd;
-    }
+    :root{ --ink:#1f365f; --bg:#ffffff; --card:#f6f9ff; --card2:#fff7f0; --border:#cfd7ef; --border2:#f2d8bd; }
+    body { font-family:'Poppins',sans-serif; margin:10px; text-align:center; color:var(--ink); background:var(--bg); }
+    h1 { font-size:32px; margin-bottom:6px; }
+    .subtitle { font-size:16px; margin-bottom:8px; }
+    button { font-size:16px; padding:6px 10px; margin:6px; cursor:pointer; }
+    label { margin:0 6px; font-size:18px; }
+    .pattern { font-size:100px; line-height:1; margin-top:4px; letter-spacing:0; }
+    #copyright { font-size:12px; text-align:right; width:100%; }
+    .card { display:inline-block; text-align:center; background:var(--card); border:2px solid var(--border); border-radius:14px; padding:14px 18px; margin:10px auto; font-size:18px; }
+    .card.alt { background:var(--card2); border-color:var(--border2); }
+    .card h2 { margin:0 0 8px; font-size:20px; }
+    .controls { display:flex; justify-content:center; align-items:center; gap:16px; flex-wrap:wrap; font-size:18px; }
+    .screenOnly { display:block; font-size:18px; }
 
-    body { font-family: 'Poppins', sans-serif; margin: 10px; text-align: center; color: var(--ink); background: var(--bg); }
-    h1 { font-size: 32px; margin-bottom: 6px; }
-    .subtitle { font-size: 16px; margin-bottom: 8px; }
-
-    button { font-size: 16px; padding: 6px 10px; margin: 6px; cursor: pointer; }
-    label { margin: 0 6px; font-size: 18px; }
-
-    .pattern { font-size: 100px; line-height: 1; margin-top: 4px; letter-spacing: 0; }
-    #copyright { font-size: 12px; text-align: right; width: 100%; }
-
-    .card {
-      display: inline-block; text-align: center; background: var(--card);
-      border: 2px solid var(--border); border-radius: 14px;
-      padding: 14px 18px; margin: 10px auto; font-size: 18px;
-    }
-    .card.alt { background: var(--card2); border-color: var(--border2); }
-    .card h2 { margin: 0 0 8px; font-size: 20px; }
-    .controls { display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 18px; }
-    .screenOnly { display: block; font-size: 18px; }
-
-    @media print {
-      body * { visibility: hidden; }
-      #ladderOutput, #ladderOutput * { visibility: visible; }
-      #ladderOutput { position: absolute; top: 0; left: 0; width: 100%; margin: 0; padding: 10px; box-sizing: border-box; }
-      .screenOnly { display: none !important; }
-      #ladderOutput br { display: none !important; }
-      @page { margin: 0.5in; }
+    @media print{
+      body *{ visibility:hidden; }
+      #ladderOutput, #ladderOutput *{ visibility:visible; }
+      #ladderOutput{ position:absolute; top:0; left:0; width:100%; margin:0; padding:10px; box-sizing:border-box; }
+      .screenOnly{ display:none !important; }
+      #ladderOutput br{ display:none !important; }
+      @page { margin:0.5in; }
     }
   </style>
 </head>
 <body>
-
   <h1>R-Controlled Word Ladders</h1>
 
-  <!-- Teacher directions (screen only) -->
   <div class="screenOnly" style="max-width:920px;margin:0 auto 12px;">
     <strong>Directions:</strong>
-    Choose <em>Base</em> (r-controlled), <em>Include Blends</em> (r-controlled may appear with blends),
-    or <em>Only Blends</em> (restrict to ladders that include blends).
+    Choose <em>No Blends</em>, <em>Include Blends</em>, or <em>Only Blends</em>. Then generate and print.
   </div>
 
-  <!-- FORMAT -->
   <div class="card">
     <h2>Format</h2>
     <div class="controls">
-      <label><input type="radio" name="ladderMode" value="base" checked> 1. Base</label>
-      <label><input type="radio" name="ladderMode" value="with"> 2. Include Blends</label>
-      <label><input type="radio" name="ladderMode" value="only"> 3. Only Blends</label>
+      <label><input type="radio" name="ladderMode" value="No Blends" checked> 1. No Blends</label>
+      <label><input type="radio" name="ladderMode" value="Include Blends"> 2. Include Blends</label>
+      <label><input type="radio" name="ladderMode" value="Only Blends"> 3. Only Blends</label>
     </div>
   </div>
 
-  <!-- DISPLAY -->
   <div class="card alt">
     <h2>Display</h2>
     <div class="controls">
@@ -78,185 +63,69 @@
     </div>
   </div>
 
-  <!-- ACTIONS -->
-  <div style="margin: 8px 0 10px;">
-    <button onclick="generateLadder()">Generate Ladder</button>
+  <div style="margin:8px 0 10px;">
+    <button id="btnGenerate">Generate Ladder</button>
     <button onclick="window.print()">Print Page</button>
   </div>
 
   <div id="ladderOutput" style="margin-top:8px; margin-bottom:60px;"></div>
 
   <script>
-    /* =========================
-       Utilities
-    ==========================*/
-    const safeLower = (w) => (w || '').toLowerCase();
+    /* ======= helpers that use RCTRL_NS ======= */
+    const NS = () => (window && window.RCTRL_NS) ? window.RCTRL_NS : null;
 
-    function getPattern(word) {
-      const key = safeLower(word);
-      return (typeof rWordPatterns !== 'undefined' && rWordPatterns && rWordPatterns[key]) ? rWordPatterns[key] : '111';
+    function getPattern(word){
+      const dict = NS()?.patterns?.() || {};
+      return dict[(word||'').toLowerCase()] || '111';
     }
-
-    function getImage(word) {
-      const key = safeLower(word);
-      return (typeof rWordImages !== 'undefined' && rWordImages && rWordImages[key]) ? rWordImages[key] : 'images/placeholder_110.png';
+    function getImage(word){
+      const dict = NS()?.images?.() || {};
+      return dict[(word||'').toLowerCase()] || 'images/placeholder_110.png';
     }
-
-    function splitByPattern(word, pattern) {
-      const chunks = [];
-      let i = 0;
-      for (let j = 0; j < pattern.length; j++) {
-        const d = pattern[j];
-        const len = (d === '3') ? 3 : (d === '2') ? 2 : 1;
-        chunks.push(word.slice(i, i + len));
-        i += len;
+    function splitByPattern(word, pattern){
+      const chunks=[]; let i=0;
+      for (let j=0;j<pattern.length;j++){
+        const d=pattern[j], len=(d==='3')?3:(d==='2')?2:1;
+        chunks.push(word.slice(i,i+len)); i+=len;
       }
       return chunks;
     }
-
     function arraysEqual(a,b){ return a.length===b.length && a.every((v,i)=>v===b[i]); }
 
-    // Return index of the changed chunk (or -1 if none/unclear)
-    function getChangedChunkIndex(prevWord, word, prevPat, pat) {
+    function getChangedChunkIndex(prevWord, word, prevPat, pat){
       if (!prevWord) return -1;
-      const A = splitByPattern(prevWord, prevPat);
-      const B = splitByPattern(word, pat);
-      const n = Math.max(A.length, B.length);
+      const A=splitByPattern(prevWord, prevPat);
+      const B=splitByPattern(word, pat);
 
-      // Same number of chunks → find the one diff
-      if (A.length === B.length) {
-        let idx = -1;
-        for (let i = 0; i < n; i++) {
-          if ((A[i] || '') !== (B[i] || '')) {
-            if (idx !== -1) return -1; // more than one diff
-            idx = i;
-          }
+      if (A.length===B.length){
+        let idx=-1;
+        for (let i=0;i<A.length;i++){
+          if ((A[i]||'')!==(B[i]||'')){ if (idx!==-1) return -1; idx=i; }
         }
-        return idx; // may be -1 if identical
+        return idx;
       }
-
-      // One inserted/removed chunk → mark insertion/removal index
-      if (B.length === A.length + 1) {
-        for (let i = 0; i < B.length; i++) {
-          const test = B.slice(0, i).concat(B.slice(i + 1));
-          if (arraysEqual(A, test)) return i;
+      if (B.length===A.length+1){
+        for (let i=0;i<B.length;i++){
+          const test=B.slice(0,i).concat(B.slice(i+1));
+          if (arraysEqual(A,test)) return i;
         }
       }
-      if (A.length === B.length + 1) {
-        for (let i = 0; i < A.length; i++) {
-          const test = A.slice(0, i).concat(A.slice(i + 1));
-          if (arraysEqual(B, test)) return i;
+      if (A.length===B.length+1){
+        for (let i=0;i<A.length;i++){
+          const test=A.slice(0,i).concat(A.slice(i+1));
+          if (arraysEqual(B,test)) return i;
         }
       }
       return -1;
     }
 
-    function pickLaddersForMode(mode) {
-      const base = (typeof rWordLadders !== 'undefined' && Array.isArray(rWordLadders)) ? rWordLadders : [];
-      const blends = (typeof rWordLaddersWithBlends !== 'undefined' && Array.isArray(rWordLaddersWithBlends)) ? rWordLaddersWithBlends : [];
-      if (mode === 'with') return blends.length ? blends : base;
-      if (mode === 'only') return blends;
-      return base;
-    }
-
-    /* =========================
-       Main
-    ==========================*/
-    function generateLadder() {
-      if (typeof rWordPatterns === 'undefined' || typeof rWordImages === 'undefined') {
-        alert('❌ Error: Patterns/Images not loaded. Check "rladders.js" path.');
-        return;
-      }
-
-      const mode = document.querySelector('input[name="ladderMode"]:checked').value;
-      const ladders = pickLaddersForMode(mode);
-      if (!ladders.length) {
-        alert(mode==='only' ? '❌ No r-controlled ladders that include blends.' : '❌ No r-controlled ladders available.');
-        return;
-      }
-
-      const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
-      const useFont = (cellStyle === 'underlines') ? 'UnderlineFont' : 'BoxesFont';
-      const boldChanged = document.getElementById('boldChanged').checked;
-
-      const ladder = ladders[Math.floor(Math.random()*ladders.length)];
-
-      const rows = ladder.map((word, i) => {
-        const first = (i===0), last = (i===ladder.length-1);
-        const prev = ladder[i-1] || '';
-
-        const patt = getPattern(word);      // e.g., "112" for "scar"
-        const prevP = getPattern(prev);
-        const imgSrc = getImage(word);
-
-        // Build pattern row: show exact digit string, bold changed chunk
-        let patternHTML = '';
-        if (!first) {
-          const changedIdx = boldChanged ? getChangedChunkIndex(prev, word, prevP, patt) : -1;
-          if (changedIdx === -1) {
-            patternHTML = patt;
-          } else {
-            let out = '';
-            for (let j=0;j<patt.length;j++) {
-              const ch = patt[j];
-              out += (j===changedIdx) ? `<span style="font-weight:700;">${ch}</span>` : ch;
-            }
-            patternHTML = out;
-          }
-        }
-
-        const display = first
-          ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins',sans-serif;">${word}</div>`
-          : `<div class="pattern" style="font-family:'${useFont}',monospace;font-size:${useFont==='UnderlineFont'?'85px':'100px'};letter-spacing:0;">${patternHTML}</div>`;
-
-        const imgTD = `<td style="padding:5px 7px;width:140px;">
-                         <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
-                       </td>`;
-
-        const borders = !last
-          ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
-          : 'border-left:4px solid #000;border-right:4px solid #000;';
-
-        const wordTD = `<td style="padding:5px 7px;${borders}">${display}</td>`;
-
-        // Optional micro-hint (chunk-level add/remove/substitute) using the patterns
-        const hint = (!first) ? getMicroHint(prev, word, prevP, patt) : '';
-        const hintTD = hint
-          ? `<td style="padding:3px 5px;width:170px;">
-               <div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">
-                 ${hint}
-               </div>
-             </td>`
-          : `<td style="padding:3px 5px;width:170px;"></td>`;
-
-        return `<tr>${imgTD}${wordTD}${hintTD}</tr>`;
-      }).join('');
-
-      const titleSuffix = (mode==='with') ? ' — Include Blends' : (mode==='only') ? ' — Only Blends' : '';
-      const html = `
-        <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
-          <div id="titleBlock" style="text-align:center;">
-            <h2 style="font-size:24px;">R-Controlled Word Ladders${titleSuffix}</h2>
-            <p style="font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
-          </div>
-          <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
-            ${rows}
-          </table>
-          <br><br>
-          <div id="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
-        </div>
-      `;
-      document.getElementById('ladderOutput').innerHTML = html;
-    }
-
-    // Build a small “+x / -x / a→b” hint from chunks (optional)
-    function getMicroHint(prev, word, prevPat, pat){
-      const A = splitByPattern(prev, prevPat);
-      const B = splitByPattern(word, pat);
+    function getMicroHint(prev, word, prevP, patt){
+      const A=splitByPattern(prev, prevP);
+      const B=splitByPattern(word, patt);
       const eq=(x,y)=>x.length===y.length && x.every((v,i)=>v===y[i]);
 
-      if (A.length === B.length){
-        let idx=-1; for (let i=0;i<A.length;i++){ if (A[i]!==B[i]){ if(idx!==-1) return ''; idx=i; } }
+      if (A.length===B.length){
+        let idx=-1; for (let i=0;i<A.length;i++){ if (A[i]!==B[i]){ if (idx!==-1) return ''; idx=i; } }
         if (idx===-1) return '';
         const a=A[idx], b=B[idx];
         if (b.length===a.length+1 && (b.startsWith(a)||b.endsWith(a))){
@@ -271,7 +140,6 @@
         }
         return `${a} → ${b}`;
       }
-
       if (B.length===A.length+1){
         for (let k=0;k<B.length;k++){ const test=B.slice(0,k).concat(B.slice(k+1)); if (eq(A,test)) return `+ ${B[k]}`; }
         return '';
@@ -282,6 +150,75 @@
       }
       return '';
     }
+
+    function generateLadder(){
+      const api = NS();
+      if (!api){
+        alert('❌ R-controlled data not loaded. Check rladders.js path/name.');
+        return;
+      }
+      const mode = document.querySelector('input[name="ladderMode"]:checked').value; // "No Blends" | "Include Blends" | "Only Blends"
+      const ladders = api.getLaddersByMode(mode);
+      if (!Array.isArray(ladders) || !ladders.length){
+        alert(mode==='Only Blends' ? '❌ No r-controlled ladders that include blends.' : '❌ No r-controlled ladders available.');
+        return;
+      }
+
+      const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
+      const useFont   = (cellStyle==='underlines') ? 'UnderlineFont' : 'BoxesFont';
+      const boldChanged = document.getElementById('boldChanged').checked;
+
+      const ladder = ladders[Math.floor(Math.random()*ladders.length)];
+      const rows = ladder.map((word, i)=>{
+        const first = (i===0), last=(i===ladder.length-1);
+        const prev  = ladder[i-1] || '';
+        const patt  = getPattern(word);
+        const prevP = getPattern(prev);
+        const imgSrc= getImage(word);
+
+        let patternHTML = '';
+        if (!first){
+          const changedIdx = boldChanged ? getChangedChunkIndex(prev, word, prevP, patt) : -1;
+          patternHTML = Array.from(patt).map((ch,idx)=> idx===changedIdx ? `<span style="font-weight:700;">${ch}</span>` : ch).join('');
+        }
+
+        const display = first
+          ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins',sans-serif;">${word}</div>`
+          : `<div class="pattern" style="font-family:'${useFont}',monospace;font-size:${useFont==='UnderlineFont'?'85px':'100px'};">${patternHTML}</div>`;
+
+        const imgTD = `<td style="padding:5px 7px;width:140px;"><img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;"></td>`;
+        const borders = !last ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;' : 'border-left:4px solid #000;border-right:4px solid #000;';
+        const wordTD = `<td style="padding:5px 7px;${borders}">${display}</td>`;
+
+        const hint = (!first) ? getMicroHint(prev, word, prevP, patt) : '';
+        const hintTD = hint
+          ? `<td style="padding:3px 5px;width:170px;">
+               <div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">
+                 ${hint}
+               </div>
+             </td>`
+          : `<td style="padding:3px 5px;width:170px;"></td>`;
+
+        return `<tr>${imgTD}${wordTD}${hintTD}</tr>`;
+      }).join('');
+
+      const titleSuffix = (mode==='Include Blends') ? ' — Include Blends' : (mode==='Only Blends') ? ' — Only Blends' : '';
+      const html = `
+        <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
+          <div id="titleBlock" style="text-align:center;">
+            <h2 style="font-size:24px;">R-Controlled Word Ladders${titleSuffix}</h2>
+            <p style="font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
+          </div>
+          <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
+            ${rows}
+          </table>
+          <br><br>
+          <div id="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+        </div>`;
+      document.getElementById('ladderOutput').innerHTML = html;
+    }
+
+    document.getElementById('btnGenerate').addEventListener('click', generateLadder);
   </script>
 </body>
 </html>
