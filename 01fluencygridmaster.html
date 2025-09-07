@@ -116,7 +116,9 @@
     size: letter landscape;
     margin: 0;
   }
-
+ .no-print {
+    display: none !important;
+  }
   html, body {
     width: 100vw;
     height: 100vh;
@@ -334,7 +336,7 @@
       </div>
     </div>
   </div>
- <center><img src="images/chrome.png"></center>
+ <center><img src="images/chrome.png" class="no-print"></center>
   <!-- OUTPUT -->
   <div id="output"></div>
 
