@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>2-Digit Addition with Regrouping (Base-10 Blocks – 4 per page)</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .page {
+      width: 8.5in;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 0.5in 0.5in 0.7in;
+    }
+
+    h1 {
+      font-size: 1.3rem;
+      margin: 0 0 4px;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    /* Example card at top */
+    .example-card {
+      border: 2px solid #000;
+      border-radius: 6px;
+      padding: 8px 10px 10px;
+      margin-bottom: 10px;
+    }
+
+    .example-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .example-caption-top {
+      font-size: 0.8rem;
+      margin-bottom: 4px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+    }
+
+    button {
+      padding: 5px 10px;
+      font-size: 0.9rem;
+      border-radius: 4px;
+      border: 1px solid #000;
+      cursor: pointer;
+      font-weight: 600;
+      background: #ffffff;
+    }
+
+    .problems-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-auto-rows: 1fr;
+      gap: 12px;
+    }
+
+    .problem-card {
+      border: 2px solid #000;
+      border-radius: 6px;
+      padding: 10px 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 260px;
+    }
+
+    .equation {
+      font-size: 1.3rem;
+      text-align: left;
+      margin-bottom: 2px;
+    }
+
+    .place-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      margin-top: 0;
+    }
+
+    .place-table th,
+    .place-table td {
+      border: 1px solid #000;
+      padding: 5px;
+      vertical-align: top;
+    }
+
+    .place-header {
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .place-cell {
+      min-height: 120px;
+      text-align: center;
+    }
+
+    .stacked {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .blocks-row-tens {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 4px;
+      justify-content: center;
+    }
+
+    /* Ones as 5-across grid, larger */
+    .blocks-row-ones {
+      display: grid;
+      grid-template-columns: repeat(5, 18px); /* always 5 across */
+      grid-auto-rows: 18px;
+      gap: 4px;
+      justify-content: center;
+      justify-items: center;
+      align-items: center;
+      min-height: 40px;
+      width: 100%;
+    }
+
+    .dotted-separator {
+      border-top: 1px dotted #000;
+      width: 90%;
+      margin: 3px 0;
+    }
+
+    .block {
+      border: 2px solid #000;
+      background: transparent;
+    }
+
+    .block.ten {
+      width: 16px;
+      height: 52px;
+    }
+
+    .block.one {
+      width: 16px;
+      height: 16px;
+    }
+
+    .ones-note {
+      font-size: 0.75rem;
+      margin-top: 4px;
+      text-align: center;
+    }
+
+    .answer-line {
+      margin-top: 6px;
+      font-size: 1rem;
+    }
+
+    .answer-line::after {
+      content: " _______________";
+    }
+
+    .footer-note {
+      font-size: 0.8rem;
+      color: #333;
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    /* Example-specific styling */
+    .example-table {
+      margin-top: 4px;
+    }
+
+    .example-ones-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .example-ones-grid {
+      /* reuse .blocks-row-ones styles */
+    }
+
+    .circle-overlay {
+      position: absolute;
+      /* circle around the top 10 ones (2 rows of 5) */
+      width: 110px;
+      height: 44px;
+      border: 2px solid #000;
+      border-radius: 999px;
+      top: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .example-tens-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .example-tens-extra {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      margin-top: 2px;
+    }
+
+    .example-caption {
+      font-size: 0.75rem;
+      text-align: center;
+    }
+
+    @media print {
+      .controls { display: none; }
+      .page {
+        width: 100%;
+        margin: 0;
+        padding: 0.5in;
+      }
+      button { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>2-Digit Addition with Regrouping – Base-10 Blocks</h1>
+    <div class="subtitle">
+      Circle 10 ones to make a ten. Trade them for 1 ten rod, then add tens and ones.
+    </div>
+
+    <!-- Example card -->
+    <div class="example-card">
+      <div class="example-title">Example: 46 + 38</div>
+      <div class="example-caption-top">
+        Step 1: Show each number in tens and ones. Step 2: Circle 10 ones to trade for 1 ten. Step 3: Add the extra ten rod.
+      </div>
+      <table class="place-table example-table">
+        <tr>
+          <th class="place-header">Tens</th>
+          <th class="place-header">Ones</th>
+        </tr>
+        <tr>
+          <!-- Tens example -->
+          <td class="place-cell">
+            <div class="example-tens-stack">
+              <div class="blocks-row-tens">
+                <!-- 46 has 4 tens, 38 has 3 tens = 7 tens shown together -->
+                <!-- 4 tens -->
+                <div class="block ten"></div>
+                <div class="block ten"></div>
+                <div class="block ten"></div>
+                <div class="block ten"></div>
+                <!-- space between addends (optional visual gap) -->
+                <div style="width:8px;"></div>
+                <!-- 3 tens -->
+                <div class="block ten"></div>
+                <div class="block ten"></div>
+                <div class="block ten"></div>
+              </div>
+              <div class="example-tens-extra">
+                <div class="block ten"></div>
+                <div class="example-caption">+1 ten after regrouping</div>
+              </div>
+            </div>
+          </td>
+
+          <!-- Ones example -->
+          <td class="place-cell">
+            <div class="stacked">
+              <div class="example-ones-container">
+                <div class="blocks-row-ones example-ones-grid">
+                  <!-- 46 has 6 ones, 38 has 8 ones = 14 ones total -->
+                  <!-- We'll just show all 14; circle 10 of them -->
+                  <!-- First 10 (2 rows of 5) will fall under the circle overlay -->
+                  <!-- 14 one blocks -->
+                  <!-- Row 1: 5 -->
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <!-- Row 2: 5 -->
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <!-- Row 3: remaining 4 -->
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                </div>
+                <div class="circle-overlay"></div>
+              </div>
+              <div class="ones-note">
+                Circle 10 ones to trade for 1 ten.
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="controls">
+      <button id="generateBtn">Generate New Worksheet</button>
+      <button id="printBtn">Print Page</button>
+    </div>
+
+    <div class="problems-grid" id="problemsPage"></div>
+
+    <div class="footer-note">
+      4 problems per page (2 columns × 2 rows). Each problem requires regrouping in the ones place.
+    </div>
+  </div>
+
+  <script>
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Force regrouping in ones place (ones sum >= 10, total sum <= 99)
+    function generateAdditionRegroupingProblem() {
+      let a, b, sum;
+      while (true) {
+        a = randomInt(10, 89);
+        b = randomInt(10, 89);
+        sum = a + b;
+        const onesTotal = (a % 10) + (b % 10);
+        if (sum <= 99 && onesTotal >= 10) {
+          return { a, b, sum };
+        }
+      }
+    }
+
+    function createBlocks(container, count, type) {
+      container.innerHTML = "";
+      for (let i = 0; i < count; i++) {
+        const div = document.createElement("div");
+        div.classList.add("block", type);
+        container.appendChild(div);
+      }
+    }
+
+    function renderProblemCard(problem) {
+      const { a, b } = problem;
+
+      const card = document.createElement("div");
+      card.classList.add("problem-card");
+
+      const eq = document.createElement("div");
+      eq.classList.add("equation");
+      eq.textContent = `${a} + ${b} =`;
+      card.appendChild(eq);
+
+      const table = document.createElement("table");
+      table.classList.add("place-table");
+      table.innerHTML = `
+        <tr>
+          <th class="place-header">Tens</th>
+          <th class="place-header">Ones</th>
+        </tr>
+        <tr>
+          <td class="place-cell">
+            <div class="stacked tens-stack">
+              <div class="blocks-row-tens tens-row-1"></div>
+              <div class="dotted-separator"></div>
+              <div class="blocks-row-tens tens-row-2"></div>
+            </div>
+          </td>
+          <td class="place-cell">
+            <div class="stacked ones-stack">
+              <div class="blocks-row-ones ones-row-1"></div>
+              <div class="dotted-separator"></div>
+              <div class="blocks-row-ones ones-row-2"></div>
+              <div class="ones-note">Circle 10 ones to make a ten.</div>
+            </div>
+          </td>
+        </tr>
+      `;
+      card.appendChild(table);
+
+      const answerLine = document.createElement("div");
+      answerLine.classList.add("answer-line");
+      answerLine.textContent = "Sum:";
+      card.appendChild(answerLine);
+
+      const aTens = Math.floor(a / 10);
+      const aOnes = a % 10;
+      const bTens = Math.floor(b / 10);
+      const bOnes = b % 10;
+
+      const tensRow1 = table.querySelector(".tens-row-1");
+      const tensRow2 = table.querySelector(".tens-row-2");
+      const onesRow1 = table.querySelector(".ones-row-1");
+      const onesRow2 = table.querySelector(".ones-row-2");
+
+      createBlocks(tensRow1, aTens, "ten");
+      createBlocks(tensRow2, bTens, "ten");
+      createBlocks(onesRow1, aOnes, "one");
+      createBlocks(onesRow2, bOnes, "one");
+
+      return card;
+    }
+
+    function generateWorksheet() {
+      const page = document.getElementById("problemsPage");
+      page.innerHTML = "";
+
+      const NUM_PROBLEMS = 4; // 4 per page
+
+      for (let i = 0; i < NUM_PROBLEMS; i++) {
+        const prob = generateAdditionRegroupingProblem();
+        const card = renderProblemCard(prob);
+        page.appendChild(card);
+      }
+    }
+
+    document.getElementById("generateBtn").addEventListener("click", generateWorksheet);
+    document.getElementById("printBtn").addEventListener("click", () => window.print());
+
+    // First load
+    generateWorksheet();
+  </script>
+</body>
+</html>
