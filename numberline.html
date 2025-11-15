@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Open Number Line – Count Backwards (Printable)</title>
+  <title>Open Number Line – Count Backwards (3 per page)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -22,7 +22,7 @@
       width: 8.5in;
       max-width: 100%;
       margin: 0 auto;
-      padding: 0.5in 0.5in 0.75in;
+      padding: 0.4in 0.4in 0.6in;
     }
 
     h1 {
@@ -70,30 +70,50 @@
       background: #ffffff;
     }
 
-    .numberline-wrapper {
-      margin-top: 8px;
-      border: 2px solid #000;
-      padding: 8px;
+    .problems-column {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
-    svg {
+    .problem-card {
+      border: 2px solid #000;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-height: 210px;
+    }
+
+    .problem-header {
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 2px;
+    }
+
+    .problem-number {
+      font-weight: 600;
+    }
+
+    .numberline-container {
+      border: 1px solid #000;
+      padding: 6px;
+      flex: 1;
+    }
+
+    svg.numberline-svg {
       width: 100%;
-      height: 320px;
+      height: 170px;
       display: block;
     }
 
     .equation {
       text-align: center;
-      font-size: 1.1rem;
-      margin-top: 8px;
-      font-weight: 600;
-    }
-
-    .warning {
-      text-align: center;
-      color: #b00020;
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       margin-top: 4px;
+      font-weight: 600;
     }
 
     .footer-note {
@@ -103,18 +123,23 @@
       text-align: center;
     }
 
-    /* Print: hide controls, fill page cleanly */
+    .warning {
+      text-align: center;
+      color: #b00020;
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    /* Print: hide controls/buttons, just show worksheet */
     @media print {
       .controls {
         display: none;
       }
-
       .page {
         width: 100%;
         margin: 0;
-        padding: 0.5in;
+        padding: 0.4in;
       }
-
       button {
         display: none;
       }
@@ -129,34 +154,61 @@
     </div>
 
     <div class="controls">
-      <label>Start:</label>
-      <input id="startInput" type="number" value="72" />
-      <label>Subtract:</label>
-      <input id="subInput" type="number" value="38" />
-      <button id="drawBtn">Generate Number Line</button>
+      <label>Min start:</label>
+      <input id="minStart" type="number" value="40" />
+      <label>Max start:</label>
+      <input id="maxStart" type="number" value="99" />
+      <label>Min subtract:</label>
+      <input id="minSub" type="number" value="11" />
+      <label>Max subtract:</label>
+      <input id="maxSub" type="number" value="49" />
+      <button id="generateBtn">Generate Worksheet</button>
+      <button id="printBtn">Print Page</button>
     </div>
 
-    <div class="numberline-wrapper">
-      <svg id="numberLineSvg" viewBox="0 0 800 320"></svg>
-    </div>
-
-    <div id="equation" class="equation"></div>
     <div id="warning" class="warning"></div>
 
+    <div class="problems-column">
+      <div class="problem-card">
+        <div class="problem-header">
+          <span class="problem-number">#1</span>
+          <span class="problem-label"></span>
+        </div>
+        <div class="numberline-container">
+          <svg class="numberline-svg" viewBox="0 0 800 220"></svg>
+        </div>
+        <div class="equation"></div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-header">
+          <span class="problem-number">#2</span>
+          <span class="problem-label"></span>
+        </div>
+        <div class="numberline-container">
+          <svg class="numberline-svg" viewBox="0 0 800 220"></svg>
+        </div>
+        <div class="equation"></div>
+      </div>
+
+      <div class="problem-card">
+        <div class="problem-header">
+          <span class="problem-number">#3</span>
+          <span class="problem-label"></span>
+        </div>
+        <div class="numberline-container">
+          <svg class="numberline-svg" viewBox="0 0 800 220"></svg>
+        </div>
+        <div class="equation"></div>
+      </div>
+    </div>
+
     <div class="footer-note">
-      Only the starting number is printed. All other ticks have individual writing lines for students to fill in as they count back.
+      Click "Generate Worksheet" to get new problems, then "Print Page" to print a clean worksheet with 3 number lines.
     </div>
   </div>
 
   <script>
-    const svg = document.getElementById("numberLineSvg");
-    const eqEl = document.getElementById("equation");
-    const warnEl = document.getElementById("warning");
-
-    function clearSvg() {
-      while (svg.firstChild) svg.removeChild(svg.firstChild);
-    }
-
     function createSvgElement(name, attrs) {
       const el = document.createElementNS("http://www.w3.org/2000/svg", name);
       for (const key in attrs) {
@@ -165,35 +217,50 @@
       return el;
     }
 
-    function drawNumberLine(start, sub) {
-      clearSvg();
-      eqEl.textContent = "";
-      warnEl.textContent = "";
+    function clearSvg(svg) {
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+    }
 
-      if (!Number.isFinite(start) || !Number.isFinite(sub)) {
-        warnEl.textContent = "Enter valid numbers.";
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function generateProblem(minStart, maxStart, minSub, maxSub) {
+      for (let tries = 0; tries < 1000; tries++) {
+        const start = randomInt(minStart, maxStart);
+        const sub = randomInt(minSub, maxSub);
+        if (sub > 0 && start > sub) {
+          return { start, sub };
+        }
+      }
+      return null;
+    }
+
+    function drawNumberLine(svg, eqEl, problem) {
+      clearSvg(svg);
+      if (!problem) {
+        eqEl.textContent = "";
         return;
       }
-      if (sub <= 0 || start <= sub) {
-        warnEl.textContent = "Use numbers with start > subtract and subtract > 0.";
-        return;
-      }
+
+      const { start, sub } = problem;
 
       const ones = sub % 10;
       const tens = Math.floor(sub / 10);
 
-      // ones first, then tens (e.g., 38 -> 8 ones, 3 tens)
       const steps = [];
       for (let i = 0; i < ones; i++) steps.push(1);
       for (let i = 0; i < tens; i++) steps.push(10);
 
       const segmentCount = steps.length;
-      if (segmentCount === 0) return;
+      if (segmentCount === 0) {
+        eqEl.textContent = "";
+        return;
+      }
 
-      // compute values from right (start) to left (answer)
       const points = [];
       let currentVal = start;
-      points.push({ value: currentVal }); // starting number on right
+      points.push({ value: currentVal });
 
       for (const step of steps) {
         currentVal -= step;
@@ -201,12 +268,11 @@
       }
       const answer = currentVal;
 
-      // layout: proportional spacing, sized for print
       const svgWidth = 800;
-      const marginLeft = 80;
-      const marginRight = 80;
+      const marginLeft = 70;
+      const marginRight = 70;
       const arrowGap = 20;
-      const lineY = 160;
+      const lineY = 110;
 
       const xLineStart = marginLeft;
       const xLineEnd = svgWidth - marginRight;
@@ -217,7 +283,6 @@
       const totalDistance = steps.reduce((a, b) => a + b, 0);
       const widthPerUnit = innerLength / totalDistance;
 
-      // place ticks: start on right, move left
       let xCurrent = innerEnd;
       points[0].x = xCurrent;
 
@@ -228,69 +293,60 @@
         points[i].x = xCurrent;
       }
 
-      const xStartTick = points[0].x;
-      const xEndTick = points[points.length - 1].x;
-
-      // main line
       const mainLine = createSvgElement("line", {
         x1: xLineStart,
         y1: lineY,
         x2: xLineEnd,
         y2: lineY,
         stroke: "black",
-        "stroke-width": 4,
+        "stroke-width": 3,
         "stroke-linecap": "round"
       });
       svg.appendChild(mainLine);
 
-      // arrowheads just outside first and last tick
       const leftArrow = createSvgElement("path", {
-        d: `M ${xLineStart} ${lineY} L ${xLineStart + 14} ${lineY - 8} L ${xLineStart + 14} ${lineY + 8} Z`,
+        d: `M ${xLineStart} ${lineY} L ${xLineStart + 12} ${lineY - 7} L ${xLineStart + 12} ${lineY + 7} Z`,
         fill: "black"
       });
       const rightArrow = createSvgElement("path", {
-        d: `M ${xLineEnd} ${lineY} L ${xLineEnd - 14} ${lineY - 8} L ${xLineEnd - 14} ${lineY + 8} Z`,
+        d: `M ${xLineEnd} ${lineY} L ${xLineEnd - 12} ${lineY - 7} L ${xLineEnd - 12} ${lineY + 7} Z`,
         fill: "black"
       });
       svg.appendChild(leftArrow);
       svg.appendChild(rightArrow);
 
-      // ticks + writing lines
       const tickTop = lineY - 12;
       const tickBottom = lineY + 12;
-      const textY = lineY + 40;
-      const lineYUnderline = lineY + 45; // underline position for blanks
+      const textY = lineY + 34;
+      const underlineY = lineY + 38;
 
       points.forEach((pt, i) => {
-        // tick
         const tick = createSvgElement("line", {
           x1: pt.x,
           y1: tickTop,
           x2: pt.x,
           y2: tickBottom,
           stroke: "black",
-          "stroke-width": 3
+          "stroke-width": 2.5
         });
         svg.appendChild(tick);
 
         if (i === 0) {
-          // starting number on right
           const text = createSvgElement("text", {
             x: pt.x,
             y: textY,
             "text-anchor": "middle",
-            "font-size": "18",
+            "font-size": "16",
             "font-weight": "700"
           });
           text.textContent = pt.value;
           svg.appendChild(text);
         } else {
-          // blank underline for student (individual ___ under each tick)
           const underline = createSvgElement("line", {
-            x1: pt.x - 18,
-            y1: lineYUnderline,
-            x2: pt.x + 18,
-            y2: lineYUnderline,
+            x1: pt.x - 16,
+            y1: underlineY,
+            x2: pt.x + 16,
+            y2: underlineY,
             stroke: "black",
             "stroke-width": 2
           });
@@ -298,48 +354,71 @@
         }
       });
 
-      // arcs + jump labels (−1 vs −10)
       for (let i = 0; i < steps.length; i++) {
         const stepSize = steps[i];
         const x1 = points[i].x;
         const x2 = points[i + 1].x;
         const midX = (x1 + x2) / 2;
 
-        // arc height: bigger for tens
-        const arcHeight = stepSize === 1 ? 30 : 50;
+        const arcHeight = stepSize === 1 ? 24 : 40;
 
         const path = createSvgElement("path", {
           d: `M ${x1} ${lineY} Q ${midX} ${lineY - arcHeight}, ${x2} ${lineY}`,
           fill: "none",
           stroke: "black",
-          "stroke-width": 3,
+          "stroke-width": 2.5,
           "stroke-linecap": "round"
         });
         svg.appendChild(path);
 
-        const jumpLabel = createSvgElement("text", {
+        const label = createSvgElement("text", {
           x: midX,
-          y: lineY - arcHeight - 6,
+          y: lineY - arcHeight - 4,
           "text-anchor": "middle",
-          "font-size": "16",
+          "font-size": "13",
           "font-weight": "700"
         });
-        jumpLabel.textContent = `-${stepSize}`;
-        svg.appendChild(jumpLabel);
+        label.textContent = `-${stepSize}`;
+        svg.appendChild(label);
       }
 
-      // equation with blank; answer shown in parentheses for teacher
       eqEl.textContent = `${start} − ${sub} = ______   (answer: ${answer})`;
     }
 
-    document.getElementById("drawBtn").addEventListener("click", () => {
-      const start = parseInt(document.getElementById("startInput").value, 10);
-      const sub = parseInt(document.getElementById("subInput").value, 10);
-      drawNumberLine(start, sub);
-    });
+    function generateWorksheet() {
+      const warnEl = document.getElementById("warning");
+      warnEl.textContent = "";
 
-    // First load example
-    drawNumberLine(72, 38);
+      const minStart = parseInt(document.getElementById("minStart").value, 10);
+      const maxStart = parseInt(document.getElementById("maxStart").value, 10);
+      const minSub = parseInt(document.getElementById("minSub").value, 10);
+      const maxSub = parseInt(document.getElementById("maxSub").value, 10);
+
+      if (!(minStart < maxStart && minSub < maxSub)) {
+        warnEl.textContent = "Check your ranges. Min must be less than Max.";
+        return;
+      }
+
+      const svgList = document.querySelectorAll("svg.numberline-svg");
+      const eqList = document.querySelectorAll(".equation");
+      const labelList = document.querySelectorAll(".problem-label");
+
+      for (let i = 0; i < svgList.length; i++) {
+        const prob = generateProblem(minStart, maxStart, minSub, maxSub);
+        if (!prob) {
+          warnEl.textContent = "Could not generate problems with those ranges.";
+          return;
+        }
+        labelList[i].textContent = `${prob.start} − ${prob.sub}`;
+        drawNumberLine(svgList[i], eqList[i], prob);
+      }
+    }
+
+    document.getElementById("generateBtn").addEventListener("click", generateWorksheet);
+    document.getElementById("printBtn").addEventListener("click", () => window.print());
+
+    // initial load
+    generateWorksheet();
   </script>
 </body>
 </html>
