@@ -2,11 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Open Number Line – Count Backwards (3 per page)</title>
+  <title>Open Number Line – Count Backwards (3 per page, Landscape)</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html, body {
       margin: 0;
@@ -19,10 +17,10 @@
     }
 
     .page {
-      width: 8.5in;
+      width: 11in; /* landscape width */
       max-width: 100%;
       margin: 0 auto;
-      padding: 0.4in 0.4in 0.6in;
+      padding: 0.5in 0.5in 0.6in;
     }
 
     h1 {
@@ -48,9 +46,7 @@
       font-size: 0.85rem;
     }
 
-    label {
-      font-size: 0.85rem;
-    }
+    label { font-size: 0.85rem; }
 
     input {
       width: 70px;
@@ -93,9 +89,7 @@
       margin-bottom: 2px;
     }
 
-    .problem-number {
-      font-weight: 600;
-    }
+    .problem-number { font-weight: 600; }
 
     .numberline-container {
       border: 1px solid #000;
@@ -130,19 +124,19 @@
       margin-top: 4px;
     }
 
-    /* Print: hide controls/buttons, just show worksheet */
     @media print {
-      .controls {
-        display: none;
+      @page {
+        size: landscape;
+        margin: 0;
       }
+
+      .controls { display: none; }
       .page {
         width: 100%;
         margin: 0;
-        padding: 0.4in;
+        padding: 0.5in;
       }
-      button {
-        display: none;
-      }
+      button { display: none; }
     }
   </style>
 </head>
@@ -175,7 +169,7 @@
           <span class="problem-label"></span>
         </div>
         <div class="numberline-container">
-          <svg class="numberline-svg" viewBox="0 0 800 220"></svg>
+          <svg class="numberline-svg" viewBox="0 0 900 220"></svg>
         </div>
         <div class="equation"></div>
       </div>
@@ -186,7 +180,7 @@
           <span class="problem-label"></span>
         </div>
         <div class="numberline-container">
-          <svg class="numberline-svg" viewBox="0 0 800 220"></svg>
+          <svg class="numberline-svg" viewBox="0 0 900 220"></svg>
         </div>
         <div class="equation"></div>
       </div>
@@ -197,23 +191,21 @@
           <span class="problem-label"></span>
         </div>
         <div class="numberline-container">
-          <svg class="numberline-svg" viewBox="0 0 800 220"></svg>
+          <svg class="numberline-svg" viewBox="0 0 900 220"></svg>
         </div>
         <div class="equation"></div>
       </div>
     </div>
 
     <div class="footer-note">
-      Click "Generate Worksheet" to get new problems, then "Print Page" to print a clean worksheet with 3 number lines.
+      Click "Generate Worksheet" to get new problems, then "Print Page" for a clean 3-per-page landscape number line worksheet.
     </div>
   </div>
 
   <script>
     function createSvgElement(name, attrs) {
       const el = document.createElementNS("http://www.w3.org/2000/svg", name);
-      for (const key in attrs) {
-        el.setAttribute(key, attrs[key]);
-      }
+      for (const key in attrs) el.setAttribute(key, attrs[key]);
       return el;
     }
 
@@ -229,9 +221,7 @@
       for (let tries = 0; tries < 1000; tries++) {
         const start = randomInt(minStart, maxStart);
         const sub = randomInt(minSub, maxSub);
-        if (sub > 0 && start > sub) {
-          return { start, sub };
-        }
+        if (sub > 0 && start > sub) return { start, sub };
       }
       return null;
     }
@@ -244,7 +234,6 @@
       }
 
       const { start, sub } = problem;
-
       const ones = sub % 10;
       const tens = Math.floor(sub / 10);
 
@@ -252,8 +241,7 @@
       for (let i = 0; i < ones; i++) steps.push(1);
       for (let i = 0; i < tens; i++) steps.push(10);
 
-      const segmentCount = steps.length;
-      if (segmentCount === 0) {
+      if (!steps.length) {
         eqEl.textContent = "";
         return;
       }
@@ -268,10 +256,11 @@
       }
       const answer = currentVal;
 
-      const svgWidth = 800;
-      const marginLeft = 70;
-      const marginRight = 70;
-      const arrowGap = 20;
+      // Wider landscape line, less side padding
+      const svgWidth = 900;
+      const marginLeft = 30;
+      const marginRight = 30;
+      const arrowGap = 10;
       const lineY = 110;
 
       const xLineStart = marginLeft;
@@ -354,13 +343,14 @@
         }
       });
 
+      // Shorter arcs for tens, slightly shorter for ones
       for (let i = 0; i < steps.length; i++) {
         const stepSize = steps[i];
         const x1 = points[i].x;
         const x2 = points[i + 1].x;
         const midX = (x1 + x2) / 2;
 
-        const arcHeight = stepSize === 1 ? 24 : 40;
+        const arcHeight = stepSize === 1 ? 20 : 32;
 
         const path = createSvgElement("path", {
           d: `M ${x1} ${lineY} Q ${midX} ${lineY - arcHeight}, ${x2} ${lineY}`,
