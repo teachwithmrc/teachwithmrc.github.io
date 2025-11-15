@@ -2,114 +2,130 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Open Number Line – Count Backwards (Tens and Ones)</title>
+  <title>Open Number Line – Count Backwards (Printable)</title>
   <style>
     * {
       box-sizing: border-box;
     }
 
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      background: #f5f5f5;
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
     }
 
-    .container {
-      background: #ffffff;
-      padding: 20px 24px 28px;
-      border-radius: 12px;
-      max-width: 900px;
-      width: 100%;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .page {
+      width: 8.5in;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 0.5in 0.5in 0.75in;
     }
 
     h1 {
-      font-size: 1.4rem;
-      margin: 0 0 8px;
+      font-size: 1.2rem;
+      margin: 0 0 4px;
       text-align: center;
     }
 
     .subtitle {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       text-align: center;
-      margin-bottom: 14px;
-      color: #555;
+      margin-bottom: 10px;
+      color: #333;
     }
 
     .controls {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
       justify-content: center;
       margin-bottom: 10px;
+      font-size: 0.85rem;
     }
 
     label {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
 
     input {
       width: 70px;
-      padding: 4px 6px;
-      font-size: 0.9rem;
+      padding: 3px 5px;
+      font-size: 0.85rem;
       border-radius: 4px;
-      border: 1px solid #ccc;
+      border: 1px solid #000;
     }
 
     button {
-      padding: 6px 12px;
-      font-size: 0.9rem;
-      border-radius: 6px;
-      border: none;
+      padding: 5px 10px;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      border: 1px solid #000;
       cursor: pointer;
       font-weight: 600;
       background: #ffffff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     }
 
-    button:hover {
-      transform: translateY(-1px);
+    .numberline-wrapper {
+      margin-top: 8px;
+      border: 2px solid #000;
+      padding: 8px;
     }
 
     svg {
-      border: 2px solid #000;
-      border-radius: 8px;
-      background: #fff;
       width: 100%;
-      height: 240px;
-      margin-top: 10px;
+      height: 320px;
+      display: block;
     }
 
     .equation {
       text-align: center;
-      font-size: 1.4rem;
-      margin-top: 10px;
-      font-weight: 600;
-    }
-
-    .footer-note {
-      font-size: 0.8rem;
-      color: #555;
+      font-size: 1.1rem;
       margin-top: 8px;
-      text-align: center;
+      font-weight: 600;
     }
 
     .warning {
       text-align: center;
       color: #b00020;
-      font-size: 0.9rem;
-      margin-top: 6px;
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    .footer-note {
+      font-size: 0.75rem;
+      color: #333;
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    /* Print: hide controls, fill page cleanly */
+    @media print {
+      .controls {
+        display: none;
+      }
+
+      .page {
+        width: 100%;
+        margin: 0;
+        padding: 0.5in;
+      }
+
+      button {
+        display: none;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="page">
     <h1>Open Number Line – Count Backwards</h1>
     <div class="subtitle">
-      Start at the number on the right. Hop back by ones, then tens. Students fill in the blanks under each tick.
+      Start at the number on the right. Hop back by ones, then tens. Write each number on the lines under the ticks.
     </div>
 
     <div class="controls">
@@ -117,16 +133,18 @@
       <input id="startInput" type="number" value="72" />
       <label>Subtract:</label>
       <input id="subInput" type="number" value="38" />
-      <button id="drawBtn">Draw Number Line</button>
+      <button id="drawBtn">Generate Number Line</button>
     </div>
 
-    <svg id="numberLineSvg" viewBox="0 0 800 240"></svg>
+    <div class="numberline-wrapper">
+      <svg id="numberLineSvg" viewBox="0 0 800 320"></svg>
+    </div>
 
     <div id="equation" class="equation"></div>
     <div id="warning" class="warning"></div>
 
     <div class="footer-note">
-      Example: 72 − 38 → eight small −1 hops (students write 71, 70, 69, …), then three big −10 hops.
+      Only the starting number is printed. All other ticks have individual writing lines for students to fill in as they count back.
     </div>
   </div>
 
@@ -161,10 +179,10 @@
         return;
       }
 
-      // Decompose subtrahend: ones first, then tens (e.g., 38 -> 8 ones, 3 tens)
       const ones = sub % 10;
       const tens = Math.floor(sub / 10);
 
+      // ones first, then tens (e.g., 38 -> 8 ones, 3 tens)
       const steps = [];
       for (let i = 0; i < ones; i++) steps.push(1);
       for (let i = 0; i < tens; i++) steps.push(10);
@@ -172,10 +190,10 @@
       const segmentCount = steps.length;
       if (segmentCount === 0) return;
 
-      // Compute values from right (start) to left (answer)
+      // compute values from right (start) to left (answer)
       const points = [];
       let currentVal = start;
-      points.push({ value: currentVal }); // start label (right)
+      points.push({ value: currentVal }); // starting number on right
 
       for (const step of steps) {
         currentVal -= step;
@@ -183,12 +201,12 @@
       }
       const answer = currentVal;
 
-      // Layout with proportional spacing
+      // layout: proportional spacing, sized for print
       const svgWidth = 800;
       const marginLeft = 80;
       const marginRight = 80;
-      const arrowGap = 16; // space between line arrow and first/last tick
-      const lineY = 150;
+      const arrowGap = 20;
+      const lineY = 160;
 
       const xLineStart = marginLeft;
       const xLineEnd = svgWidth - marginRight;
@@ -199,7 +217,7 @@
       const totalDistance = steps.reduce((a, b) => a + b, 0);
       const widthPerUnit = innerLength / totalDistance;
 
-      // positions: start at right innerEnd, walk left by proportional distances
+      // place ticks: start on right, move left
       let xCurrent = innerEnd;
       points[0].x = xCurrent;
 
@@ -220,12 +238,12 @@
         x2: xLineEnd,
         y2: lineY,
         stroke: "black",
-        "stroke-width": 5,
+        "stroke-width": 4,
         "stroke-linecap": "round"
       });
       svg.appendChild(mainLine);
 
-      // arrowheads OUTSIDE the ticks
+      // arrowheads just outside first and last tick
       const leftArrow = createSvgElement("path", {
         d: `M ${xLineStart} ${lineY} L ${xLineStart + 14} ${lineY - 8} L ${xLineStart + 14} ${lineY + 8} Z`,
         fill: "black"
@@ -237,35 +255,47 @@
       svg.appendChild(leftArrow);
       svg.appendChild(rightArrow);
 
-      // ticks + labels (only start number; others are blanks)
+      // ticks + writing lines
+      const tickTop = lineY - 12;
+      const tickBottom = lineY + 12;
+      const textY = lineY + 40;
+      const lineYUnderline = lineY + 45; // underline position for blanks
+
       points.forEach((pt, i) => {
+        // tick
         const tick = createSvgElement("line", {
           x1: pt.x,
-          y1: lineY - 12,
+          y1: tickTop,
           x2: pt.x,
-          y2: lineY + 12,
+          y2: tickBottom,
           stroke: "black",
           "stroke-width": 3
         });
         svg.appendChild(tick);
 
-        const label = createSvgElement("text", {
-          x: pt.x,
-          y: lineY + 34,
-          "text-anchor": "middle",
-          "font-size": "18",
-          "font-weight": i === 0 ? "700" : "400"
-        });
-
         if (i === 0) {
-          // Only show the starting number (rightmost tick)
-          label.textContent = pt.value;
+          // starting number on right
+          const text = createSvgElement("text", {
+            x: pt.x,
+            y: textY,
+            "text-anchor": "middle",
+            "font-size": "18",
+            "font-weight": "700"
+          });
+          text.textContent = pt.value;
+          svg.appendChild(text);
         } else {
-          // Blank line for students to fill in (e.g., 71, 70, 69, …)
-          label.textContent = "_____";
+          // blank underline for student (individual ___ under each tick)
+          const underline = createSvgElement("line", {
+            x1: pt.x - 18,
+            y1: lineYUnderline,
+            x2: pt.x + 18,
+            y2: lineYUnderline,
+            stroke: "black",
+            "stroke-width": 2
+          });
+          svg.appendChild(underline);
         }
-
-        svg.appendChild(label);
       });
 
       // arcs + jump labels (−1 vs −10)
@@ -275,14 +305,14 @@
         const x2 = points[i + 1].x;
         const midX = (x1 + x2) / 2;
 
-        // higher arc for tens than ones
-        const arcHeight = stepSize === 1 ? 26 : 42;
+        // arc height: bigger for tens
+        const arcHeight = stepSize === 1 ? 30 : 50;
 
         const path = createSvgElement("path", {
           d: `M ${x1} ${lineY} Q ${midX} ${lineY - arcHeight}, ${x2} ${lineY}`,
           fill: "none",
           stroke: "black",
-          "stroke-width": 4,
+          "stroke-width": 3,
           "stroke-linecap": "round"
         });
         svg.appendChild(path);
@@ -298,9 +328,8 @@
         svg.appendChild(jumpLabel);
       }
 
-      // equation with blank answer (students solve)
-      eqEl.textContent = `${start} − ${sub} = ?   (answer: ${answer})`;
-      // If you don't want the answer given at all, delete " (answer: ...)" above.
+      // equation with blank; answer shown in parentheses for teacher
+      eqEl.textContent = `${start} − ${sub} = ______   (answer: ${answer})`;
     }
 
     document.getElementById("drawBtn").addEventListener("click", () => {
@@ -309,7 +338,7 @@
       drawNumberLine(start, sub);
     });
 
-    // initial example
+    // First load example
     drawNumberLine(72, 38);
   </script>
 </body>
