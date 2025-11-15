@@ -93,7 +93,7 @@
 
     .numberline-container {
       border: 1px solid #000;
-      padding: 6px;
+      padding: 2px; /* was 6px – reduced so the line fills the box */
       flex: 1;
     }
 
@@ -256,11 +256,11 @@
       }
       const answer = currentVal;
 
-      // Wider landscape line, less side padding
+      // Wider line, almost no side padding
       const svgWidth = 900;
-      const marginLeft = 30;
-      const marginRight = 30;
-      const arrowGap = 10;
+      const marginLeft = 5;   // was 30
+      const marginRight = 5;  // was 30
+      const arrowGap = 4;     // was 10
       const lineY = 110;
 
       const xLineStart = marginLeft;
@@ -343,7 +343,7 @@
         }
       });
 
-      // Shorter arcs for tens, slightly shorter for ones
+      // Shorter arcs
       for (let i = 0; i < steps.length; i++) {
         const stepSize = steps[i];
         const x1 = points[i].x;
