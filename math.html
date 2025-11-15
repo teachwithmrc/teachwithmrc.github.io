@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Regrouping Base-Ten Subtraction Worksheet</title>
+  <title>2-Digit Regrouping with Base-Ten Blocks (Tens/Ones Table)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -67,8 +67,8 @@
 
     .problem-card {
       border-bottom: 1px solid #000;
-      padding: 12px 0 16px;
-      min-height: 220px; /* gives room to regroup */
+      padding: 12px 0 18px;
+      min-height: 220px; /* keeps space for regrouping + answer */
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -84,35 +84,28 @@
       margin-bottom: 4px;
     }
 
-    .blocks-area {
+    /* Table layout for Tens / Ones */
+    .place-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 4px;
+    }
+
+    .place-table th,
+    .place-table td {
       border: 2px solid #000;
-      border-radius: 8px;
-      padding: 10px 12px;
+      padding: 8px;
+      vertical-align: top;
     }
 
-    .blocks-label {
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 6px;
+    .place-header {
+      font-size: 1rem;
+      font-weight: 700;
+      text-align: center;
     }
 
-    .blocks-rows {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      align-items: flex-start;
-    }
-
-    .blocks-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .row-title {
-      width: 60px;
-      font-size: 0.85rem;
+    .place-cell {
+      min-height: 90px;
     }
 
     .row-blocks {
@@ -137,20 +130,25 @@
       height: 16px;
     }
 
-    .regroup-area {
-      margin-top: 10px;
-      border: 1px dashed #000;
-      border-radius: 6px;
-      padding: 6px 8px 24px;
-    }
-
-    .regroup-label {
-      font-size: 0.8rem;
-      margin-bottom: 4px;
-    }
-
+    /* Space for student to draw the 10 borrowed ones */
     .regroup-space {
-      height: 40px; /* blank zone where they can draw 10 ones */
+      margin-top: 8px;
+      min-height: 40px;
+      border: 1px dashed #000;
+    }
+
+    .regroup-note {
+      font-size: 0.75rem;
+      margin-bottom: 2px;
+    }
+
+    .answer-line {
+      margin-top: 10px;
+      font-size: 1.2rem;
+    }
+
+    .answer-line::after {
+      content: " __________________________";
     }
 
     .footer-note {
@@ -165,7 +163,7 @@
   <div class="container">
     <h1>2-Digit Regrouping with Base-Ten Blocks</h1>
     <div class="subtitle">
-      Each problem shows the minuend in tens and ones. Students cross out tens and draw 10 new ones when they regroup.
+      Each problem shows tens and ones in a place value table. Students can borrow a ten and draw 10 new ones in the regroup space.
     </div>
 
     <div class="controls">
@@ -177,7 +175,7 @@
     </div>
 
     <div class="footer-note">
-      Tip: Print and have students draw X’s on tens/ones and add 10 ones in the regroup space when they borrow.
+      Print and have students cross out tens, draw 10 new ones in the Ones regroup space, then write the answer on the line.
     </div>
   </div>
 
@@ -191,7 +189,7 @@
       let top, bottom;
 
       while (true) {
-        top = randomInt(20, 99);    // keep it at least 20 so tens exist
+        top = randomInt(20, 99);    // at least 20 so we have tens
         bottom = randomInt(10, 99);
 
         const topOnes = top % 10;
@@ -222,70 +220,47 @@
       const card = document.createElement("div");
       card.classList.add("problem-card");
 
-      // Equation
+      // Equation: e.g., "92 − 51 ="
       const eq = document.createElement("div");
       eq.classList.add("equation");
       eq.textContent = `${top} − ${bottom} =`;
       card.appendChild(eq);
 
-      // Blocks area
-      const blocksArea = document.createElement("div");
-      blocksArea.classList.add("blocks-area");
+      // Place value table: Tens / Ones
+      const table = document.createElement("table");
+      table.classList.add("place-table");
+      table.innerHTML = `
+        <tr>
+          <th class="place-header">Tens</th>
+          <th class="place-header">Ones</th>
+        </tr>
+        <tr>
+          <td class="place-cell">
+            <div class="row-blocks tens-blocks"></div>
+          </td>
+          <td class="place-cell">
+            <div class="row-blocks ones-blocks"></div>
+            <div class="regroup-space">
+              <div class="regroup-note">If you borrow, draw 10 new ones here.</div>
+            </div>
+          </td>
+        </tr>
+      `;
 
-      const label = document.createElement("div");
-      label.classList.add("blocks-label");
-      label.textContent = "Base-ten blocks for the first number (minuend):";
-      blocksArea.appendChild(label);
+      card.appendChild(table);
 
-      const blocksRows = document.createElement("div");
-      blocksRows.classList.add("blocks-rows");
+      // Answer line underneath
+      const answerLine = document.createElement("div");
+      answerLine.classList.add("answer-line");
+      answerLine.textContent = "Answer:";
+      card.appendChild(answerLine);
 
-      // Tens row
-      const tensRow = document.createElement("div");
-      tensRow.classList.add("blocks-row");
-      const tensTitle = document.createElement("div");
-      tensTitle.classList.add("row-title");
-      tensTitle.textContent = "Tens:";
-      const tensBlocks = document.createElement("div");
-      tensBlocks.classList.add("row-blocks");
-      tensRow.appendChild(tensTitle);
-      tensRow.appendChild(tensBlocks);
-
-      // Ones row
-      const onesRow = document.createElement("div");
-      onesRow.classList.add("blocks-row");
-      const onesTitle = document.createElement("div");
-      onesTitle.classList.add("row-title");
-      onesTitle.textContent = "Ones:";
-      const onesBlocks = document.createElement("div");
-      onesBlocks.classList.add("row-blocks");
-      onesRow.appendChild(onesTitle);
-      onesRow.appendChild(onesBlocks);
-
-      blocksRows.appendChild(tensRow);
-      blocksRows.appendChild(onesRow);
-      blocksArea.appendChild(blocksRows);
-
-      // Regrouping area under ones
-      const regroupArea = document.createElement("div");
-      regroupArea.classList.add("regroup-area");
-
-      const regroupLabel = document.createElement("div");
-      regroupLabel.classList.add("regroup-label");
-      regroupLabel.textContent = "Regroup space: if you borrow, draw 10 new ones here before crossing out.";
-      regroupArea.appendChild(regroupLabel);
-
-      const regroupSpace = document.createElement("div");
-      regroupSpace.classList.add("regroup-space");
-      regroupArea.appendChild(regroupSpace);
-
-      blocksArea.appendChild(regroupArea);
-
-      card.appendChild(blocksArea);
-
-      // Place-value for top
+      // Place-value for the top number (minuend)
       const tens = Math.floor(top / 10);
       const ones = top % 10;
+
+      const tensBlocks = table.querySelector(".tens-blocks");
+      const onesBlocks = table.querySelector(".ones-blocks");
 
       createBlocks(tensBlocks, tens, "ten");
       createBlocks(onesBlocks, ones, "one");
