@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>2-Digit Addition with Regrouping (Base-10 Blocks)</title>
+  <title>Compact 2-Digit Addition with Regrouping (Base-10 Blocks)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -10,7 +10,7 @@
 
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      padding: 20px;
+      padding: 16px;
       display: flex;
       justify-content: center;
       background: #f5f5f5;
@@ -18,35 +18,35 @@
 
     .container {
       background: #ffffff;
-      padding: 20px 24px 28px;
-      border-radius: 12px;
-      max-width: 800px;
+      padding: 16px 18px 20px;
+      border-radius: 10px;
+      max-width: 900px;
       width: 100%;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
 
     h1 {
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       margin: 0 0 4px;
       text-align: center;
     }
 
     .subtitle {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       text-align: center;
-      margin-bottom: 16px;
+      margin-bottom: 10px;
       color: #555;
     }
 
     .controls {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 16px;
+      margin-bottom: 10px;
     }
 
     button {
-      padding: 8px 14px;
-      font-size: 0.9rem;
+      padding: 6px 10px;
+      font-size: 0.8rem;
       border-radius: 6px;
       border: none;
       cursor: pointer;
@@ -61,52 +61,52 @@
 
     .problems-page {
       border: 2px solid #000;
-      padding: 16px;
+      padding: 10px;
       background: #fff;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-auto-rows: 1fr;
+      gap: 8px;
     }
 
     .problem-card {
-      border-bottom: 1px solid #000;
-      padding: 12px 0 18px;
-      min-height: 220px;
+      border: 1px solid #000;
+      border-radius: 6px;
+      padding: 6px 6px 8px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-    }
-
-    .problem-card:last-child {
-      border-bottom: none;
+      gap: 4px;
+      min-height: 130px;
     }
 
     .equation {
-      font-size: 2.2rem;
+      font-size: 1.1rem;
       text-align: left;
-      margin-bottom: 4px;
     }
 
-    /* Table layout for Tens / Ones */
+    /* Small tens/ones table */
     .place-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 4px;
       table-layout: fixed;
+      margin-top: 2px;
     }
 
     .place-table th,
     .place-table td {
-      border: 2px solid #000;
-      padding: 8px;
+      border: 1px solid #000;
+      padding: 3px;
       vertical-align: top;
     }
 
     .place-header {
-      font-size: 1rem;
+      font-size: 0.75rem;
       font-weight: 700;
       text-align: center;
     }
 
     .place-cell {
-      min-height: 90px;
+      min-height: 60px;
       text-align: center;
     }
 
@@ -114,65 +114,70 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px; /* tight so blocks are "right on top" */
+      gap: 2px;
     }
 
-    .row-label {
-      font-size: 0.7rem;
-      align-self: flex-start;
-    }
-
-    .row-blocks {
+    .row-blocks-tens {
       display: flex;
-      flex-wrap: wrap;
-      gap: 3px;
+      flex-wrap: nowrap;
+      gap: 2px;
       justify-content: center;
     }
 
-    /* Base-ten block styles */
+    /* Ones as 2-per-column grid */
+    .row-blocks-ones {
+      display: grid;
+      grid-auto-flow: column;
+      grid-template-rows: repeat(2, 10px); /* 2 per column */
+      grid-auto-columns: 10px;
+      gap: 2px;
+      justify-content: center;
+    }
+
+    /* Base-ten block styles, smaller */
     .block {
-      border: 3px solid #000;
-      background: transparent; /* white/no shading for printing */
+      border: 2px solid #000;
+      background: transparent;
     }
 
     .block.ten {
-      width: 16px;
-      height: 50px;
+      width: 10px;
+      height: 30px;
     }
 
     .block.one {
-      width: 16px;
-      height: 16px;
+      width: 10px;
+      height: 10px;
     }
 
     .ones-note {
-      font-size: 0.75rem;
-      margin-top: 4px;
+      font-size: 0.65rem;
+      margin-top: 2px;
       text-align: center;
     }
 
     .answer-line {
-      margin-top: 10px;
-      font-size: 1.2rem;
+      margin-top: 4px;
+      font-size: 0.85rem;
     }
 
     .answer-line::after {
-      content: " __________________________";
+      content: " ____________";
     }
 
     .footer-note {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: #555;
-      margin-top: 8px;
+      margin-top: 6px;
       text-align: center;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>2-Digit Addition with Regrouping (Base-10 Blocks)</h1>
+    <h1>2-Digit Addition with Regrouping – Compact Base-10 Blocks</h1>
     <div class="subtitle">
-      Both addends are shown in tens and ones. Stack the ones, circle a group of 10, and trade it for a ten.
+      Each problem shows tens and ones for both addends in one box. Ones are arranged 2 per column so students can circle a group of 10.
     </div>
 
     <div class="controls">
@@ -180,11 +185,11 @@
     </div>
 
     <div id="problemsPage" class="problems-page">
-      <!-- Problems will be injected here -->
+      <!-- Problems injected here -->
     </div>
 
     <div class="footer-note">
-      Print and have students circle a group of 10 ones, regroup it into a new ten, then write the sum.
+      6 compact problems per page (2 columns × 3 rows). Print and have students circle 10 ones, regroup into a ten, then write the sum.
     </div>
   </div>
 
@@ -211,11 +216,14 @@
       }
     }
 
-    function createBlocks(container, count, type) {
+    function createBlocks(container, count, type, onesMode = false) {
       container.innerHTML = "";
       for (let i = 0; i < count; i++) {
         const div = document.createElement("div");
         div.classList.add("block", type);
+        if (onesMode) {
+          // as grid cell, no extra tweaks needed
+        }
         container.appendChild(div);
       }
     }
@@ -226,13 +234,13 @@
       const card = document.createElement("div");
       card.classList.add("problem-card");
 
-      // Equation: e.g., "47 + 28 ="
+      // Equation, e.g., "65 + 38 ="
       const eq = document.createElement("div");
       eq.classList.add("equation");
       eq.textContent = `${a} + ${b} =`;
       card.appendChild(eq);
 
-      // Place value table: Tens / Ones
+      // Place value table with Tens / Ones
       const table = document.createElement("table");
       table.classList.add("place-table");
       table.innerHTML = `
@@ -243,47 +251,42 @@
         <tr>
           <td class="place-cell">
             <div class="stacked tens-stack">
-              <div class="row-label">1st</div>
-              <div class="row-blocks tens-blocks-1"></div>
-              <div class="row-label">2nd</div>
-              <div class="row-blocks tens-blocks-2"></div>
+              <div class="row-blocks-tens tens-row-1"></div>
+              <div class="row-blocks-tens tens-row-2"></div>
             </div>
           </td>
           <td class="place-cell">
             <div class="stacked ones-stack">
-              <div class="row-label">1st</div>
-              <div class="row-blocks ones-blocks-1"></div>
-              <div class="row-label">2nd</div>
-              <div class="row-blocks ones-blocks-2"></div>
-              <div class="ones-note">Circle a group of 10 ones to make a new ten.</div>
+              <div class="row-blocks-ones ones-row-1"></div>
+              <div class="row-blocks-ones ones-row-2"></div>
+              <div class="ones-note">Circle 10 ones to make a ten.</div>
             </div>
           </td>
         </tr>
       `;
-
       card.appendChild(table);
 
-      // Answer line underneath
+      // Answer line
       const answerLine = document.createElement("div");
       answerLine.classList.add("answer-line");
       answerLine.textContent = "Sum:";
       card.appendChild(answerLine);
 
-      // Place-value for both numbers
+      // Place-value breakdown
       const aTens = Math.floor(a / 10);
       const aOnes = a % 10;
       const bTens = Math.floor(b / 10);
       const bOnes = b % 10;
 
-      const tensBlocks1 = table.querySelector(".tens-blocks-1");
-      const tensBlocks2 = table.querySelector(".tens-blocks-2");
-      const onesBlocks1 = table.querySelector(".ones-blocks-1");
-      const onesBlocks2 = table.querySelector(".ones-blocks-2");
+      const tensRow1 = table.querySelector(".tens-row-1");
+      const tensRow2 = table.querySelector(".tens-row-2");
+      const onesRow1 = table.querySelector(".ones-row-1");
+      const onesRow2 = table.querySelector(".ones-row-2");
 
-      createBlocks(tensBlocks1, aTens, "ten");
-      createBlocks(tensBlocks2, bTens, "ten");
-      createBlocks(onesBlocks1, aOnes, "one");
-      createBlocks(onesBlocks2, bOnes, "one");
+      createBlocks(tensRow1, aTens, "ten");
+      createBlocks(tensRow2, bTens, "ten");
+      createBlocks(onesRow1, aOnes, "one", true);
+      createBlocks(onesRow2, bOnes, "one", true);
 
       return card;
     }
@@ -292,7 +295,7 @@
       const page = document.getElementById("problemsPage");
       page.innerHTML = "";
 
-      const NUM_PROBLEMS = 3; // 3 problems per page
+      const NUM_PROBLEMS = 6; // 6 compact problems per page
 
       for (let i = 0; i < NUM_PROBLEMS; i++) {
         const prob = generateAdditionRegroupingProblem();
