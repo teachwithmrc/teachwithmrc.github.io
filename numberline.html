@@ -93,8 +93,11 @@
 
     .numberline-container {
       border: 1px solid #000;
-      padding: 2px; /* was 6px – reduced so the line fills the box */
+      padding: 4px 6px;
       flex: 1;
+      display: flex;
+      justify-content: flex-start;  /* SVG is left-aligned */
+      align-items: flex-start;
     }
 
     svg.numberline-svg {
@@ -256,11 +259,11 @@
       }
       const answer = currentVal;
 
-      // Wider line, almost no side padding
+      // Line uses almost whole width; anchored left in the container
       const svgWidth = 900;
-      const marginLeft = 5;   // was 30
-      const marginRight = 5;  // was 30
-      const arrowGap = 4;     // was 10
+      const marginLeft = 10;  // small margin on left
+      const marginRight = 4;  // almost none on right
+      const arrowGap = 6;
       const lineY = 110;
 
       const xLineStart = marginLeft;
@@ -307,7 +310,7 @@
       const tickTop = lineY - 12;
       const tickBottom = lineY + 12;
       const textY = lineY + 34;
-      const underlineY = lineY + 38;
+      const underlineY = lineY + 40; // slightly lower for more writing room
 
       points.forEach((pt, i) => {
         const tick = createSvgElement("line", {
@@ -331,19 +334,20 @@
           text.textContent = pt.value;
           svg.appendChild(text);
         } else {
+          // longer underline so kids have room to write under each tick
           const underline = createSvgElement("line", {
-            x1: pt.x - 16,
+            x1: pt.x - 30,
             y1: underlineY,
-            x2: pt.x + 16,
+            x2: pt.x + 30,
             y2: underlineY,
             stroke: "black",
-            "stroke-width": 2
+            "stroke-width": 2.2
           });
           svg.appendChild(underline);
         }
       });
 
-      // Shorter arcs
+      // Shorter arcs so they don't crash into text/lines
       for (let i = 0; i < steps.length; i++) {
         const stepSize = steps[i];
         const x1 = points[i].x;
