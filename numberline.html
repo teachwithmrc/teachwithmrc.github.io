@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Open Number Line – Subtracting by Tens and Ones</title>
+  <title>Open Number Line – Count Backwards (Tens and Ones)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -107,16 +107,16 @@
 </head>
 <body>
   <div class="container">
-    <h1>Open Number Line – Subtracting by Tens and Ones</h1>
+    <h1>Open Number Line – Count Backwards</h1>
     <div class="subtitle">
-      Jumps are proportional: −1 is a small hop, −10 is a long hop, so the spacing matches the math.
+      Start at the number on the right. Hop back by ones, then tens. Students fill in the blanks under each tick.
     </div>
 
     <div class="controls">
       <label>Start:</label>
       <input id="startInput" type="number" value="72" />
       <label>Subtract:</label>
-      <input id="subInput" type="number" value="23" />
+      <input id="subInput" type="number" value="38" />
       <button id="drawBtn">Draw Number Line</button>
     </div>
 
@@ -126,7 +126,7 @@
     <div id="warning" class="warning"></div>
 
     <div class="footer-note">
-      The subtrahend is broken into ones first, then tens (e.g., 23 → −1, −1, −1, −10, −10) like your whiteboard example.
+      Example: 72 − 38 → eight small −1 hops (students write 71, 70, 69, …), then three big −10 hops.
     </div>
   </div>
 
@@ -161,10 +161,10 @@
         return;
       }
 
+      // Decompose subtrahend: ones first, then tens (e.g., 38 -> 8 ones, 3 tens)
       const ones = sub % 10;
       const tens = Math.floor(sub / 10);
 
-      // steps array: ones first, then tens (e.g., 23 -> [1,1,1,10,10])
       const steps = [];
       for (let i = 0; i < ones; i++) steps.push(1);
       for (let i = 0; i < tens; i++) steps.push(10);
@@ -175,7 +175,7 @@
       // Compute values from right (start) to left (answer)
       const points = [];
       let currentVal = start;
-      points.push({ value: currentVal }); // start
+      points.push({ value: currentVal }); // start label (right)
 
       for (const step of steps) {
         currentVal -= step;
@@ -187,14 +187,20 @@
       const svgWidth = 800;
       const marginLeft = 80;
       const marginRight = 80;
+      const arrowGap = 16; // space between line arrow and first/last tick
       const lineY = 150;
-      const lineLength = svgWidth - marginLeft - marginRight;
+
+      const xLineStart = marginLeft;
+      const xLineEnd = svgWidth - marginRight;
+      const innerStart = xLineStart + arrowGap;
+      const innerEnd = xLineEnd - arrowGap;
+      const innerLength = innerEnd - innerStart;
 
       const totalDistance = steps.reduce((a, b) => a + b, 0);
-      const widthPerUnit = lineLength / totalDistance;
+      const widthPerUnit = innerLength / totalDistance;
 
-      // positions: start at right, walk left by step * widthPerUnit
-      let xCurrent = marginLeft + lineLength;
+      // positions: start at right innerEnd, walk left by proportional distances
+      let xCurrent = innerEnd;
       points[0].x = xCurrent;
 
       let stepIndex = 0;
@@ -204,14 +210,14 @@
         points[i].x = xCurrent;
       }
 
-      const xStart = points[0].x;
-      const xEnd = points[points.length - 1].x;
+      const xStartTick = points[0].x;
+      const xEndTick = points[points.length - 1].x;
 
       // main line
       const mainLine = createSvgElement("line", {
-        x1: xEnd,
+        x1: xLineStart,
         y1: lineY,
-        x2: xStart,
+        x2: xLineEnd,
         y2: lineY,
         stroke: "black",
         "stroke-width": 5,
@@ -219,19 +225,19 @@
       });
       svg.appendChild(mainLine);
 
-      // arrowheads
+      // arrowheads OUTSIDE the ticks
       const leftArrow = createSvgElement("path", {
-        d: `M ${xEnd} ${lineY} L ${xEnd + 14} ${lineY - 8} L ${xEnd + 14} ${lineY + 8} Z`,
+        d: `M ${xLineStart} ${lineY} L ${xLineStart + 14} ${lineY - 8} L ${xLineStart + 14} ${lineY + 8} Z`,
         fill: "black"
       });
       const rightArrow = createSvgElement("path", {
-        d: `M ${xStart} ${lineY} L ${xStart - 14} ${lineY - 8} L ${xStart - 14} ${lineY + 8} Z`,
+        d: `M ${xLineEnd} ${lineY} L ${xLineEnd - 14} ${lineY - 8} L ${xLineEnd - 14} ${lineY + 8} Z`,
         fill: "black"
       });
       svg.appendChild(leftArrow);
       svg.appendChild(rightArrow);
 
-      // ticks + number labels
+      // ticks + labels (only start number; others are blanks)
       points.forEach((pt, i) => {
         const tick = createSvgElement("line", {
           x1: pt.x,
@@ -243,25 +249,33 @@
         });
         svg.appendChild(tick);
 
-        const text = createSvgElement("text", {
+        const label = createSvgElement("text", {
           x: pt.x,
           y: lineY + 34,
           "text-anchor": "middle",
           "font-size": "18",
-          "font-weight": i === 0 || i === points.length - 1 ? "700" : "400"
+          "font-weight": i === 0 ? "700" : "400"
         });
-        text.textContent = pt.value;
-        svg.appendChild(text);
+
+        if (i === 0) {
+          // Only show the starting number (rightmost tick)
+          label.textContent = pt.value;
+        } else {
+          // Blank line for students to fill in (e.g., 71, 70, 69, …)
+          label.textContent = "_____";
+        }
+
+        svg.appendChild(label);
       });
 
-      // arcs + jump labels
+      // arcs + jump labels (−1 vs −10)
       for (let i = 0; i < steps.length; i++) {
         const stepSize = steps[i];
         const x1 = points[i].x;
         const x2 = points[i + 1].x;
         const midX = (x1 + x2) / 2;
 
-        // bigger arc height for tens than ones
+        // higher arc for tens than ones
         const arcHeight = stepSize === 1 ? 26 : 42;
 
         const path = createSvgElement("path", {
@@ -284,7 +298,9 @@
         svg.appendChild(jumpLabel);
       }
 
-      eqEl.textContent = `${start} − ${sub} = ${answer}`;
+      // equation with blank answer (students solve)
+      eqEl.textContent = `${start} − ${sub} = ?   (answer: ${answer})`;
+      // If you don't want the answer given at all, delete " (answer: ...)" above.
     }
 
     document.getElementById("drawBtn").addEventListener("click", () => {
@@ -294,7 +310,7 @@
     });
 
     // initial example
-    drawNumberLine(72, 23);
+    drawNumberLine(72, 38);
   </script>
 </body>
 </html>
