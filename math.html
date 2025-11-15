@@ -89,6 +89,7 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 4px;
+      table-layout: fixed;
     }
 
     .place-table th,
@@ -106,12 +107,15 @@
 
     .place-cell {
       min-height: 90px;
+      /* center content horizontally */
+      text-align: center;
     }
 
     .row-blocks {
       display: flex;
       flex-wrap: wrap;
       gap: 4px;
+      justify-content: center; /* CENTER tens/ones blocks */
     }
 
     /* Base-ten block styles */
@@ -130,16 +134,43 @@
       height: 16px;
     }
 
+    /* Ones cell split into two columns: regroup (left) + ones blocks (right) */
+    .ones-cell {
+      padding: 6px;
+    }
+
+    .ones-inner {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .regroup-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ones-blocks-column {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     /* Space for student to draw the 10 borrowed ones */
     .regroup-space {
-      margin-top: 8px;
-      min-height: 40px;
+      flex: 1;
+      margin-top: 4px;
       border: 1px dashed #000;
+      min-height: 40px;
     }
 
     .regroup-note {
       font-size: 0.75rem;
       margin-bottom: 2px;
+      text-align: left;
     }
 
     .answer-line {
@@ -238,10 +269,15 @@
           <td class="place-cell">
             <div class="row-blocks tens-blocks"></div>
           </td>
-          <td class="place-cell">
-            <div class="row-blocks ones-blocks"></div>
-            <div class="regroup-space">
-              <div class="regroup-note">If you borrow, draw 10 new ones here.</div>
+          <td class="place-cell ones-cell">
+            <div class="ones-inner">
+              <div class="regroup-column">
+                <div class="regroup-note">If you borrow, draw 10 new ones here.</div>
+                <div class="regroup-space"></div>
+              </div>
+              <div class="ones-blocks-column">
+                <div class="row-blocks ones-blocks"></div>
+              </div>
             </div>
           </td>
         </tr>
