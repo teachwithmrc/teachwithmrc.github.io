@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>2-Digit Regrouping with Base-Ten Blocks (Tens/Ones Table)</title>
+  <title>2-Digit Regrouping with Base-10 Blocks (Tens/Ones Table)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -68,7 +68,7 @@
     .problem-card {
       border-bottom: 1px solid #000;
       padding: 12px 0 18px;
-      min-height: 220px; /* keeps space for regrouping + answer */
+      min-height: 220px; /* space for regrouping + answer */
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -107,7 +107,6 @@
 
     .place-cell {
       min-height: 90px;
-      /* center content horizontally */
       text-align: center;
     }
 
@@ -115,7 +114,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 4px;
-      justify-content: center; /* CENTER tens/ones blocks */
+      justify-content: center; /* center tens/ones blocks */
     }
 
     /* Base-ten block styles */
@@ -134,43 +133,28 @@
       height: 16px;
     }
 
-    /* Ones cell split into two columns: regroup (left) + ones blocks (right) */
-    .ones-cell {
-      padding: 6px;
-    }
-
-    .ones-inner {
-      display: flex;
-      gap: 8px;
-      width: 100%;
-      height: 100%;
-    }
-
-    .regroup-column {
-      flex: 1;
+    /* Ones cell: blocks on top, borrow box underneath */
+    .ones-cell-inner {
       display: flex;
       flex-direction: column;
-    }
-
-    .ones-blocks-column {
-      flex: 1;
-      display: flex;
-      justify-content: center;
       align-items: center;
+      gap: 6px;
     }
 
-    /* Space for student to draw the 10 borrowed ones */
-    .regroup-space {
-      flex: 1;
-      margin-top: 4px;
+    .borrow-box {
       border: 1px dashed #000;
-      min-height: 40px;
+      width: 90%;
+      min-height: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end; /* text at bottom */
+      padding: 4px 4px 2px 4px;
     }
 
-    .regroup-note {
+    .borrow-note {
       font-size: 0.75rem;
-      margin-bottom: 2px;
-      text-align: left;
+      text-align: center;
+      margin-top: 2px;
     }
 
     .answer-line {
@@ -192,9 +176,9 @@
 </head>
 <body>
   <div class="container">
-    <h1>2-Digit Regrouping with Base-Ten Blocks</h1>
+    <h1>2-Digit Regrouping with Base-10 Blocks</h1>
     <div class="subtitle">
-      Each problem shows tens and ones in a place value table. Students can borrow a ten and draw 10 new ones in the regroup space.
+      Tens and ones are shown in a place-value table. Students can borrow a ten and draw 10 new ones in the box under the ones.
     </div>
 
     <div class="controls">
@@ -206,7 +190,7 @@
     </div>
 
     <div class="footer-note">
-      Print and have students cross out tens, draw 10 new ones in the Ones regroup space, then write the answer on the line.
+      Print and have students cross out tens, draw 10 new ones inside the dashed box, then write the answer on the line.
     </div>
   </div>
 
@@ -269,14 +253,12 @@
           <td class="place-cell">
             <div class="row-blocks tens-blocks"></div>
           </td>
-          <td class="place-cell ones-cell">
-            <div class="ones-inner">
-              <div class="regroup-column">
-                <div class="regroup-note">If you borrow, draw 10 new ones here.</div>
-                <div class="regroup-space"></div>
-              </div>
-              <div class="ones-blocks-column">
-                <div class="row-blocks ones-blocks"></div>
+          <td class="place-cell">
+            <div class="ones-cell-inner">
+              <div class="row-blocks ones-blocks"></div>
+              <div class="borrow-box">
+                <!-- students draw 10 borrowed ones here -->
+                <div class="borrow-note">If you borrow, draw 10 new ones.</div>
               </div>
             </div>
           </td>
