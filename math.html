@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Regrouping Base-Ten Subtraction Worksheet</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      background: #f5f5f5;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 20px 24px 28px;
+      border-radius: 12px;
+      max-width: 800px;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      margin: 0 0 4px;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 16px;
+      color: #555;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 16px;
+    }
+
+    button {
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background: #ffffff;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .problems-page {
+      border: 2px solid #000;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .problem-card {
+      border-bottom: 1px solid #000;
+      padding: 12px 0 16px;
+      min-height: 220px; /* gives room to regroup */
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .problem-card:last-child {
+      border-bottom: none;
+    }
+
+    .equation {
+      font-size: 2.2rem;
+      text-align: left;
+      margin-bottom: 4px;
+    }
+
+    .blocks-area {
+      border: 2px solid #000;
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .blocks-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .blocks-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-start;
+    }
+
+    .blocks-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .row-title {
+      width: 60px;
+      font-size: 0.85rem;
+    }
+
+    .row-blocks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    /* Base-ten block styles */
+    .block {
+      border: 3px solid #000;
+      background: transparent; /* white/no shading for printing */
+    }
+
+    .block.ten {
+      width: 16px;
+      height: 50px;
+    }
+
+    .block.one {
+      width: 16px;
+      height: 16px;
+    }
+
+    .regroup-area {
+      margin-top: 10px;
+      border: 1px dashed #000;
+      border-radius: 6px;
+      padding: 6px 8px 24px;
+    }
+
+    .regroup-label {
+      font-size: 0.8rem;
+      margin-bottom: 4px;
+    }
+
+    .regroup-space {
+      height: 40px; /* blank zone where they can draw 10 ones */
+    }
+
+    .footer-note {
+      font-size: 0.8rem;
+      color: #555;
+      margin-top: 8px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>2-Digit Regrouping with Base-Ten Blocks</h1>
+    <div class="subtitle">
+      Each problem shows the minuend in tens and ones. Students cross out tens and draw 10 new ones when they regroup.
+    </div>
+
+    <div class="controls">
+      <button id="generateBtn">Generate New Worksheet</button>
+    </div>
+
+    <div id="problemsPage" class="problems-page">
+      <!-- Problems will be injected here -->
+    </div>
+
+    <div class="footer-note">
+      Tip: Print and have students draw X’s on tens/ones and add 10 ones in the regroup space when they borrow.
+    </div>
+  </div>
+
+  <script>
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Generate a 2-digit subtraction problem that REQUIRES regrouping in the ones place
+    function generateRegroupingProblem() {
+      let top, bottom;
+
+      while (true) {
+        top = randomInt(20, 99);    // keep it at least 20 so tens exist
+        bottom = randomInt(10, 99);
+
+        const topOnes = top % 10;
+        const bottomOnes = bottom % 10;
+
+        // Must be a valid subtraction (no negatives)
+        if (top <= bottom) continue;
+
+        // Force regrouping in ones: top ones < bottom ones
+        if (topOnes >= bottomOnes) continue;
+
+        return { top, bottom };
+      }
+    }
+
+    function createBlocks(container, count, type) {
+      container.innerHTML = "";
+      for (let i = 0; i < count; i++) {
+        const div = document.createElement("div");
+        div.classList.add("block", type);
+        container.appendChild(div);
+      }
+    }
+
+    function renderProblemCard(problem) {
+      const { top, bottom } = problem;
+
+      const card = document.createElement("div");
+      card.classList.add("problem-card");
+
+      // Equation
+      const eq = document.createElement("div");
+      eq.classList.add("equation");
+      eq.textContent = `${top} − ${bottom} =`;
+      card.appendChild(eq);
+
+      // Blocks area
+      const blocksArea = document.createElement("div");
+      blocksArea.classList.add("blocks-area");
+
+      const label = document.createElement("div");
+      label.classList.add("blocks-label");
+      label.textContent = "Base-ten blocks for the first number (minuend):";
+      blocksArea.appendChild(label);
+
+      const blocksRows = document.createElement("div");
+      blocksRows.classList.add("blocks-rows");
+
+      // Tens row
+      const tensRow = document.createElement("div");
+      tensRow.classList.add("blocks-row");
+      const tensTitle = document.createElement("div");
+      tensTitle.classList.add("row-title");
+      tensTitle.textContent = "Tens:";
+      const tensBlocks = document.createElement("div");
+      tensBlocks.classList.add("row-blocks");
+      tensRow.appendChild(tensTitle);
+      tensRow.appendChild(tensBlocks);
+
+      // Ones row
+      const onesRow = document.createElement("div");
+      onesRow.classList.add("blocks-row");
+      const onesTitle = document.createElement("div");
+      onesTitle.classList.add("row-title");
+      onesTitle.textContent = "Ones:";
+      const onesBlocks = document.createElement("div");
+      onesBlocks.classList.add("row-blocks");
+      onesRow.appendChild(onesTitle);
+      onesRow.appendChild(onesBlocks);
+
+      blocksRows.appendChild(tensRow);
+      blocksRows.appendChild(onesRow);
+      blocksArea.appendChild(blocksRows);
+
+      // Regrouping area under ones
+      const regroupArea = document.createElement("div");
+      regroupArea.classList.add("regroup-area");
+
+      const regroupLabel = document.createElement("div");
+      regroupLabel.classList.add("regroup-label");
+      regroupLabel.textContent = "Regroup space: if you borrow, draw 10 new ones here before crossing out.";
+      regroupArea.appendChild(regroupLabel);
+
+      const regroupSpace = document.createElement("div");
+      regroupSpace.classList.add("regroup-space");
+      regroupArea.appendChild(regroupSpace);
+
+      blocksArea.appendChild(regroupArea);
+
+      card.appendChild(blocksArea);
+
+      // Place-value for top
+      const tens = Math.floor(top / 10);
+      const ones = top % 10;
+
+      createBlocks(tensBlocks, tens, "ten");
+      createBlocks(onesBlocks, ones, "one");
+
+      return card;
+    }
+
+    function generateWorksheet() {
+      const page = document.getElementById("problemsPage");
+      page.innerHTML = "";
+
+      const NUM_PROBLEMS = 3; // 3 problems per page
+
+      for (let i = 0; i < NUM_PROBLEMS; i++) {
+        const prob = generateRegroupingProblem();
+        const card = renderProblemCard(prob);
+        page.appendChild(card);
+      }
+    }
+
+    document.getElementById("generateBtn").addEventListener("click", generateWorksheet);
+
+    // First load
+    generateWorksheet();
+  </script>
+</body>
+</html>
