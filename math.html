@@ -2,11 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Open Number Line – Count Backwards (6 per page)</title>
+  <title>Open Number Line – Count Backwards (4 per page)</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html, body {
       margin: 0;
@@ -22,7 +20,7 @@
       width: 8.5in;
       max-width: 100%;
       margin: 0 auto;
-      padding: 0.4in 0.4in 0.6in;
+      padding: 0.5in 0.5in 0.7in;
     }
 
     h1 {
@@ -48,9 +46,7 @@
       font-size: 0.85rem;
     }
 
-    label {
-      font-size: 0.85rem;
-    }
+    label { font-size: 0.85rem; }
 
     input {
       width: 70px;
@@ -70,6 +66,13 @@
       background: #ffffff;
     }
 
+    .warning {
+      text-align: center;
+      color: #b00020;
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
     .problems-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -83,19 +86,18 @@
       display: flex;
       flex-direction: column;
       gap: 4px;
-      min-height: 200px;
+      min-height: 220px;
     }
 
     .problem-header {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       display: flex;
       justify-content: space-between;
       align-items: baseline;
+      margin-bottom: 2px;
     }
 
-    .problem-number {
-      font-weight: 600;
-    }
+    .problem-number { font-weight: 600; }
 
     .numberline-container {
       border: 1px solid #000;
@@ -105,13 +107,13 @@
 
     svg.numberline-svg {
       width: 100%;
-      height: 150px;
+      height: 160px;
       display: block;
     }
 
     .equation {
       text-align: center;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       margin-top: 2px;
       font-weight: 600;
     }
@@ -123,26 +125,14 @@
       text-align: center;
     }
 
-    .warning {
-      text-align: center;
-      color: #b00020;
-      font-size: 0.85rem;
-      margin-top: 4px;
-    }
-
-    /* Print: hide controls, just show worksheet */
     @media print {
-      .controls {
-        display: none;
-      }
+      .controls { display: none; }
       .page {
         width: 100%;
         margin: 0;
-        padding: 0.4in;
+        padding: 0.5in;
       }
-      button {
-        display: none;
-      }
+      button { display: none; }
     }
   </style>
 </head>
@@ -163,19 +153,20 @@
       <label>Max subtract:</label>
       <input id="maxSub" type="number" value="49" />
       <button id="generateBtn">Generate Worksheet</button>
+      <button id="printBtn">Print Page</button>
     </div>
 
     <div id="warning" class="warning"></div>
 
     <div class="problems-grid">
-      <!-- 6 problem cards -->
+      <!-- 4 problem cards -->
       <div class="problem-card">
         <div class="problem-header">
           <span class="problem-number">#1</span>
           <span class="problem-label"></span>
         </div>
         <div class="numberline-container">
-          <svg class="numberline-svg" viewBox="0 0 800 200"></svg>
+          <svg class="numberline-svg" viewBox="0 0 800 220"></svg>
         </div>
         <div class="equation"></div>
       </div>
@@ -186,7 +177,7 @@
           <span class="problem-label"></span>
         </div>
         <div class="numberline-container">
-          <svg class="numberline-svg" viewBox="0 0 800 200"></svg>
+          <svg class="numberline-svg" viewBox="0 0 800 220"></svg>
         </div>
         <div class="equation"></div>
       </div>
@@ -197,7 +188,7 @@
           <span class="problem-label"></span>
         </div>
         <div class="numberline-container">
-          <svg class="numberline-svg" viewBox="0 0 800 200"></svg>
+          <svg class="numberline-svg" viewBox="0 0 800 220"></svg>
         </div>
         <div class="equation"></div>
       </div>
@@ -208,45 +199,21 @@
           <span class="problem-label"></span>
         </div>
         <div class="numberline-container">
-          <svg class="numberline-svg" viewBox="0 0 800 200"></svg>
-        </div>
-        <div class="equation"></div>
-      </div>
-
-      <div class="problem-card">
-        <div class="problem-header">
-          <span class="problem-number">#5</span>
-          <span class="problem-label"></span>
-        </div>
-        <div class="numberline-container">
-          <svg class="numberline-svg" viewBox="0 0 800 200"></svg>
-        </div>
-        <div class="equation"></div>
-      </div>
-
-      <div class="problem-card">
-        <div class="problem-header">
-          <span class="problem-number">#6</span>
-          <span class="problem-label"></span>
-        </div>
-        <div class="numberline-container">
-          <svg class="numberline-svg" viewBox="0 0 800 200"></svg>
+          <svg class="numberline-svg" viewBox="0 0 800 220"></svg>
         </div>
         <div class="equation"></div>
       </div>
     </div>
 
     <div class="footer-note">
-      Click "Generate Worksheet", then use your browser's Print option. Each number line shows ones hops first, then tens hops, with proportional spacing.
+      Click "Generate Worksheet" to get new problems, then "Print Page" for a clean 4-per-page number line worksheet.
     </div>
   </div>
 
   <script>
     function createSvgElement(name, attrs) {
       const el = document.createElementNS("http://www.w3.org/2000/svg", name);
-      for (const key in attrs) {
-        el.setAttribute(key, attrs[key]);
-      }
+      for (const key in attrs) el.setAttribute(key, attrs[key]);
       return el;
     }
 
@@ -258,14 +225,11 @@
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    // Generate a subtraction problem start - sub with constraints
     function generateProblem(minStart, maxStart, minSub, maxSub) {
       for (let tries = 0; tries < 1000; tries++) {
         const start = randomInt(minStart, maxStart);
         const sub = randomInt(minSub, maxSub);
-        if (sub > 0 && start > sub) {
-          return { start, sub };
-        }
+        if (sub > 0 && start > sub) return { start, sub };
       }
       return null;
     }
@@ -278,7 +242,6 @@
       }
 
       const { start, sub } = problem;
-
       const ones = sub % 10;
       const tens = Math.floor(sub / 10);
 
@@ -303,10 +266,10 @@
       const answer = currentVal;
 
       const svgWidth = 800;
-      const marginLeft = 60;
-      const marginRight = 60;
-      const arrowGap = 18;
-      const lineY = 95;
+      const marginLeft = 70;
+      const marginRight = 70;
+      const arrowGap = 20;
+      const lineY = 120;
 
       const xLineStart = marginLeft;
       const xLineEnd = svgWidth - marginRight;
@@ -327,7 +290,6 @@
         points[i].x = xCurrent;
       }
 
-      // main line
       const mainLine = createSvgElement("line", {
         x1: xLineStart,
         y1: lineY,
@@ -339,7 +301,6 @@
       });
       svg.appendChild(mainLine);
 
-      // arrows
       const leftArrow = createSvgElement("path", {
         d: `M ${xLineStart} ${lineY} L ${xLineStart + 12} ${lineY - 7} L ${xLineStart + 12} ${lineY + 7} Z`,
         fill: "black"
@@ -351,12 +312,11 @@
       svg.appendChild(leftArrow);
       svg.appendChild(rightArrow);
 
-      const tickTop = lineY - 10;
-      const tickBottom = lineY + 10;
-      const textY = lineY + 30;
-      const underlineY = lineY + 34;
+      const tickTop = lineY - 12;
+      const tickBottom = lineY + 12;
+      const textY = lineY + 36;
+      const underlineY = lineY + 40;
 
-      // ticks + start label + blanks
       points.forEach((pt, i) => {
         const tick = createSvgElement("line", {
           x1: pt.x,
@@ -373,32 +333,31 @@
             x: pt.x,
             y: textY,
             "text-anchor": "middle",
-            "font-size": "14",
+            "font-size": "16",
             "font-weight": "700"
           });
           text.textContent = pt.value;
           svg.appendChild(text);
         } else {
           const underline = createSvgElement("line", {
-            x1: pt.x - 14,
+            x1: pt.x - 16,
             y1: underlineY,
-            x2: pt.x + 14,
+            x2: pt.x + 16,
             y2: underlineY,
             stroke: "black",
-            "stroke-width": 1.8
+            "stroke-width": 2
           });
           svg.appendChild(underline);
         }
       });
 
-      // arcs + labels
       for (let i = 0; i < steps.length; i++) {
         const stepSize = steps[i];
         const x1 = points[i].x;
         const x2 = points[i + 1].x;
         const midX = (x1 + x2) / 2;
 
-        const arcHeight = stepSize === 1 ? 20 : 32;
+        const arcHeight = stepSize === 1 ? 24 : 40;
 
         const path = createSvgElement("path", {
           d: `M ${x1} ${lineY} Q ${midX} ${lineY - arcHeight}, ${x2} ${lineY}`,
@@ -413,14 +372,13 @@
           x: midX,
           y: lineY - arcHeight - 4,
           "text-anchor": "middle",
-          "font-size": "12",
+          "font-size": "13",
           "font-weight": "700"
         });
         label.textContent = `-${stepSize}`;
         svg.appendChild(label);
       }
 
-      // equation (answer in parentheses for teacher)
       eqEl.textContent = `${start} − ${sub} = ______   (answer: ${answer})`;
     }
 
@@ -454,6 +412,7 @@
     }
 
     document.getElementById("generateBtn").addEventListener("click", generateWorksheet);
+    document.getElementById("printBtn").addEventListener("click", () => window.print());
 
     // initial load
     generateWorksheet();
