@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>2-Digit Regrouping with Base-10 Blocks (Tens/Ones Table)</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      background: #f5f5f5;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 20px 24px 28px;
+      border-radius: 12px;
+      max-width: 800px;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      margin: 0 0 4px;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 16px;
+      color: #555;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 16px;
+    }
+
+    button {
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background: #ffffff;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .problems-page {
+      border: 2px solid #000;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .problem-card {
+      border-bottom: 1px solid #000;
+      padding: 12px 0 18px;
+      min-height: 220px; /* space for regrouping + answer */
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .problem-card:last-child {
+      border-bottom: none;
+    }
+
+    .equation {
+      font-size: 2.2rem;
+      text-align: left;
+      margin-bottom: 4px;
+    }
+
+    /* Table layout for Tens / Ones */
+    .place-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 4px;
+      table-layout: fixed;
+    }
+
+    .place-table th,
+    .place-table td {
+      border: 2px solid #000;
+      padding: 8px;
+      vertical-align: top;
+    }
+
+    .place-header {
+      font-size: 1rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .place-cell {
+      min-height: 90px;
+      text-align: center;
+    }
+
+    .row-blocks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      justify-content: center; /* center tens/ones blocks */
+    }
+
+    /* Base-ten block styles */
+    .block {
+      border: 3px solid #000;
+      background: transparent; /* white/no shading for printing */
+    }
+
+    .block.ten {
+      width: 16px;
+      height: 50px;
+    }
+
+    .block.one {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Ones cell: blocks on top, borrow box underneath */
+    .ones-cell-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .borrow-box {
+      border: 1px dashed #000;
+      width: 90%;
+      min-height: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end; /* text at bottom */
+      padding: 4px 4px 2px 4px;
+    }
+
+    .borrow-note {
+      font-size: 0.75rem;
+      text-align: center;
+      margin-top: 2px;
+    }
+
+    .answer-line {
+      margin-top: 10px;
+      font-size: 1.2rem;
+    }
+
+    .answer-line::after {
+      content: " __________________________";
+    }
+
+    .footer-note {
+      font-size: 0.8rem;
+      color: #555;
+      margin-top: 8px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>2-Digit Regrouping with Base-10 Blocks</h1>
+    <div class="subtitle">
+      Tens and ones are shown in a place-value table. Students can borrow a ten and draw 10 new ones in the box under the ones.
+    </div>
+
+    <div class="controls">
+      <button id="generateBtn">Generate New Worksheet</button>
+    </div>
+
+    <div id="problemsPage" class="problems-page">
+      <!-- Problems will be injected here -->
+    </div>
+
+    <div class="footer-note">
+      Print and have students cross out tens, draw 10 new ones inside the dashed box, then write the answer on the line.
+    </div>
+  </div>
+
+  <script>
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Generate a 2-digit subtraction problem that REQUIRES regrouping in the ones place
+    function generateRegroupingProblem() {
+      let top, bottom;
+
+      while (true) {
+        top = randomInt(20, 99);    // at least 20 so we have tens
+        bottom = randomInt(10, 99);
+
+        const topOnes = top % 10;
+        const bottomOnes = bottom % 10;
+
+        // Must be a valid subtraction (no negatives)
+        if (top <= bottom) continue;
+
+        // Force regrouping in ones: top ones < bottom ones
+        if (topOnes >= bottomOnes) continue;
+
+        return { top, bottom };
+      }
+    }
+
+    function createBlocks(container, count, type) {
+      container.innerHTML = "";
+      for (let i = 0; i < count; i++) {
+        const div = document.createElement("div");
+        div.classList.add("block", type);
+        container.appendChild(div);
+      }
+    }
+
+    function renderProblemCard(problem) {
+      const { top, bottom } = problem;
+
+      const card = document.createElement("div");
+      card.classList.add("problem-card");
+
+      // Equation: e.g., "92 − 51 ="
+      const eq = document.createElement("div");
+      eq.classList.add("equation");
+      eq.textContent = `${top} − ${bottom} =`;
+      card.appendChild(eq);
+
+      // Place value table: Tens / Ones
+      const table = document.createElement("table");
+      table.classList.add("place-table");
+      table.innerHTML = `
+        <tr>
+          <th class="place-header">Tens</th>
+          <th class="place-header">Ones</th>
+        </tr>
+        <tr>
+          <td class="place-cell">
+            <div class="row-blocks tens-blocks"></div>
+          </td>
+          <td class="place-cell">
+            <div class="ones-cell-inner">
+              <div class="row-blocks ones-blocks"></div>
+              <div class="borrow-box">
+                <!-- students draw 10 borrowed ones here -->
+                <div class="borrow-note">If you borrow, draw 10 new ones.</div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      `;
+
+      card.appendChild(table);
+
+      // Answer line underneath
+      const answerLine = document.createElement("div");
+      answerLine.classList.add("answer-line");
+      answerLine.textContent = "Answer:";
+      card.appendChild(answerLine);
+
+      // Place-value for the top number (minuend)
+      const tens = Math.floor(top / 10);
+      const ones = top % 10;
+
+      const tensBlocks = table.querySelector(".tens-blocks");
+      const onesBlocks = table.querySelector(".ones-blocks");
+
+      createBlocks(tensBlocks, tens, "ten");
+      createBlocks(onesBlocks, ones, "one");
+
+      return card;
+    }
+
+    function generateWorksheet() {
+      const page = document.getElementById("problemsPage");
+      page.innerHTML = "";
+
+      const NUM_PROBLEMS = 3; // 3 problems per page
+
+      for (let i = 0; i < NUM_PROBLEMS; i++) {
+        const prob = generateRegroupingProblem();
+        const card = renderProblemCard(prob);
+        page.appendChild(card);
+      }
+    }
+
+    document.getElementById("generateBtn").addEventListener("click", generateWorksheet);
+
+    // First load
+    generateWorksheet();
+  </script>
+</body>
+</html>
