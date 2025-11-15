@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>2-Digit Regrouping with Base-10 Blocks (Tens/Ones Table)</title>
+  <title>2-Digit Addition with Regrouping (Base-10 Blocks)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -68,7 +68,7 @@
     .problem-card {
       border-bottom: 1px solid #000;
       padding: 12px 0 18px;
-      min-height: 220px; /* space for regrouping + answer */
+      min-height: 220px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -110,11 +110,23 @@
       text-align: center;
     }
 
+    .stacked {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px; /* tight so blocks are "right on top" */
+    }
+
+    .row-label {
+      font-size: 0.7rem;
+      align-self: flex-start;
+    }
+
     .row-blocks {
       display: flex;
       flex-wrap: wrap;
-      gap: 4px;
-      justify-content: center; /* center tens/ones blocks */
+      gap: 3px;
+      justify-content: center;
     }
 
     /* Base-ten block styles */
@@ -133,28 +145,10 @@
       height: 16px;
     }
 
-    /* Ones cell: blocks on top, borrow box underneath */
-    .ones-cell-inner {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .borrow-box {
-      border: 1px dashed #000;
-      width: 90%;
-      min-height: 48px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end; /* text at bottom */
-      padding: 4px 4px 2px 4px;
-    }
-
-    .borrow-note {
+    .ones-note {
       font-size: 0.75rem;
+      margin-top: 4px;
       text-align: center;
-      margin-top: 2px;
     }
 
     .answer-line {
@@ -176,9 +170,9 @@
 </head>
 <body>
   <div class="container">
-    <h1>2-Digit Regrouping with Base-10 Blocks</h1>
+    <h1>2-Digit Addition with Regrouping (Base-10 Blocks)</h1>
     <div class="subtitle">
-      Tens and ones are shown in a place-value table. Students can borrow a ten and draw 10 new ones in the box under the ones.
+      Both addends are shown in tens and ones. Stack the ones, circle a group of 10, and trade it for a ten.
     </div>
 
     <div class="controls">
@@ -190,7 +184,7 @@
     </div>
 
     <div class="footer-note">
-      Print and have students cross out tens, draw 10 new ones inside the dashed box, then write the answer on the line.
+      Print and have students circle a group of 10 ones, regroup it into a new ten, then write the sum.
     </div>
   </div>
 
@@ -199,24 +193,21 @@
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    // Generate a 2-digit subtraction problem that REQUIRES regrouping in the ones place
-    function generateRegroupingProblem() {
-      let top, bottom;
+    // Generate a 2-digit addition problem that REQUIRES regrouping in the ones place
+    function generateAdditionRegroupingProblem() {
+      let a, b, sum;
 
       while (true) {
-        top = randomInt(20, 99);    // at least 20 so we have tens
-        bottom = randomInt(10, 99);
+        a = randomInt(10, 89);
+        b = randomInt(10, 89);
+        sum = a + b;
 
-        const topOnes = top % 10;
-        const bottomOnes = bottom % 10;
+        const onesTotal = (a % 10) + (b % 10);
 
-        // Must be a valid subtraction (no negatives)
-        if (top <= bottom) continue;
-
-        // Force regrouping in ones: top ones < bottom ones
-        if (topOnes >= bottomOnes) continue;
-
-        return { top, bottom };
+        // keep it 2-digit and force regrouping (10–18 ones)
+        if (sum <= 99 && onesTotal >= 10) {
+          return { a, b, sum };
+        }
       }
     }
 
@@ -230,15 +221,15 @@
     }
 
     function renderProblemCard(problem) {
-      const { top, bottom } = problem;
+      const { a, b } = problem;
 
       const card = document.createElement("div");
       card.classList.add("problem-card");
 
-      // Equation: e.g., "92 − 51 ="
+      // Equation: e.g., "47 + 28 ="
       const eq = document.createElement("div");
       eq.classList.add("equation");
-      eq.textContent = `${top} − ${bottom} =`;
+      eq.textContent = `${a} + ${b} =`;
       card.appendChild(eq);
 
       // Place value table: Tens / Ones
@@ -251,15 +242,20 @@
         </tr>
         <tr>
           <td class="place-cell">
-            <div class="row-blocks tens-blocks"></div>
+            <div class="stacked tens-stack">
+              <div class="row-label">1st</div>
+              <div class="row-blocks tens-blocks-1"></div>
+              <div class="row-label">2nd</div>
+              <div class="row-blocks tens-blocks-2"></div>
+            </div>
           </td>
           <td class="place-cell">
-            <div class="ones-cell-inner">
-              <div class="row-blocks ones-blocks"></div>
-              <div class="borrow-box">
-                <!-- students draw 10 borrowed ones here -->
-                <div class="borrow-note">If you borrow, draw 10 new ones.</div>
-              </div>
+            <div class="stacked ones-stack">
+              <div class="row-label">1st</div>
+              <div class="row-blocks ones-blocks-1"></div>
+              <div class="row-label">2nd</div>
+              <div class="row-blocks ones-blocks-2"></div>
+              <div class="ones-note">Circle a group of 10 ones to make a new ten.</div>
             </div>
           </td>
         </tr>
@@ -270,18 +266,24 @@
       // Answer line underneath
       const answerLine = document.createElement("div");
       answerLine.classList.add("answer-line");
-      answerLine.textContent = "Answer:";
+      answerLine.textContent = "Sum:";
       card.appendChild(answerLine);
 
-      // Place-value for the top number (minuend)
-      const tens = Math.floor(top / 10);
-      const ones = top % 10;
+      // Place-value for both numbers
+      const aTens = Math.floor(a / 10);
+      const aOnes = a % 10;
+      const bTens = Math.floor(b / 10);
+      const bOnes = b % 10;
 
-      const tensBlocks = table.querySelector(".tens-blocks");
-      const onesBlocks = table.querySelector(".ones-blocks");
+      const tensBlocks1 = table.querySelector(".tens-blocks-1");
+      const tensBlocks2 = table.querySelector(".tens-blocks-2");
+      const onesBlocks1 = table.querySelector(".ones-blocks-1");
+      const onesBlocks2 = table.querySelector(".ones-blocks-2");
 
-      createBlocks(tensBlocks, tens, "ten");
-      createBlocks(onesBlocks, ones, "one");
+      createBlocks(tensBlocks1, aTens, "ten");
+      createBlocks(tensBlocks2, bTens, "ten");
+      createBlocks(onesBlocks1, aOnes, "one");
+      createBlocks(onesBlocks2, bOnes, "one");
 
       return card;
     }
@@ -293,7 +295,7 @@
       const NUM_PROBLEMS = 3; // 3 problems per page
 
       for (let i = 0; i < NUM_PROBLEMS; i++) {
-        const prob = generateRegroupingProblem();
+        const prob = generateAdditionRegroupingProblem();
         const card = renderProblemCard(prob);
         page.appendChild(card);
       }
