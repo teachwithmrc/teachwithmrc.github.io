@@ -85,13 +85,11 @@
       border-bottom: 2px solid #000;
     }
 
-    /* Checklist on top right */
     .steps-checklist {
       font-size: 0.85rem;
       line-height: 1.3;
     }
 
-    /* Main area: left boxes, right multiples */
     .main-area {
       display: flex;
       gap: 16px;
@@ -111,7 +109,7 @@
       gap: 12px;
     }
 
-    /* Left: “long division boxes” */
+    /* Left organizer grid */
     .ld-grid-wrapper {
       position: relative;
       display: flex;
@@ -134,12 +132,6 @@
 
     .ld-box.gray {
       background: #eaeaea;
-    }
-
-    .ld-box.small {
-      width: 28px;
-      height: 28px;
-      border-width: 1.5px;
     }
 
     .remainder-label {
@@ -178,7 +170,7 @@
       margin: 4px 0;
     }
 
-    /* Right: multiples sections */
+    /* Multiples sections */
     .multiples-section {
       border: 1px solid #000;
       border-radius: 4px;
@@ -204,6 +196,10 @@
       border: 2px solid #000;
       margin: 0 2px;
       vertical-align: middle;
+      line-height: 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: center;
     }
 
     .multiples-table {
@@ -258,10 +254,10 @@
 
     <div class="controls">
       <label>Dividend:
-        <input id="dividendInput" type="number" min="10" max="99" value="84" />
+        <input id="dividendInput" type="number" min="10" max="99" value="69" />
       </label>
       <label>Divisor:
-        <input id="divisorInput" type="number" min="2" max="9" value="4" />
+        <input id="divisorInput" type="number" min="2" max="9" value="7" />
       </label>
       <label>Multiples:
         <select id="multiplesMode">
@@ -278,7 +274,7 @@
     <div class="organizer">
       <div class="top-row">
         <div id="equationDisplay" class="problem-equation">
-          84 ÷ 4 = <span class="blank"></span>
+          69 ÷ 7 = <span class="blank"></span>
         </div>
         <div class="steps-checklist">
           <div><input type="checkbox" /> 1. Divide</div>
@@ -295,7 +291,7 @@
         <!-- LEFT: all step boxes -->
         <div class="left-panel">
           <div class="ld-grid-wrapper">
-            <!-- top: two digit boxes (shaded) and remainder box -->
+            <!-- two columns of boxes like your template -->
             <div class="ld-column">
               <div class="ld-box gray"></div>
               <div class="ld-box gray"></div>
@@ -331,15 +327,17 @@
           </div>
         </div>
 
-        <!-- RIGHT: two multiples sections, each with full boxes -->
+        <!-- RIGHT: two multiples sections -->
         <div class="right-panel">
-
           <!-- Multiples section 1 -->
           <div id="mult1" class="multiples-section">
             <div class="multiples-title">Top Digit Multiples</div>
             <div class="multiples-question">
-              How many times does <span class="sq-blank"></span> go into
-              <span class="sq-blank"></span><span class="sq-blank"></span>
+              How many times does
+              <span class="sq-blank" id="topDigitDivisorBox"></span>
+              go into
+              <span class="sq-blank" id="topDigitDividendBox"></span>
+              <span class="sq-blank" id="topDigitBlankBox"></span>
               evenly or without going over?
             </div>
             <table class="multiples-table">
@@ -356,8 +354,11 @@
           <div id="mult2" class="multiples-section">
             <div class="multiples-title">Full Number Multiples</div>
             <div class="multiples-question">
-              How many times does <span class="sq-blank"></span> go into
-              <span class="sq-blank"></span><span class="sq-blank"></span>
+              How many times does
+              <span class="sq-blank" id="fullDivisorBox"></span>
+              go into
+              <span class="sq-blank" id="fullDividendTensBox"></span>
+              <span class="sq-blank" id="fullDividendOnesBox"></span>
               evenly or without going over?
             </div>
             <table class="multiples-table">
@@ -388,9 +389,16 @@
     const mult1 = document.getElementById("mult1");
     const mult2 = document.getElementById("mult2");
 
+    const topDigitDivisorBox = document.getElementById("topDigitDivisorBox");
+    const topDigitDividendBox = document.getElementById("topDigitDividendBox");
+    const topDigitBlankBox = document.getElementById("topDigitBlankBox");
+    const fullDivisorBox = document.getElementById("fullDivisorBox");
+    const fullDividendTensBox = document.getElementById("fullDividendTensBox");
+    const fullDividendOnesBox = document.getElementById("fullDividendOnesBox");
+
     function clampDividend(v) {
       let n = parseInt(v, 10);
-      if (isNaN(n)) n = 84;
+      if (isNaN(n)) n = 69;
       if (n < 10) n = 10;
       if (n > 99) n = 99;
       return n;
@@ -398,7 +406,7 @@
 
     function clampDivisor(v) {
       let n = parseInt(v, 10);
-      if (isNaN(n)) n = 4;
+      if (isNaN(n)) n = 7;
       if (n < 2) n = 2;
       if (n > 9) n = 9;
       return n;
@@ -440,6 +448,19 @@
       equationDisplay.innerHTML =
         `${dividend} ÷ ${divisor} = <span class="blank"></span>`;
 
+      const tens = Math.floor(dividend / 10);
+      const ones = dividend % 10;
+
+      // Fill the question boxes with digits
+      topDigitDivisorBox.textContent = divisor;
+      topDigitDividendBox.textContent = tens;
+      topDigitBlankBox.textContent = ""; // still a blank square for 'go into __'
+
+      fullDivisorBox.textContent = divisor;
+      fullDividendTensBox.textContent = tens;
+      fullDividendOnesBox.textContent = ones;
+
+      // Multiples strips
       if (mode === "hidden") {
         mult1.classList.add("hidden");
         mult2.classList.add("hidden");
