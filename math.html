@@ -136,7 +136,7 @@
     /* Ones grid: 5 across max, bigger blocks */
     .blocks-row-ones {
       display: grid;
-      grid-template-columns: repeat(5, 24px); /* max 5 across */
+      grid-template-columns: repeat(5, 24px);
       grid-auto-rows: 24px;
       gap: 5px;
       justify-content: center;
@@ -161,13 +161,11 @@
       border-bottom: 1px solid #000;
     }
 
-    /* Remove right border on last cell in each row */
     .ten-frame-cell:nth-child(5),
     .ten-frame-cell:nth-child(10) {
       border-right: none;
     }
 
-    /* Remove bottom border on last row */
     .ten-frame-cell:nth-child(n+6) {
       border-bottom: none;
     }
@@ -186,6 +184,18 @@
     .block.one {
       width: 20px;
       height: 20px;
+    }
+
+    /* Answer row inside table */
+    .answer-cell {
+      height: 40px;
+      vertical-align: middle;
+    }
+
+    .answer-box {
+      font-size: 0.9rem;
+      text-align: center;
+      padding-top: 4px;
     }
 
     .answer-line {
@@ -280,13 +290,11 @@
       const card = document.createElement("div");
       card.classList.add("problem-card");
 
-      // Equation: "a − b ="
       const eq = document.createElement("div");
       eq.classList.add("equation");
       eq.textContent = `${a} − ${b} =`;
       card.appendChild(eq);
 
-      // Place value table
       const table = document.createElement("table");
       table.classList.add("place-table");
       table.innerHTML = `
@@ -305,6 +313,14 @@
               <div class="blocks-row-ones ones-row"></div>
               <div class="regroup-box-under"></div>
             </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="place-cell answer-cell">
+            <div class="answer-box">Tens: ____________</div>
+          </td>
+          <td class="place-cell answer-cell">
+            <div class="answer-box">Ones: ____________</div>
           </td>
         </tr>
       `;
