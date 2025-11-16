@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>2-Digit ÷ 1-Digit Long Division Organizer</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .page {
+      width: 8.5in;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 0.5in;
+    }
+
+    h1 {
+      font-size: 1.3rem;
+      text-align: center;
+      margin: 0 0 6px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+    }
+
+    label {
+      font-size: 0.85rem;
+    }
+
+    input[type="number"], select {
+      padding: 3px 6px;
+      font-size: 0.85rem;
+      border: 1px solid #000;
+      border-radius: 4px;
+      width: 70px;
+    }
+
+    select {
+      width: auto;
+    }
+
+    button {
+      padding: 4px 10px;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      border: 1px solid #000;
+      cursor: pointer;
+      font-weight: 600;
+      background: #fff;
+    }
+
+    /* Organizer box */
+    .organizer {
+      border: 2px solid #000;
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 4px;
+      min-height: 9in; /* so print fills a page nicely */
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .problem-equation {
+      font-size: 1.4rem;
+      font-weight: 600;
+      text-align: left;
+      margin-bottom: 4px;
+    }
+
+    .problem-equation span.blank {
+      display: inline-block;
+      min-width: 90px;
+      border-bottom: 2px solid #000;
+    }
+
+    /* Main work area: left = algorithm, right = multiples */
+    .work-area {
+      display: flex;
+      flex-direction: row;
+      gap: 18px;
+      align-items: flex-start;
+      margin-top: 4px;
+    }
+
+    .left-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .right-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Long division layout */
+    .long-division-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-top: 2px;
+      margin-bottom: 6px;
+    }
+
+    .long-division {
+      position: relative;
+      display: inline-block;
+      padding-left: 20px; /* space for divisor */
+    }
+
+    .long-division .dividend-box {
+      border-top: 2px solid #000;
+      border-left: 2px solid #000;
+      padding: 4px 10px 4px 8px;
+      min-width: 80px;
+      text-align: right;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .long-division .quotient {
+      position: absolute;
+      top: -26px;
+      left: 20px;
+      right: 0;
+      height: 20px;
+      text-align: right;
+      font-size: 1.2rem;
+      font-weight: 600;
+      border-bottom: 1px solid #000;
+    }
+
+    .long-division .divisor {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      transform: translateY(-50%);
+      font-size: 1.5rem;
+      font-weight: 700;
+      padding-right: 4px;
+    }
+
+    /* Step boxes / lines to work the algorithm (just static structure) */
+    .steps-box {
+      border: 1px solid #000;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 0.9rem;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 4px 10px;
+      margin-top: 4px;
+    }
+
+    .step-label {
+      font-weight: 600;
+    }
+
+    .step-line {
+      border-bottom: 1px solid #000;
+      min-height: 14px;
+      margin-top: 2px;
+    }
+
+    /* Multiples section */
+    .multiples-section {
+      border: 1px solid #000;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 0.85rem;
+    }
+
+    .multiples-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .multiples-question {
+      margin-bottom: 4px;
+    }
+
+    .multiples-question .blank-line {
+      display: inline-block;
+      min-width: 40px;
+      border-bottom: 1px solid #000;
+    }
+
+    .multiples-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 4px;
+      table-layout: fixed;
+    }
+
+    .multiples-table th,
+    .multiples-table td {
+      border: 1px solid #000;
+      padding: 2px;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+
+    .multiples-table th {
+      font-weight: 700;
+    }
+
+    .product-blank {
+      display: inline-block;
+      min-width: 20px;
+      border-bottom: 1px solid #000;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media print {
+      .controls { display: none; }
+      button { display: none; }
+      .page {
+        width: 100%;
+        padding: 0.4in;
+      }
+      .organizer {
+        min-height: auto;
+        height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>2-Digit by 1-Digit Long Division Graphic Organizer</h1>
+    <div class="subtitle">
+      Enter a 2-digit ÷ 1-digit problem. Choose how you want the multiples section to appear.
+    </div>
+
+    <div class="controls">
+      <label>Dividend:
+        <input id="dividendInput" type="number" min="10" max="99" value="84" />
+      </label>
+      <label>Divisor:
+        <input id="divisorInput" type="number" min="2" max="9" value="4" />
+      </label>
+      <label>Multiples:
+        <select id="multiplesMode">
+          <option value="hidden">Hide multiples</option>
+          <option value="blank">Blank lines (students fill)</option>
+          <option value="filled">Show products</option>
+        </select>
+      </label>
+      <button id="updateBtn">Update Problem</button>
+      <button id="randomBtn">Random Problem</button>
+      <button id="printBtn">Print Page</button>
+    </div>
+
+    <div class="organizer">
+      <!-- Problem equation -->
+      <div id="equationDisplay" class="problem-equation">
+        84 ÷ 4 = <span class="blank"></span>
+      </div>
+
+      <div class="work-area">
+        <!-- LEFT: Long division workspace -->
+        <div class="left-panel">
+          <div class="long-division-wrapper">
+            <div class="long-division">
+              <div id="quotientArea" class="quotient">&nbsp;</div>
+              <div id="dividendBox" class="dividend-box">84</div>
+              <div id="divisorBox" class="divisor">4</div>
+            </div>
+          </div>
+
+          <div class="steps-box">
+            <div><strong>Steps:</strong></div>
+            <div class="steps-grid">
+              <div>
+                <div class="step-label">1. Divide</div>
+                <div class="step-line"></div>
+              </div>
+              <div>
+                <div class="step-label">2. Multiply</div>
+                <div class="step-line"></div>
+              </div>
+              <div>
+                <div class="step-label">3. Subtract</div>
+                <div class="step-line"></div>
+              </div>
+              <div>
+                <div class="step-label">4. Bring Down</div>
+                <div class="step-line"></div>
+              </div>
+              <div>
+                <div class="step-label">5. Divide</div>
+                <div class="step-line"></div>
+              </div>
+              <div>
+                <div class="step-label">6. Multiply</div>
+                <div class="step-line"></div>
+              </div>
+              <div>
+                <div class="step-label">7. Subtract</div>
+                <div class="step-line"></div>
+              </div>
+              <div>
+                <div class="step-label">8. Check / Remainder</div>
+                <div class="step-line"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Multiples section -->
+        <div class="right-panel">
+          <div id="multiplesSection" class="multiples-section">
+            <div class="multiples-title">Multiples of <span id="divisorLabel">4</span></div>
+            <div class="multiples-question">
+              How many times does
+              <span id="divisorLabel2">4</span>
+              go into
+              <span class="blank-line"></span>
+              ?
+            </div>
+            <table class="multiples-table">
+              <thead>
+                <tr id="multiplesHeaderRow">
+                  <!-- x0, x1, x2, ... -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr id="multiplesProductsRow">
+                  <!-- products or blanks -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const dividendInput = document.getElementById("dividendInput");
+    const divisorInput = document.getElementById("divisorInput");
+    const multiplesModeSelect = document.getElementById("multiplesMode");
+
+    const equationDisplay = document.getElementById("equationDisplay");
+    const dividendBox = document.getElementById("dividendBox");
+    const divisorBox = document.getElementById("divisorBox");
+    const divisorLabel = document.getElementById("divisorLabel");
+    const divisorLabel2 = document.getElementById("divisorLabel2");
+    const multiplesSection = document.getElementById("multiplesSection");
+    const multiplesHeaderRow = document.getElementById("multiplesHeaderRow");
+    const multiplesProductsRow = document.getElementById("multiplesProductsRow");
+
+    function clampDividend(value) {
+      let n = parseInt(value, 10);
+      if (isNaN(n)) n = 84;
+      if (n < 10) n = 10;
+      if (n > 99) n = 99;
+      return n;
+    }
+
+    function clampDivisor(value) {
+      let n = parseInt(value, 10);
+      if (isNaN(n)) n = 4;
+      if (n < 2) n = 2;
+      if (n > 9) n = 9;
+      return n;
+    }
+
+    function buildMultiples(divisor, mode) {
+      multiplesHeaderRow.innerHTML = "";
+      multiplesProductsRow.innerHTML = "";
+
+      // Let's go from x0 to x10
+      const maxMult = 10;
+
+      for (let i = 0; i <= maxMult; i++) {
+        // Header cell: x0, x1, ...
+        const th = document.createElement("th");
+        th.textContent = "×" + i;
+        multiplesHeaderRow.appendChild(th);
+
+        // Product cell
+        const td = document.createElement("td");
+
+        if (mode === "filled") {
+          td.textContent = divisor * i;
+        } else if (mode === "blank") {
+          const span = document.createElement("span");
+          span.className = "product-blank";
+          span.innerHTML = "&nbsp;";
+          td.appendChild(span);
+        } else {
+          // hidden mode should never render here, but just in case:
+          const span = document.createElement("span");
+          span.innerHTML = "";
+          td.appendChild(span);
+        }
+
+        multiplesProductsRow.appendChild(td);
+      }
+    }
+
+    function updateOrganizer() {
+      const dividend = clampDividend(dividendInput.value);
+      const divisor = clampDivisor(divisorInput.value);
+      const mode = multiplesModeSelect.value;
+
+      dividendInput.value = dividend;
+      divisorInput.value = divisor;
+
+      // Update main equation
+      equationDisplay.innerHTML = `${dividend} ÷ ${divisor} = <span class="blank"></span>`;
+
+      // Update long-division layout
+      dividendBox.textContent = dividend;
+      divisorBox.textContent = divisor;
+
+      // Update divisor labels in multiples section
+      divisorLabel.textContent = divisor;
+      divisorLabel2.textContent = divisor;
+
+      // Handle multiples visibility & content
+      if (mode === "hidden") {
+        multiplesSection.classList.add("hidden");
+      } else {
+        multiplesSection.classList.remove("hidden");
+        buildMultiples(divisor, mode);
+      }
+    }
+
+    function randomProblem() {
+      const randomDividend = Math.floor(Math.random() * 90) + 10; // 10–99
+      const randomDivisor = Math.floor(Math.random() * 8) + 2;    // 2–9
+      dividendInput.value = randomDividend;
+      divisorInput.value = randomDivisor;
+      updateOrganizer();
+    }
+
+    document.getElementById("updateBtn").addEventListener("click", updateOrganizer);
+    document.getElementById("randomBtn").addEventListener("click", randomProblem);
+    document.getElementById("printBtn").addEventListener("click", () => window.print());
+
+    // Initial render
+    updateOrganizer();
+  </script>
+</body>
+</html>
