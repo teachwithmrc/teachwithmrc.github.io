@@ -54,7 +54,6 @@
       background: #ffffff;
     }
 
-    /* Grid for 4 problems per page */
     .problems-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -78,9 +77,6 @@
       margin-bottom: 2px;
     }
 
-    /*==========================
-      Table Layout
-    ==========================*/
     .place-table {
       width: 100%;
       border-collapse: collapse;
@@ -106,9 +102,7 @@
       text-align: center;
     }
 
-    /*==========================
-      Tens Layout (max 5 per row)
-    ==========================*/
+    /* Tens layout (max 5 per row) */
     .tens-stack {
       display: flex;
       justify-content: center;
@@ -126,9 +120,7 @@
       align-items: end;
     }
 
-    /*==========================
-      Ones Layout (max 5 across)
-    ==========================*/
+    /* Ones layout (max 5 across) */
     .ones-stack {
       display: flex;
       flex-direction: column;
@@ -152,9 +144,7 @@
       width: 100%;
     }
 
-    /*==========================
-      Dotted Ten-Frame (optional-use look)
-    ==========================*/
+    /* Dotted ten-frame */
     .regroup-box-under {
       width: 90%;
       height: 60px;
@@ -170,20 +160,15 @@
       border-bottom: 1px dotted #ccc;
     }
 
-    /* remove right border on last cell of each row */
     .ten-frame-cell:nth-child(5),
     .ten-frame-cell:nth-child(10) {
       border-right: none;
     }
 
-    /* remove bottom border on last row */
     .ten-frame-cell:nth-child(n+6) {
       border-bottom: none;
     }
 
-    /*==========================
-      Base-10 block shapes
-    ==========================*/
     .block {
       border: 2px solid #000;
       background: transparent;
@@ -199,9 +184,7 @@
       height: 20px;
     }
 
-    /*==========================
-      Answer row inside table
-    ==========================*/
+    /* Answer row inside table */
     .answer-row {
       height: 45px;
     }
@@ -253,13 +236,11 @@
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    /* Generate regrouping-required subtraction problem */
     function generateSubtractionRegroupingProblem() {
       let a, b;
       while (true) {
         a = randomInt(20, 99);
         b = randomInt(10, a - 1);
-
         if ((a % 10) < (b % 10)) return { a, b };
       }
     }
@@ -288,9 +269,10 @@
       const card = document.createElement("div");
       card.classList.add("problem-card");
 
+      // Now includes blank after equals
       const eq = document.createElement("div");
       eq.classList.add("equation");
-      eq.textContent = `${a} − ${b} =`;
+      eq.textContent = `${a} − ${b} = ________`;
       card.appendChild(eq);
 
       const table = document.createElement("table");
@@ -301,14 +283,12 @@
           <th class="place-header">Tens</th>
           <th class="place-header">Ones</th>
         </tr>
-
         <tr>
           <td class="place-cell">
             <div class="tens-stack">
               <div class="blocks-row-tens tens-row"></div>
             </div>
           </td>
-
           <td class="place-cell">
             <div class="ones-stack">
               <div class="blocks-row-ones ones-row"></div>
@@ -316,10 +296,13 @@
             </div>
           </td>
         </tr>
-
         <tr class="answer-row">
-          <td class="place-cell"><div class="answer-box">Tens: ____________</div></td>
-          <td class="place-cell"><div class="answer-box">Ones: ____________</div></td>
+          <td class="place-cell">
+            <div class="answer-box">______________</div>
+          </td>
+          <td class="place-cell">
+            <div class="answer-box">______________</div>
+          </td>
         </tr>
       `;
 
