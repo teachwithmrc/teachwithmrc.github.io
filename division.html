@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>2-Digit ÷ 1-Digit Long Division Organizer</title>
+  <title>Divide 2 Digit by 1 Digit Organizer</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -26,14 +26,6 @@
       margin: 0 0 6px;
     }
 
-    .subtitle {
-      text-align: center;
-      font-size: 0.9rem;
-      margin-bottom: 10px;
-      color: #333;
-    }
-
-    /* Controls */
     .controls {
       display: flex;
       flex-wrap: wrap;
@@ -44,9 +36,7 @@
       font-size: 0.85rem;
     }
 
-    label {
-      font-size: 0.85rem;
-    }
+    label { font-size: 0.85rem; }
 
     input[type="number"], select {
       padding: 3px 6px;
@@ -56,9 +46,7 @@
       width: 70px;
     }
 
-    select {
-      width: auto;
-    }
+    select { width: auto; }
 
     button {
       padding: 4px 10px;
@@ -70,126 +58,127 @@
       background: #fff;
     }
 
-    /* Organizer box */
     .organizer {
       border: 2px solid #000;
       border-radius: 6px;
       padding: 12px;
-      margin-top: 4px;
-      min-height: 9in; /* so print fills a page nicely */
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .problem-equation {
-      font-size: 1.4rem;
-      font-weight: 600;
-      text-align: left;
-      margin-bottom: 4px;
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
     }
 
-    .problem-equation span.blank {
+    .problem-equation {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .problem-equation .blank {
       display: inline-block;
-      min-width: 90px;
+      min-width: 80px;
       border-bottom: 2px solid #000;
     }
 
-    /* Main work area: left = algorithm, right = multiples */
-    .work-area {
+    /* Checklist on top right */
+    .steps-checklist {
+      font-size: 0.85rem;
+      line-height: 1.3;
+    }
+
+    /* Main area: left boxes, right multiples */
+    .main-area {
       display: flex;
-      flex-direction: row;
-      gap: 18px;
-      align-items: flex-start;
+      gap: 16px;
       margin-top: 4px;
     }
 
     .left-panel {
       flex: 1;
       display: flex;
-      flex-direction: column;
-      gap: 8px;
+      gap: 12px;
     }
 
     .right-panel {
-      flex: 1;
+      flex: 1.3;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
-    /* Long division layout */
-    .long-division-wrapper {
-      display: flex;
-      justify-content: center;
-      margin-top: 2px;
-      margin-bottom: 6px;
-    }
-
-    .long-division {
+    /* Left: “long division boxes” */
+    .ld-grid-wrapper {
       position: relative;
-      display: inline-block;
-      padding-left: 20px; /* space for divisor */
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
     }
 
-    .long-division .dividend-box {
-      border-top: 2px solid #000;
-      border-left: 2px solid #000;
-      padding: 4px 10px 4px 8px;
-      min-width: 80px;
-      text-align: right;
-      font-size: 1.5rem;
-      font-weight: 700;
+    .ld-column {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
-    .long-division .quotient {
+    .ld-box {
+      width: 34px;
+      height: 34px;
+      border: 2px solid #000;
+      background: #fff;
+    }
+
+    .ld-box.gray {
+      background: #eaeaea;
+    }
+
+    .ld-box.small {
+      width: 28px;
+      height: 28px;
+      border-width: 1.5px;
+    }
+
+    .remainder-label {
       position: absolute;
-      top: -26px;
-      left: 20px;
+      top: -18px;
       right: 0;
-      height: 20px;
-      text-align: right;
-      font-size: 1.2rem;
-      font-weight: 600;
-      border-bottom: 1px solid #000;
-    }
-
-    .long-division .divisor {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      transform: translateY(-50%);
-      font-size: 1.5rem;
-      font-weight: 700;
-      padding-right: 4px;
-    }
-
-    /* Step boxes / lines to work the algorithm (just static structure) */
-    .steps-box {
-      border: 1px solid #000;
-      border-radius: 4px;
-      padding: 6px 8px;
       font-size: 0.9rem;
     }
 
-    .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 4px 10px;
-      margin-top: 4px;
+    .r-box {
+      width: 28px;
+      height: 28px;
+      border: 2px solid #000;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 4px;
     }
 
-    .step-label {
-      font-weight: 600;
+    .div-bracket {
+      border-left: 3px solid #000;
+      border-top: 3px solid #000;
+      width: 70px;
+      height: 170px;
+      margin-left: 4px;
+      margin-top: 16px;
     }
 
-    .step-line {
-      border-bottom: 1px solid #000;
-      min-height: 14px;
-      margin-top: 2px;
+    .minus-sign {
+      font-size: 1.4rem;
+      margin: 4px 0;
     }
 
-    /* Multiples section */
+    .down-arrow {
+      font-size: 1.8rem;
+      text-align: center;
+      margin: 4px 0;
+    }
+
+    /* Right: multiples sections */
     .multiples-section {
       border: 1px solid #000;
       border-radius: 4px;
@@ -198,25 +187,30 @@
     }
 
     .multiples-title {
+      text-align: center;
       font-weight: 700;
       margin-bottom: 4px;
     }
 
     .multiples-question {
+      text-align: center;
       margin-bottom: 4px;
     }
 
-    .multiples-question .blank-line {
+    .sq-blank {
       display: inline-block;
-      min-width: 40px;
-      border-bottom: 1px solid #000;
+      width: 26px;
+      height: 26px;
+      border: 2px solid #000;
+      margin: 0 2px;
+      vertical-align: middle;
     }
 
     .multiples-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 4px;
       table-layout: fixed;
+      margin-top: 4px;
     }
 
     .multiples-table th,
@@ -229,12 +223,19 @@
 
     .multiples-table th {
       font-weight: 700;
+      background: #f0f0f0;
     }
 
-    .product-blank {
-      display: inline-block;
-      min-width: 20px;
+    .prod-box {
+      width: 100%;
+      height: 20px;
       border-bottom: 1px solid #000;
+      display: inline-block;
+    }
+
+    .prod-text {
+      font-size: 0.8rem;
+      font-weight: 600;
     }
 
     .hidden {
@@ -248,19 +249,12 @@
         width: 100%;
         padding: 0.4in;
       }
-      .organizer {
-        min-height: auto;
-        height: auto;
-      }
     }
   </style>
 </head>
 <body>
   <div class="page">
-    <h1>2-Digit by 1-Digit Long Division Graphic Organizer</h1>
-    <div class="subtitle">
-      Enter a 2-digit ÷ 1-digit problem. Choose how you want the multiples section to appear.
-    </div>
+    <h1>Divide 2 Digit by 1 Digit Organizer</h1>
 
     <div class="controls">
       <label>Dividend:
@@ -272,8 +266,8 @@
       <label>Multiples:
         <select id="multiplesMode">
           <option value="hidden">Hide multiples</option>
-          <option value="blank">Blank lines (students fill)</option>
-          <option value="filled">Show products</option>
+          <option value="blank">Blank (students fill)</option>
+          <option value="filled">Filled products</option>
         </select>
       </label>
       <button id="updateBtn">Update Problem</button>
@@ -282,88 +276,102 @@
     </div>
 
     <div class="organizer">
-      <!-- Problem equation -->
-      <div id="equationDisplay" class="problem-equation">
-        84 ÷ 4 = <span class="blank"></span>
+      <div class="top-row">
+        <div id="equationDisplay" class="problem-equation">
+          84 ÷ 4 = <span class="blank"></span>
+        </div>
+        <div class="steps-checklist">
+          <div><input type="checkbox" /> 1. Divide</div>
+          <div><input type="checkbox" /> 2. Multiply</div>
+          <div><input type="checkbox" /> 3. Subtract</div>
+          <div><input type="checkbox" /> 4. Bring Down</div>
+          <div><input type="checkbox" /> 5. Divide</div>
+          <div><input type="checkbox" /> 6. Multiply</div>
+          <div><input type="checkbox" /> 7. Subtract</div>
+        </div>
       </div>
 
-      <div class="work-area">
-        <!-- LEFT: Long division workspace -->
+      <div class="main-area">
+        <!-- LEFT: all step boxes -->
         <div class="left-panel">
-          <div class="long-division-wrapper">
-            <div class="long-division">
-              <div id="quotientArea" class="quotient">&nbsp;</div>
-              <div id="dividendBox" class="dividend-box">84</div>
-              <div id="divisorBox" class="divisor">4</div>
+          <div class="ld-grid-wrapper">
+            <!-- top: two digit boxes (shaded) and remainder box -->
+            <div class="ld-column">
+              <div class="ld-box gray"></div>
+              <div class="ld-box gray"></div>
+              <div class="ld-box"></div>
+              <div class="ld-box"></div>
+              <div class="ld-box"></div>
+              <div class="ld-box"></div>
             </div>
-          </div>
 
-          <div class="steps-box">
-            <div><strong>Steps:</strong></div>
-            <div class="steps-grid">
-              <div>
-                <div class="step-label">1. Divide</div>
-                <div class="step-line"></div>
-              </div>
-              <div>
-                <div class="step-label">2. Multiply</div>
-                <div class="step-line"></div>
-              </div>
-              <div>
-                <div class="step-label">3. Subtract</div>
-                <div class="step-line"></div>
-              </div>
-              <div>
-                <div class="step-label">4. Bring Down</div>
-                <div class="step-line"></div>
-              </div>
-              <div>
-                <div class="step-label">5. Divide</div>
-                <div class="step-line"></div>
-              </div>
-              <div>
-                <div class="step-label">6. Multiply</div>
-                <div class="step-line"></div>
-              </div>
-              <div>
-                <div class="step-label">7. Subtract</div>
-                <div class="step-line"></div>
-              </div>
-              <div>
-                <div class="step-label">8. Check / Remainder</div>
-                <div class="step-line"></div>
-              </div>
+            <div class="ld-column">
+              <div class="ld-box gray"></div>
+              <div class="ld-box gray"></div>
+              <div class="ld-box"></div>
+              <div class="ld-box"></div>
+              <div class="ld-box"></div>
+              <div class="ld-box"></div>
             </div>
+
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; margin-left:8px;">
+              <div class="remainder-label">
+                r <span class="r-box"></span>
+              </div>
+              <div class="minus-sign">−</div>
+              <div class="ld-box"></div>
+              <div class="down-arrow">⬇</div>
+              <div class="ld-box"></div>
+              <div class="minus-sign">−</div>
+              <div class="ld-box"></div>
+              <div class="ld-box"></div>
+            </div>
+
+            <div class="div-bracket"></div>
           </div>
         </div>
 
-        <!-- RIGHT: Multiples section -->
+        <!-- RIGHT: two multiples sections, each with full boxes -->
         <div class="right-panel">
-          <div id="multiplesSection" class="multiples-section">
-            <div class="multiples-title">Multiples of <span id="divisorLabel">4</span></div>
+
+          <!-- Multiples section 1 -->
+          <div id="mult1" class="multiples-section">
+            <div class="multiples-title">Top Digit Multiples</div>
             <div class="multiples-question">
-              How many times does
-              <span id="divisorLabel2">4</span>
-              go into
-              <span class="blank-line"></span>
-              ?
+              How many times does <span class="sq-blank"></span> go into
+              <span class="sq-blank"></span><span class="sq-blank"></span>
+              evenly or without going over?
             </div>
             <table class="multiples-table">
               <thead>
-                <tr id="multiplesHeaderRow">
-                  <!-- x0, x1, x2, ... -->
-                </tr>
+                <tr id="headRow1"></tr>
               </thead>
               <tbody>
-                <tr id="multiplesProductsRow">
-                  <!-- products or blanks -->
-                </tr>
+                <tr id="prodRow1"></tr>
               </tbody>
             </table>
           </div>
+
+          <!-- Multiples section 2 -->
+          <div id="mult2" class="multiples-section">
+            <div class="multiples-title">Full Number Multiples</div>
+            <div class="multiples-question">
+              How many times does <span class="sq-blank"></span> go into
+              <span class="sq-blank"></span><span class="sq-blank"></span>
+              evenly or without going over?
+            </div>
+            <table class="multiples-table">
+              <thead>
+                <tr id="headRow2"></tr>
+              </thead>
+              <tbody>
+                <tr id="prodRow2"></tr>
+              </tbody>
+            </table>
+          </div>
+
         </div>
       </div>
-
     </div>
   </div>
 
@@ -373,61 +381,51 @@
     const multiplesModeSelect = document.getElementById("multiplesMode");
 
     const equationDisplay = document.getElementById("equationDisplay");
-    const dividendBox = document.getElementById("dividendBox");
-    const divisorBox = document.getElementById("divisorBox");
-    const divisorLabel = document.getElementById("divisorLabel");
-    const divisorLabel2 = document.getElementById("divisorLabel2");
-    const multiplesSection = document.getElementById("multiplesSection");
-    const multiplesHeaderRow = document.getElementById("multiplesHeaderRow");
-    const multiplesProductsRow = document.getElementById("multiplesProductsRow");
+    const headRow1 = document.getElementById("headRow1");
+    const headRow2 = document.getElementById("headRow2");
+    const prodRow1 = document.getElementById("prodRow1");
+    const prodRow2 = document.getElementById("prodRow2");
+    const mult1 = document.getElementById("mult1");
+    const mult2 = document.getElementById("mult2");
 
-    function clampDividend(value) {
-      let n = parseInt(value, 10);
+    function clampDividend(v) {
+      let n = parseInt(v, 10);
       if (isNaN(n)) n = 84;
       if (n < 10) n = 10;
       if (n > 99) n = 99;
       return n;
     }
 
-    function clampDivisor(value) {
-      let n = parseInt(value, 10);
+    function clampDivisor(v) {
+      let n = parseInt(v, 10);
       if (isNaN(n)) n = 4;
       if (n < 2) n = 2;
       if (n > 9) n = 9;
       return n;
     }
 
-    function buildMultiples(divisor, mode) {
-      multiplesHeaderRow.innerHTML = "";
-      multiplesProductsRow.innerHTML = "";
-
-      // Let's go from x0 to x10
+    function buildMultiplesRow(headRow, prodRow, divisor, mode) {
+      headRow.innerHTML = "";
+      prodRow.innerHTML = "";
       const maxMult = 10;
 
       for (let i = 0; i <= maxMult; i++) {
-        // Header cell: x0, x1, ...
         const th = document.createElement("th");
-        th.textContent = "×" + i;
-        multiplesHeaderRow.appendChild(th);
+        th.textContent = "x" + i;
+        headRow.appendChild(th);
 
-        // Product cell
         const td = document.createElement("td");
-
         if (mode === "filled") {
-          td.textContent = divisor * i;
-        } else if (mode === "blank") {
           const span = document.createElement("span");
-          span.className = "product-blank";
-          span.innerHTML = "&nbsp;";
+          span.className = "prod-text";
+          span.textContent = divisor * i;
           td.appendChild(span);
         } else {
-          // hidden mode should never render here, but just in case:
-          const span = document.createElement("span");
-          span.innerHTML = "";
-          td.appendChild(span);
+          const box = document.createElement("span");
+          box.className = "prod-box";
+          td.appendChild(box);
         }
-
-        multiplesProductsRow.appendChild(td);
+        prodRow.appendChild(td);
       }
     }
 
@@ -439,31 +437,25 @@
       dividendInput.value = dividend;
       divisorInput.value = divisor;
 
-      // Update main equation
-      equationDisplay.innerHTML = `${dividend} ÷ ${divisor} = <span class="blank"></span>`;
+      equationDisplay.innerHTML =
+        `${dividend} ÷ ${divisor} = <span class="blank"></span>`;
 
-      // Update long-division layout
-      dividendBox.textContent = dividend;
-      divisorBox.textContent = divisor;
-
-      // Update divisor labels in multiples section
-      divisorLabel.textContent = divisor;
-      divisorLabel2.textContent = divisor;
-
-      // Handle multiples visibility & content
       if (mode === "hidden") {
-        multiplesSection.classList.add("hidden");
+        mult1.classList.add("hidden");
+        mult2.classList.add("hidden");
       } else {
-        multiplesSection.classList.remove("hidden");
-        buildMultiples(divisor, mode);
+        mult1.classList.remove("hidden");
+        mult2.classList.remove("hidden");
+        buildMultiplesRow(headRow1, prodRow1, divisor, mode);
+        buildMultiplesRow(headRow2, prodRow2, divisor, mode);
       }
     }
 
     function randomProblem() {
-      const randomDividend = Math.floor(Math.random() * 90) + 10; // 10–99
-      const randomDivisor = Math.floor(Math.random() * 8) + 2;    // 2–9
-      dividendInput.value = randomDividend;
-      divisorInput.value = randomDivisor;
+      const randDividend = Math.floor(Math.random() * 90) + 10; // 10–99
+      const randDivisor = Math.floor(Math.random() * 8) + 2;    // 2–9
+      dividendInput.value = randDividend;
+      divisorInput.value = randDivisor;
       updateOrganizer();
     }
 
@@ -471,7 +463,6 @@
     document.getElementById("randomBtn").addEventListener("click", randomProblem);
     document.getElementById("printBtn").addEventListener("click", () => window.print());
 
-    // Initial render
     updateOrganizer();
   </script>
 </body>
