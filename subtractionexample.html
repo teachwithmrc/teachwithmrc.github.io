@@ -29,7 +29,7 @@
     .steps-panel {
       border: 2px solid #000;
       border-radius: 4px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .steps-table {
@@ -46,26 +46,26 @@
     }
 
     .steps-top {
-      padding: 4px;
+      padding: 3px;
       border-bottom: 1px solid #000;
       vertical-align: top;
     }
 
     .steps-bottom {
-      padding: 4px;
+      padding: 3px;
       text-align: center;
       vertical-align: middle;
     }
 
     .step-title {
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 0.8rem;     /* smaller */
       text-align: center;
-      margin-bottom: 2px;
+      margin-bottom: 1px;
     }
 
     .step-text {
-      font-size: 0.8rem;
+      font-size: 0.7rem;      /* smaller */
       text-align: center;
       line-height: 1.2;
     }
@@ -73,7 +73,7 @@
     .steps-bottom img {
       max-width: 100%;
       height: auto;
-      max-height: 1.25in; /* keeps whole thing short enough */
+      max-height: 1.6in;      /* bigger pictures */
       display: inline-block;
     }
 
@@ -95,7 +95,7 @@
       font-size: 0.8rem;
     }
 
-    /* 3 problem rows, compressed */
+    /* 3 problem rows */
     .problems-column {
       display: flex;
       flex-direction: column;
@@ -106,14 +106,14 @@
       border: 2px solid #000;
       border-radius: 6px;
       padding: 8px 10px;
-      min-height: 180px;
+      min-height: 190px;        /* a bit bigger but still fits */
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
 
     .equation-line {
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       font-weight: 600;
     }
 
@@ -141,7 +141,7 @@
     .vertical-table {
       border-collapse: collapse;
       table-layout: fixed;
-      min-width: 160px;
+      min-width: 170px;
     }
 
     .vertical-table td {
@@ -150,13 +150,13 @@
     }
 
     .digit-cell {
-      font-size: 1.6rem;
+      font-size: 1.7rem;
       font-weight: 700;
-      width: 44px;
+      width: 46px;
     }
 
     .sign-cell {
-      font-size: 1.6rem;
+      font-size: 1.7rem;
       width: 24px;
       vertical-align: bottom;
     }
@@ -186,6 +186,18 @@
       flex-direction: column;
       gap: 4px;
       align-items: center;
+    }
+
+    .instruction-row {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;     /* very small so it doesn't interfere */
+      padding: 0 4px;
+    }
+
+    .blocks-instruction {
+      white-space: nowrap;
     }
 
     .blocks-columns {
@@ -280,10 +292,10 @@
       button { display: none; }
       .page {
         width: 100%;
-        padding: 0.25in;
+        padding: 0.25in;          /* tighter for print */
       }
       .problem-card {
-        min-height: 170px;
+        min-height: 180px;
         padding: 6px 8px;
       }
       .problems-column {
@@ -445,6 +457,10 @@
       blocksPanel.classList.add("blocks-panel");
 
       blocksPanel.innerHTML = `
+        <div class="instruction-row">
+          <span class="blocks-instruction tens-inst"></span>
+          <span class="blocks-instruction ones-inst"></span>
+        </div>
         <div class="blocks-columns">
           <div class="block-col">
             <div class="panel-label">Tens</div>
@@ -471,6 +487,12 @@
       createBlocks(blocksPanel.querySelector(".tens-row"), aT, "ten");
       createBlocks(blocksPanel.querySelector(".ones-row"), aO, "one");
       fillTenFrame(blocksPanel.querySelector(".regroup-box-under"));
+
+      // Tiny instructions above Tens/Ones
+      const tensInst = blocksPanel.querySelector(".tens-inst");
+      const onesInst = blocksPanel.querySelector(".ones-inst");
+      tensInst.textContent = `Subtract ${bT} tens.`;
+      onesInst.textContent = `Subtract ${bO} ones.`;
 
       return card;
     }
