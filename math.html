@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>2-Digit Subtraction with Regrouping – Vertical Setup (3 per page)</title>
+  <title>2-Digit Subtraction with Regrouping – Vertical + Base-10 Blocks (3 per page)</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -10,77 +10,59 @@
       margin: 0;
       padding: 0;
       background: #ffffff;
-    }
-
-    body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     .page {
       width: 8.5in;
-      max-width: 100%;
       margin: 0 auto;
       padding: 0.5in;
     }
 
     h1 {
-      font-size: 1.3rem;
-      margin: 0 0 4px;
       text-align: center;
-    }
-
-    .subtitle {
-      font-size: 0.9rem;
-      text-align: center;
-      margin-bottom: 10px;
-      color: #333;
+      margin-bottom: 4px;
     }
 
     .controls {
       display: flex;
       justify-content: flex-end;
-      gap: 8px;
-      margin-bottom: 10px;
-      font-size: 0.85rem;
+      gap: 10px;
+      margin-bottom: 12px;
     }
 
     button {
-      padding: 5px 10px;
-      font-size: 0.9rem;
-      border-radius: 4px;
+      padding: 6px 12px;
       border: 1px solid #000;
+      background: white;
       cursor: pointer;
       font-weight: 600;
-      background: #ffffff;
+      border-radius: 4px;
     }
 
-    /* 3 problems, stacked vertically */
+    /* 3 big rows */
     .problems-column {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 20px;
     }
 
     .problem-card {
       border: 2px solid #000;
       border-radius: 6px;
-      padding: 10px 12px;
+      padding: 12px;
+      min-height: 360px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      min-height: 220px;
+      gap: 10px;
     }
 
     .equation-line {
-      font-size: 1.3rem;
-      margin-bottom: 4px;
+      font-size: 1.4rem;
+      font-weight: 600;
     }
 
-    .equation-blank {
-      font-family: inherit;
-    }
-
-    /* Vertical subtraction layout */
+    /* Vertical layout */
     .vertical-wrapper {
       display: flex;
       justify-content: center;
@@ -90,85 +72,146 @@
     .vertical-table {
       border-collapse: collapse;
       table-layout: fixed;
-      min-width: 160px;
+      min-width: 200px;
     }
 
     .vertical-table td {
-      padding: 4px;
       text-align: center;
-    }
-
-    .sign-cell {
-      width: 20px;
-      font-size: 1.3rem;
-      vertical-align: bottom;
+      padding: 4px;
     }
 
     .digit-cell {
+      font-size: 2rem;
+      font-weight: 700;
+      width: 60px;
+    }
+
+    .sign-cell {
+      font-size: 2rem;
       width: 40px;
-      font-size: 1.6rem;
-      font-weight: 600;
       vertical-align: bottom;
     }
 
+    /* BIG regrouping boxes */
     .regroup-cell {
-      height: 26px;
-      vertical-align: bottom;
+      height: 40px;
     }
 
     .regroup-box {
-      width: 32px;
-      height: 20px;
-      border: 1px solid #000;
+      width: 55px;
+      height: 30px;
+      border: 2px solid #000;
       margin: 0 auto;
     }
 
-    .answer-row td {
-      padding-top: 2px;
-    }
-
     .answer-line-vertical {
-      border-top: 2px solid #000;
-      margin-top: 2px;
+      border-top: 3px solid #000;
       width: 100%;
       height: 0;
+      margin-top: 6px;
     }
 
-    .footer-note {
-      font-size: 0.8rem;
-      color: #333;
+    /* Base-10 blocks */
+    .blocks-section {
       margin-top: 10px;
-      text-align: center;
+    }
+
+    .place-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      margin-top: 6px;
+    }
+
+    .place-table th,
+    .place-table td {
+      border: 1px solid #000;
+      padding: 5px;
+      vertical-align: top;
+    }
+
+    .place-header {
+      font-weight: 700;
+    }
+
+    .tens-stack,
+    .ones-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .blocks-row-tens {
+      display: grid;
+      grid-template-columns: repeat(5, auto);
+      gap: 6px;
+    }
+
+    .blocks-row-ones {
+      display: grid;
+      grid-template-columns: repeat(5, 24px);
+      grid-auto-rows: 24px;
+      gap: 5px;
+    }
+
+    .block {
+      border: 2px solid #000;
+      background: transparent;
+    }
+
+    .block.ten {
+      width: 25px;
+      height: 80px;
+    }
+
+    .block.one {
+      width: 24px;
+      height: 24px;
+    }
+
+    .regroup-box-under {
+      width: 90%;
+      height: 65px;
+      border: 2px dotted #bbb;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      margin-top: 6px;
+    }
+
+    .ten-frame-cell {
+      border-right: 1px dotted #ccc;
+      border-bottom: 1px dotted #ccc;
+    }
+
+    .ten-frame-cell:nth-child(5),
+    .ten-frame-cell:nth-child(10) {
+      border-right: none;
+    }
+
+    .ten-frame-cell:nth-child(n+6) {
+      border-bottom: none;
     }
 
     @media print {
       .controls { display: none; }
-      .page {
-        width: 100%;
-        margin: 0;
-        padding: 0.5in;
-      }
       button { display: none; }
+      .page { padding: 0.3in; }
     }
   </style>
 </head>
 <body>
   <div class="page">
-    <h1>2-Digit Subtraction with Regrouping – Vertical Setup</h1>
-    <div class="subtitle">
-      Set up the problem vertically. Regroup if needed and write the new numbers in the boxes above each digit.
-    </div>
+    <h1>Subtraction with Regrouping — Vertical Setup + Base-10 Blocks</h1>
 
     <div class="controls">
-      <button id="generateBtn">Generate New Worksheet</button>
-      <button id="printBtn">Print Page</button>
+      <button id="generateBtn">Generate New</button>
+      <button id="printBtn">Print</button>
     </div>
 
     <div class="problems-column" id="problemsColumn"></div>
-
-    <div class="footer-note">
-      3 problems per page • All problems require regrouping in the ones place.
-    </div>
   </div>
 
   <script>
@@ -176,43 +219,58 @@
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    // Generate a 2-digit subtraction problem that requires regrouping in the ones place
-    function generateSubtractionRegroupingProblem() {
+    function generateProblem() {
       let a, b;
       while (true) {
         a = randomInt(20, 99);
         b = randomInt(10, a - 1);
-        if ((a % 10) < (b % 10)) {
-          return { a, b };
-        }
+        if (a % 10 < b % 10) return { a, b };
       }
     }
 
-    function renderProblemCard(problem) {
+    function createBlocks(container, count, type) {
+      container.innerHTML = "";
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement("div");
+        el.classList.add("block", type);
+        container.appendChild(el);
+      }
+    }
+
+    function fillTenFrame(frameEl) {
+      frameEl.innerHTML = "";
+      for (let i = 0; i < 10; i++) {
+        const c = document.createElement("div");
+        c.classList.add("ten-frame-cell");
+        frameEl.appendChild(c);
+      }
+    }
+
+    function renderCard(problem) {
       const { a, b } = problem;
 
       const card = document.createElement("div");
       card.classList.add("problem-card");
 
-      // Horizontal equation with blank
+      /* Horizontal: 53 − 28 = _________ */
       const eq = document.createElement("div");
       eq.classList.add("equation-line");
-      eq.textContent = `${a} − ${b} = ________`;
+      eq.textContent = `${a} − ${b} = _________`;
       card.appendChild(eq);
 
-      // Vertical setup
-      const verticalWrapper = document.createElement("div");
-      verticalWrapper.classList.add("vertical-wrapper");
+      /* Vertical layout */
+      const vertical = document.createElement("div");
+      vertical.classList.add("vertical-wrapper");
 
-      const table = document.createElement("table");
-      table.classList.add("vertical-table");
+      const vtable = document.createElement("table");
+      vtable.classList.add("vertical-table");
 
-      const aTens = Math.floor(a / 10);
-      const aOnes = a % 10;
-      const bTens = Math.floor(b / 10);
-      const bOnes = b % 10;
+      const aT = Math.floor(a / 10);
+      const aO = a % 10;
+      const bT = Math.floor(b / 10);
+      const bO = b % 10;
 
-      table.innerHTML = `
+      vtable.innerHTML = `
         <tr>
           <td class="sign-cell"></td>
           <td class="regroup-cell"><div class="regroup-box"></div></td>
@@ -220,24 +278,57 @@
         </tr>
         <tr>
           <td class="sign-cell"></td>
-          <td class="digit-cell digit-a-tens">${aTens}</td>
-          <td class="digit-cell digit-a-ones">${aOnes}</td>
+          <td class="digit-cell">${aT}</td>
+          <td class="digit-cell">${aO}</td>
         </tr>
         <tr>
           <td class="sign-cell">−</td>
-          <td class="digit-cell digit-b-tens">${bTens}</td>
-          <td class="digit-cell digit-b-ones">${bOnes}</td>
+          <td class="digit-cell">${bT}</td>
+          <td class="digit-cell">${bO}</td>
         </tr>
-        <tr class="answer-row">
+        <tr>
           <td class="sign-cell"></td>
-          <td colspan="2">
-            <div class="answer-line-vertical"></div>
+          <td colspan="2"><div class="answer-line-vertical"></div></td>
+        </tr>
+      `;
+
+      vertical.appendChild(vtable);
+      card.appendChild(vertical);
+
+      /* Base-10 blocks section */
+      const blocksSection = document.createElement("div");
+      blocksSection.classList.add("blocks-section");
+
+      const placeTable = document.createElement("table");
+      placeTable.classList.add("place-table");
+
+      placeTable.innerHTML = `
+        <tr>
+          <th class="place-header">Tens</th>
+          <th class="place-header">Ones</th>
+        </tr>
+        <tr>
+          <td>
+            <div class="tens-stack">
+              <div class="blocks-row-tens tens-row"></div>
+            </div>
+          </td>
+          <td>
+            <div class="ones-stack">
+              <div class="blocks-row-ones ones-row"></div>
+              <div class="regroup-box-under"></div>
+            </div>
           </td>
         </tr>
       `;
 
-      verticalWrapper.appendChild(table);
-      card.appendChild(verticalWrapper);
+      blocksSection.appendChild(placeTable);
+      card.appendChild(blocksSection);
+
+      /* Fill base-10 blocks */
+      createBlocks(placeTable.querySelector(".tens-row"), aT, "ten");
+      createBlocks(placeTable.querySelector(".ones-row"), aO, "one");
+      fillTenFrame(placeTable.querySelector(".regroup-box-under"));
 
       return card;
     }
@@ -246,18 +337,15 @@
       const container = document.getElementById("problemsColumn");
       container.innerHTML = "";
 
-      const NUM_PROBLEMS = 3; // three problems per page
-      for (let i = 0; i < NUM_PROBLEMS; i++) {
-        const prob = generateSubtractionRegroupingProblem();
-        const card = renderProblemCard(prob);
-        container.appendChild(card);
+      for (let i = 0; i < 3; i++) {
+        const prob = generateProblem();
+        container.appendChild(renderCard(prob));
       }
     }
 
     document.getElementById("generateBtn").addEventListener("click", generateWorksheet);
     document.getElementById("printBtn").addEventListener("click", () => window.print());
 
-    // Initial load
     generateWorksheet();
   </script>
 </body>
