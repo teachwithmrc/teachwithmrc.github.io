@@ -109,9 +109,25 @@
       gap: 12px;
     }
 
-    /* Left organizer grid */
+    /* LEFT: division house + boxes */
     .ld-grid-wrapper {
       position: relative;
+      display: flex;
+      flex-direction: row;
+      gap: 6px;
+      align-items: flex-start;
+    }
+
+    .div-bracket {
+      border-left: 3px solid #000;
+      border-top: 3px solid #000;
+      width: 70px;
+      height: 170px;
+      margin-right: 4px;
+      margin-top: 16px;
+    }
+
+    .inside-house {
       display: flex;
       gap: 6px;
       align-items: flex-start;
@@ -134,6 +150,14 @@
       background: #eaeaea;
     }
 
+    .side-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin-left: 8px;
+    }
+
     .remainder-label {
       position: absolute;
       top: -18px;
@@ -150,15 +174,6 @@
       margin-left: 4px;
     }
 
-    .div-bracket {
-      border-left: 3px solid #000;
-      border-top: 3px solid #000;
-      width: 70px;
-      height: 170px;
-      margin-left: 4px;
-      margin-top: 16px;
-    }
-
     .minus-sign {
       font-size: 1.4rem;
       margin: 4px 0;
@@ -170,7 +185,7 @@
       margin: 4px 0;
     }
 
-    /* Multiples sections */
+    /* RIGHT: multiples sections (unchanged) */
     .multiples-section {
       border: 1px solid #000;
       border-radius: 4px;
@@ -288,48 +303,52 @@
       </div>
 
       <div class="main-area">
-        <!-- LEFT: all step boxes -->
+        <!-- LEFT: division house + step boxes -->
         <div class="left-panel">
           <div class="ld-grid-wrapper">
-            <!-- two columns of boxes like your template -->
-            <div class="ld-column">
-              <div class="ld-box gray"></div>
-              <div class="ld-box gray"></div>
-              <div class="ld-box"></div>
-              <div class="ld-box"></div>
-              <div class="ld-box"></div>
-              <div class="ld-box"></div>
-            </div>
-
-            <div class="ld-column">
-              <div class="ld-box gray"></div>
-              <div class="ld-box gray"></div>
-              <div class="ld-box"></div>
-              <div class="ld-box"></div>
-              <div class="ld-box"></div>
-              <div class="ld-box"></div>
-            </div>
-
-            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; margin-left:8px;">
-              <div class="remainder-label">
-                r <span class="r-box"></span>
-              </div>
-              <div class="minus-sign">−</div>
-              <div class="ld-box"></div>
-              <div class="down-arrow">⬇</div>
-              <div class="ld-box"></div>
-              <div class="minus-sign">−</div>
-              <div class="ld-box"></div>
-              <div class="ld-box"></div>
-            </div>
-
+            <!-- division bracket on the LEFT now -->
             <div class="div-bracket"></div>
+
+            <!-- everything inside the house sits to the RIGHT of the bracket -->
+            <div class="inside-house">
+              <div class="ld-column">
+                <div class="ld-box gray"></div>
+                <div class="ld-box gray"></div>
+                <div class="ld-box"></div>
+                <div class="ld-box"></div>
+                <div class="ld-box"></div>
+                <div class="ld-box"></div>
+              </div>
+
+              <div class="ld-column">
+                <div class="ld-box gray"></div>
+                <div class="ld-box gray"></div>
+                <div class="ld-box"></div>
+                <div class="ld-box"></div>
+                <div class="ld-box"></div>
+                <div class="ld-box"></div>
+              </div>
+
+              <div class="side-column">
+                <div class="minus-sign">−</div>
+                <div class="ld-box"></div>
+                <div class="down-arrow">⬇</div>
+                <div class="ld-box"></div>
+                <div class="minus-sign">−</div>
+                <div class="ld-box"></div>
+                <div class="ld-box"></div>
+              </div>
+            </div>
+
+            <!-- remainder box up top right -->
+            <div class="remainder-label">
+              r <span class="r-box"></span>
+            </div>
           </div>
         </div>
 
-        <!-- RIGHT: two multiples sections -->
+        <!-- RIGHT: two multiples sections (same as before) -->
         <div class="right-panel">
-          <!-- Multiples section 1 -->
           <div id="mult1" class="multiples-section">
             <div class="multiples-title">Top Digit Multiples</div>
             <div class="multiples-question">
@@ -350,7 +369,6 @@
             </table>
           </div>
 
-          <!-- Multiples section 2 -->
           <div id="mult2" class="multiples-section">
             <div class="multiples-title">Full Number Multiples</div>
             <div class="multiples-question">
@@ -370,7 +388,6 @@
               </tbody>
             </table>
           </div>
-
         </div>
       </div>
     </div>
@@ -451,16 +468,14 @@
       const tens = Math.floor(dividend / 10);
       const ones = dividend % 10;
 
-      // Fill the question boxes with digits
       topDigitDivisorBox.textContent = divisor;
       topDigitDividendBox.textContent = tens;
-      topDigitBlankBox.textContent = ""; // still a blank square for 'go into __'
+      topDigitBlankBox.textContent = "";
 
       fullDivisorBox.textContent = divisor;
       fullDividendTensBox.textContent = tens;
       fullDividendOnesBox.textContent = ones;
 
-      // Multiples strips
       if (mode === "hidden") {
         mult1.classList.add("hidden");
         mult2.classList.add("hidden");
