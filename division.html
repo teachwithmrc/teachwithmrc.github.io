@@ -106,31 +106,29 @@
       flex: 1.3;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
-    /* LEFT: division house + boxes */
+    /* LEFT: division template area */
     .ld-grid-wrapper {
       position: relative;
       display: flex;
       flex-direction: row;
       gap: 6px;
       align-items: flex-start;
+      padding-left: 18px; /* room for corner bracket */
+      min-height: 210px;
     }
 
-    .div-bracket {
+    /* Small corner bracket like your screenshot */
+    .corner-bracket {
+      position: absolute;
+      top: 34px;   /* adjust if needed */
+      left: 4px;
+      width: 72px;  /* across the first two boxes */
+      height: 34px; /* just tall enough for the first row */
       border-left: 3px solid #000;
       border-top: 3px solid #000;
-      width: 70px;
-      height: 170px;
-      margin-right: 4px;
-      margin-top: 16px;
-    }
-
-    .inside-house {
-      display: flex;
-      gap: 6px;
-      align-items: flex-start;
     }
 
     .ld-column {
@@ -158,9 +156,20 @@
       margin-left: 8px;
     }
 
+    .minus-sign {
+      font-size: 1.4rem;
+      margin: 4px 0;
+    }
+
+    .down-arrow {
+      font-size: 1.8rem;
+      text-align: center;
+      margin: 4px 0;
+    }
+
     .remainder-label {
       position: absolute;
-      top: -18px;
+      top: 0;
       right: 0;
       font-size: 0.9rem;
     }
@@ -174,18 +183,7 @@
       margin-left: 4px;
     }
 
-    .minus-sign {
-      font-size: 1.4rem;
-      margin: 4px 0;
-    }
-
-    .down-arrow {
-      font-size: 1.8rem;
-      text-align: center;
-      margin: 4px 0;
-    }
-
-    /* RIGHT: multiples sections (unchanged) */
+    /* RIGHT: multiples sections */
     .multiples-section {
       border: 1px solid #000;
       border-radius: 4px;
@@ -253,6 +251,58 @@
       display: none !important;
     }
 
+    /* Base-10 (ones) group model */
+    .group-model {
+      border: 1px solid #000;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 0.8rem;
+    }
+
+    .group-title {
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .group-info {
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .groups-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      justify-content: center;
+    }
+
+    .group-box {
+      border: 1px solid #000;
+      border-radius: 3px;
+      padding: 2px;
+      min-width: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .group-label {
+      font-size: 0.7rem;
+      text-align: center;
+      margin-top: 3px;
+    }
+
+    .one-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      border: 1px solid #000;
+      background: #fff;
+    }
+
     @media print {
       .controls { display: none; }
       button { display: none; }
@@ -303,51 +353,50 @@
       </div>
 
       <div class="main-area">
-        <!-- LEFT: division house + step boxes -->
+        <!-- LEFT: division template -->
         <div class="left-panel">
           <div class="ld-grid-wrapper">
-            <!-- division bracket on the LEFT now -->
-            <div class="div-bracket"></div>
+            <!-- corner bracket like your template -->
+            <div class="corner-bracket"></div>
 
-            <!-- everything inside the house sits to the RIGHT of the bracket -->
-            <div class="inside-house">
-              <div class="ld-column">
-                <div class="ld-box gray"></div>
-                <div class="ld-box gray"></div>
-                <div class="ld-box"></div>
-                <div class="ld-box"></div>
-                <div class="ld-box"></div>
-                <div class="ld-box"></div>
-              </div>
-
-              <div class="ld-column">
-                <div class="ld-box gray"></div>
-                <div class="ld-box gray"></div>
-                <div class="ld-box"></div>
-                <div class="ld-box"></div>
-                <div class="ld-box"></div>
-                <div class="ld-box"></div>
-              </div>
-
-              <div class="side-column">
-                <div class="minus-sign">−</div>
-                <div class="ld-box"></div>
-                <div class="down-arrow">⬇</div>
-                <div class="ld-box"></div>
-                <div class="minus-sign">−</div>
-                <div class="ld-box"></div>
-                <div class="ld-box"></div>
-              </div>
+            <!-- inside columns -->
+            <div class="ld-column">
+              <div class="ld-box gray"></div>
+              <div class="ld-box gray"></div>
+              <div class="ld-box"></div>
+              <div class="ld-box"></div>
+              <div class="ld-box"></div>
+              <div class="ld-box"></div>
             </div>
 
-            <!-- remainder box up top right -->
+            <div class="ld-column">
+              <div class="ld-box gray"></div>
+              <div class="ld-box gray"></div>
+              <div class="ld-box"></div>
+              <div class="ld-box"></div>
+              <div class="ld-box"></div>
+              <div class="ld-box"></div>
+            </div>
+
+            <!-- minus / bring down column -->
+            <div class="side-column">
+              <div class="minus-sign">−</div>
+              <div class="ld-box"></div>
+              <div class="down-arrow">⬇</div>
+              <div class="ld-box"></div>
+              <div class="minus-sign">−</div>
+              <div class="ld-box"></div>
+              <div class="ld-box"></div>
+            </div>
+
+            <!-- remainder box -->
             <div class="remainder-label">
               r <span class="r-box"></span>
             </div>
           </div>
         </div>
 
-        <!-- RIGHT: two multiples sections (same as before) -->
+        <!-- RIGHT: multiples + base-10 model -->
         <div class="right-panel">
           <div id="mult1" class="multiples-section">
             <div class="multiples-title">Top Digit Multiples</div>
@@ -388,6 +437,13 @@
               </tbody>
             </table>
           </div>
+
+          <div class="group-model">
+            <div class="group-title">Base-10 Ones Group Model</div>
+            <div id="groupInfo" class="group-info"></div>
+            <div id="groupsRow" class="groups-row"></div>
+            <div id="groupNote" class="group-label"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -412,6 +468,10 @@
     const fullDivisorBox = document.getElementById("fullDivisorBox");
     const fullDividendTensBox = document.getElementById("fullDividendTensBox");
     const fullDividendOnesBox = document.getElementById("fullDividendOnesBox");
+
+    const groupInfo = document.getElementById("groupInfo");
+    const groupsRow = document.getElementById("groupsRow");
+    const groupNote = document.getElementById("groupNote");
 
     function clampDividend(v) {
       let n = parseInt(v, 10);
@@ -454,6 +514,61 @@
       }
     }
 
+    function buildGroupModel(dividend, divisor) {
+      groupsRow.innerHTML = "";
+      groupNote.textContent = "";
+
+      const q = Math.floor(dividend / divisor);
+      const r = dividend % divisor;
+
+      groupInfo.textContent =
+        `${dividend} ones → ${q} groups of ${divisor} ones, remainder ${r}.`;
+
+      // keep picture reasonable
+      if (q > 12) {
+        groupNote.textContent =
+          "Too many groups to draw. Try a smaller dividend or larger divisor for a picture model.";
+        return;
+      }
+
+      // quotient groups
+      for (let g = 0; g < q; g++) {
+        const box = document.createElement("div");
+        box.className = "group-box";
+        for (let i = 0; i < divisor; i++) {
+          const dot = document.createElement("div");
+          dot.className = "one-dot";
+          box.appendChild(dot);
+        }
+        groupsRow.appendChild(box);
+      }
+
+      // remainder
+      if (r > 0) {
+        const remWrapper = document.createElement("div");
+        remWrapper.style.display = "flex";
+        remWrapper.style.flexDirection = "column";
+        remWrapper.style.alignItems = "center";
+        remWrapper.style.gap = "2px";
+
+        const remBox = document.createElement("div");
+        remBox.className = "group-box";
+        for (let i = 0; i < r; i++) {
+          const dot = document.createElement("div");
+          dot.className = "one-dot";
+          remBox.appendChild(dot);
+        }
+
+        const label = document.createElement("div");
+        label.className = "group-label";
+        label.textContent = "remainder";
+
+        remWrapper.appendChild(remBox);
+        remWrapper.appendChild(label);
+        groupsRow.appendChild(remWrapper);
+      }
+    }
+
     function updateOrganizer() {
       const dividend = clampDividend(dividendInput.value);
       const divisor = clampDivisor(divisorInput.value);
@@ -468,6 +583,7 @@
       const tens = Math.floor(dividend / 10);
       const ones = dividend % 10;
 
+      // fill question boxes with digits
       topDigitDivisorBox.textContent = divisor;
       topDigitDividendBox.textContent = tens;
       topDigitBlankBox.textContent = "";
@@ -476,6 +592,7 @@
       fullDividendTensBox.textContent = tens;
       fullDividendOnesBox.textContent = ones;
 
+      // multiples strips
       if (mode === "hidden") {
         mult1.classList.add("hidden");
         mult2.classList.add("hidden");
@@ -485,6 +602,9 @@
         buildMultiplesRow(headRow1, prodRow1, divisor, mode);
         buildMultiplesRow(headRow2, prodRow2, divisor, mode);
       }
+
+      // base-10 ones model
+      buildGroupModel(dividend, divisor);
     }
 
     function randomProblem() {
