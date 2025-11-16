@@ -32,8 +32,27 @@
     .subtitle {
       font-size: 0.9rem;
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       color: #333;
+    }
+
+    /* Example card at top */
+    .example-card {
+      border: 2px solid #000;
+      border-radius: 6px;
+      padding: 8px 10px 10px;
+      margin-bottom: 10px;
+    }
+
+    .example-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .example-caption-top {
+      font-size: 0.8rem;
+      margin-bottom: 4px;
     }
 
     .controls {
@@ -174,6 +193,60 @@
       text-align: center;
     }
 
+    /* Example-specific styling */
+    .example-table {
+      margin-top: 4px;
+    }
+
+    .example-ones-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .circle-overlay {
+      position: absolute;
+      width: 110px;
+      height: 44px;
+      border: 2px solid #000;
+      border-radius: 999px;
+      top: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .example-tens-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .example-tens-extra {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      margin-top: 2px;
+    }
+
+    .example-caption {
+      font-size: 0.75rem;
+      text-align: center;
+    }
+
+    /* New answer row styling (inside table) */
+    .answer-cell {
+      height: 40px;
+      vertical-align: middle;
+    }
+
+    .answer-box {
+      font-size: 0.9rem;
+      text-align: center;
+      padding-top: 4px;
+    }
+
     @media print {
       .controls { display: none; }
       .page {
@@ -189,7 +262,76 @@
   <div class="page">
     <h1>2-Digit Addition with Regrouping – Base-10 Blocks</h1>
     <div class="subtitle">
-      Each problem shows tens and ones for both addends, separated by a dotted line. Ones are arranged 5 across so students can circle a group of 10.
+      Circle 10 ones to make a ten. Trade them for 1 ten rod, then add tens and ones.
+    </div>
+
+    <!-- Example card -->
+    <div class="example-card">
+      <div class="example-title">Example: 46 + 38</div>
+      <div class="example-caption-top">
+        Step 1: Show each number in tens and ones. Step 2: Circle 10 ones to trade for 1 ten. Step 3: Add the extra ten rod.
+      </div>
+      <table class="place-table example-table">
+        <tr>
+          <th class="place-header">Tens</th>
+          <th class="place-header">Ones</th>
+        </tr>
+        <tr>
+          <!-- Tens example -->
+          <td class="place-cell">
+            <div class="example-tens-stack">
+              <div class="blocks-row-tens">
+                <!-- 4 tens -->
+                <div class="block ten"></div>
+                <div class="block ten"></div>
+                <div class="block ten"></div>
+                <div class="block ten"></div>
+                <div style="width:8px;"></div>
+                <!-- 3 tens -->
+                <div class="block ten"></div>
+                <div class="block ten"></div>
+                <div class="block ten"></div>
+              </div>
+              <div class="example-tens-extra">
+                <div class="block ten"></div>
+                <div class="example-caption">+1 ten after regrouping</div>
+              </div>
+            </div>
+          </td>
+
+          <!-- Ones example -->
+          <td class="place-cell">
+            <div class="stacked">
+              <div class="example-ones-container">
+                <div class="blocks-row-ones">
+                  <!-- 14 ones total -->
+                  <!-- Row 1: 5 -->
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <!-- Row 2: 5 -->
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <!-- Row 3: 4 -->
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                  <div class="block one"></div>
+                </div>
+                <div class="circle-overlay"></div>
+              </div>
+              <div class="ones-note">
+                Circle 10 ones to trade for 1 ten.
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
     </div>
 
     <div class="controls">
@@ -200,7 +342,7 @@
     <div class="problems-grid" id="problemsPage"></div>
 
     <div class="footer-note">
-      4 problems per page (2 columns × 2 rows). Print and have students circle 10 ones, regroup into a ten, then write the sum.
+      4 problems per page (2 columns × 2 rows). Each problem requires regrouping in the ones place.
     </div>
   </div>
 
@@ -265,6 +407,14 @@
               <div class="blocks-row-ones ones-row-2"></div>
               <div class="ones-note">Circle 10 ones to make a ten.</div>
             </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="place-cell answer-cell">
+            <div class="answer-box">Tens: ____________</div>
+          </td>
+          <td class="place-cell answer-cell">
+            <div class="answer-box">Ones: ____________</div>
           </td>
         </tr>
       `;
