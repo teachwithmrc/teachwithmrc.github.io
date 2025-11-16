@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>2-Digit Subtraction with Regrouping (Base-10 Blocks – 4 per page)</title>
+  <title>2-Digit Subtraction with Regrouping – Base-10 Blocks (4 per page)</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -54,6 +54,7 @@
       background: #ffffff;
     }
 
+    /* Grid for 4 problems per page */
     .problems-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -77,6 +78,9 @@
       margin-bottom: 2px;
     }
 
+    /*==========================
+      Table Layout
+    ==========================*/
     .place-table {
       width: 100%;
       border-collapse: collapse;
@@ -102,7 +106,9 @@
       text-align: center;
     }
 
-    /* Tens column */
+    /*==========================
+      Tens Layout (max 5 per row)
+    ==========================*/
     .tens-stack {
       display: flex;
       justify-content: center;
@@ -111,7 +117,6 @@
       padding: 4px 0;
     }
 
-    /* Max 5 tens per row using grid */
     .blocks-row-tens {
       display: grid;
       grid-template-columns: repeat(5, auto);
@@ -121,7 +126,9 @@
       align-items: end;
     }
 
-    /* Ones column */
+    /*==========================
+      Ones Layout (max 5 across)
+    ==========================*/
     .ones-stack {
       display: flex;
       flex-direction: column;
@@ -133,7 +140,6 @@
       padding-top: 4px;
     }
 
-    /* Ones grid: 5 across max, bigger blocks */
     .blocks-row-ones {
       display: grid;
       grid-template-columns: repeat(5, 24px);
@@ -146,36 +152,43 @@
       width: 100%;
     }
 
-    /* Ten-frame regroup box underneath */
+    /*==========================
+      Dotted Ten-Frame (optional-use look)
+    ==========================*/
     .regroup-box-under {
       width: 90%;
       height: 60px;
-      border: 2px solid #000;
+      border: 2px dotted #bbb;
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       grid-template-rows: repeat(2, 1fr);
+      margin-top: 6px;
     }
 
     .ten-frame-cell {
-      border-right: 1px solid #000;
-      border-bottom: 1px solid #000;
+      border-right: 1px dotted #ccc;
+      border-bottom: 1px dotted #ccc;
     }
 
+    /* remove right border on last cell of each row */
     .ten-frame-cell:nth-child(5),
     .ten-frame-cell:nth-child(10) {
       border-right: none;
     }
 
+    /* remove bottom border on last row */
     .ten-frame-cell:nth-child(n+6) {
       border-bottom: none;
     }
 
+    /*==========================
+      Base-10 block shapes
+    ==========================*/
     .block {
       border: 2px solid #000;
       background: transparent;
     }
 
-    /* Bigger tens + ones */
     .block.ten {
       width: 20px;
       height: 70px;
@@ -186,25 +199,16 @@
       height: 20px;
     }
 
-    /* Answer row inside table */
-    .answer-cell {
-      height: 40px;
-      vertical-align: middle;
+    /*==========================
+      Answer row inside table
+    ==========================*/
+    .answer-row {
+      height: 45px;
     }
 
     .answer-box {
-      font-size: 0.9rem;
-      text-align: center;
-      padding-top: 4px;
-    }
-
-    .answer-line {
-      margin-top: 6px;
       font-size: 1rem;
-    }
-
-    .answer-line::after {
-      content: " _______________";
+      padding-top: 6px;
     }
 
     .footer-note {
@@ -229,7 +233,7 @@
   <div class="page">
     <h1>2-Digit Subtraction with Regrouping – Base-10 Blocks</h1>
     <div class="subtitle">
-      Use the base-10 blocks to subtract. If you regroup, use the 10-frame to show 10 ones.
+      Use the base-10 blocks to subtract. If you regroup, use the dotted 10-frame to show 10 ones.
     </div>
 
     <div class="controls">
@@ -240,7 +244,7 @@
     <div class="problems-grid" id="problemsPage"></div>
 
     <div class="footer-note">
-      4 problems per page (2 columns × 2 rows). All problems require regrouping in the ones place.
+      4 problems per page • Each problem requires regrouping in the ones place.
     </div>
   </div>
 
@@ -249,20 +253,14 @@
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    // Generate a 2-digit subtraction problem with required regrouping in the ones place:
-    // a - b, where a > b, ones(a) < ones(b)
+    /* Generate regrouping-required subtraction problem */
     function generateSubtractionRegroupingProblem() {
       let a, b;
       while (true) {
-        a = randomInt(20, 99);      // minuend
-        b = randomInt(10, a - 1);   // subtrahend smaller than minuend
+        a = randomInt(20, 99);
+        b = randomInt(10, a - 1);
 
-        const aOnes = a % 10;
-        const bOnes = b % 10;
-
-        if (aOnes < bOnes && bOnes !== 0) {
-          return { a, b, diff: a - b };
-        }
+        if ((a % 10) < (b % 10)) return { a, b };
       }
     }
 
@@ -297,17 +295,20 @@
 
       const table = document.createElement("table");
       table.classList.add("place-table");
+
       table.innerHTML = `
         <tr>
           <th class="place-header">Tens</th>
           <th class="place-header">Ones</th>
         </tr>
+
         <tr>
           <td class="place-cell">
             <div class="tens-stack">
               <div class="blocks-row-tens tens-row"></div>
             </div>
           </td>
+
           <td class="place-cell">
             <div class="ones-stack">
               <div class="blocks-row-ones ones-row"></div>
@@ -315,32 +316,21 @@
             </div>
           </td>
         </tr>
-        <tr>
-          <td class="place-cell answer-cell">
-            <div class="answer-box">Tens: ____________</div>
-          </td>
-          <td class="place-cell answer-cell">
-            <div class="answer-box">Ones: ____________</div>
-          </td>
+
+        <tr class="answer-row">
+          <td class="place-cell"><div class="answer-box">Tens: ____________</div></td>
+          <td class="place-cell"><div class="answer-box">Ones: ____________</div></td>
         </tr>
       `;
-      card.appendChild(table);
 
-      const answerLine = document.createElement("div");
-      answerLine.classList.add("answer-line");
-      answerLine.textContent = "Difference:";
-      card.appendChild(answerLine);
+      card.appendChild(table);
 
       const aTens = Math.floor(a / 10);
       const aOnes = a % 10;
 
-      const tensRow = table.querySelector(".tens-row");
-      const onesRow = table.querySelector(".ones-row");
-      const tenFrame = table.querySelector(".regroup-box-under");
-
-      createBlocks(tensRow, aTens, "ten");
-      createBlocks(onesRow, aOnes, "one");
-      fillTenFrame(tenFrame);
+      createBlocks(table.querySelector(".tens-row"), aTens, "ten");
+      createBlocks(table.querySelector(".ones-row"), aOnes, "one");
+      fillTenFrame(table.querySelector(".regroup-box-under"));
 
       return card;
     }
@@ -348,20 +338,15 @@
     function generateWorksheet() {
       const page = document.getElementById("problemsPage");
       page.innerHTML = "";
-
-      const NUM_PROBLEMS = 4; // 4 per page
-
-      for (let i = 0; i < NUM_PROBLEMS; i++) {
+      for (let i = 0; i < 4; i++) {
         const prob = generateSubtractionRegroupingProblem();
-        const card = renderProblemCard(prob);
-        page.appendChild(card);
+        page.appendChild(renderProblemCard(prob));
       }
     }
 
     document.getElementById("generateBtn").addEventListener("click", generateWorksheet);
     document.getElementById("printBtn").addEventListener("click", () => window.print());
 
-    // First load
     generateWorksheet();
   </script>
 </body>
