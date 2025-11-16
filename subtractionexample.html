@@ -16,73 +16,111 @@
     .page {
       width: 8.5in;
       margin: 0 auto;
-      padding: 0.4in;
+      padding: 0.35in;
     }
 
     h1 {
       text-align: center;
-      margin: 0 0 6px;
-      font-size: 1.1rem;
+      margin: 0 0 4px;
+      font-size: 1.05rem;
     }
 
-    /* Example image at top */
-    .example-image-container {
-      text-align: center;
-      margin-bottom: 10px;
+    /* Step panel at top (3 columns, text + images) */
+    .steps-panel {
+      border: 2px solid #000;
+      border-radius: 4px;
+      margin-bottom: 8px;
     }
 
-    .example-image-container img {
+    .steps-table {
       width: 100%;
-      max-width: 7.75in;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .steps-table td {
+      border-right: 1px solid #000;
+    }
+    .steps-table td:last-child {
+      border-right: none;
+    }
+
+    .steps-top {
+      padding: 4px;
+      border-bottom: 1px solid #000;
+      vertical-align: top;
+    }
+
+    .steps-bottom {
+      padding: 4px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .step-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 2px;
+    }
+
+    .step-text {
+      font-size: 0.8rem;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .steps-bottom img {
+      max-width: 100%;
       height: auto;
-      max-height: 2.5in; /* keep everything on one page */
+      max-height: 1.25in; /* keeps whole thing short enough */
+      display: inline-block;
     }
 
     .controls {
       display: flex;
       justify-content: flex-end;
-      gap: 8px;
-      margin-bottom: 8px;
-      font-size: 0.85rem;
+      gap: 6px;
+      margin-bottom: 6px;
+      font-size: 0.8rem;
     }
 
     button {
-      padding: 4px 10px;
+      padding: 3px 8px;
       border: 1px solid #000;
       background: white;
       cursor: pointer;
       font-weight: 600;
       border-radius: 4px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
 
-    /* 3 big rows, tightened spacing */
+    /* 3 problem rows, compressed */
     .problems-column {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .problem-card {
-      border: 2px solid #000;
-      border-radius: 6px;
-      padding: 10px 12px;
-      min-height: 210px; /* slightly tighter so 3 fit with image */
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
 
+    .problem-card {
+      border: 2px solid #000;
+      border-radius: 6px;
+      padding: 8px 10px;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
     .equation-line {
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       font-weight: 600;
     }
 
-    /* Two main columns per problem */
     .two-columns {
       display: flex;
       flex-direction: row;
-      gap: 18px;
+      gap: 14px;
       justify-content: space-between;
       align-items: flex-start;
     }
@@ -99,38 +137,37 @@
       justify-content: center;
     }
 
-    /* Vertical subtraction */
+    /* Vertical subtraction layout */
     .vertical-table {
       border-collapse: collapse;
       table-layout: fixed;
-      min-width: 170px;
+      min-width: 160px;
     }
 
     .vertical-table td {
       text-align: center;
-      padding: 2px 4px;
+      padding: 1px 3px;
     }
 
     .digit-cell {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: 700;
-      width: 48px;
+      width: 44px;
     }
 
     .sign-cell {
-      font-size: 1.8rem;
-      width: 28px;
+      font-size: 1.6rem;
+      width: 24px;
       vertical-align: bottom;
     }
 
     .regroup-cell {
-      height: 32px;
+      height: 30px;
     }
 
-    /* SQUARE regroup boxes */
     .regroup-box {
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       border: 2px solid #000;
       margin: 0 auto;
     }
@@ -139,15 +176,15 @@
       border-top: 3px solid #000;
       width: 100%;
       height: 0;
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
-    /* Base-10 block panel (Tens / Ones columns, no borders) */
+    /* Base-10 blocks */
     .blocks-panel {
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
       align-items: center;
     }
 
@@ -155,7 +192,7 @@
       width: 100%;
       display: flex;
       flex-direction: row;
-      gap: 10px;
+      gap: 8px;
       justify-content: center;
       align-items: flex-start;
     }
@@ -165,12 +202,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
     }
 
     .panel-label {
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
 
     .tens-stack,
@@ -179,21 +216,21 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
     }
 
     .blocks-row-tens {
       display: grid;
       grid-template-columns: repeat(5, auto);
-      gap: 4px;
+      gap: 3px;
       justify-content: center;
     }
 
     .blocks-row-ones {
       display: grid;
-      grid-template-columns: repeat(5, 20px);
-      grid-auto-rows: 20px;
-      gap: 4px;
+      grid-template-columns: repeat(5, 18px);
+      grid-auto-rows: 18px;
+      gap: 3px;
       justify-content: center;
     }
 
@@ -203,25 +240,25 @@
     }
 
     .block.ten {
-      width: 20px;
-      height: 60px;
+      width: 18px;
+      height: 54px;
     }
 
     .block.one {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
     }
 
     /* Dotted ten-frame under ones */
     .regroup-box-under {
       width: 100%;
-      max-width: 130px;
-      height: 55px;
+      max-width: 120px;
+      height: 50px;
       border: 2px dotted #bbb;
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       grid-template-rows: repeat(2, 1fr);
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
     .ten-frame-cell {
@@ -243,14 +280,20 @@
       button { display: none; }
       .page {
         width: 100%;
-        padding: 0.3in;
+        padding: 0.25in;
       }
       .problem-card {
-        min-height: 190px; /* tighter on print */
-        padding: 8px 10px;
+        min-height: 170px;
+        padding: 6px 8px;
       }
       .problems-column {
-        gap: 10px;
+        gap: 6px;
+      }
+      h1 {
+        margin-bottom: 2px;
+      }
+      .steps-panel {
+        margin-bottom: 4px;
       }
     }
   </style>
@@ -259,10 +302,47 @@
   <div class="page">
     <h1>Subtraction with Regrouping — Vertical + Base-10 Blocks</h1>
 
-    <!-- Example image at top -->
-    <div class="example-image-container">
-      <img src="subtract.png"
-           alt="Example of breaking apart a ten to subtract with base ten blocks">
+    <!-- Steps explanation panel -->
+    <div class="steps-panel">
+      <table class="steps-table">
+        <tr>
+          <td class="steps-top">
+            <div class="step-title">Step 1: Try to subtract the ones.</div>
+            <div class="step-text">
+              Look at the ones.<br>
+              If you can’t take away 8 ones from 5 ones,<br>
+              you need to <strong>break apart a ten</strong>.
+            </div>
+          </td>
+          <td class="steps-top">
+            <div class="step-title">Step 2: Break apart 1 ten into 10 ones.</div>
+            <div class="step-text">
+              Cross out a ten.<br>
+              Break it apart into <strong>10 ones</strong>.<br>
+              Now you have <strong>4 tens</strong> and <strong>15 ones</strong>.
+            </div>
+          </td>
+          <td class="steps-top">
+            <div class="step-title">Step 3: Subtract the ones and subtract the tens.</div>
+            <div class="step-text">
+              15 ones − 8 ones = 7<br>
+              4 tens − 1 ten = 3 tens<br>
+              Your answer is <strong>37</strong>.
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="steps-bottom">
+            <img src="sub1.png" alt="Step 1 subtraction setup">
+          </td>
+          <td class="steps-bottom">
+            <img src="sub2.png" alt="Step 2 breaking apart a ten">
+          </td>
+          <td class="steps-bottom">
+            <img src="sub3.png" alt="Step 3 subtracting tens and ones">
+          </td>
+        </tr>
+      </table>
     </div>
 
     <div class="controls">
@@ -312,7 +392,6 @@
       const card = document.createElement("div");
       card.classList.add("problem-card");
 
-      // Top equation: 53 − 28 = _________
       const eq = document.createElement("div");
       eq.classList.add("equation-line");
       eq.textContent = `${a} − ${b} = __________`;
@@ -358,7 +437,7 @@
       left.appendChild(vtable);
       row.appendChild(left);
 
-      /* RIGHT: tens column + ones column */
+      /* RIGHT: base-10 blocks */
       const right = document.createElement("div");
       right.classList.add("right-side");
 
