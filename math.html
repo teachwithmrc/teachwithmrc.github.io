@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>2-Digit Subtraction with Regrouping – Vertical + Base-10 Blocks (3 per page)</title>
+  <title>Subtraction with Regrouping – Vertical + Base-10 Blocks (Side-by-Side, 3 per page)</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -10,7 +10,7 @@
       margin: 0;
       padding: 0;
       background: #ffffff;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: system-ui, sans-serif;
     }
 
     .page {
@@ -21,7 +21,7 @@
 
     h1 {
       text-align: center;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
     }
 
     .controls {
@@ -40,21 +40,23 @@
       border-radius: 4px;
     }
 
-    /* 3 big rows */
+    /* =====================
+       3 Problem Rows
+    ======================*/
     .problems-column {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 24px;
     }
 
     .problem-card {
       border: 2px solid #000;
       border-radius: 6px;
-      padding: 12px;
-      min-height: 360px;
+      padding: 16px;
+      min-height: 280px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
     .equation-line {
@@ -62,17 +64,36 @@
       font-weight: 600;
     }
 
-    /* Vertical layout */
-    .vertical-wrapper {
+    /* =====================
+       Two column layout
+    ======================*/
+    .two-columns {
       display: flex;
-      justify-content: center;
-      margin-top: 4px;
+      flex-direction: row;
+      gap: 20px;
+      justify-content: space-between;
+      align-items: flex-start;
     }
 
+    .left-side {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .right-side {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* =====================
+       Vertical subtraction
+    ======================*/
     .vertical-table {
       border-collapse: collapse;
       table-layout: fixed;
-      min-width: 200px;
+      min-width: 180px;
     }
 
     .vertical-table td {
@@ -83,16 +104,15 @@
     .digit-cell {
       font-size: 2rem;
       font-weight: 700;
-      width: 60px;
+      width: 50px;
     }
 
     .sign-cell {
       font-size: 2rem;
-      width: 40px;
+      width: 30px;
       vertical-align: bottom;
     }
 
-    /* BIG regrouping boxes */
     .regroup-cell {
       height: 40px;
     }
@@ -111,36 +131,30 @@
       margin-top: 6px;
     }
 
-    /* Base-10 blocks */
-    .blocks-section {
-      margin-top: 10px;
-    }
-
-    .place-table {
+    /* =====================
+       Base-10 Blocks
+    ======================*/
+    .blocks-panel {
       width: 100%;
-      border-collapse: collapse;
-      table-layout: fixed;
-      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
     }
 
-    .place-table th,
-    .place-table td {
-      border: 1px solid #000;
-      padding: 5px;
-      vertical-align: top;
-    }
-
-    .place-header {
+    .panel-label {
       font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 4px;
     }
 
     .tens-stack,
     .ones-stack {
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 6px;
-      width: 100%;
     }
 
     .blocks-row-tens {
@@ -156,6 +170,7 @@
       gap: 5px;
     }
 
+    /* Block shapes */
     .block {
       border: 2px solid #000;
       background: transparent;
@@ -171,6 +186,7 @@
       height: 24px;
     }
 
+    /* dotted ten-frame */
     .regroup-box-under {
       width: 90%;
       height: 65px;
@@ -178,7 +194,6 @@
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       grid-template-rows: repeat(2, 1fr);
-      margin-top: 6px;
     }
 
     .ten-frame-cell {
@@ -204,7 +219,7 @@
 </head>
 <body>
   <div class="page">
-    <h1>Subtraction with Regrouping — Vertical Setup + Base-10 Blocks</h1>
+    <h1>Subtraction with Regrouping — Vertical + Base-10 Blocks</h1>
 
     <div class="controls">
       <button id="generateBtn">Generate New</button>
@@ -252,15 +267,19 @@
       const card = document.createElement("div");
       card.classList.add("problem-card");
 
-      /* Horizontal: 53 − 28 = _________ */
+      // top: equation
       const eq = document.createElement("div");
       eq.classList.add("equation-line");
-      eq.textContent = `${a} − ${b} = _________`;
+      eq.textContent = `${a} − ${b} = __________`;
       card.appendChild(eq);
 
-      /* Vertical layout */
-      const vertical = document.createElement("div");
-      vertical.classList.add("vertical-wrapper");
+      // structure: left (vertical) + right (blocks)
+      const row = document.createElement("div");
+      row.classList.add("two-columns");
+
+      /* -------- LEFT SIDE (vertical) -------- */
+      const left = document.createElement("div");
+      left.classList.add("left-side");
 
       const vtable = document.createElement("table");
       vtable.classList.add("vertical-table");
@@ -292,43 +311,34 @@
         </tr>
       `;
 
-      vertical.appendChild(vtable);
-      card.appendChild(vertical);
+      left.appendChild(vtable);
+      row.appendChild(left);
 
-      /* Base-10 blocks section */
-      const blocksSection = document.createElement("div");
-      blocksSection.classList.add("blocks-section");
+      /* -------- RIGHT SIDE (blocks) -------- */
+      const right = document.createElement("div");
+      right.classList.add("right-side");
 
-      const placeTable = document.createElement("table");
-      placeTable.classList.add("place-table");
+      const blocksPanel = document.createElement("div");
+      blocksPanel.classList.add("blocks-panel");
 
-      placeTable.innerHTML = `
-        <tr>
-          <th class="place-header">Tens</th>
-          <th class="place-header">Ones</th>
-        </tr>
-        <tr>
-          <td>
-            <div class="tens-stack">
-              <div class="blocks-row-tens tens-row"></div>
-            </div>
-          </td>
-          <td>
-            <div class="ones-stack">
-              <div class="blocks-row-ones ones-row"></div>
-              <div class="regroup-box-under"></div>
-            </div>
-          </td>
-        </tr>
+      blocksPanel.innerHTML = `
+        <div class="panel-label">Base-10 Blocks</div>
+        <div class="tens-stack"><div class="blocks-row-tens tens-row"></div></div>
+        <div class="ones-stack">
+          <div class="blocks-row-ones ones-row"></div>
+          <div class="regroup-box-under"></div>
+        </div>
       `;
 
-      blocksSection.appendChild(placeTable);
-      card.appendChild(blocksSection);
+      right.appendChild(blocksPanel);
+      row.appendChild(right);
 
-      /* Fill base-10 blocks */
-      createBlocks(placeTable.querySelector(".tens-row"), aT, "ten");
-      createBlocks(placeTable.querySelector(".ones-row"), aO, "one");
-      fillTenFrame(placeTable.querySelector(".regroup-box-under"));
+      card.appendChild(row);
+
+      // fill the blocks
+      createBlocks(blocksPanel.querySelector(".tens-row"), aT, "ten");
+      createBlocks(blocksPanel.querySelector(".ones-row"), aO, "one");
+      fillTenFrame(blocksPanel.querySelector(".regroup-box-under"));
 
       return card;
     }
@@ -336,10 +346,8 @@
     function generateWorksheet() {
       const container = document.getElementById("problemsColumn");
       container.innerHTML = "";
-
       for (let i = 0; i < 3; i++) {
-        const prob = generateProblem();
-        container.appendChild(renderCard(prob));
+        container.appendChild(renderCard(generateProblem()));
       }
     }
 
