@@ -97,9 +97,10 @@
     }
 
     .left-panel {
-      flex: 1;
+      flex: 0.9;
       display: flex;
-      gap: 12px;
+      justify-content: center;
+      align-items: flex-start;
     }
 
     .right-panel {
@@ -109,32 +110,17 @@
       gap: 10px;
     }
 
-    /* LEFT: division template area */
+    /* LEFT: boxes laid out in a fixed grid */
     .ld-grid-wrapper {
+      display: grid;
+      grid-template-columns: 40px 40px 40px 40px; /* col0 = left, col1-2 = middle, col3 = remainder */
+      grid-template-rows: repeat(6, 40px);       /* 6 rows of boxes / symbols */
+      column-gap: 6px;
+      row-gap: 6px;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 260px;
       position: relative;
-      display: flex;
-      flex-direction: row;
-      gap: 6px;
-      align-items: flex-start;
-      padding-left: 18px; /* room for corner bracket */
-      min-height: 210px;
-    }
-
-    /* Small corner bracket like your screenshot */
-    .corner-bracket {
-      position: absolute;
-      top: 34px;   /* adjust if needed */
-      left: 4px;
-      width: 72px;  /* across the first two boxes */
-      height: 34px; /* just tall enough for the first row */
-      border-left: 3px solid #000;
-      border-top: 3px solid #000;
-    }
-
-    .ld-column {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
     }
 
     .ld-box {
@@ -142,45 +128,33 @@
       height: 34px;
       border: 2px solid #000;
       background: #fff;
+      margin: 0 auto;
     }
 
     .ld-box.gray {
       background: #eaeaea;
     }
 
-    .side-column {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      margin-left: 8px;
-    }
-
-    .minus-sign {
-      font-size: 1.4rem;
-      margin: 4px 0;
-    }
-
-    .down-arrow {
-      font-size: 1.8rem;
+    .minus-cell,
+    .arrow-cell,
+    .text-cell {
+      font-size: 1.5rem;
       text-align: center;
-      margin: 4px 0;
+      line-height: 1;
     }
 
-    .remainder-label {
-      position: absolute;
-      top: 0;
-      right: 0;
+    .arrow-cell {
+      font-size: 2rem;
+    }
+
+    .rem-label {
       font-size: 0.9rem;
+      text-align: left;
     }
 
-    .r-box {
-      width: 28px;
-      height: 28px;
-      border: 2px solid #000;
-      display: inline-block;
-      vertical-align: middle;
-      margin-left: 4px;
+    .r-small {
+      font-size: 0.85rem;
+      margin-right: 2px;
     }
 
     /* RIGHT: multiples sections */
@@ -353,46 +327,39 @@
       </div>
 
       <div class="main-area">
-        <!-- LEFT: division template -->
+        <!-- LEFT: box template matching your screenshot -->
         <div class="left-panel">
           <div class="ld-grid-wrapper">
-            <!-- corner bracket like your template -->
-            <div class="corner-bracket"></div>
-
-            <!-- inside columns -->
-            <div class="ld-column">
-              <div class="ld-box gray"></div>
-              <div class="ld-box gray"></div>
-              <div class="ld-box"></div>
-              <div class="ld-box"></div>
-              <div class="ld-box"></div>
-              <div class="ld-box"></div>
+            <!-- row 1 -->
+            <div class="ld-box gray" style="grid-column: 2; grid-row: 1;"></div>
+            <div class="ld-box gray" style="grid-column: 3; grid-row: 1;"></div>
+            <div class="rem-label" style="grid-column: 4; grid-row: 1; justify-self: start;">
+              <span class="r-small">r</span>
             </div>
 
-            <div class="ld-column">
-              <div class="ld-box gray"></div>
-              <div class="ld-box gray"></div>
-              <div class="ld-box"></div>
-              <div class="ld-box"></div>
-              <div class="ld-box"></div>
-              <div class="ld-box"></div>
-            </div>
+            <!-- row 2 -->
+            <div class="ld-box" style="grid-column: 1; grid-row: 2;"></div>
+            <div class="ld-box" style="grid-column: 2; grid-row: 2;"></div>
+            <div class="ld-box" style="grid-column: 3; grid-row: 2;"></div>
+            <div class="ld-box" style="grid-column: 4; grid-row: 2;"></div>
 
-            <!-- minus / bring down column -->
-            <div class="side-column">
-              <div class="minus-sign">−</div>
-              <div class="ld-box"></div>
-              <div class="down-arrow">⬇</div>
-              <div class="ld-box"></div>
-              <div class="minus-sign">−</div>
-              <div class="ld-box"></div>
-              <div class="ld-box"></div>
-            </div>
+            <!-- row 3 -->
+            <div class="minus-cell" style="grid-column: 1; grid-row: 3;">−</div>
+            <div class="ld-box" style="grid-column: 2; grid-row: 3;"></div>
+            <div class="arrow-cell" style="grid-column: 3; grid-row: 3;">⬇</div>
 
-            <!-- remainder box -->
-            <div class="remainder-label">
-              r <span class="r-box"></span>
-            </div>
+            <!-- row 4 -->
+            <div class="ld-box" style="grid-column: 2; grid-row: 4;"></div>
+            <div class="ld-box" style="grid-column: 3; grid-row: 4;"></div>
+
+            <!-- row 5 -->
+            <div class="minus-cell" style="grid-column: 1; grid-row: 5;">−</div>
+            <div class="ld-box" style="grid-column: 2; grid-row: 5;"></div>
+            <div class="ld-box" style="grid-column: 3; grid-row: 5;"></div>
+
+            <!-- row 6 -->
+            <div class="ld-box" style="grid-column: 2; grid-row: 6;"></div>
+            <div class="ld-box" style="grid-column: 3; grid-row: 6;"></div>
           </div>
         </div>
 
@@ -524,14 +491,12 @@
       groupInfo.textContent =
         `${dividend} ones → ${q} groups of ${divisor} ones, remainder ${r}.`;
 
-      // keep picture reasonable
       if (q > 12) {
         groupNote.textContent =
           "Too many groups to draw. Try a smaller dividend or larger divisor for a picture model.";
         return;
       }
 
-      // quotient groups
       for (let g = 0; g < q; g++) {
         const box = document.createElement("div");
         box.className = "group-box";
@@ -543,7 +508,6 @@
         groupsRow.appendChild(box);
       }
 
-      // remainder
       if (r > 0) {
         const remWrapper = document.createElement("div");
         remWrapper.style.display = "flex";
@@ -583,7 +547,6 @@
       const tens = Math.floor(dividend / 10);
       const ones = dividend % 10;
 
-      // fill question boxes with digits
       topDigitDivisorBox.textContent = divisor;
       topDigitDividendBox.textContent = tens;
       topDigitBlankBox.textContent = "";
@@ -592,7 +555,6 @@
       fullDividendTensBox.textContent = tens;
       fullDividendOnesBox.textContent = ones;
 
-      // multiples strips
       if (mode === "hidden") {
         mult1.classList.add("hidden");
         mult2.classList.add("hidden");
@@ -603,7 +565,6 @@
         buildMultiplesRow(headRow2, prodRow2, divisor, mode);
       }
 
-      // base-10 ones model
       buildGroupModel(dividend, divisor);
     }
 
