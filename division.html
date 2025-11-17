@@ -113,8 +113,8 @@
     /* LEFT: boxes laid out in a fixed grid */
     .ld-grid-wrapper {
       display: grid;
-      grid-template-columns: 40px 40px 40px 40px; /* col0 = left, col1-2 = middle, col3 = remainder */
-      grid-template-rows: repeat(6, 40px);       /* 6 rows of boxes / symbols */
+      grid-template-columns: 40px 40px 40px 40px; /* col0 = left, col1-2 = middle, col3 = remainder/work */
+      grid-template-rows: repeat(6, 40px);
       column-gap: 6px;
       row-gap: 6px;
       align-items: center;
@@ -129,6 +129,11 @@
       border: 2px solid #000;
       background: #fff;
       margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 600;
     }
 
     .ld-box.gray {
@@ -148,13 +153,22 @@
     }
 
     .rem-label {
-      font-size: 0.9rem;
-      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 0.85rem;
     }
 
-    .r-small {
+    .rem-label span.r-small {
       font-size: 0.85rem;
-      margin-right: 2px;
+    }
+
+    .rem-label .rem-box {
+      width: 28px;
+      height: 28px;
+      border: 2px solid #000;
+      background: #fff;
+      display: inline-block;
     }
 
     /* RIGHT: multiples sections */
@@ -293,10 +307,10 @@
 
     <div class="controls">
       <label>Dividend:
-        <input id="dividendInput" type="number" min="10" max="99" value="69" />
+        <input id="dividendInput" type="number" min="10" max="99" value="58" />
       </label>
       <label>Divisor:
-        <input id="divisorInput" type="number" min="2" max="9" value="7" />
+        <input id="divisorInput" type="number" min="2" max="9" value="4" />
       </label>
       <label>Multiples:
         <select id="multiplesMode">
@@ -313,7 +327,7 @@
     <div class="organizer">
       <div class="top-row">
         <div id="equationDisplay" class="problem-equation">
-          69 ÷ 7 = <span class="blank"></span>
+          58 ÷ 4 = <span class="blank"></span>
         </div>
         <div class="steps-checklist">
           <div><input type="checkbox" /> 1. Divide</div>
@@ -327,37 +341,40 @@
       </div>
 
       <div class="main-area">
-        <!-- LEFT: box template matching your screenshot -->
+        <!-- LEFT: box template + pre-filled digits -->
         <div class="left-panel">
           <div class="ld-grid-wrapper">
-            <!-- row 1 -->
-            <div class="ld-box gray" style="grid-column: 2; grid-row: 1;"></div>
-            <div class="ld-box gray" style="grid-column: 3; grid-row: 1;"></div>
-            <div class="rem-label" style="grid-column: 4; grid-row: 1; justify-self: start;">
-              <span class="r-small">r</span>
+            <!-- Row 1: two quotient boxes + remainder box -->
+            <div id="qBox1" class="ld-box gray" style="grid-column: 2; grid-row: 1;"></div>
+            <div id="qBox2" class="ld-box gray" style="grid-column: 3; grid-row: 1;"></div>
+            <div style="grid-column: 4; grid-row: 1; justify-self: start;">
+              <div class="rem-label">
+                <span class="r-small">r</span>
+                <div class="rem-box"></div>
+              </div>
             </div>
 
-            <!-- row 2 -->
-            <div class="ld-box" style="grid-column: 1; grid-row: 2;"></div>
-            <div class="ld-box" style="grid-column: 2; grid-row: 2;"></div>
-            <div class="ld-box" style="grid-column: 3; grid-row: 2;"></div>
+            <!-- Row 2: divisor, dividend tens, dividend ones, extra box -->
+            <div id="divisorBox" class="ld-box" style="grid-column: 1; grid-row: 2;"></div>
+            <div id="dividendTensBox" class="ld-box" style="grid-column: 2; grid-row: 2;"></div>
+            <div id="dividendOnesBox" class="ld-box" style="grid-column: 3; grid-row: 2;"></div>
             <div class="ld-box" style="grid-column: 4; grid-row: 2;"></div>
 
-            <!-- row 3 -->
+            <!-- Row 3 -->
             <div class="minus-cell" style="grid-column: 1; grid-row: 3;">−</div>
             <div class="ld-box" style="grid-column: 2; grid-row: 3;"></div>
             <div class="arrow-cell" style="grid-column: 3; grid-row: 3;">⬇</div>
 
-            <!-- row 4 -->
+            <!-- Row 4 -->
             <div class="ld-box" style="grid-column: 2; grid-row: 4;"></div>
             <div class="ld-box" style="grid-column: 3; grid-row: 4;"></div>
 
-            <!-- row 5 -->
+            <!-- Row 5 -->
             <div class="minus-cell" style="grid-column: 1; grid-row: 5;">−</div>
             <div class="ld-box" style="grid-column: 2; grid-row: 5;"></div>
             <div class="ld-box" style="grid-column: 3; grid-row: 5;"></div>
 
-            <!-- row 6 -->
+            <!-- Row 6 -->
             <div class="ld-box" style="grid-column: 2; grid-row: 6;"></div>
             <div class="ld-box" style="grid-column: 3; grid-row: 6;"></div>
           </div>
@@ -440,9 +457,13 @@
     const groupsRow = document.getElementById("groupsRow");
     const groupNote = document.getElementById("groupNote");
 
+    const divisorBox = document.getElementById("divisorBox");
+    const dividendTensBox = document.getElementById("dividendTensBox");
+    const dividendOnesBox = document.getElementById("dividendOnesBox");
+
     function clampDividend(v) {
       let n = parseInt(v, 10);
-      if (isNaN(n)) n = 69;
+      if (isNaN(n)) n = 58;
       if (n < 10) n = 10;
       if (n > 99) n = 99;
       return n;
@@ -450,7 +471,7 @@
 
     function clampDivisor(v) {
       let n = parseInt(v, 10);
-      if (isNaN(n)) n = 7;
+      if (isNaN(n)) n = 4;
       if (n < 2) n = 2;
       if (n > 9) n = 9;
       return n;
@@ -547,6 +568,12 @@
       const tens = Math.floor(dividend / 10);
       const ones = dividend % 10;
 
+      // Fill the left-side setup boxes
+      divisorBox.textContent = divisor;
+      dividendTensBox.textContent = tens;
+      dividendOnesBox.textContent = ones;
+
+      // Multiples helpers
       topDigitDivisorBox.textContent = divisor;
       topDigitDividendBox.textContent = tens;
       topDigitBlankBox.textContent = "";
