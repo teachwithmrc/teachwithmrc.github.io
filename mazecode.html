@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Blank CVC / CH Maze</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .wrapper {
+      background: #fff;
+      padding: 20px 30px;
+      border: 1px solid #ccc;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    h2 {
+      font-family: "Poppins", system-ui, sans-serif;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    .directions {
+      font-family: "Poppins", system-ui, sans-serif;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    svg {
+      width: 100%;
+      height: auto;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h2>CVC / Digraph Maze</h2>
+    <div class="directions">
+      Directions: Begin at Start, shade in the correct word, write the word
+      on the line, and move to the next box until you get to the End!
+    </div>
+
+    <!-- SVG will be populated by JS -->
+    <svg id="mazeSvg" viewBox="0 0 900 600"></svg>
+  </div>
+
+  <script>
+    const ROWS = 4;
+    const COLS = 4;
+
+    const svg = document.getElementById("mazeSvg");
+
+    // Box geometry
+    const boxWidth = 170;
+    const boxHeight = 110;
+    const marginX = 70;
+    const marginY = 80;
+    const gapX = 200;  // horizontal spacing between box origins
+    const gapY = 130;  // vertical spacing between box origins
+    const lineYOffset = 92; // where the writing line goes inside the box
+
+    // Helper to create SVG elements
+    function createSVG(tag, attrs) {
+      const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+      for (const [k, v] of Object.entries(attrs)) {
+        el.setAttribute(k, v);
+      }
+      return el;
+    }
+
+    // Compute box origin (top-left) for a given row/col
+    function boxOrigin(r, c) {
+      const x = marginX + c * gapX;
+      const y = marginY + r * gapY;
+      return { x, y };
+    }
+
+    // Compute center of a box
+    function boxCenter(r, c) {
+      const { x, y } = boxOrigin(r, c);
+      return {
+        cx: x + boxWidth / 2,
+        cy: y + boxHeight / 2
+      };
+    }
+
+    // Draw boxes with bottom writing line
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const { x, y } = boxOrigin(r, c);
+
+        // Outer rectangle
+        const rect = createSVG("rect", {
+          x,
+          y,
+          width: boxWidth,
+          height: boxHeight,
+          fill: "none",
+          stroke: "#000",
+          "stroke-width": 2
+        });
+        svg.appendChild(rect);
+
+        // Writing line
+        const line = createSVG("line", {
+          x1: x + 10,
+          x2: x + boxWidth - 10,
+          y1: y + lineYOffset,
+          y2: y + lineYOffset,
+          stroke: "#000",
+          "stroke-width": 2
+        });
+        svg.appendChild(line);
+      }
+    }
+
+    // Draw connectors (horizontal, vertical, diagonal) between neighbors
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const { cx, cy } = boxCenter(r, c);
+
+        for (let dr = -1; dr <= 1; dr++) {
+          for (let dc = -1; dc <= 1; dc++) {
+            if (dr === 0 && dc === 0) continue;
+            const nr = r + dr;
+            const nc = c + dc;
+            if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) continue;
+
+            // To avoid double-drawing edges, only draw when neighbor is "after" this cell
+            if (nr < r || (nr === r && nc <= c)) continue;
+
+            const neighborCenter = boxCenter(nr, nc);
+
+            const conn = createSVG("line", {
+              x1: cx,
+              y1: cy,
+              x2: neighborCenter.cx,
+              y2: neighborCenter.cy,
+              stroke: "#ccc",
+              "stroke-width": 4
+            });
+            svg.appendChild(conn);
+          }
+        }
+      }
+    }
+
+    // Optional: slightly lower connectors behind boxes
+    svg.insertBefore(svg.firstChild.nextSibling, svg.lastChild); // keeps stacking sane
+  </script>
+</body>
+</html>
