@@ -2,152 +2,167 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Blank CVC / CH Maze</title>
+  <title>Maze Diagonals Demo</title>
   <style>
     body {
-      margin: 0;
-      padding: 20px;
+      font-family: "Poppins", system-ui, sans-serif;
       background: #f5f5f5;
+      padding: 20px;
     }
-    .wrapper {
-      background: #fff;
-      padding: 20px 30px;
-      border: 1px solid #ccc;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    h2 {
-      font-family: "Poppins", system-ui, sans-serif;
-      font-size: 18px;
-      margin-bottom: 8px;
-    }
-    .directions {
-      font-family: "Poppins", system-ui, sans-serif;
-      font-size: 12px;
+
+    h1 {
+      font-size: 20px;
       margin-bottom: 10px;
     }
-    svg {
+
+    .page {
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 16px 20px 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .maze-wrapper {
+      position: relative;
+      width: 720px;      /* base width of your PNG */
+      aspect-ratio: 720 / 556; /* keeps proportions when scaled */
+      margin: 0 auto;
+    }
+
+    .maze-bg {
+      position: absolute;
+      inset: 0;
       width: 100%;
-      height: auto;
-      border: 0;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    /* small markers on each connector */
+    .edge-label {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      font-size: 10px;
+      padding: 1px 3px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(0, 0, 0, 0.3);
+      pointer-events: none;
+    }
+
+    /* optional: show centers of boxes as little dots */
+    .cell-dot {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: red;
+      opacity: 0.6;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-  <div class="wrapper">
-    <h2>CVC / Digraph Maze</h2>
-    <div class="directions">
-      Directions: Begin at Start, shade in the correct word, write the word
-      on the line, and move to the next box until you get to the End!
-    </div>
+  <div class="page">
+    <h1>Maze Diagonals Demo (Overlay on chmaze.png)</h1>
+    <p style="font-size: 13px; margin-bottom: 10px;">
+      Each small label shows a connector between two boxes (e.g. 0-1, 5-10).
+      This is all generated from code (including diagonals). Once this looks right,
+      we’ll replace these IDs with real words.
+    </p>
 
-    <!-- SVG will be populated by JS -->
-    <svg id="mazeSvg" viewBox="0 0 900 600"></svg>
+    <div class="maze-wrapper" id="mazeWrapper">
+      <img src="chmaze.png" alt="Blank Maze" class="maze-bg" />
+      <!-- JS will inject the edge labels + cell dots -->
+    </div>
   </div>
 
   <script>
+    // 4×4 grid of boxes
     const ROWS = 4;
     const COLS = 4;
 
-    const svg = document.getElementById("mazeSvg");
+    // Approximate normalized positions of box centers (fraction of width/height).
+    // These are tuned for your blank maze. You can fine-tune the numbers if needed.
+    const rowFrac = [0.23, 0.42, 0.61, 0.80];  // top → bottom
+    const colFrac = [0.14, 0.37, 0.63, 0.86];  // left → right
 
-    // Box geometry
-    const boxWidth = 170;
-    const boxHeight = 110;
-    const marginX = 70;
-    const marginY = 80;
-    const gapX = 200;  // horizontal spacing between box origins
-    const gapY = 130;  // vertical spacing between box origins
-    const lineYOffset = 92; // where the writing line goes inside the box
+    const wrapper = document.getElementById("mazeWrapper");
+    const wrapperRect = wrapper.getBoundingClientRect(); // for width/height
 
-    // Helper to create SVG elements
-    function createSVG(tag, attrs) {
-      const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
-      for (const [k, v] of Object.entries(attrs)) {
-        el.setAttribute(k, v);
-      }
-      return el;
+    // Helper: index <-> row/col
+    function indexFromRC(r, c) {
+      return r * COLS + c;
     }
 
-    // Compute box origin (top-left) for a given row/col
-    function boxOrigin(r, c) {
-      const x = marginX + c * gapX;
-      const y = marginY + r * gapY;
-      return { x, y };
+    function rcFromIndex(idx) {
+      return { r: Math.floor(idx / COLS), c: idx % COLS };
     }
 
-    // Compute center of a box
-    function boxCenter(r, c) {
-      const { x, y } = boxOrigin(r, c);
-      return {
-        cx: x + boxWidth / 2,
-        cy: y + boxHeight / 2
-      };
-    }
-
-    // Draw boxes with bottom writing line
+    // Compute absolute positions for each cell center (in % of wrapper)
+    const cellCenters = [];
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
-        const { x, y } = boxOrigin(r, c);
-
-        // Outer rectangle
-        const rect = createSVG("rect", {
-          x,
-          y,
-          width: boxWidth,
-          height: boxHeight,
-          fill: "none",
-          stroke: "#000",
-          "stroke-width": 2
-        });
-        svg.appendChild(rect);
-
-        // Writing line
-        const line = createSVG("line", {
-          x1: x + 10,
-          x2: x + boxWidth - 10,
-          y1: y + lineYOffset,
-          y2: y + lineYOffset,
-          stroke: "#000",
-          "stroke-width": 2
-        });
-        svg.appendChild(line);
+        const idx = indexFromRC(r, c);
+        const top = rowFrac[r] * 100;
+        const left = colFrac[c] * 100;
+        cellCenters[idx] = { top, left };
       }
     }
 
-    // Draw connectors (horizontal, vertical, diagonal) between neighbors
-    for (let r = 0; r < ROWS; r++) {
-      for (let c = 0; c < COLS; c++) {
-        const { cx, cy } = boxCenter(r, c);
+    // Draw small red dots at each cell center (for debug)
+    cellCenters.forEach((pos, idx) => {
+      const dot = document.createElement("div");
+      dot.className = "cell-dot";
+      dot.style.top = pos.top + "%";
+      dot.style.left = pos.left + "%";
+      dot.title = "Cell " + idx;
+      wrapper.appendChild(dot);
+    });
 
-        for (let dr = -1; dr <= 1; dr++) {
-          for (let dc = -1; dc <= 1; dc++) {
-            if (dr === 0 && dc === 0) continue;
-            const nr = r + dr;
-            const nc = c + dc;
-            if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) continue;
-
-            // To avoid double-drawing edges, only draw when neighbor is "after" this cell
-            if (nr < r || (nr === r && nc <= c)) continue;
-
-            const neighborCenter = boxCenter(nr, nc);
-
-            const conn = createSVG("line", {
-              x1: cx,
-              y1: cy,
-              x2: neighborCenter.cx,
-              y2: neighborCenter.cy,
-              stroke: "#ccc",
-              "stroke-width": 4
-            });
-            svg.appendChild(conn);
-          }
+    // Get all neighbors (including diagonals)
+    function getNeighbors(idx) {
+      const { r, c } = rcFromIndex(idx);
+      const neighbors = [];
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          if (dr === 0 && dc === 0) continue;
+          const nr = r + dr;
+          const nc = c + dc;
+          if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) continue;
+          neighbors.push(indexFromRC(nr, nc));
         }
       }
+      return neighbors;
     }
 
-    // Optional: slightly lower connectors behind boxes
-    svg.insertBefore(svg.firstChild.nextSibling, svg.lastChild); // keeps stacking sane
+    // Create an edge label (only once per pair, so 0-1 but not 1-0)
+    const madeEdges = new Set();
+
+    for (let from = 0; from < ROWS * COLS; from++) {
+      const neighbors = getNeighbors(from);
+      neighbors.forEach((to) => {
+        const key = from < to ? `${from}-${to}` : `${to}-${from}`;
+        if (madeEdges.has(key)) return;
+        madeEdges.add(key);
+
+        const fromPos = cellCenters[from];
+        const toPos = cellCenters[to];
+
+        const midTop = (fromPos.top + toPos.top) / 2;
+        const midLeft = (fromPos.left + toPos.left) / 2;
+
+        const el = document.createElement("div");
+        el.className = "edge-label";
+        el.id = "edge-" + key;
+        el.style.top = midTop + "%";
+        el.style.left = midLeft + "%";
+        el.textContent = key; // For now, just show the edge IDs
+        wrapper.appendChild(el);
+      });
+    }
   </script>
 </body>
 </html>
