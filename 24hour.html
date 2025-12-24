@@ -14,21 +14,45 @@
     .wrap{ max-width:1150px; margin:0 auto; padding:18px; display:grid; grid-template-columns:1fr 1.25fr; gap:18px; }
     h1{ margin:0 0 10px; font-size:22px; font-weight:950; }
     .card{ border:var(--strokeThin) solid var(--ink); border-radius:14px; padding:14px; }
-    .hint{ font-size:13px; font-weight:800; line-height:1.35; margin:0 0 12px; opacity:.95; }
-    .stage{ border:var(--strokeThin) solid var(--ink); border-radius:14px; padding:10px; background:#fff; }
-    .stage svg{ width:100%; height:auto; display:block; }
+    .hint{ font-size:13px; font-weight:750; line-height:1.35; margin:0 0 12px; opacity:.95; }
 
-    .topControls{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
-    label{ font-weight:950; display:block; margin:0 0 6px; }
-    input, select{
-      width:100%; box-sizing:border-box;
-      font-size:14px; font-weight:900;
+    .stage{
       border:var(--strokeThin) solid var(--ink);
-      border-radius:10px; padding:8px 10px; background:#fff; outline:none;
+      border-radius:14px;
+      padding:10px;
+      background:#fff;
+      overflow:hidden;
+    }
+    /* Lock a predictable render size so circles never collide */
+    .stage svg{
+      width:100%;
+      height:auto;
+      display:block;
     }
 
+    .topControls{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+    label{ font-weight:900; display:block; margin:0 0 6px; }
+
+    /* IMPORTANT: don’t over-bold selects; make them readable on Safari */
+    input, select{
+      width:100%;
+      box-sizing:border-box;
+      font-size:14px;
+      font-weight:700;            /* was 900+ */
+      color:#000;                 /* force visible text */
+      background-color:#fff;      /* force visible selection */
+      border:var(--strokeThin) solid var(--ink);
+      border-radius:10px;
+      padding:8px 10px;
+      outline:none;
+      appearance:auto;
+      -webkit-appearance: menulist;  /* Safari */
+      -moz-appearance: auto;
+    }
+    input::placeholder{ color: rgba(0,0,0,.55); font-weight:650; }
+
     .toggleRow{ display:flex; gap:14px; flex-wrap:wrap; margin:8px 0 14px; }
-    .toggleRow label{ margin:0; font-size:13px; font-weight:950; display:flex; align-items:center; gap:8px; }
+    .toggleRow label{ margin:0; font-size:13px; font-weight:900; display:flex; align-items:center; gap:8px; }
     .toggleRow input{ width:auto; }
 
     .blocks{ display:flex; flex-direction:column; gap:10px; }
@@ -37,27 +61,18 @@
       border-radius:14px;
       padding:10px;
     }
-    .blockHead{
-      display:flex; justify-content:space-between; align-items:center; gap:10px;
-      margin-bottom:8px;
-    }
+    .blockHead{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px; }
     .blockTitle{ font-weight:950; }
     .removeBtn{
       border:var(--strokeThin) solid var(--ink);
-      background:#fff; border-radius:10px;
-      font-weight:950; padding:6px 10px; cursor:pointer;
+      background:#fff;
+      border-radius:10px;
+      font-weight:900;
+      padding:6px 10px;
+      cursor:pointer;
     }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-    }
-    .timeGrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap:8px;
-    }
+    .grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .timeGrid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
 
     .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
     button{
@@ -83,7 +98,7 @@
     <div class="card">
       <h1>24-Hour Circle Planner</h1>
       <p class="hint">
-        Add a <b>Schedule Block</b> (example: 12:00 AM → 5:00 AM “Sleep”). Each block shades + repeats the label so it looks filled.
+        Add <b>Schedule Blocks</b>. The circles are stacked (AM on top, PM below). Selections should now show correctly.
       </p>
 
       <div class="topControls">
@@ -117,7 +132,8 @@
     </div>
 
     <div class="stage">
-      <svg id="svg" viewBox="0 0 900 1250" xmlns="http://www.w3.org/2000/svg" aria-label="Circle planner"></svg>
+      <!-- Bigger viewBox height + smaller radius below = no overlap -->
+      <svg id="svg" viewBox="0 0 900 1500" xmlns="http://www.w3.org/2000/svg" aria-label="Circle planner"></svg>
     </div>
   </div>
 
@@ -132,23 +148,10 @@
   const shadeBlocksEl = $("shadeBlocks");
   const repeatTextEl = $("repeatText");
 
-  const state = {
-    blocks: [] // { id, startH, startM, startMer, endH, endM, endMer, label }
-  };
+  const state = { blocks: [] };
 
-  $("addBlockBtn").addEventListener("click", () => {
-    addBlock();
-    renderUI();
-    renderPlanner();
-  });
-
-  $("clearBtn").addEventListener("click", () => {
-    state.blocks = [];
-    addBlock(); // leave one blank block
-    renderUI();
-    renderPlanner();
-  });
-
+  $("addBlockBtn").addEventListener("click", () => { addBlock(); renderUI(); renderPlanner(); });
+  $("clearBtn").addEventListener("click", () => { state.blocks = []; addBlock(); addBlock(); renderUI(); renderPlanner(); });
   $("printBtn").addEventListener("click", () => window.print());
   $("downloadBtn").addEventListener("click", downloadSVG);
 
@@ -157,8 +160,8 @@
     el.addEventListener("input", renderPlanner);
   });
 
-  function addBlock(prefill = null) {
-    const id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random());
+  function addBlock(prefill=null){
+    const id = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()+Math.random()));
     state.blocks.push({
       id,
       startH: prefill?.startH ?? "12",
@@ -171,12 +174,22 @@
     });
   }
 
-  function hours12() { return Array.from({length:12},(_,i)=>String(i+1)); }
-  function minutesList() { return ["00","15","30","45"]; }
+  function hours12(){ return Array.from({length:12},(_,i)=>String(i+1)); }
+  function minutesList(){ return ["00","15","30","45"]; }
 
-  function renderUI() {
+  function fillSelect(el, items, selected){
+    el.innerHTML = "";
+    for (const it of items){
+      const opt = document.createElement("option");
+      opt.value = it;
+      opt.textContent = it;
+      if (String(it) === String(selected)) opt.selected = true;
+      el.appendChild(opt);
+    }
+  }
+
+  function renderUI(){
     blocksWrap.innerHTML = "";
-
     state.blocks.forEach((b, idx) => {
       const block = document.createElement("div");
       block.className = "block";
@@ -193,9 +206,7 @@
             <div class="timeGrid">
               <select data-k="startH"></select>
               <select data-k="startM"></select>
-              <select data-k="startMer">
-                <option>AM</option><option>PM</option>
-              </select>
+              <select data-k="startMer"><option>AM</option><option>PM</option></select>
             </div>
           </div>
 
@@ -204,9 +215,7 @@
             <div class="timeGrid">
               <select data-k="endH"></select>
               <select data-k="endM"></select>
-              <select data-k="endMer">
-                <option>AM</option><option>PM</option>
-              </select>
+              <select data-k="endMer"><option>AM</option><option>PM</option></select>
             </div>
           </div>
         </div>
@@ -217,38 +226,35 @@
         </div>
       `;
 
-      // populate selects
-      const selStartH = block.querySelector('select[data-k="startH"]');
-      const selStartM = block.querySelector('select[data-k="startM"]');
-      const selStartMer = block.querySelector('select[data-k="startMer"]');
+      const q = (sel) => block.querySelector(sel);
+      const sH = q('select[data-k="startH"]');
+      const sM = q('select[data-k="startM"]');
+      const sMer = q('select[data-k="startMer"]');
 
-      const selEndH = block.querySelector('select[data-k="endH"]');
-      const selEndM = block.querySelector('select[data-k="endM"]');
-      const selEndMer = block.querySelector('select[data-k="endMer"]');
+      const eH = q('select[data-k="endH"]');
+      const eM = q('select[data-k="endM"]');
+      const eMer = q('select[data-k="endMer"]');
 
-      fillSelect(selStartH, hours12(), b.startH);
-      fillSelect(selStartM, minutesList(), b.startM);
-      selStartMer.value = b.startMer;
+      fillSelect(sH, hours12(), b.startH);
+      fillSelect(sM, minutesList(), b.startM);
+      sMer.value = b.startMer;
 
-      fillSelect(selEndH, hours12(), b.endH);
-      fillSelect(selEndM, minutesList(), b.endM);
-      selEndMer.value = b.endMer;
+      fillSelect(eH, hours12(), b.endH);
+      fillSelect(eM, minutesList(), b.endM);
+      eMer.value = b.endMer;
 
-      const labelInput = block.querySelector('input[data-k="label"]');
+      const labelInput = q('input[data-k="label"]');
       labelInput.value = b.label;
 
-      // listeners -> update state -> render planner
       const wire = (el, key) => {
         el.addEventListener("change", () => { b[key] = el.value; maybeAutoAddNext(idx); renderPlanner(); });
         el.addEventListener("input",  () => { b[key] = el.value; maybeAutoAddNext(idx); renderPlanner(); });
       };
-      wire(selStartH, "startH"); wire(selStartM, "startM"); wire(selStartMer, "startMer");
-      wire(selEndH, "endH");     wire(selEndM, "endM");     wire(selEndMer, "endMer");
-      wire(labelInput, "label");
+      wire(sH,"startH"); wire(sM,"startM"); wire(sMer,"startMer");
+      wire(eH,"endH");   wire(eM,"endM");   wire(eMer,"endMer");
+      wire(labelInput,"label");
 
-      // remove
-      const removeBtn = block.querySelector(".removeBtn");
-      removeBtn.addEventListener("click", () => {
+      q(".removeBtn").addEventListener("click", () => {
         if (state.blocks.length === 1) return;
         state.blocks = state.blocks.filter(x => x.id !== b.id);
         renderUI();
@@ -259,38 +265,21 @@
     });
   }
 
-  function maybeAutoAddNext(idx) {
-    // If they typed a label in the last block, automatically add a new blank block.
+  function maybeAutoAddNext(idx){
     const isLast = idx === state.blocks.length - 1;
     if (!isLast) return;
-
     const b = state.blocks[idx];
-    const hasAny = (b.label || "").trim().length > 0;
-    if (hasAny) {
-      // only add if there isn't already an extra blank block
-      // (i.e., last block is no longer blank)
+    if ((b.label || "").trim().length > 0){
       addBlock();
       renderUI();
     }
   }
 
-  function fillSelect(el, items, selected){
-    el.innerHTML = "";
-    for (const it of items) {
-      const opt = document.createElement("option");
-      opt.value = it;
-      opt.textContent = it;
-      if (String(it) === String(selected)) opt.selected = true;
-      el.appendChild(opt);
-    }
-  }
-
-  // ----- Planner rendering -----
-  function toMinutes12h(hourStr, minStr, mer) {
+  function toMinutes12h(hourStr, minStr, mer){
     let h = parseInt(hourStr,10) % 12;
     const m = parseInt(minStr,10);
     if (mer === "PM") h += 12;
-    return h*60 + m; // 0..1439
+    return h*60 + m;
   }
 
   function renderPlanner(){
@@ -301,26 +290,28 @@
     const shadeMode = shadeBlocksEl.checked;
     const repeatMode = repeatTextEl.checked;
 
-    // Build events list from blocks that have a label
     const events = [];
     for (const b of state.blocks){
       const label = (b.label || "").trim();
       if (!label) continue;
-
       const start = toMinutes12h(b.startH, b.startM, b.startMer);
       let end = toMinutes12h(b.endH, b.endM, b.endMer);
       if (end <= start) end += 24*60; // crosses midnight
       events.push({ start, end, label });
     }
 
-    // clear svg
     while (svg.firstChild) svg.removeChild(svg.firstChild);
 
-    // stacked circles
-    const cx = 450, cyAM = 380, cyPM = 920;
-    const R = 290, ringWidth = 95, innerR = R - ringWidth;
+    // Smaller radius + more spacing = guaranteed no overlap
+    const cx = 450;
+    const R = 250;
+    const ringWidth = 88;
+    const innerR = R - ringWidth;
 
-    addText(cx, 55, "TIME TABLE", 26, 950, "middle");
+    const cyAM = 380;
+    const cyPM = 1120; // larger gap
+
+    addText(cx, 65, "TIME TABLE", 26, 950, "middle");
     drawClockFace(cx, cyAM, R, innerR, "AM", slotMinutes);
     drawClockFace(cx, cyPM, R, innerR, "PM", slotMinutes);
 
@@ -329,9 +320,7 @@
       drawEventOnWindow(ev, cx, cyPM, R, innerR, 12*60, 24*60, slotMinutes, fontSize, repeatMode, shadeMode);
     }
 
-    // ---- helpers ----
     function drawEventOnWindow(ev, cx, cy, R, innerR, winStart, winEnd, slotMin, fontSize, repeatMode, shadeMode){
-      // render only within today's 0..1440 range
       const s0 = clamp(ev.start, 0, 24*60);
       const e0 = clamp(ev.end,   0, 24*60);
       const start = Math.max(s0, winStart);
@@ -339,8 +328,8 @@
       if (end <= start) return;
 
       const slots = Math.round((12*60)/slotMin);
-      const aSlot = Math.floor((start - winStart) / slotMin);
-      const bSlot = Math.ceil((end - winStart) / slotMin);
+      const aSlot = Math.floor((start - winStart)/slotMin);
+      const bSlot = Math.ceil((end - winStart)/slotMin);
 
       if (shadeMode){
         for (let i=aSlot; i<bSlot; i++){
@@ -350,18 +339,16 @@
 
       if (repeatMode){
         for (let i=aSlot; i<bSlot; i++){
-          placeLabel(ev.label, i + 0.5, slots, cx, cy, (R+innerR)/2, fontSize);
+          placeLabel(ev.label, i+0.5, slots, cx, cy, (R+innerR)/2, fontSize);
         }
       } else {
-        placeLabel(ev.label, (aSlot + bSlot)/2, slots, cx, cy, (R+innerR)/2, fontSize);
+        placeLabel(ev.label, (aSlot+bSlot)/2, slots, cx, cy, (R+innerR)/2, fontSize);
       }
     }
 
     function shadeWedge(cx, cy, r0, r1, a0, a1, opacity){
-      const p0o = polar(cx,cy,r1,a0);
-      const p1o = polar(cx,cy,r1,a1);
-      const p1i = polar(cx,cy,r0,a1);
-      const p0i = polar(cx,cy,r0,a0);
+      const p0o = polar(cx,cy,r1,a0), p1o = polar(cx,cy,r1,a1);
+      const p1i = polar(cx,cy,r0,a1), p0i = polar(cx,cy,r0,a0);
       const largeArc = (a1 - a0) > Math.PI ? 1 : 0;
 
       const d = [
@@ -404,10 +391,10 @@
       t.setAttribute("transform", `rotate(${rot} ${p.x} ${p.y})`);
       svg.appendChild(t);
 
-      lines.forEach((ln, i) => {
+      lines.forEach((ln,i)=>{
         const sp = document.createElementNS("http://www.w3.org/2000/svg","tspan");
         sp.setAttribute("x", p.x);
-        sp.setAttribute("dy", i===0 ? "0" : String(fontSize + 2));
+        sp.setAttribute("dy", i===0 ? "0" : String(fontSize+2));
         sp.textContent = ln;
         t.appendChild(sp);
       });
@@ -416,75 +403,68 @@
     function drawClockFace(cx,cy,R,innerR,tag,slotMinutes){
       addCircle(cx,cy,R, 3.25);
       addCircle(cx,cy,innerR, 3.25);
-      addText(cx, cy + R + 44, tag, 22, 950, "middle");
+      addText(cx, cy + R + 46, tag, 22, 950, "middle");
 
       const slots = Math.round((12*60)/slotMinutes);
       const majorEvery = Math.max(1, Math.round(60/slotMinutes));
-
-      for (let i=0; i<slots; i++){
+      for (let i=0;i<slots;i++){
         const ang = slotToAngle(i, slots);
         const p1 = polar(cx,cy,innerR, ang);
         const p2 = polar(cx,cy,R, ang);
-        addLine(p1.x,p1.y,p2.x,p2.y, (i % majorEvery === 0) ? 3.25 : 2.0);
+        addLine(p1.x,p1.y,p2.x,p2.y, (i%majorEvery===0)?3.25:2.0);
       }
-
-      for (let h=0; h<12; h++){
+      for (let h=0;h<12;h++){
         const label = (h===0) ? "12" : String(h);
         const ang = hourToAngle(h);
         const p = polar(cx,cy,R+26, ang);
-        addText(p.x, p.y, label, 20, 950, "middle");
+        addText(p.x,p.y,label,20,950,"middle");
       }
     }
 
     function addText(x,y,txt,size,weight,anchor="start"){
       const t = document.createElementNS("http://www.w3.org/2000/svg","text");
-      t.setAttribute("x", x);
-      t.setAttribute("y", y);
-      t.setAttribute("fill", "black");
-      t.setAttribute("font-family", "system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif");
+      t.setAttribute("x", x); t.setAttribute("y", y);
+      t.setAttribute("fill","black");
+      t.setAttribute("font-family","system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif");
       t.setAttribute("font-size", String(size));
       t.setAttribute("font-weight", String(weight));
       t.setAttribute("text-anchor", anchor);
-      t.setAttribute("dominant-baseline", "middle");
+      t.setAttribute("dominant-baseline","middle");
       t.textContent = txt;
       svg.appendChild(t);
-      return t;
     }
     function addLine(x1,y1,x2,y2,sw){
       const ln = document.createElementNS("http://www.w3.org/2000/svg","line");
-      ln.setAttribute("x1", x1); ln.setAttribute("y1", y1);
-      ln.setAttribute("x2", x2); ln.setAttribute("y2", y2);
-      ln.setAttribute("stroke", "black");
+      ln.setAttribute("x1",x1); ln.setAttribute("y1",y1);
+      ln.setAttribute("x2",x2); ln.setAttribute("y2",y2);
+      ln.setAttribute("stroke","black");
       ln.setAttribute("stroke-width", String(sw));
       ln.setAttribute("stroke-linecap","round");
       svg.appendChild(ln);
-      return ln;
     }
     function addCircle(x,y,r,sw){
       const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
-      c.setAttribute("cx", x); c.setAttribute("cy", y); c.setAttribute("r", r);
+      c.setAttribute("cx",x); c.setAttribute("cy",y); c.setAttribute("r",r);
       c.setAttribute("fill","none");
       c.setAttribute("stroke","black");
       c.setAttribute("stroke-width", String(sw));
       svg.appendChild(c);
-      return c;
     }
     function hourToAngle(h){ return (-Math.PI/2) + (h * (2*Math.PI/12)); }
-    function slotToAngle(i, slots){ return (-Math.PI/2) + (i * (2*Math.PI/slots)); }
-    function polar(cx,cy,r,ang){ return { x: cx + r*Math.cos(ang), y: cy + r*Math.sin(ang) }; }
-    function wrapText(str, maxChars){
+    function slotToAngle(i,slots){ return (-Math.PI/2) + (i * (2*Math.PI/slots)); }
+    function polar(cx,cy,r,a){ return { x: cx + r*Math.cos(a), y: cy + r*Math.sin(a) }; }
+    function wrapText(str,maxChars){
       const words = str.split(/\s+/).filter(Boolean);
-      const out = [];
-      let cur = "";
+      const out=[]; let cur="";
       for (const w of words){
-        const next = cur ? (cur + " " + w) : w;
-        if (next.length <= maxChars) cur = next;
-        else { if (cur) out.push(cur); cur = w.length>maxChars ? w.slice(0,maxChars-1)+"…" : w; }
+        const next = cur ? (cur+" "+w) : w;
+        if (next.length<=maxChars) cur=next;
+        else{ if(cur) out.push(cur); cur = w.length>maxChars ? w.slice(0,maxChars-1)+"…" : w; }
       }
-      if (cur) out.push(cur);
+      if(cur) out.push(cur);
       return out;
     }
-    function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+    function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
   }
 
   function downloadSVG(){
@@ -500,9 +480,9 @@
     URL.revokeObjectURL(url);
   }
 
-  // Start with one block, like you described
+  // Start with 2 blocks visible (like you wanted)
   addBlock({ startH:"12", startM:"00", startMer:"AM", endH:"5", endM:"00", endMer:"AM", label:"Sleep" });
-  addBlock(); // also start with block 2 ready (since you said could already be there)
+  addBlock();
   renderUI();
   renderPlanner();
 })();
