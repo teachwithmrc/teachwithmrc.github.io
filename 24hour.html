@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Circle Time Planner (AM/PM)</title>
+  <style>
+    :root{
+      --ink:#000;
+      --bg:#fff;
+      --stroke:3.25;          /* bold lines */
+      --strokeThin:2.0;
+      --font: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:var(--font);
+    }
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:18px 18px 26px;
+      display:grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap:18px;
+      align-items:start;
+    }
+    h1{
+      margin:0 0 8px;
+      font-size:22px;
+      font-weight:900;
+      letter-spacing:.3px;
+    }
+    .card{
+      border: var(--strokeThin) solid var(--ink);
+      border-radius:14px;
+      padding:14px;
+    }
+    label{
+      font-weight:900;
+      display:block;
+      margin:10px 0 6px;
+    }
+    textarea{
+      width:100%;
+      min-height:230px;
+      resize:vertical;
+      font-size:15px;
+      font-weight:700;
+      border: var(--strokeThin) solid var(--ink);
+      border-radius:12px;
+      padding:10px 12px;
+      outline:none;
+    }
+    textarea:focus{ box-shadow:0 0 0 3px rgba(0,0,0,.08); }
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:10px;
+    }
+    button{
+      font-family:var(--font);
+      font-weight:900;
+      border: var(--strokeThin) solid var(--ink);
+      background:#fff;
+      border-radius:12px;
+      padding:10px 12px;
+      cursor:pointer;
+    }
+    button:active{ transform: translateY(1px); }
+    .hint{
+      font-size:13px;
+      font-weight:700;
+      opacity:.9;
+      line-height:1.35;
+    }
+    .controls{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .controls .mini{
+      border: var(--strokeThin) solid var(--ink);
+      border-radius:12px;
+      padding:10px 12px;
+    }
+    .mini label{ margin:0 0 6px; font-size:13px; }
+    input[type="number"], select{
+      width:100%;
+      font-size:14px;
+      font-weight:800;
+      border: var(--strokeThin) solid var(--ink);
+      border-radius:10px;
+      padding:8px 10px;
+      outline:none;
+      background:#fff;
+    }
+    .stage{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      border: var(--strokeThin) solid var(--ink);
+      border-radius:14px;
+      padding:10px;
+      background:#fff;
+    }
+    .stage svg{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+
+    /* Print: just the circles */
+    @media print{
+      body{ background:#fff; }
+      .wrap{ grid-template-columns:1fr; padding:0; }
+      .card{ display:none; }
+      .stage{
+        border:none;
+        padding:0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Circle Time Planner Generator (AM + PM)</h1>
+
+      <div class="hint">
+        Type your schedule lines like any of these:
+        <br>• <b>8:00-9:30</b> Lesson plans
+        <br>• <b>2:30pm-4:00pm</b> Tutoring
+        <br>• <b>10:00</b> Meeting (assumes 30 minutes)
+        <br><br>
+        Times can be 24-hour (<b>13:00</b>) or with am/pm. If you omit am/pm, it will place by the clock time (8:00 -> AM, 2:00 -> PM).
+      </div>
+
+      <label for="lines">Schedule</label>
+      <textarea id="lines">8:00-9:30 Deep work
+9:30-10:00 Emails
+10:00-11:00 Meetings
+12:00-12:30 Lunch
+2:00-3:30 Small groups
+7:00-8:00 Family time</textarea>
+
+      <div class="controls" style="margin-top:12px;">
+        <div class="mini">
+          <label for="ringWidth">Ring thickness</label>
+          <input id="ringWidth" type="number" min="55" max="120" value="82" />
+        </div>
+        <div class="mini">
+          <label for="fontSize">Text size</label>
+          <input id="fontSize" type="number" min="8" max="18" value="12" />
+        </div>
+        <div class="mini">
+          <label for="slotMode">Intervals</label>
+          <select id="slotMode">
+            <option value="30" selected>30 minutes (recommended)</option>
+            <option value="60">60 minutes</option>
+          </select>
+        </div>
+        <div class="mini">
+          <label for="repeatText">Text placement</label>
+          <select id="repeatText">
+            <option value="block" selected>One label per block</option>
+            <option value="every">Repeat in each slot</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <button id="renderBtn">Render</button>
+        <button id="clearBtn">Clear schedule</button>
+        <button id="printBtn">Print</button>
+        <button id="downloadBtn">Download SVG</button>
+      </div>
+    </div>
+
+    <div class="stage">
+      <svg id="svg" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg" aria-label="Circle time planner">
+        <!-- JS fills this -->
+      </svg>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+
+  const svg = $("svg");
+  const linesEl = $("lines");
+  const ringWidthEl = $("ringWidth");
+  const fontSizeEl = $("fontSize");
+  const slotModeEl = $("slotMode");
+  const repeatTextEl = $("repeatText");
+
+  $("renderBtn").addEventListener("click", render);
+  $("clearBtn").addEventListener("click", () => { linesEl.value = ""; render(); });
+  $("printBtn").addEventListener("click", () => window.print());
+  $("downloadBtn").addEventListener("click", downloadSVG);
+
+  // ---------- Parsing ----------
+  function parseTimeToMinutes(raw) {
+    // Supports: "8", "8:00", "8:00am", "2:30 pm", "14:00"
+    let s = (raw || "").trim().toLowerCase().replace(/\s+/g, "");
+    if (!s) return null;
+
+    const hasAm = s.includes("am");
+    const hasPm = s.includes("pm");
+    s = s.replace("am","").replace("pm","");
+
+    let h, m;
+    if (s.includes(":")) {
+      const [hh, mm] = s.split(":");
+      h = parseInt(hh, 10);
+      m = parseInt(mm, 10);
+    } else {
+      h = parseInt(s, 10);
+      m = 0;
+    }
+    if (!Number.isFinite(h) || !Number.isFinite(m)) return null;
+    if (m < 0 || m > 59) return null;
+
+    // Determine 24h minutes.
+    // If user explicitly gave am/pm:
+    if (hasAm || hasPm) {
+      if (h === 12) h = 0;
+      if (hasPm) h += 12;
+      return h * 60 + m;
+    }
+
+    // If no am/pm and they used 24h style (13-23), treat as 24h
+    if (h >= 13 && h <= 23) return h * 60 + m;
+
+    // Otherwise ambiguous: keep "clock time" as-is (0-12 range),
+    // we'll place 1-11 in PM if h is 1-11 and user wrote "pm" elsewhere not present.
+    // Default: 12-11 -> AM for 12, and 1-11 -> AM if < 12, BUT we'll also allow PM blocks via explicit pm.
+    // We'll handle by returning "floating" minutes in 12h space and deciding AM/PM later.
+    return { floating12h: true, h, m };
+  }
+
+  function parseLine(line) {
+    // Formats:
+    // "8:00-9:30 Activity"
+    // "2:00pm-3:00pm Activity"
+    // "10:00 Activity" => 30 min
+    const trimmed = line.trim();
+    if (!trimmed) return null;
+
+    // Find a time range first
+    const rangeMatch = trimmed.match(/^(.+?)-(.+?)\s+(.*)$/);
+    if (rangeMatch) {
+      const startRaw = rangeMatch[1].trim();
+      const endRaw   = rangeMatch[2].trim();
+      const label    = rangeMatch[3].trim();
+      return { startRaw, endRaw, label };
+    }
+
+    // Single time at beginning
+    const singleMatch = trimmed.match(/^(\S+)\s+(.*)$/);
+    if (singleMatch) {
+      return { startRaw: singleMatch[1].trim(), endRaw: null, label: singleMatch[2].trim() };
+    }
+
+    return null;
+  }
+
+  // Convert floating 12h time to a concrete AM/PM guess:
+  function resolveFloating(t, hintText) {
+    // If hintText contains "pm" anywhere in original chunk, treat as PM.
+    const hint = (hintText || "").toLowerCase();
+    const wantsPm = hint.includes("pm");
+    const wantsAm = hint.includes("am");
+
+    let h = t.h;
+    const m = t.m;
+
+    // If explicitly pm/am in hint
+    if (wantsPm || wantsAm) {
+      if (h === 12) h = 0;
+      if (wantsPm) h += 12;
+      return h*60 + m;
+    }
+
+    // Default heuristic: 12, 1-11 => AM (for planners most people schedule morning first)
+    // (You can force PM by writing "pm".)
+    if (h === 12) return 0*60 + m; // 12:xx => 12:xx AM (midnight) in strict time, but on planner treat as AM 12.
+    return h*60 + m; // 1-11 => AM
+  }
+
+  function toConcreteMinutes(parsedTime, hintText) {
+    if (parsedTime == null) return null;
+    if (typeof parsedTime === "number") return parsedTime;
+    if (parsedTime.floating12h) return resolveFloating(parsedTime, hintText);
+    return null;
+  }
+
+  // ---------- Rendering ----------
+  function render() {
+    const ringWidth = clamp(parseInt(ringWidthEl.value,10) || 82, 55, 120);
+    const fontSize  = clamp(parseInt(fontSizeEl.value,10) || 12, 8, 18);
+    const slotMinutes = parseInt(slotModeEl.value,10) || 30;
+    const repeatMode = repeatTextEl.value;
+
+    ringWidthEl.value = ringWidth;
+    fontSizeEl.value = fontSize;
+
+    // Prepare blocks from user text
+    const blocks = [];
+    const lines = linesEl.value.split("\n").map(s => s.trim()).filter(Boolean);
+
+    for (const line of lines) {
+      const p = parseLine(line);
+      if (!p) continue;
+
+      const startParsed = parseTimeToMinutes(p.startRaw);
+      let startMin = toConcreteMinutes(startParsed, p.startRaw);
+
+      let endMin;
+      if (p.endRaw) {
+        const endParsed = parseTimeToMinutes(p.endRaw);
+        endMin = toConcreteMinutes(endParsed, p.endRaw);
+
+        // If user wrote "8:00-9:30" with no am/pm, both become AM by default (fine).
+        // If end is earlier than start, assume it crosses noon/midnight forward by 12h or 24h as needed.
+        if (typeof startMin === "number" && typeof endMin === "number" && endMin <= startMin) {
+          // bump end forward by 12 hours first; if still <= start, bump by 24
+          endMin += 12*60;
+          if (endMin <= startMin) endMin += 24*60;
+        }
+      } else {
+        endMin = startMin + slotMinutes; // default one slot
+      }
+
+      // Only keep within a 24h window starting at 0
+      // Allow end to exceed 24h a bit, we’ll split if needed.
+      if (typeof startMin !== "number" || typeof endMin !== "number") continue;
+
+      blocks.push({
+        start: startMin,
+        end: endMin,
+        label: p.label || ""
+      });
+    }
+
+    // Clear SVG
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+    // Layout
+    const W = 1200, H = 720;
+    const cxAM = 370, cxPM = 830, cy = 360;
+    const R = 250;
+    const innerR = R - ringWidth;
+
+    // Title text (kept simple + bold, no background)
+    addText(600, 40, "TIME TABLE", 22, 900, "middle");
+    addText(600, 68, "NOTES", 16, 900, "middle");
+
+    // Draw both circles
+    drawClockFace(cxAM, cy, R, innerR, "AM", slotMinutes, fontSize);
+    drawClockFace(cxPM, cy, R, innerR, "PM", slotMinutes, fontSize);
+
+    // Place blocks into AM/PM circle(s)
+    // We interpret planner as:
+    // AM circle = 12:00am-11:59am (0-719)
+    // PM circle = 12:00pm-11:59pm (720-1439)
+    for (const b of blocks) {
+      placeBlockOnPlanner(b, cxAM, cy, R, innerR, 0, 12*60, "AM", slotMinutes, fontSize, repeatMode);
+      placeBlockOnPlanner(b, cxPM, cy, R, innerR, 12*60, 24*60, "PM", slotMinutes, fontSize, repeatMode);
+      // If block runs beyond 24h (rare), we ignore overflow.
+    }
+
+    // A little padding frame (optional)
+    // (commented out to keep it super clean)
+    // addRect(20, 20, W-40, H-40, 2);
+
+    function addText(x,y,txt,size,weight,anchor="start",rotateDeg=null){
+      const t = document.createElementNS("http://www.w3.org/2000/svg","text");
+      t.setAttribute("x", x);
+      t.setAttribute("y", y);
+      t.setAttribute("fill", "black");
+      t.setAttribute("font-family", "system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif");
+      t.setAttribute("font-size", String(size));
+      t.setAttribute("font-weight", String(weight));
+      t.setAttribute("text-anchor", anchor);
+      t.setAttribute("dominant-baseline", "middle");
+      if (rotateDeg !== null) t.setAttribute("transform", `rotate(${rotateDeg} ${x} ${y})`);
+      t.textContent = txt;
+      svg.appendChild(t);
+      return t;
+    }
+
+    function addLine(x1,y1,x2,y2,sw){
+      const ln = document.createElementNS("http://www.w3.org/2000/svg","line");
+      ln.setAttribute("x1", x1); ln.setAttribute("y1", y1);
+      ln.setAttribute("x2", x2); ln.setAttribute("y2", y2);
+      ln.setAttribute("stroke", "black");
+      ln.setAttribute("stroke-width", String(sw));
+      ln.setAttribute("stroke-linecap","round");
+      svg.appendChild(ln);
+      return ln;
+    }
+
+    function addCircle(x,y,r,sw){
+      const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+      c.setAttribute("cx", x); c.setAttribute("cy", y); c.setAttribute("r", r);
+      c.setAttribute("fill","none");
+      c.setAttribute("stroke","black");
+      c.setAttribute("stroke-width", String(sw));
+      svg.appendChild(c);
+      return c;
+    }
+
+    function drawClockFace(cx,cy,R,innerR,tag,slotMinutes,fontSize){
+      // Outer + inner circles
+      addCircle(cx,cy,R, 3.25);
+      addCircle(cx,cy,innerR, 3.25);
+
+      // Tag label (AM/PM)
+      addText(cx, cy + R + 36, tag, 20, 900, "middle");
+
+      // Radial lines (slots)
+      const slots = Math.round((12*60)/slotMinutes); // 24 for 30-min, 12 for 60-min
+      for (let i=0; i<slots; i++){
+        const ang = slotToAngle(i, slots);
+        const p1 = polar(cx,cy,innerR, ang);
+        const p2 = polar(cx,cy,R, ang);
+        addLine(p1.x,p1.y,p2.x,p2.y, (i % (60/slotMinutes)===0) ? 3.25 : 2.0);
+      }
+
+      // Hour numbers around the outside: 12 at top, then 1..11 clockwise
+      for (let h=0; h<12; h++){
+        const label = (h===0) ? "12" : String(h);
+        const ang = hourToAngle(h); // uses 12 at top
+        const p = polar(cx,cy,R+22, ang);
+        addText(p.x, p.y, label, 18, 900, "middle");
+      }
+    }
+
+    function placeBlockOnPlanner(block, cx,cy,R,innerR,windowStart,windowEnd,tag,slotMinutes,fontSize,repeatMode){
+      const start = clamp(block.start, windowStart, windowEnd);
+      const end   = clamp(block.end,   windowStart, windowEnd);
+
+      if (end <= windowStart || start >= windowEnd) return; // no overlap
+      if (end <= start) return;
+
+      const slots = Math.round((12*60)/slotMinutes);
+      const minutesIntoWindowStart = start - windowStart;
+      const minutesIntoWindowEnd   = end   - windowStart;
+
+      const startSlot = Math.floor(minutesIntoWindowStart / slotMinutes);
+      const endSlotExcl = Math.ceil(minutesIntoWindowEnd / slotMinutes);
+
+      if (repeatMode === "every") {
+        for (let s=startSlot; s<endSlotExcl; s++){
+          placeSingleLabel(block.label, s, s+1, slots, cx,cy,R,innerR, fontSize);
+        }
+      } else {
+        placeSingleLabel(block.label, startSlot, endSlotExcl, slots, cx,cy,R,innerR, fontSize);
+      }
+    }
+
+    function placeSingleLabel(text, slotA, slotB, slots, cx,cy,R,innerR, fontSize){
+      const clean = (text || "").trim();
+      if (!clean) return;
+
+      // Place at the mid-angle of the block
+      const midSlot = (slotA + slotB) / 2;
+      const ang = slotToAngle(midSlot, slots);
+
+      // Radius for text placement (middle of ring)
+      const rText = (R + innerR) / 2;
+
+      const p = polar(cx,cy,rText, ang);
+
+      // Rotate so it reads upright-ish
+      let deg = (ang * 180/Math.PI);
+      let rotate = deg + 90; // tangent-ish
+      // Make bottom-half text upright
+      if (deg > 90 && deg < 270) rotate += 180;
+
+      // Wrap into up to 3 lines (simple word wrap)
+      const maxChars = 14; // tuned for this ring size
+      const lines = wrapText(clean, maxChars).slice(0,3);
+
+      const t = document.createElementNS("http://www.w3.org/2000/svg","text");
+      t.setAttribute("x", p.x);
+      t.setAttribute("y", p.y);
+      t.setAttribute("fill","black");
+      t.setAttribute("font-family","system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif");
+      t.setAttribute("font-size", String(fontSize));
+      t.setAttribute("font-weight","900");
+      t.setAttribute("text-anchor","middle");
+      t.setAttribute("dominant-baseline","middle");
+      t.setAttribute("transform", `rotate(${rotate} ${p.x} ${p.y})`);
+      svg.appendChild(t);
+
+      lines.forEach((ln, i) => {
+        const sp = document.createElementNS("http://www.w3.org/2000/svg","tspan");
+        sp.setAttribute("x", p.x);
+        sp.setAttribute("dy", i===0 ? "0" : String(fontSize + 2));
+        sp.textContent = ln;
+        t.appendChild(sp);
+      });
+    }
+
+    function hourToAngle(h){
+      // h=0 means 12 at top. Clockwise.
+      // Top = -90deg
+      return (-Math.PI/2) + (h * (2*Math.PI/12));
+    }
+    function slotToAngle(slotIndex, slots){
+      // slotIndex 0 at 12:00
+      return (-Math.PI/2) + (slotIndex * (2*Math.PI/slots));
+    }
+    function polar(cx,cy,r,ang){
+      return { x: cx + r*Math.cos(ang), y: cy + r*Math.sin(ang) };
+    }
+    function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+
+    function wrapText(str, maxChars){
+      const words = str.split(/\s+/).filter(Boolean);
+      const out = [];
+      let cur = "";
+      for (const w of words){
+        const next = cur ? (cur + " " + w) : w;
+        if (next.length <= maxChars) cur = next;
+        else {
+          if (cur) out.push(cur);
+          cur = w.length > maxChars ? w.slice(0, maxChars-1) + "…" : w;
+        }
+      }
+      if (cur) out.push(cur);
+      return out;
+    }
+  }
+
+  function downloadSVG(){
+    const xml = new XMLSerializer().serializeToString(svg);
+    const blob = new Blob([xml], {type:"image/svg+xml;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "circle-time-planner.svg";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  // Initial render
+  render();
+})();
+</script>
+</body>
+</html>
