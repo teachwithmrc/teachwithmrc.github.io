@@ -3,490 +3,394 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Circle Time Planner (AM/PM)</title>
+  <title>24-Hour Circle Planner</title>
   <style>
     :root{
-      --ink:#000;
-      --bg:#fff;
-      --stroke:3.25;          /* bold lines */
-      --strokeThin:2.0;
+      --ink:#000; --bg:#fff;
+      --stroke:3.25; --strokeThin:2;
       --font: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
-    body{
-      margin:0;
-      background:var(--bg);
-      color:var(--ink);
-      font-family:var(--font);
+    body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--font); }
+    .wrap{ max-width:1150px; margin:0 auto; padding:18px; display:grid; grid-template-columns:1fr 1.25fr; gap:18px; }
+    h1{ margin:0 0 10px; font-size:22px; font-weight:950; }
+    .card{ border:var(--strokeThin) solid var(--ink); border-radius:14px; padding:14px; }
+    .hint{ font-size:13px; font-weight:800; line-height:1.35; margin:0 0 12px; opacity:.95; }
+    .stage{ border:var(--strokeThin) solid var(--ink); border-radius:14px; padding:10px; background:#fff; }
+    .stage svg{ width:100%; height:auto; display:block; }
+
+    .topControls{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+    label{ font-weight:950; display:block; margin:0 0 6px; }
+    input, select{
+      width:100%; box-sizing:border-box;
+      font-size:14px; font-weight:900;
+      border:var(--strokeThin) solid var(--ink);
+      border-radius:10px; padding:8px 10px; background:#fff; outline:none;
     }
-    .wrap{
-      max-width:1100px;
-      margin:0 auto;
-      padding:18px 18px 26px;
-      display:grid;
-      grid-template-columns: 1fr 1.25fr;
-      gap:18px;
-      align-items:start;
-    }
-    h1{
-      margin:0 0 8px;
-      font-size:22px;
-      font-weight:900;
-      letter-spacing:.3px;
-    }
-    .card{
-      border: var(--strokeThin) solid var(--ink);
+
+    .toggleRow{ display:flex; gap:14px; flex-wrap:wrap; margin:8px 0 14px; }
+    .toggleRow label{ margin:0; font-size:13px; font-weight:950; display:flex; align-items:center; gap:8px; }
+    .toggleRow input{ width:auto; }
+
+    .blocks{ display:flex; flex-direction:column; gap:10px; }
+    .block{
+      border:var(--strokeThin) solid var(--ink);
       border-radius:14px;
-      padding:14px;
+      padding:10px;
     }
-    label{
-      font-weight:900;
-      display:block;
-      margin:10px 0 6px;
+    .blockHead{
+      display:flex; justify-content:space-between; align-items:center; gap:10px;
+      margin-bottom:8px;
     }
-    textarea{
-      width:100%;
-      min-height:230px;
-      resize:vertical;
-      font-size:15px;
-      font-weight:700;
-      border: var(--strokeThin) solid var(--ink);
-      border-radius:12px;
-      padding:10px 12px;
-      outline:none;
+    .blockTitle{ font-weight:950; }
+    .removeBtn{
+      border:var(--strokeThin) solid var(--ink);
+      background:#fff; border-radius:10px;
+      font-weight:950; padding:6px 10px; cursor:pointer;
     }
-    textarea:focus{ box-shadow:0 0 0 3px rgba(0,0,0,.08); }
-    .row{
-      display:flex;
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
       gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin-top:10px;
     }
+    .timeGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:8px;
+    }
+
+    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
     button{
       font-family:var(--font);
-      font-weight:900;
-      border: var(--strokeThin) solid var(--ink);
+      font-weight:950;
+      border:var(--strokeThin) solid var(--ink);
       background:#fff;
       border-radius:12px;
       padding:10px 12px;
       cursor:pointer;
     }
-    button:active{ transform: translateY(1px); }
-    .hint{
-      font-size:13px;
-      font-weight:700;
-      opacity:.9;
-      line-height:1.35;
-    }
-    .controls{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-    }
-    .controls .mini{
-      border: var(--strokeThin) solid var(--ink);
-      border-radius:12px;
-      padding:10px 12px;
-    }
-    .mini label{ margin:0 0 6px; font-size:13px; }
-    input[type="number"], select{
-      width:100%;
-      font-size:14px;
-      font-weight:800;
-      border: var(--strokeThin) solid var(--ink);
-      border-radius:10px;
-      padding:8px 10px;
-      outline:none;
-      background:#fff;
-    }
-    .stage{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      border: var(--strokeThin) solid var(--ink);
-      border-radius:14px;
-      padding:10px;
-      background:#fff;
-    }
-    .stage svg{
-      width:100%;
-      height:auto;
-      display:block;
-    }
+    button:active{ transform:translateY(1px); }
 
-    /* Print: just the circles */
     @media print{
-      body{ background:#fff; }
       .wrap{ grid-template-columns:1fr; padding:0; }
       .card{ display:none; }
-      .stage{
-        border:none;
-        padding:0;
-      }
+      .stage{ border:none; padding:0; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card">
-      <h1>Circle Time Planner Generator (AM + PM)</h1>
+      <h1>24-Hour Circle Planner</h1>
+      <p class="hint">
+        Add a <b>Schedule Block</b> (example: 12:00 AM → 5:00 AM “Sleep”). Each block shades + repeats the label so it looks filled.
+      </p>
 
-      <div class="hint">
-        Type your schedule lines like any of these:
-        <br>• <b>8:00-9:30</b> Lesson plans
-        <br>• <b>2:30pm-4:00pm</b> Tutoring
-        <br>• <b>10:00</b> Meeting (assumes 30 minutes)
-        <br><br>
-        Times can be 24-hour (<b>13:00</b>) or with am/pm. If you omit am/pm, it will place by the clock time (8:00 -> AM, 2:00 -> PM).
-      </div>
-
-      <label for="lines">Schedule</label>
-      <textarea id="lines">8:00-9:30 Deep work
-9:30-10:00 Emails
-10:00-11:00 Meetings
-12:00-12:30 Lunch
-2:00-3:30 Small groups
-7:00-8:00 Family time</textarea>
-
-      <div class="controls" style="margin-top:12px;">
-        <div class="mini">
-          <label for="ringWidth">Ring thickness</label>
-          <input id="ringWidth" type="number" min="55" max="120" value="82" />
+      <div class="topControls">
+        <div>
+          <label>Intervals</label>
+          <select id="slotMode">
+            <option value="30" selected>30 minutes</option>
+            <option value="60">60 minutes</option>
+            <option value="15">15 minutes</option>
+          </select>
         </div>
-        <div class="mini">
-          <label for="fontSize">Text size</label>
+        <div>
+          <label>Text size</label>
           <input id="fontSize" type="number" min="8" max="18" value="12" />
         </div>
-        <div class="mini">
-          <label for="slotMode">Intervals</label>
-          <select id="slotMode">
-            <option value="30" selected>30 minutes (recommended)</option>
-            <option value="60">60 minutes</option>
-          </select>
-        </div>
-        <div class="mini">
-          <label for="repeatText">Text placement</label>
-          <select id="repeatText">
-            <option value="block" selected>One label per block</option>
-            <option value="every">Repeat in each slot</option>
-          </select>
-        </div>
       </div>
 
-      <div class="row">
-        <button id="renderBtn">Render</button>
-        <button id="clearBtn">Clear schedule</button>
+      <div class="toggleRow">
+        <label><input type="checkbox" id="shadeBlocks" checked> Shade blocks</label>
+        <label><input type="checkbox" id="repeatText" checked> Repeat label in each slot</label>
+      </div>
+
+      <div class="blocks" id="blocks"></div>
+
+      <div class="btnRow">
+        <button id="addBlockBtn">Add Schedule Block</button>
         <button id="printBtn">Print</button>
         <button id="downloadBtn">Download SVG</button>
+        <button id="clearBtn">Clear All</button>
       </div>
     </div>
 
     <div class="stage">
-      <svg id="svg" viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg" aria-label="Circle time planner">
-        <!-- JS fills this -->
-      </svg>
+      <svg id="svg" viewBox="0 0 900 1250" xmlns="http://www.w3.org/2000/svg" aria-label="Circle planner"></svg>
     </div>
   </div>
 
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
-
   const svg = $("svg");
-  const linesEl = $("lines");
-  const ringWidthEl = $("ringWidth");
-  const fontSizeEl = $("fontSize");
+  const blocksWrap = $("blocks");
+
   const slotModeEl = $("slotMode");
+  const fontSizeEl = $("fontSize");
+  const shadeBlocksEl = $("shadeBlocks");
   const repeatTextEl = $("repeatText");
 
-  $("renderBtn").addEventListener("click", render);
-  $("clearBtn").addEventListener("click", () => { linesEl.value = ""; render(); });
+  const state = {
+    blocks: [] // { id, startH, startM, startMer, endH, endM, endMer, label }
+  };
+
+  $("addBlockBtn").addEventListener("click", () => {
+    addBlock();
+    renderUI();
+    renderPlanner();
+  });
+
+  $("clearBtn").addEventListener("click", () => {
+    state.blocks = [];
+    addBlock(); // leave one blank block
+    renderUI();
+    renderPlanner();
+  });
+
   $("printBtn").addEventListener("click", () => window.print());
   $("downloadBtn").addEventListener("click", downloadSVG);
 
-  // ---------- Parsing ----------
-  function parseTimeToMinutes(raw) {
-    // Supports: "8", "8:00", "8:00am", "2:30 pm", "14:00"
-    let s = (raw || "").trim().toLowerCase().replace(/\s+/g, "");
-    if (!s) return null;
+  [slotModeEl, fontSizeEl, shadeBlocksEl, repeatTextEl].forEach(el => {
+    el.addEventListener("change", renderPlanner);
+    el.addEventListener("input", renderPlanner);
+  });
 
-    const hasAm = s.includes("am");
-    const hasPm = s.includes("pm");
-    s = s.replace("am","").replace("pm","");
-
-    let h, m;
-    if (s.includes(":")) {
-      const [hh, mm] = s.split(":");
-      h = parseInt(hh, 10);
-      m = parseInt(mm, 10);
-    } else {
-      h = parseInt(s, 10);
-      m = 0;
-    }
-    if (!Number.isFinite(h) || !Number.isFinite(m)) return null;
-    if (m < 0 || m > 59) return null;
-
-    // Determine 24h minutes.
-    // If user explicitly gave am/pm:
-    if (hasAm || hasPm) {
-      if (h === 12) h = 0;
-      if (hasPm) h += 12;
-      return h * 60 + m;
-    }
-
-    // If no am/pm and they used 24h style (13-23), treat as 24h
-    if (h >= 13 && h <= 23) return h * 60 + m;
-
-    // Otherwise ambiguous: keep "clock time" as-is (0-12 range),
-    // we'll place 1-11 in PM if h is 1-11 and user wrote "pm" elsewhere not present.
-    // Default: 12-11 -> AM for 12, and 1-11 -> AM if < 12, BUT we'll also allow PM blocks via explicit pm.
-    // We'll handle by returning "floating" minutes in 12h space and deciding AM/PM later.
-    return { floating12h: true, h, m };
+  function addBlock(prefill = null) {
+    const id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random());
+    state.blocks.push({
+      id,
+      startH: prefill?.startH ?? "12",
+      startM: prefill?.startM ?? "00",
+      startMer: prefill?.startMer ?? "AM",
+      endH: prefill?.endH ?? "1",
+      endM: prefill?.endM ?? "00",
+      endMer: prefill?.endMer ?? "AM",
+      label: prefill?.label ?? ""
+    });
   }
 
-  function parseLine(line) {
-    // Formats:
-    // "8:00-9:30 Activity"
-    // "2:00pm-3:00pm Activity"
-    // "10:00 Activity" => 30 min
-    const trimmed = line.trim();
-    if (!trimmed) return null;
+  function hours12() { return Array.from({length:12},(_,i)=>String(i+1)); }
+  function minutesList() { return ["00","15","30","45"]; }
 
-    // Find a time range first
-    const rangeMatch = trimmed.match(/^(.+?)-(.+?)\s+(.*)$/);
-    if (rangeMatch) {
-      const startRaw = rangeMatch[1].trim();
-      const endRaw   = rangeMatch[2].trim();
-      const label    = rangeMatch[3].trim();
-      return { startRaw, endRaw, label };
-    }
+  function renderUI() {
+    blocksWrap.innerHTML = "";
 
-    // Single time at beginning
-    const singleMatch = trimmed.match(/^(\S+)\s+(.*)$/);
-    if (singleMatch) {
-      return { startRaw: singleMatch[1].trim(), endRaw: null, label: singleMatch[2].trim() };
-    }
+    state.blocks.forEach((b, idx) => {
+      const block = document.createElement("div");
+      block.className = "block";
 
-    return null;
+      block.innerHTML = `
+        <div class="blockHead">
+          <div class="blockTitle">Schedule Block ${idx + 1}</div>
+          <button class="removeBtn" ${state.blocks.length===1 ? "disabled" : ""}>Remove</button>
+        </div>
+
+        <div class="grid">
+          <div>
+            <label>Start</label>
+            <div class="timeGrid">
+              <select data-k="startH"></select>
+              <select data-k="startM"></select>
+              <select data-k="startMer">
+                <option>AM</option><option>PM</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label>End</label>
+            <div class="timeGrid">
+              <select data-k="endH"></select>
+              <select data-k="endM"></select>
+              <select data-k="endMer">
+                <option>AM</option><option>PM</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <label>Event</label>
+          <input data-k="label" placeholder="Sleep, Appointment, Work..." />
+        </div>
+      `;
+
+      // populate selects
+      const selStartH = block.querySelector('select[data-k="startH"]');
+      const selStartM = block.querySelector('select[data-k="startM"]');
+      const selStartMer = block.querySelector('select[data-k="startMer"]');
+
+      const selEndH = block.querySelector('select[data-k="endH"]');
+      const selEndM = block.querySelector('select[data-k="endM"]');
+      const selEndMer = block.querySelector('select[data-k="endMer"]');
+
+      fillSelect(selStartH, hours12(), b.startH);
+      fillSelect(selStartM, minutesList(), b.startM);
+      selStartMer.value = b.startMer;
+
+      fillSelect(selEndH, hours12(), b.endH);
+      fillSelect(selEndM, minutesList(), b.endM);
+      selEndMer.value = b.endMer;
+
+      const labelInput = block.querySelector('input[data-k="label"]');
+      labelInput.value = b.label;
+
+      // listeners -> update state -> render planner
+      const wire = (el, key) => {
+        el.addEventListener("change", () => { b[key] = el.value; maybeAutoAddNext(idx); renderPlanner(); });
+        el.addEventListener("input",  () => { b[key] = el.value; maybeAutoAddNext(idx); renderPlanner(); });
+      };
+      wire(selStartH, "startH"); wire(selStartM, "startM"); wire(selStartMer, "startMer");
+      wire(selEndH, "endH");     wire(selEndM, "endM");     wire(selEndMer, "endMer");
+      wire(labelInput, "label");
+
+      // remove
+      const removeBtn = block.querySelector(".removeBtn");
+      removeBtn.addEventListener("click", () => {
+        if (state.blocks.length === 1) return;
+        state.blocks = state.blocks.filter(x => x.id !== b.id);
+        renderUI();
+        renderPlanner();
+      });
+
+      blocksWrap.appendChild(block);
+    });
   }
 
-  // Convert floating 12h time to a concrete AM/PM guess:
-  function resolveFloating(t, hintText) {
-    // If hintText contains "pm" anywhere in original chunk, treat as PM.
-    const hint = (hintText || "").toLowerCase();
-    const wantsPm = hint.includes("pm");
-    const wantsAm = hint.includes("am");
+  function maybeAutoAddNext(idx) {
+    // If they typed a label in the last block, automatically add a new blank block.
+    const isLast = idx === state.blocks.length - 1;
+    if (!isLast) return;
 
-    let h = t.h;
-    const m = t.m;
-
-    // If explicitly pm/am in hint
-    if (wantsPm || wantsAm) {
-      if (h === 12) h = 0;
-      if (wantsPm) h += 12;
-      return h*60 + m;
+    const b = state.blocks[idx];
+    const hasAny = (b.label || "").trim().length > 0;
+    if (hasAny) {
+      // only add if there isn't already an extra blank block
+      // (i.e., last block is no longer blank)
+      addBlock();
+      renderUI();
     }
-
-    // Default heuristic: 12, 1-11 => AM (for planners most people schedule morning first)
-    // (You can force PM by writing "pm".)
-    if (h === 12) return 0*60 + m; // 12:xx => 12:xx AM (midnight) in strict time, but on planner treat as AM 12.
-    return h*60 + m; // 1-11 => AM
   }
 
-  function toConcreteMinutes(parsedTime, hintText) {
-    if (parsedTime == null) return null;
-    if (typeof parsedTime === "number") return parsedTime;
-    if (parsedTime.floating12h) return resolveFloating(parsedTime, hintText);
-    return null;
+  function fillSelect(el, items, selected){
+    el.innerHTML = "";
+    for (const it of items) {
+      const opt = document.createElement("option");
+      opt.value = it;
+      opt.textContent = it;
+      if (String(it) === String(selected)) opt.selected = true;
+      el.appendChild(opt);
+    }
   }
 
-  // ---------- Rendering ----------
-  function render() {
-    const ringWidth = clamp(parseInt(ringWidthEl.value,10) || 82, 55, 120);
-    const fontSize  = clamp(parseInt(fontSizeEl.value,10) || 12, 8, 18);
+  // ----- Planner rendering -----
+  function toMinutes12h(hourStr, minStr, mer) {
+    let h = parseInt(hourStr,10) % 12;
+    const m = parseInt(minStr,10);
+    if (mer === "PM") h += 12;
+    return h*60 + m; // 0..1439
+  }
+
+  function renderPlanner(){
     const slotMinutes = parseInt(slotModeEl.value,10) || 30;
-    const repeatMode = repeatTextEl.value;
-
-    ringWidthEl.value = ringWidth;
+    const fontSize = clamp(parseInt(fontSizeEl.value,10) || 12, 8, 18);
     fontSizeEl.value = fontSize;
 
-    // Prepare blocks from user text
-    const blocks = [];
-    const lines = linesEl.value.split("\n").map(s => s.trim()).filter(Boolean);
+    const shadeMode = shadeBlocksEl.checked;
+    const repeatMode = repeatTextEl.checked;
 
-    for (const line of lines) {
-      const p = parseLine(line);
-      if (!p) continue;
+    // Build events list from blocks that have a label
+    const events = [];
+    for (const b of state.blocks){
+      const label = (b.label || "").trim();
+      if (!label) continue;
 
-      const startParsed = parseTimeToMinutes(p.startRaw);
-      let startMin = toConcreteMinutes(startParsed, p.startRaw);
-
-      let endMin;
-      if (p.endRaw) {
-        const endParsed = parseTimeToMinutes(p.endRaw);
-        endMin = toConcreteMinutes(endParsed, p.endRaw);
-
-        // If user wrote "8:00-9:30" with no am/pm, both become AM by default (fine).
-        // If end is earlier than start, assume it crosses noon/midnight forward by 12h or 24h as needed.
-        if (typeof startMin === "number" && typeof endMin === "number" && endMin <= startMin) {
-          // bump end forward by 12 hours first; if still <= start, bump by 24
-          endMin += 12*60;
-          if (endMin <= startMin) endMin += 24*60;
-        }
-      } else {
-        endMin = startMin + slotMinutes; // default one slot
-      }
-
-      // Only keep within a 24h window starting at 0
-      // Allow end to exceed 24h a bit, we’ll split if needed.
-      if (typeof startMin !== "number" || typeof endMin !== "number") continue;
-
-      blocks.push({
-        start: startMin,
-        end: endMin,
-        label: p.label || ""
-      });
+      const start = toMinutes12h(b.startH, b.startM, b.startMer);
+      let end = toMinutes12h(b.endH, b.endM, b.endMer);
+      if (end <= start) end += 24*60; // crosses midnight
+      events.push({ start, end, label });
     }
 
-    // Clear SVG
+    // clear svg
     while (svg.firstChild) svg.removeChild(svg.firstChild);
 
-    // Layout
-    const W = 1200, H = 720;
-    const cxAM = 370, cxPM = 830, cy = 360;
-    const R = 250;
-    const innerR = R - ringWidth;
+    // stacked circles
+    const cx = 450, cyAM = 380, cyPM = 920;
+    const R = 290, ringWidth = 95, innerR = R - ringWidth;
 
-    // Title text (kept simple + bold, no background)
-    addText(600, 40, "TIME TABLE", 22, 900, "middle");
-    addText(600, 68, "NOTES", 16, 900, "middle");
+    addText(cx, 55, "TIME TABLE", 26, 950, "middle");
+    drawClockFace(cx, cyAM, R, innerR, "AM", slotMinutes);
+    drawClockFace(cx, cyPM, R, innerR, "PM", slotMinutes);
 
-    // Draw both circles
-    drawClockFace(cxAM, cy, R, innerR, "AM", slotMinutes, fontSize);
-    drawClockFace(cxPM, cy, R, innerR, "PM", slotMinutes, fontSize);
-
-    // Place blocks into AM/PM circle(s)
-    // We interpret planner as:
-    // AM circle = 12:00am-11:59am (0-719)
-    // PM circle = 12:00pm-11:59pm (720-1439)
-    for (const b of blocks) {
-      placeBlockOnPlanner(b, cxAM, cy, R, innerR, 0, 12*60, "AM", slotMinutes, fontSize, repeatMode);
-      placeBlockOnPlanner(b, cxPM, cy, R, innerR, 12*60, 24*60, "PM", slotMinutes, fontSize, repeatMode);
-      // If block runs beyond 24h (rare), we ignore overflow.
+    for (const ev of events){
+      drawEventOnWindow(ev, cx, cyAM, R, innerR, 0, 12*60, slotMinutes, fontSize, repeatMode, shadeMode);
+      drawEventOnWindow(ev, cx, cyPM, R, innerR, 12*60, 24*60, slotMinutes, fontSize, repeatMode, shadeMode);
     }
 
-    // A little padding frame (optional)
-    // (commented out to keep it super clean)
-    // addRect(20, 20, W-40, H-40, 2);
-
-    function addText(x,y,txt,size,weight,anchor="start",rotateDeg=null){
-      const t = document.createElementNS("http://www.w3.org/2000/svg","text");
-      t.setAttribute("x", x);
-      t.setAttribute("y", y);
-      t.setAttribute("fill", "black");
-      t.setAttribute("font-family", "system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif");
-      t.setAttribute("font-size", String(size));
-      t.setAttribute("font-weight", String(weight));
-      t.setAttribute("text-anchor", anchor);
-      t.setAttribute("dominant-baseline", "middle");
-      if (rotateDeg !== null) t.setAttribute("transform", `rotate(${rotateDeg} ${x} ${y})`);
-      t.textContent = txt;
-      svg.appendChild(t);
-      return t;
-    }
-
-    function addLine(x1,y1,x2,y2,sw){
-      const ln = document.createElementNS("http://www.w3.org/2000/svg","line");
-      ln.setAttribute("x1", x1); ln.setAttribute("y1", y1);
-      ln.setAttribute("x2", x2); ln.setAttribute("y2", y2);
-      ln.setAttribute("stroke", "black");
-      ln.setAttribute("stroke-width", String(sw));
-      ln.setAttribute("stroke-linecap","round");
-      svg.appendChild(ln);
-      return ln;
-    }
-
-    function addCircle(x,y,r,sw){
-      const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
-      c.setAttribute("cx", x); c.setAttribute("cy", y); c.setAttribute("r", r);
-      c.setAttribute("fill","none");
-      c.setAttribute("stroke","black");
-      c.setAttribute("stroke-width", String(sw));
-      svg.appendChild(c);
-      return c;
-    }
-
-    function drawClockFace(cx,cy,R,innerR,tag,slotMinutes,fontSize){
-      // Outer + inner circles
-      addCircle(cx,cy,R, 3.25);
-      addCircle(cx,cy,innerR, 3.25);
-
-      // Tag label (AM/PM)
-      addText(cx, cy + R + 36, tag, 20, 900, "middle");
-
-      // Radial lines (slots)
-      const slots = Math.round((12*60)/slotMinutes); // 24 for 30-min, 12 for 60-min
-      for (let i=0; i<slots; i++){
-        const ang = slotToAngle(i, slots);
-        const p1 = polar(cx,cy,innerR, ang);
-        const p2 = polar(cx,cy,R, ang);
-        addLine(p1.x,p1.y,p2.x,p2.y, (i % (60/slotMinutes)===0) ? 3.25 : 2.0);
-      }
-
-      // Hour numbers around the outside: 12 at top, then 1..11 clockwise
-      for (let h=0; h<12; h++){
-        const label = (h===0) ? "12" : String(h);
-        const ang = hourToAngle(h); // uses 12 at top
-        const p = polar(cx,cy,R+22, ang);
-        addText(p.x, p.y, label, 18, 900, "middle");
-      }
-    }
-
-    function placeBlockOnPlanner(block, cx,cy,R,innerR,windowStart,windowEnd,tag,slotMinutes,fontSize,repeatMode){
-      const start = clamp(block.start, windowStart, windowEnd);
-      const end   = clamp(block.end,   windowStart, windowEnd);
-
-      if (end <= windowStart || start >= windowEnd) return; // no overlap
+    // ---- helpers ----
+    function drawEventOnWindow(ev, cx, cy, R, innerR, winStart, winEnd, slotMin, fontSize, repeatMode, shadeMode){
+      // render only within today's 0..1440 range
+      const s0 = clamp(ev.start, 0, 24*60);
+      const e0 = clamp(ev.end,   0, 24*60);
+      const start = Math.max(s0, winStart);
+      const end   = Math.min(e0, winEnd);
       if (end <= start) return;
 
-      const slots = Math.round((12*60)/slotMinutes);
-      const minutesIntoWindowStart = start - windowStart;
-      const minutesIntoWindowEnd   = end   - windowStart;
+      const slots = Math.round((12*60)/slotMin);
+      const aSlot = Math.floor((start - winStart) / slotMin);
+      const bSlot = Math.ceil((end - winStart) / slotMin);
 
-      const startSlot = Math.floor(minutesIntoWindowStart / slotMinutes);
-      const endSlotExcl = Math.ceil(minutesIntoWindowEnd / slotMinutes);
+      if (shadeMode){
+        for (let i=aSlot; i<bSlot; i++){
+          shadeWedge(cx, cy, innerR, R, slotToAngle(i, slots), slotToAngle(i+1, slots), 0.14);
+        }
+      }
 
-      if (repeatMode === "every") {
-        for (let s=startSlot; s<endSlotExcl; s++){
-          placeSingleLabel(block.label, s, s+1, slots, cx,cy,R,innerR, fontSize);
+      if (repeatMode){
+        for (let i=aSlot; i<bSlot; i++){
+          placeLabel(ev.label, i + 0.5, slots, cx, cy, (R+innerR)/2, fontSize);
         }
       } else {
-        placeSingleLabel(block.label, startSlot, endSlotExcl, slots, cx,cy,R,innerR, fontSize);
+        placeLabel(ev.label, (aSlot + bSlot)/2, slots, cx, cy, (R+innerR)/2, fontSize);
       }
     }
 
-    function placeSingleLabel(text, slotA, slotB, slots, cx,cy,R,innerR, fontSize){
+    function shadeWedge(cx, cy, r0, r1, a0, a1, opacity){
+      const p0o = polar(cx,cy,r1,a0);
+      const p1o = polar(cx,cy,r1,a1);
+      const p1i = polar(cx,cy,r0,a1);
+      const p0i = polar(cx,cy,r0,a0);
+      const largeArc = (a1 - a0) > Math.PI ? 1 : 0;
+
+      const d = [
+        `M ${p0o.x} ${p0o.y}`,
+        `A ${r1} ${r1} 0 ${largeArc} 1 ${p1o.x} ${p1o.y}`,
+        `L ${p1i.x} ${p1i.y}`,
+        `A ${r0} ${r0} 0 ${largeArc} 0 ${p0i.x} ${p0i.y}`,
+        "Z"
+      ].join(" ");
+
+      const path = document.createElementNS("http://www.w3.org/2000/svg","path");
+      path.setAttribute("d", d);
+      path.setAttribute("fill", "black");
+      path.setAttribute("fill-opacity", String(opacity));
+      svg.appendChild(path);
+    }
+
+    function placeLabel(text, slotMid, slots, cx, cy, rText, fontSize){
       const clean = (text || "").trim();
       if (!clean) return;
 
-      // Place at the mid-angle of the block
-      const midSlot = (slotA + slotB) / 2;
-      const ang = slotToAngle(midSlot, slots);
+      const ang = slotToAngle(slotMid, slots);
+      const p = polar(cx,cy,rText,ang);
 
-      // Radius for text placement (middle of ring)
-      const rText = (R + innerR) / 2;
+      const deg = ang * 180/Math.PI;
+      let rot = deg + 90;
+      if (deg > 90 && deg < 270) rot += 180;
 
-      const p = polar(cx,cy,rText, ang);
-
-      // Rotate so it reads upright-ish
-      let deg = (ang * 180/Math.PI);
-      let rotate = deg + 90; // tangent-ish
-      // Make bottom-half text upright
-      if (deg > 90 && deg < 270) rotate += 180;
-
-      // Wrap into up to 3 lines (simple word wrap)
-      const maxChars = 14; // tuned for this ring size
-      const lines = wrapText(clean, maxChars).slice(0,3);
+      const lines = wrapText(clean, 14).slice(0,3);
 
       const t = document.createElementNS("http://www.w3.org/2000/svg","text");
       t.setAttribute("x", p.x);
@@ -494,10 +398,10 @@
       t.setAttribute("fill","black");
       t.setAttribute("font-family","system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif");
       t.setAttribute("font-size", String(fontSize));
-      t.setAttribute("font-weight","900");
+      t.setAttribute("font-weight","950");
       t.setAttribute("text-anchor","middle");
       t.setAttribute("dominant-baseline","middle");
-      t.setAttribute("transform", `rotate(${rotate} ${p.x} ${p.y})`);
+      t.setAttribute("transform", `rotate(${rot} ${p.x} ${p.y})`);
       svg.appendChild(t);
 
       lines.forEach((ln, i) => {
@@ -509,20 +413,65 @@
       });
     }
 
-    function hourToAngle(h){
-      // h=0 means 12 at top. Clockwise.
-      // Top = -90deg
-      return (-Math.PI/2) + (h * (2*Math.PI/12));
-    }
-    function slotToAngle(slotIndex, slots){
-      // slotIndex 0 at 12:00
-      return (-Math.PI/2) + (slotIndex * (2*Math.PI/slots));
-    }
-    function polar(cx,cy,r,ang){
-      return { x: cx + r*Math.cos(ang), y: cy + r*Math.sin(ang) };
-    }
-    function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+    function drawClockFace(cx,cy,R,innerR,tag,slotMinutes){
+      addCircle(cx,cy,R, 3.25);
+      addCircle(cx,cy,innerR, 3.25);
+      addText(cx, cy + R + 44, tag, 22, 950, "middle");
 
+      const slots = Math.round((12*60)/slotMinutes);
+      const majorEvery = Math.max(1, Math.round(60/slotMinutes));
+
+      for (let i=0; i<slots; i++){
+        const ang = slotToAngle(i, slots);
+        const p1 = polar(cx,cy,innerR, ang);
+        const p2 = polar(cx,cy,R, ang);
+        addLine(p1.x,p1.y,p2.x,p2.y, (i % majorEvery === 0) ? 3.25 : 2.0);
+      }
+
+      for (let h=0; h<12; h++){
+        const label = (h===0) ? "12" : String(h);
+        const ang = hourToAngle(h);
+        const p = polar(cx,cy,R+26, ang);
+        addText(p.x, p.y, label, 20, 950, "middle");
+      }
+    }
+
+    function addText(x,y,txt,size,weight,anchor="start"){
+      const t = document.createElementNS("http://www.w3.org/2000/svg","text");
+      t.setAttribute("x", x);
+      t.setAttribute("y", y);
+      t.setAttribute("fill", "black");
+      t.setAttribute("font-family", "system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif");
+      t.setAttribute("font-size", String(size));
+      t.setAttribute("font-weight", String(weight));
+      t.setAttribute("text-anchor", anchor);
+      t.setAttribute("dominant-baseline", "middle");
+      t.textContent = txt;
+      svg.appendChild(t);
+      return t;
+    }
+    function addLine(x1,y1,x2,y2,sw){
+      const ln = document.createElementNS("http://www.w3.org/2000/svg","line");
+      ln.setAttribute("x1", x1); ln.setAttribute("y1", y1);
+      ln.setAttribute("x2", x2); ln.setAttribute("y2", y2);
+      ln.setAttribute("stroke", "black");
+      ln.setAttribute("stroke-width", String(sw));
+      ln.setAttribute("stroke-linecap","round");
+      svg.appendChild(ln);
+      return ln;
+    }
+    function addCircle(x,y,r,sw){
+      const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+      c.setAttribute("cx", x); c.setAttribute("cy", y); c.setAttribute("r", r);
+      c.setAttribute("fill","none");
+      c.setAttribute("stroke","black");
+      c.setAttribute("stroke-width", String(sw));
+      svg.appendChild(c);
+      return c;
+    }
+    function hourToAngle(h){ return (-Math.PI/2) + (h * (2*Math.PI/12)); }
+    function slotToAngle(i, slots){ return (-Math.PI/2) + (i * (2*Math.PI/slots)); }
+    function polar(cx,cy,r,ang){ return { x: cx + r*Math.cos(ang), y: cy + r*Math.sin(ang) }; }
     function wrapText(str, maxChars){
       const words = str.split(/\s+/).filter(Boolean);
       const out = [];
@@ -530,14 +479,12 @@
       for (const w of words){
         const next = cur ? (cur + " " + w) : w;
         if (next.length <= maxChars) cur = next;
-        else {
-          if (cur) out.push(cur);
-          cur = w.length > maxChars ? w.slice(0, maxChars-1) + "…" : w;
-        }
+        else { if (cur) out.push(cur); cur = w.length>maxChars ? w.slice(0,maxChars-1)+"…" : w; }
       }
       if (cur) out.push(cur);
       return out;
     }
+    function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
   }
 
   function downloadSVG(){
@@ -553,8 +500,11 @@
     URL.revokeObjectURL(url);
   }
 
-  // Initial render
-  render();
+  // Start with one block, like you described
+  addBlock({ startH:"12", startM:"00", startMer:"AM", endH:"5", endM:"00", endMer:"AM", label:"Sleep" });
+  addBlock(); // also start with block 2 ready (since you said could already be there)
+  renderUI();
+  renderPlanner();
 })();
 </script>
 </body>
