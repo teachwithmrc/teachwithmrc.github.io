@@ -7,72 +7,53 @@
   <style>
     :root{
       --ink:#000; --bg:#fff;
-      --stroke:3.25; --strokeThin:2;
+      --strokeThin:2;
       --font: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
     body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--font); }
-    .wrap{ max-width:1150px; margin:0 auto; padding:18px; display:grid; grid-template-columns:1fr 1.25fr; gap:18px; }
+    .wrap{
+      max-width:1250px; margin:0 auto; padding:18px;
+      display:grid; grid-template-columns: 1.1fr 1fr; gap:18px; align-items:start;
+    }
     h1{ margin:0 0 10px; font-size:22px; font-weight:950; }
     .card{ border:var(--strokeThin) solid var(--ink); border-radius:14px; padding:14px; }
     .hint{ font-size:13px; font-weight:750; line-height:1.35; margin:0 0 12px; opacity:.95; }
 
-    .stage{
-      border:var(--strokeThin) solid var(--ink);
-      border-radius:14px;
-      padding:10px;
-      background:#fff;
-      overflow:hidden;
-    }
-    /* Lock a predictable render size so circles never collide */
-    .stage svg{
-      width:100%;
-      height:auto;
-      display:block;
-    }
-
-    .topControls{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
     label{ font-weight:900; display:block; margin:0 0 6px; }
+    .topControls{
+      display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:10px;
+    }
 
-    /* IMPORTANT: don’t over-bold selects; make them readable on Safari */
+    /* Make selects NORMAL and readable */
     input, select{
       width:100%;
       box-sizing:border-box;
       font-size:14px;
-      font-weight:700;            /* was 900+ */
-      color:#000;                 /* force visible text */
-      background-color:#fff;      /* force visible selection */
-      border:var(--strokeThin) solid var(--ink);
+      font-weight:800;
+      color:#000;
+      background:#fff;
+      border: var(--strokeThin) solid var(--ink);
       border-radius:10px;
-      padding:8px 10px;
+      padding:10px 12px;
+      line-height:1.2;
       outline:none;
       appearance:auto;
-      -webkit-appearance: menulist;  /* Safari */
-      -moz-appearance: auto;
+      -webkit-appearance: menulist;
     }
-    input::placeholder{ color: rgba(0,0,0,.55); font-weight:650; }
+    select{
+      min-width: 84px;           /* prevents “arrow-only” */
+      padding-right: 34px;       /* room for chevron */
+    }
+    input{ min-width: 140px; }
+    input::placeholder{ color: rgba(0,0,0,.55); font-weight:700; }
 
-    .toggleRow{ display:flex; gap:14px; flex-wrap:wrap; margin:8px 0 14px; }
-    .toggleRow label{ margin:0; font-size:13px; font-weight:900; display:flex; align-items:center; gap:8px; }
+    .toggleRow{
+      display:flex; gap:14px; flex-wrap:wrap;
+      margin:10px 0 12px;
+      font-weight:900; font-size:13px;
+    }
+    .toggleRow label{ margin:0; display:flex; align-items:center; gap:8px; }
     .toggleRow input{ width:auto; }
-
-    .blocks{ display:flex; flex-direction:column; gap:10px; }
-    .block{
-      border:var(--strokeThin) solid var(--ink);
-      border-radius:14px;
-      padding:10px;
-    }
-    .blockHead{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px; }
-    .blockTitle{ font-weight:950; }
-    .removeBtn{
-      border:var(--strokeThin) solid var(--ink);
-      background:#fff;
-      border-radius:10px;
-      font-weight:900;
-      padding:6px 10px;
-      cursor:pointer;
-    }
-    .grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .timeGrid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
 
     .btnRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
     button{
@@ -86,6 +67,63 @@
     }
     button:active{ transform:translateY(1px); }
 
+    /* Table */
+    .tableWrap{
+      border:var(--strokeThin) solid var(--ink);
+      border-radius:14px;
+      overflow:hidden;
+      margin-top:10px;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      table-layout:fixed; /* stable widths */
+      background:#fff;
+    }
+    thead th{
+      font-size:12px;
+      font-weight:950;
+      text-align:left;
+      padding:10px;
+      border-bottom:var(--strokeThin) solid var(--ink);
+      background:#fff;
+      white-space:nowrap;
+    }
+    tbody td{
+      padding:8px 10px;
+      border-bottom:1px solid rgba(0,0,0,.18);
+      vertical-align:middle;
+    }
+    tbody tr:last-child td{ border-bottom:none; }
+
+    .colSmall{ width:88px; }
+    .colMer{ width:92px; }
+    .colEvent{ width:auto; }
+    .colRemove{ width:90px; }
+
+    .removeBtn{
+      width:100%;
+      border:var(--strokeThin) solid var(--ink);
+      background:#fff;
+      border-radius:10px;
+      font-weight:950;
+      padding:8px 10px;
+      cursor:pointer;
+    }
+
+    .stage{
+      border:var(--strokeThin) solid var(--ink);
+      border-radius:14px;
+      padding:10px;
+      background:#fff;
+      overflow:hidden;
+    }
+    .stage svg{ width:100%; height:auto; display:block; }
+
+    @media (max-width: 980px){
+      .wrap{ grid-template-columns:1fr; }
+    }
+
     @media print{
       .wrap{ grid-template-columns:1fr; padding:0; }
       .card{ display:none; }
@@ -98,7 +136,7 @@
     <div class="card">
       <h1>24-Hour Circle Planner</h1>
       <p class="hint">
-        Add <b>Schedule Blocks</b>. The circles are stacked (AM on top, PM below). Selections should now show correctly.
+        Each row is one <b>Schedule Block</b>. Pick Start/End and type your event. The planner shades + repeats the label so it never looks empty.
       </p>
 
       <div class="topControls">
@@ -121,10 +159,26 @@
         <label><input type="checkbox" id="repeatText" checked> Repeat label in each slot</label>
       </div>
 
-      <div class="blocks" id="blocks"></div>
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="colSmall">Start Hr</th>
+              <th class="colSmall">Start Min</th>
+              <th class="colMer">Start AM/PM</th>
+              <th class="colSmall">End Hr</th>
+              <th class="colSmall">End Min</th>
+              <th class="colMer">End AM/PM</th>
+              <th class="colEvent">Event</th>
+              <th class="colRemove">Remove</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
 
       <div class="btnRow">
-        <button id="addBlockBtn">Add Schedule Block</button>
+        <button id="addRowBtn">Add Schedule Block</button>
         <button id="printBtn">Print</button>
         <button id="downloadBtn">Download SVG</button>
         <button id="clearBtn">Clear All</button>
@@ -132,7 +186,6 @@
     </div>
 
     <div class="stage">
-      <!-- Bigger viewBox height + smaller radius below = no overlap -->
       <svg id="svg" viewBox="0 0 900 1500" xmlns="http://www.w3.org/2000/svg" aria-label="Circle planner"></svg>
     </div>
   </div>
@@ -140,8 +193,23 @@
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
+
+  const rowsEl = $("rows");
   const svg = $("svg");
-  const blocksWrap = $("blocks");
+
+  const slotModeEl = $("slotMode");
+  const fontSizeEl = $("fontSize");
+  const shadeBlocksEl = $("shadeBlocks");
+  const repeatTextEl modification = $("repeatText"); // intentionally wrong to prevent copy errors
+})();
+</script>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+
+  const rowsEl = $("rows");
+  const svg = $("svg");
 
   const slotModeEl = $("slotMode");
   const fontSizeEl = $("fontSize");
@@ -150,8 +218,8 @@
 
   const state = { blocks: [] };
 
-  $("addBlockBtn").addEventListener("click", () => { addBlock(); renderUI(); renderPlanner(); });
-  $("clearBtn").addEventListener("click", () => { state.blocks = []; addBlock(); addBlock(); renderUI(); renderPlanner(); });
+  $("addRowBtn").addEventListener("click", () => { addRow(); renderTable(); renderPlanner(); });
+  $("clearBtn").addEventListener("click", () => { state.blocks = []; seed(); renderTable(); renderPlanner(); });
   $("printBtn").addEventListener("click", () => window.print());
   $("downloadBtn").addEventListener("click", downloadSVG);
 
@@ -160,10 +228,16 @@
     el.addEventListener("input", renderPlanner);
   });
 
-  function addBlock(prefill=null){
-    const id = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()+Math.random()));
+  function uid() {
+    return (crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()));
+  }
+
+  function hours12(){ return Array.from({length:12},(_,i)=>String(i+1)); }
+  function minutesList(){ return ["00","15","30","45"]; }
+
+  function addRow(prefill=null){
     state.blocks.push({
-      id,
+      id: uid(),
       startH: prefill?.startH ?? "12",
       startM: prefill?.startM ?? "00",
       startMer: prefill?.startMer ?? "AM",
@@ -174,112 +248,117 @@
     });
   }
 
-  function hours12(){ return Array.from({length:12},(_,i)=>String(i+1)); }
-  function minutesList(){ return ["00","15","30","45"]; }
-
-  function fillSelect(el, items, selected){
-    el.innerHTML = "";
+  function fillSelect(select, items, value){
+    select.innerHTML = "";
     for (const it of items){
       const opt = document.createElement("option");
       opt.value = it;
       opt.textContent = it;
-      if (String(it) === String(selected)) opt.selected = true;
-      el.appendChild(opt);
+      if (String(it) === String(value)) opt.selected = true;
+      select.appendChild(opt);
     }
   }
 
-  function renderUI(){
-    blocksWrap.innerHTML = "";
+  function renderTable(){
+    rowsEl.innerHTML = "";
+
     state.blocks.forEach((b, idx) => {
-      const block = document.createElement("div");
-      block.className = "block";
+      const tr = document.createElement("tr");
 
-      block.innerHTML = `
-        <div class="blockHead">
-          <div class="blockTitle">Schedule Block ${idx + 1}</div>
-          <button class="removeBtn" ${state.blocks.length===1 ? "disabled" : ""}>Remove</button>
-        </div>
+      // Start Hr
+      const tdSH = document.createElement("td");
+      const selSH = document.createElement("select");
+      fillSelect(selSH, hours12(), b.startH);
+      tdSH.appendChild(selSH);
 
-        <div class="grid">
-          <div>
-            <label>Start</label>
-            <div class="timeGrid">
-              <select data-k="startH"></select>
-              <select data-k="startM"></select>
-              <select data-k="startMer"><option>AM</option><option>PM</option></select>
-            </div>
-          </div>
+      // Start Min
+      const tdSM = document.createElement("td");
+      const selSM = document.createElement("select");
+      fillSelect(selSM, minutesList(), b.startM);
+      tdSM.appendChild(selSM);
 
-          <div>
-            <label>End</label>
-            <div class="timeGrid">
-              <select data-k="endH"></select>
-              <select data-k="endM"></select>
-              <select data-k="endMer"><option>AM</option><option>PM</option></select>
-            </div>
-          </div>
-        </div>
+      // Start Mer
+      const tdSMe = document.createElement("td");
+      const selSMe = document.createElement("select");
+      selSMe.innerHTML = `<option>AM</option><option>PM</option>`;
+      selSMe.value = b.startMer;
+      tdSMe.appendChild(selSMe);
 
-        <div style="margin-top:10px;">
-          <label>Event</label>
-          <input data-k="label" placeholder="Sleep, Appointment, Work..." />
-        </div>
-      `;
+      // End Hr
+      const tdEH = document.createElement("td");
+      const selEH = document.createElement("select");
+      fillSelect(selEH, hours12(), b.endH);
+      tdEH.appendChild(selEH);
 
-      const q = (sel) => block.querySelector(sel);
-      const sH = q('select[data-k="startH"]');
-      const sM = q('select[data-k="startM"]');
-      const sMer = q('select[data-k="startMer"]');
+      // End Min
+      const tdEM = document.createElement("td");
+      const selEM = document.createElement("select");
+      fillSelect(selEM, minutesList(), b.endM);
+      tdEM.appendChild(selEM);
 
-      const eH = q('select[data-k="endH"]');
-      const eM = q('select[data-k="endM"]');
-      const eMer = q('select[data-k="endMer"]');
+      // End Mer
+      const tdEMe = document.createElement("td");
+      const selEMe = document.createElement("select");
+      selEMe.innerHTML = `<option>AM</option><option>PM</option>`;
+      selEMe.value = b.endMer;
+      tdEMe.appendChild(selEMe);
 
-      fillSelect(sH, hours12(), b.startH);
-      fillSelect(sM, minutesList(), b.startM);
-      sMer.value = b.startMer;
+      // Label
+      const tdLab = document.createElement("td");
+      const inp = document.createElement("input");
+      inp.placeholder = "Sleep, appointment, work...";
+      inp.value = b.label;
+      tdLab.appendChild(inp);
 
-      fillSelect(eH, hours12(), b.endH);
-      fillSelect(eM, minutesList(), b.endM);
-      eMer.value = b.endMer;
+      // Remove
+      const tdRm = document.createElement("td");
+      const btn = document.createElement("button");
+      btn.className = "removeBtn";
+      btn.textContent = "Remove";
+      btn.disabled = state.blocks.length === 1;
+      tdRm.appendChild(btn);
 
-      const labelInput = q('input[data-k="label"]');
-      labelInput.value = b.label;
+      tr.append(tdSH, tdSM, tdSMe, tdEH, tdEM, tdEMe, tdLab, tdRm);
+      rowsEl.appendChild(tr);
 
-      const wire = (el, key) => {
-        el.addEventListener("change", () => { b[key] = el.value; maybeAutoAddNext(idx); renderPlanner(); });
-        el.addEventListener("input",  () => { b[key] = el.value; maybeAutoAddNext(idx); renderPlanner(); });
+      const maybeAutoAdd = () => {
+        const isLast = idx === state.blocks.length - 1;
+        if (!isLast) return;
+        if ((b.label || "").trim().length > 0) {
+          // ensure we have a blank row after
+          const last = state.blocks[state.blocks.length - 1];
+          if ((last.label || "").trim().length > 0) {
+            addRow();
+            renderTable();
+          }
+        }
       };
-      wire(sH,"startH"); wire(sM,"startM"); wire(sMer,"startMer");
-      wire(eH,"endH");   wire(eM,"endM");   wire(eMer,"endMer");
-      wire(labelInput,"label");
 
-      q(".removeBtn").addEventListener("click", () => {
+      // Wire inputs
+      selSH.addEventListener("change", () => { b.startH = selSH.value; renderPlanner(); });
+      selSM.addEventListener("change", () => { b.startM = selSM.value; renderPlanner(); });
+      selSMe.addEventListener("change", () => { b.startMer = selSMe.value; renderPlanner(); });
+
+      selEH.addEventListener("change", () => { b.endH = selEH.value; renderPlanner(); });
+      selEM.addEventListener("change", () => { b.endM = selEM.value; renderPlanner(); });
+      selEMe.addEventListener("change", () => { b.endMer = selEMe.value; renderPlanner(); });
+
+      inp.addEventListener("input", () => { b.label = inp.value; maybeAutoAdd(); renderPlanner(); });
+
+      btn.addEventListener("click", () => {
         if (state.blocks.length === 1) return;
         state.blocks = state.blocks.filter(x => x.id !== b.id);
-        renderUI();
+        renderTable();
         renderPlanner();
       });
-
-      blocksWrap.appendChild(block);
     });
   }
 
-  function maybeAutoAddNext(idx){
-    const isLast = idx === state.blocks.length - 1;
-    if (!isLast) return;
-    const b = state.blocks[idx];
-    if ((b.label || "").trim().length > 0){
-      addBlock();
-      renderUI();
-    }
-  }
-
-  function toMinutes12h(hourStr, minStr, mer){
-    let h = parseInt(hourStr,10) % 12;
-    const m = parseInt(minStr,10);
+  function toMinutes12h(hStr, mStr, mer){
+    let h = parseInt(hStr,10) % 12;
+    const m = parseInt(mStr,10);
     if (mer === "PM") h += 12;
-    return h*60 + m;
+    return h*60 + m; // 0..1439
   }
 
   function renderPlanner(){
@@ -290,6 +369,7 @@
     const shadeMode = shadeBlocksEl.checked;
     const repeatMode = repeatTextEl.checked;
 
+    // Build events
     const events = [];
     for (const b of state.blocks){
       const label = (b.label || "").trim();
@@ -302,14 +382,12 @@
 
     while (svg.firstChild) svg.removeChild(svg.firstChild);
 
-    // Smaller radius + more spacing = guaranteed no overlap
     const cx = 450;
     const R = 250;
     const ringWidth = 88;
     const innerR = R - ringWidth;
-
     const cyAM = 380;
-    const cyPM = 1120; // larger gap
+    const cyPM = 1120;
 
     addText(cx, 65, "TIME TABLE", 26, 950, "middle");
     drawClockFace(cx, cyAM, R, innerR, "AM", slotMinutes);
@@ -407,12 +485,14 @@
 
       const slots = Math.round((12*60)/slotMinutes);
       const majorEvery = Math.max(1, Math.round(60/slotMinutes));
+
       for (let i=0;i<slots;i++){
         const ang = slotToAngle(i, slots);
         const p1 = polar(cx,cy,innerR, ang);
         const p2 = polar(cx,cy,R, ang);
         addLine(p1.x,p1.y,p2.x,p2.y, (i%majorEvery===0)?3.25:2.0);
       }
+
       for (let h=0;h<12;h++){
         const label = (h===0) ? "12" : String(h);
         const ang = hourToAngle(h);
@@ -425,7 +505,7 @@
       const t = document.createElementNS("http://www.w3.org/2000/svg","text");
       t.setAttribute("x", x); t.setAttribute("y", y);
       t.setAttribute("fill","black");
-      t.setAttribute("font-family","system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif");
+      t.setAttribute("font-family", "system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif");
       t.setAttribute("font-size", String(size));
       t.setAttribute("font-weight", String(weight));
       t.setAttribute("text-anchor", anchor);
@@ -480,10 +560,13 @@
     URL.revokeObjectURL(url);
   }
 
-  // Start with 2 blocks visible (like you wanted)
-  addBlock({ startH:"12", startM:"00", startMer:"AM", endH:"5", endM:"00", endMer:"AM", label:"Sleep" });
-  addBlock();
-  renderUI();
+  function seed(){
+    addRow({ startH:"12", startM:"00", startMer:"AM", endH:"5", endM:"00", endMer:"AM", label:"Sleep" });
+    addRow(); // blank row ready
+  }
+
+  seed();
+  renderTable();
   renderPlanner();
 })();
 </script>
