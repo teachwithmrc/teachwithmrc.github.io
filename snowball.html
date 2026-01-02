@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Momentum Snowball</title>
+  <style>
+    :root { --w: 520px; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 24px; color:#111; }
+    .wrap { max-width: var(--w); margin: 0 auto; }
+    h1 { margin: 0 0 6px; font-size: 26px; }
+    .sub { margin: 0 0 18px; color:#444; }
+
+    .card { border: 1px solid #e6e6e6; border-radius: 16px; padding: 16px; margin: 14px 0; box-shadow: 0 8px 18px rgba(0,0,0,.04); }
+    .row { display:flex; gap: 12px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+    .tasks { margin-top: 10px; display:grid; gap: 10px; }
+    label { display:flex; gap:10px; align-items:center; padding: 10px 12px; border:1px solid #eee; border-radius: 12px; }
+    input[type="checkbox"] { width: 18px; height: 18px; }
+
+    button { appearance:none; border:0; border-radius: 12px; padding: 10px 12px; background:#111; color:#fff; font-weight:700; cursor:pointer; }
+    button.secondary { background:#f2f2f2; color:#111; font-weight:700; }
+    button:active { transform: translateY(1px); }
+
+    /* Snowball display */
+    .ballBox { display:grid; place-items:center; height: 240px; }
+    .ball {
+      width: var(--size);
+      height: var(--size);
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #ffffff 0%, #f1f6ff 40%, #dbe7ff 85%);
+      box-shadow: 0 18px 30px rgba(0,0,0,.10);
+      position: relative;
+      transition: width .25s ease, height .25s ease, filter .25s ease, opacity .25s ease;
+      overflow:hidden;
+    }
+    .shine {
+      position:absolute; inset:0;
+      background: radial-gradient(circle at 25% 20%, rgba(255,255,255,.9) 0%, rgba(255,255,255,0) 55%);
+      pointer-events:none;
+    }
+    .cracks {
+      position:absolute; inset:0;
+      opacity: var(--crackOpacity);
+      filter: drop-shadow(0 2px 1px rgba(0,0,0,.08));
+      pointer-events:none;
+    }
+    .cracks svg { width:100%; height:100%; }
+    .melt {
+      position:absolute; left:0; right:0; bottom:0;
+      height: var(--melt);
+      background: linear-gradient(to top, rgba(160,200,255,.55), rgba(160,200,255,0));
+      opacity: .9;
+      transition: height .25s ease;
+      pointer-events:none;
+    }
+    .stats { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .stat { border:1px solid #eee; border-radius: 12px; padding: 10px 12px; }
+    .big { font-size: 18px; font-weight: 900; }
+    .tiny { color:#555; font-size: 12px; margin-top: 4px; }
+    .hint { color:#444; font-size: 13px; margin-top: 10px; line-height:1.35; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Momentum Snowball</h1>
+    <p class="sub">Complete your daily actions → snowball grows. Miss the minimum → it cracks + shrinks.</p>
+
+    <div class="card">
+      <div class="row">
+        <div>
+          <div class="big">Today’s Check-in</div>
+          <div class="tiny" id="todayLabel"></div>
+        </div>
+        <div class="row">
+          <button class="secondary" id="resetToday">Clear today</button>
+          <button id="saveToday">Save today</button>
+        </div>
+      </div>
+
+      <div class="tasks" id="tasks"></div>
+
+      <p class="hint">
+        Rule: You need <strong id="minLabel"></strong> completed to count as a “win day”.
+        Win day = grows. Lose day = shrinks and adds cracks/melt.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="ballBox">
+        <div class="ball" id="ball" style="--size: 40px; --crackOpacity: 0; --melt: 0px;">
+          <div class="shine"></div>
+          <div class="cracks">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+              <path d="M52 6 L48 22 L60 34 L54 46 L66 58 L58 72 L72 88"
+                    fill="none" stroke="rgba(40,40,40,.35)" stroke-width="2"/>
+              <path d="M35 18 L42 30 L32 44 L44 56 L38 70 L50 86"
+                    fill="none" stroke="rgba(40,40,40,.25)" stroke-width="2"/>
+              <path d="M70 20 L64 34 L78 46 L70 60 L82 74"
+                    fill="none" stroke="rgba(40,40,40,.22)" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="melt"></div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="big" id="momentum">0</div>
+          <div class="tiny">Momentum (snow size points)</div>
+        </div>
+        <div class="stat">
+          <div class="big" id="streak">0</div>
+          <div class="tiny">Win streak</div>
+        </div>
+        <div class="stat">
+          <div class="big" id="cracks">0</div>
+          <div class="tiny">Cracks (from missed days)</div>
+        </div>
+        <div class="stat">
+          <div class="big" id="wins">0</div>
+          <div class="tiny">Total win days</div>
+        </div>
+      </div>
+
+      <p class="hint">
+        Tip: momentum is capped so it doesn’t get infinite. Misses do damage fast at low momentum (because it’s fragile),
+        and slower later (because it’s “heavier”).
+      </p>
+    </div>
+  </div>
+
+<script>
+(() => {
+  // === Customize these ===
+  const DEFAULT_TASKS = [
+    "Workout",
+    "Morning routine done",
+    "Post / create something",
+    "10-min tidy"
+  ];
+  const MIN_FOR_WIN = 2;        // Daily minimum completed tasks to count as a win day
+  const MAX_MOMENTUM = 30;      // Cap so the ball tops out
+  const WIN_GAIN = 2;           // Momentum increase on win day
+  const LOSE_PENALTY = 3;       // Momentum decrease on lose day
+  const CRACKS_PER_LOSS = 1;
+
+  const $ = (id) => document.getElementById(id);
+  const key = "momentumSnowball_v1";
+
+  const today = new Date();
+  const todayKey = today.toISOString().slice(0,10); // YYYY-MM-DD
+  $("todayLabel").textContent = `Date: ${today.toLocaleDateString()}`;
+  $("minLabel").textContent = `${MIN_FOR_WIN} task(s)`;
+
+  const load = () => {
+    try { return JSON.parse(localStorage.getItem(key)) || null; }
+    catch { return null; }
+  };
+
+  const save = (data) => localStorage.setItem(key, JSON.stringify(data));
+
+  const state = load() || {
+    tasks: DEFAULT_TASKS,
+    momentum: 0,
+    streak: 0,
+    cracks: 0,
+    wins: 0,
+    lastSavedDay: null,
+    history: {} // day -> { checked: [bool], win: bool }
+  };
+
+  const renderTasks = () => {
+    const box = $("tasks");
+    box.innerHTML = "";
+    const savedToday = state.history[todayKey];
+    const checks = savedToday?.checked || state.tasks.map(() => false);
+
+    state.tasks.forEach((t, i) => {
+      const lab = document.createElement("label");
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = !!checks[i];
+      cb.addEventListener("change", () => {
+        const cur = getTodayChecks();
+        cur[i] = cb.checked;
+        state.history[todayKey] = state.history[todayKey] || {};
+        state.history[todayKey].checked = cur;
+        save(state);
+      });
+
+      const span = document.createElement("div");
+      span.textContent = t;
+
+      lab.appendChild(cb);
+      lab.appendChild(span);
+      box.appendChild(lab);
+    });
+  };
+
+  const getTodayChecks = () => {
+    const savedToday = state.history[todayKey];
+    if (savedToday?.checked?.length) return savedToday.checked.slice();
+    return state.tasks.map(() => false);
+  };
+
+  const computeWin = (checks) => checks.filter(Boolean).length >= MIN_FOR_WIN;
+
+  const applyDayResult = (win) => {
+    // Prevent double-saving same day result
+    if (state.lastSavedDay === todayKey) return;
+
+    if (win) {
+      state.momentum = Math.min(MAX_MOMENTUM, state.momentum + WIN_GAIN);
+      state.streak += 1;
+      state.wins += 1;
+      // small “repair”: winning can heal a crack occasionally
+      if (state.cracks > 0 && state.streak % 3 === 0) state.cracks -= 1;
+    } else {
+      state.momentum = Math.max(0, state.momentum - LOSE_PENALTY);
+      state.streak = 0;
+      state.cracks += CRACKS_PER_LOSS;
+    }
+
+    state.lastSavedDay = todayKey;
+  };
+
+  const updateBall = () => {
+    $("momentum").textContent = state.momentum;
+    $("streak").textContent = state.streak;
+    $("cracks").textContent = state.cracks;
+    $("wins").textContent = state.wins;
+
+    // Map momentum -> size (40px to 200px)
+    const minSize = 40, maxSize = 200;
+    const t = state.momentum / MAX_MOMENTUM;
+    const size = Math.round(minSize + (maxSize - minSize) * t);
+
+    // Cracks opacity based on cracks (caps at ~0.7)
+    const crackOpacity = Math.min(0.7, state.cracks * 0.12);
+
+    // Melt height based on low momentum + cracks
+    const melt = Math.round((1 - t) * 26 + Math.min(18, state.cracks * 3));
+
+    const ball = $("ball");
+    ball.style.setProperty("--size", size + "px");
+    ball.style.setProperty("--crackOpacity", crackOpacity);
+    ball.style.setProperty("--melt", melt + "px");
+  };
+
+  $("saveToday").addEventListener("click", () => {
+    const checks = getTodayChecks();
+    const win = computeWin(checks);
+
+    state.history[todayKey] = { checked: checks, win };
+    applyDayResult(win);
+    save(state);
+    updateBall();
+    alert(win ? "Win day saved ✅ Snowball grew." : "Saved ❄️ Snowball shrank + cracked.");
+  });
+
+  $("resetToday").addEventListener("click", () => {
+    state.history[todayKey] = { checked: state.tasks.map(() => false), win: false };
+    // Do NOT rewind stats; just clears today’s checks for editing before you save.
+    save(state);
+    renderTasks();
+  });
+
+  // First paint
+  renderTasks();
+  updateBall();
+})();
+</script>
+</body>
+</html>
