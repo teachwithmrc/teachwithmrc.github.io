@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Counting with Pictures — Generator</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
@@ -150,8 +151,10 @@
     }
   </style>
 
-  <!-- ✅ Load your easy-count image list and expose window.countingObjectSets -->
-  <script type="module" src="./counting_objects_easy.js"></script>
+  <!-- IMPORTANT:
+       This file MUST set: window.countingObjectSets = [{ src: "/images/xxx.png", label?: "dog" }, ...]
+       If it doesn't, nothing will generate. -->
+  <script src="./counting_objects_easy.js" defer></script>
 </head>
 
 <body>
@@ -211,14 +214,14 @@
   </div>
 
   <div class="screenOnly" style="margin: 8px 0 10px;">
-    <button id="btnGen">Generate Worksheet</button>
-    <button onclick="window.print()">Print Page</button>
+    <button id="btnGen" type="button">Generate Worksheet</button>
+    <button type="button" onclick="window.print()">Print Page</button>
   </div>
 
   <div id="worksheetOutput"></div>
 
-  <!-- ✅ Generator logic (module-safe) -->
-  <script type="module">
+  <!-- Generator logic (NON-module so it works with plain defer-loaded JS) -->
+  <script>
     const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
     function shuffle(arr){
@@ -288,8 +291,9 @@
         return;
       }
 
-      if (!Array.isArray(window.countingObjectSets) || window.countingObjectSets.length === 0){
-        alert('❌ Easy-count image list not loaded. Make sure easyCountImages.js + counting_objects_easy.js are in the same folder.');
+      const sets = window.countingObjectSets;
+      if (!Array.isArray(sets) || sets.length === 0){
+        alert('❌ counting_objects_easy.js did not load any images.\nMake sure it sets: window.countingObjectSets = [...]');
         return;
       }
 
@@ -299,7 +303,7 @@
       for (let i=0;i<numQs;i++){
         const count = randInt(min, max);
         const obj = fixedObj || pickObject();
-        if (!obj?.src) { alert("❌ No object images available."); return; }
+        if (!obj || !obj.src) { alert("❌ No object images available."); return; }
 
         const choices = unique3(count, min, max);
         questions.push({ count, obj, choices });
@@ -349,10 +353,7 @@
       document.getElementById("worksheetOutput").innerHTML = html;
     }
 
-    // Hook up the button (module-safe; no inline onclick needed)
     document.getElementById("btnGen").addEventListener("click", generateWorksheet);
-
-    // Expose for debugging if you want
     window.generateWorksheet = generateWorksheet;
   </script>
 </body>
