@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Counting with Pictures — Generator</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --ink:#1f365f;
+      --bg:#ffffff;
+      --card:#f6f9ff;
+      --border:#cfd7ef;
+    }
+    body{ font-family:'Poppins',sans-serif; margin:10px; text-align:center; color:var(--ink); background:var(--bg); }
+    h1{ font-size:32px; margin: 8px 0 2px; }
+    .subtitle{ font-size:16px; margin:0 0 10px; }
+    button{ font-size:16px; padding:8px 12px; margin:6px; cursor:pointer; border-radius:10px; border:2px solid var(--ink); background:#fff; }
+    .screenOnly{ display:block; }
+
+    .card{
+      display:inline-block;
+      text-align:left;
+      background:var(--card);
+      border:2px solid var(--border);
+      border-radius:14px;
+      padding:14px 18px;
+      margin:10px auto;
+      font-size:18px;
+      max-width: 980px;
+      width: 95%;
+    }
+    .card h2{ margin:0 0 10px; font-size:20px; text-align:center; }
+
+    .controls{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+    .field{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      background:#fff;
+      border:2px solid rgba(31,54,95,.25);
+      border-radius:12px;
+      padding:8px 10px;
+    }
+    input[type="number"], select{
+      font-family:'Poppins',sans-serif;
+      font-size:16px;
+      padding:6px 8px;
+      border-radius:10px;
+      border:2px solid rgba(31,54,95,.25);
+      outline:none;
+      width: 90px;
+      text-align:center;
+    }
+
+    /* ===== Worksheet ===== */
+    #worksheetOutput{ margin-top:10px; margin-bottom:60px; }
+    .sheet{ width:100%; max-width:980px; margin:0 auto; text-align:left; }
+
+    .sheetHeader{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:16px;
+      border-bottom:3px solid rgba(31,54,95,.25);
+      padding-bottom:10px;
+      margin-bottom:12px;
+    }
+    .title{ font-size:28px; font-weight:800; margin:0; }
+    .dir{ font-size:14px; margin:6px 0 0; }
+    .nameLine{ font-size:16px; min-width:280px; text-align:right; white-space:nowrap; }
+    .nameLine span{ display:inline-block; min-width:220px; border-bottom:2px solid var(--ink); transform: translateY(-2px); }
+
+    .grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+
+    .qCard{
+      border:3px solid rgba(31,54,95,.25);
+      border-radius:16px;
+      padding:12px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      min-height:150px;
+      background:#fff;
+    }
+    .qNum{ font-weight:800; font-size:18px; width:36px; text-align:center; }
+
+    .picBox{
+      width: 200px;
+      height: 120px;
+      border-radius:14px;
+      border:2px dashed rgba(31,54,95,.25);
+      background:#fafcff;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 6px;
+      flex: 0 0 auto;
+    }
+
+    /* stamped images */
+    .stampWrap{
+      width: 100%;
+      height: 100%;
+      display:flex;
+      flex-wrap:wrap;
+      align-content:flex-start;
+      justify-content:flex-start;
+      gap: 6px;
+    }
+    .stampWrap img{
+      display:block;
+      object-fit:contain;
+    }
+
+    .choices{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      flex:1 1 auto;
+    }
+    .choice{
+      border:3px solid rgba(31,54,95,.25);
+      border-radius:999px;
+      padding:8px 14px;
+      font-size:18px;
+      font-weight:800;
+      min-width:56px;
+      text-align:center;
+      background:#fff;
+    }
+
+    .footer{ margin-top:14px; font-size:12px; text-align:right; opacity:.85; }
+
+    @media print{
+      body *{ visibility:hidden; }
+      #worksheetOutput, #worksheetOutput *{ visibility:visible; }
+      #worksheetOutput{ position:absolute; top:0; left:0; width:100%; margin:0; padding:0; }
+      .screenOnly{ display:none !important; }
+      @page{ margin:0.5in; }
+    }
+  </style>
+
+  <!-- ✅ Load your easy-count image list and expose window.countingObjectSets -->
+  <script type="module" src="./counting_objects_easy.js"></script>
+</head>
+
+<body>
+  <h1>Counting with Pictures</h1>
+  <div class="subtitle screenOnly">Pick a range. Generate a worksheet. Print.</div>
+
+  <div class="card screenOnly">
+    <h2>Settings</h2>
+    <div class="controls">
+      <div class="field">
+        <label><strong>Min</strong></label>
+        <input id="minCount" type="number" min="1" max="50" value="1" />
+      </div>
+
+      <div class="field">
+        <label><strong>Max</strong></label>
+        <input id="maxCount" type="number" min="1" max="50" value="10" />
+      </div>
+
+      <div class="field">
+        <label><strong># Questions</strong></label>
+        <select id="numQs">
+          <option value="6">6</option>
+          <option value="8" selected>8</option>
+          <option value="10">10</option>
+          <option value="12">12</option>
+          <option value="14">14</option>
+          <option value="16">16</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label><strong>Columns</strong></label>
+        <select id="columns">
+          <option value="1">1</option>
+          <option value="2" selected>2</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label><strong>Object Set</strong></label>
+        <select id="objectMode">
+          <option value="random" selected>Random</option>
+          <option value="single">Same object for whole page</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label><strong>Title</strong></label>
+        <select id="titleText">
+          <option value="Count the Objects">Count the Objects</option>
+          <option value="How Many?">How Many?</option>
+          <option value="Count and Circle">Count and Circle</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="screenOnly" style="margin: 8px 0 10px;">
+    <button id="btnGen">Generate Worksheet</button>
+    <button onclick="window.print()">Print Page</button>
+  </div>
+
+  <div id="worksheetOutput"></div>
+
+  <!-- ✅ Generator logic (module-safe) -->
+  <script type="module">
+    const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    function shuffle(arr){
+      const a = [...arr];
+      for (let i=a.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [a[i],a[j]] = [a[j],a[i]];
+      }
+      return a;
+    }
+
+    function unique3(correct, min, max){
+      const set = new Set([correct]);
+      let tries = 0;
+
+      while (set.size < 3 && tries < 300){
+        tries++;
+        let d;
+
+        if ((max - min) < 2){
+          const wiggle = randInt(1, 3);
+          d = Math.random() < 0.5 ? correct + wiggle : Math.max(1, correct - wiggle);
+        } else {
+          d = randInt(min, max);
+        }
+
+        if (d !== correct) set.add(d);
+      }
+      return shuffle([...set]);
+    }
+
+    function pickObject(){
+      const sets = window.countingObjectSets;
+      if (!Array.isArray(sets) || sets.length === 0) return null;
+      return sets[Math.floor(Math.random() * sets.length)];
+    }
+
+    function sizeForCount(count){
+      if (count <= 5)  return 44;
+      if (count <= 8)  return 36;
+      if (count <= 12) return 30;
+      if (count <= 16) return 26;
+      if (count <= 20) return 22;
+      return 18;
+    }
+
+    function renderStampedObjectsHTML(src, count){
+      const s = sizeForCount(count);
+      let out = `<div class="stampWrap">`;
+      for (let i=0;i<count;i++){
+        out += `<img src="${src}" alt="" style="width:${s}px;height:${s}px;">`;
+      }
+      out += `</div>`;
+      return out;
+    }
+
+    function generateWorksheet(){
+      const min = parseInt(document.getElementById("minCount").value, 10);
+      const max = parseInt(document.getElementById("maxCount").value, 10);
+      const numQs = parseInt(document.getElementById("numQs").value, 10);
+      const cols = parseInt(document.getElementById("columns").value, 10);
+      const title = document.getElementById("titleText").value;
+      const objectMode = document.getElementById("objectMode").value;
+
+      if (!Number.isFinite(min) || !Number.isFinite(max) || min < 1 || max < 1 || max < min){
+        alert("❌ Check Min/Max. Min must be ≥ 1 and Max must be ≥ Min.");
+        return;
+      }
+
+      if (!Array.isArray(window.countingObjectSets) || window.countingObjectSets.length === 0){
+        alert('❌ Easy-count image list not loaded. Make sure easyCountImages.js + counting_objects_easy.js are in the same folder.');
+        return;
+      }
+
+      const fixedObj = (objectMode === "single") ? pickObject() : null;
+
+      const questions = [];
+      for (let i=0;i<numQs;i++){
+        const count = randInt(min, max);
+        const obj = fixedObj || pickObject();
+        if (!obj?.src) { alert("❌ No object images available."); return; }
+
+        const choices = unique3(count, min, max);
+        questions.push({ count, obj, choices });
+      }
+
+      const gridStyle = `grid-template-columns: repeat(${cols}, 1fr);`;
+
+      const cardsHTML = questions.map((q, idx) => {
+        const [a,b,c] = q.choices;
+        const stamped = renderStampedObjectsHTML(q.obj.src, q.count);
+
+        return `
+          <div class="qCard">
+            <div class="qNum">${idx+1}.</div>
+
+            <div class="picBox" aria-label="Objects to count">
+              ${stamped}
+            </div>
+
+            <div class="choices" aria-label="Answer choices">
+              <div class="choice">A) ${a}</div>
+              <div class="choice">B) ${b}</div>
+              <div class="choice">C) ${c}</div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      const html = `
+        <div class="sheet">
+          <div class="sheetHeader">
+            <div>
+              <p class="title">${title}</p>
+              <p class="dir"><strong>Directions:</strong> Count the objects. Circle the correct answer.</p>
+            </div>
+            <div class="nameLine"><strong>Name:</strong> <span>&nbsp;</span></div>
+          </div>
+
+          <div class="grid" style="${gridStyle}">
+            ${cardsHTML}
+          </div>
+
+          <div class="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
+        </div>
+      `;
+
+      document.getElementById("worksheetOutput").innerHTML = html;
+    }
+
+    // Hook up the button (module-safe; no inline onclick needed)
+    document.getElementById("btnGen").addEventListener("click", generateWorksheet);
+
+    // Expose for debugging if you want
+    window.generateWorksheet = generateWorksheet;
+  </script>
+</body>
+</html>
