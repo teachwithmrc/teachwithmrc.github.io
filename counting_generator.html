@@ -18,6 +18,7 @@
     h1{ font-size:32px; margin: 8px 0 2px; }
     .subtitle{ font-size:16px; margin:0 0 10px; }
     button{ font-size:16px; padding:8px 12px; margin:6px; cursor:pointer; border-radius:10px; border:2px solid var(--ink); background:#fff; }
+    button:disabled{ opacity:.5; cursor:not-allowed; }
     .screenOnly{ display:block; }
 
     .card{
@@ -61,7 +62,6 @@
       text-align:center;
     }
 
-    /* ===== Worksheet ===== */
     #worksheetOutput{ margin-top:10px; margin-bottom:60px; }
     .sheet{ width:100%; max-width:980px; margin:0 auto; text-align:left; }
 
@@ -107,7 +107,6 @@
       flex: 0 0 auto;
     }
 
-    /* stamped images */
     .stampWrap{
       width: 100%;
       height: 100%;
@@ -117,10 +116,7 @@
       justify-content:flex-start;
       gap: 6px;
     }
-    .stampWrap img{
-      display:block;
-      object-fit:contain;
-    }
+    .stampWrap img{ display:block; object-fit:contain; }
 
     .choices{
       display:flex;
@@ -150,11 +146,6 @@
       @page{ margin:0.5in; }
     }
   </style>
-
-  <!-- IMPORTANT:
-       This file MUST set: window.countingObjectSets = [{ src: "/images/xxx.png", label?: "dog" }, ...]
-       If it doesn't, nothing will generate. -->
- <script type="module" src="./counting_objects_easy.js"></script>
 </head>
 
 <body>
@@ -214,14 +205,70 @@
   </div>
 
   <div class="screenOnly" style="margin: 8px 0 10px;">
-    <button id="btnGen" type="button">Generate Worksheet</button>
+    <button id="btnGen" type="button" disabled>Loading Images…</button>
     <button type="button" onclick="window.print()">Print Page</button>
   </div>
 
   <div id="worksheetOutput"></div>
 
-  <!-- Generator logic (NON-module so it works with plain defer-loaded JS) -->
-  <script>
+  <!-- ✅ ONE module: loads the image list + runs generator -->
+  <script type="module">
+    const SITE_ORIGIN = "https://teachwithmrc.github.io";
+
+    function toFullUrl(u){
+      if (!u) return "";
+      const s = String(u).trim();
+      if (/^https?:\/\//i.test(s)) return s;
+      if (s.startsWith("/")) return SITE_ORIGIN + s; // "/images/x.png"
+      return SITE_ORIGIN + "/" + s.replace(/^\.?\//, ""); // "images/x.png" or "./images/x.png"
+    }
+
+    function normalizeItem(item){
+      // Accept:
+      // 1) string: "/images/dog.png" or "images/dog.png"
+      // 2) object: { url } or { src } or { file } or { word/name }
+      if (typeof item === "string") {
+        const src = toFullUrl(item);
+        const name = item.split("/").pop().replace(/\.png$/i,"");
+        return { name, src };
+      }
+
+      const raw = item?.url || item?.src || item?.file || "";
+      const src = toFullUrl(raw);
+      const nm = (item?.word || item?.name || raw || "").toString();
+      const name = nm.split("/").pop().replace(/\.png$/i,"").trim();
+      return { name, src };
+    }
+
+    // ----- Load easyCountImages.js (supports BOTH export styles) -----
+    let list = [];
+    try {
+      const mod = await import("./easyCountImages.js");
+      list = mod.default || mod.easyCountImages || [];
+    } catch (e) {
+      console.error("❌ Could not import ./easyCountImages.js", e);
+      alert("❌ Could not load easyCountImages.js. Check the filename + folder location.");
+    }
+
+    const sets = Array.isArray(list)
+      ? list.map(normalizeItem).filter(o => o.src)
+      : [];
+
+    window.countingObjectSets = sets;
+
+    console.log("✅ easyCountImages raw:", list);
+    console.log("✅ countingObjectSets normalized:", sets.slice(0, 3), "… total:", sets.length);
+
+    const btn = document.getElementById("btnGen");
+    if (!sets.length) {
+      btn.textContent = "No Images Loaded";
+      alert("❌ No images loaded from easyCountImages.js.\nOpen console and look at the logs for 'easyCountImages raw'.");
+    } else {
+      btn.disabled = false;
+      btn.textContent = "Generate Worksheet";
+    }
+
+    // ----- Generator -----
     const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
     function shuffle(arr){
@@ -236,18 +283,15 @@
     function unique3(correct, min, max){
       const set = new Set([correct]);
       let tries = 0;
-
       while (set.size < 3 && tries < 300){
         tries++;
         let d;
-
         if ((max - min) < 2){
           const wiggle = randInt(1, 3);
           d = Math.random() < 0.5 ? correct + wiggle : Math.max(1, correct - wiggle);
         } else {
           d = randInt(min, max);
         }
-
         if (d !== correct) set.add(d);
       }
       return shuffle([...set]);
@@ -255,7 +299,6 @@
 
     function pickObject(){
       const sets = window.countingObjectSets;
-      if (!Array.isArray(sets) || sets.length === 0) return null;
       return sets[Math.floor(Math.random() * sets.length)];
     }
 
@@ -293,7 +336,7 @@
 
       const sets = window.countingObjectSets;
       if (!Array.isArray(sets) || sets.length === 0){
-        alert('❌ counting_objects_easy.js did not load any images.\nMake sure it sets: window.countingObjectSets = [...]');
+        alert("❌ No images loaded. Check easyCountImages.js export + file path.");
         return;
       }
 
@@ -303,8 +346,6 @@
       for (let i=0;i<numQs;i++){
         const count = randInt(min, max);
         const obj = fixedObj || pickObject();
-        if (!obj || !obj.src) { alert("❌ No object images available."); return; }
-
         const choices = unique3(count, min, max);
         questions.push({ count, obj, choices });
       }
@@ -318,11 +359,7 @@
         return `
           <div class="qCard">
             <div class="qNum">${idx+1}.</div>
-
-            <div class="picBox" aria-label="Objects to count">
-              ${stamped}
-            </div>
-
+            <div class="picBox" aria-label="Objects to count">${stamped}</div>
             <div class="choices" aria-label="Answer choices">
               <div class="choice">A) ${a}</div>
               <div class="choice">B) ${b}</div>
@@ -332,7 +369,7 @@
         `;
       }).join("");
 
-      const html = `
+      document.getElementById("worksheetOutput").innerHTML = `
         <div class="sheet">
           <div class="sheetHeader">
             <div>
@@ -341,19 +378,13 @@
             </div>
             <div class="nameLine"><strong>Name:</strong> <span>&nbsp;</span></div>
           </div>
-
-          <div class="grid" style="${gridStyle}">
-            ${cardsHTML}
-          </div>
-
+          <div class="grid" style="${gridStyle}">${cardsHTML}</div>
           <div class="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
         </div>
       `;
-
-      document.getElementById("worksheetOutput").innerHTML = html;
     }
 
-    document.getElementById("btnGen").addEventListener("click", generateWorksheet);
+    btn.addEventListener("click", generateWorksheet);
     window.generateWorksheet = generateWorksheet;
   </script>
 </body>
