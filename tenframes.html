@@ -12,28 +12,25 @@
 <style>
   :root{
     --ink:#111;
-    --line:#6f6f6f; /* worksheet-divider gray */
+    --line:#6f6f6f; /* worksheet divider gray */
     --bg:#fff;
-
-    /* PDF-like colors (optional) */
-    --aColor:#e21818; /* red */
-    --bColor:#f2d21b; /* yellow */
-    --subColor:#111;  /* black */
-    --cross:#111;
   }
 
   *{ box-sizing:border-box; }
-  body{
+  html, body{
     margin:0;
+    padding:0;
     background:var(--bg);
     color:var(--ink);
     font-family:"Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    overflow-x:hidden; /* FIX: prevents sideways scroll */
   }
 
   .wrap{
-    max-width: 900px;
+    width:100%;
+    max-width: 900px;   /* letter-friendly */
     margin: 0 auto;
-    padding: 14px 14px 18px;
+    padding: 12px 12px 16px;
   }
 
   /* Controls (hidden on print) */
@@ -41,7 +38,8 @@
     border:2px solid var(--ink);
     border-radius:14px;
     padding:12px;
-    margin-bottom:14px;
+    margin-bottom:12px;
+    width:100%;
   }
   .controlsRow{
     display:flex;
@@ -53,27 +51,31 @@
     display:flex;
     flex-direction:column;
     gap:6px;
+    min-width: 150px;
   }
-  label{ font-size:12px; font-weight:700; }
+  label{ font-size:12px; font-weight:800; }
   select, input{
-    height:38px;
+    height:36px;
     border:2px solid var(--ink);
     border-radius:10px;
     padding:6px 10px;
     font-family:"Poppins", sans-serif;
     font-size:14px;
-    width: 160px;
+    width: 170px;
     background:#fff;
   }
+
   .check{
     display:flex;
     align-items:center;
     gap:8px;
-    margin-top:2px;
     font-size:13px;
-    font-weight:600;
+    font-weight:700;
+    margin-top: 2px;
+    user-select:none;
   }
   .check input{ width:18px; height:18px; }
+
   .btns{
     display:flex;
     gap:10px;
@@ -81,12 +83,12 @@
     flex-wrap:wrap;
   }
   button{
-    height:40px;
+    height:38px;
     border:2px solid var(--ink);
     border-radius:10px;
     padding:0 14px;
     font-family:"Poppins", sans-serif;
-    font-weight:800;
+    font-weight:900;
     cursor:pointer;
     background:#111;
     color:#fff;
@@ -96,57 +98,62 @@
     color:#111;
   }
 
-  /* Worksheet */
+  /* Sheet */
   .sheet{
+    width:100%;
     background:#fff;
   }
 
   .title{
     text-align:center;
-    font-size:32px;
-    font-weight:800;
-    margin: 6px 0 12px;
+    font-size:30px;
+    font-weight:900;
+    margin: 4px 0 10px;
   }
 
-  /* 2 columns x 4 rows like the PDF */
+  /* 8 problems: 2 columns x 4 rows */
   .table{
+    width:100%;
     border:1.5px solid var(--line);
   }
   .row{
     display:grid;
     grid-template-columns: 1fr 1fr;
+    width:100%;
   }
   .cellBox{
-    min-height: 240px;
+    min-height: 200px; /* smaller so it fits */
     border-right:1.5px solid var(--line);
     border-bottom:1.5px solid var(--line);
-    padding: 18px 18px 16px;
+    padding: 12px 12px 10px; /* tighter */
+    overflow:hidden;
   }
   .row .cellBox:last-child{ border-right:none; }
   .table .row:last-child .cellBox{ border-bottom:none; }
 
   .expr{
-    font-size:28px;
-    font-weight:800;
+    font-size:24px; /* slightly smaller */
+    font-weight:900;
     letter-spacing:.2px;
-    margin:0 0 12px;
+    margin:0 0 10px;
   }
   .blank{
     display:inline-block;
-    width:120px;
+    width:105px;
     border-bottom:3px solid var(--ink);
     transform: translateY(-4px);
   }
 
   .frames{
     display:grid;
-    gap:14px;
-    max-width: 360px;
+    gap:10px;          /* tighter */
+    width: 100%;
+    max-width: 260px;  /* smaller frames */
   }
 
+  /* Ten frame */
   .tenframe{
-    width: 360px;
-    max-width: 100%;
+    width: 100%;
   }
 
   .tfGrid{
@@ -154,6 +161,7 @@
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(2, 1fr);
     border:1.5px solid var(--line);
+    width:100%;
   }
   .tfCell{
     border:1.5px solid var(--line);
@@ -169,10 +177,10 @@
   .cross::before, .cross::after{
     content:"";
     position:absolute;
-    width:90%;
+    width:88%;
     height:3px;
-    background:var(--cross);
-    left:5%;
+    background:var(--ink);
+    left:6%;
     top:50%;
     transform-origin:center;
   }
@@ -182,7 +190,7 @@
   .footer{
     text-align:center;
     font-size:12px;
-    font-weight:700;
+    font-weight:800;
     margin-top:10px;
   }
 
@@ -218,20 +226,20 @@
         <input id="maxVal" type="number" min="1" max="20" value="20">
       </div>
 
-      <div class="field" id="subModeWrap" style="display:none;">
-        <label for="subDisplay">Subtraction Model</label>
-        <select id="subDisplay">
-          <option value="twoFrames">Two frames (A on top, B on bottom)</option>
-          <option value="crossOut">Cross out on top frame + answer frame</option>
-        </select>
+      <div class="field">
+        <label>Ten-frame model</label>
+        <div class="check">
+          <input id="prefillFirst" type="checkbox" checked>
+          <label for="prefillFirst">Prefill first number in the ten frames</label>
+        </div>
       </div>
 
-      <div class="field">
-        <label>&nbsp;</label>
-        <div class="check">
-          <input id="useColor" type="checkbox" checked>
-          <label for="useColor">Use PDF-style colors (red/yellow)</label>
-        </div>
+      <div class="field" id="subModeWrap" style="display:none;">
+        <label for="subDisplay">Subtraction display</label>
+        <select id="subDisplay">
+          <option value="crossOut">Cross out on top frame + answer frame</option>
+          <option value="prefillOnly">Prefill minuend only (no cross-out)</option>
+        </select>
       </div>
 
       <div class="btns">
@@ -244,9 +252,7 @@
   <!-- Sheet -->
   <div class="sheet">
     <div class="title">Add and Subtract Using Ten Frames</div>
-
     <div class="table" id="table"></div>
-
     <div class="footer">Copyright - Generated from InterventionStation.com - @TeachWithMrC</div>
   </div>
 
@@ -270,36 +276,36 @@
   // rule: no "max + anything" / "__ + max"
   function violatesNoMaxAddend(a,b,hi){ return a === hi || b === hi; }
 
-  // Prefer crossing 10 for addition (make-a-ten feel)
+  // Addition: prefer "make-a-ten" crossing 10 (like 9+4, 8+5, 7+6)
   function makeAddition(lo,hi){
-    for (let t=0;t<120;t++){
+    for (let t=0;t<180;t++){
       const a = randInt(6,9);
-      const bMin = Math.max(1, 11 - a);        // ensures cross 10
-      const bMax = Math.min(9, hi - a);
+      const bMin = Math.max(1, 11 - a);   // forces cross 10
+      const bMax = Math.min(9, hi - a);   // keep b 1..9
       if (bMin > bMax) continue;
 
       const b = randInt(bMin, bMax);
       const sum = a + b;
 
       if (sum < lo || sum > hi) continue;
-      if (violatesNoMaxAddend(a,b,hi)) continue;
+      if (violatesNoMaxAddend(a,b,hi)) continue; // prevents 20 + __
 
       return { a, b, ans: sum };
     }
 
     // fallback safe
-    for (let t=0;t<300;t++){
+    for (let t=0;t<400;t++){
       const a = randInt(lo, Math.max(lo, hi-1));
       const b = randInt(1, Math.max(1, hi-a));
       const sum = a + b;
       if (sum>=lo && sum<=hi && !violatesNoMaxAddend(a,b,hi)) return { a,b,ans:sum };
     }
-    return { a:8, b:4, ans:12 };
+    return { a:9, b:4, ans:13 };
   }
 
-  // Prefer crossing 10 for subtraction (e.g., 15-7, avoid 16-3 by default)
+  // Subtraction: prefer crossing 10 (15-7, 14-6, 13-5) and keep subtrahend 1..9
   function makeSubtraction(lo,hi){
-    for (let t=0;t<160;t++){
+    for (let t=0;t<220;t++){
       const a = randInt(Math.max(11, lo, 1), hi);
       const bMin = Math.max(1, (a-10)+1); // must cross 10
       const bMax = Math.min(9, a-1);
@@ -313,7 +319,7 @@
     }
 
     // fallback
-    for (let t=0;t<300;t++){
+    for (let t=0;t<400;t++){
       const a = randInt(lo, hi);
       const b = randInt(1, Math.max(1, a));
       const ans = a - b;
@@ -322,7 +328,7 @@
     return { a:15, b:7, ans:8 };
   }
 
-  // Ten-frame dot mapping across 0..20 (two frames of 10)
+  // Convert number (0..20) into two frames of 10 booleans
   function dotBooleans(n){
     n = clamp(n, 0, 20);
     const f1 = Array(10).fill(false);
@@ -334,30 +340,25 @@
     return [f1,f2];
   }
 
-  // SVG oval dot (prints reliably)
-  function makeDotSVG(color){
+  // SVG CIRCLE DOT (prints reliably)
+  function makeDotSVG(){
     const ns = "http://www.w3.org/2000/svg";
     const svg = document.createElementNS(ns,"svg");
     svg.setAttribute("viewBox","0 0 100 100");
-    svg.style.width = "82%";
-    svg.style.height = "58%";
+    svg.style.width = "74%";
+    svg.style.height = "74%";
 
-    const ell = document.createElementNS(ns,"ellipse");
-    ell.setAttribute("cx","50");
-    ell.setAttribute("cy","50");
-    ell.setAttribute("rx","44");
-    ell.setAttribute("ry","30");
-    ell.setAttribute("fill", color);
+    const c = document.createElementNS(ns,"circle");
+    c.setAttribute("cx","50");
+    c.setAttribute("cy","50");
+    c.setAttribute("r","38");
+    c.setAttribute("fill","#111");
+    svg.appendChild(c);
 
-    // subtle outline like the PDF
-    ell.setAttribute("stroke", "#111");
-    ell.setAttribute("stroke-width", "2");
-
-    svg.appendChild(ell);
     return svg;
   }
 
-  function buildTenFrame(totalDotsBool, dotColor, crossSet = null){
+  function buildTenFrame(frameDotsBool, crossSet = null){
     const frame = document.createElement("div");
     frame.className = "tenframe";
 
@@ -368,8 +369,8 @@
       const cell = document.createElement("div");
       cell.className = "tfCell";
 
-      if (totalDotsBool[i]){
-        cell.appendChild(makeDotSVG(dotColor));
+      if (frameDotsBool[i]){
+        cell.appendChild(makeDotSVG());
         if (crossSet && crossSet.has(i)) cell.classList.add("cross");
       }
       grid.appendChild(cell);
@@ -379,7 +380,11 @@
     return frame;
   }
 
-  function problemCellHTML({mode,a,b,ans}, useColor, subDisplay){
+  function buildProblemCell(q){
+    const { mode, a, b, ans } = q;
+    const prefillFirst = $("prefillFirst").checked;
+    const subDisplay = $("subDisplay").value;
+
     const cell = document.createElement("div");
     cell.className = "cellBox";
 
@@ -393,39 +398,52 @@
     framesWrap.className = "frames";
 
     if (mode === "add"){
-      const [a1,a2] = dotBooleans(a);
-      const [b1,b2] = dotBooleans(b);
-
-      const aColor = useColor ? getComputedStyle(document.documentElement).getPropertyValue("--aColor").trim() : "#111";
-      const bColor = useColor ? getComputedStyle(document.documentElement).getPropertyValue("--bColor").trim() : "#111";
-
-      // PDF-style: top = first addend, bottom = second addend
-      framesWrap.appendChild(buildTenFrame(a1, aColor));
-      framesWrap.appendChild(buildTenFrame(b1, bColor));
-
-    } else {
-      const subColor = useColor ? getComputedStyle(document.documentElement).getPropertyValue("--subColor").trim() : "#111";
-
-      if (subDisplay === "twoFrames"){
-        // PDF-ish: top = minuend, bottom = subtrahend (no cross-out)
-        const [m1] = dotBooleans(a);
-        const [s1] = dotBooleans(b);
-
-        framesWrap.appendChild(buildTenFrame(m1, subColor));
-        framesWrap.appendChild(buildTenFrame(s1, subColor));
+      if (prefillFirst){
+        // KEY BEHAVIOR YOU ASKED FOR:
+        // Show TWO ten frames representing the first number (a) across 0..20.
+        // Student will draw +b dots in the empty spaces (e.g., 9 + 4 => fill 1 on top + 3 on bottom)
+        const [a1,a2] = dotBooleans(a);
+        framesWrap.appendChild(buildTenFrame(a1));
+        framesWrap.appendChild(buildTenFrame(a2));
       } else {
-        // Cross out on top, answer on bottom (more teacher-friendly for subtraction)
-        const [m1] = dotBooleans(a);
-        const [ans1] = dotBooleans(ans);
+        // If not prefilled, show blank frames (teacher wants students to model everything)
+        framesWrap.appendChild(buildTenFrame(Array(10).fill(false)));
+        framesWrap.appendChild(buildTenFrame(Array(10).fill(false)));
+      }
+    } else {
+      // Subtraction
+      const [m1,m2] = dotBooleans(a);
 
-        // cross out the last b dots in the filled order (left-to-right)
-        const cross = new Set();
-        for (let k = a-b; k < a; k++){
-          if (k < 10) cross.add(k);
+      if (prefillFirst){
+        if (subDisplay === "crossOut"){
+          // Cross out b on the top frame(s), then show answer frame(s)
+          const [ans1, ans2] = dotBooleans(ans);
+
+          // Cross out from (a-b) to (a-1) in the 0..20 fill order.
+          // We store separate sets per frame.
+          const cross1 = new Set();
+          const cross2 = new Set();
+
+          for (let k = a - b; k < a; k++){
+            if (k < 10) cross1.add(k);
+            else cross2.add(k - 10);
+          }
+
+          framesWrap.appendChild(buildTenFrame(m1, cross1));
+          framesWrap.appendChild(buildTenFrame(m2, cross2));
+
+          // Answer shown as filled dots (helps kids see remainder)
+          framesWrap.appendChild(buildTenFrame(ans1));
+          framesWrap.appendChild(buildTenFrame(ans2));
+        } else {
+          // Prefill minuend only (kids do the crossing out themselves)
+          framesWrap.appendChild(buildTenFrame(m1));
+          framesWrap.appendChild(buildTenFrame(m2));
         }
-
-        framesWrap.appendChild(buildTenFrame(m1, subColor, cross));
-        framesWrap.appendChild(buildTenFrame(ans1, subColor));
+      } else {
+        // No prefill: blank frames
+        framesWrap.appendChild(buildTenFrame(Array(10).fill(false)));
+        framesWrap.appendChild(buildTenFrame(Array(10).fill(false)));
       }
     }
 
@@ -436,32 +454,25 @@
   function buildSheet(){
     const {lo,hi} = normalizeBounds();
     const mode = $("mode").value;
-    const useColor = $("useColor").checked;
-    const subDisplay = $("subDisplay").value;
 
-    // Build 8 questions: 4 rows × 2
     const qs = [];
     const seen = new Set();
-
     let guard = 0;
-    while (qs.length < 8 && guard < 600){
+
+    while (qs.length < 8 && guard < 900){
       guard++;
 
       const q = (mode==="add") ? makeAddition(lo,hi) : makeSubtraction(lo,hi);
-      const key = (mode==="add")
-        ? `${q.a}+${q.b}` // keep addition unique-ish
-        : `${q.a}-${q.b}`;
+      const key = (mode==="add") ? `${q.a}+${q.b}` : `${q.a}-${q.b}`;
 
-      // Also avoid commutative dupes in addition
       if (mode==="add"){
+        // avoid commutative dupes
         const key2 = `${q.b}+${q.a}`;
         if (seen.has(key) || seen.has(key2)) continue;
+        if (violatesNoMaxAddend(q.a,q.b,hi)) continue;
       } else {
         if (seen.has(key)) continue;
       }
-
-      // apply “no max + anything” rule in addition
-      if (mode==="add" && violatesNoMaxAddend(q.a,q.b,hi)) continue;
 
       seen.add(key);
       qs.push({ mode, ...q });
@@ -473,13 +484,8 @@
     for (let r=0; r<4; r++){
       const row = document.createElement("div");
       row.className = "row";
-
-      const left = qs[r*2];
-      const right = qs[r*2 + 1];
-
-      row.appendChild(problemCellHTML(left, useColor, subDisplay));
-      row.appendChild(problemCellHTML(right, useColor, subDisplay));
-
+      row.appendChild(buildProblemCell(qs[r*2]));
+      row.appendChild(buildProblemCell(qs[r*2 + 1]));
       table.appendChild(row);
     }
   }
@@ -493,9 +499,8 @@
   $("btnGen").addEventListener("click", buildSheet);
   $("btnPrint").addEventListener("click", () => window.print());
   $("mode").addEventListener("change", syncUI);
-  ["minVal","maxVal","useColor","subDisplay"].forEach(id => $(id).addEventListener("change", buildSheet));
+  ["minVal","maxVal","prefillFirst","subDisplay"].forEach(id => $(id).addEventListener("change", buildSheet));
 
-  // init
   syncUI();
 </script>
 </body>
