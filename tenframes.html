@@ -9,9 +9,10 @@
 
 <style>
   *{ box-sizing:border-box; }
+
   html, body{
     margin:0; padding:0;
-    font-family:Poppins, Arial, sans-serif;
+    font-family:"Poppins", Arial, sans-serif;
     background:#fff; color:#111;
     overflow-x:hidden;
   }
@@ -20,61 +21,124 @@
 
   /* CONTROLS */
   .controls{
-    border:2px solid #111; border-radius:12px;
-    padding:10px; margin-bottom:12px;
+    border:2px solid #111;
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:12px;
   }
-  .controls-row{
-    display:flex; flex-wrap:wrap;
-    gap:10px 12px; align-items:flex-end;
+
+  .controls-top{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    align-items:flex-end;
+    justify-content:flex-start;
   }
-  .field{ display:flex; flex-direction:column; gap:4px; }
-  label{ font-size:12px; font-weight:800; }
-  select,input{
-    height:36px; min-width:170px;
-    border:2px solid #111; border-radius:10px;
-    padding:6px 10px; font-family:Poppins;
-    background:#fff; font-size:14px;
+
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    min-width:190px;
   }
+
+  .field label{
+    font-size:12px;
+    font-weight:800;
+  }
+
+  select, input{
+    height:40px;
+    min-width:190px;
+    border:2px solid #111;
+    border-radius:10px;
+    padding:8px 12px;
+    font-family:"Poppins", Arial, sans-serif;
+    font-size:14px;
+    background:#fff;
+  }
+
+  /* second row checkboxes */
+  .controls-checks{
+    margin-top:10px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+    align-items:center;
+  }
+
   .check{
-    display:flex; align-items:center; gap:8px;
-    font-size:13px; font-weight:700; user-select:none;
-    padding:6px 0 0;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:16px;     /* bigger */
+    font-weight:800;    /* bold */
+    user-select:none;
+    margin:0;           /* kills weird spacing */
+    padding:0;
+    line-height:1;
   }
-  .check input{ width:18px; height:18px; }
+  .check input{
+    width:22px;
+    height:22px;
+    margin:0;          /* kills weird spacing */
+    padding:0;
+    accent-color:#111;
+  }
+
+  /* buttons centered + bigger */
+  .controls-actions{
+    margin-top:12px;
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    flex-wrap:wrap;
+  }
 
   button{
-    height:38px; padding:0 16px;
-    border:2px solid #111; border-radius:10px;
-    font-weight:900; background:#111; color:#fff;
+    height:48px;              /* bigger */
+    padding:0 22px;
+    border:2px solid #111;
+    border-radius:12px;
+    font-weight:900;
+    font-size:16px;
+    font-family:"Poppins", Arial, sans-serif;
+    background:#111;
+    color:#fff;
     cursor:pointer;
   }
-  button.secondary{ background:#fff; color:#111; }
+  button.secondary{
+    background:#fff;
+    color:#111;
+  }
 
   /* SHEET */
   .title{
     text-align:center;
-    font-size:28px;            /* slightly smaller for print */
+    font-size:28px;
     font-weight:900;
     margin:6px 0 10px;
   }
 
-  /* BLACK OUTLINES (no gray) */
+  /* BLACK OUTLINES */
   .table{ border:2px solid #111; }
   .row{ display:grid; grid-template-columns:1fr 1fr; }
 
   .cell{
     border-right:2px solid #111;
     border-bottom:2px solid #111;
-    min-height:190px;          /* slightly smaller */
+    min-height:190px;
     padding:10px;
-    display:flex; flex-direction:column;
-    align-items:center; gap:10px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
   }
   .row .cell:last-child{ border-right:none; }
   .table .row:last-child .cell{ border-bottom:none; }
 
   .expr{
-    font-size:22px;            /* slightly smaller */
+    font-size:22px;
     font-weight:900;
     text-align:center;
     line-height:1.1;
@@ -90,7 +154,7 @@
   .frames{
     display:grid;
     gap:10px;
-    width:235px;               /* smaller = prints safer */
+    width:235px;
   }
   .tenframe{ border:2px solid #111; }
   .tfgrid{
@@ -99,11 +163,10 @@
   }
   .tfcell{
     border:2px solid #111;
-    height:34px;               /* smaller for print, not tiny */
+    height:34px;
     display:flex;
     align-items:center;
     justify-content:center;
-    position:relative;
   }
 
   .footer{
@@ -124,9 +187,11 @@
 <div class="wrap">
 
   <div class="controls">
-    <div class="controls-row">
+
+    <!-- LINE 1 -->
+    <div class="controls-top">
       <div class="field">
-        <label>Operation</label>
+        <label for="mode">Operation</label>
         <select id="mode">
           <option value="add">Addition</option>
           <option value="sub">Subtraction</option>
@@ -134,33 +199,40 @@
       </div>
 
       <div class="field">
-        <label>Lowest # (first number)</label>
+        <label for="min">Lowest # (first number)</label>
         <input id="min" type="number" value="0" min="0" max="20">
       </div>
 
       <div class="field">
-        <label>Highest # (first number)</label>
+        <label for="max">Highest # (first number)</label>
         <input id="max" type="number" value="20" min="1" max="20">
       </div>
-
-      <div class="check">
-        <input id="prefill" type="checkbox" checked>
-        <label for="prefill">Prefill first number</label>
-      </div>
-
-      <div class="check" id="allowTwoDigitWrap">
-        <input id="allowTwoDigit" type="checkbox">
-        <label for="allowTwoDigit">Allow 2-digit first number (default OFF)</label>
-      </div>
-
-      <div class="check" id="biggerFirstWrap">
-        <input id="biggerFirst" type="checkbox" checked>
-        <label for="biggerFirst">Bigger number first (addition)</label>
-      </div>
-
-      <button type="button" onclick="build()">Generate</button>
-      <button type="button" class="secondary" onclick="window.print()">Print</button>
     </div>
+
+    <!-- LINE 2 -->
+    <div class="controls-checks">
+      <label class="check">
+        <input id="prefill" type="checkbox" checked>
+        Prefill
+      </label>
+
+      <label class="check">
+        <input id="allowTwoDigit" type="checkbox">
+        Allow 2-digit
+      </label>
+
+      <label class="check" id="biggerFirstWrap">
+        <input id="biggerFirst" type="checkbox" checked>
+        Bigger number first
+      </label>
+    </div>
+
+    <!-- BIG CENTER BUTTONS -->
+    <div class="controls-actions">
+      <button type="button" id="btnGen">Generate</button>
+      <button type="button" class="secondary" id="btnPrint">Print</button>
+    </div>
+
   </div>
 
   <div class="title">Add and Subtract Using Ten Frames</div>
@@ -194,7 +266,7 @@
     return [f1,f2];
   }
 
-  // SVG circle dot (prints reliably)
+  // SVG dot (print-safe)
   function dotSVG(){
     const ns="http://www.w3.org/2000/svg";
     const svg=document.createElementNS(ns,"svg");
@@ -258,71 +330,58 @@
     return cell;
   }
 
-  // ===== NEW DEFAULT RULES =====
   // ADDITION DEFAULT:
-  // - two single-digit numbers (1..9) ONLY (prevents 18+2)
-  // - sum MUST be > 10 (always)
-  // - still "make-a-ten-ish": a is biased to 6..9
-  // OPTIONAL:
-  // - if Allow 2-digit first number is ON, a can be 0..20 within bounds
+  // - two single digit numbers
+  // - sum > 10
+  // - sum <= 20
   function makeAddition(lo, hi, allowTwoDigit){
-    for(let t=0; t<4000; t++){
-      let a, b;
+    for(let t=0; t<6000; t++){
+      let a,b;
 
       if(!allowTwoDigit){
-        a = r(6,9);       // bias toward make-a-ten
+        // two single digits
+        a = r(6,9);        // keeps it focused on "over 10"
         b = r(1,9);
       } else {
-        a = r(lo, hi);    // teacher explicitly allows it
+        // teacher opted in
+        a = r(lo, hi);
         b = r(1,9);
       }
 
       const sum = a + b;
-
-      // must be > 10 always
       if(sum <= 10) continue;
-
-      // keep within 20 for ten-frame logic
       if(sum > 20) continue;
 
-      // apply bounds to FIRST number only
+      // bounds apply to FIRST number
       if(a < lo || a > hi) continue;
 
-      // if allowTwoDigit is OFF, force a to be single-digit too
+      // default keeps first number single-digit
       if(!allowTwoDigit && a > 9) continue;
 
       return { a, b, ans: sum };
     }
-
-    // fallback
     return { a:9, b:4, ans:13 };
   }
 
-  // SUBTRACTION DEFAULT (kept teacher-friendly):
-  // - first number respects bounds
-  // - bias toward crossing 10 when possible
+  // SUBTRACTION DEFAULT:
+  // - keep it in the "over 10" skill zone (teens)
   function makeSubtraction(lo, hi, allowTwoDigit){
-    for(let t=0; t<5000; t++){
-      let a, b;
+    for(let t=0; t<8000; t++){
+      let a,b;
 
-      // If allowTwoDigit is OFF, still allow 11..18 for subtraction? (it’s subtraction over 10 skill)
-      // But user’s current request is mostly addition rules; we keep subtraction reasonable.
-      a = r(Math.max(lo, 11), hi);  // keep it over 10 to match the skill
-      if(!allowTwoDigit && a > 18) continue; // keep it in the common "teen" zone unless enabled
+      a = r(Math.max(lo, 11), hi);
+      if(!allowTwoDigit && a > 18) continue;
 
-      // pick b to (usually) cross 10: b > (a-10)
       const bMin = Math.max(1, (a - 10) + 1);
       const bMax = Math.min(9, a - 1);
       if(bMin > bMax) continue;
 
       b = r(bMin, bMax);
       const ans = a - b;
-
       if(ans < 0) continue;
 
       return { a, b, ans };
     }
-
     return { a:15, b:7, ans:8 };
   }
 
@@ -333,14 +392,14 @@
     const allowTwoDigit = $("allowTwoDigit").checked;
     const biggerFirst = $("biggerFirst").checked;
 
-    // Only show biggerFirst for addition; two-digit option helpful for both
+    // Only show biggerFirst on addition
     $("biggerFirstWrap").style.display = (mode === "add") ? "flex" : "none";
 
     const qs = [];
     const seen = new Set();
     let guard = 0;
 
-    while(qs.length < 8 && guard < 12000){
+    while(qs.length < 8 && guard < 15000){
       guard++;
 
       let q = (mode === "add")
@@ -378,6 +437,11 @@
     }
   }
 
+  // actions
+  $("btnGen").addEventListener("click", build);
+  $("btnPrint").addEventListener("click", () => window.print());
+
+  // rebuild on changes
   ["mode","min","max","prefill","allowTwoDigit","biggerFirst"].forEach(id=>{
     $(id).addEventListener("change", build);
   });
