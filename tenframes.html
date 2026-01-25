@@ -3,66 +3,49 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Add and Subtract Using Ten Frames</title>
+<title>Ten Frame Generator</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
-  :root{
-    --ink:#111;
-    --line:#6f6f6f;
-    --bg:#fff;
-  }
-
   *{ box-sizing:border-box; }
   html, body{
     margin:0;
     padding:0;
-    background:var(--bg);
-    color:var(--ink);
-    font-family:"Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    font-family:Poppins, Arial, sans-serif;
+    background:#fff;
+    color:#111;
     overflow-x:hidden;
   }
 
   .wrap{
-    width:100%;
     max-width: 900px;
     margin: 0 auto;
-    padding: 10px 10px 14px;
+    padding: 12px;
   }
 
-  /* Controls (hidden on print) */
+  /* Controls */
   .controls{
-    border:2px solid var(--ink);
-    border-radius:14px;
+    border:2px solid #111;
+    border-radius:12px;
     padding:10px;
-    margin-bottom:10px;
-    width:100%;
+    margin-bottom:12px;
   }
-  .controlsRow{
+  .controls-row{
     display:flex;
     flex-wrap:wrap;
     gap:10px 12px;
     align-items:flex-end;
   }
-  .field{
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-    min-width: 150px;
-  }
+  .field{ display:flex; flex-direction:column; gap:4px; }
   label{ font-size:12px; font-weight:800; }
-  select, input{
-    height:34px;
-    border:2px solid var(--ink);
+  select,input{
+    height:36px;
+    border:2px solid #111;
     border-radius:10px;
     padding:6px 10px;
-    font-family:"Poppins", sans-serif;
+    font-family:Poppins;
     font-size:14px;
-    width: 170px;
-    background:#fff;
   }
   .check{
     display:flex;
@@ -70,27 +53,17 @@
     gap:8px;
     font-size:13px;
     font-weight:700;
-    margin-top: 2px;
     user-select:none;
   }
-  .check input{ width:18px; height:18px; }
-
-  .btns{
-    display:flex;
-    gap:10px;
-    margin-left:auto;
-    flex-wrap:wrap;
-  }
   button{
-    height:36px;
-    border:2px solid var(--ink);
+    height:38px;
+    padding:0 16px;
+    border:2px solid #111;
     border-radius:10px;
-    padding:0 14px;
-    font-family:"Poppins", sans-serif;
     font-weight:900;
-    cursor:pointer;
     background:#111;
     color:#fff;
+    cursor:pointer;
   }
   button.secondary{
     background:#fff;
@@ -98,118 +71,95 @@
   }
 
   /* Sheet */
-  .sheet{
-    width:100%;
-    background:#fff;
-  }
-
   .title{
     text-align:center;
-    font-size:28px;   /* smaller */
+    font-size:32px;
     font-weight:900;
-    margin: 2px 0 8px;
+    margin:6px 0 10px;
   }
 
-  /* 8 problems: 2 columns x 4 rows */
   .table{
-    width:100%;
-    border:1.5px solid var(--line);
+    border:2px solid #777;
   }
   .row{
     display:grid;
     grid-template-columns: 1fr 1fr;
-    width:100%;
   }
 
-  /* CENTER EACH PROBLEM + TIGHTER */
-  .cellBox{
-    border-right:1.5px solid var(--line);
-    border-bottom:1.5px solid var(--line);
-    padding: 8px 8px 8px;      /* tighter */
-    min-height: 175px;         /* smaller */
+  /* BIGGER PROBLEM AREA */
+  .cell{
+    border-right:2px solid #777;
+    border-bottom:2px solid #777;
+    min-height: 215px;
+    padding: 10px;
     display:flex;
     flex-direction:column;
-    align-items:center;        /* centers the content */
-    justify-content:flex-start;
-    gap:8px;
-    overflow:hidden;
+    align-items:center;
+    gap:10px;
   }
-  .row .cellBox:last-child{ border-right:none; }
-  .table .row:last-child .cellBox{ border-bottom:none; }
+  .row .cell:last-child{ border-right:none; }
+  .table .row:last-child .cell{ border-bottom:none; }
 
   .expr{
-    font-size:22px;            /* smaller */
+    font-size:24px;
     font-weight:900;
-    letter-spacing:.2px;
-    margin:0;
-    text-align:center;         /* centered */
-    width:100%;
+    text-align:center;
+    line-height:1.1;
   }
   .blank{
     display:inline-block;
-    width:92px;
-    border-bottom:3px solid var(--ink);
+    width:105px;
+    border-bottom:3px solid #111;
     transform: translateY(-3px);
   }
 
-  /* frames centered + smaller */
+  /* BIGGER TEN FRAMES */
   .frames{
     display:grid;
-    gap:8px;
-    width: 220px;              /* smaller */
-    max-width: 220px;
-    margin: 0 auto;
+    gap:10px;
+    width: 260px;
   }
-
   .tenframe{
-    width:100%;
+    border:2px solid #777;
   }
-
-  .tfGrid{
+  .tfgrid{
     display:grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    border:1.5px solid var(--line);
-    width:100%;
   }
 
-  /* SMALLER CELLS */
-  .tfCell{
-    border:1.5px solid var(--line);
-    width:100%;
-    height:28px;               /* key: forces compact frames */
+  /* Bigger cell height = bigger frames */
+  .tfcell{
+    border:2px solid #777;
+    height: 40px;
     display:flex;
     align-items:center;
     justify-content:center;
     position:relative;
-    overflow:hidden;
   }
 
-  /* Cross-out */
+  /* Cross out */
   .cross::before, .cross::after{
     content:"";
     position:absolute;
     width:86%;
     height:3px;
-    background:var(--ink);
-    left:7%;
+    background:#111;
     top:50%;
-    transform-origin:center;
+    left:7%;
   }
-  .cross::before{ transform:translateY(-50%) rotate(45deg); }
-  .cross::after{ transform:translateY(-50%) rotate(-45deg); }
+  .cross::before{ transform:rotate(45deg); }
+  .cross::after{ transform:rotate(-45deg); }
 
   .footer{
     text-align:center;
     font-size:12px;
     font-weight:800;
-    margin-top:8px;
+    margin-top:10px;
   }
 
   @media print{
-    .controls{ display:none !important; }
-    .wrap{ max-width:none; padding:0; }
-    .title{ margin-top:0; }
+    .controls{ display:none; }
+    .wrap{ padding:0; }
   }
 </style>
 </head>
@@ -218,9 +168,9 @@
 <div class="wrap">
 
   <div class="controls">
-    <div class="controlsRow">
+    <div class="controls-row">
       <div class="field">
-        <label for="mode">Operation</label>
+        <label>Operation</label>
         <select id="mode">
           <option value="add">Addition</option>
           <option value="sub">Subtraction</option>
@@ -228,254 +178,142 @@
       </div>
 
       <div class="field">
-        <label for="minVal">Lowest #</label>
-        <input id="minVal" type="number" min="0" max="20" value="0">
+        <label>Lowest #</label>
+        <input id="min" type="number" value="0" min="0" max="20">
       </div>
 
       <div class="field">
-        <label for="maxVal">Highest # (≤20)</label>
-        <input id="maxVal" type="number" min="1" max="20" value="20">
+        <label>Highest #</label>
+        <input id="max" type="number" value="20" min="1" max="20">
       </div>
 
-      <div class="field">
-        <label>Ten-frame model</label>
-        <div class="check">
-          <input id="prefillFirst" type="checkbox" checked>
-          <label for="prefillFirst">Prefill first number in the ten frames</label>
-        </div>
+      <div class="check">
+        <input id="prefill" type="checkbox" checked>
+        <label for="prefill">Prefill first number</label>
       </div>
 
-      <div class="field" id="subModeWrap" style="display:none;">
-        <label for="subDisplay">Subtraction display</label>
-        <select id="subDisplay">
-          <option value="crossOut">Cross out on top frames + answer frames</option>
-          <option value="prefillOnly">Prefill minuend only (no cross-out)</option>
-        </select>
-      </div>
-
-      <div class="btns">
-        <button id="btnGen" type="button">Generate 8</button>
-        <button class="secondary" id="btnPrint" type="button">Print</button>
-      </div>
+      <button type="button" onclick="build()">Generate</button>
+      <button type="button" class="secondary" onclick="window.print()">Print</button>
     </div>
   </div>
 
-  <div class="sheet">
-    <div class="title">Add and Subtract Using Ten Frames</div>
-    <div class="table" id="table"></div>
-    <div class="footer">Copyright - Generated from InterventionStation.com - @TeachWithMrC</div>
-  </div>
+  <div class="title">Add and Subtract Using Ten Frames</div>
 
+  <div class="table" id="table"></div>
+
+  <div class="footer">Copyright - Generated from InterventionStation.com - @TeachWithMrC</div>
 </div>
 
 <script>
-  const $ = (id) => document.getElementById(id);
+  function r(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+  function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
 
-  function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
-  function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
-
-  function normalizeBounds(){
-    let lo = clamp(parseInt($("minVal").value || "0",10), 0, 20);
-    let hi = clamp(parseInt($("maxVal").value || "20",10), 1, 20);
-    if (hi < lo) [lo,hi] = [hi,lo];
-    $("minVal").value = lo;
-    $("maxVal").value = hi;
-    return { lo, hi };
-  }
-
-  function violatesNoMaxAddend(a,b,hi){ return a === hi || b === hi; }
-
-  function makeAddition(lo,hi){
-    for (let t=0;t<220;t++){
-      const a = randInt(6,9);
-      const bMin = Math.max(1, 11 - a);
-      const bMax = Math.min(9, hi - a);
-      if (bMin > bMax) continue;
-
-      const b = randInt(bMin, bMax);
-      const sum = a + b;
-
-      if (sum < lo || sum > hi) continue;
-      if (violatesNoMaxAddend(a,b,hi)) continue;
-
-      return { a, b, ans: sum };
-    }
-    return { a:9, b:4, ans:13 };
-  }
-
-  function makeSubtraction(lo,hi){
-    for (let t=0;t<260;t++){
-      const a = randInt(Math.max(11, lo, 1), hi);
-      const bMin = Math.max(1, (a-10)+1);
-      const bMax = Math.min(9, a-1);
-      if (bMin > bMax) continue;
-
-      const b = randInt(bMin, bMax);
-      const ans = a - b;
-
-      if (ans < lo || ans > hi) continue;
-      return { a, b, ans };
-    }
-    return { a:15, b:7, ans:8 };
-  }
-
-  function dotBooleans(n){
-    n = clamp(n, 0, 20);
+  function dots(n){
+    n = clamp(n,0,20);
     const f1 = Array(10).fill(false);
     const f2 = Array(10).fill(false);
-    const first = Math.min(10, n);
-    for (let i=0;i<first;i++) f1[i] = true;
-    const rest = Math.max(0, n-10);
-    for (let i=0;i<rest;i++) f2[i] = true;
+    for(let i=0;i<Math.min(10,n);i++) f1[i]=true;
+    for(let i=0;i<Math.max(0,n-10);i++) f2[i]=true;
     return [f1,f2];
   }
 
-  // SVG CIRCLE DOT (print-safe)
-  function makeDotSVG(){
-    const ns = "http://www.w3.org/2000/svg";
-    const svg = document.createElementNS(ns,"svg");
+  function dotSVG(){
+    const ns="http://www.w3.org/2000/svg";
+    const svg=document.createElementNS(ns,"svg");
     svg.setAttribute("viewBox","0 0 100 100");
-    svg.style.width = "70%";
-    svg.style.height = "70%";
-    const c = document.createElementNS(ns,"circle");
+    svg.style.width="88%";
+    svg.style.height="88%";
+    const c=document.createElementNS(ns,"circle");
     c.setAttribute("cx","50");
     c.setAttribute("cy","50");
-    c.setAttribute("r","36");
+    c.setAttribute("r","44");
     c.setAttribute("fill","#111");
     svg.appendChild(c);
     return svg;
   }
 
-  function buildTenFrame(frameDotsBool, crossSet = null){
-    const frame = document.createElement("div");
-    frame.className = "tenframe";
+  function frame(arr){
+    const ten=document.createElement("div");
+    ten.className="tenframe";
+    const g=document.createElement("div");
+    g.className="tfgrid";
 
-    const grid = document.createElement("div");
-    grid.className = "tfGrid";
+    arr.forEach((on)=>{
+      const cell=document.createElement("div");
+      cell.className="tfcell";
+      if(on) cell.appendChild(dotSVG());
+      g.appendChild(cell);
+    });
 
-    for (let i=0;i<10;i++){
-      const cell = document.createElement("div");
-      cell.className = "tfCell";
-
-      if (frameDotsBool[i]){
-        cell.appendChild(makeDotSVG());
-        if (crossSet && crossSet.has(i)) cell.classList.add("cross");
-      }
-      grid.appendChild(cell);
-    }
-
-    frame.appendChild(grid);
-    return frame;
+    ten.appendChild(g);
+    return ten;
   }
 
-  function buildProblemCell(q){
-    const { mode, a, b, ans } = q;
-    const prefillFirst = $("prefillFirst").checked;
-    const subDisplay = $("subDisplay").value;
+  function makeAdd(max){
+    // make-a-ten friendly
+    for(let t=0;t<300;t++){
+      const a=r(6,9);
+      const b=r(Math.max(1,11-a),9);
+      const s=a+b;
+      if(s<=max && a!==max && b!==max) return {a,b};
+    }
+    return {a:9,b:4};
+  }
 
-    const cell = document.createElement("div");
-    cell.className = "cellBox";
+  function build(){
+    const mode=document.getElementById("mode").value;
+    const min=+document.getElementById("min").value;
+    const max=+document.getElementById("max").value;
+    const prefill=document.getElementById("prefill").checked;
 
-    const op = (mode==="add") ? "+" : "−";
-    const expr = document.createElement("div");
-    expr.className = "expr";
-    expr.innerHTML = `${a} ${op} ${b} = <span class="blank"></span>`;
-    cell.appendChild(expr);
+    const table=document.getElementById("table");
+    table.innerHTML="";
 
-    const framesWrap = document.createElement("div");
-    framesWrap.className = "frames";
-
-    if (mode === "add"){
-      if (prefillFirst){
-        const [a1,a2] = dotBooleans(a);
-        framesWrap.appendChild(buildTenFrame(a1));
-        framesWrap.appendChild(buildTenFrame(a2));
-      } else {
-        framesWrap.appendChild(buildTenFrame(Array(10).fill(false)));
-        framesWrap.appendChild(buildTenFrame(Array(10).fill(false)));
+    const qs=[];
+    while(qs.length<8){
+      if(mode==="add"){
+        const {a,b}=makeAdd(max);
+        qs.push({a,b});
+      }else{
+        const a=r(11,max);
+        const b=r(Math.max(1,a-9),9);
+        const ans=a-b;
+        if(ans<min) continue;
+        qs.push({a,b});
       }
-    } else {
-      const [m1,m2] = dotBooleans(a);
+    }
 
-      if (prefillFirst){
-        if (subDisplay === "crossOut"){
-          const [ans1, ans2] = dotBooleans(ans);
+    for(let row=0; row<4; row++){
+      const rowEl=document.createElement("div");
+      rowEl.className="row";
 
-          const cross1 = new Set();
-          const cross2 = new Set();
-          for (let k = a - b; k < a; k++){
-            if (k < 10) cross1.add(k);
-            else cross2.add(k - 10);
-          }
+      [qs[row*2], qs[row*2+1]].forEach(q=>{
+        const cell=document.createElement("div");
+        cell.className="cell";
 
-          framesWrap.appendChild(buildTenFrame(m1, cross1));
-          framesWrap.appendChild(buildTenFrame(m2, cross2));
-          framesWrap.appendChild(buildTenFrame(ans1));
-          framesWrap.appendChild(buildTenFrame(ans2));
-        } else {
-          framesWrap.appendChild(buildTenFrame(m1));
-          framesWrap.appendChild(buildTenFrame(m2));
+        cell.innerHTML = `<div class="expr">${q.a} ${mode==="add"?"+":"−"} ${q.b} = <span class="blank"></span></div>`;
+
+        const fs=document.createElement("div");
+        fs.className="frames";
+
+        if(prefill){
+          const [a1,a2]=dots(q.a);
+          fs.appendChild(frame(a1));
+          fs.appendChild(frame(a2));
+        }else{
+          fs.appendChild(frame(Array(10).fill(false)));
+          fs.appendChild(frame(Array(10).fill(false)));
         }
-      } else {
-        framesWrap.appendChild(buildTenFrame(Array(10).fill(false)));
-        framesWrap.appendChild(buildTenFrame(Array(10).fill(false)));
-      }
-    }
 
-    cell.appendChild(framesWrap);
-    return cell;
-  }
+        cell.appendChild(fs);
+        rowEl.appendChild(cell);
+      });
 
-  function buildSheet(){
-    const {lo,hi} = normalizeBounds();
-    const mode = $("mode").value;
-
-    const qs = [];
-    const seen = new Set();
-    let guard = 0;
-
-    while (qs.length < 8 && guard < 1000){
-      guard++;
-
-      const q = (mode==="add") ? makeAddition(lo,hi) : makeSubtraction(lo,hi);
-      const key = (mode==="add") ? `${q.a}+${q.b}` : `${q.a}-${q.b}`;
-
-      if (mode==="add"){
-        const key2 = `${q.b}+${q.a}`;
-        if (seen.has(key) || seen.has(key2)) continue;
-        if (violatesNoMaxAddend(q.a,q.b,hi)) continue;
-      } else {
-        if (seen.has(key)) continue;
-      }
-
-      seen.add(key);
-      qs.push({ mode, ...q });
-    }
-
-    const table = $("table");
-    table.innerHTML = "";
-
-    for (let r=0; r<4; r++){
-      const row = document.createElement("div");
-      row.className = "row";
-      row.appendChild(buildProblemCell(qs[r*2]));
-      row.appendChild(buildProblemCell(qs[r*2 + 1]));
-      table.appendChild(row);
+      table.appendChild(rowEl);
     }
   }
 
-  function syncUI(){
-    const mode = $("mode").value;
-    $("subModeWrap").style.display = (mode==="sub") ? "" : "none";
-    buildSheet();
-  }
-
-  $("btnGen").addEventListener("click", buildSheet);
-  $("btnPrint").addEventListener("click", () => window.print());
-  $("mode").addEventListener("change", syncUI);
-  ["minVal","maxVal","prefillFirst","subDisplay"].forEach(id => $(id).addEventListener("change", buildSheet));
-
-  syncUI();
+  build();
 </script>
 </body>
 </html>
