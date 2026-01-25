@@ -1,654 +1,1392 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ten Frame Addition/Subtraction Generator</title>
-
-  <!-- Poppins -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-
-  <style>
-    :root{
-      --ink:#111;
-      --line:#111;
-      --soft:#f6f7fb;
-      --accent:#6EC1FF;
-    }
-
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
-      font-family:"Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--ink);
-      background:#fff;
-    }
-
-    .wrap{
-      max-width:1100px;
-      margin:0 auto;
-      padding:18px 16px 28px;
-    }
-
-    .header{
-      border:2px solid var(--line);
-      border-radius:14px;
-      overflow:hidden;
-      margin-bottom:14px;
-    }
-    .headerTop{
-      background:var(--accent);
-      padding:14px 16px;
-    }
-    .headerTop h1{
-      margin:0;
-      font-size:22px;
-      font-weight:800;
-      color:#fff;
-      letter-spacing:.3px;
-    }
-    .headerBody{
-      padding:14px 16px 16px;
-      background:#fff;
-    }
-
-    .controls{
-      display:grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap:10px;
-      align-items:end;
-    }
-
-    .field{
-      grid-column: span 3;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      min-width:0;
-    }
-    .field.wide{ grid-column: span 6; }
-    .field.small{ grid-column: span 2; }
-    .field label{
-      font-size:12px;
-      font-weight:600;
-    }
-    select, input[type="number"]{
-      height:38px;
-      border:2px solid var(--line);
-      border-radius:10px;
-      padding:6px 10px;
-      font-family:"Poppins", sans-serif;
-      font-size:14px;
-      outline:none;
-      background:#fff;
-      width:100%;
-    }
-
-    .checks{
-      grid-column: span 12;
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px 16px;
-      margin-top:6px;
-      padding-top:10px;
-      border-top:1px solid #e7e7e7;
-    }
-    .check{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      font-size:13px;
-    }
-    .check input{ width:18px; height:18px; }
-
-    .actions{
-      grid-column: span 12;
-      display:flex;
-      gap:10px;
-      margin-top:10px;
-    }
-    button{
-      height:40px;
-      border:2px solid var(--line);
-      border-radius:10px;
-      background:#fff;
-      font-family:"Poppins", sans-serif;
-      font-weight:800;
-      padding:0 14px;
-      cursor:pointer;
-    }
-    button.primary{
-      background:#111;
-      color:#fff;
-    }
-
-    /* Page (print area) */
-    .sheet{
-      border:2px solid var(--line);
-      border-radius:14px;
-      padding:14px 14px 10px;
-      background:#fff;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px 14px;
-      margin-top:6px;
-    }
-
-    .q{
-      border:2px solid var(--line);
-      border-radius:14px;
-      padding:10px 10px 8px;
-      min-height:138px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-
-    .qTop{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:10px;
-    }
-
-    .expr{
-      font-size:18px;
-      font-weight:800;
-      line-height:1.1;
-      white-space:nowrap;
-    }
-    .blank{
-      display:inline-block;
-      border-bottom:2px solid var(--line);
-      width:80px;
-      transform: translateY(-2px);
-    }
-
-    .frames{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:8px;
-    }
-
-    .tenframe{
-      border:2px solid var(--line);
-      border-radius:10px;
-      padding:6px;
-    }
-    .tfGrid{
-      display:grid;
-      grid-template-columns: repeat(5, 1fr);
-      grid-template-rows: repeat(2, 1fr);
-      gap:6px;
-    }
-    .cell{
-      border:2px solid var(--line);
-      border-radius:8px;
-      aspect-ratio: 1 / 1;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .dot{
-      width:70%;
-      height:70%;
-      border-radius:999px;
-      background:#111;
-    }
-
-    /* “Added” dots for addition (second addend) */
-    .dot.add{
-      background:#111;
-      outline:3px solid #fff; /* subtle differentiation but still b/w */
-      outline-offset:-2px;
-    }
-
-    /* Cross-out for subtraction */
-    .cross::before, .cross::after{
-      content:"";
-      position:absolute;
-      width:90%;
-      height:3px;
-      background:#111;
-      left:5%;
-      top:50%;
-      transform-origin:center;
-    }
-    .cross::before{ transform:translateY(-50%) rotate(45deg); }
-    .cross::after{ transform:translateY(-50%) rotate(-45deg); }
-
-    .footer{
-      margin-top:10px;
-      font-size:11px;
-      text-align:center;
-      border-top:2px solid var(--line);
-      padding-top:8px;
-      font-weight:600;
-    }
-
-    /* Print */
-    @media print{
-      body{ background:#fff; }
-      .header{ display:none; }
-      .wrap{ padding:0; margin:0; max-width:none; }
-      .sheet{ border:none; border-radius:0; padding:0; }
-      .q{ break-inside:avoid; }
-      button, select, input{ display:none !important; }
-    }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="header">
-      <div class="headerTop">
-        <h1>Ten Frame Addition / Subtraction Generator</h1>
-      </div>
-      <div class="headerBody">
-        <div class="controls">
-          <div class="field">
-            <label for="mode">Operation</label>
-            <select id="mode">
-              <option value="add">Addition</option>
-              <option value="sub">Subtraction</option>
-            </select>
-          </div>
-
-          <div class="field small">
-            <label for="minVal">Lowest #</label>
-            <input id="minVal" type="number" min="0" max="20" value="0"/>
-          </div>
-
-          <div class="field small">
-            <label for="maxVal">Highest #</label>
-            <input id="maxVal" type="number" min="1" max="20" value="20"/>
-          </div>
-
-          <div class="field wide">
-            <label>Defaults (recommended)</label>
-            <div style="font-size:12px; line-height:1.3;">
-              Addition defaults to <b>crossing 10</b> (make-a-ten). Subtraction defaults to <b>crossing 10</b> (like 15−7) and avoids easy ones (like 16−3).
-            </div>
-          </div>
-
-          <div class="checks">
-            <div class="check">
-              <input id="preferMakeTen" type="checkbox" checked />
-              <label for="preferMakeTen">Prefer “make-a-ten / cross 10” problems</label>
-            </div>
-
-            <div class="check" id="addPrefillWrap">
-              <input id="addPrefill" type="checkbox" checked />
-              <label for="addPrefill">Addition: show first number filled + show added dots</label>
-            </div>
-
-            <div class="check" id="subPrefillWrap" style="display:none;">
-              <input id="subPrefill" type="checkbox" checked />
-              <label for="subPrefill">Subtraction: show minuend filled</label>
-            </div>
-
-            <div class="check" id="subCrossWrap" style="display:none;">
-              <input id="subCross" type="checkbox" checked />
-              <label for="subCross">Subtraction: cross out the dots being taken away</label>
-            </div>
-          </div>
-
-          <div class="actions">
-            <button class="primary" id="btnGen">Generate 10 Questions</button>
-            <button id="btnPrint">Print</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sheet" id="sheet">
-      <div class="grid" id="grid"></div>
-      <div class="footer">Copyright - Generated from InterventionStation.com - @TeachWithMrC</div>
-    </div>
-  </div>
-
-  <script>
-    const $ = (id) => document.getElementById(id);
-
-    const modeEl = $("mode");
-    const minEl = $("minVal");
-    const maxEl = $("maxVal");
-
-    const preferMakeTenEl = $("preferMakeTen");
-
-    const addPrefillEl = $("addPrefill");
-    const subPrefillEl = $("subPrefill");
-    const subCrossEl  = $("subCross");
-
-    const addPrefillWrap = $("addPrefillWrap");
-    const subPrefillWrap = $("subPrefillWrap");
-    const subCrossWrap   = $("subCrossWrap");
-
-    const gridEl = $("grid");
-
-    function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
-    function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
-    function shuffle(arr){
-      for (let i = arr.length - 1; i > 0; i--){
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
-
-    function normalizeBounds(){
-      let lo = clamp(parseInt(minEl.value || "0", 10), 0, 20);
-      let hi = clamp(parseInt(maxEl.value || "20", 10), 1, 20);
-      if (hi < lo) [lo, hi] = [hi, lo];
-      minEl.value = lo;
-      maxEl.value = hi;
-      return { lo, hi };
-    }
-
-    // Rule: no "max + anything" (e.g., 20 + __) and also avoid "__ + max"
-    function violatesNoMaxAddend(a, b, hi){
-      return (a === hi || b === hi);
-    }
-
-    // Build “make-a-ten friendly” addition:
-    // - Prefer a in 6..9 and b so that a+b crosses 10 (if possible) and <= hi.
-    function makeAddition(lo, hi, preferMakeTen){
-      // Attempt several times to satisfy constraints.
-      for (let t = 0; t < 60; t++){
-        let a, b;
-
-        if (preferMakeTen && hi >= 11){
-          a = randInt(6, 9);
-          // Need b so that sum crosses 10: b >= (11 - a)
-          const bMin = Math.max(1, 11 - a);
-          const bMax = Math.min(hi - a, 9); // keep b reasonable
-          if (bMin > bMax) continue;
-          b = randInt(bMin, bMax);
-        } else {
-          a = randInt(Math.max(lo, 0), hi - 1);
-          b = randInt(Math.max(lo, 0), hi - a);
-          if (b === 0) b = 1;
-        }
-
-        const sum = a + b;
-        if (sum < lo || sum > hi) continue;
-        if (violatesNoMaxAddend(a, b, hi)) continue;
-        if (a < 0 || b < 0) continue;
-
-        return { a, b, ans: sum };
-      }
-
-      // Fallback: pick any safe pair with sum <= hi and neither addend == hi
-      for (let t = 0; t < 200; t++){
-        const a = randInt(0, hi - 1);
-        const b = randInt(1, Math.max(1, hi - a));
-        const sum = a + b;
-        if (sum >= lo && sum <= hi && !violatesNoMaxAddend(a, b, hi)){
-          return { a, b, ans: sum };
-        }
-      }
-
-      // Absolute fallback
-      return { a: 8, b: 4, ans: 12 };
-    }
-
-    // Build “crossing 10” subtraction:
-    // Choose minuend m (>=11) and subtrahend s such that:
-    // - 0 <= m-s
-    // - Prefer crossing 10: s > (m - 10)
-    // This naturally avoids 16-3 (since 3 <= 6).
-    function makeSubtraction(lo, hi, preferMakeTen){
-      for (let t = 0; t < 80; t++){
-        const mMin = Math.max(1, lo, preferMakeTen ? 11 : lo);
-        const m = randInt(mMin, hi);
-
-        let sMin = 1;
-        let sMax = m - 1;
-
-        if (preferMakeTen && m >= 11){
-          sMin = Math.max(1, (m - 9));    // keeps result <=9 (like 15-7 -> 8)
-          sMax = Math.min(9, m - 1);      // keep s in 1..9 by default
-          // must cross 10:
-          sMin = Math.max(sMin, (m - 10) + 1);
-        }
-
-        if (sMin > sMax) continue;
-
-        const s = randInt(sMin, sMax);
-        const d = m - s;
-
-        if (d < 0) continue;
-        if (d < lo || d > hi) continue;
-
-        return { a: m, b: s, ans: d };
-      }
-
-      // Fallback: any valid subtraction within bounds
-      for (let t = 0; t < 200; t++){
-        const m = randInt(lo, hi);
-        const s = randInt(1, Math.max(1, m));
-        const d = m - s;
-        if (d >= lo && d <= hi && d >= 0){
-          return { a: m, b: s, ans: d };
-        }
-      }
-
-      return { a: 15, b: 7, ans: 8 };
-    }
-
-    // Ten-frame rendering helpers
-    function dotsForNumber(n){
-      // Return two arrays of 10 booleans each (frame1, frame2) where true=dot.
-      const f1 = Array(10).fill(false);
-      const f2 = Array(10).fill(false);
-      const clamped = clamp(n, 0, 20);
-
-      const first = Math.min(10, clamped);
-      for (let i = 0; i < first; i++) f1[i] = true;
-
-      const rest = Math.max(0, clamped - 10);
-      for (let i = 0; i < rest; i++) f2[i] = true;
-
-      return [f1, f2];
-    }
-
-    function buildTenFrame(frameDots, opts){
-      // opts: { addedIdx:Set, crossedIdx:Set }
-      const wrap = document.createElement("div");
-      wrap.className = "tenframe";
-
-      const grid = document.createElement("div");
-      grid.className = "tfGrid";
-
-      for (let i = 0; i < 10; i++){
-        const cell = document.createElement("div");
-        cell.className = "cell";
-
-        if (frameDots[i]){
-          const dot = document.createElement("div");
-          dot.className = "dot";
-          if (opts?.addedIdx?.has(i)) dot.classList.add("add");
-          cell.appendChild(dot);
-
-          if (opts?.crossedIdx?.has(i)) cell.classList.add("cross");
-        }
-        grid.appendChild(cell);
-      }
-
-      wrap.appendChild(grid);
-      return wrap;
-    }
-
-    function buildQuestionCard(q){
-      // q: { mode, a, b, ans, showAddPrefill, showSubPrefill, showSubCross }
-      const card = document.createElement("div");
-      card.className = "q";
-
-      const top = document.createElement("div");
-      top.className = "qTop";
-
-      const expr = document.createElement("div");
-      expr.className = "expr";
-
-      const op = q.mode === "add" ? "+" : "−";
-      expr.innerHTML = `${q.a} ${op} ${q.b} = <span class="blank"></span>`;
-      top.appendChild(expr);
-
-      card.appendChild(top);
-
-      const frames = document.createElement("div");
-      frames.className = "frames";
-
-      // Always show two frames (up to 20)
-      // Addition display:
-      // - Frame A: dots for first number (a)
-      // - Frame B: dots show full sum, but mark the "added" portion as .add (b dots after a)
-      if (q.mode === "add"){
-        if (!q.showAddPrefill){
-          // If not prefilled, just show empty frames for students to model.
-          frames.appendChild(buildTenFrame(Array(10).fill(false)));
-          frames.appendChild(buildTenFrame(Array(10).fill(false)));
-        } else {
-          const [a1, a2] = dotsForNumber(q.a);
-          frames.appendChild(buildTenFrame(a1));
-          frames.appendChild(buildTenFrame(a2));
-
-          // Second set: show sum, highlight which dots are the "b"
-          const sum = q.ans;
-          const [s1, s2] = dotsForNumber(sum);
-
-          // Determine which indices correspond to "added" dots:
-          // We'll simulate filling left-to-right; the first q.a dots are base, the next q.b are added.
-          const addedF1 = new Set();
-          const addedF2 = new Set();
-
-          const base = q.a;
-          const addCount = q.b;
-
-          // Added dots positions (0-based in 20-slot space)
-          for (let k = base; k < base + addCount; k++){
-            if (k < 10) addedF1.add(k);
-            else addedF2.add(k - 10);
-          }
-
-          frames.appendChild(buildTenFrame(s1, { addedIdx: addedF1 }));
-          frames.appendChild(buildTenFrame(s2, { addedIdx: addedF2 }));
-        }
-      }
-
-      // Subtraction display:
-      // - Show minuend filled; optionally cross out the last b dots (rightmost in fill order)
-      if (q.mode === "sub"){
-        if (!q.showSubPrefill){
-          frames.appendChild(buildTenFrame(Array(10).fill(false)));
-          frames.appendChild(buildTenFrame(Array(10).fill(false)));
-        } else {
-          const [m1, m2] = dotsForNumber(q.a);
-
-          if (!q.showSubCross){
-            frames.appendChild(buildTenFrame(m1));
-            frames.appendChild(buildTenFrame(m2));
-          } else {
-            // Build sets of crossed indices in 20-slot space (cross out the last q.b dots)
-            const crossedF1 = new Set();
-            const crossedF2 = new Set();
-
-            const startCross = q.a - q.b; // dots from here to q.a-1 get crossed
-            for (let k = startCross; k < q.a; k++){
-              if (k < 10) crossedF1.add(k);
-              else crossedF2.add(k - 10);
-            }
-
-            frames.appendChild(buildTenFrame(m1, { crossedIdx: crossedF1 }));
-            frames.appendChild(buildTenFrame(m2, { crossedIdx: crossedF2 }));
-          }
-        }
-      }
-
-      card.appendChild(frames);
-      return card;
-    }
-
-    function generate(){
-      const { lo, hi } = normalizeBounds();
-      const mode = modeEl.value;
-      const preferMakeTen = !!preferMakeTenEl.checked;
-
-      const showAddPrefill = !!addPrefillEl.checked;
-      const showSubPrefill = !!subPrefillEl.checked;
-      const showSubCross = !!subCrossEl.checked;
-
-      const questions = [];
-      const seen = new Set();
-
-      // create 10 unique-ish questions
-      let guard = 0;
-      while (questions.length < 10 && guard < 600){
-        guard++;
-
-        let q;
-        if (mode === "add"){
-          q = makeAddition(lo, hi, preferMakeTen);
-          const keyA = `${q.a}+${q.b}`;
-          const keyB = `${q.b}+${q.a}`;
-          if (seen.has(keyA) || seen.has(keyB)) continue;
-          seen.add(keyA);
-
-          questions.push({
-            mode,
-            a:q.a, b:q.b, ans:q.ans,
-            showAddPrefill
-          });
-        } else {
-          q = makeSubtraction(lo, hi, preferMakeTen);
-          const key = `${q.a}-${q.b}`;
-          if (seen.has(key)) continue;
-          seen.add(key);
-
-          questions.push({
-            mode,
-            a:q.a, b:q.b, ans:q.ans,
-            showSubPrefill,
-            showSubCross
-          });
-        }
-      }
-
-      gridEl.innerHTML = "";
-      questions.forEach(item => gridEl.appendChild(buildQuestionCard(item)));
-    }
-
-    function syncModeUI(){
-      const mode = modeEl.value;
-      if (mode === "add"){
-        addPrefillWrap.style.display = "";
-        subPrefillWrap.style.display = "none";
-        subCrossWrap.style.display = "none";
-      } else {
-        addPrefillWrap.style.display = "none";
-        subPrefillWrap.style.display = "";
-        subCrossWrap.style.display = "";
-      }
-      generate();
-    }
-
-    $("btnGen").addEventListener("click", generate);
-    $("btnPrint").addEventListener("click", () => window.print());
-
-    modeEl.addEventListener("change", syncModeUI);
-    [minEl, maxEl, preferMakeTenEl, addPrefillEl, subPrefillEl, subCrossEl].forEach(el => {
-      el.addEventListener("change", generate);
-    });
-
-    // Init
-    syncModeUI();
-  </script>
-</body>
-</html>
+ok just do every section now.....do you still have the links from the original? <p style="line-height: inherit;"></p>
+<p style="line-height: inherit;">
+  <strong
+    ><span style="font-size: 13px; font-family: Arial; color: rgb(0, 0, 0);"
+      >Phonics Skill and Link! Just open and Click "Make a Copy"!</span
+    ></strong
+  >
+</p>
+<ol style="list-style-type: decimal;">
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1z7Pr_OD9RoTUL27TpToK66h7VOCdsw0ZxfJ_oJ_1cGE/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >CVC - Short A</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/18kWC82ZvnxoWTmv1ttY1DHLiPIQfMdzfAucesUIHE1U/copy"
+        ><strong><u>CVC - Nasalized Short A</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1kZa7T018bb10Kd1k5a5hHn8aVa44gya8DUu-uzS6eZM/copy"
+        ><strong><u>CVC - Short A with Consonant Blends</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1cvKG7vm8z20Z2KGYoBnDkBwmV-Pc_Gj0f5_afNNimi8/copy"
+        ><strong><u>CVC - Short E</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1ogcoJW_C5re5TiWf5F508hhxnHWMGrq-sS_zBhgNFLY/copy"
+        ><strong><u>CVC - Short E with Consonant Blends</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1hlEAwgUyuJghVkeoUtNP87Kg7L6A5aZ5rAcZgFSzxgg/copy"
+        ><strong><u>CVC - Short I</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1HPF3MqwUf1dpBMkx6NfRQOb6Hldy13SPu8k4BOfkFFw/copy"
+        ><strong><u>CVC - Short I with Consonant Blends</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1143KHkK3PYr-di9XaqRbS0dHIwvtWHq9jTxK1aqtZFs/copy"
+        ><strong><u>CVC - Short O</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1u0dNtbl2xzQv5PKE07bOS-b7jnyr-1Fs74dKWt59NCM/copy"
+        ><strong><u>CVC - Short O with Consonant Blends</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1BA4WLcNLTzAO-aSpt_tX1VI66pbSabvx9GE5KzgYnNE/copy"
+        ><strong><u>CVC - Short U</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/153_7sMjgec6Apxgxnyc47Ga5ZpVnl-CWm3oQHP8yrUA/copy"
+        ><strong><u>CVC - Short U with Consonant Blends</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1dPnBw1rkXwGZ19QoxSuWNhxfFFQYyYZynjkZLZqEf98/copy"
+        ><strong><u>All Short Vowels Review</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1cIe-rwDEf9FJy0ermo1wv7vgL8S4IEAbjDMeJC4fy6w/copy"
+        ><strong><u>Floss Rule</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1lsiivfhdO0cj6xKp_P_jD51TqBhuuYLzwKC1i46Pgjw/copy"
+        ><strong><u>-all,-oll,-ull</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1gC1Rft9nDVHNVC_eA39VprN1vsO2qCapKDBmsEpeEvg/copy"
+        ><strong><u>Ck /k/</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1-7zvT0OfSUmYjV0pBa5fYMUbSWUhf1_dxMs1EGoU1h4/copy"
+        ><strong><u>Sh /sh/</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1VXE2LDtRuEBYOAxwcNHHaQJz5ttONOAaTIt8ZXB1kjk/copy"
+        ><strong><u>th voiced and unvoiced</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1vbB-DXgzSWo1u83ksguVAyi13u4ZsOV-MEpXNUszADE/copy"
+        ><strong><u>ch</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/11KyuFpwvZ-kpwIxG5ypqnI7vnaMVy3wpJ4CIJ7FxAEw/copy"
+        ><strong><u>Diagraph review 1</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1LNHwegBMGswkYFBvwjpRHjDfT3TTGbSkeFZORoESEtQ/copy"
+        ><strong><u>Wh, ph</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1eEzV6Kfiw3LGK4O6igpMdZQdIQ0VVW3HtKrW0hTC0Hc/copy"
+        ><strong><u>ng</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1to1NtIjfkbCInSy7RtuNu0y_FDwmcAWnDQpMaB97PUc/copy"
+        ><strong><u>nk</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1d7GriShYpBKoOH4KTMh2hAgECjqVBCyX4wSNPvnT9lg/copy"
+        ><strong><u>Diagraph review 2</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1n2luLWfgJ66JnrOcNv4eFsTBczqQX-2IPEssJeU3r10/%20copy"
+        ><strong><u>a_e</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1YZuOXeOyzPGh-m0wyoK8MNGb6_inVF36DRPkFTLKBvY/copy"
+        ><strong><u>i_e</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1Hkb6jDogN7uxSZs0d2ZnOMQ9XZkvm9JKBL1SwynkEwE/copy"
+        ><strong><u>o_e</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/13U7S6ptpJwPJlKw7jN2E0UFWuO8UFAE9LzuHUuBkbW0/copy"
+        ><strong><u>VCe Review 1</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1d81sAiSlakzaOCina_fV-MAXzJZN7JzrZ5Nzo2Zfmpk/copy"
+        ><strong><u>u_e</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1Co9P7DNXaxm4LKuryEBp-ZzWN0_hSTK6JmZ6y4MUSew/copy"
+        ><strong><u>VCe Review 2</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1W4e1ZrJTd6QHZnirxz-sxAkYFW2Am3nXz05aLR6n5q0/copy"
+        ><strong><u>_ce</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/125KaXBQnBLFuZvghju6VN7xDAFZvmwyapk_SRQpiVcI/copy"
+        ><strong><u>_ge</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1SmpUifCGh17sRwza_fsK0usE-uf5I-X2v14auENPi0A/copy"
+        ><strong><u>VCe Review 3</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1q7roQdL9bwZ73GDQxob4Jw2Vs8F4E3Hxrz09CHTD1Qc/copy"
+        ><strong><u>-es</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/148HwzYvWvIKT4FTGd9zoTfInnkN0ay5wm447w55dRmA/copy"
+        ><strong><u>-ed</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1M9erAh4M4N8xpwj9NKPgA3_dFTbEVIiyxKYZHljtQtk/copy"
+        ><strong><u>-ing</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/13uv4lf1tDS1_pclbiwB1SCQN7q7DcMk8W5nE78kqOLg/copy"
+        ><strong><u>Closed &amp; Open Syllables</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1Fb0rBG6zm4lLvDn2-pddxbjSKZG8-wIwVJbg3fioJIA/copy"
+        ><strong><u>Compound Words</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1C6JoPvPJid0MbrWxxAfK3aQwmZXgyemlvJ-rGP37Eik/copy"
+        ><strong><u>Open/Closed</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1zED4hBiUwwZ6kbicIGX1aun7mYNZYCR6_pf1G7LXO78/copy"
+        ><strong><u>tch</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1IUooNHXDxb-fDbxEpPe4PtQ37_sCe25vtqsaEi7ZWqI/copy"
+        ><strong><u>dge</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1wutaXqhG011Peupu3_9hbz5ui6Of6qqedDhJn-iERrM/copy"
+        ><strong><u>Tch, dge review</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1IzAHiNfhUcZH4eS7Og5CNW5gC1cP1aaayhRyVvY9Ivc/copy"
+        ><strong><u>Long vcc</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/15DcC8JxAyIF5AHtkodZeWYTQLq0U6u7kIpStEpZSZ7E/copy"
+        ><strong><u>Y /i/</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1x4UbyXP2TSXhO1xf1_-w2I53YvwYUeKE2YSz2UwXFCQ/copy"
+        ><strong><u>Y /e/</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1xMMLRcsFDd_whAetxklmxlXa9zHVMKXXs6gTyYJbnV0/copy"
+        ><strong><u>-le</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/12YCGdckZoRytQX6XCMj3HJNtVDHh3-bBU-0Wv5f_i5c/copy"
+        ><strong><u>Ending pattern review</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1rnRQfZcv88QAyj9HP0kUqKHBw0wWWZvafRjm-jwIYlc/copy"
+        ><strong><u>Ar /ar/</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1uGTw_WhD9BMxH2MB5N9KmZkpOFg-kfERzwTU0GaI9DE/copy"
+        ><strong><u>Or, ore /or/</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1_hG2-xaLBqtXa6OKV5WXEIsZNHDdy1qdfLDM8El-nWQ/copy"
+        ><strong><u>Ar, or, ore review</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1o7U16_7rda3lTYymr756JuJ5WF9B6PPS7Jg7seDCLAg/copy"
+        ><strong><u>Er /er/</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/166YZE5kYM_3DgVKbzUoSc-sJbPW9gFh2tcsnLj1DzFU/copy"
+        ><strong><u>Ir, ur /er/</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1MCu9rklwCVxDdUiV7WptoJEx-Qjd-gGmQev0q22JLJ8/copy"
+        ><strong><u>Spelling /er/: er, ir, ur, w + or</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1Nj_NMD4KyilZeSi0D_H_NgrlCeo3EVy-6SWPAC50W6s/copy"
+        ><strong><u>R-controlled Vowel Review</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1LB83DQIzpDRUSEHq5gS2SCkg7Y4Z91NieMUHdIUYosA/copy"
+        ><strong><u>ai,ay</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/15vWciYNWAdFby9XK5sD2CEhFog9NEz9WAi4aAr6Dchk/copy"
+        ><strong><u>Ee, ea</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="waffle-rich-text-link"
+        href="https://docs.google.com/presentation/d/1kMhd5IeTjM8cXvlOi4Ft0i_d2ClKQpjGRCoenWkEFKI/copy"
+        ><strong><u>Oa, ow, oe</u></strong></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/113xsYxfnQfZTzo_IY3sWqqTSkGKNGCphCqGo30uSbPI/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Ie, igh</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1cEehit5u6A9uPC2zSQCzm4D5I-uRKuKMcf1GDvGEMM0/copy"
+        ><strong
+          ><span style="font-size: 13px; font-family: Arial;"
+            >Vowel Team Review 1</span
+          ></strong
+        ></a
+      ><strong
+        ><span style="font-size: 13px; font-family: Arial;">
+          (ay, ai, ee, ea, oa, ow, oe, ie and igh)</span
+        ></strong
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1_N1FqpPKHIDzgdx-ZTGaoW4ovu19X_8_r9LwmPRWcss/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Oo, u /oo/</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1rffFuUcdPm6V5APQk9QmRauzR7tH9mmHyvUijoJ_xS8/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Oo - Long u</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1-Wg2T6N_hsmm6a9OMKpcODAs91Jc3GPQfLeHiVK9xsk/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Ew, ui, ue /u/</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1DMwhziV2U-vJyVpXpSyjwiU9bsBYOlGIbYG3OwI0Wao/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Vowel Teams Review 2</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1n7zUY_jy-e1Y0MCHC4rdS-4vcTRi3yzLyM6-QIdsnAs/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Au, aw,
+            </span></u
+          ></strong
+        ></a
+      ><strong
+        ><u
+          ><span
+            style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+            >l</span
+          ></u
+        ></strong
+      ><a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1n7zUY_jy-e1Y0MCHC4rdS-4vcTRi3yzLyM6-QIdsnAs/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >augh</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1595yIRA2I_MhSeNg7OQZ4yV4x6T_RSOnaAJeNmIzAh0/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Ea /e/, a /o/</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1Cl2aaFCEZuxQuSPX74Rk2G9wtk4zeJ9ltynb4Mo9ocs/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Oi,oy /oi/</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1r9d1QUU7smJuNN07SOr3QA5mLFKyFmvmbl8bevomfdA/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Ou,ow /ow/</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1yKAsFd5cz5rWcVQlfjMElzZmOPM9D2E1HYJXH24Ul7g/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Vowel team and dipthongs Review</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1LJfvVQxZh3jDPf1t2H6I7DY0oM6gK_XkUtNPnIPiL2c/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Kn /n/, wr /r/, mb /m/</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/14xMmX4SIYp4SqVftrngYqMCh2iovlSdl_vR_NN6Kfrs/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >-s/es</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1b2JJcEG4QRBWYxy2qJPKHCG6G7Fd2yFbfat-xOzSR9c/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >-er/est</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/13vYzQ4LpfNL9QQaJhOZARFuIKbeQQ2Q7HwhP_ouIPYU/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >-ly</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1c-QPB4RYN0xYhLRhDiwheyi0GR8YZtPH0kZkRtJndnw/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >-less, -ful</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1IZxw1eA5EsKfHCSsveVe0W-3gg8qRrB9OKEpYkSPE9Y/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >un-</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1EHJpcUmpTP0njs9tTyj0wuOe9xpY3JK1ytDUePzN_EY/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Pre-, re-</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1XHZ7sMlbFyPUeFkP00Bclw6j7xC3bB_12Ci3ywL3z6U/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >dis-</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1tVGzunTWCj6mT79HGnbJeScDDYrKFvsYkLC3r3p990s/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Affixes Review 1</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/19LsEfR3G0YpHiut-qNSb46YJpDtDZtbRhKnAtMKx6Rk/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Doubling Rule -ed, -ing</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1kuC2sX9885tDx6nV9VEpZmUtMydYimFfo1pawuo9ajk/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Doubling Rule -er, -est</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1fqoiE3ZauNzaJk9lgLFeyOIwFRDUWjmkiHP5yz5VNgU/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Drop -e rule</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1xCiXdG1OtYBj3otFbKDSUBYY4NaW841fhS_T4wRXOYI/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >-y to i rule</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1AEyQR9_SK5JadJPAyIxqzaGPRB17hflQcGCJ2AW4Wao/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >-ar, -or /er/</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1lxECovBb8fPPpkZ-kbAVacqtS-auhSxMshlNbxfeIAo/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Air, are, ear /air/</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1DvWTvC6tb15QP2iIDgAkXSFSlBvzI-DUp4tVxfj1G8I/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Ear /ear/</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1YuHgDTHm7h3o1ZKuL2JRhKCn33jE1QWLR-M4hfDcnTc/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Alternate /a/ (ei, ey, eigh, aigh, ea)</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1G6zblmRByEs4egpRBqbHk6C1i-M9Ii1-PAXdHOeasUc/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Alternate long U (ew, eu, ue /yu/; ou /u/)</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1wzli85mi23vOJLHC_cSDSpObM0cKhTUQjiubvHpuwCU/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Ough /aw/, /o/</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/10CSluoJQrgDfd5gcEwAIKcAVcLKpw0YLg7_Z94ti3QA/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Soft C and G</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1wLZ5CcU-tFgbPsU_YZ_QMylNuTt1BtxBacMBnwpf6OA/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >-sion, -tion</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1aE_iB12dLpCd4F3RTJVpaVPJ9Da1cq18L26G_wVl7hs/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >-ture</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/18cgnpIeNElPVD5j3FApetW2TLxjfTAyAzSLbNw1kb04/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >-er, -or, ist</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1w1rnlUwxkNjRyQszILFB-GsDbtsFAGKpZo87fqa4Khk/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >-ish</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1YLfWbOxLbTDpTZ99YXf72FeQyr-lGtQdlYPP2BI-_z4/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >-y</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1Xlb-QfA9o-ks4AdmCm_HXBsU1PCDSBtLFr-rO-JmaOg/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >-ness</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1VpC667IM0y5fUjYokkasgTdG-beI5qRJPsQGVl9tZ0Q/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >-ment</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1gMyCnoiYrP-Ns6-K0IKVEMlpK5hAphDffiLRo23Yxa4/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >-able, -ible</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/19Ij94Z59geiBSpkelp8zT8PjyF9YKXy_oSTm3DbpXLo/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Uni-, bi-, tri</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+  <li>
+    <p style="line-height: inherit;">
+      <a
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        class="in-cell-link"
+        href="https://docs.google.com/presentation/d/1BovwYWhKG2a75Cfi_FIKL_vCDm-loO26L8MEmRJUk1w/copy"
+        ><strong
+          ><u
+            ><span
+              style="font-size: 13px; font-family: Arial; color: rgb(17, 85, 204);"
+              >Affixes Review 2</span
+            ></u
+          ></strong
+        ></a
+      >
+    </p>
+  </li>
+</ol>
