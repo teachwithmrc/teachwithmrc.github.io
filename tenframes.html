@@ -17,7 +17,7 @@
   }
   .wrap{ max-width:980px; margin:0 auto; padding:12px; }
 
-  /* ========= TOP MENU (TABS) ========= */
+  /* ========= TOP MENU ========= */
   .menu{
     display:flex;
     gap:10px;
@@ -36,40 +36,35 @@
     color:#111;
     user-select:none;
   }
-  .tab.active{
-    background:#111;
-    color:#fff;
-  }
+  .tab.active{ background:#111; color:#fff; }
 
-  /* ========= CONTROLS ========= */
+  /* ========= CONTROLS (SIMPLE) ========= */
   .controls{
     border:2px solid #111;
     border-radius:12px;
     padding:12px;
     margin-bottom:12px;
   }
-
-  /* Line 1 */
   .controls-top{
     display:flex;
     flex-wrap:wrap;
     gap:12px;
     align-items:flex-end;
-    justify-content:flex-start;
+    justify-content:center;
   }
   .field{
     display:flex;
     flex-direction:column;
     gap:6px;
-    min-width:190px;
+    min-width:200px;
   }
   .field label{
     font-size:12px;
     font-weight:800;
   }
-  select, input{
-    height:40px;
-    min-width:190px;
+  input{
+    height:42px;
+    min-width:200px;
     border:2px solid #111;
     border-radius:10px;
     padding:8px 12px;
@@ -77,35 +72,20 @@
     font-size:14px;
     background:#fff;
   }
-
-  /* Line 2 */
-  .controls-checks{
-    margin-top:10px;
-    display:flex;
-    flex-wrap:wrap;
-    gap:18px;
-    align-items:center;
-  }
-  .check{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-size:16px;
-    font-weight:800;
-    user-select:none;
-    margin:0;
-    padding:0;
-    line-height:1;
-  }
-  .check input{
-    width:22px;
-    height:22px;
-    margin:0;
-    padding:0;
-    accent-color:#111;
+  input:disabled{
+    opacity:0.65;
+    background:#f5f5f5;
+    cursor:not-allowed;
   }
 
-  /* Big centered buttons */
+  .hint{
+    width:100%;
+    text-align:center;
+    font-size:13px;
+    font-weight:700;
+    margin-top:6px;
+  }
+
   .controls-actions{
     margin-top:12px;
     display:flex;
@@ -115,7 +95,7 @@
   }
   button{
     height:52px;
-    padding:0 26px;
+    padding:0 28px;
     border:2px solid #111;
     border-radius:14px;
     font-weight:900;
@@ -138,7 +118,7 @@
     margin:6px 0 10px;
   }
 
-  /* Black outlines everywhere */
+  /* Black outlines */
   .table{ border:2px solid #111; }
   .row{ display:grid; grid-template-columns:1fr 1fr; }
 
@@ -174,8 +154,6 @@
     gap:10px;
     width:235px;
   }
-  .frames.one{ width:235px; }
-  .frames.two{ width:235px; } /* same width; 2 frames stacked */
   .tenframe{ border:2px solid #111; }
   .tfgrid{
     display:grid;
@@ -187,22 +165,7 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    position:relative;
   }
-
-  /* Optional cross-out overlay (sub within 10) */
-  .cross::before, .cross::after{
-    content:"";
-    position:absolute;
-    width:86%;
-    height:3px;
-    background:#111;
-    top:50%;
-    left:7%;
-    transform-origin:center;
-  }
-  .cross::before{ transform:translateY(-50%) rotate(45deg); }
-  .cross::after{  transform:translateY(-50%) rotate(-45deg); }
 
   .footer{
     text-align:center;
@@ -221,67 +184,36 @@
 <body>
 <div class="wrap">
 
-  <!-- TOP MENU -->
+  <!-- TOP MENU (ORDER YOU REQUESTED) -->
   <div class="menu" id="menu">
-    <div class="tab active" data-skill="over10_add">Add: Over 10 (to 20)</div>
-    <div class="tab" data-skill="within10_add">Add: Within 10</div>
+    <div class="tab active" data-skill="within10_add">Add: Within 10</div>
     <div class="tab" data-skill="within10_sub">Subtract: Within 10</div>
+    <div class="tab" data-skill="over10_add">Add: Over 10 (to 20)</div>
+    <div class="tab" data-skill="over10_sub">Subtract: Over 10 (to 20)</div>
   </div>
 
-  <!-- CONTROLS -->
+  <!-- SIMPLE CONTROLS -->
   <div class="controls">
-    <!-- LINE 1 -->
     <div class="controls-top">
       <div class="field">
-        <label for="op">Operation</label>
-        <select id="op">
-          <option value="add">Addition</option>
-          <option value="sub">Subtraction</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="min">Lowest # (first number)</label>
+        <label for="min">Lowest #</label>
         <input id="min" type="number" value="0" min="0" max="20">
       </div>
-
       <div class="field">
-        <label for="max">Highest # (first number)</label>
-        <input id="max" type="number" value="20" min="1" max="20">
+        <label for="max">Highest #</label>
+        <input id="max" type="number" value="10" min="1" max="20">
       </div>
     </div>
 
-    <!-- LINE 2 -->
-    <div class="controls-checks">
-      <label class="check">
-        <input id="prefill" type="checkbox" checked>
-        Prefill
-      </label>
+    <div class="hint" id="hintText">Within 10 is locked to 0–10.</div>
 
-      <label class="check" id="allowTwoDigitWrap">
-        <input id="allowTwoDigit" type="checkbox">
-        Allow 2-digit
-      </label>
-
-      <label class="check" id="biggerFirstWrap">
-        <input id="biggerFirst" type="checkbox" checked>
-        Bigger number first
-      </label>
-
-      <label class="check" id="crossOutWrap" style="display:none;">
-        <input id="crossOut" type="checkbox" checked>
-        Show cross-out
-      </label>
-    </div>
-
-    <!-- BUTTONS -->
     <div class="controls-actions">
       <button type="button" id="btnGen">Generate</button>
       <button type="button" class="secondary" id="btnPrint">Print</button>
     </div>
   </div>
 
-  <div class="title" id="sheetTitle">Add and Subtract Using Ten Frames</div>
+  <div class="title" id="sheetTitle">Add Within 10 Using Ten Frames</div>
   <div class="table" id="table"></div>
   <div class="footer">Copyright - Generated from InterventionStation.com - @TeachWithMrC</div>
 
@@ -290,23 +222,23 @@
 <script>
   const $ = (id) => document.getElementById(id);
 
-  // ====== State (selected tab) ======
-  let SKILL = "over10_add";
+  // ====== State ======
+  let SKILL = "within10_add";
 
   function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
   function r(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
 
   function normalizeBounds(){
     let lo = clamp(parseInt($("min").value || "0",10), 0, 20);
-    let hi = clamp(parseInt($("max").value || "20",10), 1, 20);
+    let hi = clamp(parseInt($("max").value || "10",10), 1, 20);
     if (hi < lo) [lo,hi] = [hi,lo];
     $("min").value = lo;
     $("max").value = hi;
     return { lo, hi };
   }
 
-  // Convert number into two frames of 10 booleans (works for 0..20)
-  function dots(n){
+  // Ten-frame fill (0..20) across two frames
+  function dots20(n){
     n = clamp(n,0,20);
     const f1 = Array(10).fill(false);
     const f2 = Array(10).fill(false);
@@ -314,8 +246,7 @@
     for(let i=0;i<Math.max(0,n-10);i++) f2[i]=true;
     return [f1,f2];
   }
-
-  // One-frame booleans (0..10)
+  // One-frame fill (0..10)
   function dots10(n){
     n = clamp(n,0,10);
     const f = Array(10).fill(false);
@@ -323,7 +254,7 @@
     return f;
   }
 
-  // SVG dot (print-safe)
+  // SVG dot (prints reliably)
   function dotSVG(){
     const ns="http://www.w3.org/2000/svg";
     const svg=document.createElementNS(ns,"svg");
@@ -339,266 +270,224 @@
     return svg;
   }
 
-  function buildFrame(arrBool, crossSet){
+  function buildFrame(arrBool){
     const ten = document.createElement("div");
     ten.className = "tenframe";
     const g = document.createElement("div");
     g.className = "tfgrid";
-
     for(let i=0;i<10;i++){
       const cell = document.createElement("div");
       cell.className = "tfcell";
-      if(arrBool[i]){
-        cell.appendChild(dotSVG());
-        if(crossSet && crossSet.has(i)) cell.classList.add("cross");
-      }
+      if(arrBool[i]) cell.appendChild(dotSVG());
       g.appendChild(cell);
     }
     ten.appendChild(g);
     return ten;
   }
 
-  // ====== Uniqueness Keys ======
+  // No duplicates (commutative for addition)
   function keyFor(mode, a, b){
     if(mode === "add"){
       const x = Math.min(a,b);
       const y = Math.max(a,b);
-      return `A:${x}+${y}`; // no commutative duplicates
+      return `A:${x}+${y}`;
     }
     return `S:${a}-${b}`;
   }
 
   // ====== Problem generators ======
 
-  // Add: Over 10 (to 20)
-  // Defaults: single-digit addends (unless allowTwoDigit)
-  // Always sum > 10, sum <= 20, avoid 20 + anything by default usage pattern.
-  function gen_over10_add(lo, hi, allowTwoDigit){
-    for(let t=0; t<8000; t++){
-      let a,b;
-
-      if(!allowTwoDigit){
-        a = r(6,9);
-        b = r(1,9);
-        if(a < lo || a > hi) continue;
-      } else {
-        a = r(lo, hi);
-        b = r(1,9);
-      }
-
-      const sum = a + b;
-      if(sum <= 10) continue;
-      if(sum > 20) continue;
-
-      // guardrail: avoid "18+2" style by default (already prevented when !allowTwoDigit)
-      if(!allowTwoDigit && (a > 9 || b > 9)) continue;
-
-      return { a, b };
-    }
-    return { a:9, b:4 };
-  }
-
-  // Add: Within 10
-  // One ten frame, two single-digit addends, sum <= 10
+  // Add within 10: sum <= 10, not all zeros
   function gen_within10_add(){
-    for(let t=0; t<12000; t++){
-      const a = r(0,9);
-      const b = r(0,9);
-      const sum = a + b;
-      if(sum > 10) continue;
-      // avoid too many "0 + 0"
-      if(a === 0 && b === 0) continue;
-      return { a, b };
+    for(let t=0;t<12000;t++){
+      const a=r(0,9);
+      const b=r(0,9);
+      const s=a+b;
+      if(s>10) continue;
+      if(a===0 && b===0) continue;
+      return {a,b};
     }
-    return { a:5, b:3 };
+    return {a:5,b:3};
   }
 
-  // Subtract: Within 10
-  // One ten frame showing the first number (a), subtract b (<=a), result >=0
+  // Sub within 10: a<=10, b<=a, avoid too many equal pairs
   function gen_within10_sub(){
-    for(let t=0; t<12000; t++){
-      const a = r(1,10);
-      const b = r(0, a);
-      if(a === 0) continue;
-      if(a === b) continue; // avoid all-crossed / zero too often
-      return { a, b };
+    for(let t=0;t<12000;t++){
+      const a=r(1,10);
+      const b=r(0,a);
+      if(a===b) continue;
+      return {a,b};
     }
-    return { a:9, b:4 };
+    return {a:9,b:4};
   }
 
-  // ====== Build the worksheet ======
-  function build(){
-    const { lo, hi } = normalizeBounds();
+  // Add over 10 to 20: DEFAULT single-digit addends, sum > 10, sum <= 20
+  // Avoids junk like 18+2 by default by keeping both addends single-digit.
+  function gen_over10_add(lo, hi){
+    for(let t=0;t<20000;t++){
+      // Focused make-a-ten style: first addend 6..9
+      let a=r(6,9);
+      if(a<lo || a>hi) continue;
+      let b=r(1,9);
 
-    // Determine mode + rows + frames based on tab
-    let mode = "add";
-    let rows = 4;              // default: 8 problems
-    let framesCount = 2;       // default: two frames
-    let title = "Add and Subtract Using Ten Frames";
+      // keep "bigger number first" automatically
+      if(b>a) [a,b]=[b,a];
 
-    if(SKILL === "over10_add"){
-      mode = "add";
-      rows = 4;          // 8 problems
-      framesCount = 2;
-      title = "Add Over 10 (to 20) Using Ten Frames";
+      const s=a+b;
+      if(s<=10) continue;
+      if(s>20) continue;
+
+      return {a,b};
     }
-    if(SKILL === "within10_add"){
-      mode = "add";
-      rows = 5;          // 10 problems
-      framesCount = 1;
-      title = "Add Within 10 Using Ten Frames";
-    }
-    if(SKILL === "within10_sub"){
-      mode = "sub";
-      rows = 5;          // 10 problems
-      framesCount = 1;
-      title = "Subtract Within 10 Using Ten Frames";
-    }
-
-    $("sheetTitle").textContent = title;
-
-    // Sync operation dropdown to match tab (so it’s obvious)
-    $("op").value = mode;
-
-    // Show/hide controls per skill
-    const isAdd = (mode === "add");
-    $("biggerFirstWrap").style.display = (isAdd ? "flex" : "none");
-    $("allowTwoDigitWrap").style.display = (SKILL === "over10_add" ? "flex" : "none");
-    $("crossOutWrap").style.display = (SKILL === "within10_sub" ? "flex" : "none");
-
-    const prefill = $("prefill").checked;
-    const allowTwoDigit = $("allowTwoDigit").checked;
-    const biggerFirst = $("biggerFirst").checked;
-    const showCross = $("crossOut").checked;
-
-    // For within-10 pages, min/max aren’t needed — but we’ll keep them harmless.
-    // For over-10 page, min/max apply to FIRST number only (as we set up earlier).
-    if(SKILL !== "over10_add"){
-      // keep bounds safe but not restrictive
-      $("min").value = 0;
-      $("max").value = 20;
-    }
-
-    const totalProblems = rows * 2;
-
-    // Generate with uniqueness
-    const qs = [];
-    const seen = new Set();
-    let guard = 0;
-
-    while(qs.length < totalProblems && guard < 40000){
-      guard++;
-
-      let q;
-      if(SKILL === "over10_add") q = gen_over10_add(lo, hi, allowTwoDigit);
-      if(SKILL === "within10_add") q = gen_within10_add();
-      if(SKILL === "within10_sub") q = gen_within10_sub();
-
-      let a = q.a, b = q.b;
-
-      // Bigger number first affects ADDITION display (and therefore what gets prefilled)
-      if(isAdd && biggerFirst && b > a){
-        [a,b] = [b,a];
-      }
-
-      const k = keyFor(mode, a, b);
-      if(seen.has(k)) continue;
-      seen.add(k);
-
-      qs.push({ a, b });
-    }
-
-    // Render table
-    const table = $("table");
-    table.innerHTML = "";
-
-    for(let row=0; row<rows; row++){
-      const rowEl = document.createElement("div");
-      rowEl.className = "row";
-
-      const left = qs[row*2];
-      const right = qs[row*2+1];
-
-      rowEl.appendChild(buildCell(mode, left.a, left.b, prefill, framesCount, showCross));
-      rowEl.appendChild(buildCell(mode, right.a, right.b, prefill, framesCount, showCross));
-
-      table.appendChild(rowEl);
-    }
+    return {a:9,b:4};
   }
 
-  function buildCell(mode, a, b, prefill, framesCount, showCross){
-    const cell = document.createElement("div");
-    cell.className = "cell";
+  // Sub over 10 to 20: DEFAULT teen first number, subtract 1..9, usually crosses 10
+  function gen_over10_sub(lo, hi){
+    for(let t=0;t<25000;t++){
+      // keep a in 11..hi (and within bounds)
+      const a=r(Math.max(11,lo), Math.max(11,hi));
+      if(a>hi) continue;
 
-    const op = (mode === "add") ? "+" : "−";
-    cell.innerHTML = `<div class="expr">${a} ${op} ${b} = <span class="blank"></span></div>`;
+      // Prefer crossing 10: b > a-10 (e.g., 15-7)
+      const bMin=Math.max(1,(a-10)+1);
+      const bMax=Math.min(9,a-1);
+      if(bMin>bMax) continue;
+      const b=r(bMin,bMax);
 
-    const fs = document.createElement("div");
-    fs.className = "frames " + (framesCount === 1 ? "one" : "two");
+      return {a,b};
+    }
+    return {a:15,b:7};
+  }
 
-    if(framesCount === 2){
-      // Over 10 page: show two frames representing FIRST number (a) if prefill
-      if(prefill){
-        const [a1,a2] = dots(a);
-        fs.appendChild(buildFrame(a1));
-        fs.appendChild(buildFrame(a2));
-      } else {
-        fs.appendChild(buildFrame(Array(10).fill(false)));
-        fs.appendChild(buildFrame(Array(10).fill(false)));
-      }
-    } else {
-      // Within 10 pages: one frame
-      if(prefill){
-        const frameBool = dots10(a);
-        if(mode === "sub" && showCross){
-          // cross out the last b dots (from the end of the filled set)
-          const cross = new Set();
-          for(let i=a-b; i<a; i++){
-            if(i >= 0 && i < 10) cross.add(i);
-          }
-          fs.appendChild(buildFrame(frameBool, cross));
-        } else {
-          fs.appendChild(buildFrame(frameBool));
-        }
-      } else {
-        fs.appendChild(buildFrame(Array(10).fill(false)));
-      }
+  // ====== Render cell ======
+  function buildCell(mode, a, b, framesCount){
+    const cell=document.createElement("div");
+    cell.className="cell";
+
+    const op=(mode==="add")?"+":"−";
+    cell.innerHTML=`<div class="expr">${a} ${op} ${b} = <span class="blank"></span></div>`;
+
+    const fs=document.createElement("div");
+    fs.className="frames";
+
+    // Prefill is ALWAYS on (simpler UX)
+    if(framesCount===2){
+      const [f1,f2]=dots20(a);
+      fs.appendChild(buildFrame(f1));
+      fs.appendChild(buildFrame(f2));
+    }else{
+      fs.appendChild(buildFrame(dots10(a)));
     }
 
     cell.appendChild(fs);
     return cell;
   }
 
-  // ====== Menu handling ======
+  // ====== Build worksheet ======
+  function build(){
+    let { lo, hi } = normalizeBounds();
+
+    // Configure per tab: rows/frames/title + lock bounds for within 10
+    let mode="add";
+    let rows=5;        // within-10 pages default to 10 problems
+    let frames=1;
+    let title="";
+
+    const within10 = (SKILL==="within10_add" || SKILL==="within10_sub");
+
+    if(within10){
+      // Lock bounds to 0..10 (teacher shouldn’t have to think about it)
+      lo=0; hi=10;
+      $("min").value=0;
+      $("max").value=10;
+      $("min").disabled=true;
+      $("max").disabled=true;
+      $("hintText").textContent="Within 10 is locked to 0–10.";
+    }else{
+      $("min").disabled=false;
+      $("max").disabled=false;
+      $("hintText").textContent="Over 10 uses your Lowest/Highest as the FIRST number range (up to 20).";
+    }
+
+    if(SKILL==="within10_add"){
+      mode="add"; rows=5; frames=1;
+      title="Add Within 10 Using Ten Frames";
+    } else if(SKILL==="within10_sub"){
+      mode="sub"; rows=5; frames=1;
+      title="Subtract Within 10 Using Ten Frames";
+    } else if(SKILL==="over10_add"){
+      mode="add"; rows=4; frames=2;  // 8 problems fits best with 2 frames
+      title="Add Over 10 (to 20) Using Ten Frames";
+    } else if(SKILL==="over10_sub"){
+      mode="sub"; rows=4; frames=2;  // 8 problems fits best with 2 frames
+      title="Subtract Over 10 (to 20) Using Ten Frames";
+    }
+
+    $("sheetTitle").textContent=title;
+
+    // Generate unique problems
+    const total=rows*2;
+    const seen=new Set();
+    const qs=[];
+    let guard=0;
+
+    while(qs.length<total && guard<50000){
+      guard++;
+
+      let q;
+      if(SKILL==="within10_add") q=gen_within10_add();
+      if(SKILL==="within10_sub") q=gen_within10_sub();
+      if(SKILL==="over10_add")   q=gen_over10_add(lo,hi);
+      if(SKILL==="over10_sub")   q=gen_over10_sub(lo,hi);
+
+      let a=q.a, b=q.b;
+      const k=keyFor(mode,a,b);
+      if(seen.has(k)) continue;
+      seen.add(k);
+
+      qs.push({a,b});
+    }
+
+    // Render
+    const table=$("table");
+    table.innerHTML="";
+
+    for(let i=0;i<rows;i++){
+      const row=document.createElement("div");
+      row.className="row";
+
+      const left=qs[i*2], right=qs[i*2+1];
+      row.appendChild(buildCell(mode,left.a,left.b,frames));
+      row.appendChild(buildCell(mode,right.a,right.b,frames));
+      table.appendChild(row);
+    }
+  }
+
+  // ====== Tabs ======
   function setSkill(skill){
-    SKILL = skill;
+    SKILL=skill;
     document.querySelectorAll(".tab").forEach(t=>{
-      t.classList.toggle("active", t.dataset.skill === skill);
+      t.classList.toggle("active", t.dataset.skill===skill);
     });
     build();
   }
 
-  $("menu").addEventListener("click", (e)=>{
-    const tab = e.target.closest(".tab");
+  $("menu").addEventListener("click",(e)=>{
+    const tab=e.target.closest(".tab");
     if(!tab) return;
     setSkill(tab.dataset.skill);
   });
 
   // Buttons
-  $("btnGen")?.addEventListener("click", build);
-  $("btnPrint")?.addEventListener("click", () => window.print());
-
-  // Controls trigger rebuild
-  ["prefill","allowTwoDigit","biggerFirst","crossOut","min","max"].forEach(id=>{
-    const el = $(id);
-    if(el) el.addEventListener("change", build);
-  });
-
-  // Make sure top action buttons exist
   $("btnGen").addEventListener("click", build);
-  $("btnPrint").addEventListener("click", () => window.print());
+  $("btnPrint").addEventListener("click", ()=>window.print());
 
-  // Initial build
+  // Only min/max changes matter (on over-10 tabs)
+  $("min").addEventListener("change", build);
+  $("max").addEventListener("change", build);
+
+  // Initial
   build();
 </script>
 </body>
