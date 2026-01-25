@@ -18,6 +18,7 @@
 
   .wrap{ max-width:900px; margin:0 auto; padding:12px; }
 
+  /* CONTROLS */
   .controls{
     border:2px solid #111; border-radius:12px;
     padding:10px; margin-bottom:12px;
@@ -49,17 +50,22 @@
   }
   button.secondary{ background:#fff; color:#111; }
 
+  /* SHEET */
   .title{
-    text-align:center; font-size:30px; font-weight:900;
+    text-align:center;
+    font-size:28px;            /* slightly smaller for print */
+    font-weight:900;
     margin:6px 0 10px;
   }
 
-  .table{ border:2px solid #777; }
+  /* BLACK OUTLINES (no gray) */
+  .table{ border:2px solid #111; }
   .row{ display:grid; grid-template-columns:1fr 1fr; }
+
   .cell{
-    border-right:2px solid #777;
-    border-bottom:2px solid #777;
-    min-height:200px;
+    border-right:2px solid #111;
+    border-bottom:2px solid #111;
+    min-height:190px;          /* slightly smaller */
     padding:10px;
     display:flex; flex-direction:column;
     align-items:center; gap:10px;
@@ -68,29 +74,43 @@
   .table .row:last-child .cell{ border-bottom:none; }
 
   .expr{
-    font-size:23px; font-weight:900;
-    text-align:center; line-height:1.1;
+    font-size:22px;            /* slightly smaller */
+    font-weight:900;
+    text-align:center;
+    line-height:1.1;
   }
   .blank{
     display:inline-block;
-    width:100px;
+    width:95px;
     border-bottom:3px solid #111;
     transform: translateY(-3px);
   }
 
-  .frames{ display:grid; gap:10px; width:245px; }
-  .tenframe{ border:2px solid #777; }
-  .tfgrid{ display:grid; grid-template-columns:repeat(5,1fr); }
+  /* TEN FRAMES */
+  .frames{
+    display:grid;
+    gap:10px;
+    width:235px;               /* smaller = prints safer */
+  }
+  .tenframe{ border:2px solid #111; }
+  .tfgrid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+  }
   .tfcell{
-    border:2px solid #777;
-    height:37px;                 /* slightly smaller */
-    display:flex; align-items:center; justify-content:center;
+    border:2px solid #111;
+    height:34px;               /* smaller for print, not tiny */
+    display:flex;
+    align-items:center;
+    justify-content:center;
     position:relative;
   }
 
   .footer{
-    text-align:center; font-size:12px;
-    font-weight:800; margin-top:10px;
+    text-align:center;
+    font-size:12px;
+    font-weight:800;
+    margin-top:10px;
   }
 
   @media print{
@@ -105,7 +125,6 @@
 
   <div class="controls">
     <div class="controls-row">
-
       <div class="field">
         <label>Operation</label>
         <select id="mode">
@@ -124,17 +143,14 @@
         <input id="max" type="number" value="20" min="1" max="20">
       </div>
 
-      <div class="field">
-        <label>Problem Focus</label>
-        <select id="focus">
-          <option value="mixed">Mixed (includes small-first-number)</option>
-          <option value="make10">Make-a-ten focus (more cross-10)</option>
-        </select>
-      </div>
-
       <div class="check">
         <input id="prefill" type="checkbox" checked>
         <label for="prefill">Prefill first number</label>
+      </div>
+
+      <div class="check" id="allowTwoDigitWrap">
+        <input id="allowTwoDigit" type="checkbox">
+        <label for="allowTwoDigit">Allow 2-digit first number (default OFF)</label>
       </div>
 
       <div class="check" id="biggerFirstWrap">
@@ -178,6 +194,7 @@
     return [f1,f2];
   }
 
+  // SVG circle dot (prints reliably)
   function dotSVG(){
     const ns="http://www.w3.org/2000/svg";
     const svg=document.createElementNS(ns,"svg");
@@ -213,103 +230,126 @@
     if(mode === "add"){
       const x = Math.min(a,b);
       const y = Math.max(a,b);
-      return `A:${x}+${y}`; // avoid commutative dupes
+      return `A:${x}+${y}`; // no commutative duplicates
     }
-    return `S:${a}-${b}`;
+    return `S:${a}-${b}`;   // no exact duplicates
   }
 
-  function violatesNoMaxAddend(a,b,hi){
-    // your rule: don't let the MAX be used as an addend (e.g., 20 + anything)
-    return a === hi || b === hi;
+  function buildProblemCell(mode, a, b, prefill){
+    const cell = document.createElement("div");
+    cell.className = "cell";
+
+    const op = (mode === "add") ? "+" : "−";
+    cell.innerHTML = `<div class="expr">${a} ${op} ${b} = <span class="blank"></span></div>`;
+
+    const fs = document.createElement("div");
+    fs.className = "frames";
+
+    if(prefill){
+      const [a1,a2] = dots(a);
+      fs.appendChild(frame(a1));
+      fs.appendChild(frame(a2));
+    } else {
+      fs.appendChild(frame(Array(10).fill(false)));
+      fs.appendChild(frame(Array(10).fill(false)));
+    }
+
+    cell.appendChild(fs);
+    return cell;
   }
 
-  // Addition generator:
-  // - "first number" is what prints in the ten frames (a)
-  // - focus controls whether we bias to cross-10 or not
-  function makeAdd(lo,hi,focus){
-    for(let t=0;t<1200;t++){
-      let a,b;
+  // ===== NEW DEFAULT RULES =====
+  // ADDITION DEFAULT:
+  // - two single-digit numbers (1..9) ONLY (prevents 18+2)
+  // - sum MUST be > 10 (always)
+  // - still "make-a-ten-ish": a is biased to 6..9
+  // OPTIONAL:
+  // - if Allow 2-digit first number is ON, a can be 0..20 within bounds
+  function makeAddition(lo, hi, allowTwoDigit){
+    for(let t=0; t<4000; t++){
+      let a, b;
 
-      if(focus === "make10"){
-        // favor 6-9 to encourage make-a-ten
-        a = r(Math.max(lo,6), Math.min(hi,9));
-        const bMin = Math.max(1, 11 - a);
-        const bMax = 9;
-        if(bMin > bMax) continue;
-        b = r(bMin, bMax);
+      if(!allowTwoDigit){
+        a = r(6,9);       // bias toward make-a-ten
+        b = r(1,9);
       } else {
-        // mixed: allow small a too
-        a = r(lo, hi);
-        b = r(1, 9);
+        a = r(lo, hi);    // teacher explicitly allows it
+        b = r(1,9);
       }
 
       const sum = a + b;
 
-      // keep sum reasonable for ten-frame work (max 20)
+      // must be > 10 always
+      if(sum <= 10) continue;
+
+      // keep within 20 for ten-frame logic
       if(sum > 20) continue;
 
-      // respect "no max addend" rule ONLY when hi is 20 (your main concern)
-      if(hi === 20 && violatesNoMaxAddend(a,b,hi)) continue;
+      // apply bounds to FIRST number only
+      if(a < lo || a > hi) continue;
+
+      // if allowTwoDigit is OFF, force a to be single-digit too
+      if(!allowTwoDigit && a > 9) continue;
 
       return { a, b, ans: sum };
     }
-    return { a:5, b:1, ans:6 };
+
+    // fallback
+    return { a:9, b:4, ans:13 };
   }
 
-  // Subtraction generator:
-  // - first number (a) must be within [lo, hi]
-  // - keep b 1..9, and keep answer >=0
-  // - in make10 focus, bias to crossing 10
-  function makeSub(lo,hi,focus){
-    for(let t=0;t<1400;t++){
-      let a,b;
+  // SUBTRACTION DEFAULT (kept teacher-friendly):
+  // - first number respects bounds
+  // - bias toward crossing 10 when possible
+  function makeSubtraction(lo, hi, allowTwoDigit){
+    for(let t=0; t<5000; t++){
+      let a, b;
 
-      a = r(lo, hi);
-      if(a < 1) continue;
+      // If allowTwoDigit is OFF, still allow 11..18 for subtraction? (it’s subtraction over 10 skill)
+      // But user’s current request is mostly addition rules; we keep subtraction reasonable.
+      a = r(Math.max(lo, 11), hi);  // keep it over 10 to match the skill
+      if(!allowTwoDigit && a > 18) continue; // keep it in the common "teen" zone unless enabled
 
-      if(focus === "make10"){
-        // bias: a at least 11 so crossing 10 is possible
-        if(a < 11) continue;
-        const bMin = Math.max(1, (a - 10) + 1);  // ensures cross 10
-        const bMax = Math.min(9, a);
-        if(bMin > bMax) continue;
-        b = r(bMin, bMax);
-      } else {
-        b = r(1, Math.min(9, a)); // mixed: can be small like 5-1
-      }
+      // pick b to (usually) cross 10: b > (a-10)
+      const bMin = Math.max(1, (a - 10) + 1);
+      const bMax = Math.min(9, a - 1);
+      if(bMin > bMax) continue;
 
+      b = r(bMin, bMax);
       const ans = a - b;
+
       if(ans < 0) continue;
 
       return { a, b, ans };
     }
-    return { a:5, b:1, ans:4 };
+
+    return { a:15, b:7, ans:8 };
   }
 
   function build(){
     const { lo, hi } = normalizeBounds();
     const mode = $("mode").value;
-    const focus = $("focus").value;
     const prefill = $("prefill").checked;
+    const allowTwoDigit = $("allowTwoDigit").checked;
     const biggerFirst = $("biggerFirst").checked;
 
-    // bigger-first only meaningful for addition
+    // Only show biggerFirst for addition; two-digit option helpful for both
     $("biggerFirstWrap").style.display = (mode === "add") ? "flex" : "none";
 
     const qs = [];
     const seen = new Set();
     let guard = 0;
 
-    while(qs.length < 8 && guard < 8000){
+    while(qs.length < 8 && guard < 12000){
       guard++;
 
       let q = (mode === "add")
-        ? makeAdd(lo,hi,focus)
-        : makeSub(lo,hi,focus);
+        ? makeAddition(lo, hi, allowTwoDigit)
+        : makeSubtraction(lo, hi, allowTwoDigit);
 
       let a = q.a, b = q.b;
 
-      // If teacher wants bigger number first, reorder only for ADDITION display/prefill
+      // Bigger number first (addition)
       if(mode === "add" && biggerFirst && b > a){
         [a,b] = [b,a];
       }
@@ -328,35 +368,17 @@
       const rowEl = document.createElement("div");
       rowEl.className = "row";
 
-      [qs[row*2], qs[row*2+1]].forEach(q=>{
-        const cell = document.createElement("div");
-        cell.className = "cell";
+      const left = qs[row*2];
+      const right = qs[row*2 + 1];
 
-        const op = (mode === "add") ? "+" : "−";
-        cell.innerHTML = `<div class="expr">${q.a} ${op} ${q.b} = <span class="blank"></span></div>`;
-
-        const fs = document.createElement("div");
-        fs.className = "frames";
-
-        // Prefill shows the FIRST number in the ten frames (q.a)
-        if(prefill){
-          const [a1,a2] = dots(q.a);
-          fs.appendChild(frame(a1));
-          fs.appendChild(frame(a2));
-        } else {
-          fs.appendChild(frame(Array(10).fill(false)));
-          fs.appendChild(frame(Array(10).fill(false)));
-        }
-
-        cell.appendChild(fs);
-        rowEl.appendChild(cell);
-      });
+      rowEl.appendChild(buildProblemCell(mode, left.a, left.b, prefill));
+      rowEl.appendChild(buildProblemCell(mode, right.a, right.b, prefill));
 
       table.appendChild(rowEl);
     }
   }
 
-  ["mode","min","max","focus","prefill","biggerFirst"].forEach(id=>{
+  ["mode","min","max","prefill","allowTwoDigit","biggerFirst"].forEach(id=>{
     $(id).addEventListener("change", build);
   });
 
