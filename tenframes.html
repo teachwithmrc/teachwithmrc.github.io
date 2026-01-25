@@ -10,151 +10,87 @@
 <style>
   *{ box-sizing:border-box; }
   html, body{
-    margin:0;
-    padding:0;
+    margin:0; padding:0;
     font-family:Poppins, Arial, sans-serif;
-    background:#fff;
-    color:#111;
+    background:#fff; color:#111;
     overflow-x:hidden;
   }
 
-  .wrap{
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 12px;
-  }
+  .wrap{ max-width:900px; margin:0 auto; padding:12px; }
 
-  /* Controls */
   .controls{
-    border:2px solid #111;
-    border-radius:12px;
-    padding:10px;
-    margin-bottom:12px;
+    border:2px solid #111; border-radius:12px;
+    padding:10px; margin-bottom:12px;
   }
   .controls-row{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px 12px;
-    align-items:flex-end;
+    display:flex; flex-wrap:wrap;
+    gap:10px 12px; align-items:flex-end;
   }
   .field{ display:flex; flex-direction:column; gap:4px; }
   label{ font-size:12px; font-weight:800; }
   select,input{
-    height:36px;
-    border:2px solid #111;
-    border-radius:10px;
-    padding:6px 10px;
-    font-family:Poppins;
-    font-size:14px;
+    height:36px; min-width:170px;
+    border:2px solid #111; border-radius:10px;
+    padding:6px 10px; font-family:Poppins;
+    background:#fff; font-size:14px;
   }
   .check{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-size:13px;
-    font-weight:700;
-    user-select:none;
+    display:flex; align-items:center; gap:8px;
+    font-size:13px; font-weight:700; user-select:none;
+    padding:6px 0 0;
   }
+  .check input{ width:18px; height:18px; }
+
   button{
-    height:38px;
-    padding:0 16px;
-    border:2px solid #111;
-    border-radius:10px;
-    font-weight:900;
-    background:#111;
-    color:#fff;
+    height:38px; padding:0 16px;
+    border:2px solid #111; border-radius:10px;
+    font-weight:900; background:#111; color:#fff;
     cursor:pointer;
   }
-  button.secondary{
-    background:#fff;
-    color:#111;
-  }
+  button.secondary{ background:#fff; color:#111; }
 
-  /* Sheet */
   .title{
-    text-align:center;
-    font-size:32px;
-    font-weight:900;
+    text-align:center; font-size:30px; font-weight:900;
     margin:6px 0 10px;
   }
 
-  .table{
-    border:2px solid #777;
-  }
-  .row{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  /* BIGGER PROBLEM AREA */
+  .table{ border:2px solid #777; }
+  .row{ display:grid; grid-template-columns:1fr 1fr; }
   .cell{
     border-right:2px solid #777;
     border-bottom:2px solid #777;
-    min-height: 215px;
-    padding: 10px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:10px;
+    min-height:200px;
+    padding:10px;
+    display:flex; flex-direction:column;
+    align-items:center; gap:10px;
   }
   .row .cell:last-child{ border-right:none; }
   .table .row:last-child .cell{ border-bottom:none; }
 
   .expr{
-    font-size:24px;
-    font-weight:900;
-    text-align:center;
-    line-height:1.1;
+    font-size:23px; font-weight:900;
+    text-align:center; line-height:1.1;
   }
   .blank{
     display:inline-block;
-    width:105px;
+    width:100px;
     border-bottom:3px solid #111;
     transform: translateY(-3px);
   }
 
-  /* BIGGER TEN FRAMES */
-  .frames{
-    display:grid;
-    gap:10px;
-    width: 260px;
-  }
-  .tenframe{
-    border:2px solid #777;
-  }
-  .tfgrid{
-    display:grid;
-    grid-template-columns: repeat(5, 1fr);
-  }
-
-  /* Bigger cell height = bigger frames */
+  .frames{ display:grid; gap:10px; width:245px; }
+  .tenframe{ border:2px solid #777; }
+  .tfgrid{ display:grid; grid-template-columns:repeat(5,1fr); }
   .tfcell{
     border:2px solid #777;
-    height: 40px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    height:37px;                 /* slightly smaller */
+    display:flex; align-items:center; justify-content:center;
     position:relative;
   }
 
-  /* Cross out */
-  .cross::before, .cross::after{
-    content:"";
-    position:absolute;
-    width:86%;
-    height:3px;
-    background:#111;
-    top:50%;
-    left:7%;
-  }
-  .cross::before{ transform:rotate(45deg); }
-  .cross::after{ transform:rotate(-45deg); }
-
   .footer{
-    text-align:center;
-    font-size:12px;
-    font-weight:800;
-    margin-top:10px;
+    text-align:center; font-size:12px;
+    font-weight:800; margin-top:10px;
   }
 
   @media print{
@@ -169,6 +105,7 @@
 
   <div class="controls">
     <div class="controls-row">
+
       <div class="field">
         <label>Operation</label>
         <select id="mode">
@@ -178,18 +115,31 @@
       </div>
 
       <div class="field">
-        <label>Lowest #</label>
+        <label>Lowest # (first number)</label>
         <input id="min" type="number" value="0" min="0" max="20">
       </div>
 
       <div class="field">
-        <label>Highest #</label>
+        <label>Highest # (first number)</label>
         <input id="max" type="number" value="20" min="1" max="20">
+      </div>
+
+      <div class="field">
+        <label>Problem Focus</label>
+        <select id="focus">
+          <option value="mixed">Mixed (includes small-first-number)</option>
+          <option value="make10">Make-a-ten focus (more cross-10)</option>
+        </select>
       </div>
 
       <div class="check">
         <input id="prefill" type="checkbox" checked>
         <label for="prefill">Prefill first number</label>
+      </div>
+
+      <div class="check" id="biggerFirstWrap">
+        <input id="biggerFirst" type="checkbox" checked>
+        <label for="biggerFirst">Bigger number first (addition)</label>
       </div>
 
       <button type="button" onclick="build()">Generate</button>
@@ -198,22 +148,33 @@
   </div>
 
   <div class="title">Add and Subtract Using Ten Frames</div>
-
   <div class="table" id="table"></div>
-
   <div class="footer">Copyright - Generated from InterventionStation.com - @TeachWithMrC</div>
+
 </div>
 
 <script>
-  function r(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
-  function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+  const $ = (id) => document.getElementById(id);
 
+  function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+  function r(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+  function normalizeBounds(){
+    let lo = clamp(parseInt($("min").value || "0",10), 0, 20);
+    let hi = clamp(parseInt($("max").value || "20",10), 1, 20);
+    if (hi < lo) [lo,hi] = [hi,lo];
+    $("min").value = lo;
+    $("max").value = hi;
+    return { lo, hi };
+  }
+
+  // Ten-frame fill (0..20) across two frames
   function dots(n){
     n = clamp(n,0,20);
     const f1 = Array(10).fill(false);
     const f2 = Array(10).fill(false);
-    for(let i=0;i<Math.min(10,n);i++) f1[i]=true;
-    for(let i=0;i<Math.max(0,n-10);i++) f2[i]=true;
+    for(let i=0;i<Math.min(10,n);i++) f1[i] = true;
+    for(let i=0;i<Math.max(0,n-10);i++) f2[i] = true;
     return [f1,f2];
   }
 
@@ -221,12 +182,12 @@
     const ns="http://www.w3.org/2000/svg";
     const svg=document.createElementNS(ns,"svg");
     svg.setAttribute("viewBox","0 0 100 100");
-    svg.style.width="88%";
-    svg.style.height="88%";
+    svg.style.width="84%";
+    svg.style.height="84%";
     const c=document.createElementNS(ns,"circle");
     c.setAttribute("cx","50");
     c.setAttribute("cy","50");
-    c.setAttribute("r","44");
+    c.setAttribute("r","43");
     c.setAttribute("fill","#111");
     svg.appendChild(c);
     return svg;
@@ -237,70 +198,152 @@
     ten.className="tenframe";
     const g=document.createElement("div");
     g.className="tfgrid";
-
     arr.forEach((on)=>{
       const cell=document.createElement("div");
       cell.className="tfcell";
       if(on) cell.appendChild(dotSVG());
       g.appendChild(cell);
     });
-
     ten.appendChild(g);
     return ten;
   }
 
-  function makeAdd(max){
-    // make-a-ten friendly
-    for(let t=0;t<300;t++){
-      const a=r(6,9);
-      const b=r(Math.max(1,11-a),9);
-      const s=a+b;
-      if(s<=max && a!==max && b!==max) return {a,b};
+  // uniqueness keys
+  function keyFor(mode, a, b){
+    if(mode === "add"){
+      const x = Math.min(a,b);
+      const y = Math.max(a,b);
+      return `A:${x}+${y}`; // avoid commutative dupes
     }
-    return {a:9,b:4};
+    return `S:${a}-${b}`;
+  }
+
+  function violatesNoMaxAddend(a,b,hi){
+    // your rule: don't let the MAX be used as an addend (e.g., 20 + anything)
+    return a === hi || b === hi;
+  }
+
+  // Addition generator:
+  // - "first number" is what prints in the ten frames (a)
+  // - focus controls whether we bias to cross-10 or not
+  function makeAdd(lo,hi,focus){
+    for(let t=0;t<1200;t++){
+      let a,b;
+
+      if(focus === "make10"){
+        // favor 6-9 to encourage make-a-ten
+        a = r(Math.max(lo,6), Math.min(hi,9));
+        const bMin = Math.max(1, 11 - a);
+        const bMax = 9;
+        if(bMin > bMax) continue;
+        b = r(bMin, bMax);
+      } else {
+        // mixed: allow small a too
+        a = r(lo, hi);
+        b = r(1, 9);
+      }
+
+      const sum = a + b;
+
+      // keep sum reasonable for ten-frame work (max 20)
+      if(sum > 20) continue;
+
+      // respect "no max addend" rule ONLY when hi is 20 (your main concern)
+      if(hi === 20 && violatesNoMaxAddend(a,b,hi)) continue;
+
+      return { a, b, ans: sum };
+    }
+    return { a:5, b:1, ans:6 };
+  }
+
+  // Subtraction generator:
+  // - first number (a) must be within [lo, hi]
+  // - keep b 1..9, and keep answer >=0
+  // - in make10 focus, bias to crossing 10
+  function makeSub(lo,hi,focus){
+    for(let t=0;t<1400;t++){
+      let a,b;
+
+      a = r(lo, hi);
+      if(a < 1) continue;
+
+      if(focus === "make10"){
+        // bias: a at least 11 so crossing 10 is possible
+        if(a < 11) continue;
+        const bMin = Math.max(1, (a - 10) + 1);  // ensures cross 10
+        const bMax = Math.min(9, a);
+        if(bMin > bMax) continue;
+        b = r(bMin, bMax);
+      } else {
+        b = r(1, Math.min(9, a)); // mixed: can be small like 5-1
+      }
+
+      const ans = a - b;
+      if(ans < 0) continue;
+
+      return { a, b, ans };
+    }
+    return { a:5, b:1, ans:4 };
   }
 
   function build(){
-    const mode=document.getElementById("mode").value;
-    const min=+document.getElementById("min").value;
-    const max=+document.getElementById("max").value;
-    const prefill=document.getElementById("prefill").checked;
+    const { lo, hi } = normalizeBounds();
+    const mode = $("mode").value;
+    const focus = $("focus").value;
+    const prefill = $("prefill").checked;
+    const biggerFirst = $("biggerFirst").checked;
 
-    const table=document.getElementById("table");
-    table.innerHTML="";
+    // bigger-first only meaningful for addition
+    $("biggerFirstWrap").style.display = (mode === "add") ? "flex" : "none";
 
-    const qs=[];
-    while(qs.length<8){
-      if(mode==="add"){
-        const {a,b}=makeAdd(max);
-        qs.push({a,b});
-      }else{
-        const a=r(11,max);
-        const b=r(Math.max(1,a-9),9);
-        const ans=a-b;
-        if(ans<min) continue;
-        qs.push({a,b});
+    const qs = [];
+    const seen = new Set();
+    let guard = 0;
+
+    while(qs.length < 8 && guard < 8000){
+      guard++;
+
+      let q = (mode === "add")
+        ? makeAdd(lo,hi,focus)
+        : makeSub(lo,hi,focus);
+
+      let a = q.a, b = q.b;
+
+      // If teacher wants bigger number first, reorder only for ADDITION display/prefill
+      if(mode === "add" && biggerFirst && b > a){
+        [a,b] = [b,a];
       }
+
+      const k = keyFor(mode, a, b);
+      if(seen.has(k)) continue;
+      seen.add(k);
+
+      qs.push({ a, b });
     }
 
+    const table = $("table");
+    table.innerHTML = "";
+
     for(let row=0; row<4; row++){
-      const rowEl=document.createElement("div");
-      rowEl.className="row";
+      const rowEl = document.createElement("div");
+      rowEl.className = "row";
 
       [qs[row*2], qs[row*2+1]].forEach(q=>{
-        const cell=document.createElement("div");
-        cell.className="cell";
+        const cell = document.createElement("div");
+        cell.className = "cell";
 
-        cell.innerHTML = `<div class="expr">${q.a} ${mode==="add"?"+":"−"} ${q.b} = <span class="blank"></span></div>`;
+        const op = (mode === "add") ? "+" : "−";
+        cell.innerHTML = `<div class="expr">${q.a} ${op} ${q.b} = <span class="blank"></span></div>`;
 
-        const fs=document.createElement("div");
-        fs.className="frames";
+        const fs = document.createElement("div");
+        fs.className = "frames";
 
+        // Prefill shows the FIRST number in the ten frames (q.a)
         if(prefill){
-          const [a1,a2]=dots(q.a);
+          const [a1,a2] = dots(q.a);
           fs.appendChild(frame(a1));
           fs.appendChild(frame(a2));
-        }else{
+        } else {
           fs.appendChild(frame(Array(10).fill(false)));
           fs.appendChild(frame(Array(10).fill(false)));
         }
@@ -312,6 +355,10 @@
       table.appendChild(rowEl);
     }
   }
+
+  ["mode","min","max","focus","prefill","biggerFirst"].forEach(id=>{
+    $(id).addEventListener("change", build);
+  });
 
   build();
 </script>
