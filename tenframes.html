@@ -63,7 +63,9 @@
     font-size:12px;
     font-weight:800;
   }
-  input{
+
+  /* IMPORTANT: only style number inputs (prevents huge toggle bug) */
+  input[type="number"]{
     height:42px;
     min-width:200px;
     border:2px solid #111;
@@ -73,8 +75,8 @@
     font-size:14px;
     background:#fff;
   }
-  input:disabled{
-    opacity:0.7;
+  input[type="number"]:disabled{
+    opacity:0.75;
     background:#f5f5f5;
     cursor:not-allowed;
   }
@@ -87,6 +89,7 @@
     margin-top:8px;
   }
 
+  /* Pretty toggle switches */
   .toggleRow{
     margin-top:10px;
     display:flex;
@@ -108,7 +111,7 @@
     user-select:none;
     background:#fff;
   }
-  .toggle input{
+  .toggle input[type="checkbox"]{
     appearance:none;
     -webkit-appearance:none;
     width:44px;
@@ -121,8 +124,9 @@
     background:#fff;
     cursor:pointer;
     flex:0 0 auto;
+    min-width:44px; /* override any inherited sizing */
   }
-  .toggle input::after{
+  .toggle input[type="checkbox"]::after{
     content:"";
     position:absolute;
     top:50%;
@@ -135,8 +139,8 @@
     transform:translateY(-50%);
     transition:all .15s ease;
   }
-  .toggle input:checked{ background:#111; }
-  .toggle input:checked::after{ left:19px; background:#fff; }
+  .toggle input[type="checkbox"]:checked{ background:#111; }
+  .toggle input[type="checkbox"]:checked::after{ left:19px; background:#fff; }
 
   .controls-actions{
     margin-top:12px;
@@ -170,6 +174,7 @@
     margin:6px 0 10px;
   }
 
+  /* Black outlines */
   .table{ border:2px solid #111; }
   .row{ display:grid; grid-template-columns:1fr 1fr; }
 
@@ -213,11 +218,13 @@
     border:2px solid #111;
     height:34px;
     display:flex;
-    align-items:center;
+    align-items:flex-start;
     justify-content:center;
+    padding-top:2px;
     position:relative;
   }
 
+  /* Cross-out overlay */
   .cross::before, .cross::after{
     content:"";
     position:absolute;
@@ -238,44 +245,47 @@
     margin-top:10px;
   }
 
-  /* ========= PRINT FIT (ONE PAGE) ========= */
+  /* ========= PRINT FIT (Within 10 is PERFECT) ========= */
   @media print{
     .menu, .controls{ display:none; }
-
-    /* tighten overall page */
     .wrap{ padding:0; max-width:none; }
 
-    /* scale the content slightly */
     body{
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
-      zoom: 0.92;              /* key fix: pulls it back onto 1 page */
+      zoom: 0.92; /* this is the within-10 sweet spot */
     }
 
-    .title{
-      font-size:24px;
-      margin:4px 0 6px;
-    }
-
-    .cell{
-      min-height:165px;        /* smaller */
-      padding:8px;
-      gap:8px;
-    }
-
+    .title{ font-size:24px; margin:4px 0 6px; }
+    .cell{ min-height:165px; padding:8px; gap:8px; }
     .expr{ font-size:20px; }
+    .frames{ width:220px; gap:8px; }
+    .tfcell{ height:30px; padding-top:1px; }
+    .footer{ margin-top:6px; font-size:11px; }
 
-    .frames{
-      width:220px;
-      gap:8px;
+    /* Over-10 pages: fill the page more (bigger problems) */
+    body[data-skill="over10_add"], body[data-skill="over10_sub"]{
+      zoom: 0.95;
     }
-    .tfcell{
-      height:30px;             /* smaller ten frame cells */
+    body[data-skill="over10_add"] .cell,
+    body[data-skill="over10_sub"] .cell{
+      min-height:185px;
+      padding:10px;
+      gap:10px;
     }
-
-    .footer{
-      margin-top:6px;
-      font-size:11px;
+    body[data-skill="over10_add"] .expr,
+    body[data-skill="over10_sub"] .expr{
+      font-size:22px;
+    }
+    body[data-skill="over10_add"] .frames,
+    body[data-skill="over10_sub"] .frames{
+      width:240px;
+      gap:10px;
+    }
+    body[data-skill="over10_add"] .tfcell,
+    body[data-skill="over10_sub"] .tfcell{
+      height:32px;
+      padding-top:2px;
     }
   }
 </style>
@@ -284,6 +294,7 @@
 <body>
 <div class="wrap">
 
+  <!-- TOP MENU (your order) -->
   <div class="menu" id="menu">
     <div class="tab active" data-skill="within10_add">Add: Within 10</div>
     <div class="tab" data-skill="within10_sub">Subtract: Within 10</div>
@@ -291,6 +302,7 @@
     <div class="tab" data-skill="over10_sub">Subtract: Over 10 (to 20)</div>
   </div>
 
+  <!-- CONTROLS -->
   <div class="controls">
     <div class="controls-top">
       <div class="field">
@@ -331,7 +343,9 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
+
   let SKILL = "within10_add";
+  document.body.setAttribute("data-skill", SKILL);
 
   function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
   function r(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
@@ -345,6 +359,7 @@
     return { lo, hi };
   }
 
+  /* ---------- Dots helpers ---------- */
   function dots20(n){
     n = clamp(n,0,20);
     const f1 = Array(10).fill(false);
@@ -391,6 +406,7 @@
     return ten;
   }
 
+  /* Cross out the last b dots out of a */
   function crossSetsFor(a, b){
     const crossIndices = new Set();
     const start = Math.max(0, a - b);
@@ -405,6 +421,7 @@
     return { cross1, cross2 };
   }
 
+  /* ---------- No duplicates ---------- */
   function keyFor(mode, a, b){
     if(mode === "add"){
       const x = Math.min(a,b);
@@ -414,8 +431,11 @@
     return `S:${a}-${b}`;
   }
 
+  /* ---------- Generators ---------- */
+
+  // Add within 10: sum <= 10
   function gen_within10_add(){
-    for(let t=0;t<20000;t++){
+    for(let t=0;t<25000;t++){
       const a=r(0,9), b=r(0,9);
       const s=a+b;
       if(s>10) continue;
@@ -425,8 +445,9 @@
     return {a:5,b:3};
   }
 
+  // Sub within 10: a<=10, b<=a
   function gen_within10_sub(){
-    for(let t=0;t<20000;t++){
+    for(let t=0;t<25000;t++){
       const a=r(1,10);
       const b=r(0,a);
       if(a===b) continue;
@@ -435,12 +456,14 @@
     return {a:9,b:4};
   }
 
+  // Add over 10 to 20: two single digits, sum > 10, sum <= 20
+  // Bounds apply to FIRST number only.
   function gen_over10_add(lo, hi){
-    for(let t=0;t<40000;t++){
+    for(let t=0;t<60000;t++){
       let a=r(6,9);
       if(a<lo || a>hi) continue;
       let b=r(1,9);
-      if(b>a) [a,b]=[b,a];
+      if(b>a) [a,b]=[b,a]; // bigger first automatically
       const s=a+b;
       if(s<=10) continue;
       if(s>20) continue;
@@ -449,23 +472,39 @@
     return {a:9,b:4};
   }
 
+  // Sub over 10 to 20 (FIXED):
+  // - Picks a in [max(lo,11)..min(hi,20)]
+  // - Tries to CROSS 10 when possible
+  // - If crossing 10 is impossible (e.g., a=20 locked), falls back to any valid 1..9 subtraction
   function gen_over10_sub(lo, hi){
     const amin = Math.max(11, lo);
     const amax = Math.min(20, hi);
     if(amin > amax) return {a:15,b:7};
 
-    for(let t=0;t<60000;t++){
+    for(let t=0;t<80000;t++){
       const a = r(amin, amax);
-      const bMin = Math.max(1, (a - 10) + 1);
+
+      // Try "cross 10" first, but only if it's possible with b<=9
+      const crossMin = Math.max(1, (a - 10) + 1); // b > a-10
+      const crossMax = Math.min(9, a - 1);
+
+      if(crossMin <= crossMax){
+        const b = r(crossMin, crossMax);
+        return {a,b};
+      }
+
+      // Fallback: any valid b 1..9 (still meaningful, avoids b=0)
+      const bMin = 1;
       const bMax = Math.min(9, a - 1);
       if(bMin > bMax) continue;
       const b = r(bMin, bMax);
-      if(a - b < 0) continue;
       return {a,b};
     }
+
     return {a:15,b:7};
   }
 
+  /* ---------- Render cell ---------- */
   function buildCell(mode, a, b, framesCount, prefill, crossOut){
     const cell=document.createElement("div");
     cell.className="cell";
@@ -509,13 +548,18 @@
     return cell;
   }
 
+  /* ---------- Build worksheet ---------- */
   function build(){
     let { lo, hi } = normalizeBounds();
     const prefill = $("prefill").checked;
     const crossOut = $("crossOut").checked;
 
     const within10 = (SKILL==="within10_add" || SKILL==="within10_sub");
-    let mode="add", rows=5, frames=1, title="";
+
+    let mode="add";
+    let rows=5;     // within10 => 10 problems
+    let frames=1;
+    let title="";
 
     if(within10){
       lo=0; hi=10;
@@ -533,15 +577,18 @@
     if(SKILL==="over10_sub"){   mode="sub"; rows=4; frames=2; title="Subtract Over 10 (to 20) Using Ten Frames"; }
 
     $("sheetTitle").textContent=title;
+
+    // Cross-out toggle only on subtraction tabs
     $("crossToggle").style.display = (mode==="sub") ? "inline-flex" : "none";
 
-    const total=rows*2;
-    const seen=new Set();
-    const qs=[];
-    let guard=0;
+    const total = rows*2;
+    const seen = new Set();
+    const qs = [];
+    let guard = 0;
 
-    while(qs.length<total && guard<120000){
+    while(qs.length < total && guard < 150000){
       guard++;
+
       let q;
       if(SKILL==="within10_add") q=gen_within10_add();
       if(SKILL==="within10_sub") q=gen_within10_sub();
@@ -561,6 +608,7 @@
     for(let i=0;i<rows;i++){
       const row=document.createElement("div");
       row.className="row";
+
       const left=qs[i*2], right=qs[i*2+1];
       row.appendChild(buildCell(mode,left.a,left.b,frames,prefill,crossOut));
       row.appendChild(buildCell(mode,right.a,right.b,frames,prefill,crossOut));
@@ -569,7 +617,9 @@
   }
 
   function setSkill(skill){
-    SKILL=skill;
+    SKILL = skill;
+    document.body.setAttribute("data-skill", SKILL);
+
     document.querySelectorAll(".tab").forEach(t=>{
       t.classList.toggle("active", t.dataset.skill===skill);
     });
