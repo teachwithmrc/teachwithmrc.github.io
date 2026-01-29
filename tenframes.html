@@ -64,7 +64,7 @@
     font-weight:800;
   }
 
-  /* IMPORTANT: style ONLY number inputs */
+  /* Only style number inputs (prevents huge toggle bug) */
   input[type="number"]{
     height:42px;
     min-width:200px;
@@ -265,9 +265,7 @@
     /* Over-10: fill the page more (bigger problems) */
     body[data-skill="over10_add"], body[data-skill="over10_sub"]{ zoom: 0.95; }
     body[data-skill="over10_add"] .cell,
-    body[data-skill="over10_sub"] .cell{
-      min-height:185px; padding:10px; gap:10px;
-    }
+    body[data-skill="over10_sub"] .cell{ min-height:185px; padding:10px; gap:10px; }
     body[data-skill="over10_add"] .expr,
     body[data-skill="over10_sub"] .expr{ font-size:22px; }
     body[data-skill="over10_add"] .frames,
@@ -281,7 +279,6 @@
 <body>
 <div class="wrap">
 
-  <!-- TOP MENU (your order) -->
   <div class="menu" id="menu">
     <div class="tab active" data-skill="within10_add">Add: Within 10</div>
     <div class="tab" data-skill="within10_sub">Subtract: Within 10</div>
@@ -289,7 +286,6 @@
     <div class="tab" data-skill="over10_sub">Subtract: Over 10 (to 20)</div>
   </div>
 
-  <!-- CONTROLS -->
   <div class="controls">
     <div class="controls-top">
       <div class="field">
@@ -335,7 +331,6 @@
   document.body.setAttribute("data-skill", SKILL);
 
   function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
-  function r(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
 
   function normalizeBounds(){
     let lo = clamp(parseInt($("min").value || "0",10), 0, 20);
@@ -362,6 +357,7 @@
     return f;
   }
 
+  // Print-safe dot (SVG)
   function dotSVG(){
     const ns="http://www.w3.org/2000/svg";
     const svg=document.createElementNS(ns,"svg");
@@ -393,6 +389,7 @@
     return ten;
   }
 
+  // Cross out the last b dots out of a
   function crossSetsFor(a, b){
     const crossIndices = new Set();
     const start = Math.max(0, a - b);
@@ -407,86 +404,105 @@
     return { cross1, cross2 };
   }
 
-  /* ---------- No duplicates ---------- */
-  function keyFor(mode, a, b){
-    if(mode === "add"){
-      const x = Math.min(a,b);
-      const y = Math.max(a,b);
-      return `A:${x}+${y}`;
+  /* ---------- Shuffle ---------- */
+  function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]]=[arr[j],arr[i]];
     }
-    return `S:${a}-${b}`;
+    return arr;
   }
 
-  /* ---------- Generators ---------- */
-  function gen_within10_add(){
-    for(let t=0;t<25000;t++){
-      const a=r(0,9), b=r(0,9);
-      const s=a+b;
-      if(s>10) continue;
-      if(a===0 && b===0) continue;
-      return {a,b};
+  /* ---------- Build all possible problems (instant + no freezes) ---------- */
+  // NOTE: We keep "no duplicates" by picking from a unique list. If the list is too small,
+  // we allow repeats ONLY as needed so Generate always works.
+  function buildProblemPool(skill, lo, hi){
+    const pool = [];
+
+    if(skill === "within10_add"){
+      // Add within 10: a+b<=10
+      for(let a=0;a<=9;a++){
+        for(let b=0;b<=9;b++){
+          if(a===0 && b===0) continue;
+          if(a+b<=10) pool.push({a,b});
+        }
+      }
+      // remove commutative duplicates by keeping min/max key
+      const seen = new Set();
+      const uniq = [];
+      for(const q of pool){
+        const x=Math.min(q.a,q.b), y=Math.max(q.a,q.b);
+        const k=`A:${x}+${y}`;
+        if(seen.has(k)) continue;
+        seen.add(k);
+        uniq.push({a:y,b:x}); // bigger first looks nicer
+      }
+      return uniq;
     }
-    return {a:5,b:3};
-  }
 
-  function gen_within10_sub(){
-    for(let t=0;t<25000;t++){
-      const a=r(1,10);
-      const b=r(0,a);
-      if(a===b) continue;
-      return {a,b};
+    if(skill === "within10_sub"){
+      for(let a=1;a<=10;a++){
+        for(let b=0;b<a;b++){
+          pool.push({a,b});
+        }
+      }
+      return pool;
     }
-    return {a:9,b:4};
-  }
 
-  function gen_over10_add(lo, hi){
-    for(let t=0;t<60000;t++){
-      let a=r(6,9);
-      if(a<lo || a>hi) continue;
-      let b=r(1,9);
-      if(b>a) [a,b]=[b,a];
-      const s=a+b;
-      if(s<=10) continue;
-      if(s>20) continue;
-      return {a,b};
+    if(skill === "over10_add"){
+      // Over 10: two single digits, sum >10, <=20. Bound applies to FIRST number.
+      // We'll generate all valid pairs with a in [6..9] and b in [1..9] then filter by bounds.
+      for(let a=6;a<=9;a++){
+        for(let b=1;b<=9;b++){
+          const A=Math.max(a,b), B=Math.min(a,b);
+          const s=A+B;
+          if(s<=10 || s>20) continue;
+          if(A<lo || A>hi) continue; // first number range
+          pool.push({a:A,b:B});
+        }
+      }
+      // remove duplicates via commutative key
+      const seen = new Set();
+      const uniq = [];
+      for(const q of pool){
+        const x=Math.min(q.a,q.b), y=Math.max(q.a,q.b);
+        const k=`A:${x}+${y}`;
+        if(seen.has(k)) continue;
+        seen.add(k);
+        uniq.push({a:y,b:x});
+      }
+      return uniq;
     }
-    return {a:9,b:4};
-  }
 
-  // ✅ FIXED: Subtract over 10
-  // Prefers crossing 10, but does NOT force it (so tight ranges still produce 8 unique problems).
-  function gen_over10_sub(lo, hi){
-    const amin = Math.max(11, lo);
-    const amax = Math.min(20, hi);
-    if(amin > amax) return {a:15,b:7};
-
-    for(let t=0;t<80000;t++){
-      const a = r(amin, amax);
-      const bMax = Math.min(9, a-1);
-      if(bMax < 1) continue;
-
-      // weighted preference: 70% try a "cross 10" b when possible
-      const wantCross = Math.random() < 0.70;
-
-      let b;
-      if(wantCross){
-        const crossMin = Math.max(1, (a - 10) + 1); // b > a-10
-        const crossMax = Math.min(bMax, 9);
-        if(crossMin <= crossMax){
-          b = r(crossMin, crossMax);
-          return {a,b};
+    if(skill === "over10_sub"){
+      // Over 10 subtraction: a in [max(11,lo)..min(20,hi)], b in [1..min(9,a-1)]
+      const amin = Math.max(11, lo);
+      const amax = Math.min(20, hi);
+      for(let a=amin; a<=amax; a++){
+        for(let b=1; b<=Math.min(9,a-1); b++){
+          pool.push({a,b});
         }
       }
 
-      // fallback: any valid 1..bMax
-      b = r(1, bMax);
-      return {a,b};
+      // Prefer "cross 10" problems FIRST, but don't require it.
+      // cross10 = b > a-10
+      const cross = [];
+      const nonCross = [];
+      for(const q of pool){
+        if(q.b > (q.a - 10)) cross.push(q);
+        else nonCross.push(q);
+      }
+
+      // Shuffle inside each group and return cross-first
+      shuffle(cross);
+      shuffle(nonCross);
+      return cross.concat(nonCross);
     }
 
-    return {a:15,b:7};
+    return pool;
   }
 
-  /* ---------- Render cell ---------- */
+  /* ---------- Render one problem ---------- */
   function buildCell(mode, a, b, framesCount, prefill, crossOut){
     const cell=document.createElement("div");
     cell.className="cell";
@@ -532,12 +548,17 @@
 
   /* ---------- Build worksheet ---------- */
   function build(){
-    let { lo, hi } = normalizeBounds();
+    const { lo:rawLo, hi:rawHi } = normalizeBounds();
     const prefill = $("prefill").checked;
     const crossOut = $("crossOut").checked;
 
     const within10 = (SKILL==="within10_add" || SKILL==="within10_sub");
-    let mode="add", rows=5, frames=1, title="";
+    let lo=rawLo, hi=rawHi;
+
+    let mode="add";
+    let rows=5;     // within10 => 10 problems
+    let frames=1;
+    let title="";
 
     if(within10){
       lo=0; hi=10;
@@ -557,47 +578,29 @@
     $("sheetTitle").textContent=title;
     $("crossToggle").style.display = (mode==="sub") ? "inline-flex" : "none";
 
-    const total = rows*2;
-    const seen = new Set();
-    const qs = [];
-    let guard = 0;
+    const total = rows * 2;
 
-    // Primary pass: strict no-duplicates
-    while(qs.length < total && guard < 150000){
-      guard++;
+    // Build full pool instantly (no freezing)
+    let pool = buildProblemPool(SKILL, lo, hi);
 
-      let q;
-      if(SKILL==="within10_add") q=gen_within10_add();
-      if(SKILL==="within10_sub") q=gen_within10_sub();
-      if(SKILL==="over10_add")   q=gen_over10_add(lo,hi);
-      if(SKILL==="over10_sub")   q=gen_over10_sub(lo,hi);
+    // Shuffle whole pool (except over10_sub already cross-first internally)
+    if(SKILL !== "over10_sub") shuffle(pool);
 
-      const a=q.a, b=q.b;
-      const k=keyFor(mode,a,b);
-      if(seen.has(k)) continue;
-      seen.add(k);
-      qs.push({a,b});
+    // Take as many unique as possible
+    const picked = pool.slice(0, total);
+
+    // If the teacher chose a super-tight range, we might not have enough unique items.
+    // Fill the rest with repeats (but still random) so Generate ALWAYS works.
+    while(picked.length < total){
+      if(pool.length === 0){
+        // ultimate fallback
+        picked.push({a:9,b:4});
+      }else{
+        picked.push(pool[Math.floor(Math.random()*pool.length)]);
+      }
     }
 
-    // Safety fill: if the range is too narrow to find enough unique items,
-    // fill remaining slots with best-effort values (so Generate never “does nothing”).
-    // (Still tries to avoid immediate repeats.)
-    let safety = 0;
-    while(qs.length < total && safety < 50000){
-      safety++;
-      let q;
-      if(SKILL==="within10_add") q=gen_within10_add();
-      if(SKILL==="within10_sub") q=gen_within10_sub();
-      if(SKILL==="over10_add")   q=gen_over10_add(lo,hi);
-      if(SKILL==="over10_sub")   q=gen_over10_sub(lo,hi);
-
-      // avoid exact same as last item
-      const last = qs[qs.length-1];
-      if(last && last.a === q.a && last.b === q.b) continue;
-
-      qs.push(q);
-    }
-
+    // Render
     const table=$("table");
     table.innerHTML="";
 
@@ -605,8 +608,8 @@
       const row=document.createElement("div");
       row.className="row";
 
-      const left = qs[i*2]     || {a:9,b:4};
-      const right= qs[i*2 + 1] || {a:9,b:4};
+      const left = picked[i*2];
+      const right= picked[i*2 + 1];
 
       row.appendChild(buildCell(mode,left.a,left.b,frames,prefill,crossOut));
       row.appendChild(buildCell(mode,right.a,right.b,frames,prefill,crossOut));
