@@ -414,8 +414,6 @@
   }
 
   /* ---------- Build all possible problems (instant + no freezes) ---------- */
-  // NOTE: We keep "no duplicates" by picking from a unique list. If the list is too small,
-  // we allow repeats ONLY as needed so Generate always works.
   function buildProblemPool(skill, lo, hi){
     const pool = [];
 
@@ -478,6 +476,7 @@
       // Over 10 subtraction: a in [max(11,lo)..min(20,hi)], b in [1..min(9,a-1)]
       const amin = Math.max(11, lo);
       const amax = Math.min(20, hi);
+      
       for(let a=amin; a<=amax; a++){
         for(let b=1; b<=Math.min(9,a-1); b++){
           pool.push({a,b});
@@ -548,15 +547,14 @@
 
   /* ---------- Build worksheet ---------- */
   function build(){
-    const { lo:rawLo, hi:rawHi } = normalizeBounds();
+    let { lo, hi } = normalizeBounds();
     const prefill = $("prefill").checked;
     const crossOut = $("crossOut").checked;
 
     const within10 = (SKILL==="within10_add" || SKILL==="within10_sub");
-    let lo=rawLo, hi=rawHi;
-
+    
     let mode="add";
-    let rows=5;     // within10 => 10 problems
+    let rows=5;     
     let frames=1;
     let title="";
 
@@ -568,6 +566,12 @@
     }else{
       $("min").disabled=false; $("max").disabled=false;
       $("hintText").textContent="Over 10 uses your Lowest/Highest as the FIRST number range (up to 20).";
+
+      // === FIX: Auto-adjust range if user is in Over-10 Subtraction but Max is too low ===
+      if(SKILL === "over10_sub" && hi < 11){
+        hi = 20;
+        $("max").value = 20;
+      }
     }
 
     if(SKILL==="within10_add"){ mode="add"; rows=5; frames=1; title="Add Within 10 Using Ten Frames"; }
@@ -580,7 +584,7 @@
 
     const total = rows * 2;
 
-    // Build full pool instantly (no freezing)
+    // Build full pool instantly (pass potentially fixed lo/hi)
     let pool = buildProblemPool(SKILL, lo, hi);
 
     // Shuffle whole pool (except over10_sub already cross-first internally)
@@ -593,7 +597,7 @@
     // Fill the rest with repeats (but still random) so Generate ALWAYS works.
     while(picked.length < total){
       if(pool.length === 0){
-        // ultimate fallback
+        // ultimate fallback if pool is empty (should not happen with fix)
         picked.push({a:9,b:4});
       }else{
         picked.push(pool[Math.floor(Math.random()*pool.length)]);
