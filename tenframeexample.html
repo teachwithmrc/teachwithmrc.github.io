@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ten Frame Generator - PREVIEW MODE</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+  *{ box-sizing:border-box; }
+  html, body{
+    margin:0; padding:0;
+    font-family:"Poppins", Arial, sans-serif;
+    background:#fff; color:#111;
+    overflow-x:hidden;
+    /* Prevent selection of text */
+    user-select: none; 
+    -webkit-user-select: none;
+  }
+  .wrap{ max-width:980px; margin:0 auto; padding:12px; position:relative; }
+
+  /* ========= TOP MENU ========= */
+  .menu{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-bottom:12px;
+  }
+  .tab{
+    border:2px solid #111;
+    border-radius:14px;
+    padding:10px 14px;
+    font-weight:900;
+    font-size:15px;
+    cursor:pointer;
+    background:#fff;
+    color:#111;
+    transition: all 0.2s;
+  }
+  .tab:hover{ background:#f0f0f0; }
+  .tab.active{ background:#111; color:#fff; }
+
+  /* ========= CONTROLS ========= */
+  .controls{
+    border:2px solid #111;
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:12px;
+    background: #fff;
+    position: relative;
+    z-index: 5;
+  }
+
+  .controls-top{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    align-items:flex-end;
+    justify-content:center;
+  }
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    min-width:200px;
+  }
+  .field label{
+    font-size:12px;
+    font-weight:800;
+  }
+
+  input[type="number"]{
+    height:42px;
+    min-width:200px;
+    border:2px solid #111;
+    border-radius:10px;
+    padding:8px 12px;
+    font-family:"Poppins", Arial, sans-serif;
+    font-size:14px;
+    background:#fff;
+  }
+  input[type="number"]:disabled{
+    opacity:0.75;
+    background:#f5f5f5;
+    cursor:not-allowed;
+  }
+
+  .hint{
+    width:100%;
+    text-align:center;
+    font-size:13px;
+    font-weight:700;
+    margin-top:8px;
+  }
+
+  .toggleRow{
+    margin-top:10px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    align-items:center;
+  }
+  .toggle{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 12px;
+    border:2px solid #111;
+    border-radius:14px;
+    font-weight:900;
+    font-size:15px;
+    line-height:1;
+    background:#fff;
+  }
+  .toggle input[type="checkbox"]{
+    appearance:none;
+    -webkit-appearance:none;
+    width:44px;
+    height:26px;
+    border:2px solid #111;
+    border-radius:999px;
+    position:relative;
+    margin:0;
+    padding:0;
+    background:#fff;
+    cursor:pointer;
+    flex:0 0 auto;
+    min-width:44px;
+  }
+  .toggle input[type="checkbox"]::after{
+    content:"";
+    position:absolute;
+    top:50%;
+    left:3px;
+    width:18px;
+    height:18px;
+    border:2px solid #111;
+    border-radius:999px;
+    background:#fff;
+    transform:translateY(-50%);
+    transition:all .15s ease;
+  }
+  .toggle input[type="checkbox"]:checked{ background:#111; }
+  .toggle input[type="checkbox"]:checked::after{ left:19px; background:#fff; }
+
+  .controls-actions{
+    margin-top:12px;
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  button{
+    height:54px;
+    padding:0 30px;
+    border:2px solid #111;
+    border-radius:14px;
+    font-weight:900;
+    font-size:18px;
+    font-family:"Poppins", Arial, sans-serif;
+    background:#111;
+    color:#fff;
+    cursor:pointer;
+    transition: transform 0.1s;
+  }
+  button:active{ transform:scale(0.98); }
+  
+  button.secondary{
+    background:#eee;
+    color:#888;
+    border-color:#ccc;
+    cursor: not-allowed;
+  }
+
+  /* ========= SHEET & PREVIEW LOCK ========= */
+  .preview-wrapper {
+    position: relative;
+    /* Ensure content cannot be interacted with */
+    pointer-events: none; 
+  }
+  
+  /* The overlay now has a repeating watermark pattern */
+  .fomo-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+
+    /* BLUR FILTER - Blocks Screenshots */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.4);
+    
+    /* REPEATING WATERMARK TEXT */
+    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='30' y='100' fill='%23000' opacity='0.05' transform='rotate(-45 100 100)' font-family='Arial' font-weight='900' font-size='24'%3EPREVIEW MODE%3C/text%3E%3C/svg%3E");
+    pointer-events: auto; /* Enable clicking the button inside */
+  }
+
+  .lock-card {
+    background: #111;
+    color: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    max-width: 400px;
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  @keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .lock-icon { font-size: 40px; margin-bottom: 15px; display:block; }
+  .lock-title { font-size: 24px; font-weight: 900; margin-bottom: 10px; line-height:1.2; }
+  .lock-desc { font-size: 14px; margin-bottom: 25px; opacity: 0.9; line-height: 1.5;}
+  
+  .cta-btn {
+    display: inline-block;
+    background: #fff;
+    color: #111;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 16px;
+    transition: all 0.2s;
+  }
+  .cta-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(255,255,255,0.3); }
+
+  /* ========= SHEET STYLES ========= */
+  .title{
+    text-align:center;
+    font-size:28px;
+    font-weight:900;
+    margin:6px 0 10px;
+  }
+
+  .table{ border:2px solid #111; background: #fff; }
+  .row{ display:grid; grid-template-columns:1fr 1fr; }
+
+  .cell{
+    border-right:2px solid #111;
+    border-bottom:2px solid #111;
+    min-height:190px;
+    padding:10px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+  }
+  .row .cell:last-child{ border-right:none; }
+  .table .row:last-child .cell{ border-bottom:none; }
+
+  .expr{
+    font-size:22px;
+    font-weight:900;
+    text-align:center;
+    line-height:1.1;
+  }
+  .blank{
+    display:inline-block;
+    width:95px;
+    border-bottom:3px solid #111;
+    transform: translateY(-3px);
+  }
+
+  .frames{
+    display:grid;
+    gap:10px;
+    width:235px;
+  }
+  .tenframe{ border:2px solid #111; }
+  .tfgrid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+  }
+  .tfcell{
+    border:2px solid #111;
+    height:34px;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding-top:2px;
+    position:relative;
+  }
+
+  .cross::before, .cross::after{
+    content:"";
+    position:absolute;
+    width:86%;
+    height:3px;
+    background:#111;
+    top:50%;
+    left:7%;
+    transform-origin:center;
+  }
+  .cross::before{ transform:translateY(-50%) rotate(45deg); }
+  .cross::after{  transform:translateY(-50%) rotate(-45deg); }
+
+  .footer{
+    text-align:center;
+    font-size:12px;
+    font-weight:800;
+    margin-top:10px;
+  }
+
+  /* ========= PRINT BLOCKER ========= */
+  /* This ensures even if they hit Ctrl+P, they get nothing useful */
+  @media print {
+    body { display: none; } 
+    /* Or if you want to be fancy, hide the wrap and show a message: */
+    /*
+    .wrap { display: none; }
+    body::after { 
+      content: "Printing is disabled in Preview Mode. Please Upgrade.";
+      display: block; font-size: 20px; font-weight: bold; text-align: center; margin-top: 50px;
+    }
+    */
+  }
+
+</style>
+</head>
+
+<body oncontextmenu="return false;">
+<div class="wrap">
+
+  <div class="menu" id="menu">
+    <div class="tab active" data-skill="within10_add">Add: Within 10</div>
+    <div class="tab" data-skill="within10_sub">Subtract: Within 10</div>
+    <div class="tab" data-skill="over10_add">Add: Over 10 (to 20)</div>
+    <div class="tab" data-skill="over10_sub">Subtract: Over 10 (to 20)</div>
+  </div>
+
+  <div class="controls">
+    <div class="controls-top">
+      <div class="field">
+        <label for="min">Lowest #</label>
+        <input id="min" type="number" value="0" min="0" max="20">
+      </div>
+      <div class="field">
+        <label for="max">Highest #</label>
+        <input id="max" type="number" value="10" min="1" max="20">
+      </div>
+    </div>
+
+    <div class="hint" id="hintText">Within 10 is locked to 0–10.</div>
+
+    <div class="toggleRow">
+      <label class="toggle">
+        <input id="prefill" type="checkbox" checked>
+        Prefill
+      </label>
+
+      <label class="toggle" id="crossToggle" style="display:none;">
+        <input id="crossOut" type="checkbox" checked>
+        Cross-out
+      </label>
+    </div>
+
+    <div class="controls-actions">
+      <button type="button" id="btnGen">Generate Preview</button>
+      <button type="button" class="secondary" id="btnPrint">Print Worksheet</button>
+    </div>
+  </div>
+
+  <div class="preview-wrapper">
+    
+    <div class="fomo-overlay">
+      <div class="lock-card">
+        <span class="lock-icon">🔒</span>
+        <div class="lock-title">Premium Resource</div>
+        <div class="lock-desc">
+          You are viewing a preview of the Ten Frame Generator. 
+          Upgrade to Intervention Station Premium to unlock printing and remove the watermark.
+        </div>
+        <a href="#" class="cta-btn">Unlock Full Access</a>
+      </div>
+    </div>
+
+    <div class="title" id="sheetTitle">Add Within 10 Using Ten Frames</div>
+    <div class="table" id="table"></div>
+    <div class="footer">Copyright - Generated from InterventionStation.com - @TeachWithMrC</div>
+
+  </div>
+
+</div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+
+  let SKILL = "within10_add";
+  document.body.setAttribute("data-skill", SKILL);
+
+  function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+
+  function normalizeBounds(){
+    let lo = clamp(parseInt($("min").value || "0",10), 0, 20);
+    let hi = clamp(parseInt($("max").value || "10",10), 1, 20);
+    if (hi < lo) [lo,hi] = [hi,lo];
+    $("min").value = lo;
+    $("max").value = hi;
+    return { lo, hi };
+  }
+
+  function dots20(n){
+    n = clamp(n,0,20);
+    const f1 = Array(10).fill(false);
+    const f2 = Array(10).fill(false);
+    for(let i=0;i<Math.min(10,n);i++) f1[i]=true;
+    for(let i=0;i<Math.max(0,n-10);i++) f2[i]=true;
+    return [f1,f2];
+  }
+  function dots10(n){
+    n = clamp(n,0,10);
+    const f = Array(10).fill(false);
+    for(let i=0;i<n;i++) f[i]=true;
+    return f;
+  }
+
+  function dotSVG(){
+    const ns="http://www.w3.org/2000/svg";
+    const svg=document.createElementNS(ns,"svg");
+    svg.setAttribute("viewBox","0 0 100 100");
+    svg.style.width="84%";
+    svg.style.height="84%";
+    const c=document.createElementNS(ns,"circle");
+    c.setAttribute("cx","50");
+    c.setAttribute("cy","50");
+    c.setAttribute("r","43");
+    c.setAttribute("fill","#111");
+    svg.appendChild(c);
+    return svg;
+  }
+
+  function buildFrame(boolArr, crossSet){
+    const ten=document.createElement("div");
+    ten.className="tenframe";
+    const g=document.createElement("div");
+    g.className="tfgrid";
+    for(let i=0;i<10;i++){
+      const cell=document.createElement("div");
+      cell.className="tfcell";
+      if(boolArr[i]) cell.appendChild(dotSVG());
+      if(crossSet && crossSet.has(i)) cell.classList.add("cross");
+      g.appendChild(cell);
+    }
+    ten.appendChild(g);
+    return ten;
+  }
+
+  function crossSetsFor(a, b){
+    const crossIndices = new Set();
+    const start = Math.max(0, a - b);
+    for(let i=start; i<a; i++) crossIndices.add(i);
+
+    const cross1 = new Set();
+    const cross2 = new Set();
+    crossIndices.forEach(idx=>{
+      if(idx < 10) cross1.add(idx);
+      else cross2.add(idx - 10);
+    });
+    return { cross1, cross2 };
+  }
+
+  function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]]=[arr[j],arr[i]];
+    }
+    return arr;
+  }
+
+  function buildProblemPool(skill, lo, hi){
+    const pool = [];
+    if(skill === "within10_add"){
+      for(let a=0;a<=9;a++){
+        for(let b=0;b<=9;b++){
+          if(a===0 && b===0) continue;
+          if(a+b<=10) pool.push({a,b});
+        }
+      }
+      const seen = new Set();
+      const uniq = [];
+      for(const q of pool){
+        const x=Math.min(q.a,q.b), y=Math.max(q.a,q.b);
+        const k=`A:${x}+${y}`;
+        if(seen.has(k)) continue;
+        seen.add(k);
+        uniq.push({a:y,b:x});
+      }
+      return uniq;
+    }
+    if(skill === "within10_sub"){
+      for(let a=1;a<=10;a++){
+        for(let b=0;b<a;b++){
+          pool.push({a,b});
+        }
+      }
+      return pool;
+    }
+    if(skill === "over10_add"){
+      for(let a=6;a<=9;a++){
+        for(let b=1;b<=9;b++){
+          const A=Math.max(a,b), B=Math.min(a,b);
+          const s=A+B;
+          if(s<=10 || s>20) continue;
+          if(A<lo || A>hi) continue; 
+          pool.push({a:A,b:B});
+        }
+      }
+      const seen = new Set();
+      const uniq = [];
+      for(const q of pool){
+        const x=Math.min(q.a,q.b), y=Math.max(q.a,q.b);
+        const k=`A:${x}+${y}`;
+        if(seen.has(k)) continue;
+        seen.add(k);
+        uniq.push({a:y,b:x});
+      }
+      return uniq;
+    }
+    if(skill === "over10_sub"){
+      const amin = Math.max(11, lo);
+      const amax = Math.min(20, hi);
+      for(let a=amin; a<=amax; a++){
+        for(let b=1; b<=Math.min(9,a-1); b++){
+          pool.push({a,b});
+        }
+      }
+      const cross = [];
+      const nonCross = [];
+      for(const q of pool){
+        if(q.b > (q.a - 10)) cross.push(q);
+        else nonCross.push(q);
+      }
+      shuffle(cross);
+      shuffle(nonCross);
+      return cross.concat(nonCross);
+    }
+    return pool;
+  }
+
+  function buildCell(mode, a, b, framesCount, prefill, crossOut){
+    const cell=document.createElement("div");
+    cell.className="cell";
+    const op=(mode==="add")?"+":"−";
+    cell.innerHTML=`<div class="expr">${a} ${op} ${b} = <span class="blank"></span></div>`;
+
+    const fs=document.createElement("div");
+    fs.className="frames";
+
+    if(framesCount===2){
+      if(prefill){
+        const [f1,f2] = dots20(a);
+        if(mode==="sub" && crossOut){
+          const { cross1, cross2 } = crossSetsFor(a, b);
+          fs.appendChild(buildFrame(f1, cross1));
+          fs.appendChild(buildFrame(f2, cross2));
+        }else{
+          fs.appendChild(buildFrame(f1));
+          fs.appendChild(buildFrame(f2));
+        }
+      }else{
+        fs.appendChild(buildFrame(Array(10).fill(false)));
+        fs.appendChild(buildFrame(Array(10).fill(false)));
+      }
+    }else{
+      if(prefill){
+        const f = dots10(a);
+        if(mode==="sub" && crossOut){
+          const { cross1 } = crossSetsFor(a, b);
+          fs.appendChild(buildFrame(f, cross1));
+        }else{
+          fs.appendChild(buildFrame(f));
+        }
+      }else{
+        fs.appendChild(buildFrame(Array(10).fill(false)));
+      }
+    }
+    cell.appendChild(fs);
+    return cell;
+  }
+
+  function build(){
+    let { lo, hi } = normalizeBounds();
+    const prefill = $("prefill").checked;
+    const crossOut = $("crossOut").checked;
+
+    const within10 = (SKILL==="within10_add" || SKILL==="within10_sub");
+    
+    let mode="add";
+    let rows=5;     
+    let frames=1;
+    let title="";
+
+    if(within10){
+      lo=0; hi=10;
+      $("min").value=0; $("max").value=10;
+      $("min").disabled=true; $("max").disabled=true;
+      $("hintText").textContent="Within 10 is locked to 0–10.";
+    }else{
+      $("min").disabled=false; $("max").disabled=false;
+      $("hintText").textContent="Over 10 uses your Lowest/Highest as the FIRST number range (up to 20).";
+
+      if(SKILL === "over10_sub" && hi < 11){
+        hi = 20;
+        $("max").value = 20;
+      }
+    }
+
+    if(SKILL==="within10_add"){ mode="add"; rows=5; frames=1; title="Add Within 10 Using Ten Frames"; }
+    if(SKILL==="within10_sub"){ mode="sub"; rows=5; frames=1; title="Subtract Within 10 Using Ten Frames"; }
+    if(SKILL==="over10_add"){   mode="add"; rows=4; frames=2; title="Add Over 10 (to 20) Using Ten Frames"; }
+    if(SKILL==="over10_sub"){   mode="sub"; rows=4; frames=2; title="Subtract Over 10 (to 20) Using Ten Frames"; }
+
+    $("sheetTitle").textContent=title;
+    $("crossToggle").style.display = (mode==="sub") ? "inline-flex" : "none";
+
+    const total = rows * 2;
+    let pool = buildProblemPool(SKILL, lo, hi);
+
+    if(SKILL !== "over10_sub") shuffle(pool);
+
+    const picked = pool.slice(0, total);
+    while(picked.length < total){
+      if(pool.length === 0){
+        picked.push({a:9,b:4});
+      }else{
+        picked.push(pool[Math.floor(Math.random()*pool.length)]);
+      }
+    }
+
+    const table=$("table");
+    table.innerHTML="";
+
+    for(let i=0;i<rows;i++){
+      const row=document.createElement("div");
+      row.className="row";
+      const left = picked[i*2];
+      const right= picked[i*2 + 1];
+      row.appendChild(buildCell(mode,left.a,left.b,frames,prefill,crossOut));
+      row.appendChild(buildCell(mode,right.a,right.b,frames,prefill,crossOut));
+      table.appendChild(row);
+    }
+  }
+
+  function setSkill(skill){
+    SKILL = skill;
+    document.body.setAttribute("data-skill", SKILL);
+    document.querySelectorAll(".tab").forEach(t=>{
+      t.classList.toggle("active", t.dataset.skill===skill);
+    });
+    build();
+  }
+
+  $("menu").addEventListener("click",(e)=>{
+    const tab=e.target.closest(".tab");
+    if(!tab) return;
+    setSkill(tab.dataset.skill);
+  });
+
+  $("btnGen").addEventListener("click", build);
+  
+  // PREVIEW MODE LOCK
+  $("btnPrint").addEventListener("click", ()=>{
+    alert("This feature is locked in Preview Mode.\nPlease upgrade to print worksheets.");
+  });
+
+  ["min","max","prefill","crossOut"].forEach(id=>{
+    $(id).addEventListener("change", build);
+  });
+
+  build();
+</script>
+</body>
+</html>
