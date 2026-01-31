@@ -524,3 +524,152 @@
       for(let a=amin; a<=amax; a++){
         for(let b=1; b<=Math.min(9,a-1); b++){
           pool.push({a,b});
+        }
+      }
+      const cross = [];
+      const nonCross = [];
+      for(const q of pool){
+        if(q.b > (q.a - 10)) cross.push(q);
+        else nonCross.push(q);
+      }
+      shuffle(cross);
+      shuffle(nonCross);
+      return cross.concat(nonCross);
+    }
+    return pool;
+  }
+
+  function buildCell(mode, a, b, framesCount, prefill, crossOut){
+    const cell=document.createElement("div");
+    cell.className="cell";
+    const op=(mode==="add")?"+":"−";
+    cell.innerHTML=`<div class="expr">${a} ${op} ${b} = <span class="blank"></span></div>`;
+
+    const fs=document.createElement("div");
+    fs.className="frames";
+
+    if(framesCount===2){
+      if(prefill){
+        const [f1,f2] = dots20(a);
+        if(mode==="sub" && crossOut){
+          const { cross1, cross2 } = crossSetsFor(a, b);
+          fs.appendChild(buildFrame(f1, cross1));
+          fs.appendChild(buildFrame(f2, cross2));
+        }else{
+          fs.appendChild(buildFrame(f1));
+          fs.appendChild(buildFrame(f2));
+        }
+      }else{
+        fs.appendChild(buildFrame(Array(10).fill(false)));
+        fs.appendChild(buildFrame(Array(10).fill(false)));
+      }
+    }else{
+      if(prefill){
+        const f = dots10(a);
+        if(mode==="sub" && crossOut){
+          const { cross1 } = crossSetsFor(a, b);
+          fs.appendChild(buildFrame(f, cross1));
+        }else{
+          fs.appendChild(buildFrame(f));
+        }
+      }else{
+        fs.appendChild(buildFrame(Array(10).fill(false)));
+      }
+    }
+    cell.appendChild(fs);
+    return cell;
+  }
+
+  function build(){
+    let { lo, hi } = normalizeBounds();
+    const prefill = $("prefill").checked;
+    const crossOut = $("crossOut").checked;
+
+    const within10 = (SKILL==="within10_add" || SKILL==="within10_sub");
+    
+    let mode="add";
+    let rows=5;     
+    let frames=1;
+    let title="";
+
+    if(within10){
+      lo=0; hi=10;
+      $("min").value=0; $("max").value=10;
+      $("min").disabled=true; $("max").disabled=true;
+      $("hintText").textContent="Within 10 is locked to 0–10.";
+    }else{
+      $("min").disabled=false; $("max").disabled=false;
+      $("hintText").textContent="Over 10 uses your Lowest/Highest as the FIRST number range (up to 20).";
+
+      if(SKILL === "over10_sub" && hi < 11){
+        hi = 20;
+        $("max").value = 20;
+      }
+    }
+
+    if(SKILL==="within10_add"){ mode="add"; rows=5; frames=1; title="Add Within 10 Using Ten Frames"; }
+    if(SKILL==="within10_sub"){ mode="sub"; rows=5; frames=1; title="Subtract Within 10 Using Ten Frames"; }
+    if(SKILL==="over10_add"){   mode="add"; rows=4; frames=2; title="Add Over 10 (to 20) Using Ten Frames"; }
+    if(SKILL==="over10_sub"){   mode="sub"; rows=4; frames=2; title="Subtract Over 10 (to 20) Using Ten Frames"; }
+
+    $("sheetTitle").textContent=title;
+    $("crossToggle").style.display = (mode==="sub") ? "inline-flex" : "none";
+
+    const total = rows * 2;
+    let pool = buildProblemPool(SKILL, lo, hi);
+
+    if(SKILL !== "over10_sub") shuffle(pool);
+
+    const picked = pool.slice(0, total);
+    while(picked.length < total){
+      if(pool.length === 0){
+        picked.push({a:9,b:4});
+      }else{
+        picked.push(pool[Math.floor(Math.random()*pool.length)]);
+      }
+    }
+
+    const table=$("table");
+    table.innerHTML="";
+
+    for(let i=0;i<rows;i++){
+      const row=document.createElement("div");
+      row.className="row";
+      const left = picked[i*2];
+      const right= picked[i*2 + 1];
+      row.appendChild(buildCell(mode,left.a,left.b,frames,prefill,crossOut));
+      row.appendChild(buildCell(mode,right.a,right.b,frames,prefill,crossOut));
+      table.appendChild(row);
+    }
+  }
+
+  function setSkill(skill){
+    SKILL = skill;
+    document.body.setAttribute("data-skill", SKILL);
+    document.querySelectorAll(".tab").forEach(t=>{
+      t.classList.toggle("active", t.dataset.skill===skill);
+    });
+    build();
+  }
+
+  $("menu").addEventListener("click",(e)=>{
+    const tab=e.target.closest(".tab");
+    if(!tab) return;
+    setSkill(tab.dataset.skill);
+  });
+
+  $("btnGen").addEventListener("click", build);
+  
+  // PREVIEW MODE LOCK
+  $("btnPrint").addEventListener("click", ()=>{
+    alert("This feature is locked in Preview Mode.\nPlease upgrade to print worksheets.");
+  });
+
+  ["min","max","prefill","crossOut"].forEach(id=>{
+    $(id).addEventListener("change", build);
+  });
+
+  build();
+</script>
+</body>
+</html>
