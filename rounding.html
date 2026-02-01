@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Rounding to the Nearest 10 Generator</title>
+<title>Rounding Generator</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 
@@ -15,9 +15,9 @@
     background:#fff; color:#111;
     overflow-x:hidden;
   }
-  .wrap{ max-width:1050px; margin:0 auto; padding:12px; }
+  .wrap{ max-width:1100px; margin:0 auto; padding:12px; }
 
-  /* Controls */
+  /* ========= CONTROLS ========= */
   .controls{
     border:2px solid #111;
     border-radius:12px;
@@ -35,21 +35,26 @@
     display:flex;
     flex-direction:column;
     gap:6px;
-    min-width:190px;
+    min-width:210px;
   }
   .field label{
     font-size:12px;
     font-weight:800;
   }
-  input[type="number"], select{
+  select, input[type="number"]{
     height:42px;
-    min-width:190px;
+    min-width:210px;
     border:2px solid #111;
     border-radius:10px;
     padding:8px 12px;
     font-family:"Poppins", Arial, sans-serif;
     font-size:14px;
     background:#fff;
+  }
+  input[type="number"]:disabled{
+    opacity:0.75;
+    background:#f5f5f5;
+    cursor:not-allowed;
   }
 
   .toggleRow{
@@ -71,6 +76,7 @@
     font-size:15px;
     user-select:none;
     background:#fff;
+    line-height:1;
   }
   .toggle input[type="checkbox"]{
     appearance:none;
@@ -131,7 +137,7 @@
     font-weight:700;
   }
 
-  /* Sheet */
+  /* ========= SHEET ========= */
   .title{
     text-align:center;
     font-size:28px;
@@ -150,7 +156,7 @@
     border-right:2px solid #111;
     border-bottom:2px solid #111;
     padding:12px 12px 10px;
-    min-height:190px;
+    min-height:200px;
     display:flex;
     flex-direction:column;
     gap:10px;
@@ -158,6 +164,10 @@
   }
   .row .cell:last-child{ border-right:none; }
   .grid .row:last-child .cell{ border-bottom:none; }
+
+  body.scaffold .row{ grid-template-columns: 1fr; }
+  body.scaffold .cell{ min-height:225px; }
+  body.scaffold .row .cell{ border-right:none !important; }
 
   .prompt{
     font-size:18px;
@@ -173,13 +183,24 @@
     gap:14px;
     align-items:center;
   }
-  .blank{
-    display:inline-block;
+
+  /* Answer boxes instead of blank lines */
+  .ansBox{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
     width:110px;
-    border-bottom:3px solid #111;
-    transform: translateY(-2px);
+    height:34px;
+    border:2px solid #111;
+    border-radius:6px;
+    font-weight:900;
+    font-size:16px;
+    background:#fff;
   }
-  .blank.short{ width:90px; }
+  .ansBox.wide{ width:130px; }
+  .ansBox.small{ width:90px; }
+  .ansBox.empty{ color:transparent; } /* keeps height/spacing even */
+  .ansBox.empty::selection{ background:transparent; }
 
   .nlWrap{
     width:100%;
@@ -194,26 +215,18 @@
     margin-top:10px;
   }
 
-  /* Scaffolded mode: 1 per row */
-  body.scaffold .row{
-    grid-template-columns: 1fr;
-  }
-  body.scaffold .cell{
-    min-height:210px;
-  }
-
-  /* Print */
   @media print{
     .controls{ display:none; }
     .wrap{ padding:0; max-width:none; }
+
     body{
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
       zoom: 0.94;
     }
     .title{ font-size:24px; margin:4px 0 8px; }
-    .cell{ min-height:175px; padding:10px; gap:8px; }
-    body.scaffold .cell{ min-height:200px; }
+    .cell{ min-height:185px; padding:10px; gap:8px; }
+    body.scaffold .cell{ min-height:210px; }
     .prompt{ font-size:17px; }
     .lines{ font-size:14px; }
     .footer{ font-size:11px; margin-top:6px; }
@@ -227,13 +240,25 @@
   <div class="controls">
     <div class="controls-top">
       <div class="field">
-        <label for="min">Lowest #</label>
-        <input id="min" type="number" value="0" min="0" max="9999">
+        <label for="nearest">Round to the Nearest</label>
+        <select id="nearest">
+          <option value="10" selected>Tens</option>
+          <option value="100">Hundreds</option>
+          <option value="1000">Thousands</option>
+          <option value="10000">Ten Thousands</option>
+        </select>
       </div>
+
       <div class="field">
-        <label for="max">Highest #</label>
-        <input id="max" type="number" value="999" min="1" max="9999">
+        <label for="within">Numbers Up To</label>
+        <select id="within">
+          <option value="100" selected>100</option>
+          <option value="1000">1,000</option>
+          <option value="10000">10,000</option>
+          <option value="100000">100,000</option>
+        </select>
       </div>
+
       <div class="field">
         <label for="count">Problems</label>
         <select id="count">
@@ -252,18 +277,23 @@
       </label>
 
       <label class="toggle">
-        <input id="showAllTicks" type="checkbox">
-        Show all tick labels
+        <input id="labelAll" type="checkbox">
+        Label All Tick Marks
       </label>
 
       <label class="toggle">
-        <input id="blankEndpoints" type="checkbox">
-        Blanks for endpoints
+        <input id="endpointsFilled" type="checkbox" checked>
+        Endpoints Filled In
       </label>
 
       <label class="toggle">
-        <input id="blankRoundLines" type="checkbox">
-        Blanks for Round Down/Up
+        <input id="fillDownUp" type="checkbox">
+        Fill Round Down/Up
+      </label>
+
+      <label class="toggle">
+        <input id="showDot" type="checkbox" checked>
+        Show Dot on Number Line
       </label>
     </div>
 
@@ -272,12 +302,12 @@
       <button type="button" class="secondary" id="btnPrint">Print</button>
     </div>
 
-    <div class="hint">
-      Nearest 10: number line always shows the two tens (e.g., 810 → 820) with 10 equal steps.
+    <div class="hint" id="hint">
+      Number line shows the two “benchmarks” (down/up) with 10 equal steps in between.
     </div>
   </div>
 
-  <div class="title">Round to the Nearest 10</div>
+  <div class="title" id="sheetTitle">Round to the Nearest Ten</div>
 
   <div class="grid" id="grid"></div>
 
@@ -288,31 +318,74 @@
   const $ = (id) => document.getElementById(id);
   function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
 
-  function normalizeBounds(){
-    let lo = parseInt($("min").value || "0", 10);
-    let hi = parseInt($("max").value || "999", 10);
-    lo = clamp(lo, 0, 9999);
-    hi = clamp(hi, 1, 9999);
-    if(hi < lo) [lo,hi] = [hi,lo];
-    $("min").value = lo;
-    $("max").value = hi;
-    return {lo,hi};
+  function fmt(n){
+    return n.toLocaleString("en-US");
   }
 
-  function roundDown10(n){ return Math.floor(n/10)*10; }
-  function roundUp10(n){ return roundDown10(n) + 10; }
+  function setTitles(){
+    const place = parseInt($("nearest").value, 10);
+    let label = "Ten";
+    if(place === 100) label = "Hundred";
+    if(place === 1000) label = "Thousand";
+    if(place === 10000) label = "Ten Thousand";
+    $("sheetTitle").textContent = `Round to the Nearest ${label}`;
+  }
 
-  // Build an SVG number line from down..up with 10 equal intervals (11 tick marks).
-  // Optionally label all tick values or only endpoints. Endpoints can be numbers or blanks.
-  function numberLineSVG(n, down, up, opts){
-    const W = 420;
-    const H = opts.showAllTicks ? 110 : 90;
-    const padL = 36, padR = 36;
+  function enforceWithinVsNearest(){
+    const nearest = parseInt($("nearest").value, 10);
+    const within = parseInt($("within").value, 10);
+
+    // If rounding to 10,000, "Numbers Up To" must be at least 10,000 (really 100,000 is most meaningful).
+    // Keep it simple: within must be >= nearest*10 for healthy variety.
+    const minWithin = nearest * 10;
+
+    if(within < minWithin){
+      // bump within up to the smallest allowed option
+      const options = [100, 1000, 10000, 100000];
+      const next = options.find(v => v >= minWithin) || 100000;
+      $("within").value = String(next);
+    }
+
+    // Helpful hint text
+    const withinNow = parseInt($("within").value, 10);
+    $("hint").textContent = `Generating numbers from 0 to ${fmt(withinNow - 1)} and rounding to the nearest ${fmt(nearest)}.`;
+  }
+
+  // Round to nearest place value; ties (exact midpoint) round UP
+  function roundDownTo(n, place){ return Math.floor(n / place) * place; }
+  function roundUpTo(n, place){ return roundDownTo(n, place) + place; }
+
+  function roundNearest(n, place){
+    const down = roundDownTo(n, place);
+    const up = down + place;
+    const midpoint = down + place/2;
+    return (n >= midpoint) ? up : down; // ties go up
+  }
+
+  function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]]=[arr[j],arr[i]];
+    }
+    return arr;
+  }
+
+  // Build SVG number line: down..up with 10 equal intervals.
+  // Step size = place/10 (can be 1, 10, 100, 1000)
+  function numberLineSVG(n, down, up, place, opts){
+    const showAll = opts.labelAll;
+    const endpointsFilled = opts.endpointsFilled;
+    const showDot = opts.showDot;
+
+    const W = 440;
+    const H = showAll ? 120 : 96;
+    const padL = 34, padR = 34;
     const lineY = 44;
 
     const x0 = padL;
     const x1 = W - padR;
-    const step = (x1 - x0) / 10; // 10 intervals
+    const stepX = (x1 - x0) / 10;         // 10 equal spaces
+    const stepVal = place / 10;           // 10 equal value steps
 
     const ns = "http://www.w3.org/2000/svg";
     const svg = document.createElementNS(ns, "svg");
@@ -331,7 +404,7 @@
 
     // ticks + labels
     for(let i=0;i<=10;i++){
-      const x = x0 + step*i;
+      const x = x0 + stepX*i;
 
       const tick = document.createElementNS(ns, "line");
       tick.setAttribute("x1", x);
@@ -339,88 +412,108 @@
       tick.setAttribute("x2", x);
       tick.setAttribute("y2", lineY + 10);
       tick.setAttribute("stroke", "#111");
-      tick.setAttribute("stroke-width", i===0 || i===10 ? "4" : "3");
+      tick.setAttribute("stroke-width", (i===0 || i===10) ? "4" : "3");
       svg.appendChild(tick);
 
-      const shouldLabel = opts.showAllTicks || i===0 || i===10;
+      const shouldLabel = showAll || i===0 || i===10;
       if(shouldLabel){
-        const t = document.createElementNS(ns, "text");
-        t.setAttribute("x", x);
-        t.setAttribute("y", lineY + 42);
-        t.setAttribute("text-anchor", "middle");
-        t.setAttribute("font-family", "Poppins, Arial, sans-serif");
-        t.setAttribute("font-weight", (i===0 || i===10) ? "800" : "700");
-        t.setAttribute("font-size", (i===0 || i===10) ? "22" : "14");
-        t.setAttribute("fill", "#111");
+        const val = down + (stepVal * i);
 
-        let labelVal = down + i;
-        if((i===0 || i===10) && opts.blankEndpoints){
-          // blank line for endpoints
-          // draw a line instead of text
-          const bl = document.createElementNS(ns, "line");
-          bl.setAttribute("x1", x - 22);
-          bl.setAttribute("y1", lineY + 34);
-          bl.setAttribute("x2", x + 22);
-          bl.setAttribute("y2", lineY + 34);
-          bl.setAttribute("stroke", "#111");
-          bl.setAttribute("stroke-width", "3");
-          svg.appendChild(bl);
+        if((i===0 || i===10) && !endpointsFilled){
+          // draw a blank box under endpoints
+          const boxW = 62, boxH = 26;
+          const rect = document.createElementNS(ns, "rect");
+          rect.setAttribute("x", x - boxW/2);
+          rect.setAttribute("y", lineY + 28);
+          rect.setAttribute("width", boxW);
+          rect.setAttribute("height", boxH);
+          rect.setAttribute("rx", "6");
+          rect.setAttribute("ry", "6");
+          rect.setAttribute("fill", "#fff");
+          rect.setAttribute("stroke", "#111");
+          rect.setAttribute("stroke-width", "3");
+          svg.appendChild(rect);
         }else{
-          t.textContent = String(labelVal);
+          const t = document.createElementNS(ns, "text");
+          t.setAttribute("x", x);
+          t.setAttribute("y", lineY + 48);
+          t.setAttribute("text-anchor", "middle");
+          t.setAttribute("font-family", "Poppins, Arial, sans-serif");
+          t.setAttribute("font-weight", (i===0 || i===10) ? "800" : "700");
+          t.setAttribute("font-size", (i===0 || i===10) ? "22" : "13");
+          t.setAttribute("fill", "#111");
+          t.textContent = fmt(val);
           svg.appendChild(t);
         }
       }
     }
 
-    // marker at n
-    const markerX = x0 + step * (n - down);
-    const dot = document.createElementNS(ns, "circle");
-    dot.setAttribute("cx", markerX);
-    dot.setAttribute("cy", lineY);
-    dot.setAttribute("r", "7");
-    dot.setAttribute("fill", "#111");
-    svg.appendChild(dot);
+    if(showDot){
+      // marker at n: position i = (n - down) / stepVal
+      const iPos = (n - down) / stepVal;
+      const markerX = x0 + stepX * iPos;
 
-    // Optional: show the target number above as small text (helps in scaffolded mode)
-    // (Leaving off by default to keep it clean.)
+      const dot = document.createElementNS(ns, "circle");
+      dot.setAttribute("cx", markerX);
+      dot.setAttribute("cy", lineY);
+      dot.setAttribute("r", "7");
+      dot.setAttribute("fill", "#111");
+      svg.appendChild(dot);
+    }
+
     return svg;
   }
 
-  // Generate unique numbers for problems (no duplicates)
-  function pickUniqueNumbers(lo, hi, count){
-    const span = hi - lo + 1;
-    const result = [];
-    if(span <= 0) return result;
-
-    // If range is tight, allow repeats only if necessary (but try hard not to).
-    const maxUnique = Math.min(count, span);
+  function pickUniqueNumbers(maxExclusive, count, place){
+    // Avoid numbers that are exactly on a rounding boundary too often (boring),
+    // but still allow them sometimes.
     const seen = new Set();
+    const result = [];
+    const triesLimit = 120000;
+    let tries = 0;
 
-    while(result.length < maxUnique){
-      const n = lo + Math.floor(Math.random() * span);
+    while(result.length < Math.min(count, maxExclusive) && tries < triesLimit){
+      tries++;
+      const n = Math.floor(Math.random() * maxExclusive);
+
+      // Prefer non-multiples of place, but don't forbid.
+      if(n % place === 0 && Math.random() < 0.85) continue;
+
       if(seen.has(n)) continue;
       seen.add(n);
       result.push(n);
     }
 
-    // If count > unique available, fill remaining with randoms (rare in practice)
+    // If range is tight, fill remaining (allow repeats if absolutely needed)
     while(result.length < count){
-      const n = lo + Math.floor(Math.random() * span);
-      result.push(n);
+      result.push(Math.floor(Math.random() * maxExclusive));
     }
     return result;
   }
 
-  function buildProblemCard(index, n, opts){
-    const down = roundDown10(n);
-    const up = down + 10;
+  function makeAnsBox(text, widthClass){
+    const span = document.createElement("span");
+    span.className = "ansBox " + (widthClass || "");
+    if(text === null){
+      // empty student box
+      span.innerHTML = "&nbsp;";
+      span.classList.add("empty");
+    }else{
+      span.textContent = text;
+    }
+    return span;
+  }
+
+  function buildProblemCard(index, n, place, opts){
+    const down = roundDownTo(n, place);
+    const up = down + place;
 
     const card = document.createElement("div");
     card.className = "cell";
 
     const prompt = document.createElement("div");
     prompt.className = "prompt";
-    prompt.textContent = `${index}. Round ${n} to the nearest 10.`;
+    prompt.textContent = `${index}. Round ${fmt(n)} to the nearest ${fmt(place)}.`;
     card.appendChild(prompt);
 
     const lines = document.createElement("div");
@@ -428,64 +521,51 @@
 
     const downLabel = document.createElement("span");
     downLabel.textContent = "Round Down:";
-    const downBlank = document.createElement("span");
-    downBlank.className = "blank short";
-
     const upLabel = document.createElement("span");
     upLabel.textContent = "Round Up:";
-    const upBlank = document.createElement("span");
-    upBlank.className = "blank";
 
-    if(opts.blankRoundLines){
-      lines.appendChild(downLabel);
-      lines.appendChild(downBlank);
-      lines.appendChild(upLabel);
-      lines.appendChild(upBlank);
-    }else{
-      lines.appendChild(downLabel);
-      lines.appendChild(document.createTextNode(" "));
-      const dVal = document.createElement("span");
-      dVal.style.fontWeight = "900";
-      dVal.textContent = String(down);
-      lines.appendChild(dVal);
+    lines.appendChild(downLabel);
+    lines.appendChild(
+      opts.fillDownUp ? makeAnsBox(fmt(down), "small") : makeAnsBox(null, "small")
+    );
 
-      lines.appendChild(document.createTextNode("   "));
-
-      lines.appendChild(upLabel);
-      lines.appendChild(document.createTextNode(" "));
-      const uVal = document.createElement("span");
-      uVal.style.fontWeight = "900";
-      uVal.textContent = String(up);
-      lines.appendChild(uVal);
-    }
+    lines.appendChild(upLabel);
+    lines.appendChild(
+      opts.fillDownUp ? makeAnsBox(fmt(up), "wide") : makeAnsBox(null, "wide")
+    );
 
     card.appendChild(lines);
 
     const nl = document.createElement("div");
     nl.className = "nlWrap";
-    nl.appendChild(numberLineSVG(n, down, up, {
-      showAllTicks: opts.showAllTicks,
-      blankEndpoints: opts.blankEndpoints
-    }));
+    nl.appendChild(numberLineSVG(n, down, up, place, opts));
     card.appendChild(nl);
 
     return card;
   }
 
   function build(){
-    const {lo,hi} = normalizeBounds();
+    enforceWithinVsNearest();
+    setTitles();
+
+    const place = parseInt($("nearest").value, 10);
+    const within = parseInt($("within").value, 10);
     const count = parseInt($("count").value, 10);
 
     const opts = {
       scaffold: $("scaffold").checked,
-      showAllTicks: $("showAllTicks").checked,
-      blankEndpoints: $("blankEndpoints").checked,
-      blankRoundLines: $("blankRoundLines").checked
+      labelAll: $("labelAll").checked,
+      endpointsFilled: $("endpointsFilled").checked,
+      fillDownUp: $("fillDownUp").checked,
+      showDot: $("showDot").checked
     };
 
     document.body.classList.toggle("scaffold", opts.scaffold);
 
-    const nums = pickUniqueNumbers(lo, hi, count);
+    // maxExclusive: "Numbers Up To" means 0..(within-1)
+    const maxExclusive = Math.max(1, within);
+
+    const nums = pickUniqueNumbers(maxExclusive, count, place);
 
     const grid = $("grid");
     grid.innerHTML = "";
@@ -500,19 +580,16 @@
 
       for(let c=0;c<perRow;c++){
         if(idx >= count) break;
-        const card = buildProblemCard(idx+1, nums[idx], opts);
-        row.appendChild(card);
+        row.appendChild(buildProblemCard(idx+1, nums[idx], place, opts));
         idx++;
       }
-
       grid.appendChild(row);
     }
 
-    // Fix right-border when scaffolded (1 col)
+    // Fix right borders for 1-col rows (scaffold)
     if(opts.scaffold){
       [...grid.querySelectorAll(".row .cell")].forEach(cell => cell.style.borderRight = "none");
     }else{
-      // restore (in case toggling back)
       [...grid.querySelectorAll(".row")].forEach(rw=>{
         const cells = rw.querySelectorAll(".cell");
         if(cells.length===2){
@@ -525,13 +602,19 @@
     }
   }
 
+  function init(){
+    enforceWithinVsNearest();
+    setTitles();
+    build();
+  }
+
   $("btnGen").addEventListener("click", build);
   $("btnPrint").addEventListener("click", ()=>window.print());
-  ["min","max","count","scaffold","showAllTicks","blankEndpoints","blankRoundLines"].forEach(id=>{
-    $(id).addEventListener("change", build);
-  });
 
-  build();
+  ["nearest","within","count","scaffold","labelAll","endpointsFilled","fillDownUp","showDot"]
+    .forEach(id => $(id).addEventListener("change", build));
+
+  init();
 </script>
 </body>
 </html>
