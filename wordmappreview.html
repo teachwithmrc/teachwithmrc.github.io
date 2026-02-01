@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Word Ladder Generator - PREVIEW MODE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ink:#1f365f; --bg:#fafafa; --card:#f6f9ff; --border:#cfd7ef;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Poppins,system-ui,-apple-system,sans-serif;
+      color:var(--ink);
+      background:var(--bg);
+      /* Prevent selection */
+      user-select: none; -webkit-user-select: none;
+    }
+
+    /* Header */
+    header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--border); padding-bottom: 10px;}
+    .wrap{max-width:1000px;margin:0 auto;padding:12px 16px; text-align: center;}
+    h1{font-size:28px;margin:0 0 10px 0;font-weight:800;}
+
+    /* Feature Badge */
+    .feature-badge {
+      display: inline-block;
+      background: #e3f2fd;
+      color: #1565c0;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 99px;
+      border: 1px solid #bbdefb;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    /* Tabs */
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+    .tab{
+      appearance:none;
+      border:2px solid #000;
+      background:#fff;
+      color:#111;
+      padding:10px 16px;
+      border-radius:10px;
+      font-weight:700;
+      font-size: 14px;
+      cursor:pointer;
+      transition:all .15s;
+    }
+    .tab:hover{ transform:translateY(-2px); box-shadow: 0 4px 0 rgba(0,0,0,0.1); }
+    .tab[aria-selected="true"]{background:#111;color:#fff;border-color:#111;}
+    .tab:disabled{opacity:.45;cursor:not-allowed}
+
+    /* Content area */
+    .content{
+      max-width:1000px;
+      margin:20px auto;
+      padding:0 16px 24px;
+      position: relative; /* Key for overlay positioning */
+      min-height: 800px; 
+    }
+    .panel{display:none;border:2px solid #000;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.06)}
+    .panel.active{display:block}
+
+    /* Iframes */
+    .ladder-frame{width:100%;height:100vh;min-height:800px;border:0;display:block;background:#fff}
+
+    /* Helper: loading */
+    .loading{display:flex;align-items:center;justify-content:center;gap:10px;padding:30px;font-weight:600;color:#555}
+    .spinner{width:18px;height:18px;border:3px solid #ccc;border-top-color:#111;border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ========= PREVIEW MODE STYLES ========= */
+    .preview-wrapper {
+      position: relative;
+      /* Ensure the overlay sits on top of everything inside .content */
+      z-index: 5;
+    }
+
+    .fomo-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 50; /* Higher than iframe */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+
+      /* BLUR FILTER */
+      backdrop-filter: blur(2.5px);
+      -webkit-backdrop-filter: blur(2.5px);
+      background: rgba(255, 255, 255, 0.1);
+
+      /* REPEATING WATERMARK */
+      background-image: url("data:image/svg+xml,%3Csvg width='250' height='250' viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='20' y='150' fill='%23000' opacity='0.15' transform='rotate(-45 125 125)' font-family='Poppins' font-weight='900' font-size='32'%3EPREVIEW MODE%3C/text%3E%3C/svg%3E");
+      
+      pointer-events: auto; /* Catch clicks */
+    }
+
+    .lock-card {
+      background: #111;
+      color: #fff;
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      max-width: 400px;
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid #fff;
+      
+      /* Sticky positioning to keep it centered in view while scrolling long iframes */
+      position: sticky;
+      top: 50vh;
+      transform: translateY(-50%);
+    }
+    @keyframes popIn {
+      from { transform: scale(0.8) translateY(-50%); opacity: 0; }
+      to { transform: scale(1) translateY(-50%); opacity: 1; }
+    }
+
+    .lock-icon { font-size: 40px; margin-bottom: 15px; display:block; }
+    .lock-title { font-size: 24px; font-weight: 900; margin-bottom: 10px; line-height:1.2; }
+    .lock-desc { font-size: 14px; margin-bottom: 25px; opacity: 0.9; line-height: 1.5;}
+    
+    .cta-btn {
+      display: inline-block;
+      background: #fff;
+      color: #111;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+    .cta-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(255,255,255,0.3); }
+
+    /* Print: Block everything */
+    @media print{ 
+      body { display: none !important; } 
+    }
+  </style>
+</head>
+
+<body oncontextmenu="return false;">
+  <header>
+    <div class="wrap">
+      <h1>Word Ladder Generator</h1>
+      <div class="feature-badge">⚡ Includes 6 different skill generators</div>
+      
+      <div class="tabs" role="tablist" aria-label="Word Ladder Sets">
+        <button class="tab" role="tab" aria-selected="true" data-target="#tab-cvc">CVC</button>
+        <button class="tab" role="tab" data-target="#tab-digraphs">Digraphs</button>
+        <button class="tab" role="tab" data-target="#tab-glued">Glued Sounds</button>
+        <button class="tab" role="tab" data-target="#tab-r">R‑Controlled</button>
+        <button class="tab" role="tab" data-target="#tab-vce">Silent E</button>
+        <button class="tab" role="tab" data-target="#tab-vowelteams">Vowel Teams</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    
+    <div class="preview-wrapper">
+      
+      <div class="fomo-overlay">
+        <div class="lock-card">
+          <span class="lock-icon">🔒</span>
+          <div class="lock-title">Premium Resource</div>
+          <div class="lock-desc">
+            You are viewing a preview of the Word Ladder Generators. 
+            Upgrade to Intervention Station Premium to unlock all 6 tools, printing, and watermark removal.
+          </div>
+          <a href="#" class="cta-btn">Unlock Full Access</a>
+        </div>
+      </div>
+
+      <section id="tab-cvc" class="panel active" role="tabpanel" aria-labelledby="CVC">
+        <div class="loading"><span class="spinner"></span> Loading CVC ladders...</div>
+        <iframe class="ladder-frame" title="CVC Word Ladders" src="/blendsladder.html" loading="eager"></iframe>
+      </section>
+
+      <section id="tab-digraphs" class="panel" role="tabpanel" aria-labelledby="Digraphs">
+        <div class="loading"><span class="spinner"></span> Loading Digraph ladders...</div>
+        <iframe class="ladder-frame" title="Digraph Word Ladders" src="/01digraphladderwithblends.html" loading="lazy"></iframe>
+      </section>
+
+      <section id="tab-glued" class="panel" role="tabpanel" aria-labelledby="Glued Sounds">
+        <div class="loading"><span class="spinner"></span> Loading Glued Sounds ladders...</div>
+        <iframe class="ladder-frame" title="Glued Sounds Word Ladders" src="/01gluedladder.html" loading="lazy"></iframe>
+      </section>
+
+      <section id="tab-r" class="panel" role="tabpanel" aria-labelledby="R-Controlled">
+        <div class="loading"><span class="spinner"></span> Loading R‑Controlled ladders...</div>
+        <iframe class="ladder-frame" title="R‑Controlled Word Ladders" src="/01rcontrladders2.html" loading="lazy"></iframe>
+      </section>
+
+      <section id="tab-vce" class="panel" role="tabpanel" aria-labelledby="VCe">
+        <div class="loading"><span class="spinner"></span> Loading VCe ladders...</div>
+        <iframe class="ladder-frame" title="VCe Word Ladders" src="01vceladders.html" loading="lazy"></iframe>
+      </section>
+
+      <section id="tab-vowelteams" class="panel" role="tabpanel" aria-labelledby="Vowel Teams">
+        <div class="loading"><span class="spinner"></span> Loading Vowel Teams ladders...</div>
+        <iframe class="ladder-frame" title="Vowel Teams Word Ladders" src="01vowelteamslonge" loading="lazy"></iframe>
+      </section>
+    
+    </div> </main>
+
+  <script>
+    // --- Seamless tab switcher ---
+    const tabs = Array.from(document.querySelectorAll('.tab'));
+    const panels = Array.from(document.querySelectorAll('.panel'));
+
+    function activate(targetSel){
+      panels.forEach(p=>p.classList.toggle('active', '#'+p.id === targetSel));
+      tabs.forEach(t=>t.setAttribute('aria-selected', t.dataset.target===targetSel));
+      // No scrolling needed, keeps UI stable
+    }
+    tabs.forEach(btn=>btn.addEventListener('click',()=>activate(btn.dataset.target)));
+
+    // --- Auto-hide the loading row ---
+    const frameSections = document.querySelectorAll('.panel');
+    frameSections.forEach(section=>{
+      const frame = section.querySelector('iframe');
+      const loadingRow = section.querySelector('.loading');
+      if(!frame) return;
+      frame.addEventListener('load',()=>{
+        loadingRow?.remove();
+        try{
+          // Attempt to fit height (only works on same origin)
+          const doc = frame.contentDocument || frame.contentWindow.document;
+          const resize = ()=>{ frame.style.height = Math.max(800, doc.body.scrollHeight + 1) + 'px'; };
+          resize();
+          const mo = new MutationObserver(resize);
+          mo.observe(doc.body, {subtree:true, childList:true});
+          frame.contentWindow.addEventListener('resize', resize);
+        }catch(e){ 
+          // If cross-origin, keep default height
+        }
+      }, { once:true });
+    });
+
+    // --- LOCKED: Block Ctrl/Cmd+P ---
+    window.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='p'){
+        e.preventDefault(); // Stop the iframe print behavior
+        alert("This feature is locked in Preview Mode.\nPlease upgrade to print worksheets.");
+      }
+    });
+  </script>
+</body>
+</html>
