@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Rounding to the Nearest 10 Generator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+  *{ box-sizing:border-box; }
+  html, body{
+    margin:0; padding:0;
+    font-family:"Poppins", Arial, sans-serif;
+    background:#fff; color:#111;
+    overflow-x:hidden;
+  }
+  .wrap{ max-width:1050px; margin:0 auto; padding:12px; }
+
+  /* Controls */
+  .controls{
+    border:2px solid #111;
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:12px;
+  }
+  .controls-top{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    align-items:flex-end;
+    justify-content:center;
+  }
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    min-width:190px;
+  }
+  .field label{
+    font-size:12px;
+    font-weight:800;
+  }
+  input[type="number"], select{
+    height:42px;
+    min-width:190px;
+    border:2px solid #111;
+    border-radius:10px;
+    padding:8px 12px;
+    font-family:"Poppins", Arial, sans-serif;
+    font-size:14px;
+    background:#fff;
+  }
+
+  .toggleRow{
+    margin-top:10px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    align-items:center;
+  }
+  .toggle{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 12px;
+    border:2px solid #111;
+    border-radius:14px;
+    font-weight:900;
+    font-size:15px;
+    user-select:none;
+    background:#fff;
+  }
+  .toggle input[type="checkbox"]{
+    appearance:none;
+    -webkit-appearance:none;
+    width:44px;
+    height:26px;
+    border:2px solid #111;
+    border-radius:999px;
+    position:relative;
+    margin:0;
+    padding:0;
+    background:#fff;
+    cursor:pointer;
+    flex:0 0 auto;
+    min-width:44px;
+  }
+  .toggle input[type="checkbox"]::after{
+    content:"";
+    position:absolute;
+    top:50%;
+    left:3px;
+    width:18px;
+    height:18px;
+    border:2px solid #111;
+    border-radius:999px;
+    background:#fff;
+    transform:translateY(-50%);
+    transition:all .15s ease;
+  }
+  .toggle input[type="checkbox"]:checked{ background:#111; }
+  .toggle input[type="checkbox"]:checked::after{ left:19px; background:#fff; }
+
+  .controls-actions{
+    margin-top:12px;
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  button{
+    height:54px;
+    padding:0 30px;
+    border:2px solid #111;
+    border-radius:14px;
+    font-weight:900;
+    font-size:18px;
+    font-family:"Poppins", Arial, sans-serif;
+    background:#111;
+    color:#fff;
+    cursor:pointer;
+  }
+  button.secondary{ background:#fff; color:#111; }
+
+  .hint{
+    margin-top:8px;
+    text-align:center;
+    font-size:13px;
+    font-weight:700;
+  }
+
+  /* Sheet */
+  .title{
+    text-align:center;
+    font-size:28px;
+    font-weight:900;
+    margin:6px 0 10px;
+  }
+
+  .grid{
+    border:2px solid #111;
+  }
+  .row{
+    display:grid;
+    grid-template-columns: 1fr 1fr; /* default 2 per row */
+  }
+  .cell{
+    border-right:2px solid #111;
+    border-bottom:2px solid #111;
+    padding:12px 12px 10px;
+    min-height:190px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .row .cell:last-child{ border-right:none; }
+  .grid .row:last-child .cell{ border-bottom:none; }
+
+  .prompt{
+    font-size:18px;
+    font-weight:900;
+    line-height:1.2;
+  }
+
+  .lines{
+    font-size:15px;
+    font-weight:800;
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    align-items:center;
+  }
+  .blank{
+    display:inline-block;
+    width:110px;
+    border-bottom:3px solid #111;
+    transform: translateY(-2px);
+  }
+  .blank.short{ width:90px; }
+
+  .nlWrap{
+    width:100%;
+    display:flex;
+    justify-content:center;
+  }
+
+  .footer{
+    text-align:center;
+    font-size:12px;
+    font-weight:800;
+    margin-top:10px;
+  }
+
+  /* Scaffolded mode: 1 per row */
+  body.scaffold .row{
+    grid-template-columns: 1fr;
+  }
+  body.scaffold .cell{
+    min-height:210px;
+  }
+
+  /* Print */
+  @media print{
+    .controls{ display:none; }
+    .wrap{ padding:0; max-width:none; }
+    body{
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      zoom: 0.94;
+    }
+    .title{ font-size:24px; margin:4px 0 8px; }
+    .cell{ min-height:175px; padding:10px; gap:8px; }
+    body.scaffold .cell{ min-height:200px; }
+    .prompt{ font-size:17px; }
+    .lines{ font-size:14px; }
+    .footer{ font-size:11px; margin-top:6px; }
+  }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="controls">
+    <div class="controls-top">
+      <div class="field">
+        <label for="min">Lowest #</label>
+        <input id="min" type="number" value="0" min="0" max="9999">
+      </div>
+      <div class="field">
+        <label for="max">Highest #</label>
+        <input id="max" type="number" value="999" min="1" max="9999">
+      </div>
+      <div class="field">
+        <label for="count">Problems</label>
+        <select id="count">
+          <option value="10" selected>10</option>
+          <option value="12">12</option>
+          <option value="14">14</option>
+          <option value="16">16</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="toggleRow">
+      <label class="toggle">
+        <input id="scaffold" type="checkbox">
+        Scaffolded (1 per line)
+      </label>
+
+      <label class="toggle">
+        <input id="showAllTicks" type="checkbox">
+        Show all tick labels
+      </label>
+
+      <label class="toggle">
+        <input id="blankEndpoints" type="checkbox">
+        Blanks for endpoints
+      </label>
+
+      <label class="toggle">
+        <input id="blankRoundLines" type="checkbox">
+        Blanks for Round Down/Up
+      </label>
+    </div>
+
+    <div class="controls-actions">
+      <button type="button" id="btnGen">Generate</button>
+      <button type="button" class="secondary" id="btnPrint">Print</button>
+    </div>
+
+    <div class="hint">
+      Nearest 10: number line always shows the two tens (e.g., 810 → 820) with 10 equal steps.
+    </div>
+  </div>
+
+  <div class="title">Round to the Nearest 10</div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="footer">Copyright - Generated from InterventionStation.com - @TeachWithMrC</div>
+</div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+
+  function normalizeBounds(){
+    let lo = parseInt($("min").value || "0", 10);
+    let hi = parseInt($("max").value || "999", 10);
+    lo = clamp(lo, 0, 9999);
+    hi = clamp(hi, 1, 9999);
+    if(hi < lo) [lo,hi] = [hi,lo];
+    $("min").value = lo;
+    $("max").value = hi;
+    return {lo,hi};
+  }
+
+  function roundDown10(n){ return Math.floor(n/10)*10; }
+  function roundUp10(n){ return roundDown10(n) + 10; }
+
+  // Build an SVG number line from down..up with 10 equal intervals (11 tick marks).
+  // Optionally label all tick values or only endpoints. Endpoints can be numbers or blanks.
+  function numberLineSVG(n, down, up, opts){
+    const W = 420;
+    const H = opts.showAllTicks ? 110 : 90;
+    const padL = 36, padR = 36;
+    const lineY = 44;
+
+    const x0 = padL;
+    const x1 = W - padR;
+    const step = (x1 - x0) / 10; // 10 intervals
+
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("width", "100%");
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+
+    // base line
+    const base = document.createElementNS(ns, "line");
+    base.setAttribute("x1", x0);
+    base.setAttribute("y1", lineY);
+    base.setAttribute("x2", x1);
+    base.setAttribute("y2", lineY);
+    base.setAttribute("stroke", "#111");
+    base.setAttribute("stroke-width", "4");
+    svg.appendChild(base);
+
+    // ticks + labels
+    for(let i=0;i<=10;i++){
+      const x = x0 + step*i;
+
+      const tick = document.createElementNS(ns, "line");
+      tick.setAttribute("x1", x);
+      tick.setAttribute("y1", lineY - 10);
+      tick.setAttribute("x2", x);
+      tick.setAttribute("y2", lineY + 10);
+      tick.setAttribute("stroke", "#111");
+      tick.setAttribute("stroke-width", i===0 || i===10 ? "4" : "3");
+      svg.appendChild(tick);
+
+      const shouldLabel = opts.showAllTicks || i===0 || i===10;
+      if(shouldLabel){
+        const t = document.createElementNS(ns, "text");
+        t.setAttribute("x", x);
+        t.setAttribute("y", lineY + 42);
+        t.setAttribute("text-anchor", "middle");
+        t.setAttribute("font-family", "Poppins, Arial, sans-serif");
+        t.setAttribute("font-weight", (i===0 || i===10) ? "800" : "700");
+        t.setAttribute("font-size", (i===0 || i===10) ? "22" : "14");
+        t.setAttribute("fill", "#111");
+
+        let labelVal = down + i;
+        if((i===0 || i===10) && opts.blankEndpoints){
+          // blank line for endpoints
+          // draw a line instead of text
+          const bl = document.createElementNS(ns, "line");
+          bl.setAttribute("x1", x - 22);
+          bl.setAttribute("y1", lineY + 34);
+          bl.setAttribute("x2", x + 22);
+          bl.setAttribute("y2", lineY + 34);
+          bl.setAttribute("stroke", "#111");
+          bl.setAttribute("stroke-width", "3");
+          svg.appendChild(bl);
+        }else{
+          t.textContent = String(labelVal);
+          svg.appendChild(t);
+        }
+      }
+    }
+
+    // marker at n
+    const markerX = x0 + step * (n - down);
+    const dot = document.createElementNS(ns, "circle");
+    dot.setAttribute("cx", markerX);
+    dot.setAttribute("cy", lineY);
+    dot.setAttribute("r", "7");
+    dot.setAttribute("fill", "#111");
+    svg.appendChild(dot);
+
+    // Optional: show the target number above as small text (helps in scaffolded mode)
+    // (Leaving off by default to keep it clean.)
+    return svg;
+  }
+
+  // Generate unique numbers for problems (no duplicates)
+  function pickUniqueNumbers(lo, hi, count){
+    const span = hi - lo + 1;
+    const result = [];
+    if(span <= 0) return result;
+
+    // If range is tight, allow repeats only if necessary (but try hard not to).
+    const maxUnique = Math.min(count, span);
+    const seen = new Set();
+
+    while(result.length < maxUnique){
+      const n = lo + Math.floor(Math.random() * span);
+      if(seen.has(n)) continue;
+      seen.add(n);
+      result.push(n);
+    }
+
+    // If count > unique available, fill remaining with randoms (rare in practice)
+    while(result.length < count){
+      const n = lo + Math.floor(Math.random() * span);
+      result.push(n);
+    }
+    return result;
+  }
+
+  function buildProblemCard(index, n, opts){
+    const down = roundDown10(n);
+    const up = down + 10;
+
+    const card = document.createElement("div");
+    card.className = "cell";
+
+    const prompt = document.createElement("div");
+    prompt.className = "prompt";
+    prompt.textContent = `${index}. Round ${n} to the nearest 10.`;
+    card.appendChild(prompt);
+
+    const lines = document.createElement("div");
+    lines.className = "lines";
+
+    const downLabel = document.createElement("span");
+    downLabel.textContent = "Round Down:";
+    const downBlank = document.createElement("span");
+    downBlank.className = "blank short";
+
+    const upLabel = document.createElement("span");
+    upLabel.textContent = "Round Up:";
+    const upBlank = document.createElement("span");
+    upBlank.className = "blank";
+
+    if(opts.blankRoundLines){
+      lines.appendChild(downLabel);
+      lines.appendChild(downBlank);
+      lines.appendChild(upLabel);
+      lines.appendChild(upBlank);
+    }else{
+      lines.appendChild(downLabel);
+      lines.appendChild(document.createTextNode(" "));
+      const dVal = document.createElement("span");
+      dVal.style.fontWeight = "900";
+      dVal.textContent = String(down);
+      lines.appendChild(dVal);
+
+      lines.appendChild(document.createTextNode("   "));
+
+      lines.appendChild(upLabel);
+      lines.appendChild(document.createTextNode(" "));
+      const uVal = document.createElement("span");
+      uVal.style.fontWeight = "900";
+      uVal.textContent = String(up);
+      lines.appendChild(uVal);
+    }
+
+    card.appendChild(lines);
+
+    const nl = document.createElement("div");
+    nl.className = "nlWrap";
+    nl.appendChild(numberLineSVG(n, down, up, {
+      showAllTicks: opts.showAllTicks,
+      blankEndpoints: opts.blankEndpoints
+    }));
+    card.appendChild(nl);
+
+    return card;
+  }
+
+  function build(){
+    const {lo,hi} = normalizeBounds();
+    const count = parseInt($("count").value, 10);
+
+    const opts = {
+      scaffold: $("scaffold").checked,
+      showAllTicks: $("showAllTicks").checked,
+      blankEndpoints: $("blankEndpoints").checked,
+      blankRoundLines: $("blankRoundLines").checked
+    };
+
+    document.body.classList.toggle("scaffold", opts.scaffold);
+
+    const nums = pickUniqueNumbers(lo, hi, count);
+
+    const grid = $("grid");
+    grid.innerHTML = "";
+
+    const perRow = opts.scaffold ? 1 : 2;
+    const rows = Math.ceil(count / perRow);
+
+    let idx = 0;
+    for(let r=0;r<rows;r++){
+      const row = document.createElement("div");
+      row.className = "row";
+
+      for(let c=0;c<perRow;c++){
+        if(idx >= count) break;
+        const card = buildProblemCard(idx+1, nums[idx], opts);
+        row.appendChild(card);
+        idx++;
+      }
+
+      grid.appendChild(row);
+    }
+
+    // Fix right-border when scaffolded (1 col)
+    if(opts.scaffold){
+      [...grid.querySelectorAll(".row .cell")].forEach(cell => cell.style.borderRight = "none");
+    }else{
+      // restore (in case toggling back)
+      [...grid.querySelectorAll(".row")].forEach(rw=>{
+        const cells = rw.querySelectorAll(".cell");
+        if(cells.length===2){
+          cells[0].style.borderRight = "2px solid #111";
+          cells[1].style.borderRight = "none";
+        }else if(cells.length===1){
+          cells[0].style.borderRight = "none";
+        }
+      });
+    }
+  }
+
+  $("btnGen").addEventListener("click", build);
+  $("btnPrint").addEventListener("click", ()=>window.print());
+  ["min","max","count","scaffold","showAllTicks","blankEndpoints","blankRoundLines"].forEach(id=>{
+    $(id).addEventListener("change", build);
+  });
+
+  build();
+</script>
+</body>
+</html>
