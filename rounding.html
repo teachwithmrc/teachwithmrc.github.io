@@ -145,18 +145,13 @@
     margin:6px 0 10px;
   }
 
-  .grid{
-    border:2px solid #111;
-  }
-  .row{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-  }
+  .grid{ border:2px solid #111; }
+  .row{ display:grid; grid-template-columns: 1fr 1fr; }
   .cell{
     border-right:2px solid #111;
     border-bottom:2px solid #111;
     padding:12px 12px 18px;
-    min-height:235px;
+    min-height:255px;
     display:flex;
     flex-direction:column;
     gap:10px;
@@ -165,10 +160,9 @@
   .row .cell:last-child{ border-right:none; }
   .grid .row:last-child .cell{ border-bottom:none; }
 
-  /* Scaffolded: bigger, not smaller */
   body.scaffold .row{ grid-template-columns: 1fr; }
   body.scaffold .cell{
-    min-height:265px;
+    min-height:285px;
     padding:14px 14px 22px;
   }
   body.scaffold .row .cell{ border-right:none !important; }
@@ -179,7 +173,6 @@
     line-height:1.2;
   }
 
-  /* New centered rewrite line */
   .rewrite{
     width:100%;
     text-align:center;
@@ -194,9 +187,7 @@
     text-decoration-thickness: 4px;
     text-underline-offset: 4px;
   }
-  .rewrite .c{
-    opacity:.35; /* commas */
-  }
+  .rewrite .c{ opacity:.35; }
 
   .lines{
     font-size:15px;
@@ -234,15 +225,15 @@
   }
   .ansBox.empty{ color:transparent; }
 
-  /* Number line area: extra breathing room + prevents clipping */
+  /* Number line wrapper */
   .nlWrap{
     width:100%;
     display:flex;
     justify-content:center;
-    padding-bottom:18px;
-    min-height:135px;
+    padding-bottom:10px;
+    min-height:145px;
   }
-  .nlWrap svg{ max-width:560px; }
+  .nlWrap svg{ max-width:590px; }
 
   .footer{
     text-align:center;
@@ -254,26 +245,15 @@
   @media print{
     .controls{ display:none; }
     .wrap{ padding:0; max-width:none; }
-
     body{
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
       zoom: 0.94;
     }
-    body.scaffold{
-      zoom: 1.02; /* scaffolded bigger in print */
-    }
-
+    body.scaffold{ zoom: 1.02; }
     .title{ font-size:24px; margin:4px 0 8px; }
-    .cell{
-      min-height:225px;
-      padding:10px 10px 18px;
-      gap:8px;
-    }
-    body.scaffold .cell{
-      min-height:255px;
-      padding:12px 12px 22px;
-    }
+    .cell{ min-height:245px; padding:10px 10px 18px; gap:8px; }
+    body.scaffold .cell{ min-height:275px; padding:12px 12px 22px; }
     .prompt{ font-size:17px; }
     .rewrite{ font-size:22px; }
     .lines{ font-size:14px; }
@@ -320,11 +300,6 @@
       </label>
 
       <label class="toggle">
-        <input id="endpointsFilled" type="checkbox" checked>
-        Endpoints Filled In
-      </label>
-
-      <label class="toggle">
         <input id="fillDownUp" type="checkbox">
         Fill Round Down/Up
       </label>
@@ -344,18 +319,15 @@
   </div>
 
   <div class="title" id="sheetTitle">Round to the Nearest Ten</div>
-
   <div class="grid" id="grid"></div>
-
   <div class="footer">Copyright - Generated from InterventionStation.com - @TeachWithMrC</div>
 </div>
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const PROBLEM_COUNT = 6; // fixed to 6
+  const PROBLEM_COUNT = 6;
 
   function fmt(n){ return n.toLocaleString("en-US"); }
-
   function placeLabel(place){
     if(place === 10) return "Ten";
     if(place === 100) return "Hundred";
@@ -373,7 +345,6 @@
     const nearest = parseInt($("nearest").value, 10);
     const within = parseInt($("within").value, 10);
 
-    // Keep "Numbers Up To" meaningful
     const minWithin = nearest * 10;
     if(within < minWithin){
       const options = [100, 1000, 10000, 100000];
@@ -381,7 +352,7 @@
       $("within").value = String(next);
     }
 
-    // Disable Label All Tick Marks for thousands+
+    // Thousands+ => force simplified labels (endpoint+mid only)
     const labelAllWrap = $("labelAllWrap");
     if(nearest >= 1000){
       $("labelAll").checked = false;
@@ -391,15 +362,11 @@
     }
 
     const withinNow = parseInt($("within").value, 10);
-
-    // Also enforce the minimum number so the underlined digit exists (no "681 to nearest 1000")
-    const minNum = Math.min(nearest, withinNow - 1);
     $("hint").textContent =
-      `Generating numbers from ${fmt(minNum)} to ${fmt(withinNow - 1)} and rounding to the nearest ${fmt(nearest)}.`;
+      `Generating numbers from ${fmt(nearest)} to ${fmt(withinNow - 1)} and rounding to the nearest ${fmt(nearest)}.`;
   }
 
   function roundDownTo(n, place){ return Math.floor(n / place) * place; }
-
   function shuffle(arr){
     for(let i=arr.length-1;i>0;i--){
       const j=Math.floor(Math.random()*(i+1));
@@ -417,20 +384,14 @@
     while(result.length < Math.min(count, span) && tries < 120000){
       tries++;
       const n = minInclusive + Math.floor(Math.random() * span);
-
-      // reduce boring exact-boundary numbers (but still allow sometimes)
       if(n % place === 0 && Math.random() < 0.85) continue;
-
       if(seen.has(n)) continue;
       seen.add(n);
       result.push(n);
     }
-
-    // if range is tight, fill remaining (rare)
     while(result.length < count){
       result.push(minInclusive + Math.floor(Math.random() * span));
     }
-
     return shuffle(result);
   }
 
@@ -441,23 +402,14 @@
     return span;
   }
 
-  // Build centered rewrite number with underlined digit (the place being rounded to)
   function buildRewriteNumber(n, place){
-    // underline digit at exponent = log10(place)
-    const exp = Math.round(Math.log10(place)); // 10->1, 100->2, 1000->3, 10000->4
+    const exp = Math.round(Math.log10(place));
+    const raw = String(n);
+    const underlineIndex = raw.length - 1 - exp;
 
-    const s = String(n); // no commas; we'll add commas visually
-    const idxFromRight = exp; // tens = 1 => underline digit 2nd from right
-    const underlineIndex = s.length - 1 - idxFromRight;
-
-    // Add commas while preserving underline target:
-    // We'll render per character of the comma-formatted number.
-    const withCommas = n.toLocaleString("en-US"); // e.g., "8,202"
-    const rawDigits = s.split("");
-
-    // Map raw digit positions to comma-formatted positions:
-    // Walk comma-formatted string; when char is digit, consume next raw digit index.
+    const withCommas = n.toLocaleString("en-US");
     let rawPos = 0;
+
     const container = document.createElement("div");
     container.className = "rewrite";
 
@@ -467,38 +419,31 @@
         sp.className = "c";
         sp.textContent = ",";
         container.appendChild(sp);
-        continue;
+      }else{
+        const sp = document.createElement("span");
+        sp.textContent = ch;
+        if(rawPos === underlineIndex) sp.className = "u";
+        container.appendChild(sp);
+        rawPos++;
       }
-      // digit
-      const sp = document.createElement("span");
-      const currentRawIndex = rawPos;
-      sp.textContent = ch;
-
-      if(currentRawIndex === underlineIndex){
-        sp.className = "u";
-      }
-      container.appendChild(sp);
-      rawPos++;
     }
-
     return container;
   }
 
-  // SVG number line: down..up with 10 equal intervals
-  // For nearest >= 1000, always label endpoints + midpoint only (prevents clutter)
+  // NEW: tick labels row + two long answer lines beneath (left/right).
+  // No endpoint boxes, no endpoint blanks. Just tick labels + two lines.
   function numberLineSVG(n, down, up, place, opts){
     const bigPlace = place >= 1000;
     const labelAll = (!bigPlace && opts.labelAll);
-    const midpointOnly = bigPlace; // endpoints + middle tick label
+    const endpointsAndMid = bigPlace;
 
-    const endpointsFilled = opts.endpointsFilled;
     const showDot = opts.showDot;
 
-    const W = 560;
-    const H = labelAll ? 128 : 118;
+    const W = 590;
+    const H = labelAll ? 132 : 122;
 
-    const padL = 44, padR = 44;
-    const lineY = 42;
+    const padL = 50, padR = 50;
+    const lineY = 40;
 
     const x0 = padL;
     const x1 = W - padR;
@@ -520,14 +465,14 @@
     base.setAttribute("stroke-width", "4");
     svg.appendChild(base);
 
-    // Which ticks get labels?
     function shouldLabel(i){
       if(labelAll) return true;
-      if(midpointOnly) return (i===0 || i===5 || i===10);
+      if(endpointsAndMid) return (i===0 || i===5 || i===10);
+      // default: label ALL ticks for tens/hundreds? No—only endpoints unless user checks labelAll
       return (i===0 || i===10);
     }
 
-    // ticks + labels / endpoint boxes
+    // ticks + labels
     for(let i=0;i<=10;i++){
       const x = x0 + stepX*i;
 
@@ -544,40 +489,19 @@
 
       const val = down + (stepVal * i);
 
-      // move label/boxes safely up so they never clip
-      const labelY = lineY + 58;
-      const boxY = lineY + 38;
-
-      const isEndpoint = (i===0 || i===10);
-
-      if(isEndpoint && !endpointsFilled){
-        const boxW = 78, boxH = 30;
-        const rect = document.createElementNS(ns, "rect");
-        rect.setAttribute("x", x - boxW/2);
-        rect.setAttribute("y", boxY);
-        rect.setAttribute("width", boxW);
-        rect.setAttribute("height", boxH);
-        rect.setAttribute("rx", "7");
-        rect.setAttribute("ry", "7");
-        rect.setAttribute("fill", "#fff");
-        rect.setAttribute("stroke", "#111");
-        rect.setAttribute("stroke-width", "3");
-        svg.appendChild(rect);
-      }else{
-        const t = document.createElementNS(ns, "text");
-        t.setAttribute("x", x);
-        t.setAttribute("y", labelY);
-        t.setAttribute("text-anchor", "middle");
-        t.setAttribute("font-family", "Poppins, Arial, sans-serif");
-        t.setAttribute("font-weight", isEndpoint ? "800" : "700");
-        t.setAttribute("font-size", isEndpoint ? "20" : (labelAll ? "12" : "14"));
-        t.setAttribute("fill", "#111");
-        t.textContent = fmt(val);
-        svg.appendChild(t);
-      }
+      const t = document.createElementNS(ns, "text");
+      t.setAttribute("x", x);
+      t.setAttribute("y", lineY + 52); // one clean row
+      t.setAttribute("text-anchor", "middle");
+      t.setAttribute("font-family", "Poppins, Arial, sans-serif");
+      t.setAttribute("font-weight", (i===0 || i===10) ? "800" : "700");
+      t.setAttribute("font-size", (i===0 || i===10) ? "18" : (labelAll ? "12" : "14"));
+      t.setAttribute("fill", "#111");
+      t.textContent = fmt(val);
+      svg.appendChild(t);
     }
 
-    // marker dot
+    // dot
     if(showDot){
       const iPos = (n - down) / stepVal;
       const markerX = x0 + stepX * iPos;
@@ -589,6 +513,26 @@
       dot.setAttribute("fill", "#111");
       svg.appendChild(dot);
     }
+
+    // two long answer lines under the tick-label row
+    const yLine = lineY + 78;
+    const leftLine = document.createElementNS(ns, "line");
+    leftLine.setAttribute("x1", x0);
+    leftLine.setAttribute("y1", yLine);
+    leftLine.setAttribute("x2", x0 + (x1-x0)*0.36);
+    leftLine.setAttribute("y2", yLine);
+    leftLine.setAttribute("stroke", "#111");
+    leftLine.setAttribute("stroke-width", "4");
+    svg.appendChild(leftLine);
+
+    const rightLine = document.createElementNS(ns, "line");
+    rightLine.setAttribute("x1", x0 + (x1-x0)*0.64);
+    rightLine.setAttribute("y1", yLine);
+    rightLine.setAttribute("x2", x1);
+    rightLine.setAttribute("y2", yLine);
+    rightLine.setAttribute("stroke", "#111");
+    rightLine.setAttribute("stroke-width", "4");
+    svg.appendChild(rightLine);
 
     return svg;
   }
@@ -605,10 +549,8 @@
     prompt.textContent = `${index}. Round ${fmt(n)} to the nearest ${fmt(place)}.`;
     card.appendChild(prompt);
 
-    // New centered rewrite number with underline
     card.appendChild(buildRewriteNumber(n, place));
 
-    // Down / Up on separate lines with arrows
     const lines = document.createElement("div");
     lines.className = "lines";
 
@@ -652,16 +594,13 @@
     const opts = {
       scaffold: $("scaffold").checked,
       labelAll: $("labelAll").checked,
-      endpointsFilled: $("endpointsFilled").checked,
       fillDownUp: $("fillDownUp").checked,
       showDot: $("showDot").checked
     };
 
     document.body.classList.toggle("scaffold", opts.scaffold);
 
-    const max = Math.max(place, within - 1);
-    const min = Math.min(place, within - 1);
-    const minInclusive = min;
+    const minInclusive = Math.min(place, within - 1);
     const maxInclusive = within - 1;
 
     const nums = pickUniqueNumbers(minInclusive, maxInclusive, PROBLEM_COUNT, place);
@@ -695,7 +634,7 @@
   $("btnGen").addEventListener("click", build);
   $("btnPrint").addEventListener("click", ()=>window.print());
 
-  ["nearest","within","scaffold","labelAll","endpointsFilled","fillDownUp","showDot"]
+  ["nearest","within","scaffold","labelAll","fillDownUp","showDot"]
     .forEach(id => $(id).addEventListener("change", build));
 
   init();
