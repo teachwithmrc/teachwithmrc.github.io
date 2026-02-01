@@ -17,7 +17,6 @@
   }
   .wrap{ max-width:1100px; margin:0 auto; padding:12px; }
 
-  /* ========= CONTROLS ========= */
   .controls{
     border:2px solid #111;
     border-radius:12px;
@@ -37,10 +36,7 @@
     gap:6px;
     min-width:210px;
   }
-  .field label{
-    font-size:12px;
-    font-weight:800;
-  }
+  .field label{ font-size:12px; font-weight:800; }
   select{
     height:42px;
     min-width:210px;
@@ -82,10 +78,8 @@
     border-radius:999px;
     position:relative;
     margin:0;
-    padding:0;
     background:#fff;
     cursor:pointer;
-    flex:0 0 auto;
     min-width:44px;
   }
   .toggle input[type="checkbox"]::after{
@@ -104,10 +98,7 @@
   .toggle input[type="checkbox"]:checked{ background:#111; }
   .toggle input[type="checkbox"]:checked::after{ left:19px; background:#fff; }
 
-  .toggle.disabled{
-    opacity:.55;
-    pointer-events:none;
-  }
+  .toggle.disabled{ opacity:.55; pointer-events:none; }
 
   .controls-actions{
     margin-top:12px;
@@ -116,19 +107,32 @@
     gap:14px;
     flex-wrap:wrap;
   }
-  button{
-    height:54px;
-    padding:0 30px;
+
+  /* your button style */
+  .buy-btn--primary{
+    background:#6ec1ff;
+    color:#ffffff;
     border:2px solid #111;
     border-radius:14px;
+    height:54px;
+    padding:0 30px;
     font-weight:900;
     font-size:18px;
     font-family:"Poppins", Arial, sans-serif;
-    background:#111;
-    color:#fff;
     cursor:pointer;
   }
-  button.secondary{ background:#fff; color:#111; }
+  .btn-secondary{
+    background:#fff;
+    color:#111;
+    border:2px solid #111;
+    border-radius:14px;
+    height:54px;
+    padding:0 30px;
+    font-weight:900;
+    font-size:18px;
+    font-family:"Poppins", Arial, sans-serif;
+    cursor:pointer;
+  }
 
   .hint{
     margin-top:8px;
@@ -137,7 +141,6 @@
     font-weight:700;
   }
 
-  /* ========= SHEET ========= */
   .title{
     text-align:center;
     font-size:28px;
@@ -161,17 +164,10 @@
   .grid .row:last-child .cell{ border-bottom:none; }
 
   body.scaffold .row{ grid-template-columns: 1fr; }
-  body.scaffold .cell{
-    min-height:285px;
-    padding:14px 14px 22px;
-  }
+  body.scaffold .cell{ min-height:285px; padding:14px 14px 22px; }
   body.scaffold .row .cell{ border-right:none !important; }
 
-  .prompt{
-    font-size:18px;
-    font-weight:900;
-    line-height:1.2;
-  }
+  .prompt{ font-size:18px; font-weight:900; line-height:1.2; }
 
   .rewrite{
     width:100%;
@@ -189,6 +185,7 @@
   }
   .rewrite .c{ opacity:.35; }
 
+  /* Round down/up lines */
   .lines{
     font-size:15px;
     font-weight:800;
@@ -210,22 +207,13 @@
     width:18px;
     text-align:center;
   }
-
-  .ansBox{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:170px;
-    height:34px;
-    border:2px solid #111;
-    border-radius:7px;
+  .blank{
     font-weight:900;
-    font-size:16px;
-    background:#fff;
+    letter-spacing:2px;
+    display:inline-block;
+    transform: translateY(-1px);
   }
-  .ansBox.empty{ color:transparent; }
 
-  /* Number line wrapper */
   .nlWrap{
     width:100%;
     display:flex;
@@ -233,7 +221,7 @@
     padding-bottom:10px;
     min-height:145px;
   }
-  .nlWrap svg{ max-width:590px; }
+  .nlWrap svg{ max-width:610px; }
 
   .footer{
     text-align:center;
@@ -245,11 +233,7 @@
   @media print{
     .controls{ display:none; }
     .wrap{ padding:0; max-width:none; }
-    body{
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-      zoom: 0.94;
-    }
+    body{ -webkit-print-color-adjust: exact; print-color-adjust: exact; zoom: 0.94; }
     body.scaffold{ zoom: 1.02; }
     .title{ font-size:24px; margin:4px 0 8px; }
     .cell{ min-height:245px; padding:10px 10px 18px; gap:8px; }
@@ -300,6 +284,11 @@
       </label>
 
       <label class="toggle">
+        <input id="endpointsFilled" type="checkbox" checked>
+        Endpoints Filled In
+      </label>
+
+      <label class="toggle">
         <input id="fillDownUp" type="checkbox">
         Fill Round Down/Up
       </label>
@@ -311,8 +300,8 @@
     </div>
 
     <div class="controls-actions">
-      <button type="button" id="btnGen">Generate</button>
-      <button type="button" class="secondary" id="btnPrint">Print</button>
+      <button type="button" class="buy-btn--primary" id="btnGen">Generate</button>
+      <button type="button" class="btn-secondary" id="btnPrint">Print</button>
     </div>
 
     <div class="hint" id="hint"></div>
@@ -352,7 +341,7 @@
       $("within").value = String(next);
     }
 
-    // Thousands+ => force simplified labels (endpoint+mid only)
+    // Thousands+ => labelAll disabled
     const labelAllWrap = $("labelAllWrap");
     if(nearest >= 1000){
       $("labelAll").checked = false;
@@ -374,7 +363,6 @@
     }
     return arr;
   }
-
   function pickUniqueNumbers(minInclusive, maxInclusive, count, place){
     const span = maxInclusive - minInclusive + 1;
     const seen = new Set();
@@ -393,13 +381,6 @@
       result.push(minInclusive + Math.floor(Math.random() * span));
     }
     return shuffle(result);
-  }
-
-  function makeAnsBox(text){
-    const span = document.createElement("span");
-    span.className = "ansBox" + (text === null ? " empty" : "");
-    span.innerHTML = text === null ? "&nbsp;" : text;
-    return span;
   }
 
   function buildRewriteNumber(n, place){
@@ -430,19 +411,22 @@
     return container;
   }
 
-  // NEW: tick labels row + two long answer lines beneath (left/right).
-  // No endpoint boxes, no endpoint blanks. Just tick labels + two lines.
+  // Number line:
+  // - tick labels row
+  // - if endpointsFilled OFF => show "_____" ONLY under the left endpoint + right endpoint
   function numberLineSVG(n, down, up, place, opts){
     const bigPlace = place >= 1000;
     const labelAll = (!bigPlace && opts.labelAll);
     const endpointsAndMid = bigPlace;
 
     const showDot = opts.showDot;
+    const endpointsFilled = opts.endpointsFilled;
 
-    const W = 590;
-    const H = labelAll ? 132 : 122;
+    const W = 610;
+    const H = labelAll ? 138 : 128;
 
-    const padL = 50, padR = 50;
+    // Nudged a bit left/right for your look
+    const padL = 44, padR = 44;  // <-- adjust if needed
     const lineY = 40;
 
     const x0 = padL;
@@ -468,11 +452,9 @@
     function shouldLabel(i){
       if(labelAll) return true;
       if(endpointsAndMid) return (i===0 || i===5 || i===10);
-      // default: label ALL ticks for tens/hundreds? No—only endpoints unless user checks labelAll
       return (i===0 || i===10);
     }
 
-    // ticks + labels
     for(let i=0;i<=10;i++){
       const x = x0 + stepX*i;
 
@@ -491,17 +473,39 @@
 
       const t = document.createElementNS(ns, "text");
       t.setAttribute("x", x);
-      t.setAttribute("y", lineY + 52); // one clean row
+      t.setAttribute("y", lineY + 52);
       t.setAttribute("text-anchor", "middle");
       t.setAttribute("font-family", "Poppins, Arial, sans-serif");
       t.setAttribute("font-weight", (i===0 || i===10) ? "800" : "700");
       t.setAttribute("font-size", (i===0 || i===10) ? "18" : (labelAll ? "12" : "14"));
       t.setAttribute("fill", "#111");
-      t.textContent = fmt(val);
+
+      const isEndpoint = (i===0 || i===10);
+
+      // If endpoints not filled, hide endpoint labels (student writes them)
+      if(isEndpoint && !endpointsFilled){
+        t.textContent = "";
+      } else {
+        t.textContent = fmt(val);
+      }
+
       svg.appendChild(t);
+
+      // Endpoint blanks: ONLY at endpoints, short "_____"
+      if(isEndpoint && !endpointsFilled){
+        const underscore = document.createElementNS(ns, "text");
+        underscore.setAttribute("x", x);
+        underscore.setAttribute("y", lineY + 84);
+        underscore.setAttribute("text-anchor", "middle");
+        underscore.setAttribute("font-family", "Poppins, Arial, sans-serif");
+        underscore.setAttribute("font-weight", "900");
+        underscore.setAttribute("font-size", "22");
+        underscore.setAttribute("fill", "#111");
+        underscore.textContent = "_____"; // 5 underscores
+        svg.appendChild(underscore);
+      }
     }
 
-    // dot
     if(showDot){
       const iPos = (n - down) / stepVal;
       const markerX = x0 + stepX * iPos;
@@ -513,26 +517,6 @@
       dot.setAttribute("fill", "#111");
       svg.appendChild(dot);
     }
-
-    // two long answer lines under the tick-label row
-    const yLine = lineY + 78;
-    const leftLine = document.createElementNS(ns, "line");
-    leftLine.setAttribute("x1", x0);
-    leftLine.setAttribute("y1", yLine);
-    leftLine.setAttribute("x2", x0 + (x1-x0)*0.36);
-    leftLine.setAttribute("y2", yLine);
-    leftLine.setAttribute("stroke", "#111");
-    leftLine.setAttribute("stroke-width", "4");
-    svg.appendChild(leftLine);
-
-    const rightLine = document.createElementNS(ns, "line");
-    rightLine.setAttribute("x1", x0 + (x1-x0)*0.64);
-    rightLine.setAttribute("y1", yLine);
-    rightLine.setAttribute("x2", x1);
-    rightLine.setAttribute("y2", yLine);
-    rightLine.setAttribute("stroke", "#111");
-    rightLine.setAttribute("stroke-width", "4");
-    svg.appendChild(rightLine);
 
     return svg;
   }
@@ -551,6 +535,7 @@
 
     card.appendChild(buildRewriteNumber(n, place));
 
+    // Round Down/Up: underscores unless Fill is checked
     const lines = document.createElement("div");
     lines.className = "lines";
 
@@ -561,7 +546,14 @@
     downArrow.className = "arrow";
     downArrow.textContent = "↓";
     row1.appendChild(downArrow);
-    row1.appendChild(opts.fillDownUp ? makeAnsBox(fmt(down)) : makeAnsBox(null));
+    if(opts.fillDownUp){
+      row1.appendChild(document.createTextNode(fmt(down)));
+    } else {
+      const b = document.createElement("span");
+      b.className = "blank";
+      b.textContent = "__________";
+      row1.appendChild(b);
+    }
 
     const row2 = document.createElement("div");
     row2.className = "lineRow";
@@ -570,7 +562,14 @@
     upArrow.className = "arrow";
     upArrow.textContent = "↑";
     row2.appendChild(upArrow);
-    row2.appendChild(opts.fillDownUp ? makeAnsBox(fmt(up)) : makeAnsBox(null));
+    if(opts.fillDownUp){
+      row2.appendChild(document.createTextNode(fmt(up)));
+    } else {
+      const b2 = document.createElement("span");
+      b2.className = "blank";
+      b2.textContent = "__________";
+      row2.appendChild(b2);
+    }
 
     lines.appendChild(row1);
     lines.appendChild(row2);
@@ -594,6 +593,7 @@
     const opts = {
       scaffold: $("scaffold").checked,
       labelAll: $("labelAll").checked,
+      endpointsFilled: $("endpointsFilled").checked,
       fillDownUp: $("fillDownUp").checked,
       showDot: $("showDot").checked
     };
@@ -615,7 +615,6 @@
     for(let r=0;r<rows;r++){
       const row = document.createElement("div");
       row.className = "row";
-
       for(let c=0;c<perRow;c++){
         if(idx >= PROBLEM_COUNT) break;
         row.appendChild(buildProblemCard(idx+1, nums[idx], place, opts));
@@ -634,7 +633,7 @@
   $("btnGen").addEventListener("click", build);
   $("btnPrint").addEventListener("click", ()=>window.print());
 
-  ["nearest","within","scaffold","labelAll","fillDownUp","showDot"]
+  ["nearest","within","scaffold","labelAll","endpointsFilled","fillDownUp","showDot"]
     .forEach(id => $(id).addEventListener("change", build));
 
   init();
