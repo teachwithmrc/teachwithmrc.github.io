@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VCe Word Ladders - PREVIEW MODE</title>
+
+  <script src="vceWordLadders_6words_full.js" defer></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face { font-family: 'BoxesFont'; src: url('fonts/boxes2.otf') format('opentype'); }
+    @font-face { font-family: 'UnderlineFont'; src: url('fonts/underlines.otf') format('opentype'); }
+
+    :root{
+      --ink:#1f365f;
+      --bg:#fafafa;
+      --card:#f6f9ff;
+      --border:#cfd7ef;
+    }
+
+    body { 
+      font-family: 'Poppins', sans-serif; margin: 28px; text-align: center; color: var(--ink); background: var(--bg); 
+      user-select: none; -webkit-user-select: none;
+    }
+    h1 { font-size: 32px; margin-bottom: 6px; }
+    .subtitle { color: #555; margin: 0 0 20px; }
+
+    /* Feature Badge */
+    .feature-badge {
+      display: inline-block;
+      background: #e3f2fd;
+      color: #1565c0;
+      font-weight: 800;
+      padding: 8px 16px;
+      border-radius: 99px;
+      margin-bottom: 15px;
+      border: 1px solid #bbdefb;
+      font-size: 14px;
+    }
+
+    /* COMPACT CONTROL BAR */
+    .controls-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      max-width: 600px;
+      margin: 0 auto 20px auto;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 12px;
+      padding: 15px 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .option-row { display: flex; gap: 8px; align-items: center; }
+    
+    .option-box { 
+      display: inline-block; 
+      padding: 8px 14px; 
+      border: 2px solid #000; 
+      border-radius: 8px; 
+      font-weight: 600; 
+      font-size: 14px; 
+      background: #fff; 
+      cursor: pointer; 
+      transition: 0.1s; 
+    }
+    .option-box:hover { transform: translateY(-1px); box-shadow: 0 2px 0 #000; }
+    .option-box.selected { background-color: #111; color: #fff; }
+
+    /* Button Styling */
+    .try-me-btn {
+      background: #111;
+      color: #fff;
+      border: 3px solid #000;
+      font-size: 20px;
+      font-weight: 800;
+      padding: 12px 30px;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #444;
+      transition: all 0.1s;
+      white-space: nowrap;
+    }
+    .try-me-btn:active {
+      transform: translateY(5px);
+      box-shadow: none;
+    }
+    .print-btn {
+      background: #f0f0f0;
+      color: #999;
+      border: 1px solid #ccc;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: not-allowed;
+    }
+
+    /* Output Area */
+    #ladderOutput { 
+      margin-top: 8px; 
+      margin-bottom: 60px; 
+      min-height: 600px; /* Ensure space for preview */
+    }
+
+    /* ========= PREVIEW MODE STYLES ========= */
+    .preview-wrapper {
+      position: relative;
+      pointer-events: none;
+    }
+
+    .fomo-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+
+      /* BLUR FILTER */
+      backdrop-filter: blur(2.5px);
+      -webkit-backdrop-filter: blur(2.5px);
+      background: rgba(255, 255, 255, 0.1);
+
+      /* REPEATING WATERMARK */
+      background-image: url("data:image/svg+xml,%3Csvg width='250' height='250' viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='20' y='150' fill='%23000' opacity='0.15' transform='rotate(-45 125 125)' font-family='Poppins' font-weight='900' font-size='32'%3EPREVIEW MODE%3C/text%3E%3C/svg%3E");
+      
+      pointer-events: auto;
+    }
+
+    .lock-card {
+      background: #111;
+      color: #fff;
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      max-width: 400px;
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid #fff;
+      
+      /* Sticky positioning for long ladders */
+      position: sticky;
+      top: 200px;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .lock-icon { font-size: 40px; margin-bottom: 15px; display:block; }
+    .lock-title { font-size: 24px; font-weight: 900; margin-bottom: 10px; line-height:1.2; }
+    .lock-desc { font-size: 14px; margin-bottom: 25px; opacity: 0.9; line-height: 1.5;}
+    
+    .cta-btn {
+      display: inline-block;
+      background: #fff;
+      color: #111;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+    .cta-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(255,255,255,0.3); }
+
+    /* Print Block */
+    @media print {
+      body { display: none !important; }
+    }
+  </style>
+</head>
+
+<body oncontextmenu="return false;">
+
+  <h1>VCe Word Ladders</h1>
+  <div class="feature-badge">⚡ Part of the Ultimate Phonics Ladder Suite</div>
+  <div class="subtitle">Select your style and hit TRY ME to generate a worksheet!</div>
+
+  <div class="controls-wrapper">
+    
+    <div class="option-row" id="displayOptions">
+      <div class="option-box selected" data-style="elkonin">Elkonin Boxes</div>
+      <div class="option-box" data-style="underlines">Underlines</div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:8px; align-items:center;">
+      <button id="btnGenerate" class="try-me-btn">🎲 TRY ME!</button>
+      <button id="btnPrint" class="print-btn">🖨️ Print Worksheet</button>
+    </div>
+
+  </div>
+
+  <center><img src="images/chrome.png" class="no-print" style="margin-bottom:10px; opacity:0.8;"></center>
+
+  <div class="preview-wrapper">
+    <div class="fomo-overlay">
+      <div class="lock-card">
+        <span class="lock-icon">🔒</span>
+        <div class="lock-title">Premium Resource</div>
+        <div class="lock-desc">
+          You are viewing a preview of the Word Ladder Generator. 
+          Upgrade to Intervention Station Premium to unlock printing and remove the watermark.
+        </div>
+        <a href="#" class="cta-btn">Unlock Full Access</a>
+      </div>
+    </div>
+
+    <div id="ladderOutput"></div>
+  </div>
+
+  <script>
+    /* =========================
+       State & UI Logic
+    ==========================*/
+    let cellStyle = 'elkonin';
+    const boldChanged = true; // Always on for preview
+
+    // Toggle Style
+    document.querySelectorAll('#displayOptions .option-box').forEach(box => {
+      box.addEventListener('click', ()=>{
+        document.querySelectorAll('#displayOptions .option-box').forEach(b=>b.classList.remove('selected'));
+        box.classList.add('selected');
+        cellStyle = box.dataset.style;
+      });
+    });
+
+    // Generate Button
+    document.getElementById('btnGenerate').addEventListener('click', generateLadder);
+
+    // Print Lock
+    function lockedPrint(){
+        alert("This feature is locked in Preview Mode.\nPlease upgrade to print worksheets.");
+    }
+    document.getElementById('btnPrint')?.addEventListener('click', lockedPrint);
+
+
+    /* =========================
+       Utilities (From Original Code)
+    ==========================*/
+    const safeLower = (w) => (w || '').toLowerCase();
+
+    function getPattern(word) {
+      const key = safeLower(word);
+      return (typeof vceWordPatterns !== 'undefined' && vceWordPatterns && vceWordPatterns[key]) ? vceWordPatterns[key] : '?';
+    }
+
+    function getImage(word) {
+      const key = safeLower(word);
+      return (typeof vceWordImages !== 'undefined' && vceWordImages && vceWordImages[key]) ? vceWordImages[key] : 'https://via.placeholder.com/110?text=%3F';
+    }
+
+    function splitByPattern(word, pattern) {
+      const chunks = [];
+      let i = 0;
+      for (let j = 0; j < pattern.length; j++) {
+        const d = pattern[j];
+        const len = (d === '3') ? 3 : (d === '2') ? 2 : 1;
+        chunks.push(word.slice(i, i + len));
+        i += len;
+      }
+      return chunks;
+    }
+
+    function arraysEqual(a,b){ return a.length===b.length && a.every((v,i)=>v===b[i]); }
+
+    // Returns the index of the changed chunk (or -1 if none/unclear).
+    function getChangedChunkIndex(prevWord, word, prevPat, pat) {
+      const A = splitByPattern(prevWord, prevPat);
+      const B = splitByPattern(word, pat);
+      const n = Math.max(A.length, B.length);
+
+      // Same # chunks: find the one chunk that differs
+      if (A.length === B.length) {
+        let idx = -1;
+        for (let i = 0; i < n; i++) {
+          if ((A[i] || '') !== (B[i] || '')) {
+            if (idx !== -1) return -1; // more than one diff
+            idx = i;
+          }
+        }
+        return idx; // -1 if identical
+      }
+
+      // One inserted/removed chunk → bold the new/removed position
+      if (B.length === A.length + 1) {
+        for (let i = 0; i < B.length; i++) {
+          const test = B.slice(0, i).concat(B.slice(i + 1));
+          if (arraysEqual(A, test)) return i;
+        }
+      }
+      if (A.length === B.length + 1) {
+        for (let i = 0; i < A.length; i++) {
+          const test = A.slice(0, i).concat(A.slice(i + 1));
+          if (arraysEqual(B, test)) return i; // removed from this index
+        }
+      }
+      return -1;
+    }
+
+    function getHint(prevWord, word, prevPat, pat) {
+      const A = splitByPattern(prevWord, prevPat);
+      const B = splitByPattern(word, pat);
+      const eq = (x,y)=>x.length===y.length && x.every((v,i)=>v===y[i]);
+
+      if (!prevWord) return '';
+
+      if (A.length === B.length) {
+        let idx = -1;
+        for (let i=0;i<A.length;i++){
+          if (A[i]!==B[i]){ if(idx!==-1) return '? → ?'; idx=i; }
+        }
+        if (idx === -1) return '? → ?';
+        const a=A[idx], b=B[idx];
+        if (b.length === a.length + 1 && (b.startsWith(a) || b.endsWith(a))) {
+          const add = b.startsWith(a) ? b.slice(-1) : b.slice(0, b.length - a.length);
+          const micro = b.startsWith(a) ? `${a} → ${a}<b>${add}</b>` : `${a} → <b>${add}</b>${a}`;
+          return `+ ${add} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
+        }
+        if (a.length === b.length + 1 && (a.startsWith(b) || a.endsWith(b))) {
+          const rem = a.startsWith(b) ? a.slice(-1) : a.slice(0, a.length - b.length);
+          const micro = a.startsWith(b) ? `${a.slice(0,-1)}<b>${rem}</b> → ${b}` : `<b>${rem}</b>${a.slice(1)} → ${b}`;
+          return `- ${rem} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
+        }
+        return `${a} → ${b}`;
+      }
+
+      if (B.length === A.length + 1) {
+        for (let k=0;k<B.length;k++) {
+          const test = B.slice(0,k).concat(B.slice(k+1));
+          if (eq(A, test)) return `+ ${B[k]}`;
+        }
+        return '? → ?';
+      }
+
+      if (A.length === B.length + 1) {
+        for (let k=0;k<A.length;k++) {
+          const test = A.slice(0,k).concat(A.slice(k+1));
+          if (eq(B, test)) return `- ${A[k]}`;
+        }
+        return '? → ?';
+      }
+      return '? → ?';
+    }
+
+    /* =========================
+       Main Generator
+    ==========================*/
+    function generateLadder() {
+      // Data guard
+      if (typeof vceWordPatterns === 'undefined' || typeof vceWordImages === 'undefined' || typeof vceWordLadders === 'undefined') {
+        alert('❌ Error: VCe data not loaded. Check "vceWordLadders_6words_full.js" path and variable names.');
+        return;
+      }
+
+      // Always VCe mode (the others are disabled)
+      const ladders = Array.isArray(vceWordLadders) ? vceWordLadders : [];
+      if (!ladders.length) {
+        alert('❌ No VCe ladders available.');
+        return;
+      }
+
+      const useFont = (cellStyle === 'underlines') ? 'UnderlineFont' : 'BoxesFont';
+
+      const ladder = ladders[Math.floor(Math.random()*ladders.length)];
+
+      const rows = ladder.map((word, i) => {
+        const first = (i===0), last = (i===ladder.length-1);
+        const prev = ladder[i-1] || '';
+
+        const patt = getPattern(word);      // e.g., "112"
+        const prevP = getPattern(prev);     // pattern of previous word
+        const imgSrc = getImage(word);
+
+        // Pattern display: bold the changed digit if identifiable
+        let patternHTML = '';
+        if (!first) {
+          const changedIdx = boldChanged ? getChangedChunkIndex(prev, word, prevP, patt) : -1;
+          if (changedIdx === -1) {
+            patternHTML = patt; // fallback: raw pattern
+          } else {
+            let out = '';
+            for (let j=0;j<patt.length;j++) {
+              const ch = patt[j];
+              out += (j===changedIdx) ? `<span style="font-weight:700;">${ch}</span>` : ch;
+            }
+            patternHTML = out;
+          }
+        }
+
+        const display = first
+          ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins',sans-serif;">${word}</div>`
+          : `<div class="pattern" style="font-family:'${useFont}',monospace;font-size:${useFont==='UnderlineFont'?'85px':'100px'};letter-spacing:0;">${patternHTML}</div>`;
+
+        const imgTD = `<td style="padding:5px 7px;width:140px;">
+                          <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
+                        </td>`;
+
+        const borders = !last
+          ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
+          : 'border-left:4px solid #000;border-right:4px solid #000;';
+
+        const wordTD = `<td style="padding:5px 7px;${borders}">${display}</td>`;
+
+        const hintTD = first
+          ? `<td style="padding:3px 5px;width:170px;"></td>`
+          : `<td style="padding:3px 5px;width:170px;">
+               <div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">
+                 ${getHint(prev, word, prevP, patt)}
+               </div>
+             </td>`;
+
+        return `<tr>${imgTD}${wordTD}${hintTD}</tr>`;
+      }).join('');
+
+      const html = `
+        <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto; background:#fff; padding:20px; border:2px solid #000; border-radius:8px;">
+          <div id="titleBlock" style="text-align:center;">
+            <h2 style="font-size:24px; margin-top:0;">VCe Word Ladders</h2>
+            <p style="font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
+          </div>
+          <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
+            ${rows}
+          </table>
+          <br><br>
+          <div id="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+        </div>
+      `;
+      document.getElementById('ladderOutput').innerHTML = html;
+    }
+
+    // Generate on Load
+    window.onload = function() {
+        // Short delay to ensure data loads if local
+        setTimeout(()=> document.getElementById('btnGenerate').click(), 200);
+    };
+  </script>
+</body>
+</html>
