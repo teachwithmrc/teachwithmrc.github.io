@@ -218,6 +218,13 @@
     }
     .cta-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(255,255,255,0.3); }
 
+    button.disabled-look {
+      background: #eee !important;
+      color: #888 !important;
+      border-color: #ccc !important;
+      cursor: not-allowed !important;
+    }
+
     /* Print Block */
     @media print {
       body { display: none !important; }
@@ -472,7 +479,7 @@ document.getElementById('btnGenerate').addEventListener('click', ()=>{
     selected.clear();
     selected.add(randomSkill);
 
-    // 3. Generate without scroll
+    // 3. Generate (Scroll Removed)
     generateBoards();
 });
 
@@ -590,12 +597,9 @@ function generateBoards(){
   page.appendChild(grid);
   page.appendChild(copy);
   output.appendChild(page);
-  
-  // Scroll to wrapper to see lock card
-  document.querySelector('.preview-wrapper').scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
-// Generate on load
+// Generate one on load
 window.onload = function() {
     document.getElementById('btnGenerate').click();
 };
