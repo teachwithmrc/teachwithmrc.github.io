@@ -1,0 +1,344 @@
+Perfect use case. Below is a full upgraded version: kids pick a skill, click `Play`, and an interactive colorful Tic-Tac-Toe board appears immediately (with real words/sentences from your data file).
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phonics Tic-Tac-Toe Live Game</title>
+  <script src="fluencyDataFull_v8-2_clean.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1:#6ecbff; --bg2:#a78bfa; --bg3:#ffe66d;
+      --card:#ffffff;
+      --ink:#1f2937;
+      --x:#ef476f;
+      --o:#118ab2;
+      --ok:#06d6a0;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Baloo 2",sans-serif;
+      color:var(--ink);
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 10% 20%, #fff7 0 8%, transparent 9%),
+        radial-gradient(circle at 90% 15%, #fff8 0 6%, transparent 7%),
+        linear-gradient(135deg,var(--bg1),var(--bg2) 55%,var(--bg3));
+      padding:20px;
+    }
+    .app{max-width:1050px;margin:0 auto}
+    .top{
+      background:var(--card);
+      border-radius:24px;
+      padding:18px;
+      box-shadow:0 10px 30px #0002;
+      display:grid;
+      grid-template-columns: 1.5fr 1fr 1fr auto;
+      gap:12px;
+      align-items:end;
+    }
+    label{font-weight:800;font-size:15px;display:block;margin-bottom:4px}
+    select,button{
+      width:100%; border:none; border-radius:14px; padding:12px 14px;
+      font:700 16px "Baloo 2",sans-serif;
+    }
+    select{background:#f4f7ff}
+    button{
+      cursor:pointer;
+      background:linear-gradient(135deg,#ff6b6b,#ff9f1c);
+      color:#fff;
+      transition:transform .12s ease;
+    }
+    button:active{transform:translateY(1px)}
+    .status{
+      margin-top:14px;
+      background:#fff;
+      border-radius:18px;
+      padding:12px 16px;
+      display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+      box-shadow:0 8px 24px #0001;
+    }
+    .pill{padding:6px 12px;border-radius:999px;background:#f1f5f9;font-weight:800}
+    .x{color:var(--x)} .o{color:var(--o)}
+    .board-wrap{
+      margin-top:14px;
+      background:#fff;
+      border-radius:24px;
+      padding:18px;
+      box-shadow:0 12px 30px #0002;
+    }
+    .board{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(140px,1fr));
+      gap:10px;
+    }
+    .cell{
+      min-height:155px;
+      border:none;
+      border-radius:18px;
+      background:linear-gradient(180deg,#f9fbff,#eef4ff);
+      padding:8px;
+      display:grid;
+      grid-template-rows:1fr auto;
+      align-items:center;
+      box-shadow:inset 0 0 0 3px #dbeafe;
+      cursor:pointer;
+      position:relative;
+    }
+    .prompt{
+      text-align:center;
+      font-weight:700;
+      font-size:24px;
+      line-height:1.05;
+      padding:6px;
+    }
+    .prompt.sentence{font-size:19px;line-height:1.15}
+    .mark{
+      text-align:center;
+      font-size:52px;
+      font-weight:800;
+      line-height:1;
+      height:56px;
+    }
+    .mark.x{color:var(--x)}
+    .mark.o{color:var(--o)}
+    .controls{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .ghost{
+      background:#e2e8f0; color:#0f172a;
+    }
+    .win{
+      outline:5px solid var(--ok);
+      animation:pop .35s ease;
+    }
+    @keyframes pop{0%{transform:scale(.96)}100%{transform:scale(1)}}
+    .confetti{
+      position:fixed; inset:0; pointer-events:none; overflow:hidden;
+    }
+    .dot{
+      position:absolute; width:10px; height:16px; border-radius:4px;
+      animation:fall 1300ms linear forwards;
+    }
+    @keyframes fall{
+      from{transform:translateY(-20px) rotate(0deg);opacity:1}
+      to{transform:translateY(110vh) rotate(620deg);opacity:.9}
+    }
+    @media (max-width:900px){
+      .top{grid-template-columns:1fr}
+      .board{grid-template-columns:repeat(3,1fr)}
+      .cell{min-height:125px}
+      .prompt{font-size:18px}
+      .prompt.sentence{font-size:15px}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div>
+      <label>Skill</label>
+      <select id="skill"></select>
+    </div>
+    <div>
+      <label>Blends</label>
+      <select id="blends">
+        <option value="no">No (3 sounds)</option>
+        <option value="yes">Yes (4+ sounds)</option>
+      </select>
+    </div>
+    <div>
+      <label>Grid Content</label>
+      <select id="mode">
+        <option value="words">Words</option>
+        <option value="sentences">Sentences</option>
+        <option value="both">Both</option>
+      </select>
+    </div>
+    <div><button id="playBtn">Play</button></div>
+  </div>
+
+  <div class="status">
+    <div class="pill" id="skillTag">Skill: --</div>
+    <div class="pill">Turn: <span id="turn" class="x">X</span></div>
+    <div class="pill" id="msg">Tap a square after reading it out loud!</div>
+  </div>
+
+  <div class="board-wrap">
+    <div class="board" id="board"></div>
+    <div class="controls">
+      <button class="ghost" id="sameWords">Play Again (Same Words)</button>
+      <button class="ghost" id="newWords">New Words</button>
+    </div>
+  </div>
+</div>
+<div id="confetti" class="confetti"></div>
+
+<script>
+/* ===== Data maps from your current setup ===== */
+const PREFIX = {
+  "Short A":"0.1 - Short A","Short O":"0.2 - Short O","Short I":"0.3 - Short I","Short U":"0.4 - Short U","Short E":"0.5 - Short E","FLSZ":"0.6 - FLSZ",
+  "ck":"1.1 - ck","sh":"1.2 - sh","th":"1.3 - th","ch":"1.4 - ch","wh":"1.5 - wh",
+  "-all":"3.1 - all","-ng":"3.2 - ng","-nk":"3.3 - nk",
+  "a_e":"2.1 - a_e","i_e":"2.2 - i_e","o_e":"2.3 - o_e","u_e":"2.4 - u_e",
+  "ar":"4.1 - ar","or":"4.2 - or","er/ir/ur":"4.3 - er, ir, ur",
+  "Soft C (-ce)":"10.1 - ce","Soft G (-ge)":"10.2 - ge","Soft G (-dge)":"10.3 - dge"
+};
+const MIXED_RULES = {
+  "Mixed CVC":["0.1 - Short A","0.5 - Short E","0.3 - Short I","0.2 - Short O","0.4 - Short U","0.6 - FLSZ"],
+  "Digraphs Mixed":["1.1 - ck","1.2 - sh","1.3 - th","1.4 - ch","1.5 - wh"],
+  "Glued Mixed":["3.1 - all","3.2 - ng","3.3 - nk"],
+  "Mixed VCe":["2.1 - a_e","2.2 - i_e","2.3 - o_e","2.4 - u_e"],
+  "Mixed R-Controlled":["4.1 - ar","4.2 - or","4.3 - er, ir, ur"],
+  "Long A (ai/ay)":["6.1 - ay","6.2 - ai"],
+  "Long E (ee/ea)":["6.4 - ee","6.5 - ea"],
+  "Long I (igh/y/ie)":["6.6 - igh","6.7 - Final y","6.8 - ie"],
+  "Long O (oa/ow/oe)":["6.9 - oa","6.10 - ow","6.11 - oe"],
+  "Long U (oo/ew/ue)":["6.12 - oo (long u)","6.13 - ew","6.14 - ue"],
+  "Mixed Vowel Teams":["6.1 - ay","6.2 - ai","6.4 - ee","6.5 - ea","6.6 - igh","6.7 - Final y","6.8 - ie","6.9 - oa","6.10 - ow","6.11 - oe","6.12 - oo (long u)","6.13 - ew","6.14 - ue"],
+  "Diphthongs (oy/oi)":["7.4 - oy","7.3 - oi"],
+  "Diphthongs (ow/ou)":["7.2 - ow","7.1 - ou"],
+  "Variant Vowels (au/aw)":["7.5 - aw","7.6 - au"],
+  "Variant Vowel (oo)":["7.7 - oo variant"]
+};
+
+const SKILLS = [
+  "Short A","Short E","Short I","Short O","Short U","Mixed CVC","FLSZ",
+  "ck","sh","th","ch","wh","Digraphs Mixed",
+  "-all","-ng","-nk","Glued Mixed",
+  "a_e","i_e","o_e","u_e","Mixed VCe",
+  "ar","or","er/ir/ur","Mixed R-Controlled",
+  "Long A (ai/ay)","Long E (ee/ea)","Long I (igh/y/ie)","Long O (oa/ow/oe)","Long U (oo/ew/ue)","Mixed Vowel Teams",
+  "Diphthongs (oy/oi)","Diphthongs (ow/ou)",
+  "Variant Vowels (au/aw)","Variant Vowel (oo)",
+  "Soft C (-ce)","Soft G (-ge)","Soft G (-dge)"
+];
+
+const state = { prompts:[], board:Array(9).fill(""), turn:"X", over:false, winLine:[] };
+const $ = s => document.querySelector(s);
+
+function unique(a){ return [...new Set((a||[]).map(x=>String(x).trim()).filter(Boolean))]; }
+function shuffle(a){ const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]];} return b; }
+function fillToN(pool,n){ if(!pool.length) return []; const out=[]; while(out.length<n){ out.push(...shuffle(pool)); } return out.slice(0,n); }
+function readDict(d,k){ return Array.isArray(d?.[k]) ? d[k] : []; }
+
+function readWithBlends(dict,prefix,type,blends){
+  const t=type, tl=type.toLowerCase();
+  let base=[...readDict(dict,`${prefix} ${t}`),...readDict(dict,`${prefix} ${tl}`),...readDict(dict,prefix)];
+  if(!blends) return base;
+  const bPrefix=prefix.replace(" - ","b - ");
+  const keys=[`${prefix} with Blends ${t}`,`${prefix} with blends ${t}`,`${prefix} with Blends ${tl}`,`${prefix} with blends ${tl}`,
+              `${bPrefix} with Blends ${t}`,`${bPrefix} with blends ${t}`,`${bPrefix} with Blends ${tl}`,`${bPrefix} with blends ${tl}`];
+  for(const k of keys){ const got=readDict(dict,k); if(got.length) return got.length<9 ? got.concat(base) : got; }
+  return base;
+}
+function getList(label,type,blends){
+  const dict = type==="Words" ? (window.fluencyWords||{}) : (window.fluencySentences||{});
+  if (MIXED_RULES[label]) return MIXED_RULES[label].flatMap(p => readWithBlends(dict,p,type,blends));
+  if (PREFIX[label]) return readWithBlends(dict,PREFIX[label],type,blends);
+  return [];
+}
+
+function buildPrompts(){
+  const skill=$("#skill").value;
+  const mode=$("#mode").value;
+  const blends=$("#blends").value==="yes";
+  let list=[];
+  if(mode==="words") list = unique(getList(skill,"Words",blends));
+  if(mode==="sentences") list = unique(getList(skill,"Sentences",blends));
+  if(mode==="both"){
+    const w=unique(getList(skill,"Words",blends));
+    const s=unique(getList(skill,"Sentences",blends));
+    list = unique(shuffle(fillToN(w,5).concat(fillToN(s,4))));
+  }
+  if(!list.length) return null;
+  return shuffle(fillToN(list,9));
+}
+
+function winningLine(b){
+  const lines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  return lines.find(([a,c,d]) => b[a] && b[a]===b[c] && b[c]===b[d]) || null;
+}
+
+function renderBoard(){
+  const board=$("#board");
+  board.innerHTML="";
+  state.prompts.forEach((text,i)=>{
+    const cell=document.createElement("button");
+    cell.className="cell" + (state.winLine.includes(i) ? " win" : "");
+    cell.innerHTML = `<div class="prompt ${text.includes(" ")?"sentence":""}">${text}</div>
+                      <div class="mark ${state.board[i]==="X"?"x":state.board[i]==="O"?"o":""}">${state.board[i]||""}</div>`;
+    cell.disabled = state.over || !!state.board[i];
+    cell.onclick = () => makeMove(i);
+    board.appendChild(cell);
+  });
+}
+
+function makeMove(i){
+  if(state.over || state.board[i]) return;
+  state.board[i]=state.turn;
+  const line=winningLine(state.board);
+  if(line){
+    state.over=true; state.winLine=line;
+    $("#msg").textContent = `Player ${state.turn} wins!`;
+    burst();
+  }else if(state.board.every(Boolean)){
+    state.over=true;
+    $("#msg").textContent = "Tie game! Hit New Words for another round.";
+  }else{
+    state.turn = state.turn==="X" ? "O" : "X";
+    $("#msg").textContent = "Great reading! Keep going.";
+  }
+  $("#turn").textContent = state.turn;
+  $("#turn").className = state.turn.toLowerCase();
+  renderBoard();
+}
+
+function burst(){
+  const root=$("#confetti"), colors=["#ef476f","#ffd166","#06d6a0","#118ab2","#8338ec"];
+  for(let i=0;i<90;i++){
+    const d=document.createElement("div");
+    d.className="dot";
+    d.style.left=Math.random()*100+"vw";
+    d.style.background=colors[Math.floor(Math.random()*colors.length)];
+    d.style.animationDuration=(900+Math.random()*800)+"ms";
+    root.appendChild(d);
+    setTimeout(()=>d.remove(),1800);
+  }
+}
+
+function startGame(newWords=true){
+  if(newWords){
+    const prompts = buildPrompts();
+    if(!prompts){ alert("No matching content for that skill/mode yet."); return; }
+    state.prompts = prompts;
+  }
+  state.board = Array(9).fill("");
+  state.turn = Math.random() < 0.5 ? "X" : "O";
+  state.over = false;
+  state.winLine = [];
+  $("#turn").textContent = state.turn;
+  $("#turn").className = state.turn.toLowerCase();
+  $("#skillTag").textContent = `Skill: ${$("#skill").value}`;
+  $("#msg").textContent = "Tap a square after reading it out loud!";
+  renderBoard();
+}
+
+(function init(){
+  const sel=$("#skill");
+  SKILLS.forEach(s=>{ const o=document.createElement("option"); o.value=s; o.textContent=s; sel.appendChild(o); });
+  $("#playBtn").onclick = ()=>startGame(true);
+  $("#sameWords").onclick = ()=>startGame(false);
+  $("#newWords").onclick = ()=>startGame(true);
+})();
+</script>
+</body>
+</html>
+```
+
+If you want, next I can add:
+1. Single-player mode vs computer (easy/medium).  
+2. Auto “read-aloud” button for each word/sentence (speech synthesis).  
+3. Scoreboard that tracks wins across rounds.
