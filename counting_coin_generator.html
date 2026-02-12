@@ -167,9 +167,7 @@
     }
 
     .coin-area {
-      border: 1px dashed #bebebe;
-      border-radius: 10px;
-      padding: 6px;
+      padding: 2px;
       min-height: 95px;
       display: flex;
       flex-wrap: nowrap;
@@ -233,7 +231,7 @@
 <body>
   <div class="app">
     <h1>Counting Coins Generator</h1>
-    <p class="subtitle">Generate 5 counting coin problems per page.</p>
+    <p class="subtitle">Generate 6 counting coin problems per page.</p>
 
     <section class="controls">
       <div class="row">
@@ -343,7 +341,7 @@
       }
     ];
 
-    const DIME_BASE_SIZE = 40;
+    const DIME_BASE_SIZE = 46;
     const COIN_RENDER_ORDER = ['quarter', 'dime', 'nickel', 'penny'];
 
     const coinSelect = document.getElementById('coinSelect');
@@ -448,7 +446,7 @@
       }
 
       const rows = [];
-      for (let i = 1; i <= 5; i += 1) {
+      for (let i = 1; i <= 6; i += 1) {
         const problem = buildProblem(allowed, topAmount);
         const orderedPicks = orderCoinsForDisplay(problem.picks);
         rows.push(`
@@ -469,7 +467,7 @@
           <div class="name-line"><strong>Name:</strong> <span></span></div>
         </header>
         <div class="problems">${rows.join('')}</div>
-        <div class="footer-note">5 problems per page • TeachWithMrC</div>
+        <div class="footer-note">Copyright - InterventionStation.com - @TeachwithMrC</div>
       `;
     }
 
