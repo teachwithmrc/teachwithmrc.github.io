@@ -159,11 +159,18 @@
     width:100%;
     display:grid;
     grid-template-columns:1fr 1fr;
-    column-gap:20px;
-    row-gap:2px;
+    column-gap:26px;
+    padding:0 4px;
+  }
+  .duCol{
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
   }
   .duHead{ font-size:16px; font-weight:900; }
-  .duWrite{ margin-top:12px; min-height:1.35em; }
+  .duSpace{ height:44px; }
+  .duWrite{ width:100%; min-height:1.35em; }
 
   .writeBlank{
     display:inline-block;
@@ -171,7 +178,8 @@
     min-height:1.1em;
     vertical-align:middle;
   }
-  .writeBlank--small{ width:240px; max-width:100%; }
+  .writeBlank--small{ width:100%; max-width:100%; }
+  .writeBlank--mid{ width:170px; max-width:100%; }
   .writeBlank--full{ display:block; width:100%; min-width:100%; }
 
   .nlWrap{
@@ -195,7 +203,6 @@
   }
   .answerLineBreak{ width:100%; flex-basis:100%; margin-top:6px; }
 
-  .footer{ text-align:center; font-size:12px; font-weight:800; margin-top:8px; }
 
   @media print{
     .controls{ display:none; }
@@ -208,12 +215,12 @@
     .prompt{ font-size:17px; }
     .rewrite{ font-size:26px; }
     .duHead{ font-size:13px; }
-    .duWrite{ margin-top:6px; }
+    .downUp{ column-gap:16px; padding:0 2px; }
+    .duSpace{ height:20px; }
     .nlWrap{ min-height:95px; }
     .answerLine{ font-size:14px; gap:4px; }
     .answerLineBreak{ margin-top:2px; }
     .writeBlank{ border-bottom-width:2px; }
-    .footer{ font-size:10px; margin-top:4px; }
   }
 </style>
 </head>
@@ -261,7 +268,6 @@
 
   <div class="title" id="sheetTitle">Round to the Nearest Ten</div>
   <div class="grid" id="grid"></div>
-  <div class="footer">Copyright - Generated from InterventionStation.com - @TeachWithMrC</div>
 </div>
 
 <script>
@@ -309,7 +315,9 @@
 
   function makeWriteBlank(type = "small"){
     const blank = document.createElement("span");
-    blank.className = `writeBlank ${type === "full" ? "writeBlank--full" : "writeBlank--small"}`;
+    if(type === "full") blank.className = "writeBlank writeBlank--full";
+    else if(type === "mid") blank.className = "writeBlank writeBlank--mid";
+    else blank.className = "writeBlank writeBlank--small";
     blank.setAttribute("aria-hidden", "true");
     return blank;
   }
@@ -471,37 +479,35 @@
     const downUp = document.createElement("div");
     downUp.className = "downUp";
 
-    const dHead = document.createElement("div");
-    dHead.className = "duHead";
-    dHead.textContent = "Round Down ↓";
-    const uHead = document.createElement("div");
-    uHead.className = "duHead";
-    uHead.textContent = "Round Up ↑";
+    function makeDUCol(label, value){
+      const col = document.createElement("div");
+      col.className = "duCol";
 
-    const dWrite = document.createElement("div");
-    dWrite.className = "duWrite";
-    if(opts.fillDownUp){
-      dWrite.textContent = fmt(down);
-      dWrite.style.fontWeight = "900";
-      dWrite.style.fontSize = "16px";
-    }else{
-      dWrite.appendChild(makeWriteBlank("small"));
+      const head = document.createElement("div");
+      head.className = "duHead";
+      head.textContent = label;
+
+      const spacer = document.createElement("div");
+      spacer.className = "duSpace";
+
+      const write = document.createElement("div");
+      write.className = "duWrite";
+      if(opts.fillDownUp){
+        write.textContent = fmt(value);
+        write.style.fontWeight = "900";
+        write.style.fontSize = "16px";
+      }else{
+        write.appendChild(makeWriteBlank("small"));
+      }
+
+      col.appendChild(head);
+      col.appendChild(spacer);
+      col.appendChild(write);
+      return col;
     }
 
-    const uWrite = document.createElement("div");
-    uWrite.className = "duWrite";
-    if(opts.fillDownUp){
-      uWrite.textContent = fmt(up);
-      uWrite.style.fontWeight = "900";
-      uWrite.style.fontSize = "16px";
-    }else{
-      uWrite.appendChild(makeWriteBlank("small"));
-    }
-
-    downUp.appendChild(dHead);
-    downUp.appendChild(uHead);
-    downUp.appendChild(dWrite);
-    downUp.appendChild(uWrite);
+    downUp.appendChild(makeDUCol("Round Down ↓", down));
+    downUp.appendChild(makeDUCol("Round Up ↑", up));
     card.appendChild(downUp);
 
     const nl = document.createElement("div");
@@ -516,7 +522,7 @@
         answer.textContent = `I rounded to ${fmt(roundsUp ? up : down)} because ${fmt(n)} is closer to ${fmt(roundsUp ? up : down)}.`;
       }else{
         answer.appendChild(document.createTextNode("I rounded to "));
-        answer.appendChild(makeWriteBlank("small"));
+        answer.appendChild(makeWriteBlank("mid"));
         answer.appendChild(document.createTextNode(" because"));
         const secondLine = document.createElement("span");
         secondLine.className = "answerLineBreak";
