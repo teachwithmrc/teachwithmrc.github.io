@@ -171,12 +171,12 @@
   body.scaffold .cell{ min-height:285px; padding:14px 14px 22px; }
   body.scaffold .row .cell{ border-right:none !important; }
 
-  .prompt{ font-size:18px; font-weight:900; line-height:1.2; }
+  .prompt{ font-size:21px; font-weight:900; line-height:1.2; }
 
   .rewrite{
     width:100%;
     text-align:center;
-    font-size:22px;
+    font-size:34px;
     font-weight:900;
     letter-spacing:0.5px;
     margin-top:2px;
@@ -190,78 +190,55 @@
   .rewrite .c{ opacity:.35; }
 
   .lines{
-    font-size:15px;
-    font-weight:800;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
     width:100%;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    column-gap:18px;
+    row-gap:4px;
+    align-items:end;
   }
-  .lineRow{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    flex-wrap:wrap;
-  }
-  .coachBox{
-    width:100%;
-    border:2px dashed #111;
-    border-radius:10px;
-    padding:8px 10px;
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-    font-size:14px;
-    font-weight:700;
-    background:#fafcff;
-  }
-  .coachTitle{
+  .lineHead{
+    font-size:16px;
     font-weight:900;
-    font-size:14px;
-    text-transform:uppercase;
-    letter-spacing:0.4px;
   }
-  .coachStep{ line-height:1.25; }
+  .lineBlankRow{
+    min-height:1.3em;
+    margin-top:10px;
+  }
   .answerLine{
     width:100%;
-    margin-top:-2px;
-    font-size:15px;
+    margin-top:0;
+    font-size:17px;
     font-weight:800;
     line-height:1.35;
-  }
-  .arrow{
-    font-weight:900;
-    font-size:18px;
-    display:inline-block;
-    width:18px;
-    text-align:center;
-  }
-  .blankText{
-    font-weight:900;
-    letter-spacing:0px;
-    display:inline-block;
-  }
-
-  /* NEW: arrows before number line */
-  .preLineArrows{
-    width:100%;
     display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:20px;
-    font-weight:900;
-    font-size:22px;
-    line-height:1;
-    margin-top:2px;
-    margin-bottom:-4px;
+    flex-wrap:wrap;
+    align-items:flex-end;
+    gap:6px;
   }
+  .answerLineBreak{
+    display:block;
+    width:100%;
+    flex-basis:100%;
+    margin-top:6px;
+  }
+  .writeBlank{
+    display:inline-block;
+    border-bottom:3px solid #111;
+    min-height:1.1em;
+    vertical-align:middle;
+  }
+  .writeBlank--small{ width:230px; max-width:100%; }
+  .writeBlank--long{ width:240px; }
+  .writeBlank--full{ display:block; width:100%; min-width:100%; margin-right:0; }
+
 
   .nlWrap{
     width:100%;
     display:flex;
     justify-content:center;
-    padding-bottom:10px;
-    min-height:145px;
+    padding-bottom:4px;
+    min-height:126px;
   }
   .nlWrap svg{ max-width:610px; }
 
@@ -275,17 +252,21 @@
   @media print{
     .controls{ display:none; }
     .wrap{ padding:0; max-width:none; }
-    body{ -webkit-print-color-adjust: exact; print-color-adjust: exact; zoom: 0.94; }
-    body.scaffold{ zoom: 1.02; }
-    .title{ font-size:24px; margin:4px 0 8px; }
-    .cell{ min-height:245px; padding:10px 10px 18px; gap:8px; }
-    body.scaffold .cell{ min-height:275px; padding:12px 12px 22px; }
+    body{ -webkit-print-color-adjust: exact; print-color-adjust: exact; zoom: 0.9; }
+    body.scaffold{ zoom: 0.94; }
+    .title{ font-size:22px; margin:2px 0 6px; }
+    .cell{ min-height:202px; padding:8px 8px 10px; gap:6px; }
+    body.scaffold .cell{ min-height:220px; padding:9px 9px 12px; }
     .prompt{ font-size:17px; }
-    .rewrite{ font-size:22px; }
-    .lines{ font-size:14px; }
-    .coachBox{ font-size:13px; }
-    .answerLine{ font-size:14px; }
-    .footer{ font-size:11px; margin-top:6px; }
+    .rewrite{ font-size:26px; margin:0; }
+    .lines{ column-gap:12px; row-gap:2px; }
+    .lineHead{ font-size:13px; }
+    .lineBlankRow{ margin-top:6px; }
+    .nlWrap{ min-height:98px; padding-bottom:2px; }
+    .answerLine{ font-size:14px; line-height:1.2; gap:4px; }
+    .answerLineBreak{ margin-top:2px; }
+    .writeBlank{ border-bottom-width:2px; }
+    .footer{ font-size:10px; margin-top:4px; }
   }
 </style>
 </head>
@@ -342,10 +323,6 @@
         Show Dot on Number Line
       </label>
 
-      <label class="toggle">
-        <input id="showCoach" type="checkbox" checked>
-        Show Strategy Prompts
-      </label>
 
       <label class="toggle">
         <input id="showExplain" type="checkbox" checked>
@@ -412,6 +389,13 @@
   }
 
   function roundDownTo(n, place){ return Math.floor(n / place) * place; }
+
+  function makeWriteBlank(type = "small"){
+    const blank = document.createElement("span");
+    blank.className = `writeBlank ${type === "long" ? "writeBlank--long" : "writeBlank--small"}`;
+    blank.setAttribute("aria-hidden", "true");
+    return blank;
+  }
 
   function shuffle(arr){
     for(let i=arr.length-1;i>0;i--){
@@ -545,8 +529,8 @@
 
       // endpoint blank as a drawn line (cleaner than underscores text)
       if(isEndpoint && !endpointsFilled){
-        const y = lineY + 80;
-        const halfLen = 24; // makes a "_____" length
+        const y = lineY + 84;
+        const halfLen = 40; // larger writing space for endpoints
         const blankLine = document.createElementNS(ns, "line");
         blankLine.setAttribute("x1", x - halfLen);
         blankLine.setAttribute("y1", y);
@@ -589,67 +573,44 @@
     card.appendChild(prompt);
 
     card.appendChild(buildRewriteNumber(n, place));
-
-    // Round Down/Up lines (underscores if not filled)
+    // Round Down/Up headings and blanks
     const lines = document.createElement("div");
     lines.className = "lines";
 
-    const row1 = document.createElement("div");
-    row1.className = "lineRow";
-    row1.appendChild(document.createTextNode("Round Down "));
-    const downArrow = document.createElement("span");
-    downArrow.className = "arrow";
-    downArrow.textContent = "↓";
-    row1.appendChild(downArrow);
-    row1.appendChild(document.createTextNode(opts.fillDownUp ? fmt(down) : "__________"));
+    const downHead = document.createElement("div");
+    downHead.className = "lineHead";
+    downHead.textContent = "Round Down \u2193";
 
-    const row2 = document.createElement("div");
-    row2.className = "lineRow";
-    row2.appendChild(document.createTextNode("Round Up "));
-    const upArrow = document.createElement("span");
-    upArrow.className = "arrow";
-    upArrow.textContent = "↑";
-    row2.appendChild(upArrow);
-    row2.appendChild(document.createTextNode(opts.fillDownUp ? fmt(up) : "__________"));
+    const upHead = document.createElement("div");
+    upHead.className = "lineHead";
+    upHead.textContent = "Round Up \u2191";
 
-    lines.appendChild(row1);
-    lines.appendChild(row2);
-    card.appendChild(lines);
-
-    if(opts.showCoach){
-      const coach = document.createElement("div");
-      coach.className = "coachBox";
-
-      const coachTitle = document.createElement("div");
-      coachTitle.className = "coachTitle";
-      coachTitle.textContent = "Rounding Strategy";
-      coach.appendChild(coachTitle);
-
-      const s1 = document.createElement("div");
-      s1.className = "coachStep";
-      s1.textContent = `1) Benchmarks: ${fmt(down)} and ${fmt(up)}`;
-      coach.appendChild(s1);
-
-      const s2 = document.createElement("div");
-      s2.className = "coachStep";
-      s2.textContent = `2) Midpoint: ${fmt(midpoint)}`;
-      coach.appendChild(s2);
-
-      const s3 = document.createElement("div");
-      s3.className = "coachStep";
-      s3.textContent = opts.fillDownUp
-        ? `3) ${fmt(n)} is ${roundsUp ? "at/above" : "below"} the midpoint, so round ${roundsUp ? "up" : "down"}.`
-        : `3) ${fmt(n)} is ______ the midpoint, so round ______.`;
-      coach.appendChild(s3);
-
-      card.appendChild(coach);
+    const downBlankRow = document.createElement("div");
+    downBlankRow.className = "lineBlankRow";
+    if(opts.fillDownUp){
+      downBlankRow.textContent = fmt(down);
+      downBlankRow.style.fontWeight = "900";
+      downBlankRow.style.fontSize = "16px";
+    }else{
+      downBlankRow.appendChild(makeWriteBlank("small"));
     }
 
-    // NEW: arrows before number line (↓ then ↑)
-    const pre = document.createElement("div");
-    pre.className = "preLineArrows";
-    pre.innerHTML = `<span>↓</span><span>↑</span>`;
-    card.appendChild(pre);
+    const upBlankRow = document.createElement("div");
+    upBlankRow.className = "lineBlankRow";
+    if(opts.fillDownUp){
+      upBlankRow.textContent = fmt(up);
+      upBlankRow.style.fontWeight = "900";
+      upBlankRow.style.fontSize = "16px";
+    }else{
+      upBlankRow.appendChild(makeWriteBlank("small"));
+    }
+
+    lines.appendChild(downHead);
+    lines.appendChild(upHead);
+    lines.appendChild(downBlankRow);
+    lines.appendChild(upBlankRow);
+    card.appendChild(lines);
+
 
     const nl = document.createElement("div");
     nl.className = "nlWrap";
@@ -659,9 +620,18 @@
     if(opts.showExplain){
       const answer = document.createElement("div");
       answer.className = "answerLine";
-      answer.textContent = opts.fillDownUp
-        ? `I rounded to ${fmt(roundsUp ? up : down)} because ${fmt(n)} is closer to ${fmt(roundsUp ? up : down)}.`
-        : "I rounded to __________ because ____________________________________.";
+      if(opts.fillDownUp){
+        answer.textContent = `I rounded to ${fmt(roundsUp ? up : down)} because ${fmt(n)} is closer to ${fmt(roundsUp ? up : down)}.`;
+      }else{
+        answer.appendChild(document.createTextNode("I rounded to "));
+        answer.appendChild(makeWriteBlank("small"));
+        answer.appendChild(document.createTextNode(" because"));
+
+        const secondLine = document.createElement("span");
+        secondLine.className = "answerLineBreak";
+        secondLine.appendChild(makeWriteBlank("full"));
+        answer.appendChild(secondLine);
+      }
       card.appendChild(answer);
     }
 
@@ -681,7 +651,6 @@
       endpointsFilled: $("endpointsFilled").checked,
       fillDownUp: $("fillDownUp").checked,
       showDot: $("showDot").checked,
-      showCoach: $("showCoach").checked,
       showExplain: $("showExplain").checked
     };
 
@@ -720,7 +689,7 @@
   $("btnGen").addEventListener("click", build);
   $("btnPrint").addEventListener("click", ()=>window.print());
 
-  ["nearest","within","scaffold","labelAll","endpointsFilled","fillDownUp","showDot","showCoach","showExplain"]
+  ["nearest","within","scaffold","labelAll","endpointsFilled","fillDownUp","showDot","showExplain"]
     .forEach(id => $(id).addEventListener("change", build));
 
   init();
