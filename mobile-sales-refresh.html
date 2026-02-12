@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intervention Station - Mobile Optimized Sales Layout</title>
+  <style>
+    :root{
+      --brand-dark:#2f3e4e;
+      --brand-blue:#66c9f4;
+      --ink:#102246;
+      --offwhite:#f3f5f7;
+      --panel:#fff;
+      --border:rgba(0,0,0,.2);
+      --shadow:0 10px 30px rgba(0,0,0,.12);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--offwhite);color:var(--ink)}
+    a{text-decoration:none;color:inherit}
+
+    .is-ticker{background:var(--brand-dark);color:#fff;overflow:hidden}
+    .is-ticker-track{display:flex;gap:24px;white-space:nowrap;padding:10px 0;animation:ticker 30s linear infinite;width:max-content}
+    .is-ticker-item{font-size:12px;font-weight:700;opacity:.95}
+    .is-ticker-star{color:#ffe08a;margin-right:6px}
+    @keyframes ticker{to{transform:translateX(-50%)}}
+
+    .top-cta-wrap{position:sticky;top:0;z-index:1000;background:var(--brand-dark);box-shadow:0 4px 18px rgba(0,0,0,.22)}
+    .top-cta-bar{max-width:1200px;margin:auto;padding:10px 14px;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center}
+    .top-logo{max-width:250px;width:100%;height:auto}
+    .top-buttons-row{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+    .top-btn{display:inline-flex;align-items:center;justify-content:center;background:var(--brand-blue);border:2px solid var(--brand-blue);color:#fff;font-weight:700;font-size:14px;min-height:42px;padding:0 14px;border-radius:12px;white-space:nowrap}
+
+    .is-home-sections{padding:14px}
+    .is-layout{max-width:1200px;margin:auto;display:grid;grid-template-columns:290px minmax(0,1fr);gap:14px;align-items:start}
+    .is-nav{position:sticky;top:88px}
+    .is-nav-card,.is-page{background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+    .is-nav-header{background:#2f79b8;color:#fff;font-size:18px;font-weight:800;padding:12px}
+    .is-nav-subhead{font-size:13px;font-weight:800;color:#2f3e4e;padding:10px 12px 0}
+    .is-nav-group{padding:8px 12px 12px}
+    .is-nav-link{display:block;padding:8px 0;font-size:15px;font-weight:600;color:#123b63}
+    .is-nav-link:hover{text-decoration:underline}
+
+    .is-slider{position:relative;background:#fff;border-bottom:1px solid var(--border)}
+    .is-slider-viewport{overflow:auto;scroll-snap-type:x mandatory;display:flex;scrollbar-width:none}
+    .is-slider-viewport::-webkit-scrollbar{display:none}
+    .is-slide{position:relative;min-width:100%;height:clamp(190px,40vw,320px);scroll-snap-align:start}
+    .is-slide img{width:100%;height:100%;object-fit:cover}
+    .is-slide-overlay{position:absolute;left:0;right:0;bottom:0;padding:14px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.75))}
+    .is-slide-title{font-size:20px;font-weight:800}
+    .is-slide-sub{font-size:13px;font-weight:500;opacity:.95}
+
+    .is-top-cta{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:16px;border-bottom:1px solid var(--border)}
+    .is-top-cta h1{margin:0 0 8px;font-size:clamp(24px,4vw,34px);line-height:1.1}
+    .is-top-cta p{margin:0;font-size:15px;line-height:1.45;color:#2b2b2b}
+    .is-top-proof{margin-top:10px;font-size:13px;font-weight:800;color:#123b63}
+    .is-join-btn{display:inline-flex;background:var(--brand-blue);color:#fff;padding:12px 18px;border-radius:12px;font-weight:700}
+
+    .is-intervention-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:12px}
+    .is-intervention-card{border:1px solid #b9c7d6;border-radius:14px;overflow:hidden;background:#fff}
+    .is-intervention-head{padding:10px 12px;background:#2f79b8;color:#fff;font-weight:800}
+    .is-intervention-img{width:100%;aspect-ratio:16/10;object-fit:cover}
+    .is-intervention-body{padding:12px}
+    .is-intervention-body p{margin:0 0 8px;font-size:14px;color:#2b2b2b}
+    .is-intervention-link{color:#2f79b8;font-weight:800}
+
+    .mobile-nav-toggle{display:none}
+
+    @media (max-width:1024px){
+      .is-layout{grid-template-columns:1fr}
+      .is-nav{position:static}
+    }
+
+    @media (max-width:760px){
+      .top-cta-bar{grid-template-columns:1fr;justify-items:center}
+      .top-logo{max-width:230px}
+      .top-buttons-row{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+      .top-buttons-row a:last-child{grid-column:1 / -1}
+      .top-btn{width:100%}
+
+      .mobile-nav-toggle{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px;width:calc(100% - 24px);background:#fff;border:1px solid var(--border);border-radius:12px;padding:11px;font-weight:700}
+      .is-nav{display:none}
+      .is-nav.open{display:block;position:static}
+
+      .is-top-cta{grid-template-columns:1fr;padding:16px 14px}
+      .is-join-btn{width:100%;justify-content:center}
+
+      .is-intervention-grid{grid-template-columns:1fr}
+      .is-slide{height:220px}
+      .is-slide-title{font-size:18px}
+
+      .is-ticker-track{animation-duration:44s}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .is-ticker-track{animation:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="is-ticker" aria-label="Reviews ticker">
+    <div class="is-ticker-track">
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>Best intervention resources ever — my kids LOVE it.</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>Saved me hours every week. Worth every penny.</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>The generators are unreal. Print and go.</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>My small groups finally feel organized.</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>Best intervention resources ever — my kids LOVE it.</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>Saved me hours every week. Worth every penny.</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>The generators are unreal. Print and go.</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>My small groups finally feel organized.</div>
+    </div>
+  </div>
+
+  <div class="top-cta-wrap">
+    <div class="top-cta-bar">
+      <img src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png" alt="Intervention Station" class="top-logo" />
+      <div class="top-buttons-row">
+        <a href="https://member.interventionstation.com/join" class="top-btn">Join Membership</a>
+        <a href="https://member.interventionstation.com/membership" class="top-btn">What's Inside?</a>
+        <a href="https://member.interventionstation.com/login" class="top-btn">Log In</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="is-home-sections">
+    <div class="is-layout">
+      <button class="mobile-nav-toggle" id="mobileNavToggle" type="button" aria-expanded="false" aria-controls="leftNav">☰ Browse resources</button>
+
+      <aside class="is-nav" id="leftNav" aria-label="Navigation">
+        <nav class="is-nav-card">
+          <div class="is-nav-header">Math Resources</div>
+          <div class="is-nav-subhead">Numbers &amp; Operations</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="https://interventionstation.com/placevalue-preview">Place Value</a>
+            <a class="is-nav-link" href="https://interventionstation.com/rounding-preview">Rounding</a>
+            <a class="is-nav-link" href="https://interventionstation.com/addition-preview">Addition (Multi Digit)</a>
+          </div>
+          <div class="is-nav-subhead">Fractions &amp; Decimals</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="https://interventionstation.com/fractions-preview">Fractions</a>
+            <a class="is-nav-link" href="https://interventionstation.com/decimals-preview">Decimals</a>
+            <a class="is-nav-link" href="https://interventionstation.com/division-preview">Long Division</a>
+          </div>
+
+          <div class="is-nav-header">Reading &amp; Phonics</div>
+          <div class="is-nav-subhead">Reading by Phonics Skills</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="https://interventionstation.com/phonics-comics-preview">Phonics Comics</a>
+            <a class="is-nav-link" href="https://interventionstation.com/spelling-preview">Spelling by Phonics Skill</a>
+            <a class="is-nav-link" href="https://interventionstation.com/heart-words-preview">Heart Words</a>
+          </div>
+          <div class="is-nav-subhead">Writing Practice</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="https://interventionstation.com/games-preview">Writing Practice</a>
+            <a class="is-nav-link" href="https://interventionstation.com/fix-mixup-preview">Fix the Mix Up</a>
+            <a class="is-nav-link" href="https://interventionstation.com/blending-slides-preview">Blending Slides</a>
+          </div>
+
+          <div class="is-nav-header">Generators</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="https://interventionstation.com/fluencygridpreview">Fluency Grid Generator</a>
+            <a class="is-nav-link" href="https://interventionstation.com/word-map-preview">Word Mapping</a>
+            <a class="is-nav-link" href="https://interventionstation.com/rollreadpreview">Roll and Read</a>
+          </div>
+
+          <div class="is-nav-header">Learning Songs</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="https://interventionstation.com/math-song-preview">Math Learning Songs</a>
+            <a class="is-nav-link" href="https://interventionstation.com/math-song-preview">All Learning Songs + Resources</a>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="is-main">
+        <section class="is-page">
+          <section class="is-slider">
+            <div class="is-slider-viewport" id="heroSlider">
+              <a class="is-slide" href="https://interventionstation.com/phonics-comics-preview">
+                <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530f8a93b0572969e8c.png" alt="Phonics Comics" />
+                <div class="is-slide-overlay"><div class="is-slide-title">Phonics Comics</div><div class="is-slide-sub">Decodable stories kids actually want to read</div></div>
+              </a>
+              <a class="is-slide" href="https://interventionstation.com/fluencygridpreview">
+                <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530e18638d0cfa07bbe.png" alt="Fluency Grid Generator" />
+                <div class="is-slide-overlay"><div class="is-slide-title">Generators</div><div class="is-slide-sub">Build printable practice pages in seconds</div></div>
+              </a>
+              <a class="is-slide" href="https://interventionstation.com/math-song-preview">
+                <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049e186383c509dc54f.png" alt="Learning Songs" />
+                <div class="is-slide-overlay"><div class="is-slide-title">Learning Songs</div><div class="is-slide-sub">Songs + printables that make routines stick</div></div>
+              </a>
+              <a class="is-slide" href="https://interventionstation.com/multiplication-preview">
+                <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/674515a001f2194ec471bb64.png" alt="Math Resources" />
+                <div class="is-slide-overlay"><div class="is-slide-title">Math Resources</div><div class="is-slide-sub">Scaffolded intervention for every level</div></div>
+              </a>
+            </div>
+          </section>
+
+          <section class="is-top-cta">
+            <div>
+              <h1>Printable Resources + Generators for Busy Teachers</h1>
+              <p>Scaffolded math & reading support, learning songs, and print-in-seconds generators that save hours every week.</p>
+              <p class="is-top-proof">Resources Used by Thousands of Teachers, Viewed Millions of Times On TeachWithMrC's Channel.</p>
+            </div>
+            <a href="https://member.interventionstation.com/join" class="is-join-btn">Join Membership</a>
+          </section>
+
+          <section class="is-intervention-grid">
+            <a class="is-intervention-card" href="https://interventionstation.com/multiplication-preview">
+              <div class="is-intervention-head">Math Resources</div>
+              <img class="is-intervention-img" src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/674515a001f2194ec471bb64.png" alt="Math resources preview">
+              <div class="is-intervention-body"><p>Place value, rounding, multiplication, division, fractions, and more.</p><span class="is-intervention-link">Explore →</span></div>
+            </a>
+            <a class="is-intervention-card" href="https://interventionstation.com/phonics-comics-preview">
+              <div class="is-intervention-head">Reading &amp; Phonics</div>
+              <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b07d871dd47.png" alt="Reading and phonics preview">
+              <div class="is-intervention-body"><p>Reading by phonics skill, writing practice, and print-ready literacy support.</p><span class="is-intervention-link">Explore →</span></div>
+            </a>
+            <a class="is-intervention-card" href="https://interventionstation.com/fluencygridpreview">
+              <div class="is-intervention-head">Generators</div>
+              <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b5d5571dd46.png" alt="Generators preview">
+              <div class="is-intervention-body"><p>Fluency Grid, Word Mapping, Roll &amp; Read, and more click-to-create tools.</p><span class="is-intervention-link">Explore →</span></div>
+            </a>
+            <a class="is-intervention-card" href="https://interventionstation.com/math-song-preview">
+              <div class="is-intervention-head">Learning Songs</div>
+              <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049e186383c509dc54f.png" alt="Learning songs preview">
+              <div class="is-intervention-body"><p>Learning songs with visual supports and printable resources for routines.</p><span class="is-intervention-link">Explore →</span></div>
+            </a>
+          </section>
+        </section>
+      </main>
+    </div>
+  </section>
+
+  <script>
+    const toggle = document.getElementById('mobileNavToggle');
+    const nav = document.getElementById('leftNav');
+    if (toggle && nav) {
+      toggle.addEventListener('click', () => {
+        const isOpen = nav.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', String(isOpen));
+      });
+    }
+
+    const slider = document.getElementById('heroSlider');
+    if (slider) {
+      let index = 0;
+      const slides = slider.querySelectorAll('.is-slide');
+      setInterval(() => {
+        index = (index + 1) % slides.length;
+        slider.scrollTo({ left: slider.clientWidth * index, behavior: 'smooth' });
+      }, 3500);
+    }
+  </script>
+</body>
+</html>
