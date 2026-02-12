@@ -1,344 +1,612 @@
-Perfect use case. Below is a full upgraded version: kids pick a skill, click `Play`, and an interactive colorful Tic-Tac-Toe board appears immediately (with real words/sentences from your data file).
-
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Phonics Tic-Tac-Toe Live Game</title>
-  <script src="fluencyDataFull_v8-2_clean.js"></script>
+  <title>Phonics Tic-Tac-Toe Game</title>
+  <script src="/ladder/fluencyDataFull_v8-2_clean.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg1:#6ecbff; --bg2:#a78bfa; --bg3:#ffe66d;
-      --card:#ffffff;
-      --ink:#1f2937;
-      --x:#ef476f;
-      --o:#118ab2;
-      --ok:#06d6a0;
+    :root {
+      --sky: #dff4ff;
+      --mint: #e8fff3;
+      --sun: #fff8d9;
+      --card: #ffffff;
+      --ink: #213547;
+      --x: #ef476f;
+      --o: #118ab2;
+      --line: #d7e7f7;
+      --win: #06d6a0;
+      --btn1: #ff9f1c;
+      --btn2: #ff6b6b;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:"Baloo 2",sans-serif;
-      color:var(--ink);
-      min-height:100vh;
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Baloo 2", sans-serif;
+      color: var(--ink);
+      min-height: 100vh;
       background:
-        radial-gradient(circle at 10% 20%, #fff7 0 8%, transparent 9%),
-        radial-gradient(circle at 90% 15%, #fff8 0 6%, transparent 7%),
-        linear-gradient(135deg,var(--bg1),var(--bg2) 55%,var(--bg3));
-      padding:20px;
+        radial-gradient(circle at 10% 15%, #ffffff 0 8%, transparent 9%),
+        radial-gradient(circle at 88% 18%, #ffffff 0 6%, transparent 7%),
+        linear-gradient(145deg, var(--sky), var(--mint) 55%, var(--sun));
+      padding: 20px;
     }
-    .app{max-width:1050px;margin:0 auto}
-    .top{
-      background:var(--card);
-      border-radius:24px;
-      padding:18px;
-      box-shadow:0 10px 30px #0002;
-      display:grid;
-      grid-template-columns: 1.5fr 1fr 1fr auto;
-      gap:12px;
-      align-items:end;
+
+    .app { max-width: 1100px; margin: 0 auto; }
+    h1 { margin: 0 0 8px; font-size: 42px; text-align: center; }
+    .sub { text-align: center; margin: 0 0 14px; font-size: 19px; }
+
+    .panel {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+      display: grid;
+      grid-template-columns: 1.35fr 1fr 1fr 1fr auto;
+      gap: 10px;
+      align-items: end;
     }
-    label{font-weight:800;font-size:15px;display:block;margin-bottom:4px}
-    select,button{
-      width:100%; border:none; border-radius:14px; padding:12px 14px;
-      font:700 16px "Baloo 2",sans-serif;
+    label { display: block; margin-bottom: 5px; font-weight: 800; font-size: 14px; }
+    select, button {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 11px 12px;
+      font: 700 16px "Baloo 2", sans-serif;
     }
-    select{background:#f4f7ff}
-    button{
-      cursor:pointer;
-      background:linear-gradient(135deg,#ff6b6b,#ff9f1c);
-      color:#fff;
-      transition:transform .12s ease;
+    select { background: #f5f9ff; color: var(--ink); }
+    button {
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--btn1), var(--btn2));
+      color: #fff;
+      transition: transform .12s ease;
     }
-    button:active{transform:translateY(1px)}
-    .status{
-      margin-top:14px;
-      background:#fff;
-      border-radius:18px;
-      padding:12px 16px;
-      display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;
-      box-shadow:0 8px 24px #0001;
+    button:active { transform: translateY(1px); }
+    .ghost { background: #e2ecf6; color: #15324a; }
+
+    .status {
+      margin-top: 12px;
+      background: var(--card);
+      border-radius: 18px;
+      padding: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
     }
-    .pill{padding:6px 12px;border-radius:999px;background:#f1f5f9;font-weight:800}
-    .x{color:var(--x)} .o{color:var(--o)}
-    .board-wrap{
-      margin-top:14px;
-      background:#fff;
-      border-radius:24px;
-      padding:18px;
-      box-shadow:0 12px 30px #0002;
+    .pill {
+      background: #eff6ff;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-weight: 800;
+      font-size: 16px;
     }
-    .board{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(140px,1fr));
-      gap:10px;
+    .x { color: var(--x); }
+    .o { color: var(--o); }
+
+    .board-wrap {
+      margin-top: 12px;
+      background: var(--card);
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
     }
-    .cell{
-      min-height:155px;
-      border:none;
-      border-radius:18px;
-      background:linear-gradient(180deg,#f9fbff,#eef4ff);
-      padding:8px;
-      display:grid;
-      grid-template-rows:1fr auto;
-      align-items:center;
-      box-shadow:inset 0 0 0 3px #dbeafe;
-      cursor:pointer;
-      position:relative;
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(120px, 1fr));
+      gap: 10px;
     }
-    .prompt{
-      text-align:center;
-      font-weight:700;
-      font-size:24px;
-      line-height:1.05;
-      padding:6px;
+    .cell {
+      min-height: 165px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #f9fcff, #eef6ff);
+      box-shadow: inset 0 0 0 3px var(--line);
+      padding: 8px;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      align-items: center;
+      cursor: pointer;
     }
-    .prompt.sentence{font-size:19px;line-height:1.15}
-    .mark{
-      text-align:center;
-      font-size:52px;
-      font-weight:800;
-      line-height:1;
-      height:56px;
+    .cell:disabled { cursor: not-allowed; opacity: 0.8; }
+
+    .prompt {
+      text-align: center;
+      font-size: 27px;
+      font-weight: 700;
+      line-height: 1.04;
+      padding: 4px;
+      word-break: break-word;
     }
-    .mark.x{color:var(--x)}
-    .mark.o{color:var(--o)}
-    .controls{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
-    .ghost{
-      background:#e2e8f0; color:#0f172a;
+    .prompt.sentence { font-size: 18px; line-height: 1.15; }
+
+    .mark {
+      text-align: center;
+      height: 56px;
+      line-height: 56px;
+      font-weight: 800;
+      font-size: 52px;
     }
-    .win{
-      outline:5px solid var(--ok);
-      animation:pop .35s ease;
+    .mark.x { color: var(--x); }
+    .mark.o { color: var(--o); }
+
+    .win {
+      outline: 5px solid var(--win);
+      animation: pop 0.25s ease;
     }
-    @keyframes pop{0%{transform:scale(.96)}100%{transform:scale(1)}}
-    .confetti{
-      position:fixed; inset:0; pointer-events:none; overflow:hidden;
+    @keyframes pop { from { transform: scale(0.97); } to { transform: scale(1); } }
+
+    .actions {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
     }
-    .dot{
-      position:absolute; width:10px; height:16px; border-radius:4px;
-      animation:fall 1300ms linear forwards;
+    .actions button { width: auto; padding: 9px 14px; }
+
+    .confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
     }
-    @keyframes fall{
-      from{transform:translateY(-20px) rotate(0deg);opacity:1}
-      to{transform:translateY(110vh) rotate(620deg);opacity:.9}
+    .dot {
+      position: absolute;
+      width: 10px;
+      height: 16px;
+      border-radius: 4px;
+      animation: fall 1300ms linear forwards;
     }
-    @media (max-width:900px){
-      .top{grid-template-columns:1fr}
-      .board{grid-template-columns:repeat(3,1fr)}
-      .cell{min-height:125px}
-      .prompt{font-size:18px}
-      .prompt.sentence{font-size:15px}
+    @keyframes fall {
+      from { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      to { transform: translateY(110vh) rotate(600deg); opacity: 0.9; }
+    }
+
+    @media (max-width: 980px) {
+      .panel { grid-template-columns: 1fr; }
+      .board { grid-template-columns: repeat(3, 1fr); }
+      .cell { min-height: 130px; }
+      .prompt { font-size: 20px; }
+      .prompt.sentence { font-size: 15px; }
     }
   </style>
 </head>
 <body>
-<div class="app">
-  <div class="top">
-    <div>
-      <label>Skill</label>
-      <select id="skill"></select>
+  <div class="app">
+    <h1>Phonics Tic-Tac-Toe</h1>
+    <p class="sub">Pick a skill, click Play, and start right away.</p>
+
+    <div class="panel">
+      <div>
+        <label for="skill">Skill</label>
+        <select id="skill"></select>
+      </div>
+      <div>
+        <label for="blends">Include Blends?</label>
+        <select id="blends">
+          <option value="no">No (3 sounds)</option>
+          <option value="yes">Yes (4+ sounds)</option>
+        </select>
+      </div>
+      <div>
+        <label for="mode">Grid Content</label>
+        <select id="mode">
+          <option value="words">Words</option>
+          <option value="sentences">Sentences</option>
+          <option value="both">Both</option>
+        </select>
+      </div>
+      <div>
+        <label for="gameMode">Game Mode</label>
+        <select id="gameMode">
+          <option value="pvp">2 Players</option>
+          <option value="cpu-easy">Vs Computer (Easy)</option>
+          <option value="cpu-medium">Vs Computer (Medium)</option>
+        </select>
+      </div>
+      <div>
+        <label>&nbsp;</label>
+        <button id="playBtn">Play</button>
+      </div>
     </div>
-    <div>
-      <label>Blends</label>
-      <select id="blends">
-        <option value="no">No (3 sounds)</option>
-        <option value="yes">Yes (4+ sounds)</option>
-      </select>
+
+    <div class="status">
+      <div class="pill" id="skillTag">Skill: --</div>
+      <div class="pill">Turn: <span id="turn" class="x">X</span></div>
+      <div class="pill" id="msg">Press Play to begin.</div>
+      <div class="pill">X Wins: <span id="scoreX">0</span></div>
+      <div class="pill">O Wins: <span id="scoreO">0</span></div>
+      <div class="pill">Ties: <span id="scoreT">0</span></div>
     </div>
-    <div>
-      <label>Grid Content</label>
-      <select id="mode">
-        <option value="words">Words</option>
-        <option value="sentences">Sentences</option>
-        <option value="both">Both</option>
-      </select>
+
+    <div class="board-wrap">
+      <div class="board" id="board"></div>
+      <div class="actions">
+        <button id="sameWords" class="ghost">Play Again (Same Words)</button>
+        <button id="newWords" class="ghost">New Words</button>
+        <button id="resetScore" class="ghost">Reset Score</button>
+      </div>
     </div>
-    <div><button id="playBtn">Play</button></div>
   </div>
+  <div id="confetti" class="confetti"></div>
 
-  <div class="status">
-    <div class="pill" id="skillTag">Skill: --</div>
-    <div class="pill">Turn: <span id="turn" class="x">X</span></div>
-    <div class="pill" id="msg">Tap a square after reading it out loud!</div>
-  </div>
+  <script>
+    const PREFIX = {
+      "Short A": "0.1 - Short A",
+      "Short O": "0.2 - Short O",
+      "Short I": "0.3 - Short I",
+      "Short U": "0.4 - Short U",
+      "Short E": "0.5 - Short E",
+      "FLSZ": "0.6 - FLSZ",
+      "ck": "1.1 - ck",
+      "sh": "1.2 - sh",
+      "th": "1.3 - th",
+      "ch": "1.4 - ch",
+      "wh": "1.5 - wh",
+      "-all": "3.1 - all",
+      "-ng": "3.2 - ng",
+      "-nk": "3.3 - nk",
+      "a_e": "2.1 - a_e",
+      "i_e": "2.2 - i_e",
+      "o_e": "2.3 - o_e",
+      "u_e": "2.4 - u_e",
+      "ar": "4.1 - ar",
+      "or": "4.2 - or",
+      "er/ir/ur": "4.3 - er, ir, ur",
+      "Soft C (-ce)": "10.1 - ce",
+      "Soft G (-ge)": "10.2 - ge",
+      "Soft G (-dge)": "10.3 - dge"
+    };
 
-  <div class="board-wrap">
-    <div class="board" id="board"></div>
-    <div class="controls">
-      <button class="ghost" id="sameWords">Play Again (Same Words)</button>
-      <button class="ghost" id="newWords">New Words</button>
-    </div>
-  </div>
-</div>
-<div id="confetti" class="confetti"></div>
+    const MIXED_RULES = {
+      "Mixed CVC": ["0.1 - Short A", "0.5 - Short E", "0.3 - Short I", "0.2 - Short O", "0.4 - Short U", "0.6 - FLSZ"],
+      "Digraphs Mixed": ["1.1 - ck", "1.2 - sh", "1.3 - th", "1.4 - ch", "1.5 - wh"],
+      "Glued Mixed": ["3.1 - all", "3.2 - ng", "3.3 - nk"],
+      "Mixed VCe": ["2.1 - a_e", "2.2 - i_e", "2.3 - o_e", "2.4 - u_e"],
+      "Mixed R-Controlled": ["4.1 - ar", "4.2 - or", "4.3 - er, ir, ur"],
+      "Long A (ai/ay)": ["6.1 - ay", "6.2 - ai"],
+      "Long E (ee/ea)": ["6.4 - ee", "6.5 - ea"],
+      "Long I (igh/y/ie)": ["6.6 - igh", "6.7 - Final y", "6.8 - ie"],
+      "Long O (oa/ow/oe)": ["6.9 - oa", "6.10 - ow", "6.11 - oe"],
+      "Long U (oo/ew/ue)": ["6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
+      "Mixed Vowel Teams": ["6.1 - ay", "6.2 - ai", "6.4 - ee", "6.5 - ea", "6.6 - igh", "6.7 - Final y", "6.8 - ie", "6.9 - oa", "6.10 - ow", "6.11 - oe", "6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
+      "Diphthongs (oy/oi)": ["7.4 - oy", "7.3 - oi"],
+      "Diphthongs (ow/ou)": ["7.2 - ow", "7.1 - ou"],
+      "Variant Vowels (au/aw)": ["7.5 - aw", "7.6 - au"],
+      "Variant Vowel (oo)": ["7.7 - oo variant"]
+    };
 
-<script>
-/* ===== Data maps from your current setup ===== */
-const PREFIX = {
-  "Short A":"0.1 - Short A","Short O":"0.2 - Short O","Short I":"0.3 - Short I","Short U":"0.4 - Short U","Short E":"0.5 - Short E","FLSZ":"0.6 - FLSZ",
-  "ck":"1.1 - ck","sh":"1.2 - sh","th":"1.3 - th","ch":"1.4 - ch","wh":"1.5 - wh",
-  "-all":"3.1 - all","-ng":"3.2 - ng","-nk":"3.3 - nk",
-  "a_e":"2.1 - a_e","i_e":"2.2 - i_e","o_e":"2.3 - o_e","u_e":"2.4 - u_e",
-  "ar":"4.1 - ar","or":"4.2 - or","er/ir/ur":"4.3 - er, ir, ur",
-  "Soft C (-ce)":"10.1 - ce","Soft G (-ge)":"10.2 - ge","Soft G (-dge)":"10.3 - dge"
-};
-const MIXED_RULES = {
-  "Mixed CVC":["0.1 - Short A","0.5 - Short E","0.3 - Short I","0.2 - Short O","0.4 - Short U","0.6 - FLSZ"],
-  "Digraphs Mixed":["1.1 - ck","1.2 - sh","1.3 - th","1.4 - ch","1.5 - wh"],
-  "Glued Mixed":["3.1 - all","3.2 - ng","3.3 - nk"],
-  "Mixed VCe":["2.1 - a_e","2.2 - i_e","2.3 - o_e","2.4 - u_e"],
-  "Mixed R-Controlled":["4.1 - ar","4.2 - or","4.3 - er, ir, ur"],
-  "Long A (ai/ay)":["6.1 - ay","6.2 - ai"],
-  "Long E (ee/ea)":["6.4 - ee","6.5 - ea"],
-  "Long I (igh/y/ie)":["6.6 - igh","6.7 - Final y","6.8 - ie"],
-  "Long O (oa/ow/oe)":["6.9 - oa","6.10 - ow","6.11 - oe"],
-  "Long U (oo/ew/ue)":["6.12 - oo (long u)","6.13 - ew","6.14 - ue"],
-  "Mixed Vowel Teams":["6.1 - ay","6.2 - ai","6.4 - ee","6.5 - ea","6.6 - igh","6.7 - Final y","6.8 - ie","6.9 - oa","6.10 - ow","6.11 - oe","6.12 - oo (long u)","6.13 - ew","6.14 - ue"],
-  "Diphthongs (oy/oi)":["7.4 - oy","7.3 - oi"],
-  "Diphthongs (ow/ou)":["7.2 - ow","7.1 - ou"],
-  "Variant Vowels (au/aw)":["7.5 - aw","7.6 - au"],
-  "Variant Vowel (oo)":["7.7 - oo variant"]
-};
+    const SKILLS = [
+      "Short A", "Short E", "Short I", "Short O", "Short U", "Mixed CVC", "FLSZ",
+      "ck", "sh", "th", "ch", "wh", "Digraphs Mixed",
+      "-all", "-ng", "-nk", "Glued Mixed",
+      "a_e", "i_e", "o_e", "u_e", "Mixed VCe",
+      "ar", "or", "er/ir/ur", "Mixed R-Controlled",
+      "Long A (ai/ay)", "Long E (ee/ea)", "Long I (igh/y/ie)", "Long O (oa/ow/oe)", "Long U (oo/ew/ue)", "Mixed Vowel Teams",
+      "Diphthongs (oy/oi)", "Diphthongs (ow/ou)",
+      "Variant Vowels (au/aw)", "Variant Vowel (oo)",
+      "Soft C (-ce)", "Soft G (-ge)", "Soft G (-dge)"
+    ];
 
-const SKILLS = [
-  "Short A","Short E","Short I","Short O","Short U","Mixed CVC","FLSZ",
-  "ck","sh","th","ch","wh","Digraphs Mixed",
-  "-all","-ng","-nk","Glued Mixed",
-  "a_e","i_e","o_e","u_e","Mixed VCe",
-  "ar","or","er/ir/ur","Mixed R-Controlled",
-  "Long A (ai/ay)","Long E (ee/ea)","Long I (igh/y/ie)","Long O (oa/ow/oe)","Long U (oo/ew/ue)","Mixed Vowel Teams",
-  "Diphthongs (oy/oi)","Diphthongs (ow/ou)",
-  "Variant Vowels (au/aw)","Variant Vowel (oo)",
-  "Soft C (-ce)","Soft G (-ge)","Soft G (-dge)"
-];
+    const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+    const $ = (s) => document.querySelector(s);
 
-const state = { prompts:[], board:Array(9).fill(""), turn:"X", over:false, winLine:[] };
-const $ = s => document.querySelector(s);
+    const state = {
+      prompts: [],
+      board: Array(9).fill(""),
+      turn: "X",
+      over: false,
+      winLine: [],
+      scores: { X: 0, O: 0, T: 0 }
+    };
 
-function unique(a){ return [...new Set((a||[]).map(x=>String(x).trim()).filter(Boolean))]; }
-function shuffle(a){ const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]];} return b; }
-function fillToN(pool,n){ if(!pool.length) return []; const out=[]; while(out.length<n){ out.push(...shuffle(pool)); } return out.slice(0,n); }
-function readDict(d,k){ return Array.isArray(d?.[k]) ? d[k] : []; }
+    function wordsDict() {
+      return window.fluencyWords || window.fluencyData?.words || {};
+    }
 
-function readWithBlends(dict,prefix,type,blends){
-  const t=type, tl=type.toLowerCase();
-  let base=[...readDict(dict,`${prefix} ${t}`),...readDict(dict,`${prefix} ${tl}`),...readDict(dict,prefix)];
-  if(!blends) return base;
-  const bPrefix=prefix.replace(" - ","b - ");
-  const keys=[`${prefix} with Blends ${t}`,`${prefix} with blends ${t}`,`${prefix} with Blends ${tl}`,`${prefix} with blends ${tl}`,
-              `${bPrefix} with Blends ${t}`,`${bPrefix} with blends ${t}`,`${bPrefix} with Blends ${tl}`,`${bPrefix} with blends ${tl}`];
-  for(const k of keys){ const got=readDict(dict,k); if(got.length) return got.length<9 ? got.concat(base) : got; }
-  return base;
-}
-function getList(label,type,blends){
-  const dict = type==="Words" ? (window.fluencyWords||{}) : (window.fluencySentences||{});
-  if (MIXED_RULES[label]) return MIXED_RULES[label].flatMap(p => readWithBlends(dict,p,type,blends));
-  if (PREFIX[label]) return readWithBlends(dict,PREFIX[label],type,blends);
-  return [];
-}
+    function sentsDict() {
+      return window.fluencySentences || window.fluencyData?.sentences || {};
+    }
 
-function buildPrompts(){
-  const skill=$("#skill").value;
-  const mode=$("#mode").value;
-  const blends=$("#blends").value==="yes";
-  let list=[];
-  if(mode==="words") list = unique(getList(skill,"Words",blends));
-  if(mode==="sentences") list = unique(getList(skill,"Sentences",blends));
-  if(mode==="both"){
-    const w=unique(getList(skill,"Words",blends));
-    const s=unique(getList(skill,"Sentences",blends));
-    list = unique(shuffle(fillToN(w,5).concat(fillToN(s,4))));
-  }
-  if(!list.length) return null;
-  return shuffle(fillToN(list,9));
-}
+    function readDict(dict, key) {
+      return Array.isArray(dict[key]) ? dict[key] : [];
+    }
 
-function winningLine(b){
-  const lines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-  return lines.find(([a,c,d]) => b[a] && b[a]===b[c] && b[c]===b[d]) || null;
-}
+    function uniqueByLowercase(list) {
+      const out = [];
+      const seen = new Set();
+      for (const item of list || []) {
+        const v = String(item).trim();
+        const k = v.toLowerCase();
+        if (v && !seen.has(k)) {
+          seen.add(k);
+          out.push(v);
+        }
+      }
+      return out;
+    }
 
-function renderBoard(){
-  const board=$("#board");
-  board.innerHTML="";
-  state.prompts.forEach((text,i)=>{
-    const cell=document.createElement("button");
-    cell.className="cell" + (state.winLine.includes(i) ? " win" : "");
-    cell.innerHTML = `<div class="prompt ${text.includes(" ")?"sentence":""}">${text}</div>
-                      <div class="mark ${state.board[i]==="X"?"x":state.board[i]==="O"?"o":""}">${state.board[i]||""}</div>`;
-    cell.disabled = state.over || !!state.board[i];
-    cell.onclick = () => makeMove(i);
-    board.appendChild(cell);
-  });
-}
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
 
-function makeMove(i){
-  if(state.over || state.board[i]) return;
-  state.board[i]=state.turn;
-  const line=winningLine(state.board);
-  if(line){
-    state.over=true; state.winLine=line;
-    $("#msg").textContent = `Player ${state.turn} wins!`;
-    burst();
-  }else if(state.board.every(Boolean)){
-    state.over=true;
-    $("#msg").textContent = "Tie game! Hit New Words for another round.";
-  }else{
-    state.turn = state.turn==="X" ? "O" : "X";
-    $("#msg").textContent = "Great reading! Keep going.";
-  }
-  $("#turn").textContent = state.turn;
-  $("#turn").className = state.turn.toLowerCase();
-  renderBoard();
-}
+    function fillToN(list, n) {
+      if (!list.length) return [];
+      const out = [];
+      let bag = shuffle(list);
+      while (out.length < n) {
+        if (!bag.length) bag = shuffle(list);
+        out.push(bag.shift());
+      }
+      return out.slice(0, n);
+    }
 
-function burst(){
-  const root=$("#confetti"), colors=["#ef476f","#ffd166","#06d6a0","#118ab2","#8338ec"];
-  for(let i=0;i<90;i++){
-    const d=document.createElement("div");
-    d.className="dot";
-    d.style.left=Math.random()*100+"vw";
-    d.style.background=colors[Math.floor(Math.random()*colors.length)];
-    d.style.animationDuration=(900+Math.random()*800)+"ms";
-    root.appendChild(d);
-    setTimeout(()=>d.remove(),1800);
-  }
-}
+    function readWithBlends(dict, prefix, type, blends) {
+      const tl = type.toLowerCase();
+      let base = [];
 
-function startGame(newWords=true){
-  if(newWords){
-    const prompts = buildPrompts();
-    if(!prompts){ alert("No matching content for that skill/mode yet."); return; }
-    state.prompts = prompts;
-  }
-  state.board = Array(9).fill("");
-  state.turn = Math.random() < 0.5 ? "X" : "O";
-  state.over = false;
-  state.winLine = [];
-  $("#turn").textContent = state.turn;
-  $("#turn").className = state.turn.toLowerCase();
-  $("#skillTag").textContent = `Skill: ${$("#skill").value}`;
-  $("#msg").textContent = "Tap a square after reading it out loud!";
-  renderBoard();
-}
+      const baseKeys = [
+        `${prefix} ${type}`,
+        `${prefix} ${tl}`,
+        `${prefix}`
+      ];
+      for (const k of baseKeys) base = base.concat(readDict(dict, k));
 
-(function init(){
-  const sel=$("#skill");
-  SKILLS.forEach(s=>{ const o=document.createElement("option"); o.value=s; o.textContent=s; sel.appendChild(o); });
-  $("#playBtn").onclick = ()=>startGame(true);
-  $("#sameWords").onclick = ()=>startGame(false);
-  $("#newWords").onclick = ()=>startGame(true);
-})();
-</script>
+      if (!blends) return base;
+
+      const bPrefix = prefix.replace(" - ", "b - ");
+      const blendKeys = [
+        `${prefix} with Blends ${type}`,
+        `${prefix} with blends ${type}`,
+        `${prefix} with Blends ${tl}`,
+        `${prefix} with blends ${tl}`,
+        `${prefix} with BLENDS ${type}`,
+        `${bPrefix} with Blends ${type}`,
+        `${bPrefix} with blends ${type}`,
+        `${bPrefix} with Blends ${tl}`,
+        `${bPrefix} with blends ${tl}`
+      ];
+
+      for (const k of blendKeys) {
+        const got = readDict(dict, k);
+        if (got.length) {
+          if (got.length < 9) return uniqueByLowercase(got.concat(base));
+          return got;
+        }
+      }
+
+      return base;
+    }
+
+    function getList(label, type, blends) {
+      const dict = type === "Words" ? wordsDict() : sentsDict();
+
+      if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)) {
+        let all = [];
+        for (const p of MIXED_RULES[label]) {
+          all = all.concat(readWithBlends(dict, p, type, blends));
+        }
+        return all;
+      }
+
+      const prefix = PREFIX[label];
+      if (prefix) return readWithBlends(dict, prefix, type, blends);
+
+      const want = label.toLowerCase();
+      const tail1 = " " + type;
+      const tail2 = " " + type.toLowerCase();
+      const keys = Object.keys(dict);
+      const guess = keys.find((k) => k.toLowerCase().includes(want) && (k.endsWith(tail1) || k.endsWith(tail2)));
+      return guess ? readDict(dict, guess) : [];
+    }
+
+    function buildPrompts() {
+      const skill = $("#skill").value;
+      const mode = $("#mode").value;
+      const blends = $("#blends").value === "yes";
+
+      if (mode === "words") {
+        const words = uniqueByLowercase(getList(skill, "Words", blends));
+        return fillToN(shuffle(words), 9);
+      }
+
+      if (mode === "sentences") {
+        const sents = uniqueByLowercase(getList(skill, "Sentences", blends));
+        return fillToN(shuffle(sents), 9);
+      }
+
+      const words = uniqueByLowercase(getList(skill, "Words", blends));
+      const sents = uniqueByLowercase(getList(skill, "Sentences", blends));
+      const w = fillToN(shuffle(words), 5);
+      const s = fillToN(shuffle(sents), 4);
+      return shuffle(w.concat(s));
+    }
+
+    function winningLine(board) {
+      return LINES.find(([a, b, c]) => board[a] && board[a] === board[b] && board[b] === board[c]) || null;
+    }
+
+    function openSpots(board) {
+      return board.map((v, i) => (v ? null : i)).filter((i) => i !== null);
+    }
+
+    function findLineMove(board, mark) {
+      for (const [a, b, c] of LINES) {
+        const line = [a, b, c];
+        const vals = line.map((i) => board[i]);
+        const marks = vals.filter((v) => v === mark).length;
+        const empties = line.filter((i) => !board[i]);
+        if (marks === 2 && empties.length === 1) return empties[0];
+      }
+      return null;
+    }
+
+    function isComputerTurn() {
+      const gm = $("#gameMode").value;
+      return gm !== "pvp" && state.turn === "O" && !state.over;
+    }
+
+    function setTurnUI() {
+      $("#turn").textContent = state.turn;
+      $("#turn").className = state.turn.toLowerCase();
+    }
+
+    function renderScores() {
+      $("#scoreX").textContent = state.scores.X;
+      $("#scoreO").textContent = state.scores.O;
+      $("#scoreT").textContent = state.scores.T;
+    }
+
+    function renderBoard() {
+      const boardEl = $("#board");
+      boardEl.innerHTML = "";
+
+      state.prompts.forEach((text, i) => {
+        const btn = document.createElement("button");
+        btn.className = "cell" + (state.winLine.includes(i) ? " win" : "");
+        btn.disabled = state.over || !!state.board[i] || isComputerTurn();
+
+        const isSentence = String(text).includes(" ");
+        btn.innerHTML = `<div class="prompt ${isSentence ? "sentence" : ""}">${text}</div><div class="mark ${state.board[i] === "X" ? "x" : state.board[i] === "O" ? "o" : ""}">${state.board[i] || ""}</div>`;
+
+        btn.onclick = () => makeMove(i);
+        boardEl.appendChild(btn);
+      });
+    }
+
+    function burst() {
+      const root = $("#confetti");
+      const colors = ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#8338ec"];
+      for (let i = 0; i < 70; i++) {
+        const d = document.createElement("div");
+        d.className = "dot";
+        d.style.left = (Math.random() * 100) + "vw";
+        d.style.background = colors[Math.floor(Math.random() * colors.length)];
+        d.style.animationDuration = (900 + Math.random() * 800) + "ms";
+        root.appendChild(d);
+        setTimeout(() => d.remove(), 1800);
+      }
+    }
+
+    function finishRound(line) {
+      if (line) {
+        state.over = true;
+        state.winLine = line;
+        state.scores[state.turn] += 1;
+        renderScores();
+        const cpu = $("#gameMode").value !== "pvp" && state.turn === "O";
+        $("#msg").textContent = cpu ? "Computer wins!" : `Player ${state.turn} wins!`;
+        burst();
+      } else if (state.board.every(Boolean)) {
+        state.over = true;
+        state.scores.T += 1;
+        renderScores();
+        $("#msg").textContent = "Tie game!";
+      } else {
+        state.turn = state.turn === "X" ? "O" : "X";
+        $("#msg").textContent = "Great reading! Keep going.";
+      }
+
+      setTurnUI();
+      renderBoard();
+
+      if (isComputerTurn()) {
+        setTimeout(computerMove, 450);
+      }
+    }
+
+    function makeMove(i) {
+      if (state.over || state.board[i]) return;
+      state.board[i] = state.turn;
+      finishRound(winningLine(state.board));
+    }
+
+    function computerMove() {
+      if (!isComputerTurn()) return;
+      const gm = $("#gameMode").value;
+      let move = null;
+
+      if (gm === "cpu-easy") {
+        const spots = openSpots(state.board);
+        move = spots[Math.floor(Math.random() * spots.length)];
+      } else {
+        move = findLineMove(state.board, "O");
+        if (move === null) move = findLineMove(state.board, "X");
+        if (move === null && !state.board[4]) move = 4;
+        if (move === null) {
+          const corners = [0,2,6,8].filter((i) => !state.board[i]);
+          if (corners.length) move = corners[Math.floor(Math.random() * corners.length)];
+        }
+        if (move === null) {
+          const spots = openSpots(state.board);
+          move = spots[Math.floor(Math.random() * spots.length)];
+        }
+      }
+
+      state.board[move] = "O";
+      finishRound(winningLine(state.board));
+    }
+
+    function startGame(newWords) {
+      if (newWords) {
+        const prompts = buildPrompts();
+        if (!prompts.length) {
+          alert("No matching content found for this skill/mode in your JS data.");
+          return;
+        }
+        state.prompts = prompts;
+      }
+
+      state.board = Array(9).fill("");
+      state.turn = "X";
+      state.over = false;
+      state.winLine = [];
+
+      setTurnUI();
+      $("#skillTag").textContent = `Skill: ${$("#skill").value}`;
+      $("#msg").textContent = "Tap a square after reading it out loud.";
+      renderBoard();
+
+      if (isComputerTurn()) {
+        setTimeout(computerMove, 450);
+      }
+    }
+
+    function resetScores() {
+      state.scores = { X: 0, O: 0, T: 0 };
+      renderScores();
+    }
+
+    (function init() {
+      const skill = $("#skill");
+      SKILLS.forEach((s) => {
+        const o = document.createElement("option");
+        o.value = s;
+        o.textContent = s;
+        skill.appendChild(o);
+      });
+
+      $("#playBtn").onclick = () => startGame(true);
+      $("#newWords").onclick = () => startGame(true);
+      $("#sameWords").onclick = () => startGame(false);
+      $("#resetScore").onclick = resetScores;
+
+      renderScores();
+    })();
+  </script>
 </body>
 </html>
 ```
 
-If you want, next I can add:
-1. Single-player mode vs computer (easy/medium).  
-2. Auto “read-aloud” button for each word/sentence (speech synthesis).  
-3. Scoreboard that tracks wins across rounds.
+If you want, I can also send a second version with the JS path changed to a relative path (`fluencyDataFull_v8-2_clean.js`) in case your page is not in `/ladder/`.
