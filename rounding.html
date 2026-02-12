@@ -4,16 +4,15 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Rounding Generator</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-
 <style>
   *{ box-sizing:border-box; }
-  html, body{
-    margin:0; padding:0;
-    font-family:"Poppins", Arial, sans-serif;
-    background:#fff; color:#111;
-    overflow-x:hidden;
+  html,body{
+    margin:0;
+    padding:0;
+    font-family:"Poppins",Arial,sans-serif;
+    color:#111;
+    background:#fff;
   }
   .wrap{ max-width:1100px; margin:0 auto; padding:12px; }
 
@@ -26,16 +25,11 @@
   .controls-top{
     display:flex;
     flex-wrap:wrap;
-    gap:12px;
-    align-items:flex-end;
     justify-content:center;
+    align-items:flex-end;
+    gap:12px;
   }
-  .field{
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-    min-width:210px;
-  }
+  .field{ display:flex; flex-direction:column; gap:6px; min-width:210px; }
   .field label{ font-size:12px; font-weight:800; }
   select{
     height:42px;
@@ -43,7 +37,7 @@
     border:2px solid #111;
     border-radius:10px;
     padding:8px 12px;
-    font-family:"Poppins", Arial, sans-serif;
+    font-family:"Poppins",Arial,sans-serif;
     font-size:14px;
     background:#fff;
   }
@@ -52,9 +46,9 @@
     margin-top:10px;
     display:flex;
     flex-wrap:wrap;
-    gap:10px;
     justify-content:center;
     align-items:center;
+    gap:10px;
   }
   .toggle{
     display:inline-flex;
@@ -66,21 +60,19 @@
     font-weight:900;
     font-size:15px;
     user-select:none;
-    background:#fff;
-    line-height:1;
   }
+  .toggle.disabled{ opacity:.55; pointer-events:none; }
   .toggle input[type="checkbox"]{
     appearance:none;
-    -webkit-appearance:none;
     width:44px;
     height:26px;
+    min-width:44px;
+    margin:0;
     border:2px solid #111;
     border-radius:999px;
-    position:relative;
-    margin:0;
     background:#fff;
     cursor:pointer;
-    min-width:44px;
+    position:relative;
   }
   .toggle input[type="checkbox"]::after{
     content:"";
@@ -96,54 +88,30 @@
     transition:all .15s ease;
   }
   .toggle input[type="checkbox"]:checked{ background:#111; }
-  .toggle input[type="checkbox"]:checked::after{ left:19px; background:#fff; }
-  .toggle.disabled{ opacity:.55; pointer-events:none; }
+  .toggle input[type="checkbox"]:checked::after{ left:19px; }
 
   .controls-actions{
     margin-top:12px;
     display:flex;
     justify-content:center;
-    gap:14px;
     flex-wrap:wrap;
+    gap:14px;
   }
-  .buy-btn--primary{
-    background:#6ec1ff;
-    color:#ffffff;
+  .btn{
     border:2px solid #111;
     border-radius:14px;
     height:54px;
     padding:0 30px;
-    font-weight:900;
+    font-family:"Poppins",Arial,sans-serif;
     font-size:18px;
-    font-family:"Poppins", Arial, sans-serif;
+    font-weight:900;
     cursor:pointer;
   }
-  .btn-secondary{
-    background:#fff;
-    color:#111;
-    border:2px solid #111;
-    border-radius:14px;
-    height:54px;
-    padding:0 30px;
-    font-weight:900;
-    font-size:18px;
-    font-family:"Poppins", Arial, sans-serif;
-    cursor:pointer;
-  }
+  .btn-primary{ background:#6ec1ff; color:#fff; }
+  .btn-secondary{ background:#fff; color:#111; }
 
-  .hint{
-    margin-top:8px;
-    text-align:center;
-    font-size:13px;
-    font-weight:700;
-  }
-  .learning-note{
-    margin-top:8px;
-    text-align:center;
-    font-size:13px;
-    font-weight:700;
-    color:#1d3a66;
-  }
+  .hint, .learning-note{ text-align:center; font-size:13px; font-weight:700; margin-top:8px; }
+  .learning-note{ color:#1d3a66; }
 
   .title{
     text-align:center;
@@ -153,146 +121,104 @@
   }
 
   .grid{ border:2px solid #111; }
-  .row{ display:grid; grid-template-columns: 1fr 1fr; }
+  .row{ display:grid; grid-template-columns:1fr 1fr; }
   .cell{
     border-right:2px solid #111;
     border-bottom:2px solid #111;
-    padding:12px 12px 18px;
-    min-height:255px;
+    padding:12px 12px 14px;
+    min-height:245px;
     display:flex;
     flex-direction:column;
     gap:10px;
-    align-items:flex-start;
   }
   .row .cell:last-child{ border-right:none; }
   .grid .row:last-child .cell{ border-bottom:none; }
 
-  body.scaffold .row{ grid-template-columns: 1fr; }
-  body.scaffold .cell{ min-height:285px; padding:14px 14px 22px; }
+  body.scaffold .row{ grid-template-columns:1fr; }
+  body.scaffold .cell{ min-height:265px; }
   body.scaffold .row .cell{ border-right:none !important; }
 
-  .prompt{ font-size:18px; font-weight:900; line-height:1.2; }
+  .prompt{ font-size:21px; font-weight:900; line-height:1.2; }
 
   .rewrite{
     width:100%;
     text-align:center;
-    font-size:22px;
+    font-size:34px;
     font-weight:900;
     letter-spacing:0.5px;
-    margin-top:2px;
-    margin-bottom:2px;
+    margin:0;
   }
   .rewrite .u{
-    text-decoration: underline;
-    text-decoration-thickness: 4px;
-    text-underline-offset: 4px;
+    text-decoration:underline;
+    text-decoration-thickness:4px;
+    text-underline-offset:4px;
   }
   .rewrite .c{ opacity:.35; }
 
-  .lines{
-    font-size:15px;
-    font-weight:800;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
+  .downUp{
     width:100%;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    column-gap:56px;
+    row-gap:2px;
   }
-  .lineRow{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    flex-wrap:wrap;
-  }
-  .coachBox{
-    width:100%;
-    border:2px dashed #111;
-    border-radius:10px;
-    padding:8px 10px;
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-    font-size:14px;
-    font-weight:700;
-    background:#fafcff;
-  }
-  .coachTitle{
-    font-weight:900;
-    font-size:14px;
-    text-transform:uppercase;
-    letter-spacing:0.4px;
-  }
-  .coachStep{ line-height:1.25; }
-  .answerLine{
-    width:100%;
-    margin-top:-2px;
-    font-size:15px;
-    font-weight:800;
-    line-height:1.35;
-  }
-  .arrow{
-    font-weight:900;
-    font-size:18px;
-    display:inline-block;
-    width:18px;
-    text-align:center;
-  }
-  .blankText{
-    font-weight:900;
-    letter-spacing:0px;
-    display:inline-block;
-  }
+  .duHead{ font-size:16px; font-weight:900; }
+  .downUp{ padding:0 8px; }
+  .duWrite{ margin-top:12px; min-height:1.35em; }
 
-  /* NEW: arrows before number line */
-  .preLineArrows{
-    width:100%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:20px;
-    font-weight:900;
-    font-size:22px;
-    line-height:1;
-    margin-top:2px;
-    margin-bottom:-4px;
+  .writeBlank{
+    display:inline-block;
+    border-bottom:3px solid #111;
+    min-height:1.1em;
+    vertical-align:middle;
   }
+  .writeBlank--small{ width:240px; max-width:100%; }
+  .writeBlank--full{ display:block; width:100%; min-width:100%; }
 
   .nlWrap{
     width:100%;
     display:flex;
     justify-content:center;
-    padding-bottom:10px;
-    min-height:145px;
+    min-height:118px;
+    padding-bottom:2px;
   }
   .nlWrap svg{ max-width:610px; }
 
-  .footer{
-    text-align:center;
-    font-size:12px;
+  .answerLine{
+    width:100%;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:flex-end;
+    gap:6px;
+    font-size:17px;
     font-weight:800;
-    margin-top:10px;
+    line-height:1.3;
   }
+  .answerLineBreak{ width:100%; flex-basis:100%; margin-top:6px; }
+
 
   @media print{
     .controls{ display:none; }
-    .wrap{ padding:0; max-width:none; }
-    body{ -webkit-print-color-adjust: exact; print-color-adjust: exact; zoom: 0.94; }
-    body.scaffold{ zoom: 1.02; }
-    .title{ font-size:24px; margin:4px 0 8px; }
-    .cell{ min-height:245px; padding:10px 10px 18px; gap:8px; }
-    body.scaffold .cell{ min-height:275px; padding:12px 12px 22px; }
+    .wrap{ max-width:none; padding:0; }
+    body{ -webkit-print-color-adjust:exact; print-color-adjust:exact; zoom:.9; }
+    body.scaffold{ zoom:.94; }
+    .title{ font-size:22px; margin:2px 0 6px; }
+    .cell{ min-height:200px; padding:8px 8px 10px; gap:6px; }
+    body.scaffold .cell{ min-height:220px; }
     .prompt{ font-size:17px; }
-    .rewrite{ font-size:22px; }
-    .lines{ font-size:14px; }
-    .coachBox{ font-size:13px; }
-    .answerLine{ font-size:14px; }
-    .footer{ font-size:11px; margin-top:6px; }
+    .rewrite{ font-size:26px; }
+    .duHead{ font-size:13px; }
+    .downUp{ column-gap:24px; padding:0 4px; }
+    .duWrite{ margin-top:6px; }
+    .nlWrap{ min-height:95px; }
+    .answerLine{ font-size:14px; gap:4px; }
+    .answerLineBreak{ margin-top:2px; }
+    .writeBlank{ border-bottom-width:2px; }
   }
 </style>
 </head>
-
 <body>
 <div class="wrap">
-
   <div class="controls">
     <div class="controls-top">
       <div class="field">
@@ -304,7 +230,6 @@
           <option value="10000">Ten Thousands</option>
         </select>
       </div>
-
       <div class="field">
         <label for="within">Numbers Up To</label>
         <select id="within">
@@ -317,45 +242,17 @@
     </div>
 
     <div class="toggleRow">
-      <label class="toggle">
-        <input id="scaffold" type="checkbox">
-        Scaffolded (1 per line)
-      </label>
-
-      <label class="toggle" id="labelAllWrap">
-        <input id="labelAll" type="checkbox">
-        Label All Tick Marks
-      </label>
-
-      <label class="toggle">
-        <input id="endpointsFilled" type="checkbox" checked>
-        Endpoints Filled In
-      </label>
-
-      <label class="toggle">
-        <input id="fillDownUp" type="checkbox">
-        Fill Round Down/Up
-      </label>
-
-      <label class="toggle">
-        <input id="showDot" type="checkbox" checked>
-        Show Dot on Number Line
-      </label>
-
-      <label class="toggle">
-        <input id="showCoach" type="checkbox" checked>
-        Show Strategy Prompts
-      </label>
-
-      <label class="toggle">
-        <input id="showExplain" type="checkbox" checked>
-        Include Explain-Your-Thinking Line
-      </label>
+      <label class="toggle"><input id="scaffold" type="checkbox">Scaffolded (1 per line)</label>
+      <label class="toggle" id="labelAllWrap"><input id="labelAll" type="checkbox">Label All Tick Marks</label>
+      <label class="toggle"><input id="endpointsFilled" type="checkbox" checked>Endpoints Filled In</label>
+      <label class="toggle"><input id="fillDownUp" type="checkbox">Fill Round Down/Up</label>
+      <label class="toggle"><input id="showDot" type="checkbox" checked>Show Dot on Number Line</label>
+      <label class="toggle"><input id="showExplain" type="checkbox" checked>Include Explain-Your-Thinking Line</label>
     </div>
 
     <div class="controls-actions">
-      <button type="button" class="buy-btn--primary" id="btnGen">Generate</button>
-      <button type="button" class="btn-secondary" id="btnPrint">Print</button>
+      <button type="button" id="btnGen" class="btn btn-primary">Generate</button>
+      <button type="button" id="btnPrint" class="btn btn-secondary">Print</button>
     </div>
 
     <div class="hint" id="hint"></div>
@@ -364,7 +261,6 @@
 
   <div class="title" id="sheetTitle">Round to the Nearest Ten</div>
   <div class="grid" id="grid"></div>
-  <div class="footer">Copyright - Generated from InterventionStation.com - @TeachWithMrC</div>
 </div>
 
 <script>
@@ -396,22 +292,26 @@
       $("within").value = String(next);
     }
 
-    const labelAllWrap = $("labelAllWrap");
     if(nearest >= 1000){
       $("labelAll").checked = false;
-      labelAllWrap.classList.add("disabled");
+      $("labelAllWrap").classList.add("disabled");
     }else{
-      labelAllWrap.classList.remove("disabled");
+      $("labelAllWrap").classList.remove("disabled");
     }
 
     const withinNow = parseInt($("within").value, 10);
-    $("hint").textContent =
-      `Generating numbers from ${fmt(nearest)} to ${fmt(withinNow - 1)} and rounding to the nearest ${fmt(nearest)}.`;
-    $("learningNote").textContent =
-      "Tip: Have students locate the midpoint first, then decide whether the number is below or above it before they round.";
+    $("hint").textContent = `Generating numbers from ${fmt(nearest)} to ${fmt(withinNow - 1)} and rounding to the nearest ${fmt(nearest)}.`;
+    $("learningNote").textContent = "Tip: Have students locate the midpoint first, then decide whether the number is below or above it before they round.";
   }
 
   function roundDownTo(n, place){ return Math.floor(n / place) * place; }
+
+  function makeWriteBlank(type = "small"){
+    const blank = document.createElement("span");
+    blank.className = `writeBlank ${type === "full" ? "writeBlank--full" : "writeBlank--small"}`;
+    blank.setAttribute("aria-hidden", "true");
+    return blank;
+  }
 
   function shuffle(arr){
     for(let i=arr.length-1;i>0;i--){
@@ -426,7 +326,6 @@
     const seen = new Set();
     const result = [];
     let tries = 0;
-
     while(result.length < Math.min(count, span) && tries < 120000){
       tries++;
       const n = minInclusive + Math.floor(Math.random() * span);
@@ -445,13 +344,11 @@
     const exp = Math.round(Math.log10(place));
     const raw = String(n);
     const underlineIndex = raw.length - 1 - exp;
-
     const withCommas = n.toLocaleString("en-US");
     let rawPos = 0;
 
     const container = document.createElement("div");
     container.className = "rewrite";
-
     for(const ch of withCommas){
       if(ch === ","){
         const sp = document.createElement("span");
@@ -469,18 +366,13 @@
     return container;
   }
 
-  // SVG number line: endpoint blanks are DRAWN LINES (not underscores text)
   function numberLineSVG(n, down, up, place, opts){
     const bigPlace = place >= 1000;
     const labelAll = (!bigPlace && opts.labelAll);
     const endpointsAndMid = bigPlace;
 
-    const showDot = opts.showDot;
-    const endpointsFilled = opts.endpointsFilled;
-
     const W = 610;
     const H = labelAll ? 138 : 128;
-
     const padL = 44, padR = 44;
     const lineY = 40;
 
@@ -495,12 +387,9 @@
     svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
 
     const base = document.createElementNS(ns, "line");
-    base.setAttribute("x1", x0);
-    base.setAttribute("y1", lineY);
-    base.setAttribute("x2", x1);
-    base.setAttribute("y2", lineY);
-    base.setAttribute("stroke", "#111");
-    base.setAttribute("stroke-width", "4");
+    base.setAttribute("x1", x0); base.setAttribute("y1", lineY);
+    base.setAttribute("x2", x1); base.setAttribute("y2", lineY);
+    base.setAttribute("stroke", "#111"); base.setAttribute("stroke-width", "4");
     svg.appendChild(base);
 
     function shouldLabel(i){
@@ -513,40 +402,29 @@
       const x = x0 + stepX*i;
 
       const tick = document.createElementNS(ns, "line");
-      tick.setAttribute("x1", x);
-      tick.setAttribute("y1", lineY - 10);
-      tick.setAttribute("x2", x);
-      tick.setAttribute("y2", lineY + 10);
+      tick.setAttribute("x1", x); tick.setAttribute("y1", lineY - 10);
+      tick.setAttribute("x2", x); tick.setAttribute("y2", lineY + 10);
       tick.setAttribute("stroke", "#111");
       tick.setAttribute("stroke-width", (i===0 || i===10) ? "4" : "3");
       svg.appendChild(tick);
 
       if(!shouldLabel(i)) continue;
-
       const val = down + (stepVal * i);
       const isEndpoint = (i===0 || i===10);
 
-      // label row
       const t = document.createElementNS(ns, "text");
-      t.setAttribute("x", x);
-      t.setAttribute("y", lineY + 52);
+      t.setAttribute("x", x); t.setAttribute("y", lineY + 52);
       t.setAttribute("text-anchor", "middle");
       t.setAttribute("font-family", "Poppins, Arial, sans-serif");
       t.setAttribute("font-weight", isEndpoint ? "800" : "700");
       t.setAttribute("font-size", isEndpoint ? "18" : (labelAll ? "12" : "14"));
       t.setAttribute("fill", "#111");
-
-      if(isEndpoint && !endpointsFilled){
-        t.textContent = "";
-      } else {
-        t.textContent = fmt(val);
-      }
+      t.textContent = (isEndpoint && !opts.endpointsFilled) ? "" : fmt(val);
       svg.appendChild(t);
 
-      // endpoint blank as a drawn line (cleaner than underscores text)
-      if(isEndpoint && !endpointsFilled){
-        const y = lineY + 80;
-        const halfLen = 24; // makes a "_____" length
+      if(isEndpoint && !opts.endpointsFilled){
+        const y = lineY + 84;
+        const halfLen = 40;
         const blankLine = document.createElementNS(ns, "line");
         blankLine.setAttribute("x1", x - halfLen);
         blankLine.setAttribute("y1", y);
@@ -559,10 +437,9 @@
       }
     }
 
-    if(showDot){
+    if(opts.showDot){
       const iPos = (n - down) / stepVal;
       const markerX = x0 + stepX * iPos;
-
       const dot = document.createElementNS(ns, "circle");
       dot.setAttribute("cx", markerX);
       dot.setAttribute("cy", lineY);
@@ -590,66 +467,41 @@
 
     card.appendChild(buildRewriteNumber(n, place));
 
-    // Round Down/Up lines (underscores if not filled)
-    const lines = document.createElement("div");
-    lines.className = "lines";
+    const downUp = document.createElement("div");
+    downUp.className = "downUp";
 
-    const row1 = document.createElement("div");
-    row1.className = "lineRow";
-    row1.appendChild(document.createTextNode("Round Down "));
-    const downArrow = document.createElement("span");
-    downArrow.className = "arrow";
-    downArrow.textContent = "↓";
-    row1.appendChild(downArrow);
-    row1.appendChild(document.createTextNode(opts.fillDownUp ? fmt(down) : "__________"));
+    const dHead = document.createElement("div");
+    dHead.className = "duHead";
+    dHead.textContent = "Round Down ↓";
+    const uHead = document.createElement("div");
+    uHead.className = "duHead";
+    uHead.textContent = "Round Up ↑";
 
-    const row2 = document.createElement("div");
-    row2.className = "lineRow";
-    row2.appendChild(document.createTextNode("Round Up "));
-    const upArrow = document.createElement("span");
-    upArrow.className = "arrow";
-    upArrow.textContent = "↑";
-    row2.appendChild(upArrow);
-    row2.appendChild(document.createTextNode(opts.fillDownUp ? fmt(up) : "__________"));
-
-    lines.appendChild(row1);
-    lines.appendChild(row2);
-    card.appendChild(lines);
-
-    if(opts.showCoach){
-      const coach = document.createElement("div");
-      coach.className = "coachBox";
-
-      const coachTitle = document.createElement("div");
-      coachTitle.className = "coachTitle";
-      coachTitle.textContent = "Rounding Strategy";
-      coach.appendChild(coachTitle);
-
-      const s1 = document.createElement("div");
-      s1.className = "coachStep";
-      s1.textContent = `1) Benchmarks: ${fmt(down)} and ${fmt(up)}`;
-      coach.appendChild(s1);
-
-      const s2 = document.createElement("div");
-      s2.className = "coachStep";
-      s2.textContent = `2) Midpoint: ${fmt(midpoint)}`;
-      coach.appendChild(s2);
-
-      const s3 = document.createElement("div");
-      s3.className = "coachStep";
-      s3.textContent = opts.fillDownUp
-        ? `3) ${fmt(n)} is ${roundsUp ? "at/above" : "below"} the midpoint, so round ${roundsUp ? "up" : "down"}.`
-        : `3) ${fmt(n)} is ______ the midpoint, so round ______.`;
-      coach.appendChild(s3);
-
-      card.appendChild(coach);
+    const dWrite = document.createElement("div");
+    dWrite.className = "duWrite";
+    if(opts.fillDownUp){
+      dWrite.textContent = fmt(down);
+      dWrite.style.fontWeight = "900";
+      dWrite.style.fontSize = "16px";
+    }else{
+      dWrite.appendChild(makeWriteBlank("small"));
     }
 
-    // NEW: arrows before number line (↓ then ↑)
-    const pre = document.createElement("div");
-    pre.className = "preLineArrows";
-    pre.innerHTML = `<span>↓</span><span>↑</span>`;
-    card.appendChild(pre);
+    const uWrite = document.createElement("div");
+    uWrite.className = "duWrite";
+    if(opts.fillDownUp){
+      uWrite.textContent = fmt(up);
+      uWrite.style.fontWeight = "900";
+      uWrite.style.fontSize = "16px";
+    }else{
+      uWrite.appendChild(makeWriteBlank("small"));
+    }
+
+    downUp.appendChild(dHead);
+    downUp.appendChild(uHead);
+    downUp.appendChild(dWrite);
+    downUp.appendChild(uWrite);
+    card.appendChild(downUp);
 
     const nl = document.createElement("div");
     nl.className = "nlWrap";
@@ -659,9 +511,17 @@
     if(opts.showExplain){
       const answer = document.createElement("div");
       answer.className = "answerLine";
-      answer.textContent = opts.fillDownUp
-        ? `I rounded to ${fmt(roundsUp ? up : down)} because ${fmt(n)} is closer to ${fmt(roundsUp ? up : down)}.`
-        : "I rounded to __________ because ____________________________________.";
+      if(opts.fillDownUp){
+        answer.textContent = `I rounded to ${fmt(roundsUp ? up : down)} because ${fmt(n)} is closer to ${fmt(roundsUp ? up : down)}.`;
+      }else{
+        answer.appendChild(document.createTextNode("I rounded to "));
+        answer.appendChild(makeWriteBlank("small"));
+        answer.appendChild(document.createTextNode(" because"));
+        const secondLine = document.createElement("span");
+        secondLine.className = "answerLineBreak";
+        secondLine.appendChild(makeWriteBlank("full"));
+        answer.appendChild(secondLine);
+      }
       card.appendChild(answer);
     }
 
@@ -681,7 +541,6 @@
       endpointsFilled: $("endpointsFilled").checked,
       fillDownUp: $("fillDownUp").checked,
       showDot: $("showDot").checked,
-      showCoach: $("showCoach").checked,
       showExplain: $("showExplain").checked
     };
 
@@ -689,7 +548,6 @@
 
     const minInclusive = Math.min(place, within - 1);
     const maxInclusive = within - 1;
-
     const nums = pickUniqueNumbers(minInclusive, maxInclusive, PROBLEM_COUNT, place);
 
     const grid = $("grid");
@@ -704,7 +562,7 @@
       row.className = "row";
       for(let c=0;c<perRow;c++){
         if(idx >= PROBLEM_COUNT) break;
-        row.appendChild(buildProblemCard(idx+1, nums[idx], place, opts));
+        row.appendChild(buildProblemCard(idx + 1, nums[idx], place, opts));
         idx++;
       }
       grid.appendChild(row);
@@ -718,9 +576,8 @@
   }
 
   $("btnGen").addEventListener("click", build);
-  $("btnPrint").addEventListener("click", ()=>window.print());
-
-  ["nearest","within","scaffold","labelAll","endpointsFilled","fillDownUp","showDot","showCoach","showExplain"]
+  $("btnPrint").addEventListener("click", () => window.print());
+  ["nearest","within","scaffold","labelAll","endpointsFilled","fillDownUp","showDot","showExplain"]
     .forEach(id => $(id).addEventListener("change", build));
 
   init();
