@@ -172,10 +172,11 @@
       padding: 6px;
       min-height: 95px;
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       gap: 6px;
-      align-content: flex-start;
-      align-items: flex-start;
+      align-content: flex-end;
+      align-items: flex-end;
+      overflow: hidden;
     }
 
     .coin-item {
@@ -183,8 +184,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
+      justify-content: flex-end;
+      gap: 1px;
       flex: 0 0 auto;
+      min-height: 100%;
     }
 
     .coin-img {
@@ -197,7 +200,8 @@
     .coin-line {
       width: calc(var(--coin-size, 48px) * 0.9);
       border-bottom: 2px solid #333;
-      height: 8px;
+      height: 4px;
+      transform: translateY(-1px);
     }
 
     .answer {
