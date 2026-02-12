@@ -243,10 +243,12 @@
     if (slider) {
       let index = 0;
       const slides = slider.querySelectorAll('.is-slide');
-      setInterval(() => {
-        index = (index + 1) % slides.length;
-        slider.scrollTo({ left: slider.clientWidth * index, behavior: 'smooth' });
-      }, 3500);
+      if (slides.length > 1) {
+        setInterval(() => {
+          index = (index + 1) % slides.length;
+          slider.scrollTo({ left: slider.clientWidth * index, behavior: 'smooth' });
+        }, 3500);
+      }
     }
   </script>
 </body>
