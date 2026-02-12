@@ -1,3 +1,9 @@
+Use this updated version. I made these fixes:
+
+1. Added a print/footer line: `Copyright - InterventionStation.com - @TeachwithMrC`
+2. Made endpoint labels and Round Down/Up values match better: larger, centered, and consistent font styling.
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -166,11 +172,17 @@
     min-width:0;
     display:flex;
     flex-direction:column;
-    align-items:flex-start;
+    align-items:center;
+    text-align:center;
   }
-  .duHead{ font-size:16px; font-weight:900; }
+  .duHead{ font-size:17px; font-weight:900; }
   .duSpace{ height:44px; }
-  .duWrite{ width:100%; min-height:1.35em; }
+  .duWrite{
+    width:100%;
+    min-height:1.35em;
+    text-align:center;
+    font-family:"Poppins",Arial,sans-serif;
+  }
 
   .writeBlank{
     display:inline-block;
@@ -203,6 +215,13 @@
   }
   .answerLineBreak{ width:100%; flex-basis:100%; margin-top:6px; }
 
+  .copyright{
+    margin-top:10px;
+    text-align:center;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.2px;
+  }
 
   @media print{
     .controls{ display:none; }
@@ -221,6 +240,11 @@
     .answerLine{ font-size:14px; gap:4px; }
     .answerLineBreak{ margin-top:2px; }
     .writeBlank{ border-bottom-width:2px; }
+    .copyright{
+      margin-top:6px;
+      font-size:11px;
+      font-weight:800;
+    }
   }
 </style>
 </head>
@@ -268,6 +292,7 @@
 
   <div class="title" id="sheetTitle">Round to the Nearest Ten</div>
   <div class="grid" id="grid"></div>
+  <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
 </div>
 
 <script>
@@ -335,6 +360,7 @@
     const seen = new Set();
     const result = [];
     let tries = 0;
+
     while(result.length < Math.min(count, span) && tries < 120000){
       tries++;
       const n = minInclusive + Math.floor(Math.random() * span);
@@ -422,11 +448,13 @@
       const isEndpoint = (i===0 || i===10);
 
       const t = document.createElementNS(ns, "text");
-      t.setAttribute("x", x); t.setAttribute("y", lineY + 52);
+      t.setAttribute("x", x);
+      t.setAttribute("y", lineY + 56);
       t.setAttribute("text-anchor", "middle");
+      t.setAttribute("dominant-baseline", "middle");
       t.setAttribute("font-family", "Poppins, Arial, sans-serif");
-      t.setAttribute("font-weight", isEndpoint ? "800" : "700");
-      t.setAttribute("font-size", isEndpoint ? "18" : (labelAll ? "12" : "14"));
+      t.setAttribute("font-weight", isEndpoint ? "900" : "700");
+      t.setAttribute("font-size", isEndpoint ? "22" : (labelAll ? "12" : "14"));
       t.setAttribute("fill", "#111");
       t.textContent = (isEndpoint && !opts.endpointsFilled) ? "" : fmt(val);
       svg.appendChild(t);
@@ -495,7 +523,8 @@
       if(opts.fillDownUp){
         write.textContent = fmt(value);
         write.style.fontWeight = "900";
-        write.style.fontSize = "16px";
+        write.style.fontSize = "22px";
+        write.style.lineHeight = "1.1";
       }else{
         write.appendChild(makeWriteBlank("small"));
       }
@@ -591,3 +620,4 @@
 </script>
 </body>
 </html>
+```
