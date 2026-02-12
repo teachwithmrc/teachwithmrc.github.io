@@ -182,8 +182,10 @@
     .coin-item {
       width: var(--coin-size, 48px);
       display: flex;
-      align-items: flex-end;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 1px;
       flex: 0 0 auto;
       min-height: 100%;
     }
@@ -193,6 +195,13 @@
       height: var(--coin-size, 48px);
       object-fit: contain;
       display: block;
+    }
+
+    .coin-line {
+      width: calc(var(--coin-size, 48px) * 0.9);
+      border-bottom: 2px solid #333;
+      height: 4px;
+      transform: translateY(-1px);
     }
 
     .answer {
@@ -267,6 +276,10 @@
       </div>
 
       <div class="actions">
+        <label class="coin-pill" for="showLines">
+          <input type="checkbox" id="showLines" />
+          <span>Show counting lines under coins</span>
+        </label>
         <button id="generateBtn" class="primary" type="button">Generate Worksheet</button>
         <button type="button" onclick="window.print()">Print Page</button>
       </div>
@@ -291,22 +304,6 @@
           coin: 'https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7fc21b0392f87c6169.png',
           dot: 'https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f52c95225a81d6b04.png',
           'number-dot': 'https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7fa41b879e95bb7444.png'
-        }
-      },
-      {
-        key: 'dime',
-        label: 'Dime (10¢)',
-        value: 10,
-        ratio: 1,
-        front: {
-          coin: 'https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f7213971802a4d866.png',
-          dot: 'https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f715cda2f49b4afc9.png',
-          'number-dot': 'https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f7f6dcfe6062f2e8f.png'
-        },
-        back: {
-          coin: 'https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7fc21b033a7b7c6168.png',
-          dot: 'https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f3fdd0ee03cca84ee.png',
-          'number-dot': 'https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f715cda4952b4afc7.png'
         }
       },
       {
@@ -340,11 +337,26 @@
           dot: 'https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7fc21b0302667c616a.png',
           'number-dot': 'https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7fc21b035da47c616b.png'
         }
+      },
+      {
+        key: 'dime',
+        label: 'Dime (10¢)',
+        value: 10,
+        ratio: 1,
+        front: {
+          coin: 'https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f7213971802a4d866.png',
+          dot: 'https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f715cda2f49b4afc9.png',
+          'number-dot': 'https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f7f6dcfe6062f2e8f.png'
+        },
+        back: {
+          coin: 'https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7fc21b033a7b7c6168.png',
+          dot: 'https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f3fdd0ee03cca84ee.png',
+          'number-dot': 'https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f715cda4952b4afc7.png'
+        }
       }
     ];
 
     const DIME_BASE_SIZE = 40;
-    const COIN_RENDER_ORDER = ['quarter', 'dime', 'nickel', 'penny'];
 
     const coinSelect = document.getElementById('coinSelect');
     const sheet = document.getElementById('sheet');
@@ -377,10 +389,6 @@
       return COINS.filter((coin) => checked.includes(coin.key));
     }
 
-    function orderCoinsForDisplay(picks) {
-      return COIN_RENDER_ORDER.flatMap((key) => picks.filter((coin) => coin.key === key));
-    }
-
     function buildProblem(allowed, topAmount) {
       const coinCount = randomInt(3, 9);
       const picks = [];
@@ -404,7 +412,7 @@
       const fallbackCount = Math.max(1, Math.min(coinCount, Math.floor(topAmount / smallest)));
       const fallbackCoin = allowed.find((c) => c.value === smallest) || allowed[0];
       const fallbackPicks = Array.from({ length: fallbackCount }, () => fallbackCoin);
-      return { picks: orderCoinsForDisplay(fallbackPicks), total: fallbackPicks.reduce((s, c) => s + c.value, 0) };
+      return { picks: fallbackPicks, total: fallbackPicks.reduce((s, c) => s + c.value, 0) };
     }
 
     function getCoinImageUrl(coin, styleMode, sideMode) {
@@ -417,13 +425,14 @@
       return Math.round(DIME_BASE_SIZE * (coin.ratio || 1));
     }
 
-    function coinHTML(coin, styleMode, sideMode) {
+    function coinHTML(coin, styleMode, sideMode, showLines) {
       const src = getCoinImageUrl(coin, styleMode, sideMode);
       const altSide = sideMode === 'both' ? 'front or back' : sideMode;
       const coinSize = getCoinSizePx(coin);
       return `
         <div class="coin-item" style="--coin-size:${coinSize}px;">
           <img class="coin-img" src="${src}" alt="${coin.label} ${altSide}" loading="lazy">
+          ${showLines ? '<span class="coin-line" aria-hidden="true"></span>' : ''}
         </div>
       `;
     }
@@ -433,6 +442,7 @@
       const topAmountInput = document.getElementById('maxAmount');
       const styleMode = document.getElementById('coinStyle').value;
       const sideMode = document.getElementById('coinSide').value;
+      const showLines = document.getElementById('showLines').checked;
       const topAmount = Math.max(1, Math.min(200, Number.parseInt(topAmountInput.value, 10) || 1));
       topAmountInput.value = String(topAmount);
 
@@ -450,11 +460,10 @@
       const rows = [];
       for (let i = 1; i <= 5; i += 1) {
         const problem = buildProblem(allowed, topAmount);
-        const orderedPicks = orderCoinsForDisplay(problem.picks);
         rows.push(`
           <article class="problem">
             <div class="pnum">${i}.</div>
-            <div class="coin-area">${orderedPicks.map((coin) => coinHTML(coin, styleMode, sideMode)).join('')}</div>
+            <div class="coin-area">${problem.picks.map((coin) => coinHTML(coin, styleMode, sideMode, showLines)).join('')}</div>
             <div class="answer">Total: <span class="line"></span> ¢</div>
           </article>
         `);
