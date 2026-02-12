@@ -344,6 +344,7 @@
     ];
 
     const DIME_BASE_SIZE = 40;
+    const COIN_RENDER_ORDER = ['quarter', 'dime', 'nickel', 'penny'];
 
     const coinSelect = document.getElementById('coinSelect');
     const sheet = document.getElementById('sheet');
@@ -376,6 +377,10 @@
       return COINS.filter((coin) => checked.includes(coin.key));
     }
 
+    function orderCoinsForDisplay(picks) {
+      return COIN_RENDER_ORDER.flatMap((key) => picks.filter((coin) => coin.key === key));
+    }
+
     function buildProblem(allowed, topAmount) {
       const coinCount = randomInt(3, 9);
       const picks = [];
@@ -399,8 +404,7 @@
       const fallbackCount = Math.max(1, Math.min(coinCount, Math.floor(topAmount / smallest)));
       const fallbackCoin = allowed.find((c) => c.value === smallest) || allowed[0];
       const fallbackPicks = Array.from({ length: fallbackCount }, () => fallbackCoin);
-      fallbackPicks.sort((a, b) => b.value - a.value);
-      return { picks: fallbackPicks, total: fallbackPicks.reduce((s, c) => s + c.value, 0) };
+      return { picks: orderCoinsForDisplay(fallbackPicks), total: fallbackPicks.reduce((s, c) => s + c.value, 0) };
     }
 
     function getCoinImageUrl(coin, styleMode, sideMode) {
@@ -446,11 +450,11 @@
       const rows = [];
       for (let i = 1; i <= 5; i += 1) {
         const problem = buildProblem(allowed, topAmount);
-        problem.picks.sort((a, b) => b.value - a.value);
+        const orderedPicks = orderCoinsForDisplay(problem.picks);
         rows.push(`
           <article class="problem">
             <div class="pnum">${i}.</div>
-            <div class="coin-area">${problem.picks.map((coin) => coinHTML(coin, styleMode, sideMode)).join('')}</div>
+            <div class="coin-area">${orderedPicks.map((coin) => coinHTML(coin, styleMode, sideMode)).join('')}</div>
             <div class="answer">Total: <span class="line"></span> ¢</div>
           </article>
         `);
