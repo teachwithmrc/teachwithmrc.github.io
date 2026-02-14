@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vowel Teams Word Ladders</title>
+
+  <!-- DATA: loads ayWordLadders, aiWordLadders, and word banks (ay/ai + blends) -->
+  <script src="longA_and_VCe_Ladders_combined.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    @font-face { font-family: 'BoxesFont'; src: url('fonts/boxes2.otf') format('opentype'); }
+    @font-face { font-family: 'UnderlineFont'; src: url('fonts/underlines.otf') format('opentype'); }
+
+    :root{
+      --ink:#1f365f; --bg:#ffffff;
+      --card:#f6f9ff; --card2:#fff7f0;
+      --border:#cfd7ef; --border2:#f2d8bd;
+      --disabled:#9aa6bf;
+      --btn:#1f365f; --btnText:#fff;
+    }
+
+    body { font-family: 'Poppins', sans-serif; margin: 10px; text-align: center; color: var(--ink); background: var(--bg); }
+    h1 { font-size: 32px; margin-bottom: 6px; }
+    .subtitle { font-size: 16px; margin-bottom: 8px; }
+
+    button { font-size: 16px; padding: 8px 14px; margin: 6px; cursor: pointer; border-radius: 10px; border: 2px solid var(--border); }
+    .primary { background: var(--btn); color: var(--btnText); border-color: var(--btn); }
+    .outline { background: #fff; color: var(--ink); }
+    .chip { padding: 8px 14px; border-radius: 999px; border: 2px solid var(--border); background: #fff; min-width: 80px; }
+    .chip.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+    .card {
+      display: inline-block; text-align: center; background: var(--card);
+      border: 2px solid var(--border); border-radius: 14px; padding: 14px 18px; margin: 10px auto; font-size: 18px;
+    }
+    .card.alt { background: var(--card2); border-color: var(--border2); }
+    .card h2 { margin: 0 0 8px; font-size: 20px; }
+    .controls { display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 18px; }
+
+    .pattern { font-size: 100px; line-height: 1; margin-top: 4px; letter-spacing: 0; }
+
+    .screenOnly { display: block; font-size: 18px; }
+    #ladderOutput { margin-top:8px; margin-bottom:60px; }
+    #copyright { font-size: 12px; text-align: right; width: 100%; margin-top: 16px; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #ladderOutput, #ladderOutput * { visibility: visible; }
+      #ladderOutput { position: absolute; top: 0; left: 0; width: 100%; margin: 0; padding: 10px; box-sizing: border-box; }
+      .screenOnly { display: none !important; }
+      #ladderOutput br { display: none !important; }
+      @page { margin: 0.5in; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Vowel Teams Word Ladders</h1>
+  <div class="subtitle">Choose a team and generate a 6-step ladder that changes only one sound each step.</div>
+
+  <!-- TEACHER DIRECTIONS -->
+  <div class="screenOnly" style="max-width:920px;margin:0 auto 12px;">
+    <strong>Directions:</strong> Pick <em>ai</em> or <em>ay</em>, choose a display style, then click <b>Generate Ladder</b>. Print when ready.
+  </div>
+
+  <!-- VOWEL TEAMS PICKER -->
+  <div class="card">
+    <h2>Vowel Teams</h2>
+    <div class="controls">
+      <button id="btnAI" class="chip active" onclick="setTeam('ai')">ai</button>
+      <button id="btnAY" class="chip" onclick="setTeam('ay')">ay</button>
+    </div>
+  </div>
+
+  <!-- DISPLAY OPTIONS -->
+  <div class="card alt">
+    <h2>Display</h2>
+    <div class="controls">
+      <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
+      <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
+      <label><input type="checkbox" id="boldChanged" checked> Bold Changed Part</label>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div style="margin: 8px 0 10px;">
+     <center><img src="images/chrome.png"></center>
+    <button class="primary" onclick="generateLadder()">Generate Ladder</button>
+    <button class="outline" onclick="window.print()">Print Page</button>
+  </div>
+
+  <div id="ladderOutput"></div>
+
+  <script>
+    // ===== STATE =====
+    let currentTeam = 'ai'; // default
+
+    function setTeam(team) {
+      currentTeam = team;
+      document.getElementById('btnAI').classList.toggle('active', team === 'ai');
+      document.getElementById('btnAY').classList.toggle('active', team === 'ay');
+      // Optional: auto-generate on switch
+      // generateLadder();
+    }
+
+    // ===== WORD LOOKUPS (from the combined JS) =====
+    // Build quick maps from the word-bank arrays so we can pull patterns/splits by word.
+    const banks = [
+      ...(window.longA_ai || []),
+      ...(window.longA_ay || []),
+      ...(window.longA_ai_blends || []),
+      ...(window.longA_ay_blends || []),
+    ];
+    const patternByWord = Object.create(null);
+    const splitByWord = Object.create(null);
+    (banks || []).forEach(entry => {
+      if (!entry || !entry.word) return;
+      const key = entry.word.toLowerCase();
+      patternByWord[key] = entry.pattern;
+      splitByWord[key] = entry.split;
+    });
+
+   const imgFor = (w) => {
+  const k = (w || '').toLowerCase();
+  const map = (window.longAImages || {});
+  return map[k] || map[w] || `images/${k}.png`;
+};
+
+    // Split a word into chunks by its pattern string (e.g., "1211")
+    function splitByPattern(word, pattern) {
+      const chunks = [];
+      let i = 0;
+      for (let j = 0; j < (pattern||'').length; j++) {
+        const d = pattern[j];
+        const len = (d === '3') ? 3 : (d === '2') ? 2 : 1;
+        chunks.push(word.slice(i, i + len));
+        i += len;
+      }
+      return chunks;
+    }
+
+    function arraysEqual(a,b){ return a.length===b.length && a.every((v,i)=>v===b[i]); }
+
+    function getChangedChunkIndex(prevWord, word, prevPat, pat) {
+      if (!prevWord) return -1;
+      const A = splitByPattern(prevWord, prevPat);
+      const B = splitByPattern(word, pat);
+      if (A.length === B.length) {
+        let idx = -1;
+        for (let i = 0; i < A.length; i++) {
+          if ((A[i]||'') !== (B[i]||'')) { if (idx !== -1) return -1; idx = i; }
+        }
+        return idx;
+      }
+      if (B.length === A.length + 1) {
+        for (let i = 0; i < B.length; i++) {
+          const test = B.slice(0, i).concat(B.slice(i + 1));
+          if (arraysEqual(A, test)) return i;
+        }
+        return -1;
+      }
+      if (A.length === B.length + 1) {
+        for (let i = 0; i < A.length; i++) {
+          const test = A.slice(0, i).concat(A.slice(i + 1));
+          if (arraysEqual(B, test)) return i;
+        }
+        return -1;
+      }
+      return -1;
+    }
+
+    function getHint(prevWord, word, prevPat, pat) {
+      if (!prevWord) return '';
+      const A = splitByPattern(prevWord, prevPat);
+      const B = splitByPattern(word, pat);
+      const eq = (x,y)=>x.length===y.length && x.every((v,i)=>v===y[i]);
+
+      if (A.length === B.length) {
+        let idx = -1;
+        for (let i=0;i<A.length;i++){ if (A[i]!==B[i]){ if(idx!==-1) return '? → ?'; idx=i; } }
+        if (idx === -1) return '? → ?';
+        const a=A[idx], b=B[idx];
+        if (b.length === a.length + 1 && (b.startsWith(a) || b.endsWith(a))) {
+          const add = b.startsWith(a) ? b.slice(-1) : b.slice(0, b.length - a.length);
+          const micro = b.startsWith(a) ? `${a} → ${a}<b>${add}</b>` : `${a} → <b>${add}</b>${a}`;
+          return `+ ${add} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
+        }
+        if (a.length === b.length + 1 && (a.startsWith(b) || a.endsWith(b))) {
+          const rem = a.startsWith(b) ? a.slice(-1) : a.slice(0, a.length - b.length);
+          const micro = a.startsWith(b) ? `${a.slice(0,-1)}<b>${rem}</b> → ${b}` : `<b>${rem}</b>${a.slice(1)} → ${b}`;
+          return `- ${rem} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
+        }
+        return `${a} → ${b}`;
+      }
+
+      if (B.length === A.length + 1) {
+        for (let k=0;k<B.length;k++) {
+          const test = B.slice(0,k).concat(B.slice(k+1));
+          if (eq(A, test)) return `+ ${B[k]}`;
+        }
+        return '? → ?';
+      }
+
+      if (A.length === B.length + 1) {
+        for (let k=0;k<A.length;k++) {
+          const test = A.slice(0,k).concat(A.slice(k+1));
+          if (eq(B, test)) return `- ${A[k]}`;
+        }
+        return '? → ?';
+      }
+      return '? → ?';
+    }
+
+    // Pull a ladder set for the active team
+    function chooseLadderPool() {
+      if (currentTeam === 'ay') return (window.ayWordLadders || []);
+      return (window.aiWordLadders || []);
+    }
+
+    function patternFor(word) {
+      const key = (word||'').toLowerCase();
+      return patternByWord[key] || '??'; // show ?? if not found so we can spot any gaps
+    }
+
+    function generateLadder() {
+      const ladders = chooseLadderPool();
+      if (!ladders.length) {
+        alert('❌ No ladders available for this team. Make sure longA_and_VCe_Ladders_combined.js loaded.');
+        return;
+      }
+
+      const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
+      const useFont = (cellStyle === 'underlines') ? 'UnderlineFont' : 'BoxesFont';
+      const boldChanged = document.getElementById('boldChanged').checked;
+
+      const ladder = ladders[Math.floor(Math.random()*ladders.length)];
+      const rows = ladder.map((word, i) => {
+        const first = (i===0), last=(i===ladder.length-1);
+        const prev = ladder[i-1] || '';
+
+        const patt = patternFor(word);
+        const prevP = first ? '' : patternFor(prev);
+        const imgSrc = imgFor(word);
+
+        let patternHTML = '';
+        if (!first) {
+          const changedIdx = boldChanged ? getChangedChunkIndex(prev, word, prevP, patt) : -1;
+          if (changedIdx === -1) {
+            patternHTML = patt;
+          } else {
+            let out = '';
+            for (let j=0;j<patt.length;j++) {
+              const ch = patt[j];
+              out += (j===changedIdx) ? `<span style="font-weight:700;">${ch}</span>` : ch;
+            }
+            patternHTML = out;
+          }
+        }
+
+        const display = first
+          ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins',sans-serif;">${word}</div>`
+          : `<div class="pattern" style="font-family:'${useFont}',monospace;font-size:${useFont==='UnderlineFont'?'85px':'100px'};letter-spacing:0;">${patternHTML}</div>`;
+
+        const imgTD = `<td style="padding:5px 7px;width:140px;">
+                         <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
+                       </td>`;
+
+        const borders = !last
+          ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
+          : 'border-left:4px solid #000;border-right:4px solid #000;';
+
+        const wordTD = `<td style="padding:5px 7px;${borders}">${display}</td>`;
+
+        const hintTD = first
+          ? `<td style="padding:3px 5px;width:170px;"></td>`
+          : `<td style="padding:3px 5px;width:170px;">
+               <div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">
+                 ${getHint(prev, word, prevP, patt)}
+               </div>
+             </td>`;
+
+        return `<tr>${imgTD}${wordTD}${hintTD}</tr>`;
+      }).join('');
+
+      const teamLabel = (currentTeam === 'ay') ? 'AY' : 'AI';
+      const html = `
+        <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
+          <div id="titleBlock" style="text-align:center;">
+            <h2 style="font-size:24px;">Vowel Teams — ${teamLabel} Word Ladder</h2>
+            <p style="font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
+          </div>
+          <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
+            ${rows}
+          </table>
+          <div id="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+        </div>
+      `;
+      document.getElementById('ladderOutput').innerHTML = html;
+    }
+
+    // Optional: generate one on load
+    window.addEventListener('DOMContentLoaded', () => {
+      setTeam('ai');
+      // generateLadder();
+    });
+  </script>
+</body>
+</html>

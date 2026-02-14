@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CVC Word Ladder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+ body {
+  font-family: 'Poppins', sans-serif;
+  padding: 10px;
+  font-size: 14px;
+}
+.top-word {
+  font-size: 28px;
+  letter-spacing: 6px;
+  vertical-align: bottom;
+  height: 100%;
+  display: table-cell;
+}
+
+h1 {
+  font-size: 24px; /* was 32px */
+  margin-bottom: 10px;
+}
+
+    table {
+      border-collapse: collapse;
+      margin: 0 auto;
+    }
+td, th {
+  border: 6px solid black; /* cell borders */
+}
+    tr {
+  height: 80px;  /* Or whatever fits your print layout best */
+}
+    td {
+  padding: 4px;
+  width: 100px;
+  height: 60px;
+  font-size: 14px;
+}
+ td img {
+  max-height: 60px;
+  max-width: 60px;
+  object-fit: contain;
+  display: block;
+  margin: auto;
+}
+    .no-top-right-bottom {
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+}
+.bottom-cell {
+  font-size: 20px; /* was 28px */
+  letter-spacing: 8px; /* was 12px */
+}
+
+.image-cell {
+  border: 2px solid black;
+  padding: 1px;
+  height: 150px;
+  text-align: center;
+  vertical-align: middle;
+}
+.no-top-border {
+  border-top: none;
+}
+    .no-bottom-border {
+  border-bottom: none;
+}
+.no-top-left-bottom {
+  border-top: none;
+  border-left: none;
+  border-bottom: none;
+}
+
+.speech-bubble {
+  display: inline-block;
+  padding: 4px 12px;
+  border: 2px solid black;
+  border-radius: 18px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.letter-lines {
+  height: auto;               /* Don't stretch full cell */
+  align-items: flex-end;      /* Still aligns lines to bottom */
+  margin-top: 0;
+}
+.bottom-align {
+  vertical-align: bottom;
+  display: table-cell;
+  height: 100%;
+}
+.letter-lines span {
+  display: inline-block; /* ← This is the fix */
+  width: 40px;
+  height: 4px;
+  background: black;
+  border-radius: 2px;
+  margin: 0 4px; /* optional: add spacing between lines */
+}
+  button {
+    display: none;
+  }
+ .ladder-cell {
+  height: 80px;               /* Constrain height */
+  vertical-align: bottom;     /* Align content to bottom */
+  padding: 0;  
+   padding-left: 4px;
+padding-right: 4px;/* Remove excess space */
+}
+  table {
+    page-break-inside: avoid;
+  }
+
+}
+    .image-col {
+  width: 80px;
+}
+
+.middle-col {
+  width: 220px; /* Make this WIDER — adjust as needed */
+}
+
+.speech-col {
+  width: 100px;
+}
+    @media print {
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  h1 {
+    margin-bottom: 4px;
+  }
+}
+  </style>
+</head>
+<body>
+<button onclick="window.print()">Print Page</button>
+  <h1>CVC Word Ladder</h1>
+
+  <table>
+  <tr>
+    <td class="image-cell image-col no-top-left-bottom"><img src="images/cap.png" alt="cap"></td>
+    <td class="ladder-cell top-word middle-col no-top-border">c a p</td>
+    <td class="speech-col no-top-right-bottom"></td>
+  </tr>
+  <tr>
+    <td class="image-cell image-col no-top-left-bottom"><img src="images/cat.png" alt="cat"></td>
+    <td class="ladder-cell bottom-cell middle-col">
+      <div class="letter-lines"><span></span><span></span><span></span></div>
+    </td>
+    <td class="speech-col no-top-right-bottom">
+      <div class="speech-bubble">p → t</div>
+    </td>
+  </tr>
+  <tr>
+    <td class="image-cell image-col no-top-left-bottom"><img src="images/bat.png" alt="bat"></td>
+    <td class="ladder-cell bottom-cell middle-col">
+      <div class="letter-lines"><span></span><span></span><span></span></div>
+    </td>
+    <td class="speech-col no-top-right-bottom">
+      <div class="speech-bubble">c → b</div>
+    </td>
+  </tr>
+  <tr>
+    <td class="image-cell image-col no-top-left-bottom"><img src="images/bag.png" alt="bag"></td>
+    <td class="ladder-cell bottom-cell middle-col">
+      <div class="letter-lines"><span></span><span></span><span></span></div>
+    </td>
+    <td class="speech-col no-top-right-bottom">
+      <div class="speech-bubble">t → g</div>
+    </td>
+  </tr>
+  <tr>
+    <td class="image-cell image-col no-top-left-bottom"><img src="images/bug.png" alt="bug"></td>
+    <td class="ladder-cell bottom-cell middle-col">
+      <div class="letter-lines"><span></span><span></span><span></span></div>
+    </td>
+    <td class="speech-col no-top-right-bottom">
+      <div class="speech-bubble">a → u</div>
+    </td>
+  </tr>
+  <tr>
+    <td class="image-cell image-col no-top-left-bottom"><img src="images/bun.png" alt="bun"></td>
+    <td class="ladder-cell no-bottom-border middle-col">
+      <div class="letter-lines"><span></span><span></span><span></span></div>
+    </td>
+    <td class="speech-col no-top-right-bottom">
+      <div class="speech-bubble">g → n</div>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

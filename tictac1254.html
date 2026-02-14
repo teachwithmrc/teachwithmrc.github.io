@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Phonics Tic-Tac-Toe</title>
+
+  <!-- Use your latest data file -->
+  <script src="fluencyDataFull_v8-2_clean.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --cvc:#e9f2ff; --cvc-selected:#1976d2;
+      --dig:#f3e9ff; --dig-selected:#8e24aa;
+      --glued:#e8fff4; --glued-selected:#2e7d32;
+      --vce:#fff5e6; --vce-selected:#ef6c00;
+      --rctrl:#f0f5ff; --rctrl-selected:#3f51b5;
+      --vteams:#fff0f6; --vteams-selected:#d81b60;
+
+      --chip-bg:#f3f6fb; --chip-text:#263238; --chip-x:#546e7a;
+    }
+    *{box-sizing:border-box}
+    body{margin:24px; font-family:Poppins,system-ui,Segoe UI,Roboto,Arial,sans-serif; background:#fafafa; color:#111}
+    h1{margin:.1rem 0 .25rem; font-weight:700}
+    .subtitle{margin:0 0 1rem; color:#555}
+
+    /* Steps wrapper */
+    .steps{max-width:1080px; margin:0 auto}
+    .card{background:#fff; border:2px solid #000; border-radius:12px; padding:14px; margin-bottom:12px}
+    .section-label{font-weight:700; text-align:center; margin-bottom:10px}
+
+    .skill-block{border:1px solid #bbb; border-radius:12px; overflow:hidden; margin-bottom:10px; background:#fff}
+    .skill-header{display:flex; align-items:center; justify-content:center; gap:8px; padding:10px; font-weight:700; cursor:pointer; user-select:none}
+    .arrow{width:18px; text-align:center}
+    .skills-inner{display:flex; flex-wrap:wrap; gap:8px; padding:10px; justify-content:center}
+    .skills-inner.collapsed{display:none}
+
+    .bg-cvc .skill-header{background:var(--cvc)}
+    .bg-dig .skill-header{background:var(--dig)}
+    .bg-glued .skill-header{background:var(--glued)}
+    .bg-vce .skill-header{background:var(--vce)}
+    .bg-rctrl .skill-header{background:var(--rctrl)}
+    .bg-vteams .skill-header{background:var(--vteams)}
+
+    .skill-button{border:2px solid #000; background:#fff; padding:8px 12px; border-radius:12px; font-weight:700; cursor:pointer; min-height:36px}
+    .skill-button:active{transform:translateY(1px)}
+    .skill-button.selected{color:#fff}
+    .skill-button.cvc.selected{background:var(--cvc-selected)}
+    .skill-button.dig.selected{background:var(--dig-selected)}
+    .skill-button.glued.selected{background:var(--glued-selected)}
+    .skill-button.vce.selected{background:var(--vce-selected)}
+    .skill-button.rctrl.selected{background:var(--rctrl-selected)}
+    .skill-button.vteams.selected{background:var(--vteams-selected)}
+
+    .option-grid{display:flex; gap:8px; justify-content:center; flex-wrap:wrap}
+    .option-box{border:2px solid #000; border-radius:10px; padding:6px 12px; background:#fff; font-weight:700; cursor:pointer}
+    .option-box.selected{background:#d0f0ff}
+
+    .chips-title{text-align:center; font-weight:700; margin-top:6px}
+    .chips{display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:6px}
+    .chip{display:flex; align-items:center; gap:8px; background:var(--chip-bg); color:var(--chip-text); padding:6px 10px; border-radius:999px; box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+    .chip .x{width:18px; height:18px; display:grid; place-items:center; border-radius:50%; background:#e8edf2; color:var(--chip-x); font-weight:700; cursor:pointer}
+
+    /* Output (boards) */
+    #output{max-width:900px; margin:18px auto 0; display:flex; flex-direction:column; gap:16px}
+    .page{background:#fff; border:2px solid #000; border-radius:10px; padding:.45in; box-shadow:0 6px 20px rgba(0,0,0,.12)}
+    .worksheet-title{font-size:28px; text-align:center; font-weight:700; margin-bottom:6px}
+    .worksheet-directions{text-align:center; margin-bottom:12px}
+    .board-wrap{display:grid; grid-template-columns:1fr 1fr; gap:24px}
+    table.t3{border-collapse:collapse; width:100%; table-layout:fixed}
+    .t3 td{width:100px; height:80px; padding:6px; vertical-align:middle; text-align:center}
+    .t3 td{border:none}
+    .t3 tr:not(:last-child) td{border-bottom:6px solid #000}
+    .t3 td:not(:last-child){border-right:6px solid #000}
+    .cell-text.word{white-space:nowrap}
+    .cell-text.sentence{white-space:normal; overflow-wrap:anywhere}
+    .board-shell{border:3px solid #000; border-radius:14px; padding:10px}
+    .board-label{font-weight:700; text-align:center; margin-bottom:6px}
+    #copyright{font-size:12px; text-align:right; margin-top:10px; display:none}
+
+    @media (max-width:760px){
+      .board-wrap{grid-template-columns:1fr}
+      .worksheet-title{font-size:22px}
+    }
+    @media print{
+      body{margin:0; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+      .card, .subtitle, #controls{display:none!important}
+      #output{margin:0}
+      .page{box-shadow:none; border:none; padding:0}
+      .board-wrap{gap:14px}
+      #copyright{display:block}
+    }
+  </style>
+</head>
+<body>
+  <div class="steps" id="controls">
+    <h1>Phonics Tic-Tac-Toe Generator</h1>
+    <div class="subtitle">Step 2 toggles <b>Blends</b> (blended content is prioritized and falls back to base). Step 3 chooses <b>Words</b>, <b>Sentences</b>, or <b>Both</b>.</div>
+
+    <!-- STEP 1 -->
+    <div class="card" id="step1">
+      <div class="section-label">Step 1: Select Skills</div>
+
+      <!-- CVC -->
+      <div class="skill-block bg-cvc">
+        <div class="skill-header" data-target="cvc"><span class="arrow">▲</span><span>CVC Short Vowels</span><span class="arrow">▲</span></div>
+        <div class="skills-inner" id="section-cvc">
+          <button class="skill-button cvc" data-skill="Short A">Short A</button>
+          <button class="skill-button cvc" data-skill="Short E">Short E</button>
+          <button class="skill-button cvc" data-skill="Short I">Short I</button>
+          <button class="skill-button cvc" data-skill="Short O">Short O</button>
+          <button class="skill-button cvc" data-skill="Short U">Short U</button>
+          <button class="skill-button cvc" data-skill="FLSZ">FLSZ</button>
+          <button class="skill-button cvc" data-skill="Mixed CVC">Mixed CVC</button>
+        </div>
+      </div>
+
+      <!-- Digraphs -->
+      <div class="skill-block bg-dig">
+        <div class="skill-header" data-target="dig"><span class="arrow">▲</span><span>Digraphs</span><span class="arrow">▲</span></div>
+        <div class="skills-inner" id="section-dig">
+          <button class="skill-button dig" data-skill="Digraph(ck)">ck</button>
+          <button class="skill-button dig" data-skill="Digraph(sh)">sh</button>
+          <button class="skill-button dig" data-skill="Digraph(th)">th</button>
+          <button class="skill-button dig" data-skill="Digraph(ch)">ch</button>
+          <button class="skill-button dig" data-skill="Digraph(wh)">wh</button>
+          <button class="skill-button dig" data-skill="Digraphs Mixed">Digraphs Mixed</button>
+        </div>
+      </div>
+
+      <!-- Glued -->
+      <div class="skill-block bg-glued">
+        <div class="skill-header" data-target="glued"><span class="arrow">▲</span><span>Glued Sounds</span><span class="arrow">▲</span></div>
+        <div class="skills-inner" id="section-glued">
+          <button class="skill-button glued" data-skill="Glued(all)">-all</button>
+          <button class="skill-button glued" data-skill="Glued(-ng)">-ng</button>
+          <button class="skill-button glued" data-skill="Glued(-nk)">-nk</button>
+          <button class="skill-button glued" data-skill="Glued Mixed">Glued Mixed</button>
+        </div>
+      </div>
+
+      <!-- VCe -->
+      <div class="skill-block bg-vce">
+        <div class="skill-header" data-target="vce"><span class="arrow">▲</span><span>Silent E (VCe)</span><span class="arrow">▲</span></div>
+        <div class="skills-inner" id="section-vce">
+          <button class="skill-button vce" data-skill="VCe(a_e)">a_e</button>
+          <button class="skill-button vce" data-skill="VCe(i_e)">i_e</button>
+          <button class="skill-button vce" data-skill="VCe(o_e)">o_e</button>
+          <button class="skill-button vce" data-skill="VCe(u_e)">u_e</button>
+          <button class="skill-button vce" data-skill="Mixed VCe">Mixed VCe</button>
+        </div>
+      </div>
+
+      <!-- R-Controlled -->
+      <div class="skill-block bg-rctrl">
+        <div class="skill-header" data-target="rctrl"><span class="arrow">▲</span><span>R-Controlled</span><span class="arrow">▲</span></div>
+        <div class="skills-inner" id="section-rctrl">
+          <button class="skill-button rctrl" data-skill="R-Controlled(ar)">ar</button>
+          <button class="skill-button rctrl" data-skill="R-Controlled(or)">or</button>
+          <button class="skill-button rctrl" data-skill="R-Controlled(er,ir,ur)">er/ir/ur</button>
+          <button class="skill-button rctrl" data-skill="Mixed R-Controlled">Mixed</button>
+        </div>
+      </div>
+
+      <!-- Vowel Teams -->
+      <div class="skill-block bg-vteams">
+        <div class="skill-header" data-target="vteams"><span class="arrow">▲</span><span>Vowel Teams</span><span class="arrow">▲</span></div>
+        <div class="skills-inner" id="section-vteams">
+          <button class="skill-button vteams" data-skill="Long A (ai/ay)">Long A (ai/ay)</button>
+          <button class="skill-button vteams" data-skill="Long E (ee/ea)">Long E (ee/ea)</button>
+          <button class="skill-button vteams" data-skill="Long I (igh/y/ie)">Long I (igh/y/ie)</button>
+          <button class="skill-button vteams" data-skill="Long O (oa/ow/oe)">Long O (oa/ow/oe)</button>
+          <button class="skill-button vteams" data-skill="Long U (oo/ew/ue)">Long U (oo/ew/ue)</button>
+          <button class="skill-button vteams" data-skill="Mixed Vowel Teams">Mixed Vowel Teams</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="card">
+      <div class="section-label">Step 2: Include Blends?</div>
+      <div class="option-grid" id="blendsOptions">
+        <div class="option-box" data-blends="no">No (3 sounds)</div>
+        <div class="option-box" data-blends="yes">Yes (4+ sounds)</div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="card">
+      <div class="section-label">Step 3: What would you like in the grid?</div>
+      <div class="option-grid" id="contentOptions">
+        <div class="option-box" data-mode="words">Words Only</div>
+        <div class="option-box" data-mode="sentences">Sentences Only</div>
+        <div class="option-box" data-mode="both">Both</div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="card">
+      <div class="section-label">Step 4: Generate & Print</div>
+      <div class="chips-title">Skills Selected:</div>
+      <div id="chips" class="chips"></div>
+      <div style="text-align:center; margin-top:10px;">
+        <button id="btnGenerate" class="option-box">Generate</button>
+        <button onclick="window.print()" class="option-box">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTPUT -->
+  <div id="output"></div>
+
+<script>
+/* ---------- minimal, click-everything version wired to v8-2_clean ---------- */
+
+/* CSS.escape polyfill */
+if (typeof CSS === 'undefined' || typeof CSS.escape !== 'function') {
+  window.CSS = window.CSS || {};
+  CSS.escape = CSS.escape || function(sel){ return (sel+'').replace(/[^a-zA-Z0-9_-]/g,'\\\\$&'); };
+}
+
+/* ========== Skill map (UI label -> internal code) ==========
+
+   Codes are our own short ids. Each code maps to base keys found in your data.
+   When blends are ON, we first use the "* with Blends ..." arrays (if present),
+   then fall back to the base list to fill any gaps.
+*/
+const SUPPORTED = {
+  // CVC
+  "Short A":"cvc.a", "Short E":"cvc.e", "Short I":"cvc.i", "Short O":"cvc.o", "Short U":"cvc.u",
+  "FLSZ":"cvc.flsz", "Mixed CVC":"cvc.mix",
+
+  // Digraphs
+  "Digraph(ck)":"dig.ck", "Digraph(sh)":"dig.sh", "Digraph(th)":"dig.th",
+  "Digraph(ch)":"dig.ch", "Digraph(wh)":"dig.wh", "Digraphs Mixed":"dig.mix",
+
+  // Glued (-all, -ng [ang/ing/ong/ung], -nk)
+  "Glued(all)":"gl.all", "Glued(-ng)":"gl.ng", "Glued(-nk)":"gl.nk", "Glued Mixed":"gl.mix",
+
+  // VCe
+  "VCe(a_e)":"vce.ae", "VCe(i_e)":"vce.ie", "VCe(o_e)":"vce.oe", "VCe(u_e)":"vce.ue", "Mixed VCe":"vce.mix",
+
+  // R-controlled
+  "R-Controlled(ar)":"r.ar", "R-Controlled(or)":"r.or", "R-Controlled(er,ir,ur)":"r.erirur", "Mixed R-Controlled":"r.mix",
+
+  // Vowel teams
+  "Long A (ai/ay)":"vt.la", "Long E (ee/ea)":"vt.le", "Long I (igh/y/ie)":"vt.li",
+  "Long O (oa/ow/oe)":"vt.lo", "Long U (oo/ew/ue)":"vt.lu", "Mixed Vowel Teams":"vt.mix",
+};
+
+/* Pretty labels for chips/title */
+const SKILL_LABEL = Object.fromEntries(Object.entries(SUPPORTED).map(([k,v])=>[v,k]));
+
+/* Direct key map per code & type.
+   Each entry can be a string (one key) or an array (merge these keys).
+*/
+const KEYS = {
+  words:{
+    // CVC
+    "cvc.a": "0.1 - Short A Words",
+    "cvc.e": "0.5 - Short E Words",
+    "cvc.i": "0.3 - Short I Words",
+    "cvc.o": "0.2 - Short O Words",
+    "cvc.u": "0.4 - Short U Words",
+    "cvc.flsz": "0.6 - FLSZ Words",
+    "cvc.mix": "Mixed CVC Words",
+
+    // Digraphs
+    "dig.ck": "1.1 - ck Words",
+    "dig.sh": "1.2 - sh Words",
+    "dig.th": "1.3 - th Words",
+    "dig.ch": "1.4 - ch Words",
+    "dig.wh": "1.5 - wh Words",
+    "dig.mix": "1.6 - Digraphs Mixed Words",
+
+    // Glued
+    "gl.all": "3.1 - all Words",
+    "gl.ng": [ "3.2 - ang Words", "3.3 - ing Words", "3.4 - ong Words", "3.5 - ung Words" ],
+    "gl.nk": "3.6 - nk Words",
+    "gl.mix": [ "3.1 - all Words", "3.2 - ang Words", "3.3 - ing Words", "3.4 - ong Words", "3.5 - ung Words", "3.6 - nk Words" ],
+
+    // VCe (words exist in your data object)
+    "vce.ae": "2.1 - a_e Words",
+    "vce.ie": "2.2 - i_e Words",
+    "vce.oe": "2.3 - o_e Words",
+    "vce.ue": "2.4 - u_e Words",
+    "vce.mix": "2.5 - VCe Mixed Words",
+
+    // R-controlled
+    "r.ar": "4.1 - ar Words",
+    "r.or": "4.2 - or Words",
+    "r.erirur": "4.3 - er, ir, ur Words",
+    // If your file also has "4.4 - All R-Controlled Words", this will be picked automatically below
+    "r.mix": [ "4.1 - ar Words", "4.2 - or Words", "4.3 - er, ir, ur Words", "4.4 - All R-Controlled Words" ],
+
+    // Vowel teams (long vowels)
+    "vt.la": "6.1 - Long A Words",
+    "vt.le": "6.2 - Long E Words",
+    "vt.li": "6.3 - Long I Words",
+    "vt.lo": "6.4 - Long O Words",
+    "vt.lu": "6.5 - Long U Words",
+    "vt.mix": [ "6.1 - Long A Words", "6.2 - Long E Words", "6.3 - Long I Words", "6.4 - Long O Words", "6.5 - Long U Words", "6.6 - All Vowel Teams Words" ]
+  },
+  sentences:{
+    // CVC
+    "cvc.a": "0.1 - Short A Sentences",
+    "cvc.e": "0.5 - Short E Sentences",
+    "cvc.i": "0.3 - Short I Sentences",
+    "cvc.o": "0.2 - Short O Sentences",
+    "cvc.u": "0.4 - Short U Sentences",
+    "cvc.flsz": "0.6 - FLSZ Sentences",
+    "cvc.mix": "Mixed CVC Sentences",
+
+    // Digraphs
+    "dig.ck": "1.1 - ck Sentences",
+    "dig.sh": "1.2 - sh Sentences",
+    "dig.th": "1.3 - th Sentences",
+    "dig.ch": "1.4 - ch Sentences",
+    "dig.wh": "1.5 - wh Sentences",
+    "dig.mix": "1.6 - Digraphs Mixed Sentences",
+
+    // Glued
+    "gl.all": "3.1 - all Sentences",
+    "gl.ng": [ "3.2 - ang Sentences", "3.3 - ing Sentences", "3.4 - ong Sentences", "3.5 - ung Sentences" ],
+    "gl.nk": "3.6 - nk Sentences",
+    "gl.mix": [ "3.1 - all Sentences", "3.2 - ang Sentences", "3.3 - ing Sentences", "3.4 - ong Sentences", "3.5 - ung Sentences", "3.6 - nk Sentences" ],
+
+    // VCe
+    "vce.ae": "2.1 - a_e Sentences",
+    "vce.ie": "2.2 - i_e Sentences",
+    "vce.oe": "2.3 - o_e Sentences",
+    "vce.ue": "2.4 - u_e Sentences",
+    "vce.mix": "2.5 - VCe Mixed Sentences",
+
+    // R-controlled
+    "r.ar": "4.1 - ar Sentences",
+    "r.or": "4.2 - or Sentences",
+    "r.erirur": "4.3 - er, ir, ur Sentences",
+    // prefer “All R-Controlled” if present
+    "r.mix": [ "4.4 - All R-Controlled Sentences", "4.1 - ar Sentences", "4.2 - or Sentences", "4.3 - er, ir, ur Sentences" ],
+
+    // Vowel teams (some files name them “Long A/E/I/O/U Sentences” and also have b-variants for blends)
+    "vt.la": "6.1 - Long A Sentences",
+    "vt.le": "6.2 - Long E Sentences",
+    "vt.li": "6.3 - Long I Sentences",
+    "vt.lo": "6.4 - Long O Sentences",
+    "vt.lu": "6.5 - Long U Sentences",
+    "vt.mix": [ "6.6 - All Vowel Teams Sentences", "6.1 - Long A Sentences", "6.2 - Long E Sentences", "6.3 - Long I Sentences", "6.4 - Long O Sentences", "6.5 - Long U Sentences" ]
+  },
+
+  // Optional map of “with Blends” label variants to try first when blends are ON.
+  blendsFirst:{
+    // Words
+    "0.1 - Short A Words":"0.1 - Short A with Blends Words",
+    "0.2 - Short O Words":"0.2 - Short O with Blends Words",
+    "0.3 - Short I Words":"0.3 - Short I with Blends Words",
+    "0.4 - Short U Words":"0.4 - Short U with Blends Words",
+    "0.5 - Short E Words":"0.5 - Short E with Blends Words",
+    "0.6 - FLSZ Words":"0.6 - FLSZ with Blends Words",
+    "Mixed CVC Words":"Mixed CVC with Blends Words",
+    "1.1 - ck Words":"1.1 - ck with Blends Words",
+    "1.2 - sh Words":"1.2 - sh with Blends Words",
+    "1.3 - th Words":"1.3 - th with Blends Words",
+    "1.4 - ch Words":"1.4 - ch with Blends Words",
+    "1.5 - wh Words":"1.5 - wh with Blends Words",
+    "1.6 - Digraphs Mixed Words":"1.6 - Digraphs Mixed with Blends Words",
+    "3.1 - all Words":"3.1 - all with Blends Words",
+    "3.2 - ang Words":"3.2 - ang with Blends Words",
+    "3.3 - ing Words":"3.3 - ing with Blends Words",
+    "3.4 - ong Words":"3.4 - ong with Blends Words",
+    "3.5 - ung Words":"3.5 - ung with Blends Words",
+    "3.6 - nk Words":"3.6 - nk with Blends Words",
+    "2.1 - a_e Words":"2.1 - a_e Words with Blends",
+    "2.2 - i_e Words":"2.2 - i_e Words with Blends",
+    "2.3 - o_e Words":"2.3 - o_e Words with Blends",
+    "2.4 - u_e Words":"2.4 - u_e Words with Blends",
+    "2.5 - VCe Mixed Words":"2.5 - VCe Mixed Words with Blends",
+    "4.1 - ar Words":"4.1 - ar Words with Blends",
+    "4.2 - or Words":"4.2 - or Words with Blends",
+    "4.3 - er, ir, ur Words":"4.3 - er, ir, ur Words with Blends",
+    "4.4 - All R-Controlled Words":"4.4 - All R-Controlled Words with Blends",
+    "6.1 - Long A Words":"6.1b - Long A Words (with Blends)",
+    "6.2 - Long E Words":"6.2b - Long E Words (with Blends)",
+    "6.3 - Long I Words":"6.3b - Long I Words (with Blends)",
+    "6.4 - Long O Words":"6.4b - Long O Words (with Blends)",
+    "6.5 - Long U Words":"6.5b - Long U Words (with Blends)",
+    "6.6 - All Vowel Teams Words":"6.6b - All Vowel Teams Words (with Blends)",
+
+    // Sentences
+    "0.1 - Short A Sentences":"0.1 - Short A with Blends Sentences",
+    "0.2 - Short O Sentences":"0.2 - Short O with Blends Sentences",
+    "0.3 - Short I Sentences":"0.3 - Short I with Blends Sentences",
+    "0.4 - Short U Sentences":"0.4 - Short U with Blends Sentences",
+    "0.5 - Short E Sentences":"0.5 - Short E with Blends Sentences",
+    "0.6 - FLSZ Sentences":"0.6 - FLSZ with Blends Sentences",
+    "Mixed CVC Sentences":"Mixed CVC with Blends Sentences",
+    "1.1 - ck Sentences":"1.1 - ck with Blends Sentences",
+    "1.2 - sh Sentences":"1.2 - sh with Blends Sentences",
+    "1.3 - th Sentences":"1.3 - th with Blends Sentences",
+    "1.4 - ch Sentences":"1.4 - ch with Blends Sentences",
+    "1.5 - wh Sentences":"1.5 - wh with Blends Sentences",
+    "1.6 - Digraphs Mixed Sentences":"1.6 - Digraphs Mixed with Blends Sentences",
+    "3.1 - all Sentences":"3.1 - all with Blends Sentences",
+    "3.2 - ang Sentences":"3.2 - ang with Blends Sentences",
+    "3.3 - ing Sentences":"3.3 - ing with Blends Sentences",
+    "3.4 - ong Sentences":"3.4 - ong with Blends Sentences",
+    "3.5 - ung Sentences":"3.5 - ung with Blends Sentences",
+    "3.6 - nk Sentences":"3.6 - nk with Blends Sentences",
+    "2.1 - a_e Sentences":"2.1 - a_e Sentences with Blends",
+    "2.2 - i_e Sentences":"2.2 - i_e Sentences with Blends",
+    "2.3 - o_e Sentences":"2.3 - o_e Sentences with Blends",
+    "2.4 - u_e Sentences":"2.4 - u_e Sentences with Blends",
+    "2.5 - VCe Mixed Sentences":"2.5 - VCe Mixed Sentences with Blends",
+    "4.1 - ar Sentences":"4.1 - ar Sentences with Blends",
+    "4.2 - or Sentences":"4.2 - or Sentences with Blends",
+    "4.3 - er, ir, ur Sentences":"4.3 - er, ir, ur Sentences with Blends",
+    "4.4 - All R-Controlled Sentences":"4.4 - All R-Controlled Sentences with Blends",
+    "6.1 - Long A Sentences":"6.1b - Long A Sentences (with Blends)",
+    "6.2 - Long E Sentences":"6.2b - Long E Sentences (with Blends)",
+    "6.3 - Long I Sentences":"6.3b - Long I Sentences (with Blends)",
+    "6.4 - Long O Sentences":"6.4b - Long O Sentences (with Blends)",
+    "6.5 - Long U Sentences":"6.5b - Long U Sentences (with Blends)",
+    "6.6 - All Vowel Teams Sentences":"6.6b - All Vowel Teams Sentences (with Blends)"
+  }
+};
+
+/* State */
+const selectedCodes = new Set();
+let includeBlends = false;        // Step 2
+let mode = null;                  // 'words' | 'sentences' | 'both'
+
+/* Helpers */
+const uniq = arr => Array.from(new Set(arr));
+function getDataList(keyName, type){
+  const src = (window.fluencyData && window.fluencyData[type]) ? window.fluencyData[type] : {};
+  return Array.isArray(src[keyName]) ? src[keyName] : [];
+}
+/* When blends are ON: try the “with Blends …” key first, then base. */
+function preferBlends(keysOrKey, type){
+  const keys = Array.isArray(keysOrKey) ? keysOrKey : [keysOrKey];
+  let out = [];
+  for (const baseKey of keys){
+    if (includeBlends && KEYS.blendsFirst[baseKey]){
+      out = out.concat(getDataList(KEYS.blendsFirst[baseKey], type));
+    }
+    out = out.concat(getDataList(baseKey, type));
+  }
+  return uniq(out);
+}
+function listFor(code, type){
+  // Special case: r.mix must combine sublists; blends already prioritized via preferBlends.
+  if (code === 'r.mix'){
+    const combo = preferBlends(KEYS[type]['r.mix'], type);
+    return combo;
+  }
+  // Special case: -ng combines ang/ing/ong/ung (already defined as array)
+  return preferBlends(KEYS[type][code], type);
+}
+function pick(arr, n){ return arr.slice().sort(()=>Math.random()-0.5).slice(0, n); }
+
+function gatherBalanced(codes, mode, totalCells){
+  if (mode !== 'both'){
+    const per = Math.max(1, Math.floor(totalCells / codes.length));
+    let pool = [];
+    for (const c of codes) pool = pool.concat(pick(listFor(c, mode), per));
+    for (const c of codes){ if (pool.length >= totalCells) break; pool = pool.concat(pick(listFor(c, mode), totalCells - pool.length)); }
+    return pick(pool, totalCells);
+  }
+  // both
+  const targetW = Math.floor(totalCells/2), targetS = totalCells - targetW;
+  const perW = Math.max(1, Math.floor(targetW / codes.length));
+  const perS = Math.max(1, Math.floor(targetS / codes.length));
+  let words=[], sents=[];
+  for (const c of codes){ words = words.concat(pick(listFor(c,'words'), perW)); sents = sents.concat(pick(listFor(c,'sentences'), perS)); }
+  for (const c of codes){ if (words.length >= targetW) break; words = words.concat(pick(listFor(c,'words'), targetW - words.length)); }
+  for (const c of codes){ if (sents.length >= targetS) break; sents = sents.concat(pick(listFor(c,'sentences'), targetS - sents.length)); }
+  return pick(words.concat(sents), totalCells);
+}
+
+/* UI wiring */
+
+// Expand/collapse (event delegation)
+document.getElementById('step1').addEventListener('click', (e)=>{
+  const header = e.target.closest('.skill-header');
+  if (!header) return;
+  const target = header.getAttribute('data-target');
+  const inner = document.getElementById('section-'+target);
+  if (!inner) return;
+  const arrows = header.querySelectorAll('.arrow');
+  const collapsed = inner.classList.contains('collapsed');
+  inner.classList.toggle('collapsed', !collapsed);
+  arrows.forEach(a=>a.textContent = collapsed ? '▲' : '▼');
+});
+
+// Skill button toggle (event delegation)
+document.getElementById('step1').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.skill-button');
+  if (!btn) return;
+  const label = btn.getAttribute('data-skill');
+  if (!(label in SUPPORTED)) return; // Safety
+  const code = SUPPORTED[label];
+  if (selectedCodes.has(code)){ selectedCodes.delete(code); btn.classList.remove('selected'); }
+  else { selectedCodes.add(code); btn.classList.add('selected'); }
+  renderChips();
+});
+
+function renderChips(){
+  const wrap = document.getElementById('chips');
+  wrap.innerHTML = '';
+  Array.from(selectedCodes).forEach(code=>{
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.innerHTML = `<span>${SKILL_LABEL[code]||code}</span><span class="x" title="Remove">×</span>`;
+    chip.querySelector('.x').addEventListener('click', ()=>{
+      selectedCodes.delete(code);
+      const label = SKILL_LABEL[code] || code;
+      const btn = document.querySelector(`.skill-button[data-skill="${CSS.escape(label)}"]`);
+      if (btn) btn.classList.remove('selected');
+      renderChips();
+    });
+    wrap.appendChild(chip);
+  });
+}
+
+// Step 2: blends
+document.querySelectorAll('#blendsOptions .option-box').forEach(box=>{
+  box.addEventListener('click', ()=>{
+    document.querySelectorAll('#blendsOptions .option-box').forEach(b=>b.classList.remove('selected'));
+    box.classList.add('selected');
+    includeBlends = (box.dataset.blends === 'yes');
+  });
+});
+document.querySelector('#blendsOptions .option-box[data-blends="no"]').classList.add('selected');
+
+// Step 3: mode
+document.querySelectorAll('#contentOptions .option-box').forEach(box=>{
+  box.addEventListener('click', ()=>{
+    document.querySelectorAll('#contentOptions .option-box').forEach(b=>b.classList.remove('selected'));
+    box.classList.add('selected');
+    mode = box.dataset.mode;
+  });
+});
+
+// Build one 3x3 board
+function buildBoard(cells){
+  const tbl = document.createElement('table'); tbl.className = 't3';
+  for(let r=0;r<3;r++){
+    const tr = tbl.insertRow();
+    for(let c=0;c<3;c++){
+      const td = tr.insertCell();
+      const val = cells[r*3+c] || '';
+      const isSentence = /\s/.test(val);
+      const span = document.createElement('span');
+      span.className = 'cell-text ' + (isSentence ? 'sentence' : 'word');
+      span.textContent = val;
+      span.style.fontSize = isSentence ? '20px' : '24px';
+      span.style.lineHeight = isSentence ? '22px' : '28px';
+      td.appendChild(span);
+    }
+  }
+  const shell = document.createElement('div');
+  shell.className = 'board-shell';
+  const label = document.createElement('div');
+  label.className = 'board-label';
+  label.textContent = '';
+  shell.appendChild(label);
+  shell.appendChild(tbl);
+  return shell;
+}
+
+// Generate
+document.getElementById('btnGenerate').addEventListener('click', ()=>{
+  if (selectedCodes.size === 0) return alert('Select at least one skill in Step 1.');
+  if (!mode) return alert('Choose Words Only / Sentences Only / Both in Step 3.');
+  if (!window.fluencyData) return alert('Missing fluency data script.');
+
+  const codes = Array.from(selectedCodes);
+  const TOTAL = 36; // 4 boards x 9 cells
+  const content = gatherBalanced(codes, mode, TOTAL);
+  if (content.length < TOTAL) return alert('Not enough content for 4 boards from the selected skills.');
+
+  const output = document.getElementById('output');
+  output.innerHTML = '';
+  const page = document.createElement('div'); page.className = 'page';
+
+  const title = document.createElement('div'); title.className = 'worksheet-title';
+  title.textContent = codes.map(c=>SKILL_LABEL[c]||c).join(' • ') + ' — Tic-Tac-Toe';
+
+  const directions = document.createElement('div'); directions.className = 'worksheet-directions';
+  directions.innerHTML = '<strong>Directions:</strong> Read the word or sentence in the space you’d like to go, then put an X or O. Your opponent does the same. If you get 3 in a row… you win!';
+
+  const grid = document.createElement('div'); grid.className = 'board-wrap';
+  [0,9,18,27].forEach((i,idx)=>{
+    const group = buildBoard(content.slice(i,i+9));
+    group.querySelector('.board-label').textContent = 'Game ' + (idx+1);
+    grid.appendChild(group);
+  });
+
+  const copy = document.createElement('div'); copy.id = 'copyright';
+  copy.textContent = 'Copyright — InterventionStation.com — @TeachwithMrC';
+
+  page.appendChild(title);
+  page.appendChild(directions);
+  page.appendChild(grid);
+  page.appendChild(copy);
+  output.appendChild(page);
+  page.scrollIntoView({behavior:'smooth', block:'start'});
+});
+</script>
+</body>
+</html>

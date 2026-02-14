@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ultimate Math Tic Tac Toe / Roll and Read Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1f2c3a;
+      --bg1: #eef8ff;
+      --bg2: #f4fff3;
+      --card: #ffffff;
+      --line: #c8d5e2;
+      --accent: #1565c0;
+      --accent-soft: #e8f2ff;
+      --x: #d32f2f;
+      --o: #1976d2;
+      --ok: #2e7d32;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 22px;
+      font-family: "Poppins", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 10%, #ffffff 0 8%, transparent 9%),
+        radial-gradient(circle at 90% 8%, #ffffff 0 7%, transparent 8%),
+        linear-gradient(145deg, var(--bg1), var(--bg2));
+    }
+
+    .app {
+      max-width: 1150px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      text-align: center;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      margin: 0 0 14px;
+      color: #445668;
+      font-size: 0.98rem;
+    }
+
+    .controls {
+      background: var(--card);
+      border: 2px solid #000;
+      border-radius: 14px;
+      padding: 12px;
+      display: grid;
+      gap: 12px;
+      box-shadow: 0 8px 18px rgba(22, 48, 74, 0.08);
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 10px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .label {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-right: 2px;
+    }
+
+    .pill {
+      border: 2px solid #000;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      user-select: none;
+    }
+
+    .pill.selected {
+      background: var(--accent-soft);
+      color: #083d7a;
+      border-color: #083d7a;
+    }
+
+    .select-wrap {
+      border: 2px solid #000;
+      border-radius: 999px;
+      background: #fff;
+      padding: 4px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    select {
+      border: none;
+      font: inherit;
+      background: transparent;
+      min-width: 150px;
+      color: #1d2a38;
+      outline: none;
+      padding: 4px 0;
+      cursor: pointer;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      padding: 9px 14px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: #e7f3ff;
+      color: #113a62;
+    }
+
+    .secondary {
+      background: #f6fff1;
+      color: #224b17;
+    }
+
+    #output {
+      margin-top: 14px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .sheet {
+      width: min(980px, 100%);
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 10px 20px rgba(20, 40, 62, 0.12);
+    }
+
+    .sheet-title {
+      text-align: center;
+      font-size: 1.55rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .sheet-meta {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 0.92rem;
+      color: #3f4f5e;
+    }
+
+    .score-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .score-pill {
+      border-radius: 999px;
+      background: #eff6ff;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .x { color: var(--x); }
+    .o { color: var(--o); }
+
+    .board {
+      margin: 0 auto 8px;
+      width: min(700px, 100%);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .cell {
+      min-height: 170px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #f9fcff, #edf4ff);
+      box-shadow: inset 0 0 0 3px #d9e7fb;
+      padding: 8px 8px 4px;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .cell:disabled {
+      cursor: not-allowed;
+      opacity: 0.92;
+    }
+
+    .cell.win {
+      outline: 4px solid var(--ok);
+    }
+
+    .prompt-wrap {
+      text-align: center;
+      display: grid;
+      place-items: center;
+      gap: 6px;
+      padding: 4px;
+    }
+
+    .prompt-math {
+      font-size: 1.9rem;
+      line-height: 1.08;
+      font-weight: 700;
+    }
+
+    .mark {
+      min-height: 48px;
+      line-height: 48px;
+      font-size: 2.8rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .coin-strip {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      max-width: 100%;
+    }
+
+    .coin-strip img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+
+    .coin-plus {
+      font-weight: 700;
+      color: #5a6d7e;
+      font-size: 0.95rem;
+    }
+
+    .coin-prompt-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #304356;
+    }
+
+    .ttt-actions {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .roll-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin: 8px 0 12px;
+      padding: 10px;
+      border: 2px dashed #aec5df;
+      border-radius: 12px;
+      background: #f6fbff;
+    }
+
+    .die-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .live-die {
+      width: 68px;
+      height: 68px;
+      border: 2px solid #000;
+      border-radius: 10px;
+      object-fit: contain;
+      background: #fff;
+    }
+
+    .live-die.rolling {
+      animation: spin 0.52s linear;
+    }
+
+    .die-value {
+      font-size: 1.35rem;
+      font-weight: 800;
+      min-width: 36px;
+      text-align: center;
+      color: #1e3957;
+    }
+
+    .status {
+      flex: 1 1 100%;
+      text-align: center;
+      font-size: 0.92rem;
+      color: #334b62;
+      min-height: 1.5em;
+    }
+
+    .roll-table {
+      margin: 0 auto;
+      border-collapse: collapse;
+      width: min(100%, 920px);
+      table-layout: fixed;
+    }
+
+    .roll-table td {
+      border: 1px solid #000;
+      width: calc(100% / 6);
+      height: 82px;
+      text-align: center;
+      vertical-align: middle;
+      padding: 6px;
+    }
+
+    .roll-table .dice-cell {
+      height: 92px;
+      background: #fbfdff;
+    }
+
+    .roll-table .dice-cell img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+    }
+
+    .rr-cell.current {
+      background: #fff2c2;
+      box-shadow: inset 0 0 0 3px #f9a825;
+      transform: scale(1.02);
+      font-weight: 700;
+    }
+
+    .rr-cell.done {
+      background: #eef8ee;
+    }
+
+    .rr-math {
+      font-size: 1.7rem;
+      font-weight: 700;
+      line-height: 1.05;
+    }
+
+    .rr-coin .coin-strip img {
+      width: 28px;
+      height: 28px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg) scale(1); }
+      35% { transform: rotate(130deg) scale(1.07); }
+      70% { transform: rotate(290deg) scale(0.97); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    @media (max-width: 900px) {
+      .cell {
+        min-height: 140px;
+      }
+
+      .prompt-math {
+        font-size: 1.45rem;
+      }
+
+      .coin-strip img {
+        width: 30px;
+        height: 30px;
+      }
+
+      .roll-table td {
+        height: 74px;
+        padding: 4px;
+      }
+
+      .rr-math {
+        font-size: 1.2rem;
+      }
+    }
+
+    @media print {
+      @page { size: letter landscape; margin: 0.35in; }
+
+      body {
+        background: #fff !important;
+        padding: 0 !important;
+      }
+
+      .controls,
+      .subtitle,
+      #btnGenerate,
+      #btnPrint,
+      #btnResetScore,
+      .ttt-actions,
+      .roll-controls {
+        display: none !important;
+      }
+
+      #output {
+        margin: 0 !important;
+      }
+
+      .sheet {
+        width: auto !important;
+        max-width: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.15in 0.2in !important;
+      }
+
+      .sheet-title {
+        font-size: 16px !important;
+        margin-bottom: 2px !important;
+      }
+
+      .sheet-meta {
+        font-size: 10px !important;
+        margin-bottom: 6px !important;
+      }
+
+      .score-row {
+        margin-bottom: 6px !important;
+      }
+
+      .score-pill {
+        font-size: 10px !important;
+        padding: 4px 8px !important;
+      }
+
+      .cell {
+        min-height: 130px !important;
+        box-shadow: inset 0 0 0 2px #d9e7fb !important;
+      }
+
+      .prompt-math {
+        font-size: 22px !important;
+      }
+
+      .coin-strip img {
+        width: 28px !important;
+        height: 28px !important;
+      }
+
+      .roll-table td {
+        height: 64px !important;
+      }
+
+      .roll-table .dice-cell img {
+        width: 42px !important;
+        height: 42px !important;
+      }
+
+      .rr-math {
+        font-size: 17px !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>Ultimate Math Tic Tac Toe / Roll and Read</h1>
+    <p class="subtitle">Choose game type, math skill, and level. Generate, play, and print.</p>
+
+    <section class="controls">
+      <div class="row" id="gameTypeRow">
+        <span class="label">Game Type:</span>
+        <button type="button" class="pill selected" data-game-type="tictactoe">Tic Tac Toe</button>
+        <button type="button" class="pill" data-game-type="rollread">Roll and Read</button>
+      </div>
+
+      <div class="row" id="operationRow">
+        <span class="label">Skill:</span>
+        <button type="button" class="pill selected" data-operation="coins">Coins</button>
+        <button type="button" class="pill" data-operation="addition">Addition</button>
+        <button type="button" class="pill" data-operation="subtraction">Subtraction</button>
+        <button type="button" class="pill" data-operation="multiplication">Multiplication</button>
+        <button type="button" class="pill" data-operation="division">Division</button>
+      </div>
+
+      <div class="row">
+        <span class="label">Difficulty:</span>
+        <div class="select-wrap">
+          <select id="difficultySelect"></select>
+        </div>
+
+        <span class="label" style="margin-left: 10px;">Roll Grid Size:</span>
+        <div class="select-wrap">
+          <select id="gridSizeSelect">
+            <option value="18">18 cells (3 rows)</option>
+            <option value="24">24 cells (4 rows)</option>
+            <option value="30">30 cells (5 rows)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="btnGenerate" class="primary" type="button">Generate</button>
+        <button id="btnPrint" class="secondary" type="button">Print</button>
+        <button id="btnResetScore" type="button">Reset Tic Tac Toe Score</button>
+      </div>
+    </section>
+
+    <div id="output"></div>
+  </div>
+
+  <script>
+    const COINS = {
+      quarter: {
+        key: "quarter",
+        label: "Quarter",
+        value: 25,
+        img: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f715cda9ca3b4afc8.png"
+      },
+      dime: {
+        key: "dime",
+        label: "Dime",
+        value: 10,
+        img: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f7213971802a4d866.png"
+      },
+      nickel: {
+        key: "nickel",
+        label: "Nickel",
+        value: 5,
+        img: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f30ec4a3836469e61.png"
+      },
+      penny: {
+        key: "penny",
+        label: "Penny",
+        value: 1,
+        img: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f3fdd0e810fca84ef.png"
+      }
+    };
+
+    const DIFFICULTY_BY_OPERATION = {
+      coins: [
+        { value: "single", label: "Single digit totals (up to 30¢)" },
+        { value: "double", label: "Double digit totals (up to 99¢)" },
+        { value: "multi", label: "Multi digit totals (up to 200¢)" }
+      ],
+      addition: [
+        { value: "single", label: "Single digit" },
+        { value: "double", label: "2-digit" },
+        { value: "multi", label: "Multi-digit" }
+      ],
+      subtraction: [
+        { value: "single", label: "Single digit" },
+        { value: "double", label: "2-digit" },
+        { value: "multi", label: "Multi-digit" }
+      ],
+      multiplication: [
+        { value: "single", label: "Single digit facts" },
+        { value: "double", label: "2-digit by 1-digit" },
+        { value: "multi", label: "3-digit by 1-digit" }
+      ],
+      division: [
+        { value: "single", label: "Single digit facts" },
+        { value: "double", label: "2-digit by 1-digit" },
+        { value: "multi", label: "3-digit by 1-digit" }
+      ]
+    };
+
+    const state = {
+      gameType: "tictactoe",
+      operation: "coins",
+      difficulty: "single",
+      gridSize: 18,
+      ttt: {
+        prompts: [],
+        marks: Array(9).fill(""),
+        turn: "X",
+        over: false,
+        winLine: [],
+        score: { X: 0, O: 0, T: 0 }
+      },
+      roll: null
+    };
+
+    const WIN_LINES = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
+
+    const difficultySelect = document.getElementById("difficultySelect");
+    const gridSizeSelect = document.getElementById("gridSizeSelect");
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function choose(arr) {
+      return arr[randInt(0, arr.length - 1)];
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    function updateDifficultyOptions() {
+      const options = DIFFICULTY_BY_OPERATION[state.operation] || [];
+      const previous = state.difficulty;
+      difficultySelect.innerHTML = "";
+      options.forEach((opt) => {
+        const el = document.createElement("option");
+        el.value = opt.value;
+        el.textContent = opt.label;
+        difficultySelect.appendChild(el);
+      });
+
+      const hasPrevious = options.some((o) => o.value === previous);
+      state.difficulty = hasPrevious ? previous : options[0].value;
+      difficultySelect.value = state.difficulty;
+    }
+
+    function setSelectedInRow(rowId, attr, value) {
+      const row = document.getElementById(rowId);
+      row.querySelectorAll(".pill").forEach((pill) => {
+        pill.classList.toggle("selected", pill.getAttribute(attr) === value);
+      });
+    }
+
+    function coinConfig() {
+      if (state.difficulty === "single") {
+        return { maxTotal: 30, countMin: 2, countMax: 4, allowed: ["penny", "nickel", "dime"] };
+      }
+      if (state.difficulty === "double") {
+        return { maxTotal: 99, countMin: 3, countMax: 6, allowed: ["penny", "nickel", "dime", "quarter"] };
+      }
+      return { maxTotal: 200, countMin: 4, countMax: 8, allowed: ["penny", "nickel", "dime", "quarter"] };
+    }
+
+    function opRangeByDifficulty() {
+      if (state.difficulty === "single") {
+        return { min: 0, max: 9 };
+      }
+      if (state.difficulty === "double") {
+        return { min: 10, max: 99 };
+      }
+      return { min: 100, max: 999 };
+    }
+
+    function multiplicationPair() {
+      if (state.difficulty === "single") {
+        return { a: randInt(2, 12), b: randInt(2, 12) };
+      }
+      if (state.difficulty === "double") {
+        return { a: randInt(10, 99), b: randInt(2, 9) };
+      }
+      return { a: randInt(100, 999), b: randInt(2, 9) };
+    }
+
+    function divisionPair() {
+      if (state.difficulty === "single") {
+        const divisor = randInt(2, 12);
+        const quotient = randInt(2, 12);
+        return { dividend: divisor * quotient, divisor };
+      }
+      if (state.difficulty === "double") {
+        const divisor = randInt(2, 9);
+        const quotient = randInt(10, 99);
+        const dividend = divisor * quotient;
+        if (dividend > 999) {
+          return divisionPair();
+        }
+        return { dividend, divisor };
+      }
+      const divisor = randInt(2, 9);
+      const quotient = randInt(100, 999);
+      return { dividend: divisor * quotient, divisor };
+    }
+
+    function buildCoinPrompt() {
+      const cfg = coinConfig();
+      let picks = [];
+      let sum = 0;
+      const coinCount = randInt(cfg.countMin, cfg.countMax);
+      let tries = 0;
+      while (tries < 450) {
+        tries += 1;
+        picks = [];
+        for (let i = 0; i < coinCount; i += 1) {
+          picks.push(COINS[choose(cfg.allowed)]);
+        }
+        sum = picks.reduce((acc, coin) => acc + coin.value, 0);
+        if (sum > 0 && sum <= cfg.maxTotal) {
+          break;
+        }
+      }
+
+      picks.sort((a, b) => b.value - a.value);
+      const imgHtml = picks.map((coin, idx) => {
+        const plus = idx < picks.length - 1 ? '<span class="coin-plus">+</span>' : "";
+        return `<img src="${coin.img}" alt="${escapeHtml(coin.label)}">${plus}`;
+      }).join("");
+
+      return {
+        type: "coins",
+        text: "Count the coins",
+        mathText: "",
+        answer: sum,
+        html: `<div class="prompt-wrap"><div class="coin-strip">${imgHtml}</div><div class="coin-prompt-label">How much in all?</div></div>`
+      };
+    }
+
+    function buildAdditionPrompt() {
+      const r = opRangeByDifficulty();
+      const a = randInt(r.min, r.max);
+      const b = randInt(r.min, r.max);
+      return {
+        type: "math",
+        text: `${a} + ${b}`,
+        answer: a + b,
+        html: `<div class="prompt-wrap"><div class="prompt-math">${a} + ${b}</div></div>`
+      };
+    }
+
+    function buildSubtractionPrompt() {
+      const r = opRangeByDifficulty();
+      let a = randInt(r.min, r.max);
+      let b = randInt(r.min, r.max);
+      if (b > a) {
+        const t = a;
+        a = b;
+        b = t;
+      }
+      return {
+        type: "math",
+        text: `${a} - ${b}`,
+        answer: a - b,
+        html: `<div class="prompt-wrap"><div class="prompt-math">${a} - ${b}</div></div>`
+      };
+    }
+
+    function buildMultiplicationPrompt() {
+      const pair = multiplicationPair();
+      return {
+        type: "math",
+        text: `${pair.a} x ${pair.b}`,
+        answer: pair.a * pair.b,
+        html: `<div class="prompt-wrap"><div class="prompt-math">${pair.a} × ${pair.b}</div></div>`
+      };
+    }
+
+    function buildDivisionPrompt() {
+      const pair = divisionPair();
+      return {
+        type: "math",
+        text: `${pair.dividend} / ${pair.divisor}`,
+        answer: pair.dividend / pair.divisor,
+        html: `<div class="prompt-wrap"><div class="prompt-math">${pair.dividend} ÷ ${pair.divisor}</div></div>`
+      };
+    }
+
+    function buildPrompt() {
+      if (state.operation === "coins") return buildCoinPrompt();
+      if (state.operation === "addition") return buildAdditionPrompt();
+      if (state.operation === "subtraction") return buildSubtractionPrompt();
+      if (state.operation === "multiplication") return buildMultiplicationPrompt();
+      return buildDivisionPrompt();
+    }
+
+    function buildPrompts(total) {
+      const out = [];
+      for (let i = 0; i < total; i += 1) {
+        out.push(buildPrompt());
+      }
+      return out;
+    }
+
+    function labelForOperation() {
+      if (state.operation === "coins") return "Coins";
+      if (state.operation === "addition") return "Addition";
+      if (state.operation === "subtraction") return "Subtraction";
+      if (state.operation === "multiplication") return "Multiplication";
+      return "Division";
+    }
+
+    function labelForDifficulty() {
+      const option = (DIFFICULTY_BY_OPERATION[state.operation] || []).find((o) => o.value === state.difficulty);
+      return option ? option.label : state.difficulty;
+    }
+
+    function winnerLine(marks) {
+      return WIN_LINES.find(([a, b, c]) => marks[a] && marks[a] === marks[b] && marks[b] === marks[c]) || null;
+    }
+
+    function resetTttBoardOnly() {
+      state.ttt.marks = Array(9).fill("");
+      state.ttt.turn = "X";
+      state.ttt.over = false;
+      state.ttt.winLine = [];
+    }
+
+    function makeTttMove(index) {
+      if (state.ttt.over || state.ttt.marks[index]) return;
+      state.ttt.marks[index] = state.ttt.turn;
+      const line = winnerLine(state.ttt.marks);
+      if (line) {
+        state.ttt.over = true;
+        state.ttt.winLine = line;
+        state.ttt.score[state.ttt.turn] += 1;
+      } else if (state.ttt.marks.every(Boolean)) {
+        state.ttt.over = true;
+        state.ttt.score.T += 1;
+      } else {
+        state.ttt.turn = state.ttt.turn === "X" ? "O" : "X";
+      }
+      renderTicTacToe();
+    }
+
+    function renderTicTacToe() {
+      const output = document.getElementById("output");
+      const meta = `${labelForOperation()} | ${labelForDifficulty()} | Tic Tac Toe`;
+      const turnClass = state.ttt.turn === "X" ? "x" : "o";
+
+      output.innerHTML = `
+        <article class="sheet">
+          <div class="sheet-title">Math Tic Tac Toe</div>
+          <div class="sheet-meta">${meta} | Turn: <span class="${turnClass}">${state.ttt.turn}</span></div>
+          <div class="score-row">
+            <div class="score-pill">X Wins: <span class="x">${state.ttt.score.X}</span></div>
+            <div class="score-pill">O Wins: <span class="o">${state.ttt.score.O}</span></div>
+            <div class="score-pill">Ties: ${state.ttt.score.T}</div>
+          </div>
+          <div id="tttBoard" class="board"></div>
+          <div class="ttt-actions">
+            <button id="btnSameBoard" type="button">Play Again (Same Board)</button>
+            <button id="btnNewBoard" type="button">New Problems</button>
+          </div>
+        </article>
+      `;
+
+      const board = document.getElementById("tttBoard");
+      state.ttt.prompts.forEach((prompt, idx) => {
+        const mark = state.ttt.marks[idx] || "";
+        const button = document.createElement("button");
+        button.className = "cell" + (state.ttt.winLine.includes(idx) ? " win" : "");
+        button.disabled = Boolean(mark) || state.ttt.over;
+        button.innerHTML = `
+          ${prompt.html}
+          <div class="mark ${mark === "X" ? "x" : mark === "O" ? "o" : ""}">${mark}</div>
+        `;
+        button.addEventListener("click", () => makeTttMove(idx));
+        board.appendChild(button);
+      });
+
+      document.getElementById("btnSameBoard").addEventListener("click", () => {
+        resetTttBoardOnly();
+        renderTicTacToe();
+      });
+
+      document.getElementById("btnNewBoard").addEventListener("click", () => generate());
+    }
+
+    function buildRollTable(prompts) {
+      const cols = 6;
+      const rows = Math.ceil(prompts.length / cols);
+      const table = document.createElement("table");
+      table.className = "roll-table";
+
+      const header = table.insertRow();
+      for (let c = 0; c < cols; c += 1) {
+        const td = header.insertCell();
+        td.className = "dice-cell";
+        const img = document.createElement("img");
+        img.src = `images/dice${c + 1}.png`;
+        img.alt = `Dice ${c + 1}`;
+        td.appendChild(img);
+      }
+
+      let i = 0;
+      for (let r = 0; r < rows; r += 1) {
+        const row = table.insertRow();
+        for (let c = 0; c < cols; c += 1) {
+          const td = row.insertCell();
+          td.className = "rr-cell";
+          td.dataset.col = String(c + 1);
+          const prompt = prompts[i];
+          if (prompt) {
+            if (prompt.type === "coins") {
+              td.classList.add("rr-coin");
+            } else {
+              td.classList.add("rr-math");
+            }
+            td.innerHTML = prompt.html;
+          } else {
+            td.innerHTML = "";
+          }
+          i += 1;
+        }
+      }
+
+      return { table, rows };
+    }
+
+    function setDieFace(value) {
+      if (!state.roll) return;
+      state.roll.dieImg.src = `images/dice${value}.png`;
+      state.roll.dieImg.alt = `Current die: ${value}`;
+      state.roll.dieValue.textContent = String(value);
+    }
+
+    function availableColumns() {
+      if (!state.roll) return [];
+      const out = [];
+      for (let i = 0; i < 6; i += 1) {
+        if (state.roll.columnPointers[i] < state.roll.columnQueues[i].length) out.push(i + 1);
+      }
+      return out;
+    }
+
+    function animateRoll(finalValue) {
+      return new Promise((resolve) => {
+        if (!state.roll) {
+          resolve();
+          return;
+        }
+        state.roll.dieImg.classList.add("rolling");
+        let ticks = 0;
+        const totalTicks = 8 + randInt(0, 3);
+        const timer = setInterval(() => {
+          ticks += 1;
+          setDieFace(randInt(1, 6));
+          if (ticks >= totalTicks) {
+            clearInterval(timer);
+            state.roll.dieImg.classList.remove("rolling");
+            setDieFace(finalValue);
+            resolve();
+          }
+        }, 70);
+      });
+    }
+
+    function resetRollRound() {
+      if (!state.roll) return;
+      state.roll.columnPointers = Array(6).fill(0);
+      state.roll.completed = 0;
+      state.roll.current = null;
+      state.roll.rolling = false;
+      state.roll.page.querySelectorAll(".rr-cell").forEach((td) => {
+        td.classList.remove("current", "done");
+      });
+      state.roll.rollBtn.disabled = false;
+      state.roll.rollBtn.textContent = "Roll";
+      setDieFace(1);
+      state.roll.status.textContent = `Roll to start. 0 of ${state.roll.total} complete.`;
+    }
+
+    async function takeRollTurn() {
+      if (!state.roll || state.roll.rolling) return;
+
+      const open = availableColumns();
+      if (!open.length) {
+        state.roll.rollBtn.disabled = true;
+        state.roll.rollBtn.textContent = "Board Complete";
+        state.roll.status.textContent = `Board complete. ${state.roll.total} of ${state.roll.total} complete.`;
+        return;
+      }
+
+      state.roll.rolling = true;
+      state.roll.rollBtn.disabled = true;
+      state.roll.status.textContent = "Rolling...";
+
+      const raw = randInt(1, 6);
+      const final = open.includes(raw) ? raw : choose(open);
+      const rerollMessage = raw === final ? "" : ` Auto-reroll ${raw} → ${final}.`;
+      await animateRoll(final);
+
+      const col = final - 1;
+      const ptr = state.roll.columnPointers[col];
+      const target = state.roll.columnQueues[col][ptr] || null;
+
+      if (state.roll.current) {
+        state.roll.current.classList.remove("current");
+        state.roll.current.classList.add("done");
+      }
+
+      if (target) {
+        state.roll.columnPointers[col] = ptr + 1;
+        state.roll.completed += 1;
+        target.classList.add("current");
+        target.classList.remove("done");
+        state.roll.current = target;
+      }
+
+      if (state.roll.completed >= state.roll.total) {
+        state.roll.rollBtn.disabled = true;
+        state.roll.rollBtn.textContent = "Board Complete";
+        state.roll.status.textContent = `Rolled ${final}. Read it. Board complete.${rerollMessage}`;
+        state.roll.rolling = false;
+        return;
+      }
+
+      const left = state.roll.total - state.roll.completed;
+      state.roll.status.textContent = `Rolled ${final}. Read highlighted box. ${state.roll.completed} of ${state.roll.total} complete (${left} left).${rerollMessage}`;
+      state.roll.rollBtn.disabled = false;
+      state.roll.rolling = false;
+    }
+
+    function wireRollState(page) {
+      const rollBtn = page.querySelector("#rollBtn");
+      const resetBtn = page.querySelector("#resetRollBtn");
+      const status = page.querySelector("#rollStatus");
+      const dieImg = page.querySelector("#liveDie");
+      const dieValue = page.querySelector("#dieValue");
+
+      const columnQueues = Array.from({ length: 6 }, () => []);
+      page.querySelectorAll(".rr-cell").forEach((td) => {
+        if (td.textContent.trim()) {
+          const col = Number(td.dataset.col);
+          if (col >= 1 && col <= 6) {
+            columnQueues[col - 1].push(td);
+          }
+        }
+      });
+      const total = columnQueues.reduce((sum, q) => sum + q.length, 0);
+
+      state.roll = {
+        page,
+        rollBtn,
+        resetBtn,
+        status,
+        dieImg,
+        dieValue,
+        columnQueues,
+        columnPointers: Array(6).fill(0),
+        completed: 0,
+        total,
+        current: null,
+        rolling: false
+      };
+
+      rollBtn.addEventListener("click", takeRollTurn);
+      resetBtn.addEventListener("click", resetRollRound);
+      resetRollRound();
+    }
+
+    function renderRollRead(prompts) {
+      const output = document.getElementById("output");
+      const meta = `${labelForOperation()} | ${labelForDifficulty()} | Roll and Read`;
+      const built = buildRollTable(prompts);
+
+      output.innerHTML = `
+        <article class="sheet">
+          <div class="sheet-title">Math Roll and Read</div>
+          <div class="sheet-meta">${meta}</div>
+          <div class="roll-controls">
+            <div class="die-wrap">
+              <img id="liveDie" class="live-die" src="images/dice1.png" alt="Current die: 1">
+              <div id="dieValue" class="die-value">1</div>
+            </div>
+            <button id="rollBtn" type="button">Roll</button>
+            <button id="resetRollBtn" type="button">Reset Round</button>
+            <div id="rollStatus" class="status">Roll to start.</div>
+          </div>
+          <div id="rollTableMount"></div>
+        </article>
+      `;
+
+      document.getElementById("rollTableMount").appendChild(built.table);
+      wireRollState(output.querySelector(".sheet"));
+    }
+
+    function generate() {
+      if (state.gameType === "tictactoe") {
+        state.ttt.prompts = buildPrompts(9);
+        resetTttBoardOnly();
+        renderTicTacToe();
+        return;
+      }
+      const prompts = buildPrompts(state.gridSize);
+      renderRollRead(prompts);
+    }
+
+    document.querySelectorAll("#gameTypeRow .pill").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.gameType = button.dataset.gameType;
+        setSelectedInRow("gameTypeRow", "data-game-type", state.gameType);
+      });
+    });
+
+    document.querySelectorAll("#operationRow .pill").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.operation = button.dataset.operation;
+        setSelectedInRow("operationRow", "data-operation", state.operation);
+        updateDifficultyOptions();
+      });
+    });
+
+    difficultySelect.addEventListener("change", () => {
+      state.difficulty = difficultySelect.value;
+    });
+
+    gridSizeSelect.addEventListener("change", () => {
+      state.gridSize = Number(gridSizeSelect.value) || 18;
+    });
+
+    document.getElementById("btnGenerate").addEventListener("click", generate);
+    document.getElementById("btnPrint").addEventListener("click", () => window.print());
+    document.getElementById("btnResetScore").addEventListener("click", () => {
+      state.ttt.score = { X: 0, O: 0, T: 0 };
+      if (state.gameType === "tictactoe" && state.ttt.prompts.length) {
+        renderTicTacToe();
+      }
+    });
+
+    updateDifficultyOptions();
+    generate();
+  </script>
+</body>
+</html>

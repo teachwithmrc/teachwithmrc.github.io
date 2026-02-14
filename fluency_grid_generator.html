@@ -1,24 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Fluency Grid Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="fluencyDataFull_v3.js"></script> <!-- LOAD THE JS FILE HERE -->
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      text-align: center;
       margin: 40px;
     }
+
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .setup-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .section-box {
+      border: 2px solid #000;
+      padding: 20px;
+      width: 45%;
+    }
+
     #gridContainer {
-      margin-top: 20px;
+      text-align: center;
+      margin: 40px auto 20px;
     }
+
     table {
-      margin: 0 auto;
+      margin: auto;
       border-collapse: collapse;
-      font-family: 'Poppins', sans-serif;
     }
+
     td {
       border: 1px solid #000;
       width: 120px;
@@ -27,91 +48,147 @@
       text-align: center;
       vertical-align: middle;
     }
-    #footer {
-      margin-top: 60px;
-      font-size: 16px;
-      font-family: 'Poppins', sans-serif;
-      position: fixed;
-      bottom: 20px;
-      left: 0;
-      width: 100%;
+
+    #controls {
       text-align: center;
+      margin-top: 30px;
     }
+
+    .copyright {
+      text-align: center;
+      font-size: 12px;
+      margin-top: 60px;
+    }
+
     @media print {
-      #setupSection, button, select {
-        display: none;
+      body * {
+        visibility: hidden;
       }
-      #footer {
-        font-size: 16px;
+
+      #printableSection, #printableSection * {
+        visibility: visible;
+      }
+
+      #printableSection {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
       }
     }
   </style>
 </head>
 <body>
+  <h1>Fluency Grid Generator</h1>
 
-  <div id="setupSection">
-    <h2>Fluency Grid Generator</h2>
-    <label for="skillSelect">Choose a Skill:</label>
-    <select id="skillSelect" onchange="updateTitle()">
-      <option value="0.1">0.1 - Short A</option>
-      <option value="0.2">0.2 - Short O</option>
-      <option value="0.3">0.3 - Short I</option>
-      <option value="0.4">0.4 - Short U</option>
-      <option value="0.5">0.5 - Short E</option>
-      <option value="0.6">0.6 - FLSZ Words</option>
-      <option value="0.7">0.7 - CVC and FLSZ</option>
-      <option value="mixed">Mixed CVC</option>
-    </select>
-    <br><br>
+  <div class="setup-container">
+    <!-- LEFT SIDE -->
+    <div class="section-box">
+      <strong>Select Skills:</strong><br/>
+      <label><input type="checkbox" value="0.1"> Short A</label><br/>
+      <label><input type="checkbox" value="0.2"> Short O</label><br/>
+      <label><input type="checkbox" value="0.3"> Short I</label><br/>
+      <label><input type="checkbox" value="0.4"> Short U</label><br/>
+      <label><input type="checkbox" value="0.5"> Short E</label><br/>
+      <label><input type="checkbox" value="0.6"> FLSZ</label><br/>
+      <label><input type="checkbox" value="0.7"> CVC & FLSZ</label><br/>
+      <label><input type="checkbox" value="mixed"> Mixed CVC</label><br/>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="section-box">
+      <strong>Tricky-Sticky Words:</strong><br/>
+      <label><input type="checkbox" id="includeSticky"> Yes, Include Them</label><br/><br/>
+
+      <strong>Grid Size:</strong><br/>
+      <label><input type="radio" name="gridSize" value="15"> 3 x 5 - 15 words</label><br/>
+      <label><input type="radio" name="gridSize" value="20"> 4 x 5 - 20 words</label><br/>
+      <label><input type="radio" name="gridSize" value="25"> 5 x 5 - 25 words</label><br/>
+    </div>
+  </div>
+
+  <!-- WORD / SENTENCE SELECTION -->
+  <div style="text-align: center; margin-bottom: 20px; font-size: 18px;">
+    <strong>What would you like in the grid?</strong><br/>
+    <label><input type="radio" name="contentType" value="words"> Only Words</label>
+    <label><input type="radio" name="contentType" value="sentences"> Only Sentences</label>
+    <label><input type="radio" name="contentType" value="both"> Both</label>
+  </div>
+
+  <div id="controls">
     <button onclick="generateGrid()">Generate Fluency Grid</button>
     <button onclick="window.print()">Print</button>
   </div>
 
-  <h2 id="gridTitle" style="margin-top: 40px;">0.1 - Short A</h2>
-  <div id="gridContainer"></div>
-
-  <div id="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
+  <!-- GRID SECTION FOR PRINT -->
+  <div id="printableSection">
+    <div id="gridHeader" style="text-align: center; margin-top: 40px;"></div>
+    <div id="gridContainer"></div>
+    <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+  </div>
 
   <script>
-    window.fluencyData = window.fluencyData || {};
-    window.fluencyData.wordLists = {
-      "mixed": ["bad", "bag", "ban", "bam", "bat", "cab", "cam", "can", "cap", "cat", "dab", "dad", "dam", "fad", "fan", "fat", "fax", "gag", "gap", "had", "hag", "Hal", "ham", "has", "hat", "jab", "jag", "jam", "lab", "lad", "lag", "lap", "mad", "man", "map", "mat", "nab", "nag", "nap", "pad", "pan", "pat", "rad", "rag", "ram", "ran", "rap", "rat", "sad", "sag", "sap", "sat", "sax", "tab", "tad", "tag", "tan", "tap", "tax", "wag", "wax", "zag", "zap", "van", "Dan", "Max", "Pam", "Sam", "Nat", "Tad", "Jan", "Max", "Hal", "bod", "bog", "bop", "bot", "box", "cob", "cod", "con", "cop", "cot", "dog", "dot", "fog", "fox", "got", "hog", "hop", "hot", "job", "jog", "jot", "lob", "log", "lot", "mob", "mom", "mop", "nod", "not", "pod", "pop", "pot", "rob", "rod", "rot", "sob", "sod", "top", "Bob", "Don", "Ron", "Rob", "Tom", "Jon", "Doc", "bib", "bid", "big", "bin", "bit", "biz", "did", "dig", "dim", "dip", "fib", "fig", "fin", "fit", "fix", "gig", "hid", "him", "hip", "hit", "his", "jig", "kid", "kin", "kit", "lid", "lip", "lit", "mid", "mix", "pig", "pin", "pit", "rid", "rib", "rig", "rim", "rip", "sin", "sip", "sit", "six", "tin", "tip", "wig", "win", "zig", "zip", "zit", "Jim", "Kim", "Kit", "Sid", "Tim", "bud", "bug", "bun", "but", "bus", "cub", "cup", "cut", "dug", "fun", "gum", "gut", "hub", "hug", "hut", "jug", "lug", "mud", "mug", "nut", "pub", "pug", "pun", "pup", "rub", "rug", "run", "sub", "sum", "sun", "tub", "tug", "tux", "Bud", "Gus", "Tug", "Pug", "Cub", "bed", "beg", "bet", "den", "fed", "get", "hen", "hem", "jet", "led", "leg", "let", "men", "met", "net", "peg", "pen", "pep", "pet", "red", "set", "ten", "ven", "vet", "web", "wed", "wet", "yep", "yes", "yet", "zen", "Ben", "Deb", "Ben", "Deb", "Jen", "Ken", "Meg", "Ned", "Rex", "Ted", "Len", "Mel", "Bev", "Ren", "Ted", "Jed"],
-      "0.1": ["bad", "bag", "ban", "bam", "bat", "cab", "cam", "can", "cap", "cat", "dab", "dad", "dam", "fad", "fan", "fat", "fax", "gag", "gap", "had", "hag", "Hal", "ham", "has", "hat", "jab", "jag", "jam", "lab", "lad", "lag", "lap", "mad", "man", "map", "mat", "nab", "nag", "nap", "pad", "pan", "pat", "rad", "rag", "ram", "ran", "rap", "rat", "sad", "sag", "sap", "sat", "sax", "tab", "tad", "tag", "tan", "tap", "tax", "wag", "wax", "zag", "zap", "van", "Dan", "Max", "Pam", "Sam", "Nat", "Tad", "Jan", "Max", "Hal"],
-      "0.2": ["bod", "bog", "bop", "bot", "box", "cob", "cod", "con", "cop", "cot", "dog", "dot", "fog", "fox", "got", "hog", "hop", "hot", "job", "jog", "jot", "lob", "log", "lot", "mob", "mom", "mop", "nod", "not", "pod", "pop", "pot", "rob", "rod", "rot", "sob", "sod", "top", "Bob", "Don", "Ron", "Rob", "Tom", "Jon", "Doc"],
-      "0.3": ["bib", "bid", "big", "bin", "bit", "biz", "did", "dig", "dim", "dip", "fib", "fig", "fin", "fit", "fix", "gig", "hid", "him", "hip", "hit", "his", "jig", "kid", "kin", "kit", "lid", "lip", "lit", "mid", "mix", "pig", "pin", "pit", "rid", "rib", "rig", "rim", "rip", "sin", "sip", "sit", "six", "tin", "tip", "wig", "win", "zig", "zip", "zit", "Jim", "Kim", "Kit", "Sid", "Tim"],
-      "0.4": ["bud", "bug", "bun", "but", "bus", "cub", "cup", "cut", "dug", "fun", "gum", "gut", "hub", "hug", "hut", "jug", "lug", "mud", "mug", "nut", "pub", "pug", "pun", "pup", "rub", "rug", "run", "sub", "sum", "sun", "tub", "tug", "tux", "Bud", "Gus", "Tug", "Pug", "Cub"],
-      "0.5": ["bed", "beg", "bet", "den", "fed", "get", "hen", "hem", "jet", "led", "leg", "let", "men", "met", "net", "peg", "pen", "pep", "pet", "red", "set", "ten", "ven", "vet", "web", "wed", "wet", "yep", "yes", "yet", "zen", "Ben", "Deb", "Ben", "Deb", "Jen", "Ken", "Meg", "Ned", "Rex", "Ted", "Len", "Mel", "Bev", "Ren", "Ted", "Jed"],
-      "0.6": ["bell", "buff", "buzz", "cuff", "dill", "doll", "dull", "fell", "fill", "fizz", "fuss", "fuzz", "hill", "hiss", "huff", "ill", "jazz", "jiff", "kiss", "less", "loss", "mass", "mess", "mill", "miss", "moss", "muff", "off", "pass", "pill", "puff", "quill", "sell", "tell", "toss", "well", "will", "yell", "Bill", "Dill", "Jill", "Will", "Bess", "Jess", "Tess", "Hoss"],
-      "0.7": ["bed", "beg", "bet", "den", "fed", "get", "hen", "hem", "jet", "led", "leg", "let", "men", "met", "net", "peg", "pen", "pep", "pet", "red", "set", "ten", "ven", "vet", "web", "wed", "wet", "yep", "yes", "yet", "zen", "Ben", "Deb", "Ben", "Deb", "Jen", "Ken", "Meg", "Ned", "Rex", "Ted", "Len", "Mel", "Bev", "Ren", "Ted", "Jed", "bad", "bag", "ban", "bam", "bat", "cab", "cam", "can", "cap", "cat", "dab", "dad", "dam", "Dan", "fad", "fan", "fat", "fax", "gag", "gap", "had", "hag", "Hal", "ham", "has", "hat", "jab", "jag", "jam", "Jan", "lab", "lad", "lag", "lap", "mad", "man", "map", "mat", "Max", "nab", "nag", "nap", "pad", "Pam", "pan", "pat", "rad", "rag", "ram", "ran", "rap", "rat", "sad", "sag", "Sam", "sap", "sat", "sax", "tab", "tad", "tag", "tan", "tap", "tax", "wag", "wax", "zag", "zap", "Bob", "bod", "bog", "bop", "bot", "box", "cob", "cod", "con", "cop", "cot", "dog", "Don", "dot", "fog", "fox", "got", "hog", "hop", "hot", "job", "jog", "jot", "lob", "log", "lot", "mob", "mom", "mop", "nod", "not", "pod", "pop", "pot", "rob", "rod", "Ron", "rot", "sob", "sod", "Tom", "top", "bib", "bid", "big", "bin", "bit", "biz", "did", "dig", "dim", "dip", "fib", "fig", "fin", "fit", "fix", "gig", "hid", "him", "hip", "hit", "his", "jig", "Jim", "kid", "Kim", "kin", "kit", "lid", "lip", "lit", "mid", "mix", "pig", "pin", "pit", "rid", "rib", "rig", "rim", "rip", "Sid", "sin", "sip", "sit", "six", "Tim", "tin", "tip", "wig", "win", "zig", "zip", "zit", "bud", "bug", "bun", "but", "bus", "cub", "cup", "cut", "dug", "fun", "gum", "gut", "hub", "hug", "hut", "jug", "lug", "mud", "mug", "nut", "pub", "pug", "pun", "pup", "rub", "rug", "run", "sub", "sum", "sun", "tub", "tug", "tux", "was", "you", "bell", "buff", "buzz", "cuff", "dill", "doll", "dull", "fell", "fill", "fizz", "fuss", "fuzz", "hill", "hiss", "huff", "ill", "jazz", "jiff", "kiss", "less", "loss", "mass", "mess", "mill", "miss", "moss", "muff", "off", "pass", "pill", "puff", "quill", "sell", "tell", "toss", "well", "will", "yell", "Bill", "Dill", "Jill", "Will", "Bess", "Jess", "Tess", "Hoss", "Dan", "Max", "Pam", "Sam", "Nat", "Tad", "Jan", "Max", "Hal", "Bob", "Don", "Ron", "Rob", "Tom", "Jon", "Doc", "Jim", "Kim", "Kit", "Sid", "Tim", "Bud", "Gus", "Tug", "Pug", "Cub", "Ben", "Deb", "Ben", "Deb", "Jen", "Ken", "Meg", "Ned", "Rex", "Ted", "Len", "Mel", "Bev", "Ren", "Ted", "Jed", "Bill", "Dill", "Jill", "Will", "Bess", "Jess", "Tess", "Hoss"], array[j]] = [array[j], array[i]];
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1)];
+        [array[i], array[j]] = [array[j], array[i]];
       }
       return array;
     }
 
-    function updateTitle() {
-      const select = document.getElementById("skillSelect");
-      const selectedText = select.options[select.selectedIndex].text;
-      document.getElementById("gridTitle").textContent = selectedText;
-    }
-
     function generateGrid() {
-      updateTitle();
-      const skill = document.getElementById('skillSelect').value;
-      const words = shuffle([...window.fluencyData.wordLists[skill]]).slice(0, 30);
+      const selectedSkills = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+      const gridSize = parseInt(document.querySelector('input[name="gridSize"]:checked')?.value || "25");
+      const type = document.querySelector('input[name="contentType"]:checked')?.value;
+      const includeSticky = document.getElementById("includeSticky").checked;
 
-      let html = '<table>';
-      for (let i = 0; i < 6; i++) {
-        html += '<tr>';
-        for (let j = 0; j < 5; j++) {
-          const idx = i * 5 + j;
-          const word = words[idx] || "";
-          html += `<td>${word}</td>`;
-        }
-        html += '</tr>';
+      if (!selectedSkills.length || !type) {
+        alert("Please select at least one skill and a content type.");
+        return;
       }
-      html += '</table>';
-      document.getElementById('gridContainer').innerHTML = html;
+
+      let allItems = [];
+
+      selectedSkills.forEach(skill => {
+        if (type === "words" || type === "both") {
+          let words = window.fluencyData.words[`${skill} - Short A Words`] || window.fluencyData.words[`${skill} Words`] || [];
+          if (includeSticky && window.fluencyData.trickySticky[skill]) {
+            words = words.concat(window.fluencyData.trickySticky[skill]);
+          }
+          allItems.push(...words);
+        }
+
+        if (type === "sentences" || type === "both") {
+          const sKey = skill === "mixed" ? "Mixed CVC" : `${skill} Sentences`;
+          const sentences = window.fluencyData.sentences[sKey] || [];
+          allItems.push(...sentences);
+        }
+      });
+
+      const shuffled = shuffle([...new Set(allItems)]).slice(0, gridSize);
+
+      let tableHTML = "<table>";
+      const cols = gridSize === 15 ? 3 : gridSize === 20 ? 4 : 5;
+      for (let i = 0; i < gridSize; i += cols) {
+        tableHTML += "<tr>";
+        for (let j = 0; j < cols; j++) {
+          tableHTML += `<td>${shuffled[i + j] || ""}</td>`;
+        }
+        tableHTML += "</tr>";
+      }
+      tableHTML += "</table>";
+
+      document.getElementById("gridHeader").innerHTML = `
+        <h2>Fluency Grid</h2>
+        <p>Skills: ${selectedSkills.map(s => {
+          if (s === "mixed") return "Mixed CVC";
+          const match = s.match(/0\.\d - (.+)/);
+          return match ? match[1] : s;
+        }).join(", ")}</p><br/><br/>
+      `;
+
+      document.getElementById("gridContainer").innerHTML = tableHTML;
     }
   </script>
-
 </body>
 </html>

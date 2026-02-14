@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Counting Pictures Generator</title>
+  <style>
+    :root { --gap: 16px; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; padding: 18px; color: #111; }
+    .wrap { max-width: 1100px; margin: 0 auto; }
+    h1 { margin: 0 0 10px; font-size: 22px; }
+    .controls {
+      display: flex; flex-wrap: wrap; gap: 10px 14px;
+      align-items: end; padding: 12px; border: 1px solid #e5e5e5; border-radius: 12px;
+      margin-bottom: 16px;
+    }
+    label { display: grid; gap: 6px; font-size: 13px; }
+    input, button {
+      font: inherit; padding: 10px 12px; border-radius: 10px; border: 1px solid #d0d0d0;
+      background: #fff;
+    }
+    button { cursor: pointer; border: 1px solid #bbb; }
+    button.primary { background: #111; color: #fff; border-color: #111; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    .status { font-size: 13px; color: #444; margin-left: auto; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap);
+    }
+    .card {
+      border: 1px solid #e5e5e5;
+      border-radius: 14px;
+      padding: 14px;
+      min-height: 220px;
+      display: grid;
+      gap: 12px;
+    }
+    .toprow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .qnum { font-weight: 800; }
+    .pics {
+      display: grid;
+      grid-template-columns: repeat(6, 42px);
+      gap: 8px;
+      align-content: start;
+      min-height: 96px;
+    }
+    .pics img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      display: block;
+    }
+    .choices {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .choice {
+      border: 1px solid #d9d9d9;
+      border-radius: 12px;
+      padding: 10px 12px;
+      text-align: center;
+      font-weight: 700;
+      background: #fafafa;
+    }
+
+    /* Print: 6 per page, 3 rows x 2 columns */
+    @media print {
+      body { padding: 0; }
+      .controls, .status { display: none !important; }
+      .wrap { max-width: none; margin: 0; padding: 0; }
+      .grid { gap: 12px; padding: 12px; }
+      .card { break-inside: avoid; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Counting Pictures Generator</h1>
+
+    <div class="controls">
+      <label>
+        Max pictures
+        <input id="maxCount" type="number" min="1" max="30" value="10" />
+      </label>
+
+      <label>
+        Use only files that contain (optional)
+        <input id="nameFilter" type="text" placeholder="example: apple" />
+      </label>
+
+      <button id="generateBtn" class="primary" disabled>Generate (6)</button>
+      <button id="printBtn" disabled>Print</button>
+
+      <div id="status" class="status">Loading images…</div>
+    </div>
+
+    <div id="out" class="grid"></div>
+  </div>
+
+  <script>
+    (function () {
+      // Put jsonimages.json next to this HTML file
+      const JSON_PATH = "./jsonimages.json";
+
+      const elMax = document.getElementById("maxCount");
+      const elFilter = document.getElementById("nameFilter");
+      const elGen = document.getElementById("generateBtn");
+      const elPrint = document.getElementById("printBtn");
+      const elOut = document.getElementById("out");
+      const elStatus = document.getElementById("status");
+
+      let imageUrls = [];
+
+      const isImageName = (name) => /\.(png|jpg|jpeg|webp)$/i.test(name || "");
+
+      // Your JSON items include fields like name/path/download_url. (We use download_url.)
+      // Example fields: "name", "path", "download_url"  [oai_citation:1‡jsonimages.json](sediment://file_000000005c7c722fa586cabe4dc38213)
+      const loadUrls = async () => {
+        try {
+          const res = await fetch(JSON_PATH, { cache: "no-store" });
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const list = await res.json();
+
+          // list is an array of objects (GitHub contents-style)
+          imageUrls = (list || [])
+            .filter(item => item && item.download_url && isImageName(item.name))
+            .map(item => ({ url: item.download_url, name: (item.name || "").toLowerCase() }));
+
+          if (imageUrls.length === 0) {
+            elStatus.textContent = "Loaded JSON, but found 0 image URLs.";
+            elGen.disabled = true;
+            elPrint.disabled = true;
+            return;
+          }
+
+          elStatus.textContent = `Loaded ${imageUrls.length} images.`;
+          elGen.disabled = false;
+          elPrint.disabled = false;
+        } catch (err) {
+          elStatus.textContent = "Could not load jsonimages.json. Make sure it’s in the same folder as this page.";
+          console.error(err);
+          elGen.disabled = true;
+          elPrint.disabled = true;
+        }
+      };
+
+      const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+      const pickRandomImage = () => {
+        const needle = (elFilter.value || "").trim().toLowerCase();
+
+        const pool = needle
+          ? imageUrls.filter(x => x.name.includes(needle))
+          : imageUrls;
+
+        const usePool = pool.length ? pool : imageUrls;
+
+        return usePool[Math.floor(Math.random() * usePool.length)].url;
+      };
+
+      const shuffle = (arr) => {
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      };
+
+      const makeChoices = (correct) => {
+        // 3 choices total, include correct, keep within a reasonable range
+        const set = new Set([correct]);
+        while (set.size < 3) {
+          const delta = randInt(-3, 3);
+          const n = Math.max(1, correct + delta);
+          set.add(n);
+        }
+        return shuffle([...set]);
+      };
+
+      const render = () => {
+        const max = Math.max(1, Math.min(30, parseInt(elMax.value || "10", 10)));
+        elMax.value = String(max);
+
+        elOut.innerHTML = "";
+
+        for (let q = 1; q <= 6; q++) {
+          const count = randInt(1, max);
+          const imgUrl = pickRandomImage();
+          const choices = makeChoices(count);
+
+          const card = document.createElement("div");
+          card.className = "card";
+
+          const top = document.createElement("div");
+          top.className = "toprow";
+          top.innerHTML = `<div class="qnum">#${q}</div><div style="font-size:13px;color:#444;">How many?</div>`;
+          card.appendChild(top);
+
+          const pics = document.createElement("div");
+          pics.className = "pics";
+
+          for (let i = 0; i < count; i++) {
+            const im = document.createElement("img");
+            im.src = imgUrl;
+            im.alt = "counting picture";
+            pics.appendChild(im);
+          }
+          card.appendChild(pics);
+
+          const choiceRow = document.createElement("div");
+          choiceRow.className = "choices";
+          choices.forEach(n => {
+            const c = document.createElement("div");
+            c.className = "choice";
+            c.textContent = n;
+            choiceRow.appendChild(c);
+          });
+          card.appendChild(choiceRow);
+
+          elOut.appendChild(card);
+        }
+      };
+
+      elGen.addEventListener("click", render);
+      elPrint.addEventListener("click", () => window.print());
+
+      loadUrls();
+    })();
+  </script>
+</body>
+</html>

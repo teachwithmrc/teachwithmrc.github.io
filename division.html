@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Divide 2 Digit by 1 Digit Organizer</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .page {
+      width: 8.5in;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 0.5in;
+    }
+
+    h1 {
+      font-size: 1.3rem;
+      text-align: center;
+      margin: 0 0 6px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+    }
+
+    label { font-size: 0.85rem; }
+
+    input[type="number"], select {
+      padding: 3px 6px;
+      font-size: 0.85rem;
+      border: 1px solid #000;
+      border-radius: 4px;
+      width: 70px;
+    }
+
+    select { width: auto; }
+
+    button {
+      padding: 4px 10px;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      border: 1px solid #000;
+      cursor: pointer;
+      font-weight: 600;
+      background: #fff;
+    }
+
+    .organizer {
+      border: 2px solid #000;
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .problem-equation {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .problem-equation .blank {
+      display: inline-block;
+      min-width: 80px;
+      border-bottom: 2px solid #000;
+    }
+
+    .steps-checklist {
+      font-size: 0.85rem;
+      line-height: 1.3;
+    }
+
+    .main-area {
+      display: flex;
+      gap: 16px;
+      margin-top: 4px;
+    }
+
+    .left-panel {
+      flex: 0.9;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .right-panel {
+      flex: 1.3;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* LEFT: boxes laid out in a fixed grid */
+    .ld-grid-wrapper {
+      display: grid;
+      grid-template-columns: 40px 40px 40px 40px; /* col0 = left, col1-2 = middle, col3 = remainder/work */
+      grid-template-rows: repeat(6, 40px);
+      column-gap: 6px;
+      row-gap: 6px;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 260px;
+      position: relative;
+    }
+
+    .ld-box {
+      width: 34px;
+      height: 34px;
+      border: 2px solid #000;
+      background: #fff;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .ld-box.gray {
+      background: #eaeaea;
+    }
+
+    .minus-cell,
+    .arrow-cell,
+    .text-cell {
+      font-size: 1.5rem;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .arrow-cell {
+      font-size: 2rem;
+    }
+
+    .rem-label {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 0.85rem;
+    }
+
+    .rem-label span.r-small {
+      font-size: 0.85rem;
+    }
+
+    .rem-label .rem-box {
+      width: 28px;
+      height: 28px;
+      border: 2px solid #000;
+      background: #fff;
+      display: inline-block;
+    }
+
+    /* RIGHT: multiples sections */
+    .multiples-section {
+      border: 1px solid #000;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 0.85rem;
+    }
+
+    .multiples-title {
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .multiples-question {
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .sq-blank {
+      display: inline-block;
+      width: 26px;
+      height: 26px;
+      border: 2px solid #000;
+      margin: 0 2px;
+      vertical-align: middle;
+      line-height: 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .multiples-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      margin-top: 4px;
+    }
+
+    .multiples-table th,
+    .multiples-table td {
+      border: 1px solid #000;
+      padding: 2px;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+
+    .multiples-table th {
+      font-weight: 700;
+      background: #f0f0f0;
+    }
+
+    .prod-box {
+      width: 100%;
+      height: 20px;
+      border-bottom: 1px solid #000;
+      display: inline-block;
+    }
+
+    .prod-text {
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Base-10 (ones) group model */
+    .group-model {
+      border: 1px solid #000;
+      border-radius: 4px;
+      padding: 6px 8px;
+      font-size: 0.8rem;
+    }
+
+    .group-title {
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .group-info {
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .groups-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      justify-content: center;
+    }
+
+    .group-box {
+      border: 1px solid #000;
+      border-radius: 3px;
+      padding: 2px;
+      min-width: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .group-label {
+      font-size: 0.7rem;
+      text-align: center;
+      margin-top: 3px;
+    }
+
+    .one-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      border: 1px solid #000;
+      background: #fff;
+    }
+
+    @media print {
+      .controls { display: none; }
+      button { display: none; }
+      .page {
+        width: 100%;
+        padding: 0.4in;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Divide 2 Digit by 1 Digit Organizer</h1>
+
+    <div class="controls">
+      <label>Dividend:
+        <input id="dividendInput" type="number" min="10" max="99" value="58" />
+      </label>
+      <label>Divisor:
+        <input id="divisorInput" type="number" min="2" max="9" value="4" />
+      </label>
+      <label>Multiples:
+        <select id="multiplesMode">
+          <option value="hidden">Hide multiples</option>
+          <option value="blank">Blank (students fill)</option>
+          <option value="filled">Filled products</option>
+        </select>
+      </label>
+      <button id="updateBtn">Update Problem</button>
+      <button id="randomBtn">Random Problem</button>
+      <button id="printBtn">Print Page</button>
+    </div>
+
+    <div class="organizer">
+      <div class="top-row">
+        <div id="equationDisplay" class="problem-equation">
+          58 ÷ 4 = <span class="blank"></span>
+        </div>
+        <div class="steps-checklist">
+          <div><input type="checkbox" /> 1. Divide</div>
+          <div><input type="checkbox" /> 2. Multiply</div>
+          <div><input type="checkbox" /> 3. Subtract</div>
+          <div><input type="checkbox" /> 4. Bring Down</div>
+          <div><input type="checkbox" /> 5. Divide</div>
+          <div><input type="checkbox" /> 6. Multiply</div>
+          <div><input type="checkbox" /> 7. Subtract</div>
+        </div>
+      </div>
+
+      <div class="main-area">
+        <!-- LEFT: box template + pre-filled digits -->
+        <div class="left-panel">
+          <div class="ld-grid-wrapper">
+            <!-- Row 1: two quotient boxes + remainder box -->
+            <div id="qBox1" class="ld-box gray" style="grid-column: 2; grid-row: 1;"></div>
+            <div id="qBox2" class="ld-box gray" style="grid-column: 3; grid-row: 1;"></div>
+            <div style="grid-column: 4; grid-row: 1; justify-self: start;">
+              <div class="rem-label">
+                <span class="r-small">r</span>
+                <div class="rem-box"></div>
+              </div>
+            </div>
+
+            <!-- Row 2: divisor, dividend tens, dividend ones, extra box -->
+            <div id="divisorBox" class="ld-box" style="grid-column: 1; grid-row: 2;"></div>
+            <div id="dividendTensBox" class="ld-box" style="grid-column: 2; grid-row: 2;"></div>
+            <div id="dividendOnesBox" class="ld-box" style="grid-column: 3; grid-row: 2;"></div>
+            <div class="ld-box" style="grid-column: 4; grid-row: 2;"></div>
+
+            <!-- Row 3 -->
+            <div class="minus-cell" style="grid-column: 1; grid-row: 3;">−</div>
+            <div class="ld-box" style="grid-column: 2; grid-row: 3;"></div>
+            <div class="arrow-cell" style="grid-column: 3; grid-row: 3;">⬇</div>
+
+            <!-- Row 4 -->
+            <div class="ld-box" style="grid-column: 2; grid-row: 4;"></div>
+            <div class="ld-box" style="grid-column: 3; grid-row: 4;"></div>
+
+            <!-- Row 5 -->
+            <div class="minus-cell" style="grid-column: 1; grid-row: 5;">−</div>
+            <div class="ld-box" style="grid-column: 2; grid-row: 5;"></div>
+            <div class="ld-box" style="grid-column: 3; grid-row: 5;"></div>
+
+            <!-- Row 6 -->
+            <div class="ld-box" style="grid-column: 2; grid-row: 6;"></div>
+            <div class="ld-box" style="grid-column: 3; grid-row: 6;"></div>
+          </div>
+        </div>
+
+        <!-- RIGHT: multiples + base-10 model -->
+        <div class="right-panel">
+          <div id="mult1" class="multiples-section">
+            <div class="multiples-title">Top Digit Multiples</div>
+            <div class="multiples-question">
+              How many times does
+              <span class="sq-blank" id="topDigitDivisorBox"></span>
+              go into
+              <span class="sq-blank" id="topDigitDividendBox"></span>
+              <span class="sq-blank" id="topDigitBlankBox"></span>
+              evenly or without going over?
+            </div>
+            <table class="multiples-table">
+              <thead>
+                <tr id="headRow1"></tr>
+              </thead>
+              <tbody>
+                <tr id="prodRow1"></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div id="mult2" class="multiples-section">
+            <div class="multiples-title">Full Number Multiples</div>
+            <div class="multiples-question">
+              How many times does
+              <span class="sq-blank" id="fullDivisorBox"></span>
+              go into
+              <span class="sq-blank" id="fullDividendTensBox"></span>
+              <span class="sq-blank" id="fullDividendOnesBox"></span>
+              evenly or without going over?
+            </div>
+            <table class="multiples-table">
+              <thead>
+                <tr id="headRow2"></tr>
+              </thead>
+              <tbody>
+                <tr id="prodRow2"></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="group-model">
+            <div class="group-title">Base-10 Ones Group Model</div>
+            <div id="groupInfo" class="group-info"></div>
+            <div id="groupsRow" class="groups-row"></div>
+            <div id="groupNote" class="group-label"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const dividendInput = document.getElementById("dividendInput");
+    const divisorInput = document.getElementById("divisorInput");
+    const multiplesModeSelect = document.getElementById("multiplesMode");
+
+    const equationDisplay = document.getElementById("equationDisplay");
+    const headRow1 = document.getElementById("headRow1");
+    const headRow2 = document.getElementById("headRow2");
+    const prodRow1 = document.getElementById("prodRow1");
+    const prodRow2 = document.getElementById("prodRow2");
+    const mult1 = document.getElementById("mult1");
+    const mult2 = document.getElementById("mult2");
+
+    const topDigitDivisorBox = document.getElementById("topDigitDivisorBox");
+    const topDigitDividendBox = document.getElementById("topDigitDividendBox");
+    const topDigitBlankBox = document.getElementById("topDigitBlankBox");
+    const fullDivisorBox = document.getElementById("fullDivisorBox");
+    const fullDividendTensBox = document.getElementById("fullDividendTensBox");
+    const fullDividendOnesBox = document.getElementById("fullDividendOnesBox");
+
+    const groupInfo = document.getElementById("groupInfo");
+    const groupsRow = document.getElementById("groupsRow");
+    const groupNote = document.getElementById("groupNote");
+
+    const divisorBox = document.getElementById("divisorBox");
+    const dividendTensBox = document.getElementById("dividendTensBox");
+    const dividendOnesBox = document.getElementById("dividendOnesBox");
+
+    function clampDividend(v) {
+      let n = parseInt(v, 10);
+      if (isNaN(n)) n = 58;
+      if (n < 10) n = 10;
+      if (n > 99) n = 99;
+      return n;
+    }
+
+    function clampDivisor(v) {
+      let n = parseInt(v, 10);
+      if (isNaN(n)) n = 4;
+      if (n < 2) n = 2;
+      if (n > 9) n = 9;
+      return n;
+    }
+
+    function buildMultiplesRow(headRow, prodRow, divisor, mode) {
+      headRow.innerHTML = "";
+      prodRow.innerHTML = "";
+      const maxMult = 10;
+
+      for (let i = 0; i <= maxMult; i++) {
+        const th = document.createElement("th");
+        th.textContent = "x" + i;
+        headRow.appendChild(th);
+
+        const td = document.createElement("td");
+        if (mode === "filled") {
+          const span = document.createElement("span");
+          span.className = "prod-text";
+          span.textContent = divisor * i;
+          td.appendChild(span);
+        } else {
+          const box = document.createElement("span");
+          box.className = "prod-box";
+          td.appendChild(box);
+        }
+        prodRow.appendChild(td);
+      }
+    }
+
+    function buildGroupModel(dividend, divisor) {
+      groupsRow.innerHTML = "";
+      groupNote.textContent = "";
+
+      const q = Math.floor(dividend / divisor);
+      const r = dividend % divisor;
+
+      groupInfo.textContent =
+        `${dividend} ones → ${q} groups of ${divisor} ones, remainder ${r}.`;
+
+      if (q > 12) {
+        groupNote.textContent =
+          "Too many groups to draw. Try a smaller dividend or larger divisor for a picture model.";
+        return;
+      }
+
+      for (let g = 0; g < q; g++) {
+        const box = document.createElement("div");
+        box.className = "group-box";
+        for (let i = 0; i < divisor; i++) {
+          const dot = document.createElement("div");
+          dot.className = "one-dot";
+          box.appendChild(dot);
+        }
+        groupsRow.appendChild(box);
+      }
+
+      if (r > 0) {
+        const remWrapper = document.createElement("div");
+        remWrapper.style.display = "flex";
+        remWrapper.style.flexDirection = "column";
+        remWrapper.style.alignItems = "center";
+        remWrapper.style.gap = "2px";
+
+        const remBox = document.createElement("div");
+        remBox.className = "group-box";
+        for (let i = 0; i < r; i++) {
+          const dot = document.createElement("div");
+          dot.className = "one-dot";
+          remBox.appendChild(dot);
+        }
+
+        const label = document.createElement("div");
+        label.className = "group-label";
+        label.textContent = "remainder";
+
+        remWrapper.appendChild(remBox);
+        remWrapper.appendChild(label);
+        groupsRow.appendChild(remWrapper);
+      }
+    }
+
+    function updateOrganizer() {
+      const dividend = clampDividend(dividendInput.value);
+      const divisor = clampDivisor(divisorInput.value);
+      const mode = multiplesModeSelect.value;
+
+      dividendInput.value = dividend;
+      divisorInput.value = divisor;
+
+      equationDisplay.innerHTML =
+        `${dividend} ÷ ${divisor} = <span class="blank"></span>`;
+
+      const tens = Math.floor(dividend / 10);
+      const ones = dividend % 10;
+
+      // Fill the left-side setup boxes
+      divisorBox.textContent = divisor;
+      dividendTensBox.textContent = tens;
+      dividendOnesBox.textContent = ones;
+
+      // Multiples helpers
+      topDigitDivisorBox.textContent = divisor;
+      topDigitDividendBox.textContent = tens;
+      topDigitBlankBox.textContent = "";
+
+      fullDivisorBox.textContent = divisor;
+      fullDividendTensBox.textContent = tens;
+      fullDividendOnesBox.textContent = ones;
+
+      if (mode === "hidden") {
+        mult1.classList.add("hidden");
+        mult2.classList.add("hidden");
+      } else {
+        mult1.classList.remove("hidden");
+        mult2.classList.remove("hidden");
+        buildMultiplesRow(headRow1, prodRow1, divisor, mode);
+        buildMultiplesRow(headRow2, prodRow2, divisor, mode);
+      }
+
+      buildGroupModel(dividend, divisor);
+    }
+
+    function randomProblem() {
+      const randDividend = Math.floor(Math.random() * 90) + 10; // 10–99
+      const randDivisor = Math.floor(Math.random() * 8) + 2;    // 2–9
+      dividendInput.value = randDividend;
+      divisorInput.value = randDivisor;
+      updateOrganizer();
+    }
+
+    document.getElementById("updateBtn").addEventListener("click", updateOrganizer);
+    document.getElementById("randomBtn").addEventListener("click", randomProblem);
+    document.getElementById("printBtn").addEventListener("click", () => window.print());
+
+    updateOrganizer();
+  </script>
+</body>
+</html>

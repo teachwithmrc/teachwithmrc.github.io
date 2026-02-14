@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Master Word Ladders</title>
+
+  <!-- DATA SCRIPTS (both loaded so we can switch by menu choice) -->
+  <script src="blendsmaster.js" defer></script> <!-- CVC source -->
+  <script src="digraphs_master_FINAL_v2.js" defer></script> <!-- Digraph source -->
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: 'BoxesFont';
+      src: url('fonts/boxes2.otf') format('opentype');
+    }
+    @font-face {
+      font-family: 'UnderlineFont';
+      src: url('fonts/underlines.otf') format('opentype');
+    }
+
+    :root{
+      --ink:#1f365f; --bg:#ffffff;
+      --card:#f6f9ff; --card2:#fff7f0;
+      --border:#cfd7ef; --border2:#f2d8bd;
+
+      --cvc:#e9f2ff; --cvc-selected:#1976d2;
+      --dig:#f3e9ff; --dig-selected:#8e24aa;
+    }
+
+    *{ box-sizing:border-box; }
+    body { font-family: 'Poppins', sans-serif; margin: 12px; text-align: center; color: var(--ink); background: var(--bg); }
+    h1 { font-size: 32px; margin-bottom: 6px; }
+    .subtitle { font-size: 16px; margin-bottom: 10px; }
+
+    /* Layout */
+    .layout {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: minmax(420px, 1fr) 420px;
+      gap: 10px; align-items: start;
+    }
+    @media (max-width: 980px){ .layout{ display:block; } }
+
+    .section { border:2px solid #000; background:#fff; border-radius:14px; padding:12px; text-align:left; }
+    .section h2 { margin:0 0 8px; font-size:20px; text-align:center; }
+
+    .skill-block { border:1px solid #bbb; border-radius:12px; overflow:hidden; margin-bottom:12px; background:#fff; }
+    .skill-header { display:flex; align-items:center; justify-content:center; padding:10px 14px; font-weight:700; font-size:18px; user-select:none; }
+    .skills-inner { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; padding:12px; }
+
+    .bg-cvc .skill-header { background:var(--cvc); }
+    .bg-dig .skill-header { background:var(--dig); }
+
+    .skill-button {
+      border:2px solid #000; padding:8px 14px; border-radius:14px;
+      font-weight:700; font-size:16px; cursor:pointer; background:#fff;
+      transition:transform .08s ease, background-color .2s ease, color .2s ease;
+      user-select:none; line-height:1.2; min-height:36px;
+    }
+    .skill-button:active{ transform:translateY(1px); }
+    .skill-button.cvc.selected { background:var(--cvc-selected); color:#fff; }
+    .skill-button.dig.selected { background:var(--dig-selected); color:#fff; }
+
+    .controls { display:flex; justify-content:center; align-items:center; gap:16px; flex-wrap:wrap; font-size:18px; }
+    button { font-size: 16px; padding: 8px 12px; margin: 6px; cursor: pointer; }
+    label { margin: 0 6px; font-size: 18px; }
+
+    /* Cards (screen-only helper blocks) */
+    .card {
+      display: inline-block; text-align: center; background: var(--card);
+      border: 2px solid var(--border); border-radius: 14px; padding: 14px 18px;
+      margin: 10px auto; font-size: 18px;
+    }
+    .card.alt { background: var(--card2); border-color: var(--border2); }
+    .card h3 { margin:0 0 8px; font-size:18px; }
+
+    .screenOnly { display:block; font-size:16px; margin-bottom:8px; }
+
+    /* Output shell + print */
+    #ladderOutput { margin-top:10px; margin-bottom:60px; }
+    #copyright { font-size: 12px; text-align: right; width: 100%; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #ladderOutput, #ladderOutput * { visibility: visible; }
+      #ladderOutput {
+        position: absolute; top: 0; left: 0; width: 100%;
+        margin: 0; padding: 10px; box-sizing: border-box;
+      }
+      .screenOnly, .layout { display: none !important; }
+      #ladderOutput br { display: none !important; }
+      @page { margin: 0.5in; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Master Word Ladders</h1>
+  <div class="subtitle">Step 1: choose one skill • Step 2: blends • Generate</div>
+
+  <div class="layout">
+    <!-- LEFT: Skills -->
+    <div class="section">
+      <h2>Step 1: Select One Skill</h2>
+
+      <!-- CVC Short Vowels -->
+      <div class="skill-block bg-cvc">
+        <div class="skill-header">Short Vowels (CVC)</div>
+        <div class="skills-inner">
+          <button class="skill-button cvc" data-skill="CVC">CVC</button>
+        </div>
+      </div>
+
+      <!-- Digraphs -->
+      <div class="skill-block bg-dig">
+        <div class="skill-header">Digraphs</div>
+        <div class="skills-inner">
+          <button class="skill-button dig" data-skill="Digraphs">Digraphs</button>
+        </div>
+      </div>
+
+      <div class="screenOnly" style="max-width:920px;margin:6px auto 0;">
+        <strong>Heads up:</strong> More categories (VCe, R-Controlled, etc.) will plug into this same menu later.
+      </div>
+    </div>
+
+    <!-- RIGHT: Options + Actions -->
+    <div class="section">
+      <h2>Step 2: Include Blends?</h2>
+      <div class="controls" id="blendOptions">
+        <label><input type="radio" name="blendMode" value="no" checked> No Blends</label>
+        <label><input type="radio" name="blendMode" value="with"> With Blends</label>
+        <label id="onlyBlendsLabel"><input type="radio" name="blendMode" value="only"> Only Blends</label>
+      </div>
+
+      <div class="card alt" style="margin-top:10px;">
+        <h3>Display</h3>
+        <div class="controls">
+          <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
+          <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
+          <label><input type="checkbox" id="boldChanged" checked> Bold Changed Part</label>
+        </div>
+      </div>
+
+      <div class="controls" style="margin-top:10px;">
+        <button id="btnGenerate">Generate Ladder</button>
+        <button onclick="window.print()">Print Page</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTPUT -->
+  <div id="ladderOutput"></div>
+
+  <script>
+    // ------ Menu: single-select skill ------
+    let selectedSkill = null; // "CVC" or "Digraphs"
+
+    function updateSkillSelection(btn){
+      document.querySelectorAll('.skill-button').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedSkill = btn.dataset.skill;
+
+      // For Digraphs, Only Blends isn't a valid mode -> disable that radio
+      const onlyLabel = document.getElementById('onlyBlendsLabel');
+      const onlyInput = onlyLabel.querySelector('input[type="radio"]');
+      if (selectedSkill === 'Digraphs'){
+        onlyLabel.style.opacity = 0.4;
+        onlyInput.disabled = true;
+        // If "only" was selected previously, bump to "with"
+        const sel = document.querySelector('input[name="blendMode"]:checked');
+        if (sel && sel.value === 'only'){
+          document.querySelector('input[name="blendMode"][value="with"]').checked = true;
+        }
+      } else {
+        onlyLabel.style.opacity = 1;
+        onlyInput.disabled = false;
+      }
+    }
+
+    document.querySelectorAll('.skill-button').forEach(btn=>{
+      btn.addEventListener('click', ()=>updateSkillSelection(btn));
+    });
+
+    // Default select CVC initially for clarity
+    const defaultSkillBtn = document.querySelector('.skill-button.cvc');
+    if (defaultSkillBtn){ updateSkillSelection(defaultSkillBtn); }
+
+    // ------ Helpers from your originals (rendering remains the same style) ------
+    function splitWordByPattern(word, pattern) {
+      const chunks = []; let i = 0;
+      for (let j = 0; j < pattern.length; j++) {
+        const d = pattern[j];
+        const len = d === '3' ? 3 : (d === '2' ? 2 : 1);
+        chunks.push(word.slice(i, i + len));
+        i += len;
+      }
+      return chunks;
+    }
+
+    function getUnitChangeMap(prevWord, word, prevPattern, pattern) {
+      const prevChunks = splitWordByPattern(prevWord, prevPattern);
+      const curChunks  = splitWordByPattern(word, pattern);
+      const unitChanges = [];
+      const pushMany = (arr, n, v)=>{ for (let i=0;i<n;i++) arr.push(v); };
+
+      const maxChunks = Math.max(prevChunks.length, curChunks.length);
+      for (let i = 0; i < maxChunks; i++) {
+        const a = prevChunks[i] || '';
+        const b = curChunks[i]  || '';
+        const aLen = a.length, bLen = b.length;
+
+        if (!bLen) continue;
+        if (a === b) { pushMany(unitChanges, bLen, false); continue; }
+
+        if (bLen === aLen + 1 && (b.startsWith(a) || b.endsWith(a))) {
+          if (b.startsWith(a)) { pushMany(unitChanges, aLen, false); unitChanges.push(true); }
+          else { unitChanges.push(true); pushMany(unitChanges, aLen, false); }
+          continue;
+        }
+        if (aLen === bLen) { for (let k=0;k<bLen;k++) unitChanges.push(a[k] !== b[k]); continue; }
+        pushMany(unitChanges, bLen, true);
+      }
+      return unitChanges;
+    }
+
+    function renderPatternHTMLUnits(pattern, useFont, boldUnits) {
+      const isUnderline = useFont === 'UnderlineFont';
+      const lens = Array.from(pattern).map(d => d === '3' ? 3 : (d === '2' ? 2 : 1));
+      let html = '', unitIndex = 0;
+      for (let c = 0; c < lens.length; c++) {
+        const L = lens[c];
+        html += `<span style="${isUnderline ? 'display:inline-block;margin:0 6px;' : ''}">`;
+        for (let u = 0; u < L; u++) {
+          const bold = boldUnits && !!boldUnits[unitIndex];
+          html += `<span style="${bold ? 'font-weight:700;' : ''}">1</span>`;
+          unitIndex++;
+        }
+        html += `</span>`;
+      }
+      return html;
+    }
+
+    function getChunkHint(prevWord, word, prevPattern, pattern) {
+      const prevChunks = splitWordByPattern(prevWord, prevPattern);
+      const wordChunks = splitWordByPattern(word, pattern);
+      const arraysEqual = (a, b) => a.length === b.length && a.every((v,i)=>v===b[i]);
+
+      if (prevChunks.length === wordChunks.length) {
+        let idx = -1;
+        for (let i = 0; i < prevChunks.length; i++) {
+          if (prevChunks[i] !== wordChunks[i]) {
+            if (idx !== -1) return '? → ?';
+            idx = i;
+          }
+        }
+        if (idx === -1) return '? → ?';
+        const a = prevChunks[idx], b = wordChunks[idx];
+
+        if (b.length === a.length + 1 && (b.startsWith(a) || b.endsWith(a))) {
+          const added = b.startsWith(a) ? b.slice(-1) : b.slice(0, b.length - a.length);
+          const micro = b.startsWith(a)
+            ? `${a} → ${a}<b>${added}</b>`
+            : `${a} → <b>${added}</b>${a}`;
+          return `+ ${added} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
+        }
+        if (a.length === b.length + 1 && (a.startsWith(b) || a.endsWith(b))) {
+          const removed = a.startsWith(b) ? a.slice(-1) : a.slice(0, a.length - b.length);
+          const micro = a.startsWith(b)
+            ? `${a.slice(0, -1)}<b>${removed}</b> → ${b}`
+            : `<b>${removed}</b>${a.slice(1)} → ${b}`;
+          return `- ${removed} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
+        }
+        return `${a} → ${b}`;
+      }
+
+      if (wordChunks.length === prevChunks.length + 1) {
+        for (let k = 0; k < wordChunks.length; k++) {
+          const test = wordChunks.slice(0, k).concat(wordChunks.slice(k + 1));
+          if (arraysEqual(prevChunks, test)) return `+ ${wordChunks[k]}`;
+        }
+        return '? → ?';
+      }
+
+      if (prevChunks.length === wordChunks.length + 1) {
+        for (let k = 0; k < prevChunks.length; k++) {
+          const test = prevChunks.slice(0, k).concat(prevChunks.slice(k + 1));
+          if (arraysEqual(wordChunks, test)) return `- ${prevChunks[k]}`;
+        }
+        return '? → ?';
+      }
+
+      return '? → ?';
+    }
+
+    function renderLadder(ladder, titleText, useFont, boldChanged){
+      const rowsHTML = ladder.map((word, idx) => {
+        const isFirst = idx === 0;
+        const isLast = idx === ladder.length - 1;
+        const prevWord = ladder[idx - 1] || '';
+
+        const pattern = (typeof rWordPatterns !== 'undefined' && rWordPatterns[word]) ? rWordPatterns[word] : '?';
+        const prevPattern = (typeof rWordPatterns !== 'undefined' && rWordPatterns[prevWord]) ? rWordPatterns[prevWord] : '?';
+
+        const boldUnits = (!isFirst && boldChanged) ? getUnitChangeMap(prevWord, word, prevPattern, pattern) : null;
+        const patternHTML = isFirst ? '' : renderPatternHTMLUnits(pattern, useFont, boldUnits);
+
+        const wordDisplay = isFirst
+          ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins', sans-serif;">${word}</div>`
+          : `<div class="pattern" style="
+               font-family:'${useFont}', monospace;
+               font-size:${useFont === 'UnderlineFont' ? '85px' : '100px'};
+               letter-spacing:0px; text-align:center;
+             ">${patternHTML}</div>`;
+
+        const imgSrc = (typeof rWordImages !== 'undefined' && rWordImages[word]) ? rWordImages[word] : 'images/placeholder.png';
+
+        const imageTD = `<td style="padding:5px 7px;width:140px;">
+                           <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
+                         </td>`;
+
+        const borders = !isLast
+          ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
+          : 'border-left:4px solid #000;border-right:4px solid #000;';
+
+        const wordTD = `<td style="padding:5px 7px;${borders}">${wordDisplay}</td>`;
+
+        const hintTD = (() => {
+          if (isFirst) return `<td style="padding:3px 5px;width:170px;"></td>`;
+          const hint = getChunkHint(prevWord, word, prevPattern, pattern);
+          return `<td style="padding:3px 5px;width:170px;">
+                    <div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">${hint}</div>
+                  </td>`;
+        })();
+
+        return `<tr>${imageTD}${wordTD}${hintTD}</tr>`;
+      }).join('');
+
+      const html = `
+        <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
+          <div id="titleBlock" style="text-align:center;">
+            <h2 style="font-size:24px;">${titleText}</h2>
+            <p style="font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
+          </div>
+          <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
+            ${rowsHTML}
+          </table>
+          <br><br>
+          <div id="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+        </div>
+      `;
+      document.getElementById('ladderOutput').innerHTML = html;
+    }
+
+    // ------ Generate ------
+    document.getElementById('btnGenerate').addEventListener('click', ()=>{
+      if (!selectedSkill){
+        alert('Pick CVC or Digraphs first.');
+        return;
+      }
+
+      // Display options
+      const cellStyle = document.querySelector('input[name="cellStyle"]:checked')?.value || 'elkonin';
+      const useFont = (cellStyle === 'underlines') ? 'UnderlineFont' : 'BoxesFont';
+      const boldChanged = document.getElementById('boldChanged').checked;
+
+      // Blends mode to dataset mode
+      const blendSel = document.querySelector('input[name="blendMode"]:checked')?.value || 'no';
+
+      // Route by skill
+      if (selectedSkill === 'CVC'){
+        // Expecting getLaddersByMode('CVC' | 'Include Blends' | 'Only Blends') from blendsmaster.js
+        if (typeof getLaddersByMode !== 'function' || typeof rWordPatterns === 'undefined' || typeof rWordImages === 'undefined'){
+          alert('❌ Error: CVC data not loaded. Check blendsmaster.js');
+          return;
+        }
+        const modeMap = { no: 'CVC', with: 'Include Blends', only: 'Only Blends' };
+        const mode = modeMap[blendSel] || 'CVC';
+        const ladders = getLaddersByMode(mode);
+        if (!ladders || !ladders.length){ alert('❌ No CVC ladders available for this mode.'); return; }
+        const ladder = ladders[Math.floor(Math.random() * ladders.length)];
+        renderLadder(ladder, 'Short Vowel Word Ladders', useFont, boldChanged);
+        return;
+      }
+
+      if (selectedSkill === 'Digraphs'){
+        // Expecting getLaddersByMode('Digraphs' | 'Include Blends') from digraphs_master_FINAL_v2.js
+        if (typeof getLaddersByMode !== 'function' || typeof rWordPatterns === 'undefined' || typeof rWordImages === 'undefined'){
+          alert('❌ Error: Digraph data not loaded. Check digraphs_master_FINAL_v2.js');
+          return;
+        }
+        const mode = (blendSel === 'with') ? 'Include Blends' : 'Digraphs'; // 'only' is not supported for digraphs
+        const ladders = getLaddersByMode(mode);
+        if (!ladders || !ladders.length){ alert('❌ No Digraph ladders available for this mode.'); return; }
+        const ladder = ladders[Math.floor(Math.random() * ladders.length)];
+        renderLadder(ladder, 'Digraph Word Ladders', useFont, boldChanged);
+        return;
+      }
+    });
+  </script>
+</body>
+</html>

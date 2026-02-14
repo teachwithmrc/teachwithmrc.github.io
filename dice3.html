@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Roll and Read Generator</title>
+
+  <!-- Data file -->
+  <script src="fluencyDataFull_v8-2_clean.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cvc: #e9f2ff;          --cvc-selected: #1976d2;
+      --dig: #f3e9ff;          --dig-selected: #8e24aa;
+      --glued: #e8fff4;        --glued-selected: #2e7d32;
+      --vce: #fff5e6;          --vce-selected: #ef6c00;
+      --rctrl: #f0f5ff;        --rctrl-selected: #3f51b5;
+      --vteams: #fff0f6;       --vteams-selected: #d81b60;
+      --dip: #eefcfb;          --dip-selected: #00897b;
+      --variant: #fff8e1;      --variant-selected: #f9a825;
+      --soft: #eef4ff;         --soft-selected: #455a64;
+      --chip-bg: #f3f6fb;      --chip-text: #263238; 
+      --chip-x: #546e7a;
+    }
+
+    body { font-family: 'Poppins', sans-serif; margin: 28px; text-align: center; background: #fafafa; }
+    h1 { font-size: 32px; margin-bottom: 6px; }
+    .subtitle { color: #555; margin: 0 0 14px; }
+
+    .layout { 
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto 14px auto;
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) 380px;
+      gap: 8px;
+      align-items: start;
+    }
+    .layout .left { grid-column: 1; }
+    .layout .right { grid-column: 2; display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px; }
+
+    .table-section { border: 2px solid #000; padding: 12px; width: 100%; box-sizing: border-box; text-align: left; border-radius: 12px; background: #fff; height: auto; }
+    .section-label { font-weight: 700; font-size: 18px; margin-bottom: 8px; text-align: center; }
+
+    .skill-block { border: 1px solid #bbb; border-radius: 12px; overflow: hidden; margin-bottom: 12px; background: #fff; }
+    .skill-header { display: flex; align-items: center; justify-content: center; padding: 10px 14px; font-weight: 700; font-size: 18px; cursor: pointer; user-select: none; }
+    .skill-header .arrow { font-size: 22px; line-height: 1; margin: 0 10px; width: 22px; text-align: center; }
+    .skill-header .title { white-space: nowrap; }
+    .skills-inner { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; padding: 12px; }
+    .skills-inner.collapsed { display: none; }
+
+    .bg-cvc .skill-header { background: var(--cvc); }
+    .bg-dig .skill-header { background: var(--dig); }
+    .bg-glued .skill-header { background: var(--glued); }
+    .bg-vce .skill-header { background: var(--vce); }
+    .bg-rctrl .skill-header { background: var(--rctrl); }
+    .bg-vteams .skill-header { background: var(--vteams); }
+    .bg-dip .skill-header { background: var(--dip); }
+    .bg-variant .skill-header { background: var(--variant); }
+    .bg-soft .skill-header { background: var(--soft); }
+
+    .skill-button {
+      border: 2px solid #000; padding: 8px 14px; border-radius: 14px;
+      font-weight: 700; font-size: 16px; cursor: pointer; background: #fff;
+      transition: transform .08s ease, background-color .2s ease, color .2s ease;
+      user-select: none; line-height: 1.2; min-height: 36px;
+    }
+    .skill-button:active { transform: translateY(1px); }
+    .skill-button.cvc.selected { background: var(--cvc-selected); color: #fff; }
+    .skill-button.dig.selected { background: var(--dig-selected); color: #fff; }
+    .skill-button.glued.selected { background: var(--glued-selected); color: #fff; }
+    .skill-button.vce.selected { background: var(--vce-selected); color: #fff; }
+    .skill-button.rctrl.selected { background: var(--rctrl-selected); color: #fff; }
+    .skill-button.vteams.selected { background: var(--vteams-selected); color: #fff; }
+    .skill-button.dip.selected { background: var(--dip-selected); color: #fff; }
+    .skill-button.variant.selected { background: var(--variant-selected); color: #fff; }
+    .skill-button.soft.selected { background: var(--soft-selected); color: #fff; }
+
+    .chips-title { margin-top: 12px; text-align: center; font-weight: 700; font-size: 14px; }
+    .chips-wrap { margin-top: 8px; display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+    .chip { background: var(--chip-bg); color: var(--chip-text); border: none; border-radius: 999px; padding: 6px 10px; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+    .chip .x { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; cursor: pointer; background: #e8edf2; color: #546e7a; }
+
+    .option-grid { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .option-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .option-box { display: inline-block; padding: 8px 12px; border: 2px solid #000; border-radius: 12px; font-weight: 600; font-size: 16px; background: #fff; cursor: pointer; }
+    .option-box.selected { background-color: #d0f0ff; }
+
+    #output { display: flex; justify-content: center; padding: 16px 0; flex-direction: column; gap: 20px; }
+
+    .page { 
+      width: 8.5in; max-width: calc(100% - 32px);
+      background: #fff; box-shadow: 0 6px 20px rgba(0,0,0,.12);
+      padding: 0.5in; border: 2px solid #000; border-radius: 8px; 
+      margin: 0 auto; page-break-inside: avoid;
+      text-align: center;
+      position: relative;
+    }
+    .worksheet-title { font-size: 28px; margin-bottom: 6px; font-weight: 700; }
+    .skills-line { font-size: 14px; margin: 6px 0 10px; }
+    .worksheet-directions { font-size: 16px; margin-bottom: 12px; }
+
+    table.roll { margin: auto; border-collapse: collapse; }
+    .roll td { border: 1px solid #000; width: 120px; height: 80px; text-align: center; vertical-align: middle; }
+    .dice-cell { height: 100px; }
+    .word-cell { font-size: 28px; }
+    .sentence-cell { font-size: 18px; text-align: left; padding: 6px; }
+
+    #copyright { font-size: 12px; text-align: right; margin-top: 8px; display: block; }
+
+    @media print {
+      @page { size: letter landscape; margin: 0.35in; }
+
+      body > h1,
+      .table-section,
+      button,
+      .chips-title,
+      .chips-wrap,
+      .subtitle,
+      .layout,
+      #floatingActions { display: none !important; }
+
+      #output { margin: 0; }
+      .page {
+        width: auto;
+        padding: 0.25in 0.3in !important;
+        border: none !important;
+        box-shadow: none !important;
+        page-break-inside: avoid; break-inside: avoid;
+        position: relative;
+        transform: scale(0.94);
+        transform-origin: top left;
+        width: calc(100% / 0.94);
+      }
+
+      .worksheet-title { font-size: 18px !important; margin-bottom: 0.05in !important; }
+      .skills-line { font-size: 12px !important; margin: 0 0 0.07in !important; }
+      .worksheet-directions { font-size: 14px !important; margin-bottom: 0.08in !important; }
+
+      .dice-cell img { width: 48px !important; height: 48px !important; }
+      .roll td { height: 0.72in !important; width: 1.75in !important; }
+      .word-cell { font-size: 22px !important; }
+      .sentence-cell { font-size: 16px !important; line-height: 1.15 !important; padding: 5px !important; }
+
+      #copyright {
+        position: static !important;
+        margin-top: 0.12in !important;
+        font-size: 10px !important;
+        text-align: right !important;
+        display: block !important;
+        page-break-inside: avoid !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Roll and Read Generator</h1>
+  <div class="subtitle">Step 1: skills → Step 2: blends → Step 3: words/sentences/both → Step 4: (optional) grid size → Generate a **landscape** Roll & Read page.</div>
+
+  <div class="layout">
+    <div class="left">
+      <div id="step1" class="table-section">
+        <div class="section-label">Step 1: Select Skills</div>
+
+        <!-- CVC Short Vowels -->
+        <div class="skill-block bg-cvc">
+          <div class="skill-header" data-target="cvc"><span class="arrow">▲</span><span class="title">CVC Short Vowels</span><span class="arrow">▲</span></div>
+          <div class="skills-inner" id="section-cvc">
+            <button class="skill-button cvc" data-skill="Short A">Short A</button>
+            <button class="skill-button cvc" data-skill="Short E">Short E</button>
+            <button class="skill-button cvc" data-skill="Short I">Short I</button>
+            <button class="skill-button cvc" data-skill="Short O">Short O</button>
+            <button class="skill-button cvc" data-skill="Short U">Short U</button>
+            <button class="skill-button cvc" data-skill="Mixed CVC">Mixed CVC</button>
+            <button class="skill-button cvc" data-skill="FLSZ">FLSZ</button>
+          </div>
+        </div>
+
+        <!-- Digraphs -->
+        <div class="skill-block bg-dig">
+          <div class="skill-header" data-target="dig"><span class="arrow">▼</span><span class="title">Digraphs</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-dig">
+            <button class="skill-button dig" data-skill="ck">ck</button>
+            <button class="skill-button dig" data-skill="sh">sh</button>
+            <button class="skill-button dig" data-skill="th">th</button>
+            <button class="skill-button dig" data-skill="ch">ch</button>
+            <button class="skill-button dig" data-skill="wh">wh</button>
+            <button class="skill-button dig" data-skill="Digraphs Mixed">Digraphs Mixed</button>
+          </div>
+        </div>
+
+        <!-- Glued Sounds -->
+        <div class="skill-block bg-glued">
+          <div class="skill-header" data-target="glued"><span class="arrow">▼</span><span class="title">Glued Sounds</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-glued">
+            <button class="skill-button glued" data-skill="-all">-all</button>
+            <button class="skill-button glued" data-skill="-ng">-ng</button>
+            <button class="skill-button glued" data-skill="-nk">-nk</button>
+            <button class="skill-button glued" data-skill="Glued Mixed">Glued Mixed</button>
+          </div>
+        </div>
+
+        <!-- VCe -->
+        <div class="skill-block bg-vce">
+          <div class="skill-header" data-target="vce"><span class="arrow">▼</span><span class="title">Silent E (VCe)</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-vce">
+            <button class="skill-button vce" data-skill="a_e">a_e</button>
+            <button class="skill-button vce" data-skill="i_e">i_e</button>
+            <button class="skill-button vce" data-skill="o_e">o_e</button>
+            <button class="skill-button vce" data-skill="u_e">u_e</button>
+            <button class="skill-button vce" data-skill="Mixed VCe">Mixed VCe</button>
+          </div>
+        </div>
+
+        <!-- R-Controlled -->
+        <div class="skill-block bg-rctrl">
+          <div class="skill-header" data-target="rctrl"><span class="arrow">▼</span><span class="title">R-Controlled</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-rctrl">
+            <button class="skill-button rctrl" data-skill="ar">ar</button>
+            <button class="skill-button rctrl" data-skill="or">or</button>
+            <button class="skill-button rctrl" data-skill="er/ir/ur">er/ir/ur</button>
+            <button class="skill-button rctrl" data-skill="Mixed R-Controlled">Mixed R-Controlled</button>
+          </div>
+        </div>
+
+        <!-- Vowel Teams -->
+        <div class="skill-block bg-vteams">
+          <div class="skill-header" data-target="vteams"><span class="arrow">▼</span><span class="title">Vowel Teams</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-vteams">
+            <button class="skill-button vteams" data-skill="Long A (ai/ay)">Long A (ai/ay)</button>
+            <button class="skill-button vteams" data-skill="Long E (ee/ea)">Long E (ee/ea)</button>
+            <button class="skill-button vteams" data-skill="Long I (igh/y/ie)">Long I (igh/y/ie)</button>
+            <span class="break"></span>
+            <button class="skill-button vteams" data-skill="Long O (oa/ow/oe)">Long O (oa/ow/oe)</button>
+            <button class="skill-button vteams" data-skill="Long U (oo/ew/ue)">Long U (oo/ew/ue)</button>
+            <button class="skill-button vteams" data-skill="Mixed Vowel Teams">Mixed Vowel Teams</button>
+          </div>
+        </div>
+
+        <!-- Diphthongs -->
+        <div class="skill-block bg-dip">
+          <div class="skill-header" data-target="dip"><span class="arrow">▼</span><span class="title">Diphthongs</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-dip">
+            <button class="skill-button dip" data-skill="Diphthongs (oy/oi)">oy/oi</button>
+            <button class="skill-button dip" data-skill="Diphthongs (ow/ou)">ow/ou</button>
+          </div>
+        </div>
+
+        <!-- Variant Vowels -->
+        <div class="skill-block bg-variant">
+          <div class="skill-header" data-target="variant"><span class="arrow">▼</span><span class="title">Variant Vowels</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-variant">
+            <button class="skill-button variant" data-skill="Variant Vowels (au/aw)">au/aw</button>
+            <button class="skill-button variant" data-skill="Variant Vowel (oo)">oo</button>
+          </div>
+        </div>
+
+        <!-- Soft Endings -->
+        <div class="skill-block bg-soft">
+          <div class="skill-header" data-target="soft"><span class="arrow">▼</span><span class="title">Soft C/G Endings</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-soft">
+            <button class="skill-button soft" data-skill="Soft C (-ce)">Soft C (-ce)</button>
+            <button class="skill-button soft" data-skill="Soft G (-ge)">Soft G (-ge)</button>
+            <button class="skill-button soft" data-skill="Soft G (-dge)">Soft G (-dge)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="table-section tight">
+        <div class="section-label">Step 2: Include Blends?</div>
+        <div class="option-grid" id="blendOptions">
+          <div class="option-row">
+            <div class="option-box" data-blends="no">No – 3 Sounds</div>
+            <div class="option-box" data-blends="yes">Yes – 4+ Sounds</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-section tight">
+        <div class="section-label">Step 3: What would you like in the grid?</div>
+        <div class="option-grid" id="contentOptions">
+          <div class="option-row">
+            <div class="option-box" data-mode="words">Words Only</div>
+            <div class="option-box" data-mode="sentences">Sentences Only</div>
+            <div class="option-box" data-mode="both">Both</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Optional Grid Size (defaults to 30 if untouched) -->
+      <div class="table-section tight">
+        <div class="section-label">Step 4: Select Grid Size (optional)</div>
+        <div class="option-grid" id="gridSize">
+          <div class="option-row">
+            <div class="option-box" data-size="18">6 × 3 = 18</div>
+            <div class="option-box" data-size="24">6 × 4 = 24</div>
+            <div class="option-box selected" data-size="30">6 × 5 = 30</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-section actions-sticky tight">
+        <div class="section-label">Step 5: Generate & Print</div>
+        <div class="chips-title">Skills Selected:</div>
+        <div id="chips" class="chips-wrap"></div>
+        <div style="text-align:center; margin-top:10px;">
+          <button id="btnGenerate" style="font-size: 18px; padding: 10px 24px;">Generate</button>
+          <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTPUT -->
+  <div id="output"></div>
+
+  <!-- Desktop-only floating actions -->
+  <div id="floatingActions" style="position: fixed; right: 16px; bottom: 16px; z-index: 1000; background:#ffffff; border:2px solid #000; border-radius:12px; box-shadow: 0 6px 20px rgba(0,0,0,.15); padding:10px 12px; display:none; gap:8px; align-items:center;">
+    <button id="fabGenerate" style="font-size:14px; padding:8px 12px;">Generate</button>
+    <button id="fabPrint" style="font-size:14px; padding:8px 12px;">Print</button>
+  </div>
+
+<script>
+/* ===== Utilities ===== */
+if (typeof CSS === 'undefined' || typeof CSS.escape !== 'function') {
+  window.CSS = window.CSS || {};
+  CSS.escape = CSS.escape || function(sel){
+    return (sel + '').replace(/[^a-zA-Z0-9_-]/g, '\\$&');
+  };
+}
+function toArray(x){
+  if (Array.isArray(x)) return x.slice();
+  if (x == null) return [];
+  try { return Array.from(x); } catch { return []; }
+}
+function shuffle(list){
+  const a = toArray(list);
+  const n = a.length >>> 0;
+  for (let i = n - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function uniqueByLowercase(list){
+  const seen = new Set();
+  const out = [];
+  for (const item of toArray(list)){
+    const key = String(item).toLowerCase();
+    if (!seen.has(key)) { seen.add(key); out.push(item); }
+  }
+  return out;
+}
+function fillToN(list, n){
+  const base = toArray(list);
+  if (base.length === 0 || !Number.isFinite(n) || n <= 0) return [];
+  const out = [];
+  let bag = shuffle(base);
+  while (out.length < n){
+    if (bag.length === 0){
+      bag = shuffle(base);
+      if (bag.length === 0) break;
+    }
+    out.push(bag.shift());
+  }
+  return out.slice(0, n);
+}
+
+/* ===== Data keys/mapping ===== */
+const PREFIX = {
+  "Short A": "0.1 - Short A",
+  "Short O": "0.2 - Short O",
+  "Short I": "0.3 - Short I",
+  "Short U": "0.4 - Short U",
+  "Short E": "0.5 - Short E",
+  "FLSZ":    "0.6 - FLSZ",
+
+  "ck": "1.1 - ck",
+  "sh": "1.2 - sh",
+  "th": "1.3 - th",
+  "ch": "1.4 - ch",
+  "wh": "1.5 - wh",
+
+  "-all": "3.1 - all",
+  "-ng":  "3.2 - ng",
+  "-nk":  "3.3 - nk",
+
+  "a_e": "2.1 - a_e",
+  "i_e": "2.2 - i_e",
+  "o_e": "2.3 - o_e",
+  "u_e": "2.4 - u_e",
+
+  "ar": "4.1 - ar",
+  "or": "4.2 - or",
+  "er/ir/ur": "4.3 - er, ir, ur",
+
+  "Soft C (-ce)": "10.1 - ce",
+  "Soft G (-ge)": "10.2 - ge",
+  "Soft G (-dge)": "10.3 - dge"
+};
+
+const MIXED_RULES = {
+  "Mixed CVC": ["0.1 - Short A","0.5 - Short E","0.3 - Short I","0.2 - Short O","0.4 - Short U","0.6 - FLSZ"],
+  "Digraphs Mixed": ["1.1 - ck","1.2 - sh","1.3 - th","1.4 - ch","1.5 - wh"],
+  "Glued Mixed": ["3.1 - all","3.2 - ng","3.3 - nk"],
+
+  "Mixed VCe": ["2.1 - a_e","2.2 - i_e","2.3 - o_e","2.4 - u_e"],
+  "Mixed R-Controlled": ["4.1 - ar","4.2 - or","4.3 - er, ir, ur"],
+
+  "Long A (ai/ay)": ["6.1 - ay","6.2 - ai"],
+  "Long E (ee/ea)": ["6.4 - ee","6.5 - ea"],
+  "Long I (igh/y/ie)": ["6.6 - igh","6.7 - Final y","6.8 - ie"],
+  "Long O (oa/ow/oe)": ["6.9 - oa","6.10 - ow","6.11 - oe"],
+  "Long U (oo/ew/ue)": ["6.12 - oo (long u)","6.13 - ew","6.14 - ue"],
+
+  "Mixed Vowel Teams": [
+    "6.1 - ay","6.2 - ai","6.4 - ee","6.5 - ea",
+    "6.6 - igh","6.7 - Final y","6.8 - ie",
+    "6.9 - oa","6.10 - ow","6.11 - oe",
+    "6.12 - oo (long u)","6.13 - ew","6.14 - ue"
+  ],
+
+  "Diphthongs (oy/oi)": ["7.4 - oy","7.3 - oi"],
+  "Diphthongs (ow/ou)": ["7.2 - ow","7.1 - ou"],
+
+  "Variant Vowels (au/aw)": ["7.5 - aw","7.6 - au"],
+  "Variant Vowel (oo)": ["7.7 - oo variant"]
+};
+
+function wordsDict(){ return (typeof fluencyWords !== 'undefined') ? fluencyWords : (typeof fluencyData !== 'undefined' ? fluencyData.words : {}); }
+function sentsDict(){ return (typeof fluencySentences !== 'undefined') ? fluencySentences : (typeof fluencyData !== 'undefined' ? fluencyData.sentences : {}); }
+function readDict(dict, key){ return Array.isArray(dict[key]) ? dict[key] : []; }
+
+/* Case-flex blends + type/case fallbacks */
+function readWithBlends(dict, prefix, type, blends){
+  const typeLower = type.toLowerCase();
+  const baseKeys = [`${prefix} ${type}`, `${prefix} ${typeLower}`, `${prefix}`];
+  let base = [];
+  for (const k of baseKeys){ base = base.concat(readDict(dict, k)); }
+
+  if (blends){
+    const candidates = [
+      `${prefix} with Blends ${type}`,
+      `${prefix} with blends ${type}`,
+      `${prefix} with Blends ${typeLower}`,
+      `${prefix} with blends ${typeLower}`,
+      `${prefix} with BLENDS ${type}`
+    ];
+    const bPrefix = prefix.replace(' - ', 'b - ');
+    candidates.push(
+      `${bPrefix} with Blends ${type}`,
+      `${bPrefix} with blends ${type}`,
+      `${bPrefix} with Blends ${typeLower}`,
+      `${bPrefix} with blends ${typeLower}`
+    );
+
+    for (const k of candidates){
+      const got = readDict(dict, k);
+      if (got.length){
+        const MIN_BACKFILL = 30; // ensure Roll & Read fills well
+        return (got.length < MIN_BACKFILL) ? uniqueByLowercase(got.concat(base)) : got;
+      }
+    }
+  }
+  return base;
+}
+
+function getList(label, type, blends){
+  const dict = (type === 'Words') ? wordsDict() : sentsDict();
+
+  if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)){
+    let all = [];
+    for (const p of MIXED_RULES[label]){
+      all = all.concat(readWithBlends(dict, p, type, blends));
+    }
+    return all;
+  }
+
+  const prefix = PREFIX[label];
+  if (prefix) return readWithBlends(dict, prefix, type, blends);
+
+  const tail1 = " " + type;
+  const tail2 = " " + type.toLowerCase();
+  const want = label.toLowerCase();
+  const keys = Object.keys(dict);
+  const guess = keys.find(k => k.toLowerCase().includes(want) && (k.endsWith(tail1) || k.endsWith(tail2)));
+  return guess ? readDict(dict, guess) : [];
+}
+
+/* ===== UI wiring ===== */
+const selected = new Set();
+let includeBlends = false;
+let mode = null;
+let gridSize = 30; // default 6x5
+
+document.querySelectorAll('.skill-header').forEach(header=>{
+  header.addEventListener('click', ()=>{
+    const target = header.getAttribute('data-target');
+    const inner = document.getElementById('section-' + target);
+    const arrows = header.querySelectorAll('.arrow');
+    const isCollapsed = inner.classList.contains('collapsed');
+    if (isCollapsed) { inner.classList.remove('collapsed'); arrows.forEach(a=>a.textContent='▲'); }
+    else { inner.classList.add('collapsed'); arrows.forEach(a=>a.textContent='▼'); }
+  });
+});
+
+document.querySelectorAll('.skill-button').forEach(btn=>{
+  btn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const label = btn.dataset.skill;
+    if (selected.has(label)) { selected.delete(label); btn.classList.remove('selected'); }
+    else { selected.add(label); btn.classList.add('selected'); }
+    renderChips();
+  });
+});
+
+function renderChips(){
+  const wrap = document.getElementById('chips');
+  wrap.innerHTML = '';
+  Array.from(selected).forEach(label=>{
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.innerHTML = '<span>'+label+'</span><span class="x" title="Remove">\u00D7</span>';
+    chip.querySelector('.x').addEventListener('click', ()=>{
+      selected.delete(label);
+      const btn = document.querySelector('.skill-button[data-skill="'+CSS.escape(label)+'"]');
+      if (btn) btn.classList.remove('selected');
+      renderChips();
+    });
+    wrap.appendChild(chip);
+  });
+}
+
+document.querySelectorAll('#blendOptions .option-box').forEach(box=>{
+  box.addEventListener('click', ()=>{
+    document.querySelectorAll('#blendOptions .option-box').forEach(b=>b.classList.remove('selected'));
+    box.classList.add('selected');
+    includeBlends = (box.dataset.blends === 'yes');
+  });
+});
+
+document.querySelectorAll('#contentOptions .option-box').forEach(box=>{
+  box.addEventListener('click', ()=>{
+    document.querySelectorAll('#contentOptions .option-box').forEach(b=>b.classList.remove('selected'));
+    box.classList.add('selected');
+    mode = box.dataset.mode;
+  });
+});
+
+document.querySelectorAll('#gridSize .option-box').forEach(box=>{
+  box.addEventListener('click', ()=>{
+    document.querySelectorAll('#gridSize .option-box').forEach(b=>b.classList.remove('selected'));
+    box.classList.add('selected');
+    const v = parseInt(box.dataset.size, 10);
+    if (Number.isFinite(v)) gridSize = v;
+  });
+});
+
+/* Show/hide floating bar on desktop */
+function toggleFloatingBar(){
+  const el = document.getElementById('floatingActions');
+  const isDesktop = window.matchMedia('(min-width: 992px)').matches;
+  el.style.display = isDesktop ? 'flex' : 'none';
+}
+toggleFloatingBar();
+window.addEventListener('resize', toggleFloatingBar);
+document.getElementById('fabGenerate')?.addEventListener('click', ()=>document.getElementById('btnGenerate')?.click());
+document.getElementById('fabPrint')?.addEventListener('click', ()=>window.print());
+
+/* ===== Roll & Read builder ===== */
+function buildRollAndReadTable(cells) {
+  const cols = 6;
+  // Cap rows to prevent overflow, especially for sentences
+  const maxRows = (mode === 'sentences' || mode === 'both') ? 4 : 5; // Limit to 4 rows for sentences, 5 for words
+  const rows = Math.min(Math.ceil(cells.length / cols), maxRows);
+  const totalCells = rows * cols;
+  cells = cells.slice(0, totalCells); // Trim content to fit
+
+  const tbl = document.createElement('table');
+  tbl.className = 'roll';
+
+  // Dice header
+  const header = tbl.insertRow();
+  for (let c = 0; c < cols; c++) {
+    const td = header.insertCell();
+    td.className = 'dice-cell';
+    const img = document.createElement('img');
+    img.src = `images/dice${c+1}.png`;
+    img.alt = `Die ${c+1}`;
+    img.style.width = '60px';
+    img.style.height = '60px';
+    td.appendChild(img);
+  }
+
+  // Content rows
+  let idx = 0;
+  for (let r = 0; r < rows; r++) {
+    const row = tbl.insertRow();
+    for (let c = 0; c < cols; c++) {
+      const td = row.insertCell();
+      const val = cells[idx++] || '';
+      const isSentence = val.includes(' ');
+      td.className = isSentence ? 'sentence-cell' : 'word-cell';
+      td.textContent = val;
+    }
+  }
+  return tbl;
+}
+
+/* Generate the Roll & Read page */
+function generateRollAndRead() {
+  if (selected.size === 0) return alert('Select at least one skill in Step 1.');
+  if (!mode) return alert('Choose Words Only / Sentences Only / Both in Step 3.');
+  if (!wordsDict() && !sentsDict()) return alert('Data not loaded. Check the <script src="..."> file name.');
+
+  const labels = Array.from(selected);
+  const TOTAL = gridSize;
+  let pool = [];
+
+  if (mode === 'words') {
+    const unionW = labels.flatMap(lbl => getList(lbl, 'Words', includeBlends));
+    pool = uniqueByLowercase(unionW);
+  } else if (mode === 'sentences') {
+    const unionS = labels.flatMap(lbl => getList(lbl, 'Sentences', includeBlends));
+    pool = uniqueByLowercase(unionS);
+  } else {
+    const words = uniqueByLowercase(labels.flatMap(lbl => getList(lbl, 'Words', includeBlends)));
+    const sents = uniqueByLowercase(labels.flatMap(lbl => getList(lbl, 'Sentences', includeBlends)));
+    const half = Math.floor(TOTAL/2);
+    const w = fillToN(shuffle(words), half);
+    const s = fillToN(shuffle(sents), TOTAL - w.length);
+    pool = shuffle(w.concat(s));
+  }
+
+  let content = (mode === 'both') ? pool : fillToN(shuffle(pool), TOTAL);
+  if (content.length < TOTAL) {
+    return alert('Not enough content found using these settings. Add more skills or change blends/content options.');
+  }
+  content = content.slice(0, TOTAL);
+
+  // Warn if content is trimmed due to row limiting
+  if ((mode === 'sentences' || mode === 'both') && gridSize > 24) {
+    alert('Note: For sentences or mixed content, the grid is limited to 4 rows (24 cells) to fit on one page. Some content may be trimmed.');
+  }
+
+  // Build output page
+  const output = document.getElementById('output');
+  output.innerHTML = '';
+
+  const page = document.createElement('div');
+  page.className = 'page';
+
+  const title = document.createElement('div');
+  title.className = 'worksheet-title';
+  title.textContent = 'Roll and Read';
+
+  const skills = document.createElement('div');
+  skills.className = 'skills-line';
+  skills.innerHTML = '<strong>Skills:</strong> ' + (labels.length ? labels.join(' • ') : '—');
+
+  const directions = document.createElement('div');
+  directions.className = 'worksheet-directions';
+  directions.innerHTML = '<strong>Directions:</strong> Roll a die, read one item from that column, and keep going!';
+
+  const table = buildRollAndReadTable(content);
+
+  const copy = document.createElement('div');
+  copy.id = 'copyright';
+  copy.textContent = 'Copyright - InterventionStation.com - @TeachwithMrC';
+
+  page.appendChild(title);
+  page.appendChild(skills);
+  page.appendChild(directions);
+  page.appendChild(table);
+  page.appendChild(copy);
+  output.appendChild(page);
+  output.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+document.getElementById('btnGenerate').addEventListener('click', generateRollAndRead);
+</script>
+</body>
+</html>

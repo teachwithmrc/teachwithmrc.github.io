@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roll and Read Builder (Family Flow)</title>
+
+  <script>
+    (function loadData() {
+      const paths = [
+        '/ladder/fluencyDataFull_v8-2_clean.js',
+        '/ladder/fluencyDataFull_v6.js',
+        'fluencyDataFull_v8-2_clean.js',
+        'fluencyDataFull_v6.js',
+        '/fluencyDataFull_v8-2_clean.js'
+      ];
+      let i = 0;
+      function tryNext() {
+        if (i >= paths.length) return;
+        const s = document.createElement('script');
+        s.src = paths[i++];
+        s.onload = () => {
+          if (window.fluencyWords || window.fluencySentences || window.fluencyData) {
+            window.__fluencyLoaded = true;
+            window.__fluencyPath = s.src;
+            const el = document.getElementById('dataStatus');
+            if (el) el.textContent = 'Data loaded: ' + window.__fluencyPath;
+          } else {
+            tryNext();
+          }
+        };
+        s.onerror = () => {
+          const el = document.getElementById('dataStatus');
+          if (el) el.textContent = 'Trying data path: ' + (paths[i] || 'none left');
+          tryNext();
+        };
+        document.head.appendChild(s);
+      }
+      tryNext();
+    })();
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg1: #edf7ff;
+      --bg2: #f4fff1;
+      --ink: #233746;
+      --card: #ffffff;
+      --line: #d7e6f4;
+      --pill: #eef5ff;
+      --accent: #1976d2;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 22px;
+      font-family: 'Poppins', sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 9% 11%, #fff 0 8%, transparent 9%),
+        radial-gradient(circle at 88% 17%, #fff 0 6%, transparent 7%),
+        linear-gradient(140deg, var(--bg1), var(--bg2));
+    }
+
+    .app { max-width: 1140px; margin: 0 auto; }
+    h1 { text-align: center; margin: 0 0 6px; font-size: 34px; }
+    .sub { text-align: center; margin: 0 0 14px; color: #476074; }
+    .data-status {
+      text-align: center;
+      margin: 0 0 10px;
+      font-size: 12px;
+      color: #3f5c73;
+      font-weight: 600;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 2px solid #000;
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 8px 20px rgba(31, 59, 84, 0.09);
+    }
+
+    .grid-2x2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .cell-card {
+      border: 2px solid #000;
+      border-radius: 12px;
+      padding: 10px;
+      background: #fff;
+      min-height: 160px;
+    }
+    .cell-card.compact {
+      min-height: 112px;
+      padding: 8px;
+    }
+
+    .cell-title {
+      margin: 0 0 8px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .cell-card.compact .cell-title {
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .family-picker {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(140px, 1fr));
+      gap: 8px;
+    }
+
+    .family-btn {
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      padding: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      line-height: 1.2;
+    }
+
+    .family-btn small {
+      display: block;
+      font-weight: 600;
+      font-size: 11px;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+
+    .selected-family {
+      border: 2px solid #000;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: left;
+      background: #eef6ff;
+    }
+
+    .selected-family .name {
+      font-size: 21px;
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 4px;
+    }
+
+    .selected-family .hint {
+      font-size: 13px;
+      color: #3f566a;
+      margin-bottom: 8px;
+    }
+
+    .btn-small {
+      border: 2px solid #000;
+      background: #fff;
+      border-radius: 9px;
+      padding: 6px 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .skills-wrap {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      min-height: 40px;
+    }
+
+    .skill-btn {
+      border: 2px solid #000;
+      border-radius: 999px;
+      background: #fff;
+      padding: 8px 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .skill-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: #125ea8;
+    }
+
+    .choice-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .option-btn {
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      padding: 10px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .cell-card.compact .option-btn {
+      padding: 7px;
+      font-size: 13px;
+      border-radius: 8px;
+    }
+
+    .option-btn.active { background: #d2efff; }
+
+    .summary {
+      margin-top: 10px;
+      border: 2px dashed #58718a;
+      border-radius: 12px;
+      padding: 10px;
+      background: #f8fbff;
+      font-size: 15px;
+      line-height: 1.35;
+      min-height: 62px;
+    }
+
+    .controls {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      padding: 10px 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn.play {
+      background: linear-gradient(135deg, #ff9f1c, #ff6b6b);
+      color: #fff;
+      border: none;
+      padding: 11px 16px;
+    }
+
+    .size-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      margin-top: 2px;
+    }
+
+    .size-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #40576b;
+    }
+
+    .size-btn {
+      border: 2px solid #000;
+      border-radius: 999px;
+      background: #fff;
+      padding: 6px 10px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .size-btn.active {
+      background: #d2efff;
+    }
+
+    .game-card {
+      margin-top: 12px;
+      background: var(--card);
+      border: 2px solid #000;
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 8px 20px rgba(31, 59, 84, 0.09);
+    }
+
+    .game-title { text-align: center; font-size: 25px; font-weight: 700; margin-bottom: 8px; }
+
+    .meta {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .pill {
+      background: var(--pill);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-weight: 700;
+    }
+
+    .empty {
+      border: 2px dashed #8ba1b8;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      color: #486277;
+      font-weight: 600;
+      min-height: 220px;
+      display: grid;
+      place-items: center;
+      background: #fbfdff;
+    }
+
+    .roll-sheet {
+      width: min(100%, 980px);
+      margin: 0 auto;
+      border: 2px solid #000;
+      border-radius: 12px;
+      background: #fff;
+      padding: 12px;
+    }
+
+    .worksheet-title { font-size: 28px; margin: 0 0 4px; font-weight: 700; text-align: center; }
+    .skills-line { font-size: 14px; margin: 4px 0 8px; text-align: center; }
+    .worksheet-directions { font-size: 16px; margin-bottom: 10px; text-align: center; }
+
+    .game-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 8px 0 12px;
+      padding: 10px;
+      border: 2px dashed #a9bedc;
+      border-radius: 12px;
+      background: #f7fbff;
+    }
+
+    .game-die-wrap { display: flex; align-items: center; gap: 10px; }
+
+    .live-die {
+      width: 72px;
+      height: 72px;
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      object-fit: contain;
+    }
+
+    .live-die.rolling {
+      animation: dieRollSpin .5s linear;
+    }
+
+    .die-value {
+      min-width: 40px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #1f3556;
+    }
+
+    .game-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .roll-btn, .reset-btn {
+      border: 2px solid #000;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #fff;
+      padding: 9px 14px;
+      font-size: 16px;
+    }
+
+    .roll-btn { background: #e6f4ff; }
+    .roll-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+    .game-status {
+      flex: 1 1 100%;
+      text-align: center;
+      font-size: 14px;
+      color: #30455f;
+      margin-top: 2px;
+      line-height: 1.3;
+      min-height: 2.6em;
+    }
+
+    table.roll { margin: auto; border-collapse: collapse; width: 100%; table-layout: fixed; }
+    .roll td { border: 1px solid #000; min-height: 76px; height: 76px; text-align: center; vertical-align: middle; }
+    .dice-cell { height: 88px; }
+    .word-cell { font-size: 28px; }
+    .sentence-cell { font-size: 18px; text-align: left; padding: 6px; }
+    .rr-cell { transition: transform .15s ease, box-shadow .18s ease, background-color .18s ease; }
+
+    .roll td.current-cell {
+      background: #fff3c4;
+      box-shadow: inset 0 0 0 4px #f9a825;
+      transform: scale(1.03);
+      font-weight: 700;
+    }
+
+    .roll td.completed-cell { background: #edf7ed; }
+    .word-cell.current-cell { font-size: 34px; }
+    .sentence-cell.current-cell { font-size: 21px; }
+    .roll td.flash { animation: rollPulse .45s ease; }
+
+    #copyright {
+      font-size: 12px;
+      text-align: right;
+      margin-top: 8px;
+      display: block;
+    }
+
+    @keyframes rollPulse {
+      0% { transform: scale(0.98); }
+      55% { transform: scale(1.06); }
+      100% { transform: scale(1.03); }
+    }
+
+    @keyframes dieRollSpin {
+      0% { transform: rotate(0deg) scale(1); }
+      35% { transform: rotate(140deg) scale(1.07); }
+      70% { transform: rotate(300deg) scale(0.97); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    @media (max-width: 1040px) {
+      .family-picker { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 860px) {
+      .grid-2x2 { grid-template-columns: 1fr; }
+      .word-cell { font-size: 22px; }
+      .sentence-cell { font-size: 16px; }
+      .word-cell.current-cell { font-size: 28px; }
+      .sentence-cell.current-cell { font-size: 18px; }
+    }
+
+    @media print {
+      .panel,
+      .sub,
+      .data-status,
+      .game-controls { display: none !important; }
+      body {
+        background: #fff !important;
+        padding: 0 !important;
+      }
+      .app { max-width: none; }
+      .game-card {
+        border: none !important;
+        box-shadow: none !important;
+      }
+      .roll-sheet {
+        border: none !important;
+        padding: 0 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>Roll and Read Game Builder</h1>
+    <p class="sub">Pick a family, pick exact skills, then generate your live classroom Roll and Read board.</p>
+    <div id="dataStatus" class="data-status">Loading fluency data...</div>
+
+    <div class="panel">
+      <div class="grid-2x2">
+        <section class="cell-card">
+          <h2 class="cell-title">Skill Family</h2>
+          <div id="familyStage"></div>
+        </section>
+
+        <section class="cell-card">
+          <h2 class="cell-title">Select Skills</h2>
+          <div id="skillsWrap" class="skills-wrap">Choose a skill family first.</div>
+        </section>
+
+        <section class="cell-card compact">
+          <h2 class="cell-title">Blends</h2>
+          <div id="blendRow" class="choice-row">
+            <button class="option-btn active" data-blends="no">No (3 sounds)</button>
+            <button class="option-btn" data-blends="yes">Yes (4+ sounds)</button>
+          </div>
+        </section>
+
+        <section class="cell-card compact">
+          <h2 class="cell-title">Content Type</h2>
+          <div id="modeRow" class="choice-row">
+            <button class="option-btn active" data-mode="words">Words</button>
+            <button class="option-btn" data-mode="sentences">Sentences</button>
+            <button class="option-btn" data-mode="both" style="grid-column: span 2;">Words + Sentences</button>
+          </div>
+        </section>
+      </div>
+
+      <div id="summary" class="summary">Choose a skill family to begin.</div>
+
+      <div class="controls">
+        <button id="playBtn" class="btn play">Generate Game</button>
+        <button id="newBoardBtn" class="btn">New Board</button>
+        <button id="printBtn" class="btn">Print</button>
+
+        <div class="size-wrap" id="sizeRow">
+          <span class="size-label">Grid Size:</span>
+          <button class="size-btn" data-size="18">6 x 3</button>
+          <button class="size-btn" data-size="24">6 x 4</button>
+          <button class="size-btn active" data-size="30">6 x 5</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-card">
+      <div class="game-title">Roll and Read Live</div>
+      <div id="meta" class="meta"></div>
+      <div id="gameArea" class="empty">Press <strong>Generate Game</strong> after choosing skills.</div>
+    </div>
+  </div>
+
+  <script>
+    const FAMILY_MAP = {
+      'CVC Short Vowels': {
+        tone: '#1976d2', hint: 'Short vowel practice',
+        skills: ['Short A', 'Short E', 'Short I', 'Short O', 'Short U', 'Mixed CVC', 'FLSZ']
+      },
+      'Digraphs': {
+        tone: '#8e24aa', hint: '2-letter sounds',
+        skills: ['ck', 'sh', 'th', 'ch', 'wh', 'Digraphs Mixed']
+      },
+      'Glued Sounds': {
+        tone: '#2e7d32', hint: '-all, -ng, -nk',
+        skills: ['-all', '-ng', '-nk', 'Glued Mixed']
+      },
+      'Silent E (VCe)': {
+        tone: '#ef6c00', hint: 'a_e, i_e, o_e, u_e',
+        skills: ['a_e', 'i_e', 'o_e', 'u_e', 'Mixed VCe']
+      },
+      'R-Controlled': {
+        tone: '#3f51b5', hint: 'ar, or, er/ir/ur',
+        skills: ['ar', 'or', 'er/ir/ur', 'Mixed R-Controlled']
+      },
+      'Vowel Teams': {
+        tone: '#d81b60', hint: 'ai/ay, ee/ea, ...',
+        skills: ['Long A (ai/ay)', 'Long E (ee/ea)', 'Long I (igh/y/ie)', 'Long O (oa/ow/oe)', 'Long U (oo/ew/ue)', 'Mixed Vowel Teams']
+      },
+      'Diphthongs': {
+        tone: '#00897b', hint: 'oy/oi, ow/ou',
+        skills: ['Diphthongs (oy/oi)', 'Diphthongs (ow/ou)']
+      },
+      'Variant Vowels': {
+        tone: '#f9a825', hint: 'au/aw, oo variant',
+        skills: ['Variant Vowels (au/aw)', 'Variant Vowel (oo)']
+      },
+      'Soft C/G Endings': {
+        tone: '#455a64', hint: '-ce, -ge, -dge',
+        skills: ['Soft C (-ce)', 'Soft G (-ge)', 'Soft G (-dge)']
+      }
+    };
+
+    const PREFIX = {
+      'Short A': '0.1 - Short A', 'Short O': '0.2 - Short O', 'Short I': '0.3 - Short I', 'Short U': '0.4 - Short U', 'Short E': '0.5 - Short E', 'FLSZ': '0.6 - FLSZ',
+      'ck': '1.1 - ck', 'sh': '1.2 - sh', 'th': '1.3 - th', 'ch': '1.4 - ch', 'wh': '1.5 - wh',
+      '-all': '3.1 - all', '-ng': '3.2 - ng', '-nk': '3.3 - nk',
+      'a_e': '2.1 - a_e', 'i_e': '2.2 - i_e', 'o_e': '2.3 - o_e', 'u_e': '2.4 - u_e',
+      'ar': '4.1 - ar', 'or': '4.2 - or', 'er/ir/ur': '4.3 - er, ir, ur',
+      'Soft C (-ce)': '10.1 - ce', 'Soft G (-ge)': '10.2 - ge', 'Soft G (-dge)': '10.3 - dge'
+    };
+
+    const MIXED_RULES = {
+      'Mixed CVC': ['0.1 - Short A', '0.5 - Short E', '0.3 - Short I', '0.2 - Short O', '0.4 - Short U', '0.6 - FLSZ'],
+      'Digraphs Mixed': ['1.1 - ck', '1.2 - sh', '1.3 - th', '1.4 - ch', '1.5 - wh'],
+      'Glued Mixed': ['3.1 - all', '3.2 - ng', '3.3 - nk'],
+      'Mixed VCe': ['2.1 - a_e', '2.2 - i_e', '2.3 - o_e', '2.4 - u_e'],
+      'Mixed R-Controlled': ['4.1 - ar', '4.2 - or', '4.3 - er, ir, ur'],
+      'Long A (ai/ay)': ['6.1 - ay', '6.2 - ai'],
+      'Long E (ee/ea)': ['6.4 - ee', '6.5 - ea'],
+      'Long I (igh/y/ie)': ['6.6 - igh', '6.7 - Final y', '6.8 - ie'],
+      'Long O (oa/ow/oe)': ['6.9 - oa', '6.10 - ow', '6.11 - oe'],
+      'Long U (oo/ew/ue)': ['6.12 - oo (long u)', '6.13 - ew', '6.14 - ue'],
+      'Mixed Vowel Teams': ['6.1 - ay', '6.2 - ai', '6.4 - ee', '6.5 - ea', '6.6 - igh', '6.7 - Final y', '6.8 - ie', '6.9 - oa', '6.10 - ow', '6.11 - oe', '6.12 - oo (long u)', '6.13 - ew', '6.14 - ue'],
+      'Diphthongs (oy/oi)': ['7.4 - oy', '7.3 - oi'],
+      'Diphthongs (ow/ou)': ['7.2 - ow', '7.1 - ou'],
+      'Variant Vowels (au/aw)': ['7.5 - aw', '7.6 - au'],
+      'Variant Vowel (oo)': ['7.7 - oo variant']
+    };
+
+    const GAME_COLS = 6;
+
+    let activeFamily = null;
+    const selectedSkills = new Set();
+    let includeBlends = false;
+    let mode = 'words';
+    let gridSize = 30;
+
+    const boardSession = {
+      content: [],
+      labels: []
+    };
+
+    let gameState = null;
+
+    function wordsDict() { return (typeof fluencyWords !== 'undefined') ? fluencyWords : (window.fluencyData?.words || {}); }
+    function sentsDict() { return (typeof fluencySentences !== 'undefined') ? fluencySentences : (window.fluencyData?.sentences || {}); }
+    function readDict(dict, key) { return Array.isArray(dict[key]) ? dict[key] : []; }
+
+    function shuffle(arr) {
+      const a = Array.isArray(arr) ? arr.slice() : [];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const t = a[i];
+        a[i] = a[j];
+        a[j] = t;
+      }
+      return a;
+    }
+
+    function uniqueByLowercase(list) {
+      const seen = new Set();
+      const out = [];
+      for (const item of (list || [])) {
+        const v = String(item).trim();
+        const k = v.toLowerCase();
+        if (v && !seen.has(k)) {
+          seen.add(k);
+          out.push(v);
+        }
+      }
+      return out;
+    }
+
+    function fillToN(list, n) {
+      if (!list.length || n <= 0) return [];
+      const out = [];
+      let bag = shuffle(list);
+      while (out.length < n) {
+        if (!bag.length) bag = shuffle(list);
+        out.push(bag.shift());
+      }
+      return out.slice(0, n);
+    }
+
+    function readWithBlends(dict, prefix, type, blends) {
+      const tl = type.toLowerCase();
+      let base = [];
+      [prefix + ' ' + type, prefix + ' ' + tl, prefix].forEach(k => base = base.concat(readDict(dict, k)));
+
+      if (blends) {
+        const bPrefix = prefix.replace(' - ', 'b - ');
+        const candidates = [
+          prefix + ' with Blends ' + type,
+          prefix + ' with blends ' + type,
+          prefix + ' with Blends ' + tl,
+          prefix + ' with blends ' + tl,
+          prefix + ' with BLENDS ' + type,
+          bPrefix + ' with Blends ' + type,
+          bPrefix + ' with blends ' + type,
+          bPrefix + ' with Blends ' + tl,
+          bPrefix + ' with blends ' + tl
+        ];
+        for (const k of candidates) {
+          const got = readDict(dict, k);
+          if (got.length) return got.length < 30 ? uniqueByLowercase(got.concat(base)) : got;
+        }
+      }
+
+      return base;
+    }
+
+    function getList(label, type, blends) {
+      const dict = type === 'Words' ? wordsDict() : sentsDict();
+
+      if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)) {
+        let all = [];
+        for (const p of MIXED_RULES[label]) all = all.concat(readWithBlends(dict, p, type, blends));
+        return all;
+      }
+
+      const prefix = PREFIX[label];
+      if (prefix) return readWithBlends(dict, prefix, type, blends);
+
+      const want = label.toLowerCase();
+      const t1 = ' ' + type;
+      const t2 = ' ' + type.toLowerCase();
+      const guess = Object.keys(dict).find(k => k.toLowerCase().includes(want) && (k.endsWith(t1) || k.endsWith(t2)));
+      return guess ? readDict(dict, guess) : [];
+    }
+
+    function dataLoaded() {
+      return !!(window.fluencyWords || window.fluencySentences || window.fluencyData);
+    }
+
+    function renderFamilyStage() {
+      const host = document.getElementById('familyStage');
+
+      if (!activeFamily) {
+        const picker = document.createElement('div');
+        picker.className = 'family-picker';
+
+        Object.entries(FAMILY_MAP).forEach(([name, cfg]) => {
+          const btn = document.createElement('button');
+          btn.className = 'family-btn';
+          btn.style.borderColor = cfg.tone;
+          btn.innerHTML = name + '<small>' + cfg.hint + '</small>';
+          btn.addEventListener('click', () => {
+            activeFamily = name;
+            selectedSkills.clear();
+            renderFamilyStage();
+            renderSkills();
+            renderSummary();
+            renderMeta();
+          });
+          picker.appendChild(btn);
+        });
+
+        host.innerHTML = '';
+        host.appendChild(picker);
+        return;
+      }
+
+      const cfg = FAMILY_MAP[activeFamily];
+      host.innerHTML =
+        '<div class="selected-family" style="border-color:' + cfg.tone + '; background:' + cfg.tone + '1A;">' +
+          '<div class="name">' + activeFamily + '</div>' +
+          '<div class="hint">' + cfg.hint + '</div>' +
+          '<button id="changeFamilyBtn" class="btn-small">Change Skill Family</button>' +
+        '</div>';
+
+      document.getElementById('changeFamilyBtn').addEventListener('click', () => {
+        activeFamily = null;
+        selectedSkills.clear();
+        boardSession.content = [];
+        renderFamilyStage();
+        renderSkills();
+        renderSummary();
+        renderMeta();
+      });
+    }
+
+    function renderSkills() {
+      const wrap = document.getElementById('skillsWrap');
+      wrap.innerHTML = '';
+
+      if (!activeFamily) {
+        wrap.textContent = 'Choose a skill family first.';
+        return;
+      }
+
+      FAMILY_MAP[activeFamily].skills.forEach(skill => {
+        const btn = document.createElement('button');
+        btn.className = 'skill-btn' + (selectedSkills.has(skill) ? ' active' : '');
+        btn.textContent = skill;
+        btn.addEventListener('click', () => {
+          if (selectedSkills.has(skill)) selectedSkills.delete(skill);
+          else selectedSkills.add(skill);
+          renderSkills();
+          renderSummary();
+          renderMeta();
+        });
+        wrap.appendChild(btn);
+      });
+    }
+
+    function renderSummary() {
+      const box = document.getElementById('summary');
+
+      if (!activeFamily) {
+        box.textContent = 'Choose a skill family to begin.';
+        return;
+      }
+
+      const skills = Array.from(selectedSkills);
+      const blendText = includeBlends ? 'with blends' : 'without blends';
+      const modeText = mode === 'both' ? 'words + sentences' : mode;
+      const gridText = '6 x ' + Math.floor(gridSize / 6) + ' (' + gridSize + ' cells)';
+
+      if (!skills.length) {
+        box.innerHTML = 'You selected <strong>' + activeFamily + '</strong>. Now pick one or more exact skills on the top right.';
+        return;
+      }
+
+      box.innerHTML =
+        'Hit Generate Game: Your board will include <strong>' + activeFamily + '</strong> - <strong>' + skills.join(', ') +
+        '</strong>, <strong>' + blendText + '</strong>, using <strong>' + modeText + '</strong>, on a <strong>' + gridText + '</strong> grid.';
+    }
+
+    function renderMeta() {
+      const meta = document.getElementById('meta');
+      const skills = Array.from(selectedSkills);
+      const gridText = '6 x ' + Math.floor(gridSize / 6);
+
+      let progress = '';
+      if (gameState) progress = gameState.completedCount + '/' + gameState.totalPlayable;
+      else if (boardSession.content.length) progress = '0/' + boardSession.content.length;
+      else progress = '-';
+
+      meta.innerHTML =
+        '<div class="pill">Family: ' + (activeFamily || '-') + '</div>' +
+        '<div class="pill">Skills: ' + (skills.length ? skills.join(' • ') : '-') + '</div>' +
+        '<div class="pill">Mode: ' + (mode === 'both' ? 'Words + Sentences' : mode) + '</div>' +
+        '<div class="pill">Blends: ' + (includeBlends ? 'Yes' : 'No') + '</div>' +
+        '<div class="pill">Grid: ' + gridText + '</div>' +
+        '<div class="pill">Progress: ' + progress + '</div>';
+    }
+
+    function buildBoardContent(skills) {
+      const total = gridSize;
+
+      if (mode === 'words') {
+        const pool = uniqueByLowercase(skills.flatMap(s => getList(s, 'Words', includeBlends)));
+        return fillToN(shuffle(pool), total);
+      }
+
+      if (mode === 'sentences') {
+        const pool = uniqueByLowercase(skills.flatMap(s => getList(s, 'Sentences', includeBlends)));
+        return fillToN(shuffle(pool), total);
+      }
+
+      const words = uniqueByLowercase(skills.flatMap(s => getList(s, 'Words', includeBlends)));
+      const sents = uniqueByLowercase(skills.flatMap(s => getList(s, 'Sentences', includeBlends)));
+
+      if (!words.length && !sents.length) return [];
+      if (!words.length) return fillToN(shuffle(sents), total);
+      if (!sents.length) return fillToN(shuffle(words), total);
+
+      const half = Math.floor(total / 2);
+      const w = fillToN(shuffle(words), half);
+      const s = fillToN(shuffle(sents), total - w.length);
+      return shuffle(w.concat(s));
+    }
+
+    function buildRollAndReadTable(cells) {
+      const cols = GAME_COLS;
+      const rows = Math.ceil(cells.length / cols);
+      const tbl = document.createElement('table');
+      tbl.className = 'roll';
+
+      const header = tbl.insertRow();
+      for (let c = 0; c < cols; c++) {
+        const td = header.insertCell();
+        td.className = 'dice-cell';
+        const img = document.createElement('img');
+        img.src = 'images/dice' + (c + 1) + '.png';
+        img.alt = 'Die ' + (c + 1);
+        img.style.width = '60px';
+        img.style.height = '60px';
+        td.appendChild(img);
+      }
+
+      let idx = 0;
+      for (let r = 0; r < rows; r++) {
+        const row = tbl.insertRow();
+        for (let c = 0; c < cols; c++) {
+          const td = row.insertCell();
+          const val = cells[idx++] || '';
+          const isSentence = val.includes(' ');
+          td.className = (isSentence ? 'sentence-cell' : 'word-cell') + ' rr-cell';
+          td.dataset.row = String(r);
+          td.dataset.col = String(c + 1);
+          td.textContent = val;
+        }
+      }
+
+      return { table: tbl, rows };
+    }
+
+    function buildGameControls() {
+      const box = document.createElement('div');
+      box.className = 'game-controls';
+
+      const dieWrap = document.createElement('div');
+      dieWrap.className = 'game-die-wrap';
+
+      const die = document.createElement('img');
+      die.className = 'live-die';
+      die.src = 'images/dice1.png';
+      die.alt = 'Current die: 1';
+
+      const dieValue = document.createElement('div');
+      dieValue.className = 'die-value';
+      dieValue.textContent = '1';
+
+      dieWrap.appendChild(die);
+      dieWrap.appendChild(dieValue);
+
+      const actions = document.createElement('div');
+      actions.className = 'game-actions';
+
+      const rollBtn = document.createElement('button');
+      rollBtn.className = 'roll-btn';
+      rollBtn.type = 'button';
+      rollBtn.textContent = 'Roll';
+
+      const resetBtn = document.createElement('button');
+      resetBtn.className = 'reset-btn';
+      resetBtn.type = 'button';
+      resetBtn.textContent = 'Reset Round';
+
+      const status = document.createElement('div');
+      status.className = 'game-status';
+      status.textContent = 'Roll to start.';
+
+      actions.appendChild(rollBtn);
+      actions.appendChild(resetBtn);
+      actions.appendChild(status);
+
+      box.appendChild(dieWrap);
+      box.appendChild(actions);
+      return box;
+    }
+
+    function buildRollSheet(cells, labels) {
+      const sheet = document.createElement('div');
+      sheet.className = 'roll-sheet';
+
+      const title = document.createElement('div');
+      title.className = 'worksheet-title';
+      title.textContent = 'Roll and Read';
+
+      const skills = document.createElement('div');
+      skills.className = 'skills-line';
+      skills.innerHTML = '<strong>Skills:</strong> ' + (labels.length ? labels.join(' • ') : '-');
+
+      const directions = document.createElement('div');
+      directions.className = 'worksheet-directions';
+      directions.innerHTML = '<strong>Directions:</strong> Click Roll, read the highlighted item, and keep rolling until the board is complete.';
+
+      const controls = buildGameControls();
+      const built = buildRollAndReadTable(cells);
+
+      const copy = document.createElement('div');
+      copy.id = 'copyright';
+      copy.textContent = 'Copyright - InterventionStation.com - @TeachwithMrC';
+
+      sheet.appendChild(title);
+      sheet.appendChild(skills);
+      sheet.appendChild(directions);
+      sheet.appendChild(controls);
+      sheet.appendChild(built.table);
+      sheet.appendChild(copy);
+
+      return { sheet, rows: built.rows };
+    }
+
+    function setDieFace(value) {
+      gameState.dieImg.src = 'images/dice' + value + '.png';
+      gameState.dieImg.alt = 'Current die: ' + value;
+      gameState.dieValue.textContent = String(value);
+    }
+
+    function availableColumns() {
+      if (!gameState) return [];
+      const out = [];
+      for (let i = 0; i < GAME_COLS; i++) {
+        if (gameState.columnPointers[i] < gameState.columnQueues[i].length) out.push(i + 1);
+      }
+      return out;
+    }
+
+    function pickRandom(list) {
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    function animateDieRoll(finalValue) {
+      return new Promise(resolve => {
+        if (!gameState) {
+          resolve();
+          return;
+        }
+        const ticks = 8 + Math.floor(Math.random() * 4);
+        let count = 0;
+        gameState.dieImg.classList.add('rolling');
+        const timer = setInterval(() => {
+          count += 1;
+          const face = Math.floor(Math.random() * GAME_COLS) + 1;
+          setDieFace(face);
+          if (count >= ticks) {
+            clearInterval(timer);
+            gameState.dieImg.classList.remove('rolling');
+            setDieFace(finalValue);
+            resolve();
+          }
+        }, 70);
+      });
+    }
+
+    function resetGameRound() {
+      if (!gameState) return;
+      gameState.columnPointers = Array(GAME_COLS).fill(0);
+      gameState.completedCount = 0;
+      gameState.currentCell = null;
+      gameState.isRolling = false;
+
+      gameState.page.querySelectorAll('.rr-cell').forEach(td => {
+        td.classList.remove('current-cell', 'completed-cell', 'flash');
+      });
+
+      gameState.rollBtn.disabled = false;
+      gameState.rollBtn.textContent = 'Roll';
+      setDieFace(1);
+      gameState.statusEl.textContent = 'Roll to start. 0 of ' + gameState.totalPlayable + ' complete.';
+      renderMeta();
+    }
+
+    async function rollGameTurn() {
+      if (!gameState || gameState.isRolling) return;
+
+      const openCols = availableColumns();
+      if (openCols.length === 0) {
+        gameState.rollBtn.disabled = true;
+        gameState.rollBtn.textContent = 'Board Complete';
+        gameState.statusEl.textContent = 'Board complete. ' + gameState.totalPlayable + ' of ' + gameState.totalPlayable + ' complete.';
+        renderMeta();
+        return;
+      }
+
+      gameState.isRolling = true;
+      gameState.rollBtn.disabled = true;
+      gameState.statusEl.textContent = 'Rolling...';
+
+      const rawDie = Math.floor(Math.random() * GAME_COLS) + 1;
+      const chosenDie = openCols.includes(rawDie) ? rawDie : pickRandom(openCols);
+      const rerollNote = (rawDie === chosenDie) ? '' : ' Auto-reroll: ' + rawDie + ' -> ' + chosenDie + ' (column full).';
+      await animateDieRoll(chosenDie);
+
+      const colIndex = chosenDie - 1;
+      const ptr = gameState.columnPointers[colIndex];
+      const target = gameState.columnQueues[colIndex][ptr] || null;
+
+      if (gameState.currentCell) {
+        gameState.currentCell.classList.remove('current-cell', 'flash');
+        gameState.currentCell.classList.add('completed-cell');
+      }
+
+      if (target) {
+        gameState.columnPointers[colIndex] = ptr + 1;
+        target.classList.remove('completed-cell');
+        target.classList.add('current-cell');
+        target.classList.remove('flash');
+        void target.offsetWidth;
+        target.classList.add('flash');
+        gameState.currentCell = target;
+        gameState.completedCount += 1;
+      }
+
+      if (gameState.completedCount >= gameState.totalPlayable) {
+        gameState.rollBtn.disabled = true;
+        gameState.rollBtn.textContent = 'Board Complete';
+        gameState.statusEl.textContent = 'Rolled ' + chosenDie + '. Read it. Board complete.' + rerollNote;
+        gameState.isRolling = false;
+        renderMeta();
+        return;
+      }
+
+      const remaining = gameState.totalPlayable - gameState.completedCount;
+      gameState.statusEl.textContent =
+        'Rolled ' + chosenDie + '. Read the highlighted word. ' + gameState.completedCount + ' of ' + gameState.totalPlayable +
+        ' complete (' + remaining + ' left).' + rerollNote;
+      gameState.rollBtn.disabled = false;
+      gameState.isRolling = false;
+      renderMeta();
+    }
+
+    function wireGameControls(sheet) {
+      const rollBtn = sheet.querySelector('.roll-btn');
+      const resetBtn = sheet.querySelector('.reset-btn');
+      const statusEl = sheet.querySelector('.game-status');
+      const dieImg = sheet.querySelector('.live-die');
+      const dieValue = sheet.querySelector('.die-value');
+
+      const columnQueues = Array.from({ length: GAME_COLS }, () => []);
+      sheet.querySelectorAll('.rr-cell').forEach(td => {
+        const text = (td.textContent || '').trim();
+        if (!text) return;
+        const col = parseInt(td.dataset.col || '0', 10);
+        if (col >= 1 && col <= GAME_COLS) {
+          columnQueues[col - 1].push(td);
+        }
+      });
+
+      const totalPlayable = columnQueues.reduce((sum, q) => sum + q.length, 0);
+
+      gameState = {
+        page: sheet,
+        totalPlayable,
+        columnQueues,
+        columnPointers: Array(GAME_COLS).fill(0),
+        completedCount: 0,
+        currentCell: null,
+        isRolling: false,
+        rollBtn,
+        resetBtn,
+        statusEl,
+        dieImg,
+        dieValue
+      };
+
+      rollBtn.addEventListener('click', rollGameTurn);
+      resetBtn.addEventListener('click', resetGameRound);
+      resetGameRound();
+    }
+
+    function playBoard(forceNew) {
+      if (!dataLoaded()) {
+        const msg = window.__fluencyLoaded
+          ? 'Fluency script loaded, but no usable data object was found.'
+          : 'Fluency data is not loaded yet. Wait 1-2 seconds and try again, or refresh.';
+        return alert(msg);
+      }
+
+      if (!activeFamily) return alert('Pick a skill family first.');
+
+      const skills = Array.from(selectedSkills);
+      if (!skills.length) return alert('Pick at least one exact skill on the top right.');
+
+      if (forceNew || !boardSession.content.length) {
+        const built = buildBoardContent(skills);
+        if (built.length < gridSize) {
+          return alert('Not enough content found from the JS data for those settings.');
+        }
+        boardSession.content = built.slice(0, gridSize);
+      }
+
+      boardSession.labels = skills.slice();
+
+      const gameArea = document.getElementById('gameArea');
+      const render = buildRollSheet(boardSession.content, boardSession.labels);
+      gameArea.className = '';
+      gameArea.innerHTML = '';
+      gameArea.appendChild(render.sheet);
+
+      wireGameControls(render.sheet);
+      renderMeta();
+      document.querySelector('.game-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    document.querySelectorAll('#blendRow .option-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#blendRow .option-btn').forEach(x => x.classList.remove('active'));
+        btn.classList.add('active');
+        includeBlends = btn.dataset.blends === 'yes';
+        renderSummary();
+        renderMeta();
+      });
+    });
+
+    document.querySelectorAll('#modeRow .option-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#modeRow .option-btn').forEach(x => x.classList.remove('active'));
+        btn.classList.add('active');
+        mode = btn.dataset.mode;
+        renderSummary();
+        renderMeta();
+      });
+    });
+
+    document.querySelectorAll('#sizeRow .size-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#sizeRow .size-btn').forEach(x => x.classList.remove('active'));
+        btn.classList.add('active');
+        const n = parseInt(btn.dataset.size || '30', 10);
+        if (Number.isFinite(n)) gridSize = n;
+        renderSummary();
+        renderMeta();
+      });
+    });
+
+    document.getElementById('playBtn').addEventListener('click', () => playBoard(true));
+    document.getElementById('newBoardBtn').addEventListener('click', () => playBoard(true));
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+    renderFamilyStage();
+    renderSkills();
+    renderSummary();
+    renderMeta();
+  </script>
+</body>
+</html>

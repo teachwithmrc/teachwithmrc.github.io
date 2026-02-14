@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Subtraction with Regrouping — Vertical + Base-10 Blocks (3 per page)</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      font-family: system-ui, sans-serif;
+    }
+
+    .page {
+      width: 8.5in;
+      margin: 0 auto;
+      padding: 0.4in;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 0 0 6px;
+      font-size: 1.1rem;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+    }
+
+    button {
+      padding: 4px 10px;
+      border: 1px solid #000;
+      background: white;
+      cursor: pointer;
+      font-weight: 600;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+
+    /* 3 big rows, tightened spacing */
+    .problems-column {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .problem-card {
+      border: 2px solid #000;
+      border-radius: 6px;
+      padding: 10px 12px;
+      min-height: 220px; /* smaller so 3 fit on one page */
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .equation-line {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    /* Two main columns per problem */
+    .two-columns {
+      display: flex;
+      flex-direction: row;
+      gap: 18px;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .left-side {
+      flex: 0.9;
+      display: flex;
+      justify-content: center;
+    }
+
+    .right-side {
+      flex: 1.1;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Vertical subtraction */
+    .vertical-table {
+      border-collapse: collapse;
+      table-layout: fixed;
+      min-width: 170px;
+    }
+
+    .vertical-table td {
+      text-align: center;
+      padding: 2px 4px;
+    }
+
+    .digit-cell {
+      font-size: 1.8rem;  /* slightly smaller */
+      font-weight: 700;
+      width: 48px;
+    }
+
+    .sign-cell {
+      font-size: 1.8rem;
+      width: 28px;
+      vertical-align: bottom;
+    }
+
+    .regroup-cell {
+      height: 32px;
+    }
+
+    /* SQUARE regroup boxes */
+    .regroup-box {
+      width: 32px;
+      height: 32px;
+      border: 2px solid #000;
+      margin: 0 auto;
+    }
+
+    .answer-line-vertical {
+      border-top: 3px solid #000;
+      width: 100%;
+      height: 0;
+      margin-top: 4px;
+    }
+
+    /* Base-10 block panel (Tens / Ones columns, no borders) */
+    .blocks-panel {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .blocks-columns {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .block-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .panel-label {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .tens-stack,
+    .ones-stack {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .blocks-row-tens {
+      display: grid;
+      grid-template-columns: repeat(5, auto);
+      gap: 4px;
+      justify-content: center;
+    }
+
+    .blocks-row-ones {
+      display: grid;
+      grid-template-columns: repeat(5, 20px);
+      grid-auto-rows: 20px;
+      gap: 4px;
+      justify-content: center;
+    }
+
+    .block {
+      border: 2px solid #000;
+      background: transparent;
+    }
+
+    .block.ten {
+      width: 20px;
+      height: 60px;
+    }
+
+    .block.one {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Dotted ten-frame under ones */
+    .regroup-box-under {
+      width: 100%;
+      max-width: 130px;
+      height: 55px;
+      border: 2px dotted #bbb;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      margin-top: 4px;
+    }
+
+    .ten-frame-cell {
+      border-right: 1px dotted #ccc;
+      border-bottom: 1px dotted #ccc;
+    }
+
+    .ten-frame-cell:nth-child(5),
+    .ten-frame-cell:nth-child(10) {
+      border-right: none;
+    }
+
+    .ten-frame-cell:nth-child(n+6) {
+      border-bottom: none;
+    }
+
+    @media print {
+      .controls { display: none; }
+      button { display: none; }
+      .page {
+        width: 100%;
+        padding: 0.25in; /* less padding so everything fits */
+      }
+      .problem-card {
+        min-height: 200px; /* even tighter on print */
+        padding: 8px 10px;
+      }
+      .problems-column {
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Subtraction with Regrouping — Vertical + Base-10 Blocks</h1>
+
+    <div class="controls">
+      <button id="generateBtn">Generate New</button>
+      <button id="printBtn">Print</button>
+    </div>
+
+    <div class="problems-column" id="problemsColumn"></div>
+  </div>
+
+  <script>
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Force regrouping in ones place
+    function generateProblem() {
+      let a, b;
+      while (true) {
+        a = randomInt(20, 99);
+        b = randomInt(10, a - 1);
+        if (a % 10 < b % 10) return { a, b };
+      }
+    }
+
+    function createBlocks(container, count, type) {
+      container.innerHTML = "";
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement("div");
+        el.classList.add("block", type);
+        container.appendChild(el);
+      }
+    }
+
+    function fillTenFrame(frameEl) {
+      frameEl.innerHTML = "";
+      for (let i = 0; i < 10; i++) {
+        const c = document.createElement("div");
+        c.classList.add("ten-frame-cell");
+        frameEl.appendChild(c);
+      }
+    }
+
+    function renderCard(problem) {
+      const { a, b } = problem;
+
+      const card = document.createElement("div");
+      card.classList.add("problem-card");
+
+      // Top equation: 53 − 28 = _________
+      const eq = document.createElement("div");
+      eq.classList.add("equation-line");
+      eq.textContent = `${a} − ${b} = __________`;
+      card.appendChild(eq);
+
+      const row = document.createElement("div");
+      row.classList.add("two-columns");
+
+      /* LEFT: vertical algorithm */
+      const left = document.createElement("div");
+      left.classList.add("left-side");
+
+      const vtable = document.createElement("table");
+      vtable.classList.add("vertical-table");
+
+      const aT = Math.floor(a / 10);
+      const aO = a % 10;
+      const bT = Math.floor(b / 10);
+      const bO = b % 10;
+
+      vtable.innerHTML = `
+        <tr>
+          <td class="sign-cell"></td>
+          <td class="regroup-cell"><div class="regroup-box"></div></td>
+          <td class="regroup-cell"><div class="regroup-box"></div></td>
+        </tr>
+        <tr>
+          <td class="sign-cell"></td>
+          <td class="digit-cell">${aT}</td>
+          <td class="digit-cell">${aO}</td>
+        </tr>
+        <tr>
+          <td class="sign-cell">−</td>
+          <td class="digit-cell">${bT}</td>
+          <td class="digit-cell">${bO}</td>
+        </tr>
+        <tr>
+          <td class="sign-cell"></td>
+          <td colspan="2"><div class="answer-line-vertical"></div></td>
+        </tr>
+      `;
+
+      left.appendChild(vtable);
+      row.appendChild(left);
+
+      /* RIGHT: tens column + ones column */
+      const right = document.createElement("div");
+      right.classList.add("right-side");
+
+      const blocksPanel = document.createElement("div");
+      blocksPanel.classList.add("blocks-panel");
+
+      blocksPanel.innerHTML = `
+        <div class="blocks-columns">
+          <div class="block-col">
+            <div class="panel-label">Tens</div>
+            <div class="tens-stack">
+              <div class="blocks-row-tens tens-row"></div>
+            </div>
+          </div>
+          <div class="block-col">
+            <div class="panel-label">Ones</div>
+            <div class="ones-stack">
+              <div class="blocks-row-ones ones-row"></div>
+              <div class="regroup-box-under"></div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      right.appendChild(blocksPanel);
+      row.appendChild(right);
+
+      card.appendChild(row);
+
+      // Fill base-10 blocks
+      createBlocks(blocksPanel.querySelector(".tens-row"), aT, "ten");
+      createBlocks(blocksPanel.querySelector(".ones-row"), aO, "one");
+      fillTenFrame(blocksPanel.querySelector(".regroup-box-under"));
+
+      return card;
+    }
+
+    function generateWorksheet() {
+      const container = document.getElementById("problemsColumn");
+      container.innerHTML = "";
+      for (let i = 0; i < 3; i++) {
+        container.appendChild(renderCard(generateProblem()));
+      }
+    }
+
+    document.getElementById("generateBtn").addEventListener("click", generateWorksheet);
+    document.getElementById("printBtn").addEventListener("click", () => window.print());
+
+    generateWorksheet();
+  </script>
+</body>
+</html>

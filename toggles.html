@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ultimate Word Mapping Generator</title>
+  <script src="newtry_FULL.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: 'BoxesFont';
+      src: url('fonts/boxes2.otf') format('opentype');
+    }
+    @font-face {
+      font-family: 'UnderlineFont';
+      src: url('fonts/underlines.otf') format('opentype');
+    }
+
+    body { font-family: 'Poppins', sans-serif; margin: 40px; text-align: center; }
+    h1 { font-size: 36px; margin-bottom: 5px; }
+    h2 { font-size: 20px; margin-bottom: 20px; }
+
+    .table-section { border: 2px solid #000; padding: 20px; margin: 12px auto; width: fit-content; box-sizing: border-box; text-align: left; }
+    .section-label { font-weight: 600; font-size: 18px; margin-bottom: 12px; text-align: center; }
+
+    .skill-button-grid { display: flex; flex-direction: column; gap: 12px; }
+    .skill-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .skill-row-label { font-weight: 600; margin-right: 8px; }
+
+    .skill-button {
+      border: 2px solid #000; padding: 6px 12px; border-radius: 6px;
+      font-weight: 600; font-size: 14px; cursor: pointer;
+      transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+    .skill-button.selected { background-color: #007bff; color: white; box-shadow: 0 0 4px rgba(0, 123, 255, 0.5); }
+
+    .option-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+    .option-box { padding: 10px 14px; border: 2px solid #000; border-radius: 8px; cursor: pointer; transition: background-color 0.3s, color 0.3s; }
+    .option-box.selected { background-color: #d9c9ff; }
+
+    /* Worksheet Layout */
+    .word-table { width: 100%; border-collapse: collapse; margin-top: 20px; border: 2px solid black; }
+    .word-table td {
+      width: 50%;
+      text-align: center;
+      vertical-align: middle;
+      padding: 24px 0;    /* extra breathing room top/bottom */
+      border: 2px solid black;
+    }
+
+    .worksheet-title { font-size: 40px; margin-bottom: 5px; font-weight: 700; }
+    .worksheet-directions { font-size: 22px; margin-bottom: 20px; }
+
+    .word {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 12px; /* space before boxes/underlines */
+    }
+    .pattern {
+      font-size: 60px;
+      transform: scale(1.5);
+      display: inline-block;
+      font-family: 'BoxesFont', monospace;
+      font-weight: normal;
+      line-height: 1;
+      margin-top: 8px;      /* space above pattern */
+      margin-bottom: 14px;  /* space below so descenders don't collide */
+    }
+
+    /* Underlines style: unbold + a tiny gap between marks */
+    .pattern.underlines {
+      font-family: 'UnderlineFont', monospace;
+      font-weight: normal;           /* ensure not bold */
+      letter-spacing: 0;             /* no extra spacing */
+    }
+    .pattern.underlines span {
+      display: inline-block;
+      margin: 0 3px;                 /* subtle, consistent gap */
+    }
+
+    /* Collapsible Toggles — only for Step 1 layout */
+    .toggle-section {
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 4px 8px;
+    }
+    .toggle-section summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 4px;
+    }
+    .toggle-section[open] {
+      border-color: #007bff;
+      background-color: #f0f7ff;
+    }
+
+    /* Hide Soft C and Soft G buttons (keep Soft Endings) */
+    .skill-button[data-skill="Soft C"],
+    .skill-button[data-skill="Soft G"] { display: none; }
+
+    /* Print Formatting */
+    #copyright {
+      font-size: 12px;
+      text-align: right;
+      margin-top: 12px;
+      display: none; /* hidden on screen */
+    }
+    @media print {
+      body { margin: 0; }
+      h1, h2, .table-section, button, .toggle-section summary { display: none; }
+      #output { margin: 0; }
+      .worksheet-title, .worksheet-directions { display: block; text-align: center; }
+      #copyright { display: block; } /* show only when printing */
+    }
+  </style>
+</head>
+<body>
+  <h1>Word Mapping Generator</h1>
+  <h2>Skills: <span id="selected-skills"></span></h2>
+
+  <!-- Step 1: Skill Selection -->
+  <div class="table-section">
+    <div class="section-label">Step 1: Select Skills (3 sounds unless blends are included)</div>
+    <div class="skill-button-grid">
+
+      <div class="skill-row">
+        <span class="skill-row-label">CVC Short Vowels:</span>
+        <button class="skill-button" data-skill="Short A">Short A</button>
+        <button class="skill-button" data-skill="Short E">Short E</button>
+        <button class="skill-button" data-skill="Short I">Short I</button>
+        <button class="skill-button" data-skill="Short O">Short O</button>
+        <button class="skill-button" data-skill="Short U">Short U</button>
+        <button class="skill-button" data-skill="Mixed CVC">Mixed CVC</button>
+        <button class="skill-button" data-skill="FLSZ Words">FLSZ</button>
+      </div>
+
+      <div class="skill-row">
+        <span class="skill-row-label">Digraphs:</span>
+        <button class="skill-button" data-skill="Digraph(ck)">ck</button>
+        <button class="skill-button" data-skill="Digraph(sh)">sh</button>
+        <button class="skill-button" data-skill="Digraph(th)">th</button>
+        <button class="skill-button" data-skill="Digraph(ch)">ch</button>
+        <button class="skill-button" data-skill="Digraph(wh)">wh</button>
+        <button class="skill-button" data-skill="Digraphs Mixed">Digraphs Mixed</button>
+      </div>
+
+      <div class="skill-row">
+        <span class="skill-row-label">Glued Sounds:</span>
+        <button class="skill-button" data-skill="Glued(all)">-all</button>
+        <button class="skill-button" data-skill="Glued(-ng)">-ng</button>
+        <button class="skill-button" data-skill="Glued(-nk)">-nk</button>
+        <button class="skill-button" data-skill="Glued Mixed">Glued Mixed</button>
+      </div>
+
+      <div class="skill-row">
+        <span class="skill-row-label">Silent E (VCe):</span>
+        <button class="skill-button" data-skill="VCe(a_e)">a_e</button>
+        <button class="skill-button" data-skill="VCe(i_e)">i_e</button>
+        <button class="skill-button" data-skill="VCe(o_e)">o_e</button>
+        <button class="skill-button" data-skill="VCe(u_e)">u_e</button>
+        <button class="skill-button" data-skill="Mixed VCe">Mixed VCe</button>
+      </div>
+
+      <div class="skill-row">
+        <span class="skill-row-label">R-Controlled:</span>
+        <button class="skill-button" data-skill="R-Controlled(ar)">ar</button>
+        <button class="skill-button" data-skill="R-Controlled(or)">or</button>
+        <button class="skill-button" data-skill="R-Controlled(er,ir,ur)">er/ir/ur</button>
+        <button class="skill-button" data-skill="Mixed R-Controlled">Mixed R-Controlled</button>
+      </div>
+
+      <!-- Collapsible Advanced Skills -->
+      <details class="toggle-section">
+        <summary>Vowel Teams</summary>
+        <div class="skill-row">
+          <span class="skill-row-label">Vowel Teams:</span>
+          <button class="skill-button" data-skill="Long A (ai/ay)">Long A (ai/ay)</button>
+          <button class="skill-button" data-skill="Long E (ee/ea)">Long E (ee/ea)</button>
+          <button class="skill-button" data-skill="Long I (igh/y/ie)">Long I (igh/-y/ie)</button>
+          <button class="skill-button" data-skill="Long O (oa/ow/oe)">Long O (oa/ow/oe)</button>
+          <button class="skill-button" data-skill="Long U (oo/ew/ue)">Long U (oo/ew/ue)</button>
+          <button class="skill-button" data-skill="Mixed Vowel Teams">Mixed Vowel Teams</button>
+        </div>
+      </details>
+
+      <details class="toggle-section">
+        <summary>Diphthongs</summary>
+        <div class="skill-row">
+          <span class="skill-row-label">Diphthongs:</span>
+          <button class="skill-button" data-skill="Diphthongs (oy/oi)">oy/oi</button>
+          <button class="skill-button" data-skill="Diphthongs (ow/ou)">ow/ou</button>
+        </div>
+      </details>
+
+      <details class="toggle-section">
+        <summary>Variant Vowels</summary>
+        <div class="skill-row">
+          <span class="skill-row-label">Variant Vowels:</span>
+          <button class="skill-button" data-skill="Variant Vowels (au/aw)">au/aw</button>
+          <button class="skill-button" data-skill="Variant Vowel (oo)">oo</button>
+        </div>
+      </details>
+
+      <details class="toggle-section">
+        <summary>Soft C/G Endings</summary>
+        <div class="skill-row">
+          <span class="skill-row-label">Soft C/G Endings:</span>
+          <button class="skill-button" data-skill="Soft Endings">Soft C/G Endings (-ce/-ge/-dge)</button>
+          <!-- Hidden via CSS:
+          <button class="skill-button" data-skill="Soft C">Soft C (ce/ci/cy)</button>
+          <button class="skill-button" data-skill="Soft G">Soft G (ge/gi/gy)</button>
+          -->
+        </div>
+      </details>
+
+    </div>
+  </div>
+
+  <!-- Step 2: Include Blends -->
+  <div class="table-section">
+    <div class="section-label">Step 2: Include Blends?</div>
+    <div class="option-grid">
+      <div class="option-box" id="includeBlendsYes">Yes (4+ sounds)</div>
+      <div class="option-box" id="includeBlendsNo">No (3 sounds)</div>
+    </div>
+  </div>
+
+  <!-- Step 3: Generate & Print -->
+  <div class="table-section">
+    <div class="section-label">Step 3: Generate & Print</div>
+
+    <!-- Boxes vs Underlines toggle -->
+    <div style="margin:6px 0 12px;">
+      <label style="margin-right:8px;">
+        <input type="radio" name="cellStyle" value="boxes" checked> Elkonin Boxes
+      </label>
+      <label>
+        <input type="radio" name="cellStyle" value="underlines"> Underlines
+      </label>
+    </div>
+
+    <button onclick="generatePage()" style="font-size: 18px; padding: 10px 24px;">Generate</button>
+    <button onclick="window.print()" style="font-size: 18px; padding: 10px 24px;">Print</button>
+  </div>
+
+  <div id="output"></div>
+
+<script>
+  let selectedSkills = new Set();
+  let includeBlends = null;
+
+  // Skill button toggle
+  document.querySelectorAll('.skill-button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const skill = btn.dataset.skill;
+      if (selectedSkills.has(skill)) {
+        selectedSkills.delete(skill);
+        btn.classList.remove('selected');
+      } else {
+        selectedSkills.add(skill);
+        btn.classList.add('selected');
+      }
+      document.getElementById('selected-skills').innerText = Array.from(selectedSkills).join(', ');
+    });
+  });
+
+  // Include Blends toggles
+  document.getElementById('includeBlendsYes').addEventListener('click', function () {
+    includeBlends = true;
+    this.classList.add('selected');
+    document.getElementById('includeBlendsNo').classList.remove('selected');
+  });
+  document.getElementById('includeBlendsNo').addEventListener('click', function () {
+    includeBlends = false;
+    this.classList.add('selected');
+    document.getElementById('includeBlendsYes').classList.remove('selected');
+  });
+
+  function shuffle(arr){ return [...arr].sort(() => Math.random() - 0.5); }
+
+  // Helpers for Boxes vs Underlines
+  function currentCellFont() {
+    const val = document.querySelector('input[name="cellStyle"]:checked')?.value || 'boxes';
+    return val === 'underlines' ? 'UnderlineFont' : 'BoxesFont';
+  }
+  function currentCellClass() {
+    const val = document.querySelector('input[name="cellStyle"]:checked')?.value || 'boxes';
+    return val === 'underlines' ? 'underlines' : 'boxes';
+  }
+  function renderPatternHTML(pattern, useUnderlines) {
+    if (!useUnderlines) return pattern; // BoxesFont: just show digits
+    return Array.from(pattern).map(d => `<span>${d}</span>`).join(''); // Underlines: spaced digits
+  }
+
+  // Expose on window so the onclick finds it
+  window.generatePage = function generatePage() {
+    if (selectedSkills.size === 0) return alert("Select at least one skill!");
+    if (includeBlends === null) return alert("Please choose Include Blends: Yes or No");
+    if (typeof soundBoxWords === 'undefined') {
+      alert("Missing data: soundBoxWords (check newtry_FULL.js is loaded).");
+      return;
+    }
+
+    const source = soundBoxWords; // from newtry_FULL.js
+    let allWords = [];
+
+    selectedSkills.forEach(skill => {
+      allWords = allWords.concat(getWordsForSkill(skill, source, includeBlends));
+    });
+    if (allWords.length === 0) return alert("No words found for the selected skills.");
+
+    while (allWords.length < 8) allWords = allWords.concat(allWords);
+    allWords = shuffle(allWords).slice(0, 8);
+
+    const output = document.getElementById('output');
+    output.innerHTML = '';
+
+    const title = document.createElement('div');
+    title.className = 'worksheet-title';
+    title.textContent = `${Array.from(selectedSkills).join(', ')} Word Mapping`;
+
+    const directions = document.createElement('div');
+    directions.className = 'worksheet-directions';
+    directions.textContent = "Read each word, write it in the sound boxes correctly, read it again.";
+
+    output.appendChild(title);
+    output.appendChild(directions);
+
+    const table = document.createElement('table');
+    table.className = 'word-table';
+
+    const useUnder = (document.querySelector('input[name="cellStyle"]:checked')?.value === 'underlines');
+    const fontName = currentCellFont();
+    const patternClass = currentCellClass();
+
+    for (let r = 0; r < 4; r++) {
+      const tr = document.createElement('tr');
+      for (let c = 0; c < 2; c++) {
+        const td = document.createElement('td');
+        const idx = r * 2 + c;
+        if (idx < allWords.length) {
+          const patternHTML = renderPatternHTML(allWords[idx].pattern, useUnder);
+          td.innerHTML = `
+            <div class="word">${allWords[idx].word}</div>
+            <div class="pattern ${patternClass}" style="font-family:'${fontName}', monospace;">
+              ${patternHTML}
+            </div>
+          `;
+        }
+        tr.appendChild(td);
+      }
+      table.appendChild(tr);
+    }
+    output.appendChild(table);
+
+    // Print-only copyright, directly under the table with spacing
+    const copyright = document.createElement('div');
+    copyright.id = 'copyright';
+    copyright.innerHTML = '<br><br><br>Copyright - InterventionStation.com - @TeachwithMrC';
+    output.appendChild(copyright);
+  };
+
+  // Skill fetch logic
+  function getWordsForSkill(skill, source, blends) {
+    const blendSuffixes = [" with Blends", " with Digraphs and Blends"];
+    const glueNgParts = ["ang", "ing", "ong", "ung"];
+    const glueNkParts = ["ank", "ink", "onk", "unk"];
+
+    function fetchSet(base) {
+      if (!blends) return source[base] || [];
+      let result = [];
+      blendSuffixes.forEach(suffix => {
+        const key = `${base}${suffix}`;
+        if (source[key]) result = result.concat(source[key]);
+      });
+      return result;
+    }
+
+    switch (skill) {
+      // Short vowels & Mixed CVC
+      case "Short A": return fetchSet("Short A");
+      case "Short E": return fetchSet("Short E");
+      case "Short I": return fetchSet("Short I");
+      case "Short O": return fetchSet("Short O");
+      case "Short U": return fetchSet("Short U");
+      case "Mixed CVC":
+        return [].concat(fetchSet("Short A"), fetchSet("Short E"), fetchSet("Short I"), fetchSet("Short O"), fetchSet("Short U"));
+
+      // Digraphs
+      case "Digraph(ck)": return fetchSet("Digraph(ck)");
+      case "Digraph(sh)": return fetchSet("Digraph(sh)");
+      case "Digraph(th)": return fetchSet("Digraph(th)");
+      case "Digraph(ch)": return fetchSet("Digraph(ch)");
+      case "Digraph(wh)": return fetchSet("Digraph(wh)");
+      case "Digraphs Mixed":
+        return [].concat(fetchSet("Digraph(ck)"), fetchSet("Digraph(sh)"), fetchSet("Digraph(th)"), fetchSet("Digraph(ch)"), fetchSet("Digraph(wh)"));
+
+      // Glued
+      case "Glued(all)": return fetchSet("Glued(all)");
+      case "Glued(-ng)": return glueNgParts.flatMap(p => fetchSet(`Glued(${p})`));
+      case "Glued(-nk)": return glueNkParts.flatMap(p => fetchSet(`Glued(${p})`));
+      case "Glued Mixed":
+        return [].concat(
+          fetchSet("Glued(all)"),
+          glueNgParts.flatMap(p => fetchSet(`Glued(${p})`)),
+          glueNkParts.flatMap(p => fetchSet(`Glued(${p})`))
+        );
+
+      // VCe
+      case "VCe(a_e)": return fetchSet("VCe(a_e)");
+      case "VCe(i_e)": return fetchSet("VCe(i_e)");
+      case "VCe(o_e)": return fetchSet("VCe(o_e)");
+      case "VCe(u_e)": return fetchSet("VCe(u_e)");
+      case "Mixed VCe":
+        return [].concat(fetchSet("VCe(a_e)"), fetchSet("VCe(i_e)"), fetchSet("VCe(o_e)"), fetchSet("VCe(u_e)"));
+
+      // R-Controlled
+      case "R-Controlled(ar)": return fetchSet("R-Controlled(ar)");
+      case "R-Controlled(or)": return fetchSet("R-Controlled(or)");
+      case "R-Controlled(er,ir,ur)": return fetchSet("R-Controlled(er,ir,ur)");
+      case "Mixed R-Controlled":
+        return [].concat(fetchSet("R-Controlled(ar)"), fetchSet("R-Controlled(or)"), fetchSet("R-Controlled(er,ir,ur)"));
+
+      // Vowel Teams
+      case "Long A (ai/ay)":
+        return [].concat(fetchSet("Long A(ai)"), fetchSet("Long A(ay)"));
+      case "Long E (ee/ea)":
+        return [].concat(fetchSet("Long E(ee)"), fetchSet("Long E(ea)"));
+      case "Long I (igh/y/ie)":
+        return [].concat(fetchSet("Long I(igh)"), fetchSet("Long I(y)"), fetchSet("Long I(ie)"));
+      case "Long O (oa/ow/oe)":
+        return [].concat(fetchSet("Long O(oa)"), fetchSet("Long O(ow)"), fetchSet("Long O(oe)"));
+      case "Long U (oo/ew/ue)":
+        return [].concat(fetchSet("Long U(oo)"), fetchSet("Long U(ew)"), fetchSet("Long U(ue)"));
+      case "Mixed Vowel Teams":
+        return [].concat(
+          fetchSet("Long A(ai)"),
+          fetchSet("Long A(ay)"),
+          fetchSet("Long E(ee)"),
+          fetchSet("Long E(ea)"),
+          fetchSet("Long I(igh)"),
+          fetchSet("Long I(y)"),
+          fetchSet("Long I(ie)"),
+          fetchSet("Long O(oa)"),
+          fetchSet("Long O(ow)"),
+          fetchSet("Long O(oe)"),
+          fetchSet("Long U(oo)"),
+          fetchSet("Long U(ew)"),
+          fetchSet("Long U(ue)")
+        );
+
+      // Diphthongs
+      case "Diphthongs (oy/oi)":
+        return [].concat(fetchSet("Diphthong(oy)"), fetchSet("Diphthong(oi)"));
+      case "Diphthongs (ow/ou)":
+        return [].concat(fetchSet("Diphthong(ow)"), fetchSet("Diphthong(ou)"));
+
+      // Variant Vowels
+      case "Variant Vowels (au/aw)":
+        return [].concat(fetchSet("Variant Vowel(aw)"), fetchSet("Variant Vowel(au)"));
+      case "Variant Vowel (oo)":
+        return fetchSet("Variant Vowel(oo)");
+
+      // Soft C/G Endings
+      case "Soft Endings":
+        return [].concat(
+          fetchSet("Soft C(ce)"),
+          fetchSet("Soft G(ge)"),
+          fetchSet("Soft G(dge)")
+        );
+
+      default:
+        return fetchSet(skill);
+    }
+  }
+</script>
+</body>
+</html>

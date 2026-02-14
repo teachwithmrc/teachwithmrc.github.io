@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ten Frame Generator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+  *{ box-sizing:border-box; }
+  html, body{
+    margin:0; padding:0;
+    font-family:"Poppins", Arial, sans-serif;
+    background:#fff; color:#111;
+    overflow-x:hidden;
+  }
+  .wrap{ max-width:980px; margin:0 auto; padding:12px; }
+
+  /* ========= TOP MENU ========= */
+  .menu{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-bottom:12px;
+  }
+  .tab{
+    border:2px solid #111;
+    border-radius:14px;
+    padding:10px 14px;
+    font-weight:900;
+    font-size:15px;
+    cursor:pointer;
+    background:#fff;
+    color:#111;
+    user-select:none;
+  }
+  .tab.active{ background:#111; color:#fff; }
+
+  /* ========= CONTROLS ========= */
+  .controls{
+    border:2px solid #111;
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:12px;
+  }
+
+  .controls-top{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    align-items:flex-end;
+    justify-content:center;
+  }
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    min-width:200px;
+  }
+  .field label{
+    font-size:12px;
+    font-weight:800;
+  }
+
+  /* Only style number inputs (prevents huge toggle bug) */
+  input[type="number"]{
+    height:42px;
+    min-width:200px;
+    border:2px solid #111;
+    border-radius:10px;
+    padding:8px 12px;
+    font-family:"Poppins", Arial, sans-serif;
+    font-size:14px;
+    background:#fff;
+  }
+  input[type="number"]:disabled{
+    opacity:0.75;
+    background:#f5f5f5;
+    cursor:not-allowed;
+  }
+
+  .hint{
+    width:100%;
+    text-align:center;
+    font-size:13px;
+    font-weight:700;
+    margin-top:8px;
+  }
+
+  /* Pretty toggle switches */
+  .toggleRow{
+    margin-top:10px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    align-items:center;
+  }
+  .toggle{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 12px;
+    border:2px solid #111;
+    border-radius:14px;
+    font-weight:900;
+    font-size:15px;
+    line-height:1;
+    user-select:none;
+    background:#fff;
+  }
+  .toggle input[type="checkbox"]{
+    appearance:none;
+    -webkit-appearance:none;
+    width:44px;
+    height:26px;
+    border:2px solid #111;
+    border-radius:999px;
+    position:relative;
+    margin:0;
+    padding:0;
+    background:#fff;
+    cursor:pointer;
+    flex:0 0 auto;
+    min-width:44px;
+  }
+  .toggle input[type="checkbox"]::after{
+    content:"";
+    position:absolute;
+    top:50%;
+    left:3px;
+    width:18px;
+    height:18px;
+    border:2px solid #111;
+    border-radius:999px;
+    background:#fff;
+    transform:translateY(-50%);
+    transition:all .15s ease;
+  }
+  .toggle input[type="checkbox"]:checked{ background:#111; }
+  .toggle input[type="checkbox"]:checked::after{ left:19px; background:#fff; }
+
+  .controls-actions{
+    margin-top:12px;
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  button{
+    height:54px;
+    padding:0 30px;
+    border:2px solid #111;
+    border-radius:14px;
+    font-weight:900;
+    font-size:18px;
+    font-family:"Poppins", Arial, sans-serif;
+    background:#111;
+    color:#fff;
+    cursor:pointer;
+  }
+  button.secondary{
+    background:#fff;
+    color:#111;
+  }
+
+  /* ========= SHEET ========= */
+  .title{
+    text-align:center;
+    font-size:28px;
+    font-weight:900;
+    margin:6px 0 10px;
+  }
+
+  .table{ border:2px solid #111; }
+  .row{ display:grid; grid-template-columns:1fr 1fr; }
+
+  .cell{
+    border-right:2px solid #111;
+    border-bottom:2px solid #111;
+    min-height:190px;
+    padding:10px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+  }
+  .row .cell:last-child{ border-right:none; }
+  .table .row:last-child .cell{ border-bottom:none; }
+
+  .expr{
+    font-size:22px;
+    font-weight:900;
+    text-align:center;
+    line-height:1.1;
+  }
+  .blank{
+    display:inline-block;
+    width:95px;
+    border-bottom:3px solid #111;
+    transform: translateY(-3px);
+  }
+
+  .frames{
+    display:grid;
+    gap:10px;
+    width:235px;
+  }
+  .tenframe{ border:2px solid #111; }
+  .tfgrid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+  }
+  .tfcell{
+    border:2px solid #111;
+    height:34px;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding-top:2px;
+    position:relative;
+  }
+
+  /* Cross-out overlay */
+  .cross::before, .cross::after{
+    content:"";
+    position:absolute;
+    width:86%;
+    height:3px;
+    background:#111;
+    top:50%;
+    left:7%;
+    transform-origin:center;
+  }
+  .cross::before{ transform:translateY(-50%) rotate(45deg); }
+  .cross::after{  transform:translateY(-50%) rotate(-45deg); }
+
+  .footer{
+    text-align:center;
+    font-size:12px;
+    font-weight:800;
+    margin-top:10px;
+  }
+
+  /* ========= PRINT FIT ========= */
+  @media print{
+    .menu, .controls{ display:none; }
+    .wrap{ padding:0; max-width:none; }
+
+    body{
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      zoom: 0.92; /* within-10 sweet spot */
+    }
+
+    .title{ font-size:24px; margin:4px 0 6px; }
+    .cell{ min-height:165px; padding:8px; gap:8px; }
+    .expr{ font-size:20px; }
+    .frames{ width:220px; gap:8px; }
+    .tfcell{ height:30px; padding-top:1px; }
+    .footer{ margin-top:6px; font-size:11px; }
+
+    /* Over-10: fill the page more (bigger problems) */
+    body[data-skill="over10_add"], body[data-skill="over10_sub"]{ zoom: 0.95; }
+    body[data-skill="over10_add"] .cell,
+    body[data-skill="over10_sub"] .cell{ min-height:185px; padding:10px; gap:10px; }
+    body[data-skill="over10_add"] .expr,
+    body[data-skill="over10_sub"] .expr{ font-size:22px; }
+    body[data-skill="over10_add"] .frames,
+    body[data-skill="over10_sub"] .frames{ width:240px; gap:10px; }
+    body[data-skill="over10_add"] .tfcell,
+    body[data-skill="over10_sub"] .tfcell{ height:32px; padding-top:2px; }
+  }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="menu" id="menu">
+    <div class="tab active" data-skill="within10_add">Add: Within 10</div>
+    <div class="tab" data-skill="within10_sub">Subtract: Within 10</div>
+    <div class="tab" data-skill="over10_add">Add: Over 10 (to 20)</div>
+    <div class="tab" data-skill="over10_sub">Subtract: Over 10 (to 20)</div>
+  </div>
+
+  <div class="controls">
+    <div class="controls-top">
+      <div class="field">
+        <label for="min">Lowest #</label>
+        <input id="min" type="number" value="0" min="0" max="20">
+      </div>
+      <div class="field">
+        <label for="max">Highest #</label>
+        <input id="max" type="number" value="10" min="1" max="20">
+      </div>
+    </div>
+
+    <div class="hint" id="hintText">Within 10 is locked to 0–10.</div>
+
+    <div class="toggleRow">
+      <label class="toggle">
+        <input id="prefill" type="checkbox" checked>
+        Prefill
+      </label>
+
+      <label class="toggle" id="crossToggle" style="display:none;">
+        <input id="crossOut" type="checkbox" checked>
+        Cross-out
+      </label>
+    </div>
+
+    <div class="controls-actions">
+      <button type="button" id="btnGen">Generate</button>
+      <button type="button" class="secondary" id="btnPrint">Print</button>
+    </div>
+  </div>
+
+  <div class="title" id="sheetTitle">Add Within 10 Using Ten Frames</div>
+  <div class="table" id="table"></div>
+  <div class="footer">Copyright - Generated from InterventionStation.com - @TeachWithMrC</div>
+
+</div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+
+  let SKILL = "within10_add";
+  document.body.setAttribute("data-skill", SKILL);
+
+  function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+
+  function normalizeBounds(){
+    let lo = clamp(parseInt($("min").value || "0",10), 0, 20);
+    let hi = clamp(parseInt($("max").value || "10",10), 1, 20);
+    if (hi < lo) [lo,hi] = [hi,lo];
+    $("min").value = lo;
+    $("max").value = hi;
+    return { lo, hi };
+  }
+
+  /* ---------- Dots helpers ---------- */
+  function dots20(n){
+    n = clamp(n,0,20);
+    const f1 = Array(10).fill(false);
+    const f2 = Array(10).fill(false);
+    for(let i=0;i<Math.min(10,n);i++) f1[i]=true;
+    for(let i=0;i<Math.max(0,n-10);i++) f2[i]=true;
+    return [f1,f2];
+  }
+  function dots10(n){
+    n = clamp(n,0,10);
+    const f = Array(10).fill(false);
+    for(let i=0;i<n;i++) f[i]=true;
+    return f;
+  }
+
+  // Print-safe dot (SVG)
+  function dotSVG(){
+    const ns="http://www.w3.org/2000/svg";
+    const svg=document.createElementNS(ns,"svg");
+    svg.setAttribute("viewBox","0 0 100 100");
+    svg.style.width="84%";
+    svg.style.height="84%";
+    const c=document.createElementNS(ns,"circle");
+    c.setAttribute("cx","50");
+    c.setAttribute("cy","50");
+    c.setAttribute("r","43");
+    c.setAttribute("fill","#111");
+    svg.appendChild(c);
+    return svg;
+  }
+
+  function buildFrame(boolArr, crossSet){
+    const ten=document.createElement("div");
+    ten.className="tenframe";
+    const g=document.createElement("div");
+    g.className="tfgrid";
+    for(let i=0;i<10;i++){
+      const cell=document.createElement("div");
+      cell.className="tfcell";
+      if(boolArr[i]) cell.appendChild(dotSVG());
+      if(crossSet && crossSet.has(i)) cell.classList.add("cross");
+      g.appendChild(cell);
+    }
+    ten.appendChild(g);
+    return ten;
+  }
+
+  // Cross out the last b dots out of a
+  function crossSetsFor(a, b){
+    const crossIndices = new Set();
+    const start = Math.max(0, a - b);
+    for(let i=start; i<a; i++) crossIndices.add(i);
+
+    const cross1 = new Set();
+    const cross2 = new Set();
+    crossIndices.forEach(idx=>{
+      if(idx < 10) cross1.add(idx);
+      else cross2.add(idx - 10);
+    });
+    return { cross1, cross2 };
+  }
+
+  /* ---------- Shuffle ---------- */
+  function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]]=[arr[j],arr[i]];
+    }
+    return arr;
+  }
+
+  /* ---------- Build all possible problems (instant + no freezes) ---------- */
+  function buildProblemPool(skill, lo, hi){
+    const pool = [];
+
+    if(skill === "within10_add"){
+      // Add within 10: a+b<=10
+      for(let a=0;a<=9;a++){
+        for(let b=0;b<=9;b++){
+          if(a===0 && b===0) continue;
+          if(a+b<=10) pool.push({a,b});
+        }
+      }
+      // remove commutative duplicates by keeping min/max key
+      const seen = new Set();
+      const uniq = [];
+      for(const q of pool){
+        const x=Math.min(q.a,q.b), y=Math.max(q.a,q.b);
+        const k=`A:${x}+${y}`;
+        if(seen.has(k)) continue;
+        seen.add(k);
+        uniq.push({a:y,b:x}); // bigger first looks nicer
+      }
+      return uniq;
+    }
+
+    if(skill === "within10_sub"){
+      for(let a=1;a<=10;a++){
+        for(let b=0;b<a;b++){
+          pool.push({a,b});
+        }
+      }
+      return pool;
+    }
+
+    if(skill === "over10_add"){
+      // Over 10: two single digits, sum >10, <=20. Bound applies to FIRST number.
+      // We'll generate all valid pairs with a in [6..9] and b in [1..9] then filter by bounds.
+      for(let a=6;a<=9;a++){
+        for(let b=1;b<=9;b++){
+          const A=Math.max(a,b), B=Math.min(a,b);
+          const s=A+B;
+          if(s<=10 || s>20) continue;
+          if(A<lo || A>hi) continue; // first number range
+          pool.push({a:A,b:B});
+        }
+      }
+      // remove duplicates via commutative key
+      const seen = new Set();
+      const uniq = [];
+      for(const q of pool){
+        const x=Math.min(q.a,q.b), y=Math.max(q.a,q.b);
+        const k=`A:${x}+${y}`;
+        if(seen.has(k)) continue;
+        seen.add(k);
+        uniq.push({a:y,b:x});
+      }
+      return uniq;
+    }
+
+    if(skill === "over10_sub"){
+      // Over 10 subtraction: a in [max(11,lo)..min(20,hi)], b in [1..min(9,a-1)]
+      const amin = Math.max(11, lo);
+      const amax = Math.min(20, hi);
+      
+      for(let a=amin; a<=amax; a++){
+        for(let b=1; b<=Math.min(9,a-1); b++){
+          pool.push({a,b});
+        }
+      }
+
+      // Prefer "cross 10" problems FIRST, but don't require it.
+      // cross10 = b > a-10
+      const cross = [];
+      const nonCross = [];
+      for(const q of pool){
+        if(q.b > (q.a - 10)) cross.push(q);
+        else nonCross.push(q);
+      }
+
+      // Shuffle inside each group and return cross-first
+      shuffle(cross);
+      shuffle(nonCross);
+      return cross.concat(nonCross);
+    }
+
+    return pool;
+  }
+
+  /* ---------- Render one problem ---------- */
+  function buildCell(mode, a, b, framesCount, prefill, crossOut){
+    const cell=document.createElement("div");
+    cell.className="cell";
+
+    const op=(mode==="add")?"+":"−";
+    cell.innerHTML=`<div class="expr">${a} ${op} ${b} = <span class="blank"></span></div>`;
+
+    const fs=document.createElement("div");
+    fs.className="frames";
+
+    if(framesCount===2){
+      if(prefill){
+        const [f1,f2] = dots20(a);
+        if(mode==="sub" && crossOut){
+          const { cross1, cross2 } = crossSetsFor(a, b);
+          fs.appendChild(buildFrame(f1, cross1));
+          fs.appendChild(buildFrame(f2, cross2));
+        }else{
+          fs.appendChild(buildFrame(f1));
+          fs.appendChild(buildFrame(f2));
+        }
+      }else{
+        fs.appendChild(buildFrame(Array(10).fill(false)));
+        fs.appendChild(buildFrame(Array(10).fill(false)));
+      }
+    }else{
+      if(prefill){
+        const f = dots10(a);
+        if(mode==="sub" && crossOut){
+          const { cross1 } = crossSetsFor(a, b);
+          fs.appendChild(buildFrame(f, cross1));
+        }else{
+          fs.appendChild(buildFrame(f));
+        }
+      }else{
+        fs.appendChild(buildFrame(Array(10).fill(false)));
+      }
+    }
+
+    cell.appendChild(fs);
+    return cell;
+  }
+
+  /* ---------- Build worksheet ---------- */
+  function build(){
+    let { lo, hi } = normalizeBounds();
+    const prefill = $("prefill").checked;
+    const crossOut = $("crossOut").checked;
+
+    const within10 = (SKILL==="within10_add" || SKILL==="within10_sub");
+    
+    let mode="add";
+    let rows=5;     
+    let frames=1;
+    let title="";
+
+    if(within10){
+      lo=0; hi=10;
+      $("min").value=0; $("max").value=10;
+      $("min").disabled=true; $("max").disabled=true;
+      $("hintText").textContent="Within 10 is locked to 0–10.";
+    }else{
+      $("min").disabled=false; $("max").disabled=false;
+      $("hintText").textContent="Over 10 uses your Lowest/Highest as the FIRST number range (up to 20).";
+
+      // === FIX: Auto-adjust range if user is in Over-10 Subtraction but Max is too low ===
+      if(SKILL === "over10_sub" && hi < 11){
+        hi = 20;
+        $("max").value = 20;
+      }
+    }
+
+    if(SKILL==="within10_add"){ mode="add"; rows=5; frames=1; title="Add Within 10 Using Ten Frames"; }
+    if(SKILL==="within10_sub"){ mode="sub"; rows=5; frames=1; title="Subtract Within 10 Using Ten Frames"; }
+    if(SKILL==="over10_add"){   mode="add"; rows=4; frames=2; title="Add Over 10 (to 20) Using Ten Frames"; }
+    if(SKILL==="over10_sub"){   mode="sub"; rows=4; frames=2; title="Subtract Over 10 (to 20) Using Ten Frames"; }
+
+    $("sheetTitle").textContent=title;
+    $("crossToggle").style.display = (mode==="sub") ? "inline-flex" : "none";
+
+    const total = rows * 2;
+
+    // Build full pool instantly (pass potentially fixed lo/hi)
+    let pool = buildProblemPool(SKILL, lo, hi);
+
+    // Shuffle whole pool (except over10_sub already cross-first internally)
+    if(SKILL !== "over10_sub") shuffle(pool);
+
+    // Take as many unique as possible
+    const picked = pool.slice(0, total);
+
+    // If the teacher chose a super-tight range, we might not have enough unique items.
+    // Fill the rest with repeats (but still random) so Generate ALWAYS works.
+    while(picked.length < total){
+      if(pool.length === 0){
+        // ultimate fallback if pool is empty (should not happen with fix)
+        picked.push({a:9,b:4});
+      }else{
+        picked.push(pool[Math.floor(Math.random()*pool.length)]);
+      }
+    }
+
+    // Render
+    const table=$("table");
+    table.innerHTML="";
+
+    for(let i=0;i<rows;i++){
+      const row=document.createElement("div");
+      row.className="row";
+
+      const left = picked[i*2];
+      const right= picked[i*2 + 1];
+
+      row.appendChild(buildCell(mode,left.a,left.b,frames,prefill,crossOut));
+      row.appendChild(buildCell(mode,right.a,right.b,frames,prefill,crossOut));
+      table.appendChild(row);
+    }
+  }
+
+  function setSkill(skill){
+    SKILL = skill;
+    document.body.setAttribute("data-skill", SKILL);
+
+    document.querySelectorAll(".tab").forEach(t=>{
+      t.classList.toggle("active", t.dataset.skill===skill);
+    });
+    build();
+  }
+
+  $("menu").addEventListener("click",(e)=>{
+    const tab=e.target.closest(".tab");
+    if(!tab) return;
+    setSkill(tab.dataset.skill);
+  });
+
+  $("btnGen").addEventListener("click", build);
+  $("btnPrint").addEventListener("click", ()=>window.print());
+
+  ["min","max","prefill","crossOut"].forEach(id=>{
+    $(id).addEventListener("change", build);
+  });
+
+  build();
+</script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tic Tac Toe Fluency</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      padding: 20px;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .checkbox-group, .radio-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+    .grid-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      page-break-inside: avoid;
+    }
+    .game-section {
+      margin: 20px;
+      text-align: center;
+    }
+    .game-title {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .tic-tac-toe {
+      border-collapse: collapse;
+      margin: 0 auto;
+      width: 280px;
+      height: 280px;
+      table-layout: fixed;
+    }
+    .tic-tac-toe td {
+      border: none;
+      vertical-align: middle;
+      text-align: center;
+      font-size: 16px;
+      padding: 10px;
+    }
+    .tic-tac-toe tr:nth-child(2) td {
+      border-top: 2px solid black;
+      border-bottom: 2px solid black;
+    }
+    .tic-tac-toe td:nth-child(2) {
+      border-left: 2px solid black;
+      border-right: 2px solid black;
+    }
+    .print-footer {
+      text-align: center;
+      font-size: 10px;
+      margin-top: 60px;
+    }
+    @media print {
+      .no-print { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="no-print">Tic Tac Toe Fluency Generator</h1>
+  <div class="controls no-print">
+    <div class="checkbox-group">
+      <label><input type="checkbox" value="0.1 - Short A" checked> 0.1 - Short A</label>
+      <label><input type="checkbox" value="0.2 - Short O"> 0.2 - Short O</label>
+      <label><input type="checkbox" value="0.3 - Short I"> 0.3 - Short I</label>
+      <label><input type="checkbox" value="0.4 - Short U"> 0.4 - Short U</label>
+      <label><input type="checkbox" value="0.5 - Short E"> 0.5 - Short E</label>
+      <label><input type="checkbox" value="0.6 - FSZL"> 0.6 - FSZL</label>
+      <label><input type="checkbox" value="Mixed CVC"> Mixed CVC</label>
+    </div>
+    <div class="radio-group">
+      <label><input type="radio" name="gameCount" value="2" checked> 2 Games</label>
+      <label><input type="radio" name="gameCount" value="3"> 3 Games</label>
+      <label><input type="radio" name="gameCount" value="4"> 4 Games</label>
+    </div>
+    <button onclick="generateGrids()">Generate Games</button>
+    <button onclick="window.print()">Print</button>
+  </div>
+
+  <div id="gridContainer" class="grid-container"></div>
+
+  <div class="print-footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
+
+  <script>
+    const sentenceData = {
+      "0.1 - Short A": [
+        "A ham sat at a mat.", "I had a jam at the pan.", "Pam sat at a mat.",
+        "The bat and the cat ran.", "Sam had a tan cap.", "A bag had a tag.",
+        "I am at the van.", "The can had a jam.", "A man sat at a cab.",
+        "Pat the Cat had a nap.", "I had a bag.", "A cat sat at the mat.",
+        "Sam the Ram sat at the mat.", "Pam and Pat had a map.", "The bat and the cap sat.",
+        "A man had a cap.", "I sat at the van.", "Dan and Sam sat.",
+        "A rat ran at the bag.", "The cat ran at a cab."
+      ],
+      "0.6 - FSZL": [
+        "Bill will yell at the cab.", "The bell fell off the lab.", "I had to huff at the mess.",
+        "Miss Meg had a fuss.", "Tell Dan to pass the cup.", "Will the fuzz hop on the bed?",
+        "I had a quill in the cab.", "The doll fell in the mud.", "Buzz and Gus ran to the van.",
+        "Tess had to fix the mess."
+      ],
+      "Mixed CVC": [] // Will populate dynamically
+    };
+
+    // Populate Mixed CVC with all sentences except FSZL
+    sentenceData["Mixed CVC"] = Object.entries(sentenceData)
+      .filter(([skill]) => skill !== "0.6 - FSZL" && skill !== "Mixed CVC")
+      .flatMap(([, sentences]) => sentences);
+
+    function shuffle(array) {
+      let currentIndex = array.length, randomIndex;
+      while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+      }
+      return array;
+    }
+
+    function generateGrids() {
+      const gridContainer = document.getElementById("gridContainer");
+      gridContainer.innerHTML = "";
+      const selectedSkills = Array.from(document.querySelectorAll(".checkbox-group input:checked")).map(cb => cb.value);
+      const gameCount = parseInt(document.querySelector("input[name='gameCount']:checked").value);
+
+      const combinedSentences = selectedSkills.flatMap(skill => sentenceData[skill] || []);
+      const shuffled = shuffle([...combinedSentences]);
+
+      const layoutStyles = {
+        2: "block",
+        3: "grid",
+        4: "grid"
+      };
+
+      const layoutColumns = {
+        2: "1fr",
+        3: "repeat(2, 1fr)",
+        4: "repeat(2, 1fr)"
+      };
+
+      gridContainer.style.display = layoutStyles[gameCount];
+      gridContainer.style.gridTemplateColumns = layoutColumns[gameCount] || "";
+      gridContainer.style.gap = "20px";
+
+      for (let i = 0; i < gameCount; i++) {
+        const gameSentences = shuffled.slice(i * 9, i * 9 + 9);
+        const gameDiv = document.createElement("div");
+        gameDiv.className = "game-section";
+
+        const title = document.createElement("h2");
+        title.className = "game-title";
+        title.innerText = `Game ${i + 1}`;
+        gameDiv.appendChild(title);
+
+        const table = document.createElement("table");
+        table.className = "tic-tac-toe";
+
+        for (let r = 0; r < 3; r++) {
+          const tr = document.createElement("tr");
+          for (let c = 0; c < 3; c++) {
+            const td = document.createElement("td");
+            td.innerText = gameSentences[r * 3 + c] || "";
+            tr.appendChild(td);
+          }
+          table.appendChild(tr);
+        }
+
+        gameDiv.appendChild(table);
+        gridContainer.appendChild(gameDiv);
+      }
+    }
+  </script>
+</body>
+</html>

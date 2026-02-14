@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Master Word Ladders</title>
+
+  <!-- Silence missing favicon 404 -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>">
+
+  <!-- ===== DATA SOURCES (defer preserves order) ===== -->
+  <!-- CVC -->
+  <script src="blendsmaster.js" defer></script>
+  <script defer>
+    (function(){
+      function resolveCvc(mode){
+        // Try likely function exports first (call-time resolution)
+        const fn =
+          window.getLaddersByMode ||
+          window.getCvcLaddersByMode ||
+          (window.CVC && window.CVC.getLaddersByMode);
+        if (typeof fn === 'function') return fn(mode);
+
+        // Fallback to common global arrays/objects by mode name
+        const map = {
+          'CVC':            window.cvcWordLadders || window.CVC_WORD_LADDERS || [],
+          'Include Blends': window.cvcIncludeBlends || window.cvcWithBlends || [],
+          'Only Blends':    window.cvcOnlyBlends || []
+        };
+        return map[mode] || [];
+      }
+
+      window.CVC_NS = {
+        getLaddersByMode: (mode) => resolveCvc(mode),
+        patterns: () => (window.rWordPatterns || {}),
+        images:   () => (window.rWordImages   || {})
+      };
+    })();
+  </script>
+
+  <!-- Digraphs -->
+  <script src="digraphs_master_FINAL_v2.js" defer></script>
+  <script defer>
+    (function(){
+      function resolveDig(mode){
+        const fn =
+          window.getDigraphLaddersByMode ||
+          (window.DIG && window.DIG.getLaddersByMode);
+        if (typeof fn === 'function') return fn(mode);
+
+        // Fallbacks if file exposes arrays directly
+        const base = window.digraphWordLadders || window.DIGRAPH_LADDERS || [];
+        if (mode === 'Include Blends') {
+          return window.digraphIncludeBlends || window.digraphWithBlends || base;
+        }
+        return base;
+      }
+
+      window.DIG_NS = {
+        getLaddersByMode: (mode) => resolveDig(mode),
+        patterns: () => (window.digraphWordPatterns || window.rWordPatterns || {}),
+        images:   () => (window.digraphWordImages   || window.rWordImages   || {})
+      };
+    })();
+  </script>
+
+  <!-- Glued Sounds (already unique names) -->
+  <script src="glued_sounds_full.js" defer></script>
+  <script defer>
+    (function(){
+      window.GLUED_NS = {
+        list:     () => (window.gluedWordLadders  || window.gluedLadders || []),
+        patterns: () => (window.gluedWordPatterns || {}),
+        images:   () => (window.gluedWordImages   || {})
+      };
+    })();
+  </script>
+
+  <!-- R-Controlled -->
+  <script src="rControlled_full_max.js" defer></script>
+  <script defer>
+    (function(){
+      window.RCTRL_NS = {
+        list:     () => (window.rControlledWordLadders || window.rControlledLadders || []),
+        patterns: () => (window.rControlledPatterns   || window.rWordPatterns      || {}),
+        images:   () => (window.rControlledImages     || window.rWordImages        || {})
+      };
+    })();
+  </script>
+
+  <!-- VCe -->
+  <script src="vceWordLadders_6words_full.js" defer></script>
+  <script defer>
+    (function(){
+      window.VCE_NS = {
+        list:     () => (window.vceWordLadders  || window.vceLadders || []),
+        patterns: () => (window.vceWordPatterns || window.rWordPatterns || {}),
+        images:   () => (window.vceWordImages   || window.rWordImages   || {})
+      };
+    })();
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face { font-family:'BoxesFont'; src:local('BoxesFont'), url('fonts/boxes2.otf') format('opentype'); }
+    @font-face { font-family:'UnderlineFont'; src:local('UnderlineFont'), url('fonts/underlines.otf') format('opentype'); }
+
+    :root{
+      --cvc:#e9f2ff; --cvc-selected:#1976d2;
+      --dig:#f3e9ff; --dig-selected:#8e24aa;
+      --glued:#e8fff4; --glued-selected:#2e7d32;
+      --rctrl:#f0f5ff; --rctrl-selected:#3f51b5;
+      --vce:#fff5e6; --vce-selected:#ef6c00;
+    }
+
+    body { font-family:'Poppins',sans-serif; margin:10px; text-align:center; background:#fafafa; }
+    h1 { font-size:32px; margin-bottom:2px; }
+    .subtitle { font-size:16px; margin-bottom:8px; }
+
+    .layout { display:grid; grid-template-columns:1fr 1fr; gap:12px; max-width:1100px; margin:0 auto; }
+    @media(max-width:900px){ .layout{ display:block; } }
+
+    .section { border:2px solid #000; background:#fff; border-radius:14px; padding:14px; }
+
+    .skill-button{
+      display:block; width:100%; margin:8px 0; padding:12px;
+      font-size:18px; font-weight:700; cursor:pointer; border:2px solid #000; border-radius:12px;
+      transition:filter .15s ease;
+    }
+    .skill-button:hover{ filter:brightness(.97); }
+    .skill-button.cvc   { background:var(--cvc); }
+    .skill-button.dig   { background:var(--dig); }
+    .skill-button.glued { background:var(--glued); }
+    .skill-button.rctrl { background:var(--rctrl); }
+    .skill-button.vce   { background:var(--vce); }
+
+    .skill-button.cvc.selected   { background:var(--cvc-selected); color:#fff; }
+    .skill-button.dig.selected   { background:var(--dig-selected); color:#fff; }
+    .skill-button.glued.selected { background:var(--glued-selected); color:#fff; }
+    .skill-button.rctrl.selected { background:var(--rctrl-selected); color:#fff; }
+    .skill-button.vce.selected   { background:var(--vce-selected); color:#fff; }
+
+    .controls { display:flex; justify-content:center; align-items:center; gap:14px; flex-wrap:wrap; margin:8px 0; }
+    label { margin:0 5px; font-size:14px; }
+    button { font-size:16px; padding:8px 12px; cursor:pointer; }
+
+    #ladderOutput { margin-top:8px; margin-bottom:60px; }
+    #copyright { font-size:12px; text-align:right; width:100%; }
+
+    /* Print: show only the generated page content, no accidental first blank page */
+    @media print {
+      body * { visibility:hidden; }
+      #ladderOutput, #ladderOutput * { visibility:visible; }
+      #ladderOutput { position:absolute; top:0; left:0; width:100%; margin:0; padding:10px; box-sizing:border-box; }
+      @page { margin:0.5in; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Master Word Ladders</h1>
+  <p class="subtitle"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
+
+  <div class="layout">
+    <div class="section">
+      <button class="skill-button cvc"   data-skill="CVC">Short Vowels (CVC)</button>
+      <button class="skill-button dig"   data-skill="Digraphs">Digraphs</button>
+      <button class="skill-button glued" data-skill="Glued">Glued Sounds</button>
+      <button class="skill-button rctrl" data-skill="RControlled">R-Controlled</button>
+      <button class="skill-button vce"   data-skill="VCe">VCe (Silent E)</button>
+    </div>
+
+    <div class="section">
+      <div style="font-weight:700; margin-bottom:4px;">Blends</div>
+      <div class="controls" id="blendOptions">
+        <label id="blend-no"><input type="radio" name="blendMode" value="no" checked> No Blends</label>
+        <label id="blend-with"><input type="radio" name="blendMode" value="with"> With Blends</label>
+        <label id="blend-only"><input type="radio" name="blendMode" value="only"> Only Blends</label>
+      </div>
+
+      <div style="font-weight:700; margin-top:6px;">Display</div>
+      <div class="controls">
+        <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
+        <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
+        <label><input type="checkbox" id="boldChanged" checked> Bold Changed Part</label>
+      </div>
+
+      <div class="controls">
+        <button id="btnGenerate">Generate Ladder</button>
+        <button onclick="window.print()">Print Page</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="ladderOutput"></div>
+
+  <script defer>
+    // ===== Menu / blends availability =====
+    const supports = {
+      CVC:         { no:true, with:true,  only:true  },
+      Digraphs:    { no:true, with:true,  only:false },
+      Glued:       { no:true, with:false, only:false },
+      RControlled: { no:true, with:false, only:false },
+      VCe:         { no:true, with:false, only:false }
+    };
+    let selectedSkill = "CVC";
+
+    function setBlendUI(s){
+      const withLbl = document.getElementById('blend-with'), onlyLbl = document.getElementById('blend-only');
+      const withInp = withLbl.querySelector('input'),       onlyInp = onlyLbl.querySelector('input');
+      withInp.disabled = !supports[s].with; onlyInp.disabled = !supports[s].only;
+      withLbl.style.opacity = supports[s].with ? 1 : 0.4;
+      onlyLbl.style.opacity = supports[s].only ? 1 : 0.4;
+      const cur = document.querySelector('input[name="blendMode"]:checked').value;
+      if (cur==='with' && !supports[s].with) document.querySelector('input[name="blendMode"][value="no"]').checked=true;
+      if (cur==='only' && !supports[s].only) document.querySelector('input[name="blendMode"][value="no"]').checked=true;
+    }
+
+    document.querySelectorAll('.skill-button').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        document.querySelectorAll('.skill-button').forEach(b=>b.classList.remove('selected'));
+        btn.classList.add('selected'); selectedSkill = btn.dataset.skill; setBlendUI(selectedSkill);
+      });
+    });
+    document.querySelector('.skill-button.cvc').classList.add('selected');
+    setBlendUI(selectedSkill);
+
+    // ===== Helpers to build rows =====
+    function splitWordByPattern(word, pattern){
+      const chunks=[]; let i=0;
+      for (let j=0;j<pattern.length;j++){
+        const d=pattern[j]; const L=(d==='3')?3:(d==='2')?2:1;
+        chunks.push(word.slice(i,i+L)); i+=L;
+      }
+      return chunks;
+    }
+
+    function buildCvcRow(word, prev, isFirst, isLast, useFont, boldChanged, img){
+      const borders = !isLast
+        ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
+        : 'border-left:4px solid #000;border-right:4px solid #000;';
+      const imageBorder = isFirst ? 'border-top-left-radius:12px;' : (isLast ? 'border-bottom-left-radius:12px;' : '');
+      const imgTD = `<td style="padding:5px 7px;width:140px;${imageBorder}"><img src="${img}" alt="${word}" style="width:110px;height:110px;object-fit:contain;"></td>`;
+
+      let display;
+      if (isFirst){
+        display = `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins',sans-serif;">${word}</div>`;
+      } else {
+        let letters = '';
+        for (let i=0;i<word.length;i++){
+          const changed = (prev[i]||'') !== (word[i]||'');
+          letters += `<span style="font-weight:${(changed&&boldChanged)?'bold':'normal'}; font-family:'${useFont}',sans-serif;">1</span>`;
+        }
+        display = `<div style="display:flex;justify-content:center;gap:0;font-family:'${useFont}',sans-serif;font-size:90px;letter-spacing:3px;font-weight:600;">${letters}</div>`;
+      }
+
+      const midTD = `<td style="padding:5px 7px;${borders}">${display}</td>`;
+      let hintTD = `<td style="padding:3px 5px;width:170px;${isFirst?'border-top-right-radius:12px;':''}${isLast?'border-bottom-right-radius:12px;':''}"></td>`;
+      if (!isFirst){
+        let hint='? → ?'; for (let i=0;i<word.length;i++){ if ((prev[i]||'') !== (word[i]||'')){ hint = `${prev[i]} → ${word[i]}`; break; } }
+        hintTD = `<td style="padding:3px 5px;width:170px;${isLast?'border-bottom-right-radius:12px;':''}">
+          <div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">${hint}</div>
+        </td>`;
+      }
+      return `<tr>${imgTD}${midTD}${hintTD}</tr>`;
+    }
+
+    function buildPatternRow(word, prev, isFirst, isLast, useFont, boldChanged, img, patterns){
+      const patt = patterns[word] || '?';
+      const prevP = patterns[prev] || '?';
+      const borders = !isLast
+        ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;'
+        : 'border-left:4px solid #000;border-right:4px solid #000;';
+      const imageBorder = isFirst ? 'border-top-left-radius:12px;' : (isLast ? 'border-bottom-left-radius:12px;' : '');
+      const imgTD = `<td style="padding:5px 7px;width:140px;${imageBorder}"><img src="${img}" alt="${word}" style="width:110px;height:110px;object-fit:contain;"></td>`;
+
+      let map=null;
+      if (!isFirst && boldChanged){
+        const a=splitWordByPattern(prev, prevP), b=splitWordByPattern(word, patt);
+        map=b.map((c,i)=>c!==(a[i]||''));
+      }
+      const isU = (useFont==='UnderlineFont');
+      const digits = Array.from(patt).map((d,i)=>{
+        const bold = boldChanged && map && map[i];
+        return `<span style="${isU?'display:inline-block;margin:0 6px;':''}${bold?'font-weight:700;':''}">${d}</span>`;
+      }).join('');
+
+      const display = isFirst
+        ? `<div style=\"font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins',sans-serif;\">${word}</div>`
+        : `<div class=\"pattern\" style=\"font-family:'${useFont}',monospace;font-size:${isU? '85px':'100px'};letter-spacing:0px;\">${digits}</div>`;
+
+      const midTD = `<td style="padding:5px 7px;${borders}">${display}</td>`;
+      let hintTD = `<td style="padding:3px 5px;width:170px;${isFirst?'border-top-right-radius:12px;':''}${isLast?'border-bottom-right-radius:12px;':''}"></td>`;
+      if (!isFirst){
+        const A=splitWordByPattern(prev,prevP), B=splitWordByPattern(word,patt);
+        let hint='? → ?';
+        if (A.length===B.length){ for (let i=0;i<A.length;i++){ if (A[i]!==B[i]){ hint=`${A[i]} → ${B[i]}`; break; } } }
+        else if (B.length===A.length+1){ hint = `+ ${B[B.length-1]}`; }
+        else if (A.length===B.length+1){ hint = `- ${A[A.length-1]}`; }
+        hintTD = `<td style=\"padding:3px 5px;width:170px;${isLast?'border-bottom-right-radius:12px;':''}\">\n          <div style=\"display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;\">${hint}</div>\n        </td>`;
+      }
+      return `<tr>${imgTD}${midTD}${hintTD}</tr>`;
+    }
+
+    function renderLadder(ladder, title, useFont, boldChanged, images, patterns, type){
+      const rows = ladder.map((w,i)=>{
+        const prev = ladder[i-1] || '';
+        const isFirst = (i===0), isLast = (i===ladder.length-1);
+        const img = (images && images[w]) || 'https://via.placeholder.com/110?text=%3F';
+        return (type==='cvc')
+          ? buildCvcRow(w, prev, isFirst, isLast, useFont, boldChanged, img)
+          : buildPatternRow(w, prev, isFirst, isLast, useFont, boldChanged, img, patterns||{});
+      }).join('');
+
+      document.getElementById('ladderOutput').innerHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
+          <h2 style="font-size:24px;margin-bottom:1px;">${title}</h2>
+          <p style="margin-top:0;font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
+          <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">${rows}</table>
+          <br><br><div id="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+        </div>`;
+    }
+
+    // ===== Generate =====
+    document.getElementById('btnGenerate').addEventListener('click', ()=>{
+      const cellStyle = document.querySelector('input[name="cellStyle"]:checked').value;
+      const useFont = (cellStyle==='underlines') ? 'UnderlineFont' : 'BoxesFont';
+      const bold = document.getElementById('boldChanged').checked;
+      const blendSel = document.querySelector('input[name="blendMode"]:checked')?.value || 'no';
+
+      if (selectedSkill === 'CVC'){
+        const modeMap = { no:'CVC', with:'Include Blends', only:'Only Blends' };
+        const ladders = CVC_NS.getLaddersByMode(modeMap[blendSel]);
+        if (!Array.isArray(ladders) || !ladders.length) {
+          console.error('CVC ladders not found. Check blendsmaster.js exports.');
+          alert('No CVC ladders found. Verify blendsmaster.js and its export names.');
+          return;
+        }
+        const ladder = ladders[Math.floor(Math.random()*ladders.length)];
+        renderLadder(ladder, 'CVC Word Ladder', useFont, bold, CVC_NS.images(), {}, 'cvc');
+        return;
+      }
+
+      if (selectedSkill === 'Digraphs'){
+        const mode = (supports.Digraphs.with && blendSel==='with') ? 'Include Blends' : 'Digraphs';
+        const ladders = DIG_NS.getLaddersByMode(mode) || [];
+        if (!Array.isArray(ladders) || !ladders.length) {
+          console.error('Digraph ladders not found. Check digraphs_master_FINAL_v2.js exports.');
+          alert('No Digraph ladders found. Verify digraphs_master_FINAL_v2.js.');
+          return;
+        }
+        const ladder = ladders[Math.floor(Math.random()*ladders.length)];
+        renderLadder(ladder, 'Digraph Word Ladder', useFont, bold, DIG_NS.images(), DIG_NS.patterns(), 'pattern');
+        return;
+      }
+
+      if (selectedSkill === 'Glued'){
+        const ladders = GLUED_NS.list() || [];
+        if (!Array.isArray(ladders) || !ladders.length) { alert('No Glued ladders found.'); return; }
+        const ladder = ladders[Math.floor(Math.random()*ladders.length)];
+        renderLadder(ladder, 'Glued Sounds Word Ladder', useFont, bold, GLUED_NS.images(), GLUED_NS.patterns(), 'pattern');
+        return;
+      }
+
+      if (selectedSkill === 'RControlled'){
+        const ladders = RCTRL_NS.list() || [];
+        if (!Array.isArray(ladders) || !ladders.length) { alert('No R-Controlled ladders found.'); return; }
+        const ladder = ladders[Math.floor(Math.random()*ladders.length)];
+        renderLadder(ladder, 'R-Controlled Word Ladder', useFont, bold, RCTRL_NS.images(), RCTRL_NS.patterns(), 'pattern');
+        return;
+      }
+
+      if (selectedSkill === 'VCe'){
+        const ladders = VCE_NS.list() || [];
+        if (!Array.isArray(ladders) || !ladders.length) { alert('No VCe ladders found.'); return; }
+        const ladder = ladders[Math.floor(Math.random()*ladders.length)];
+        renderLadder(ladder, 'VCe Word Ladder', useFont, bold, VCE_NS.images(), VCE_NS.patterns(), 'pattern');
+        return;
+      }
+    });
+  </script>
+</body>
+</html>

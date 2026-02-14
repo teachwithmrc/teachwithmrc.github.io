@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Subtraction with Regrouping — Vertical + Base-10 Blocks</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      font-family: system-ui, sans-serif;
+    }
+
+    .page {
+      width: 8.5in;
+      margin: 0 auto;
+      padding: 0.35in;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 0 0 4px;
+      font-size: 1.05rem;
+    }
+
+    /* Step panel at top (3 columns, text + images) */
+    .steps-panel {
+      border: 2px solid #000;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    .steps-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .steps-table td {
+      border-right: 1px solid #000;
+    }
+    .steps-table td:last-child {
+      border-right: none;
+    }
+
+    .steps-top {
+      padding: 3px;
+      border-bottom: 1px solid #000;
+      vertical-align: top;
+    }
+
+    .steps-bottom {
+      padding: 3px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .step-title {
+      font-weight: 700;
+      font-size: 0.8rem;     /* smaller */
+      text-align: center;
+      margin-bottom: 1px;
+    }
+
+    .step-text {
+      font-size: 0.7rem;      /* smaller */
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .steps-bottom img {
+      max-width: 100%;
+      height: auto;
+      max-height: 1.6in;      /* bigger pictures */
+      display: inline-block;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+      margin-bottom: 6px;
+      font-size: 0.8rem;
+    }
+
+    button {
+      padding: 3px 8px;
+      border: 1px solid #000;
+      background: white;
+      cursor: pointer;
+      font-weight: 600;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+
+    /* 3 problem rows */
+    .problems-column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .problem-card {
+      border: 2px solid #000;
+      border-radius: 6px;
+      padding: 8px 10px;
+      min-height: 190px;        /* a bit bigger but still fits */
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .equation-line {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .two-columns {
+      display: flex;
+      flex-direction: row;
+      gap: 14px;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .left-side {
+      flex: 0.9;
+      display: flex;
+      justify-content: center;
+    }
+
+    .right-side {
+      flex: 1.1;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Vertical subtraction layout */
+    .vertical-table {
+      border-collapse: collapse;
+      table-layout: fixed;
+      min-width: 170px;
+    }
+
+    .vertical-table td {
+      text-align: center;
+      padding: 1px 3px;
+    }
+
+    .digit-cell {
+      font-size: 1.7rem;
+      font-weight: 700;
+      width: 46px;
+    }
+
+    .sign-cell {
+      font-size: 1.7rem;
+      width: 24px;
+      vertical-align: bottom;
+    }
+
+    .regroup-cell {
+      height: 30px;
+    }
+
+    .regroup-box {
+      width: 30px;
+      height: 30px;
+      border: 2px solid #000;
+      margin: 0 auto;
+    }
+
+    .answer-line-vertical {
+      border-top: 3px solid #000;
+      width: 100%;
+      height: 0;
+      margin-top: 3px;
+    }
+
+    /* Base-10 blocks */
+    .blocks-panel {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .instruction-row {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;     /* very small so it doesn't interfere */
+      padding: 0 4px;
+    }
+
+    .blocks-instruction {
+      white-space: nowrap;
+    }
+
+    .blocks-columns {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .block-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .panel-label {
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .tens-stack,
+    .ones-stack {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .blocks-row-tens {
+      display: grid;
+      grid-template-columns: repeat(5, auto);
+      gap: 3px;
+      justify-content: center;
+    }
+
+    .blocks-row-ones {
+      display: grid;
+      grid-template-columns: repeat(5, 18px);
+      grid-auto-rows: 18px;
+      gap: 3px;
+      justify-content: center;
+    }
+
+    .block {
+      border: 2px solid #000;
+      background: transparent;
+    }
+
+    .block.ten {
+      width: 18px;
+      height: 54px;
+    }
+
+    .block.one {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Dotted ten-frame under ones */
+    .regroup-box-under {
+      width: 100%;
+      max-width: 120px;
+      height: 50px;
+      border: 2px dotted #bbb;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      margin-top: 3px;
+    }
+
+    .ten-frame-cell {
+      border-right: 1px dotted #ccc;
+      border-bottom: 1px dotted #ccc;
+    }
+
+    .ten-frame-cell:nth-child(5),
+    .ten-frame-cell:nth-child(10) {
+      border-right: none;
+    }
+
+    .ten-frame-cell:nth-child(n+6) {
+      border-bottom: none;
+    }
+
+    @media print {
+      .controls { display: none; }
+      button { display: none; }
+      .page {
+        width: 100%;
+        padding: 0.25in;          /* tighter for print */
+      }
+      .problem-card {
+        min-height: 180px;
+        padding: 6px 8px;
+      }
+      .problems-column {
+        gap: 6px;
+      }
+      h1 {
+        margin-bottom: 2px;
+      }
+      .steps-panel {
+        margin-bottom: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Subtraction with Regrouping — Vertical + Base-10 Blocks</h1>
+
+    <!-- Steps explanation panel -->
+    <div class="steps-panel">
+      <table class="steps-table">
+        <tr>
+          <td class="steps-top">
+            <div class="step-title">Step 1: Try to subtract the ones.</div>
+            <div class="step-text">
+              Look at the ones.<br>
+              If you can’t take away 8 ones from 5 ones,<br>
+              you need to <strong>break apart a ten</strong>.
+            </div>
+          </td>
+          <td class="steps-top">
+            <div class="step-title">Step 2: Break apart 1 ten into 10 ones.</div>
+            <div class="step-text">
+              Cross out a ten.<br>
+              Break it apart into <strong>10 ones</strong>.<br>
+              Now you have <strong>4 tens</strong> and <strong>15 ones</strong>.
+            </div>
+          </td>
+          <td class="steps-top">
+            <div class="step-title">Step 3: Subtract the ones and subtract the tens.</div>
+            <div class="step-text">
+              15 ones − 8 ones = 7<br>
+              4 tens − 1 ten = 3 tens<br>
+              Your answer is <strong>37</strong>.
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="steps-bottom">
+            <img src="sub1.png" alt="Step 1 subtraction setup">
+          </td>
+          <td class="steps-bottom">
+            <img src="sub2.png" alt="Step 2 breaking apart a ten">
+          </td>
+          <td class="steps-bottom">
+            <img src="sub3.png" alt="Step 3 subtracting tens and ones">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="controls">
+      <button id="generateBtn">Generate New</button>
+      <button id="printBtn">Print</button>
+    </div>
+
+    <div class="problems-column" id="problemsColumn"></div>
+  </div>
+
+  <script>
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Force regrouping in ones place
+    function generateProblem() {
+      let a, b;
+      while (true) {
+        a = randomInt(20, 99);
+        b = randomInt(10, a - 1);
+        if (a % 10 < b % 10) return { a, b };
+      }
+    }
+
+    function createBlocks(container, count, type) {
+      container.innerHTML = "";
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement("div");
+        el.classList.add("block", type);
+        container.appendChild(el);
+      }
+    }
+
+    function fillTenFrame(frameEl) {
+      frameEl.innerHTML = "";
+      for (let i = 0; i < 10; i++) {
+        const c = document.createElement("div");
+        c.classList.add("ten-frame-cell");
+        frameEl.appendChild(c);
+      }
+    }
+
+    function renderCard(problem) {
+      const { a, b } = problem;
+
+      const card = document.createElement("div");
+      card.classList.add("problem-card");
+
+      const eq = document.createElement("div");
+      eq.classList.add("equation-line");
+      eq.textContent = `${a} − ${b} = __________`;
+      card.appendChild(eq);
+
+      const row = document.createElement("div");
+      row.classList.add("two-columns");
+
+      /* LEFT: vertical algorithm */
+      const left = document.createElement("div");
+      left.classList.add("left-side");
+
+      const vtable = document.createElement("table");
+      vtable.classList.add("vertical-table");
+
+      const aT = Math.floor(a / 10);
+      const aO = a % 10;
+      const bT = Math.floor(b / 10);
+      const bO = b % 10;
+
+      vtable.innerHTML = `
+        <tr>
+          <td class="sign-cell"></td>
+          <td class="regroup-cell"><div class="regroup-box"></div></td>
+          <td class="regroup-cell"><div class="regroup-box"></div></td>
+        </tr>
+        <tr>
+          <td class="sign-cell"></td>
+          <td class="digit-cell">${aT}</td>
+          <td class="digit-cell">${aO}</td>
+        </tr>
+        <tr>
+          <td class="sign-cell">−</td>
+          <td class="digit-cell">${bT}</td>
+          <td class="digit-cell">${bO}</td>
+        </tr>
+        <tr>
+          <td class="sign-cell"></td>
+          <td colspan="2"><div class="answer-line-vertical"></div></td>
+        </tr>
+      `;
+
+      left.appendChild(vtable);
+      row.appendChild(left);
+
+      /* RIGHT: base-10 blocks */
+      const right = document.createElement("div");
+      right.classList.add("right-side");
+
+      const blocksPanel = document.createElement("div");
+      blocksPanel.classList.add("blocks-panel");
+
+      blocksPanel.innerHTML = `
+        <div class="instruction-row">
+          <span class="blocks-instruction tens-inst"></span>
+          <span class="blocks-instruction ones-inst"></span>
+        </div>
+        <div class="blocks-columns">
+          <div class="block-col">
+            <div class="panel-label">Tens</div>
+            <div class="tens-stack">
+              <div class="blocks-row-tens tens-row"></div>
+            </div>
+          </div>
+          <div class="block-col">
+            <div class="panel-label">Ones</div>
+            <div class="ones-stack">
+              <div class="blocks-row-ones ones-row"></div>
+              <div class="regroup-box-under"></div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      right.appendChild(blocksPanel);
+      row.appendChild(right);
+
+      card.appendChild(row);
+
+      // Fill base-10 blocks
+      createBlocks(blocksPanel.querySelector(".tens-row"), aT, "ten");
+      createBlocks(blocksPanel.querySelector(".ones-row"), aO, "one");
+      fillTenFrame(blocksPanel.querySelector(".regroup-box-under"));
+
+      // Tiny instructions above Tens/Ones
+      const tensInst = blocksPanel.querySelector(".tens-inst");
+      const onesInst = blocksPanel.querySelector(".ones-inst");
+      tensInst.textContent = `Subtract ${bT} tens.`;
+      onesInst.textContent = `Subtract ${bO} ones.`;
+
+      return card;
+    }
+
+    function generateWorksheet() {
+      const container = document.getElementById("problemsColumn");
+      container.innerHTML = "";
+      for (let i = 0; i < 3; i++) {
+        container.appendChild(renderCard(generateProblem()));
+      }
+    }
+
+    document.getElementById("generateBtn").addEventListener("click", generateWorksheet);
+    document.getElementById("printBtn").addEventListener("click", () => window.print());
+
+    generateWorksheet();
+  </script>
+</body>
+</html>
