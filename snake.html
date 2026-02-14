@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snake</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 24px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+    }
+
+    .status {
+      margin-bottom: 16px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .game-wrap {
+      display: inline-block;
+    }
+
+    #gameBoard {
+      display: grid;
+      gap: 1px;
+      background: #000;
+      border: 1px solid #000;
+      touch-action: none;
+      margin: 0 auto 12px;
+    }
+
+    .cell {
+      width: 20px;
+      height: 20px;
+      background: #fff;
+    }
+
+    .cell.snake {
+      background: #2f855a;
+    }
+
+    .cell.food {
+      background: #e53e3e;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    button {
+      font-family: 'Poppins', sans-serif;
+      padding: 8px 12px;
+      border: 1px solid #000;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .link-button {
+      display: inline-block;
+      padding: 8px 12px;
+      border: 1px solid #000;
+      color: #000;
+      text-decoration: none;
+      background: #fff;
+    }
+
+    .dpad {
+      display: grid;
+      grid-template-columns: repeat(3, 48px);
+      grid-template-rows: repeat(3, 48px);
+      gap: 6px;
+      justify-content: center;
+      margin: 0 auto;
+      width: max-content;
+    }
+
+    .dpad button {
+      padding: 0;
+      font-size: 18px;
+      line-height: 48px;
+      width: 48px;
+      height: 48px;
+      text-align: center;
+    }
+
+    .dpad .spacer {
+      visibility: hidden;
+    }
+
+    #gameMessage {
+      min-height: 24px;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <h1>Snake</h1>
+  <p>Use Arrow Keys or WASD.</p>
+  <div class="status">Score: <span id="score">0</span></div>
+
+  <div class="game-wrap">
+    <div id="gameBoard" aria-label="Snake game board"></div>
+    <div class="controls">
+      <button id="pauseButton" type="button">Pause</button>
+      <button id="restartButton" type="button">Restart</button>
+      <a class="link-button" href="./index.html">Back</a>
+    </div>
+
+    <div class="dpad" aria-label="On-screen controls">
+      <div class="spacer"></div>
+      <button type="button" data-direction="UP">▲</button>
+      <div class="spacer"></div>
+      <button type="button" data-direction="LEFT">◀</button>
+      <div class="spacer"></div>
+      <button type="button" data-direction="RIGHT">▶</button>
+      <div class="spacer"></div>
+      <button type="button" data-direction="DOWN">▼</button>
+      <div class="spacer"></div>
+    </div>
+  </div>
+
+  <div id="gameMessage"></div>
+
+  <script src="./snake-game-logic.js"></script>
+  <script>
+    const {
+      DIRECTIONS,
+      createInitialGameState,
+      setNextDirection,
+      stepGame
+    } = window.SnakeGameLogic;
+
+    const GRID_SIZE = 16;
+    const TICK_MS = 140;
+
+    const boardEl = document.getElementById('gameBoard');
+    const scoreEl = document.getElementById('score');
+    const messageEl = document.getElementById('gameMessage');
+    const pauseButtonEl = document.getElementById('pauseButton');
+    const restartButtonEl = document.getElementById('restartButton');
+
+    let gameState = createInitialGameState(GRID_SIZE);
+    let gameIntervalId = null;
+
+    function pointKey(point) {
+      return point.x + ',' + point.y;
+    }
+
+    function renderBoard() {
+      boardEl.style.gridTemplateColumns = `repeat(${gameState.gridSize}, 20px)`;
+      boardEl.innerHTML = '';
+
+      const snakeSet = new Set(gameState.snake.map(pointKey));
+      const foodKey = gameState.food ? pointKey(gameState.food) : null;
+      const fragment = document.createDocumentFragment();
+
+      for (let y = 0; y < gameState.gridSize; y += 1) {
+        for (let x = 0; x < gameState.gridSize; x += 1) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          const key = x + ',' + y;
+
+          if (snakeSet.has(key)) {
+            cell.classList.add('snake');
+          } else if (foodKey === key) {
+            cell.classList.add('food');
+          }
+
+          fragment.appendChild(cell);
+        }
+      }
+
+      boardEl.appendChild(fragment);
+      scoreEl.textContent = String(gameState.score);
+
+      if (gameState.isGameOver) {
+        messageEl.textContent = 'Game Over. Press Restart.';
+      } else if (gameState.isPaused) {
+        messageEl.textContent = 'Paused';
+      } else {
+        messageEl.textContent = '';
+      }
+    }
+
+    function tick() {
+      gameState = stepGame(gameState);
+      renderBoard();
+    }
+
+    function startLoop() {
+      if (gameIntervalId !== null) {
+        window.clearInterval(gameIntervalId);
+      }
+      gameIntervalId = window.setInterval(tick, TICK_MS);
+    }
+
+    function restartGame() {
+      gameState = createInitialGameState(GRID_SIZE);
+      pauseButtonEl.textContent = 'Pause';
+      renderBoard();
+    }
+
+    function togglePause() {
+      if (gameState.isGameOver) {
+        return;
+      }
+
+      gameState = {
+        ...gameState,
+        isPaused: !gameState.isPaused
+      };
+
+      pauseButtonEl.textContent = gameState.isPaused ? 'Resume' : 'Pause';
+      renderBoard();
+    }
+
+    function requestDirection(directionKey) {
+      const nextDirection = DIRECTIONS[directionKey];
+      if (!nextDirection) {
+        return;
+      }
+      gameState = setNextDirection(gameState, nextDirection);
+    }
+
+    function handleKeydown(event) {
+      const key = event.key.toLowerCase();
+      const map = {
+        arrowup: 'UP',
+        w: 'UP',
+        arrowdown: 'DOWN',
+        s: 'DOWN',
+        arrowleft: 'LEFT',
+        a: 'LEFT',
+        arrowright: 'RIGHT',
+        d: 'RIGHT'
+      };
+
+      if (map[key]) {
+        event.preventDefault();
+        requestDirection(map[key]);
+      } else if (key === ' ') {
+        event.preventDefault();
+        togglePause();
+      } else if (key === 'r') {
+        restartGame();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeydown);
+    restartButtonEl.addEventListener('click', restartGame);
+    pauseButtonEl.addEventListener('click', togglePause);
+
+    document.querySelectorAll('.dpad button[data-direction]').forEach((button) => {
+      button.addEventListener('click', () => {
+        requestDirection(button.dataset.direction);
+      });
+    });
+
+    renderBoard();
+    startLoop();
+  </script>
+</body>
+</html>

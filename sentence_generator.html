@@ -21,26 +21,25 @@
     }
     td {
       border: 1px solid #000;
-      width: 220px;
+      width: 200px;
       height: 100px;
       font-size: 14px;
       text-align: center;
       vertical-align: middle;
     }
     #footer {
-      margin-top: 60px;
       font-size: 16px;
       font-family: 'Poppins', sans-serif;
       position: fixed;
-      bottom: 20px;
+      bottom: 40px;
       left: 0;
       width: 100%;
       text-align: center;
     }
     @page {
       size: landscape;
+      margin: 1in;
     }
-
     @media print {
       #setupSection, button, select {
         display: none;
@@ -54,21 +53,24 @@
 <body>
 
   <div id="setupSection">
+    <h2>Fluency Grid Generator</h2>
+    <label for="skillSelect">Choose a Skill:</label>
+    <select id="skillSelect" onchange="updateTitle()">
+      <option value="0.1-sentences">0.1 - Short A Sentences</option>
+    </select>
+    <br><br>
     <button onclick="generateGrid()">Generate Fluency Grid</button>
-    <button onclick="window.print()">Print</button>
+    <button onclick="delayedPrint()">Print</button>
   </div>
 
-  <h2 id="gridTitle" style="margin-top: 40px;">0.1 - Short A Sentences</h2>
+  <h2 id="gridTitle" style="margin-top: 40px;">0.1 - Short A</h2>
   <div id="gridContainer"></div>
 
   <div id="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>
 
   <script>
-    window.onload = function () {
-      generateGrid();
-    };
-
-    const wordLists = {
+    window.fluencyData = window.fluencyData || {};
+    window.fluencyData.wordLists = {
       "0.1-sentences": [
         "A ham sat at a mat.",
         "I had a jam at the pan.",
@@ -101,20 +103,35 @@
       return array;
     }
 
+    function updateTitle() {
+      const select = document.getElementById("skillSelect");
+      const selectedText = select.options[select.selectedIndex].text;
+      document.getElementById("gridTitle").textContent = selectedText;
+    }
+
     function generateGrid() {
-      const words = shuffle([...wordLists["0.1-sentences"]]).slice(0, 15);
+      updateTitle();
+      const skill = document.getElementById('skillSelect').value;
+      const sentences = shuffle([...window.fluencyData.wordLists[skill]]).slice(0, 15);
+
       let html = '<table>';
       for (let i = 0; i < 5; i++) {
         html += '<tr>';
         for (let j = 0; j < 3; j++) {
           const idx = i * 3 + j;
-          const word = words[idx] || "";
-          html += `<td>${word}</td>`;
+          const sentence = sentences[idx] || "";
+          html += `<td>${sentence}</td>`;
         }
         html += '</tr>';
       }
       html += '</table>';
       document.getElementById('gridContainer').innerHTML = html;
+    }
+
+    function delayedPrint() {
+      setTimeout(() => {
+        window.print();
+      }, 300);
     }
   </script>
 
