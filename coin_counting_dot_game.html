@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Counting Coins Dot Game</title>
+  <style>
+    :root {
+      --ink: #1f1b18;
+      --paper: #fffdf8;
+      --line: #d8d2c8;
+      --accent: #0a5d46;
+      --accent-soft: #e6f6ef;
+      --dot: #ffdf6d;
+      --dot-hit: #35b46d;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: "Trebuchet MS", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 0%, #fff 0%, #fff 40%, #f8f5ef 100%);
+    }
+
+    .app {
+      max-width: 1050px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      text-align: center;
+      font-size: 1.85rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      margin: 0 0 14px;
+      color: #665f58;
+    }
+
+    .controls {
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      background: var(--paper);
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 14px;
+    }
+
+    .field {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: #fff;
+    }
+
+    input[type="number"], button {
+      font: inherit;
+    }
+
+    input[type="number"] {
+      width: 90px;
+      padding: 3px 6px;
+    }
+
+    .coin-select {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .coin-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid #cec7bd;
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #fff;
+    }
+
+    button {
+      border: 1px solid #24201d;
+      border-radius: 10px;
+      background: #fff;
+      color: #111;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    button.primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .game {
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      background: var(--paper);
+      display: grid;
+      gap: 12px;
+    }
+
+    .status {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(160px, 1fr));
+      gap: 10px;
+    }
+
+    .card {
+      border: 1px solid #cfc8be;
+      border-radius: 12px;
+      padding: 10px;
+      background: #fff;
+    }
+
+    .card .label {
+      font-size: 0.84rem;
+      color: #6d675f;
+      margin-bottom: 2px;
+    }
+
+    .card .value {
+      font-size: 1.35rem;
+      font-weight: 800;
+    }
+
+    .card .value.good {
+      color: var(--accent);
+    }
+
+    .arena {
+      border: 1px dashed #c7bfb4;
+      border-radius: 14px;
+      min-height: 240px;
+      padding: 14px;
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: flex-start;
+      gap: 14px;
+      background: #fff;
+      overflow-x: auto;
+    }
+
+    .coin {
+      width: var(--coin-size, 110px);
+      height: 190px;
+      flex: 0 0 auto;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .coin-face {
+      position: relative;
+      width: var(--coin-size, 110px);
+      height: var(--coin-size, 110px);
+    }
+
+    .coin-face img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: 50%;
+    }
+
+    .dot {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #6a5b2e;
+      background: var(--dot);
+      color: #2d2818;
+      font-size: 0.72rem;
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: 0 2px 2px rgb(0 0 0 / 0.2);
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, background-color 0.15s ease;
+    }
+
+    .dot.marker {
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      padding: 0;
+      overflow: visible;
+    }
+
+    .dot.marker img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .dot:active {
+      transform: translate(-50%, -50%) scale(0.95);
+    }
+
+    .dot.hit {
+      background: var(--dot-hit);
+      border-color: #1f7548;
+      color: #fff;
+      cursor: default;
+    }
+
+    .dot.star-marker {
+      width: 32px;
+      height: 32px;
+    }
+
+    .coin-total {
+      min-height: 1.1em;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #0a5d46;
+      text-align: center;
+      width: 100%;
+      line-height: 1;
+      margin-top: auto;
+    }
+
+    .history {
+      border: 1px solid #cfc8be;
+      border-radius: 12px;
+      padding: 10px;
+      background: #fff;
+      min-height: 76px;
+    }
+
+    .history strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .history-list {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 0.95rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    @media (max-width: 760px) {
+      .status { grid-template-columns: 1fr; }
+      .coin { width: var(--coin-size-mobile, 92px); height: 168px; }
+      .coin-face { width: var(--coin-size-mobile, 92px); height: var(--coin-size-mobile, 92px); }
+      .dot { width: 22px; height: 22px; font-size: 0.68rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>Counting Coins Dot Game</h1>
+    <p class="subtitle">Tap each dot to count by value chunks and build the total.</p>
+
+    <section class="controls">
+      <div class="row">
+        <strong>Allowed coins:</strong>
+        <div class="coin-select" id="coinSelect"></div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="maxAmount"><strong>Top amount (cents)</strong></label>
+          <input id="maxAmount" type="number" min="1" max="200" value="99" />
+        </div>
+      </div>
+      <div class="actions">
+        <button id="newRoundBtn" class="primary" type="button">New Round</button>
+        <button id="resetRoundBtn" type="button">Reset Same Coins</button>
+      </div>
+    </section>
+
+    <section class="game">
+      <div class="status">
+        <div class="card">
+          <div class="label">Your Running Total</div>
+          <div class="value" id="runningTotal">0¢</div>
+        </div>
+        <div class="card">
+          <div class="label">Progress</div>
+          <div class="value" id="progressText">0 / 0 dots</div>
+        </div>
+      </div>
+
+      <div class="arena" id="arena"></div>
+
+      <div class="history">
+        <strong>What we counted so far:</strong>
+        <ol class="history-list" id="historyList"></ol>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const COINS = [
+      {
+        key: "quarter",
+        label: "Quarter (25¢)",
+        value: 25,
+        ratio: 1.355,
+        chunkValues: [5, 5, 5, 5, 5],
+        coin: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f715cda9ca3b4afc8.png"
+      },
+      {
+        key: "dime",
+        label: "Dime (10¢)",
+        value: 10,
+        ratio: 1,
+        chunkValues: [5, 5],
+        coin: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f7213971802a4d866.png"
+      },
+      {
+        key: "nickel",
+        label: "Nickel (5¢)",
+        value: 5,
+        ratio: 1.184,
+        chunkValues: [5],
+        coin: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f30ec4a3836469e61.png"
+      },
+      {
+        key: "penny",
+        label: "Penny (1¢)",
+        value: 1,
+        ratio: 1.064,
+        chunkValues: [1],
+        coin: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f3fdd0e810fca84ef.png"
+      }
+    ];
+
+    const DIME_BASE_SIZE = 108;
+    const COIN_RENDER_ORDER = ["quarter", "dime", "nickel", "penny"];
+    const MARKER_IMAGES = {
+      star: {
+        red: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698dc3e33f860b863c7d4ef3.png",
+        green: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698dc3e3000761d4bcb93ca7.png"
+      },
+      dot: {
+        red: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698dc3e35b7c964a74dc7b39.png",
+        green: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698dc3e300076175b8b93ca3.png"
+      }
+    };
+    const DOT_POSITIONS = {
+      1: [{ x: 50, y: 50 }],
+      2: [{ x: 34, y: 50 }, { x: 66, y: 50 }],
+      5: [{ x: 50, y: 23 }, { x: 72, y: 40 }, { x: 64, y: 68 }, { x: 36, y: 68 }, { x: 28, y: 40 }]
+    };
+
+    const coinSelect = document.getElementById("coinSelect");
+    const maxAmountInput = document.getElementById("maxAmount");
+    const arena = document.getElementById("arena");
+    const runningTotalEl = document.getElementById("runningTotal");
+    const progressTextEl = document.getElementById("progressText");
+    const historyList = document.getElementById("historyList");
+
+    const state = {
+      coinsInRound: [],
+      runningTotal: 0,
+      clicksDone: 0,
+      clickGoal: 0,
+      history: [],
+      coinClicks: [],
+      coinCompletionTotals: []
+    };
+
+    function buildCoinSelectors() {
+      COINS.forEach((coin) => {
+        const wrapper = document.createElement("label");
+        wrapper.className = "coin-pill";
+
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.value = coin.key;
+        cb.checked = true;
+
+        const text = document.createElement("span");
+        text.textContent = coin.label;
+
+        wrapper.appendChild(cb);
+        wrapper.appendChild(text);
+        coinSelect.appendChild(wrapper);
+      });
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function getAllowedCoins() {
+      const checked = [...coinSelect.querySelectorAll("input:checked")].map((input) => input.value);
+      return COINS.filter((coin) => checked.includes(coin.key));
+    }
+
+    function orderCoinsForDisplay(picks) {
+      return COIN_RENDER_ORDER.flatMap((key) => picks.filter((coin) => coin.key === key));
+    }
+
+    function buildRound(allowed, topAmount) {
+      const coinCount = randomInt(3, 9);
+      let picks = [];
+
+      let safety = 0;
+      while (safety < 350) {
+        safety += 1;
+        picks = [];
+        for (let i = 0; i < coinCount; i += 1) {
+          picks.push(allowed[randomInt(0, allowed.length - 1)]);
+        }
+        const total = picks.reduce((sum, c) => sum + c.value, 0);
+        if (total > 0 && total <= topAmount) {
+          return orderCoinsForDisplay(picks);
+        }
+      }
+
+      const smallest = allowed.reduce((min, c) => Math.min(min, c.value), Number.POSITIVE_INFINITY);
+      const fallbackCount = Math.max(1, Math.min(coinCount, Math.floor(topAmount / smallest)));
+      const fallbackCoin = allowed.find((c) => c.value === smallest) || allowed[0];
+      return orderCoinsForDisplay(Array.from({ length: fallbackCount }, () => fallbackCoin));
+    }
+
+    function getCoinSizePx(coin) {
+      return Math.round(DIME_BASE_SIZE * (coin.ratio || 1));
+    }
+
+    function updateStatusUI() {
+      runningTotalEl.textContent = `${state.runningTotal}¢`;
+      runningTotalEl.classList.toggle("good", state.clicksDone === state.clickGoal && state.clickGoal > 0);
+      progressTextEl.textContent = `${state.clicksDone} / ${state.clickGoal} dots`;
+    }
+
+    function updateCoinTotalsUI() {
+      const labels = arena.querySelectorAll(".coin-total[data-coin-index]");
+      labels.forEach((label) => {
+        const coinIndex = Number(label.dataset.coinIndex);
+        const completionTotal = state.coinCompletionTotals[coinIndex];
+        label.textContent = Number.isFinite(completionTotal) ? `${completionTotal}¢` : "";
+      });
+    }
+
+    function updateHistoryUI() {
+      if (!state.history.length) {
+        historyList.innerHTML = "<li>Start counting by tapping a dot.</li>";
+        return;
+      }
+      historyList.innerHTML = state.history.map((line) => `<li>${line}</li>`).join("");
+    }
+
+    function onDotClick(button) {
+      if (button.classList.contains("hit")) return;
+      const addValue = Number(button.dataset.value);
+      button.classList.add("hit");
+      const markerImg = button.querySelector("img");
+      const hitSrc = button.dataset.hitSrc;
+      if (markerImg && hitSrc) {
+        markerImg.src = hitSrc;
+      } else {
+        button.textContent = "✓";
+      }
+      state.runningTotal += addValue;
+      state.clicksDone += 1;
+      const coinIndex = Number(button.dataset.coinIndex);
+      state.coinClicks[coinIndex] += 1;
+      const coinDotGoal = state.coinsInRound[coinIndex].chunkValues.length;
+      if (
+        state.coinClicks[coinIndex] === coinDotGoal &&
+        !Number.isFinite(state.coinCompletionTotals[coinIndex])
+      ) {
+        state.coinCompletionTotals[coinIndex] = state.runningTotal;
+      }
+      state.history.push(`+${addValue}¢ -> ${state.runningTotal}¢`);
+      updateStatusUI();
+      updateCoinTotalsUI();
+      updateHistoryUI();
+    }
+
+    function renderRound() {
+      arena.innerHTML = "";
+      const fragment = document.createDocumentFragment();
+
+      state.coinsInRound.forEach((coin, index) => {
+        const coinEl = document.createElement("article");
+        coinEl.className = "coin";
+        const size = getCoinSizePx(coin);
+        coinEl.style.setProperty("--coin-size", `${size}px`);
+        coinEl.style.setProperty("--coin-size-mobile", `${Math.round(size * 0.85)}px`);
+
+        const faceEl = document.createElement("div");
+        faceEl.className = "coin-face";
+        const img = document.createElement("img");
+        img.src = coin.coin;
+        img.alt = coin.label;
+        img.loading = "lazy";
+        faceEl.appendChild(img);
+
+        const chunks = coin.chunkValues;
+        const positions = DOT_POSITIONS[chunks.length] || DOT_POSITIONS[1];
+        chunks.forEach((chunkValue, dotIdx) => {
+          const pos = positions[dotIdx] || positions[0];
+          const dot = document.createElement("button");
+          dot.type = "button";
+          dot.className = "dot";
+          if (chunkValue === 1) {
+            dot.classList.add("marker", "star-marker");
+            dot.dataset.hitSrc = MARKER_IMAGES.star.green;
+            dot.innerHTML = `<img src="${MARKER_IMAGES.star.red}" alt="1¢ marker">`;
+          } else {
+            dot.classList.add("marker", "dot-marker");
+            dot.dataset.hitSrc = MARKER_IMAGES.dot.green;
+            dot.innerHTML = `<img src="${MARKER_IMAGES.dot.red}" alt="5¢ marker">`;
+          }
+          dot.dataset.value = String(chunkValue);
+          dot.dataset.coinIndex = String(index);
+          dot.setAttribute("aria-label", `${coin.label} dot ${dotIdx + 1}`);
+          dot.style.left = `${pos.x}%`;
+          dot.style.top = `${pos.y}%`;
+          dot.addEventListener("click", () => onDotClick(dot));
+          faceEl.appendChild(dot);
+        });
+
+        coinEl.appendChild(faceEl);
+        const totalLabel = document.createElement("div");
+        totalLabel.className = "coin-total";
+        totalLabel.dataset.coinIndex = String(index);
+        totalLabel.textContent = "";
+        coinEl.appendChild(totalLabel);
+
+        coinEl.dataset.coinIndex = String(index);
+        fragment.appendChild(coinEl);
+      });
+
+      arena.appendChild(fragment);
+      updateStatusUI();
+      updateCoinTotalsUI();
+      updateHistoryUI();
+    }
+
+    function resetRunningState() {
+      state.runningTotal = 0;
+      state.clicksDone = 0;
+      state.history = [];
+      state.coinClicks = state.coinsInRound.map(() => 0);
+      state.coinCompletionTotals = state.coinsInRound.map(() => Number.NaN);
+    }
+
+    function startRound(newCoins) {
+      if (newCoins) {
+        state.coinsInRound = newCoins;
+      }
+      state.clickGoal = state.coinsInRound.reduce((sum, c) => sum + c.chunkValues.length, 0);
+      resetRunningState();
+      renderRound();
+    }
+
+    function newRound() {
+      const allowed = getAllowedCoins();
+      const topAmount = Math.max(1, Math.min(200, Number.parseInt(maxAmountInput.value, 10) || 1));
+      maxAmountInput.value = String(topAmount);
+
+      if (!allowed.length) {
+        window.alert("Please choose at least one coin.");
+        return;
+      }
+
+      const smallest = allowed.reduce((min, c) => Math.min(min, c.value), Number.POSITIVE_INFINITY);
+      if (topAmount < smallest) {
+        window.alert(`Top amount must be at least ${smallest}¢ for these coins.`);
+        return;
+      }
+
+      const coins = buildRound(allowed, topAmount);
+      startRound(coins);
+    }
+
+    function resetSameCoins() {
+      if (!state.coinsInRound.length) {
+        newRound();
+        return;
+      }
+      startRound(state.coinsInRound);
+    }
+
+    buildCoinSelectors();
+    document.getElementById("newRoundBtn").addEventListener("click", newRound);
+    document.getElementById("resetRoundBtn").addEventListener("click", resetSameCoins);
+    newRound();
+  </script>
+</body>
+</html>

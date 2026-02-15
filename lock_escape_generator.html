@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lock Escape Generator | InterventionStation.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style id="printOrientationStyle">
+    @page {
+      size: letter portrait;
+      margin: 0.5in;
+    }
+  </style>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --panel: #ffffff;
+      --ink: #112244;
+      --muted: #5b6880;
+      --brand: #0d66d0;
+      --brand-dark: #084894;
+      --accent: #ff9f1c;
+      --success: #11895a;
+      --danger: #cc2b45;
+      --border: #dbe2ee;
+      --focus: #111111;
+      --shadow: 0 12px 24px rgba(17, 34, 68, 0.12);
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 0%, #e6f0ff 0%, transparent 28%),
+        radial-gradient(circle at 90% 0%, #fff2da 0%, transparent 30%),
+        var(--bg);
+    }
+
+    body.reduce-motion * {
+      animation: none !important;
+      transition: none !important;
+      scroll-behavior: auto !important;
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 18px 16px 40px;
+    }
+
+    .topbar {
+      margin-bottom: 12px;
+      padding: 14px 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .title {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .subtitle {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .small-chip {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      background: #f8fbff;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .generator-grid {
+      display: grid;
+      gap: 10px 14px;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      align-items: end;
+    }
+
+    .field {
+      display: grid;
+      gap: 5px;
+    }
+
+    .field label {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    select,
+    button,
+    input[type="text"] {
+      font: inherit;
+      color: inherit;
+    }
+
+    select,
+    input[type="text"] {
+      width: 100%;
+      min-height: 40px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: #fff;
+    }
+
+    .toggle-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 8px;
+      min-height: 40px;
+      align-items: center;
+    }
+
+    .check-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.87rem;
+      color: var(--ink);
+      padding: 2px 4px;
+      border-radius: 8px;
+    }
+
+    .check-item input {
+      margin: 0;
+      accent-color: var(--brand);
+    }
+
+    .btn {
+      border: 2px solid transparent;
+      border-radius: 10px;
+      min-height: 40px;
+      padding: 8px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+      box-shadow: 0 8px 16px rgba(13, 102, 208, 0.24);
+    }
+
+    .btn-primary:hover {
+      background: var(--brand-dark);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--ink);
+      border-color: var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--brand);
+    }
+
+    .btn-danger {
+      background: #fff2f4;
+      color: var(--danger);
+      border-color: #f5c7cf;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .layout {
+      margin-top: 12px;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+
+    .section-title {
+      margin: 0 0 10px;
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .lock-card {
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      background: #fbfdff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lock-card::before {
+      content: "";
+      position: absolute;
+      top: -24px;
+      right: -24px;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: rgba(13, 102, 208, 0.08);
+      pointer-events: none;
+    }
+
+    .lock-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .lock-title {
+      margin: 0;
+      font-size: 1.08rem;
+      font-weight: 800;
+    }
+
+    .stage-badge {
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #e7f1ff;
+      color: #074080;
+      border: 1px solid #c6ddff;
+      white-space: nowrap;
+    }
+
+    .lock-icon-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 2px 0 8px;
+    }
+
+    .lock-svg {
+      width: 66px;
+      height: 66px;
+      transition: transform 0.25s ease;
+    }
+
+    .lock-card.open .lock-svg {
+      transform: rotate(-16deg) translateX(8px);
+    }
+
+    .lock-body {
+      display: grid;
+      gap: 12px;
+    }
+
+    .question-list {
+      margin: 0;
+      padding-left: 20px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .question-prompt {
+      margin: 0 0 4px;
+      font-weight: 500;
+    }
+
+    .choice-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 10px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .choice-pill {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #fff;
+      padding: 2px 8px;
+    }
+
+    .code-display {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .code-slot {
+      width: 34px;
+      height: 42px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      background: #fff;
+      font-size: 1rem;
+    }
+
+    .code-slot.filled {
+      border-color: #9ec2f3;
+      background: #edf5ff;
+    }
+
+    .keypad {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .key-btn {
+      min-height: 38px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .key-btn:hover {
+      border-color: var(--brand);
+      color: var(--brand);
+    }
+
+    .lock-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .feedback {
+      min-height: 24px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .feedback.neutral {
+      color: var(--muted);
+    }
+
+    .feedback.success {
+      color: var(--success);
+    }
+
+    .feedback.error {
+      color: var(--danger);
+    }
+
+    .checking {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--brand-dark);
+    }
+
+    .loader {
+      width: 14px;
+      height: 14px;
+      border: 2px solid #9ec2f3;
+      border-top-color: var(--brand);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .shake {
+      animation: shake 0.36s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    .stage-strip {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 6px 0 12px;
+    }
+
+    .stage-chip {
+      min-width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 2px solid var(--border);
+      display: grid;
+      place-items: center;
+      font-size: 0.86rem;
+      font-weight: 700;
+      background: #fff;
+      color: var(--muted);
+    }
+
+    .stage-chip.active {
+      border-color: var(--brand);
+      color: var(--brand);
+      background: #edf5ff;
+    }
+
+    .stage-chip.done {
+      border-color: #8fd4ba;
+      color: var(--success);
+      background: #ebfff6;
+    }
+
+    .final-screen {
+      display: none;
+      margin-top: 10px;
+      border: 2px solid #aadfcb;
+      background: #f3fff8;
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .final-screen.show {
+      display: block;
+    }
+
+    .final-screen h3 {
+      margin: 0 0 6px;
+      font-size: 1.35rem;
+    }
+
+    .certificate {
+      margin: 12px auto 0;
+      max-width: 450px;
+      border: 2px dashed #86c9ad;
+      border-radius: 12px;
+      padding: 10px;
+      background: #fff;
+      font-size: 0.93rem;
+    }
+
+    .confetti-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .confetti {
+      position: absolute;
+      width: 8px;
+      height: 14px;
+      opacity: 0;
+      animation: fall 1.2s ease forwards;
+    }
+
+    @keyframes fall {
+      0% {
+        opacity: 1;
+        transform: translateY(-22px) rotate(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(230px) rotate(240deg);
+      }
+    }
+
+    .timer-row {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    #worksheetPanel {
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+      padding: 14px;
+      min-height: 300px;
+    }
+
+    .worksheet-doc {
+      width: 100%;
+      color: #111;
+    }
+
+    .worksheet-head {
+      border: 2px solid #000;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .worksheet-head h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .line-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+      font-size: 0.92rem;
+    }
+
+    .line-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 200px;
+    }
+
+    .line {
+      border-bottom: 1px solid #000;
+      min-width: 120px;
+      height: 1.1em;
+    }
+
+    .worksheet-stage {
+      border: 2px solid #000;
+      border-radius: 8px;
+      padding: 10px;
+      margin: 0 0 10px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .worksheet-stage h3 {
+      margin: 0 0 6px;
+      font-size: 1rem;
+    }
+
+    .worksheet-stage ol {
+      margin: 0;
+      padding-left: 20px;
+      display: grid;
+      gap: 6px;
+      font-size: 0.94rem;
+    }
+
+    .ws-choice {
+      display: grid;
+      gap: 3px;
+      margin-top: 4px;
+      font-size: 0.86rem;
+      color: #222;
+    }
+
+    .code-box-row {
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .code-boxes {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .ws-box {
+      width: 30px;
+      height: 30px;
+      border: 2px solid #000;
+      display: inline-grid;
+      place-items: center;
+      font-weight: 700;
+    }
+
+    .answer-key {
+      border: 2px solid #000;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 12px;
+      page-break-before: always;
+    }
+
+    .answer-key h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .answer-key ul {
+      margin: 0;
+      padding-left: 20px;
+      display: grid;
+      gap: 6px;
+      font-size: 0.9rem;
+    }
+
+    .worksheet-footer {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #333;
+      border-top: 1px solid #bbb;
+      padding-top: 8px;
+    }
+
+    .json-wrap {
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .json-wrap summary {
+      cursor: pointer;
+      padding: 8px 10px;
+      background: #f8fbff;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    .json-wrap pre {
+      margin: 0;
+      max-height: 220px;
+      overflow: auto;
+      padding: 10px;
+      font-size: 0.75rem;
+      background: #fff;
+      border-top: 1px solid var(--border);
+    }
+
+    .copyright {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #4d5871;
+    }
+
+    .hide {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .generator-grid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .generator-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .keypad {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      body * {
+        visibility: hidden !important;
+      }
+
+      #worksheetPanel,
+      #worksheetPanel * {
+        visibility: visible !important;
+      }
+
+      #worksheetPanel {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        border: 0;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 0;
+      }
+
+      .worksheet-stage,
+      .worksheet-head,
+      .answer-key {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div>
+        <h1 class="title">Lock Escape Generator</h1>
+        <p class="subtitle">InterventionStation.com | Interactive lock + matching printable worksheet from one puzzle JSON</p>
+      </div>
+      <span class="small-chip" id="puzzleIdChip">Puzzle ID: Not generated</span>
+    </header>
+
+    <section class="panel" aria-label="Generator Panel">
+      <h2 class="section-title">Generator Panel</h2>
+      <div class="generator-grid">
+        <div class="field" style="grid-column: span 2;">
+          <label for="subjectSelect">Subject</label>
+          <select id="subjectSelect" aria-label="Subject">
+            <option value="math" selected>Math</option>
+          </select>
+        </div>
+
+        <div class="field" style="grid-column: span 2;">
+          <label for="gradeBandSelect">Grade Band</label>
+          <select id="gradeBandSelect" aria-label="Grade band">
+            <option value="2-3">Grades 2-3</option>
+            <option value="3-4" selected>Grades 3-4</option>
+            <option value="4-5">Grades 4-5</option>
+          </select>
+        </div>
+
+        <div class="field" style="grid-column: span 4;">
+          <label>Skill(s)</label>
+          <div class="toggle-group" role="group" aria-label="Select one or more skills">
+            <label class="check-item"><input type="checkbox" name="skill" value="addition" checked> Addition</label>
+            <label class="check-item"><input type="checkbox" name="skill" value="subtraction" checked> Subtraction</label>
+            <label class="check-item"><input type="checkbox" name="skill" value="rounding" checked> Rounding</label>
+          </div>
+        </div>
+
+        <div class="field" style="grid-column: span 2;">
+          <label for="locksSelect">Locks (Stages)</label>
+          <select id="locksSelect" aria-label="Number of locks">
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+
+        <div class="field" style="grid-column: span 2;">
+          <label for="questionCountSelect">Questions per Stage</label>
+          <select id="questionCountSelect" aria-label="Questions per stage">
+            <option value="3">3</option>
+            <option value="4" selected>4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+        </div>
+
+        <div class="field" style="grid-column: span 2;">
+          <label for="codeFormatSelect">Code Format</label>
+          <select id="codeFormatSelect" aria-label="Code format">
+            <option value="letters" selected>Letter (A/B/C/D)</option>
+            <option value="numeric">Numeric (0-9)</option>
+            <option value="symbols">Symbol (★ ● ▲ ■)</option>
+          </select>
+        </div>
+
+        <div class="field" style="grid-column: span 2;">
+          <label for="numericRuleSelect">Numeric Rule</label>
+          <select id="numericRuleSelect" aria-label="Numeric code rule">
+            <option value="onesDigitOfAnswer" selected>Ones digit of answer</option>
+            <option value="tensDigitOfAnswer">Tens digit of answer</option>
+            <option value="sumThenOnesDigit">Running sum then ones digit</option>
+          </select>
+        </div>
+
+        <div class="field" style="grid-column: span 2;">
+          <label for="difficultySelect">Difficulty</label>
+          <select id="difficultySelect" aria-label="Difficulty level">
+            <option value="1">Level 1</option>
+            <option value="2">Level 2</option>
+            <option value="3">Level 3</option>
+            <option value="progressive" selected>Progressive (L1 → L2 → L3)</option>
+          </select>
+        </div>
+
+        <div class="field" style="grid-column: span 2;">
+          <label for="orientationSelect">Worksheet Orientation</label>
+          <select id="orientationSelect" aria-label="Worksheet orientation">
+            <option value="portrait" selected>Portrait</option>
+            <option value="landscape">Landscape</option>
+          </select>
+        </div>
+
+        <div class="field" style="grid-column: span 4;">
+          <label>Options</label>
+          <div class="toggle-group" role="group" aria-label="Additional options">
+            <label class="check-item"><input type="checkbox" id="hintModeToggle" checked> Hint mode</label>
+            <label class="check-item"><input type="checkbox" id="soundToggle"> Sound</label>
+            <label class="check-item"><input type="checkbox" id="timerToggle"> Timer</label>
+            <label class="check-item"><input type="checkbox" id="reduceMotionToggle"> Reduced motion</label>
+            <label class="check-item"><input type="checkbox" id="answerKeyToggle" checked> Include answer key</label>
+          </div>
+        </div>
+
+        <div class="field" style="grid-column: span 2;">
+          <button class="btn btn-primary" id="generateBtn" aria-label="Generate lock escape puzzle">Generate</button>
+        </div>
+        <div class="field" style="grid-column: span 2;">
+          <button class="btn btn-secondary" id="printBtn" aria-label="Print worksheet">Print Worksheet</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <article class="panel" aria-label="Interactive Lock Game">
+        <h2 class="section-title">Interactive Lock Game</h2>
+        <p class="muted" id="gameInstructions">Generate a puzzle to begin. Students solve the worksheet; teacher checks each code here.</p>
+
+        <div class="stage-strip" id="stageStrip" aria-label="Stage progress"></div>
+        <div class="timer-row">
+          <span id="timerLabel">Stage Timer: Off</span>
+          <span id="statusLabel">Status: Waiting</span>
+        </div>
+
+        <div id="lockCard" class="lock-card" aria-live="polite">
+          <div class="lock-header">
+            <h3 class="lock-title" id="lockTitle">No stage loaded</h3>
+            <span class="stage-badge" id="stageBadge">Stage 0 of 0</span>
+          </div>
+          <div class="lock-icon-wrap" aria-hidden="true">
+            <svg class="lock-svg" viewBox="0 0 64 64">
+              <rect x="16" y="28" width="32" height="28" rx="5" fill="#0d66d0"></rect>
+              <path d="M22 28v-8c0-5.5 4.5-10 10-10s10 4.5 10 10v8" fill="none" stroke="#0d66d0" stroke-width="5" stroke-linecap="round"></path>
+              <circle cx="32" cy="41" r="4" fill="#fff"></circle>
+              <rect x="30.5" y="43" width="3" height="7" rx="1.5" fill="#fff"></rect>
+            </svg>
+          </div>
+
+          <div class="lock-body">
+            <ol class="question-list" id="questionList"></ol>
+
+            <div>
+              <div class="muted" style="font-size:0.86rem; margin-bottom:4px;">Enter Stage Code</div>
+              <div class="code-display" id="codeDisplay" aria-label="Code input display"></div>
+            </div>
+
+            <div class="keypad" id="keypad" aria-label="Code keypad"></div>
+
+            <div class="lock-actions">
+              <button class="btn btn-secondary" id="backspaceBtn" aria-label="Delete last code character">Backspace</button>
+              <button class="btn btn-secondary" id="clearBtn" aria-label="Clear code input">Clear</button>
+              <button class="btn btn-primary" id="checkCodeBtn" aria-label="Check code">Check Code</button>
+            </div>
+
+            <div class="feedback neutral" id="feedbackText">Awaiting puzzle generation.</div>
+          </div>
+        </div>
+
+        <div class="final-screen" id="finalScreen">
+          <div class="confetti-layer" id="confettiLayer"></div>
+          <h3>Unlocked! You Escaped!</h3>
+          <p>All locks opened. Great problem solving.</p>
+          <div class="certificate">
+            <strong>Certificate Strip</strong><br>
+            Lock Escape Completed • InterventionStation.com • @TeachwithMrC
+          </div>
+        </div>
+
+        <details class="json-wrap">
+          <summary>Puzzle JSON (single source of truth)</summary>
+          <pre id="puzzleJson">{}</pre>
+        </details>
+      </article>
+
+      <article class="panel" aria-label="Printable Worksheet">
+        <h2 class="section-title">Worksheet Preview</h2>
+        <p class="muted">This preview and the interactive locks are generated from the same puzzle object.</p>
+        <div id="worksheetPanel">
+          <div class="worksheet-doc">
+            <p class="muted">Generate a puzzle to render worksheet pages.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <div class="copyright">Copyright © InterventionStation.com • @TeachwithMrC</div>
+  </main>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const LETTERS = ["A", "B", "C", "D"];
+      const SYMBOL_MAP = { A: "★", B: "●", C: "▲", D: "■" };
+      const KEYPAD_SYMBOLS = Object.values(SYMBOL_MAP);
+      const CONFETTI_COLORS = ["#0d66d0", "#ff9f1c", "#11895a", "#cc2b45", "#7a4fb8"];
+      const CHECK_DELAY_MS = 1200;
+
+      let currentPuzzle = null;
+      let activeStageIndex = 0;
+      let currentInput = "";
+      let checking = false;
+      let stageTimerHandle = null;
+      let stageTimerSeconds = 0;
+
+      const ui = {
+        subjectSelect: document.getElementById("subjectSelect"),
+        gradeBandSelect: document.getElementById("gradeBandSelect"),
+        locksSelect: document.getElementById("locksSelect"),
+        questionCountSelect: document.getElementById("questionCountSelect"),
+        codeFormatSelect: document.getElementById("codeFormatSelect"),
+        numericRuleSelect: document.getElementById("numericRuleSelect"),
+        difficultySelect: document.getElementById("difficultySelect"),
+        orientationSelect: document.getElementById("orientationSelect"),
+        hintModeToggle: document.getElementById("hintModeToggle"),
+        soundToggle: document.getElementById("soundToggle"),
+        timerToggle: document.getElementById("timerToggle"),
+        reduceMotionToggle: document.getElementById("reduceMotionToggle"),
+        answerKeyToggle: document.getElementById("answerKeyToggle"),
+        generateBtn: document.getElementById("generateBtn"),
+        printBtn: document.getElementById("printBtn"),
+        puzzleIdChip: document.getElementById("puzzleIdChip"),
+        stageStrip: document.getElementById("stageStrip"),
+        timerLabel: document.getElementById("timerLabel"),
+        statusLabel: document.getElementById("statusLabel"),
+        lockCard: document.getElementById("lockCard"),
+        lockTitle: document.getElementById("lockTitle"),
+        stageBadge: document.getElementById("stageBadge"),
+        questionList: document.getElementById("questionList"),
+        codeDisplay: document.getElementById("codeDisplay"),
+        keypad: document.getElementById("keypad"),
+        backspaceBtn: document.getElementById("backspaceBtn"),
+        clearBtn: document.getElementById("clearBtn"),
+        checkCodeBtn: document.getElementById("checkCodeBtn"),
+        feedbackText: document.getElementById("feedbackText"),
+        finalScreen: document.getElementById("finalScreen"),
+        confettiLayer: document.getElementById("confettiLayer"),
+        puzzleJson: document.getElementById("puzzleJson"),
+        worksheetPanel: document.getElementById("worksheetPanel"),
+        gameInstructions: document.getElementById("gameInstructions"),
+        printOrientationStyle: document.getElementById("printOrientationStyle")
+      };
+
+      ui.generateBtn.addEventListener("click", handleGenerate);
+      ui.printBtn.addEventListener("click", () => window.print());
+      ui.clearBtn.addEventListener("click", clearInput);
+      ui.backspaceBtn.addEventListener("click", backspaceInput);
+      ui.checkCodeBtn.addEventListener("click", checkCurrentCode);
+      ui.codeFormatSelect.addEventListener("change", updateNumericRuleVisibility);
+      ui.reduceMotionToggle.addEventListener("change", () => {
+        document.body.classList.toggle("reduce-motion", ui.reduceMotionToggle.checked);
+      });
+
+      document.addEventListener("keydown", handleKeyInput);
+      updateNumericRuleVisibility();
+
+      const skillRegistry = {
+        /*
+          Skill plugin contract:
+          - id, label
+          - generateQuestion(level, codeFormat, gradeBand) => question object
+          Add new skills here (e.g., multiplication, division, money, time, place value).
+        */
+        addition: {
+          id: "addition",
+          label: "Addition",
+          generateQuestion(level, codeFormat, gradeBand) {
+            let a;
+            let b;
+            if (level === 1) {
+              a = randInt(10, 99);
+              b = randInt(1, 9);
+            } else if (level === 2) {
+              a = randInt(20, 99);
+              b = randInt(10, 99);
+            } else {
+              a = randInt(100, 999);
+              b = randInt(100, 999);
+            }
+
+            if (gradeBand === "2-3" && level === 3) {
+              a = randInt(100, 699);
+              b = randInt(100, 699);
+            }
+
+            const correctValue = a + b;
+            const prompt = `${a} + ${b} = ?`;
+            return buildQuestionFromAnswer({
+              prompt,
+              correctValue,
+              codeFormat,
+              distractors: generateAdditionDistractors(a, b, correctValue)
+            });
+          }
+        },
+        subtraction: {
+          id: "subtraction",
+          label: "Subtraction",
+          generateQuestion(level, codeFormat, gradeBand) {
+            let a;
+            let b;
+            if (level === 1) {
+              a = randInt(20, 99);
+              b = randInt(1, 9);
+            } else if (level === 2) {
+              a = randInt(40, 199);
+              b = randInt(10, 99);
+            } else {
+              a = randInt(300, 999);
+              b = randInt(100, 699);
+            }
+
+            if (gradeBand === "2-3" && level === 3) {
+              a = randInt(200, 799);
+              b = randInt(80, 499);
+            }
+
+            if (b > a) {
+              const temp = a;
+              a = b;
+              b = temp;
+            }
+
+            const correctValue = a - b;
+            const prompt = `${a} - ${b} = ?`;
+            return buildQuestionFromAnswer({
+              prompt,
+              correctValue,
+              codeFormat,
+              distractors: generateSubtractionDistractors(a, b, correctValue)
+            });
+          }
+        },
+        rounding: {
+          id: "rounding",
+          label: "Rounding",
+          generateQuestion(level, codeFormat) {
+            let number;
+            let place;
+            let placeText;
+
+            if (level === 1) {
+              number = randInt(10, 99);
+              place = 10;
+              placeText = "10";
+            } else if (level === 2) {
+              number = randInt(100, 999);
+              place = 100;
+              placeText = "100";
+            } else {
+              number = randInt(1000, 9999);
+              place = 1000;
+              placeText = "1,000";
+            }
+
+            const correctValue = roundToNearest(number, place);
+            const prompt = `Round ${formatNumber(number)} to the nearest ${placeText}.`;
+            return buildQuestionFromAnswer({
+              prompt,
+              correctValue,
+              codeFormat,
+              distractors: generateRoundingDistractors(number, place, correctValue)
+            });
+          }
+        }
+      };
+
+      function handleGenerate() {
+        const selectedSkills = getSelectedSkills();
+        if (!selectedSkills.length) {
+          setFeedback("Select at least one skill.", "error");
+          return;
+        }
+
+        const settings = {
+          subject: ui.subjectSelect.value,
+          gradeBand: ui.gradeBandSelect.value,
+          skills: selectedSkills,
+          locks: Number(ui.locksSelect.value),
+          questionsPerStage: Number(ui.questionCountSelect.value),
+          codeFormat: ui.codeFormatSelect.value,
+          numericRule: ui.numericRuleSelect.value,
+          difficulty: ui.difficultySelect.value,
+          hintMode: ui.hintModeToggle.checked,
+          soundEnabled: ui.soundToggle.checked,
+          timerEnabled: ui.timerToggle.checked,
+          reducedMotion: ui.reduceMotionToggle.checked,
+          includeAnswerKey: ui.answerKeyToggle.checked,
+          orientation: ui.orientationSelect.value
+        };
+
+        document.body.classList.toggle("reduce-motion", settings.reducedMotion);
+        updatePrintOrientation(settings.orientation);
+
+        currentPuzzle = generatePuzzle(settings);
+        activeStageIndex = 0;
+        currentInput = "";
+        checking = false;
+        ui.finalScreen.classList.remove("show");
+        ui.lockCard.classList.remove("open");
+        ui.gameInstructions.textContent = "Students solve each stage on paper. Enter their stage code to unlock the next lock.";
+        ui.puzzleIdChip.textContent = `Puzzle ID: ${currentPuzzle.id}`;
+
+        renderPuzzleJson();
+        renderStageStrip();
+        renderCurrentStage();
+        renderWorksheet();
+      }
+
+      function getSelectedSkills() {
+        const selected = Array.from(document.querySelectorAll("input[name='skill']:checked"))
+          .map((box) => box.value)
+          .filter((skillId) => skillRegistry[skillId]);
+        return selected;
+      }
+
+      function generatePuzzle(settings) {
+        const now = Date.now();
+        const id = `${now}-${Math.floor(Math.random() * 9000 + 1000)}`;
+        const stages = [];
+        const skillIds = settings.skills;
+
+        for (let i = 0; i < settings.locks; i += 1) {
+          const stageIndex = i + 1;
+          const level = resolveStageLevel(settings.difficulty, stageIndex);
+          const skillId = skillIds[i % skillIds.length];
+          const skill = skillRegistry[skillId];
+          const questions = [];
+
+          for (let q = 0; q < settings.questionsPerStage; q += 1) {
+            const question = skill.generateQuestion(level, settings.codeFormat, settings.gradeBand);
+            question.id = `s${stageIndex}q${q + 1}`;
+            questions.push(question);
+          }
+
+          const codeData = buildStageCode(questions, settings);
+          const stage = {
+            stageIndex,
+            title: `Lock ${stageIndex} - ${skill.label}`,
+            skillId,
+            skillLabel: skill.label,
+            level,
+            questions,
+            codeRule: codeData.codeRule,
+            correctCode: codeData.correctCode
+          };
+
+          if (!stage.correctCode || stage.correctCode.length === 0) {
+            stage.correctCode = "0".repeat(settings.questionsPerStage);
+          }
+
+          stages.push(stage);
+        }
+
+        return { id, settings, stages };
+      }
+
+      function resolveStageLevel(difficulty, stageIndex) {
+        if (difficulty === "progressive") {
+          return ((stageIndex - 1) % 3) + 1;
+        }
+        const level = Number(difficulty);
+        if (level >= 1 && level <= 3) {
+          return level;
+        }
+        return 1;
+      }
+
+      function buildQuestionFromAnswer({ prompt, correctValue, codeFormat, distractors }) {
+        const asText = formatNumber(correctValue);
+        if (codeFormat === "letters" || codeFormat === "symbols") {
+          const choices = buildMultipleChoice(correctValue, distractors);
+          return {
+            prompt,
+            type: "mc",
+            choices: choices.values.map((v) => formatNumber(v)),
+            correctChoiceIndex: choices.correctIndex,
+            correctValue
+          };
+        }
+        return {
+          prompt,
+          type: "numeric",
+          choices: [],
+          correctChoiceIndex: null,
+          correctValue,
+          correctText: asText
+        };
+      }
+
+      function buildMultipleChoice(correctValue, distractors) {
+        const pool = uniqueIntegers([correctValue].concat(distractors));
+        const options = [correctValue];
+        const shuffledDistractors = shuffleArray(pool.filter((v) => v !== correctValue));
+
+        for (let i = 0; options.length < 4 && i < shuffledDistractors.length; i += 1) {
+          options.push(shuffledDistractors[i]);
+        }
+
+        while (options.length < 4) {
+          const bump = randInt(-12, 12);
+          const candidate = Math.max(0, correctValue + bump + options.length);
+          if (!options.includes(candidate)) {
+            options.push(candidate);
+          }
+        }
+
+        const shuffled = shuffleArray(options.slice(0, 4));
+        return {
+          values: shuffled,
+          correctIndex: shuffled.indexOf(correctValue)
+        };
+      }
+
+      function generateAdditionDistractors(a, b, correctValue) {
+        const candidates = [
+          correctValue - 1,
+          correctValue + 1,
+          correctValue - 10,
+          correctValue + 10,
+          Math.abs(a - b),
+          a + Math.floor(b / 10),
+          b + Math.floor(a / 10)
+        ];
+        return candidates.filter((v) => v >= 0 && v !== correctValue);
+      }
+
+      function generateSubtractionDistractors(a, b, correctValue) {
+        const candidates = [
+          a + b,
+          Math.abs(b - a),
+          correctValue + 1,
+          correctValue - 1,
+          correctValue + 10,
+          correctValue - 10,
+          Math.floor(a / 10) - Math.floor(b / 10)
+        ];
+        return candidates.filter((v) => v >= 0 && v !== correctValue);
+      }
+
+      function generateRoundingDistractors(number, place, correctValue) {
+        const lower = Math.floor(number / place) * place;
+        const upper = lower + place;
+        const wrongPlace = place === 10 ? 100 : place === 100 ? 10 : 100;
+        const roundedWrongPlace = roundToNearest(number, wrongPlace);
+
+        const candidates = [
+          lower,
+          upper,
+          correctValue - place,
+          correctValue + place,
+          roundedWrongPlace,
+          Math.max(0, lower - place)
+        ];
+        return candidates.filter((v) => v >= 0 && v !== correctValue);
+      }
+
+      function buildStageCode(questions, settings) {
+        if (settings.codeFormat === "letters") {
+          const letters = questions.map((q) => LETTERS[q.correctChoiceIndex] || "A");
+          return {
+            codeRule: { type: "letters", order: "inQuestionOrder" },
+            correctCode: letters.join("")
+          };
+        }
+
+        if (settings.codeFormat === "symbols") {
+          const letters = questions.map((q) => LETTERS[q.correctChoiceIndex] || "A");
+          const symbols = letters.map((letter) => SYMBOL_MAP[letter] || "★");
+          return {
+            codeRule: {
+              type: "symbols",
+              source: "mcChoiceLetters",
+              order: "inQuestionOrder",
+              symbolMap: SYMBOL_MAP
+            },
+            correctCode: symbols.join("")
+          };
+        }
+
+        const rule = settings.numericRule;
+        const digits = [];
+
+        if (rule === "sumThenOnesDigit") {
+          let running = 0;
+          questions.forEach((q) => {
+            running += Number(q.correctValue) || 0;
+            digits.push(Math.abs(running) % 10);
+          });
+        } else if (rule === "tensDigitOfAnswer") {
+          questions.forEach((q) => {
+            const value = Math.abs(Number(q.correctValue) || 0);
+            digits.push(Math.floor(value / 10) % 10);
+          });
+        } else {
+          questions.forEach((q) => {
+            digits.push(Math.abs(Number(q.correctValue) || 0) % 10);
+          });
+        }
+
+        return {
+          codeRule: {
+            type: "numeric",
+            method: rule,
+            order: "inQuestionOrder"
+          },
+          correctCode: digits.join("")
+        };
+      }
+
+      function renderPuzzleJson() {
+        ui.puzzleJson.textContent = JSON.stringify(currentPuzzle, null, 2);
+      }
+
+      function renderStageStrip() {
+        if (!currentPuzzle) {
+          ui.stageStrip.innerHTML = "";
+          return;
+        }
+        const chips = currentPuzzle.stages.map((stage, idx) => {
+          const stateClass = idx < activeStageIndex ? "done" : idx === activeStageIndex ? "active" : "";
+          const mark = idx < activeStageIndex ? "✓" : stage.stageIndex;
+          return `<span class="stage-chip ${stateClass}">${mark}</span>`;
+        }).join("");
+        ui.stageStrip.innerHTML = chips;
+      }
+
+      function renderCurrentStage() {
+        if (!currentPuzzle) {
+          return;
+        }
+
+        const stage = currentPuzzle.stages[activeStageIndex];
+        const totalStages = currentPuzzle.stages.length;
+
+        if (!stage) {
+          showFinalScreen();
+          return;
+        }
+
+        currentInput = "";
+        renderCodeDisplay();
+        renderKeypad();
+        renderStageStrip();
+
+        ui.lockTitle.textContent = stage.title;
+        ui.stageBadge.textContent = `Stage ${stage.stageIndex} of ${totalStages}`;
+        ui.statusLabel.textContent = "Status: Locked";
+        ui.lockCard.classList.remove("open");
+        ui.feedbackText.className = "feedback neutral";
+        ui.feedbackText.textContent = `Solve ${stage.questions.length} question${stage.questions.length === 1 ? "" : "s"} and enter the stage code.`;
+
+        const questionsHtml = stage.questions.map((q, index) => {
+          const prompt = `<p class="question-prompt">${escapeHtml(q.prompt)}</p>`;
+          if (q.type === "mc") {
+            const choices = q.choices.map((choiceText, choiceIndex) => (
+              `<span class="choice-pill">${LETTERS[choiceIndex]}. ${escapeHtml(choiceText)}</span>`
+            )).join("");
+            return `<li>${prompt}<div class="choice-row">${choices}</div></li>`;
+          }
+          return `<li>${prompt}</li>`;
+        }).join("");
+
+        ui.questionList.innerHTML = questionsHtml;
+        ui.finalScreen.classList.remove("show");
+        stopStageTimer();
+        startStageTimerIfEnabled();
+      }
+
+      function renderCodeDisplay() {
+        if (!currentPuzzle) {
+          ui.codeDisplay.innerHTML = "";
+          return;
+        }
+        const stage = currentPuzzle.stages[activeStageIndex];
+        if (!stage) {
+          ui.codeDisplay.innerHTML = "";
+          return;
+        }
+        const targetLength = stage.correctCode.length;
+        let html = "";
+        for (let i = 0; i < targetLength; i += 1) {
+          const char = currentInput[i] || "";
+          html += `<span class="code-slot ${char ? "filled" : ""}">${escapeHtml(char)}</span>`;
+        }
+        ui.codeDisplay.innerHTML = html;
+      }
+
+      function renderKeypad() {
+        if (!currentPuzzle) {
+          ui.keypad.innerHTML = "";
+          return;
+        }
+        const stage = currentPuzzle.stages[activeStageIndex];
+        if (!stage) {
+          ui.keypad.innerHTML = "";
+          return;
+        }
+
+        const format = currentPuzzle.settings.codeFormat;
+        let keys = [];
+        if (format === "letters") {
+          keys = LETTERS;
+        } else if (format === "symbols") {
+          keys = KEYPAD_SYMBOLS;
+        } else {
+          keys = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+        }
+
+        ui.keypad.innerHTML = keys.map((key) => (
+          `<button class="key-btn" type="button" data-key="${escapeHtml(key)}" aria-label="Enter ${escapeHtml(key)}">${escapeHtml(key)}</button>`
+        )).join("");
+
+        ui.keypad.querySelectorAll(".key-btn").forEach((btn) => {
+          btn.addEventListener("click", () => appendInput(btn.dataset.key || ""));
+        });
+      }
+
+      function appendInput(char) {
+        if (!currentPuzzle || checking) {
+          return;
+        }
+        const stage = currentPuzzle.stages[activeStageIndex];
+        if (!stage) {
+          return;
+        }
+        if (currentInput.length >= stage.correctCode.length) {
+          return;
+        }
+        currentInput += char;
+        renderCodeDisplay();
+      }
+
+      function clearInput() {
+        if (!currentPuzzle || checking) {
+          return;
+        }
+        currentInput = "";
+        renderCodeDisplay();
+      }
+
+      function backspaceInput() {
+        if (!currentPuzzle || checking) {
+          return;
+        }
+        currentInput = currentInput.slice(0, -1);
+        renderCodeDisplay();
+      }
+
+      function checkCurrentCode() {
+        if (!currentPuzzle || checking) {
+          return;
+        }
+        const stage = currentPuzzle.stages[activeStageIndex];
+        if (!stage) {
+          return;
+        }
+
+        if (currentInput.length !== stage.correctCode.length) {
+          setFeedback(`Code needs ${stage.correctCode.length} character${stage.correctCode.length === 1 ? "" : "s"}.`, "error");
+          pulseWrong();
+          return;
+        }
+
+        checking = true;
+        ui.statusLabel.textContent = "Status: Checking...";
+        ui.feedbackText.className = "feedback neutral";
+        ui.feedbackText.innerHTML = `<span class="checking"><span class="loader"></span>Checking...</span>`;
+
+        const delay = currentPuzzle.settings.reducedMotion ? 150 : CHECK_DELAY_MS;
+        window.setTimeout(() => {
+          const isCorrect = currentInput === stage.correctCode;
+          checking = false;
+          if (isCorrect) {
+            handleCorrectCode(stage);
+          } else {
+            handleWrongCode(stage);
+          }
+        }, delay);
+      }
+
+      function handleCorrectCode(stage) {
+        ui.lockCard.classList.add("open");
+        ui.statusLabel.textContent = "Status: Unlocked";
+        setFeedback(`Lock ${stage.stageIndex} opened!`, "success");
+        playSound("success");
+
+        activeStageIndex += 1;
+        renderStageStrip();
+        stopStageTimer();
+
+        if (activeStageIndex >= currentPuzzle.stages.length) {
+          window.setTimeout(() => {
+            showFinalScreen();
+          }, currentPuzzle.settings.reducedMotion ? 100 : 600);
+          return;
+        }
+
+        window.setTimeout(() => {
+          renderCurrentStage();
+        }, currentPuzzle.settings.reducedMotion ? 100 : 700);
+      }
+
+      function handleWrongCode(stage) {
+        ui.statusLabel.textContent = "Status: Locked";
+        pulseWrong();
+        playSound("error");
+
+        let feedback = "Not yet. Try again.";
+        if (currentPuzzle.settings.hintMode) {
+          const wrongIndex = firstMismatchIndex(currentInput, stage.correctCode);
+          if (wrongIndex !== -1) {
+            feedback = `Not yet—check #${wrongIndex + 1}.`;
+          }
+        }
+        setFeedback(feedback, "error");
+      }
+
+      function pulseWrong() {
+        ui.lockCard.classList.remove("shake");
+        void ui.lockCard.offsetWidth;
+        ui.lockCard.classList.add("shake");
+      }
+
+      function firstMismatchIndex(input, target) {
+        const max = Math.min(input.length, target.length);
+        for (let i = 0; i < max; i += 1) {
+          if (input[i] !== target[i]) {
+            return i;
+          }
+        }
+        return input.length === target.length ? -1 : max;
+      }
+
+      function setFeedback(text, tone) {
+        ui.feedbackText.className = `feedback ${tone}`;
+        ui.feedbackText.textContent = text;
+      }
+
+      function showFinalScreen() {
+        ui.lockTitle.textContent = "All Locks Opened";
+        ui.stageBadge.textContent = `Stage ${currentPuzzle.stages.length} of ${currentPuzzle.stages.length}`;
+        ui.questionList.innerHTML = "<li>Escape complete.</li>";
+        ui.keypad.innerHTML = "";
+        ui.codeDisplay.innerHTML = "";
+        ui.statusLabel.textContent = "Status: Escaped";
+        setFeedback("All stages completed.", "success");
+        ui.finalScreen.classList.add("show");
+        triggerConfetti();
+        playSound("win");
+      }
+
+      function triggerConfetti() {
+        if (!currentPuzzle || currentPuzzle.settings.reducedMotion) {
+          ui.confettiLayer.innerHTML = "";
+          return;
+        }
+        ui.confettiLayer.innerHTML = "";
+        const count = 26;
+        let html = "";
+        for (let i = 0; i < count; i += 1) {
+          const left = randInt(4, 96);
+          const delay = (Math.random() * 0.35).toFixed(2);
+          const color = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
+          html += `<span class="confetti" style="left:${left}%; background:${color}; animation-delay:${delay}s;"></span>`;
+        }
+        ui.confettiLayer.innerHTML = html;
+      }
+
+      function renderWorksheet() {
+        if (!currentPuzzle) {
+          ui.worksheetPanel.innerHTML = '<div class="worksheet-doc"><p class="muted">Generate a puzzle to render worksheet pages.</p></div>';
+          return;
+        }
+
+        const p = currentPuzzle;
+        const settings = p.settings;
+        const directions = settings.codeFormat === "letters"
+          ? "Solve each question. Write the correct letter for each question in the Stage Code boxes."
+          : settings.codeFormat === "symbols"
+            ? "Solve each question. Convert each correct letter to a symbol (★ ● ▲ ■) and write the Stage Code."
+            : "Solve each question. Use the numeric code rule to build each stage code.";
+
+        const stageBlocks = p.stages.map((stage) => {
+          const questionsHtml = stage.questions.map((q, idx) => {
+            if (q.type === "mc") {
+              const choices = q.choices.map((choiceText, choiceIdx) => (
+                `<div>${LETTERS[choiceIdx]}. ${escapeHtml(choiceText)}</div>`
+              )).join("");
+              return `<li>${escapeHtml(q.prompt)}<div class="ws-choice">${choices}</div></li>`;
+            }
+            return `<li>${escapeHtml(q.prompt)}</li>`;
+          }).join("");
+
+          const codeBoxes = Array.from({ length: stage.correctCode.length })
+            .map(() => '<span class="ws-box"></span>')
+            .join("");
+
+          return `
+            <section class="worksheet-stage">
+              <h3>Stage ${stage.stageIndex}: ${escapeHtml(stage.skillLabel)} (Level ${stage.level})</h3>
+              <ol>${questionsHtml}</ol>
+              <div class="code-box-row">
+                <strong>Stage Code:</strong>
+                <span class="code-boxes">${codeBoxes}</span>
+              </div>
+            </section>
+          `;
+        }).join("");
+
+        const answerKey = settings.includeAnswerKey ? renderAnswerKey(p) : "";
+
+        ui.worksheetPanel.innerHTML = `
+          <div class="worksheet-doc">
+            <header class="worksheet-head">
+              <h2>Lock Escape Worksheet</h2>
+              <div class="line-row">
+                <div class="line-item"><strong>Name:</strong> <span class="line"></span></div>
+                <div class="line-item"><strong>Date:</strong> <span class="line"></span></div>
+              </div>
+              <div style="margin-top:8px; font-size:0.9rem;">
+                <strong>Directions:</strong> ${escapeHtml(directions)}
+              </div>
+              <div style="margin-top:6px; font-size:0.82rem;">
+                Puzzle ID: ${escapeHtml(p.id)} | Skill(s): ${escapeHtml(p.settings.skills.map((s) => skillRegistry[s].label).join(", "))}
+              </div>
+            </header>
+            ${stageBlocks}
+            ${answerKey}
+            <footer class="worksheet-footer">Copyright © InterventionStation.com • @TeachwithMrC</footer>
+          </div>
+        `;
+      }
+
+      function renderAnswerKey(puzzle) {
+        const stageAnswers = puzzle.stages.map((stage) => {
+          const questionAnswers = stage.questions.map((q, idx) => {
+            if (q.type === "mc") {
+              const letter = LETTERS[q.correctChoiceIndex];
+              return `Q${idx + 1}: ${letter} (${formatNumber(q.correctValue)})`;
+            }
+            return `Q${idx + 1}: ${formatNumber(q.correctValue)}`;
+          }).join(" • ");
+          return `<li><strong>Stage ${stage.stageIndex}:</strong> ${escapeHtml(questionAnswers)} | <strong>Code:</strong> ${escapeHtml(stage.correctCode)}</li>`;
+        }).join("");
+
+        return `
+          <section class="answer-key">
+            <h3>Answer Key</h3>
+            <ul>${stageAnswers}</ul>
+          </section>
+        `;
+      }
+
+      function updatePrintOrientation(orientation) {
+        const value = orientation === "landscape" ? "landscape" : "portrait";
+        ui.printOrientationStyle.textContent = `@page { size: letter ${value}; margin: 0.5in; }`;
+      }
+
+      function updateNumericRuleVisibility() {
+        const showNumericRule = ui.codeFormatSelect.value === "numeric";
+        ui.numericRuleSelect.closest(".field").classList.toggle("hide", !showNumericRule);
+      }
+
+      function startStageTimerIfEnabled() {
+        if (!currentPuzzle || !currentPuzzle.settings.timerEnabled) {
+          ui.timerLabel.textContent = "Stage Timer: Off";
+          return;
+        }
+        stageTimerSeconds = 0;
+        ui.timerLabel.textContent = "Stage Timer: 00:00";
+        stageTimerHandle = window.setInterval(() => {
+          stageTimerSeconds += 1;
+          ui.timerLabel.textContent = `Stage Timer: ${formatClock(stageTimerSeconds)}`;
+        }, 1000);
+      }
+
+      function stopStageTimer() {
+        if (stageTimerHandle) {
+          window.clearInterval(stageTimerHandle);
+          stageTimerHandle = null;
+        }
+      }
+
+      function handleKeyInput(event) {
+        if (!currentPuzzle) {
+          return;
+        }
+        const key = event.key;
+        if (key === "Backspace") {
+          backspaceInput();
+          return;
+        }
+        if (key === "Enter") {
+          checkCurrentCode();
+          return;
+        }
+        if (key === "Escape") {
+          clearInput();
+          return;
+        }
+
+        const format = currentPuzzle.settings.codeFormat;
+        if (format === "letters") {
+          const upper = key.toUpperCase();
+          if (LETTERS.includes(upper)) {
+            appendInput(upper);
+          }
+          return;
+        }
+        if (format === "numeric") {
+          if (/^[0-9]$/.test(key)) {
+            appendInput(key);
+          }
+        }
+      }
+
+      function playSound(type) {
+        if (!currentPuzzle || !currentPuzzle.settings.soundEnabled) {
+          return;
+        }
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) {
+          return;
+        }
+        const ctx = new Ctx();
+        const now = ctx.currentTime;
+
+        if (type === "success") {
+          playTone(ctx, 660, now, 0.09, "sine");
+          playTone(ctx, 880, now + 0.1, 0.12, "sine");
+        } else if (type === "error") {
+          playTone(ctx, 190, now, 0.12, "triangle");
+        } else if (type === "win") {
+          playTone(ctx, 523.25, now, 0.09, "sine");
+          playTone(ctx, 659.25, now + 0.1, 0.09, "sine");
+          playTone(ctx, 783.99, now + 0.2, 0.12, "sine");
+        }
+
+        window.setTimeout(() => {
+          ctx.close().catch(() => {});
+        }, 450);
+      }
+
+      function playTone(ctx, frequency, startTime, duration, waveType) {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = waveType || "sine";
+        osc.frequency.value = frequency;
+        gain.gain.setValueAtTime(0.0001, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.18, startTime + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+      }
+
+      function roundToNearest(value, place) {
+        return Math.round(value / place) * place;
+      }
+
+      function randInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function uniqueIntegers(values) {
+        const out = [];
+        const seen = new Set();
+        values.forEach((v) => {
+          const asNumber = Number(v);
+          if (!Number.isFinite(asNumber)) {
+            return;
+          }
+          const n = Math.round(asNumber);
+          if (!seen.has(n)) {
+            seen.add(n);
+            out.push(n);
+          }
+        });
+        return out;
+      }
+
+      function shuffleArray(array) {
+        const out = array.slice();
+        for (let i = out.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = out[i];
+          out[i] = out[j];
+          out[j] = tmp;
+        }
+        return out;
+      }
+
+      function formatNumber(value) {
+        return Number(value).toLocaleString("en-US");
+      }
+
+      function formatClock(totalSeconds) {
+        const min = Math.floor(totalSeconds / 60);
+        const sec = totalSeconds % 60;
+        return `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      updatePrintOrientation("portrait");
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Subtraction Graphic Organizer Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1d2430;
+      --panel: #ffffff;
+      --paper: #ffffff;
+      --line: #121212;
+      --soft-line: #8a96ac;
+      --p1: #f5f5f5;
+      --p2: #f7ead8;
+      --p3: #e7f2fb;
+      --p4: #e5f6e9;
+      --p5: #fcecc8;
+      --p6: #f9e3f1;
+      --p7: #e1f4f6;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at top, #f7f9fd 0%, #eef2f8 65%, #e9eef6 100%);
+    }
+
+    .app {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 14px 14px 34px;
+    }
+
+    .screen-only h1 {
+      margin: 2px 0 2px;
+      text-align: center;
+      font-size: clamp(1.28rem, 2.8vw, 2rem);
+      line-height: 1.2;
+      font-weight: 800;
+    }
+
+    .screen-only .subtitle {
+      margin: 0 0 12px;
+      text-align: center;
+      color: #42546f;
+      font-size: 0.95rem;
+    }
+
+    .controls-card {
+      background: var(--panel);
+      border: 2px solid #d8dfec;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(22, 32, 49, 0.06);
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      align-items: end;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .field label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      color: #4b5a74;
+    }
+
+    .field select,
+    .field input {
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--ink);
+      background: #fff;
+      border: 2px solid #cfd8e7;
+      border-radius: 10px;
+      padding: 8px 10px;
+      outline: none;
+    }
+
+    .checkbox-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      border: 2px solid #cfd8e7;
+      border-radius: 10px;
+      padding: 7px 10px;
+      background: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #2f415f;
+    }
+
+    .checkbox-wrap input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .button-row button {
+      border: 2px solid #1f2b3e;
+      border-radius: 10px;
+      background: #fff;
+      color: #1f2b3e;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+
+    .button-row button.primary {
+      background: #1f2b3e;
+      color: #fff;
+    }
+
+    .note {
+      margin-top: 8px;
+      font-size: 0.84rem;
+      color: #5a677f;
+    }
+
+    #worksheetHost {
+      margin-top: 12px;
+    }
+
+    .sheet {
+      width: 8.5in;
+      min-height: 11in;
+      margin: 0 auto;
+      background: var(--paper);
+      border: 1px solid #d6dce8;
+      box-shadow: 0 12px 30px rgba(20, 32, 50, 0.1);
+      padding: 0.34in;
+      position: relative;
+    }
+
+    .sheet-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 2px solid #ced7e6;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+    }
+
+    .sheet-title {
+      margin: 0;
+      font-size: 1.06rem;
+      font-weight: 800;
+      line-height: 1.22;
+    }
+
+    .name-line {
+      white-space: nowrap;
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    .name-line .line {
+      display: inline-block;
+      width: 140px;
+      border-bottom: 2px solid #111;
+      transform: translateY(-2px);
+      margin-left: 5px;
+    }
+
+    .problems {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 2px solid #cfd6e3;
+      border-left: 2px solid #cfd6e3;
+      margin-top: 8px;
+      padding-bottom: 0.3in;
+    }
+
+    .problem-wrap {
+      --cell-size: 46px;
+      --cell-gap: 5px;
+      --op-width: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 10px 10px;
+      border-right: 2px solid #cfd6e3;
+      border-bottom: 2px solid #cfd6e3;
+    }
+
+    .problem-top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      width: 100%;
+    }
+
+    .problem-head {
+      border: 2px solid #111;
+      border-radius: 4px;
+      background: #fff;
+      padding: 6px 12px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      line-height: 1.1;
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .problem-badge {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #111;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 800;
+      line-height: 1;
+      background: #fff;
+      flex: 0 0 auto;
+    }
+
+    .problem-text {
+      display: inline-flex;
+      align-items: center;
+      line-height: 1.05;
+      font-size: 1.62rem;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+
+    .problem-head.blank {
+      border-style: dashed;
+      color: #8c96a8;
+      font-weight: 600;
+    }
+
+    .add-table {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      align-items: center;
+    }
+
+    .table-row {
+      display: grid;
+      gap: var(--cell-gap);
+      align-items: center;
+      justify-items: stretch;
+      width: max-content;
+    }
+
+    .op-cell {
+      width: var(--op-width);
+      height: var(--cell-size);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1;
+      color: #111;
+    }
+
+    .digit-cell {
+      width: var(--cell-size);
+      height: var(--cell-size);
+      border: 2px solid #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.86rem;
+      font-weight: 800;
+      line-height: 1;
+      background: #fff;
+    }
+
+    .carry-row {
+      margin-bottom: 7px;
+    }
+
+    .carry-row .op-cell {
+      height: calc(var(--cell-size) * 0.72);
+      font-size: 1.32rem;
+    }
+
+    .carry-row .digit-cell {
+      height: calc(var(--cell-size) * 0.72);
+      font-size: 1.3rem;
+      border-color: #9ba6bb;
+    }
+
+    .line-row {
+      display: grid;
+      gap: var(--cell-gap);
+      align-items: center;
+      margin: 0;
+      width: max-content;
+    }
+
+    .line-spacer {
+      width: var(--op-width);
+      height: 0;
+    }
+
+    .sum-line {
+      height: 0;
+      border-top: 5px solid #000;
+      align-self: center;
+      margin: 1px 0;
+    }
+
+    .footer-note {
+      position: absolute;
+      left: 0.34in;
+      right: 0.34in;
+      bottom: 0.2in;
+      text-align: left;
+      font-size: 0.66rem;
+      color: #6a7485;
+    }
+
+    .no-color .digit-cell {
+      background: #fff !important;
+    }
+
+    @media (max-width: 980px) {
+      .sheet {
+        width: 100%;
+        min-height: 0;
+        padding: 12px;
+      }
+
+      .problem-wrap {
+        --cell-size: 38px;
+        --cell-gap: 4px;
+        --op-width: 26px;
+      }
+
+      .problem-top {
+        justify-content: center;
+      }
+
+      .problem-head {
+        font-size: 0.85rem;
+        min-height: 42px;
+      }
+
+      .problem-badge {
+        width: 22px;
+        height: 22px;
+        font-size: 0.72rem;
+      }
+
+      .problem-text {
+        font-size: 1.36rem;
+      }
+
+      .digit-cell {
+        font-size: 1.55rem;
+      }
+
+      .op-cell {
+        font-size: 1.7rem;
+      }
+
+      .problems {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-note {
+        position: static;
+        margin-top: 8px;
+      }
+    }
+
+    @media print {
+      @page {
+        size: Letter;
+        margin: 0.28in;
+      }
+
+      body { background: #fff; }
+      .screen-only { display: none !important; }
+      .app { margin: 0; max-width: none; padding: 0; }
+      #worksheetHost { margin: 0; }
+
+      .sheet {
+        width: auto;
+        min-height: 0;
+        margin: 0;
+        border: 0;
+        box-shadow: none;
+        padding: 0;
+      }
+
+      .problem-wrap {
+        --cell-size: 46px;
+        --cell-gap: 5px;
+        --op-width: 30px;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .problem-head {
+        min-height: 36px;
+      }
+
+      .digit-cell {
+        font-size: 1.82rem;
+      }
+
+      .footer-note {
+        position: fixed;
+        left: 0.28in;
+        right: 0.28in;
+        bottom: 0.1in;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="screen-only">
+      <h1>Subtraction Graphic Organizer Generator</h1>
+      <p class="subtitle">Advanced format: 6 problems per page (3 rows x 2) with aligned subtraction tables</p>
+
+      <section class="controls-card">
+        <div class="controls-grid">
+          <div class="field">
+            <label for="digitsA">Minuend Digits</label>
+            <select id="digitsA">
+              <option value="2" selected>2 digits</option>
+              <option value="3">3 digits</option>
+              <option value="4">4 digits</option>
+              <option value="5">5 digits</option>
+              <option value="6">6 digits</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="digitsB">Subtrahend Digits</label>
+            <select id="digitsB">
+              <option value="1" selected>1 digit</option>
+              <option value="2">2 digits</option>
+              <option value="3">3 digits</option>
+              <option value="4">4 digits</option>
+              <option value="5">5 digits</option>
+              <option value="6">6 digits</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="problemMode">Problem Source</label>
+            <select id="problemMode">
+              <option value="random" selected>Random problems</option>
+              <option value="custom">Custom problems</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="customProblem">Custom Problems (up to 6)</label>
+            <input id="customProblem" type="text" placeholder="Example: 76-4, 58-9, 43-7, 91-8, 67-5, 84-6" />
+          </div>
+
+          <div class="field">
+            <label for="sheetTitle">Worksheet Title</label>
+            <input id="sheetTitle" type="text" value="Subtraction Graphic Organizer" />
+          </div>
+
+          <div class="field">
+            <label>Color Coding</label>
+            <label class="checkbox-wrap"><input id="colorToggle" type="checkbox" checked />Use faint place-value colors</label>
+          </div>
+
+          <div class="field">
+            <label>Equation Label</label>
+            <label class="checkbox-wrap"><input id="showProblemEq" type="checkbox" checked />Show boxed problem equation</label>
+          </div>
+
+          <div class="field">
+            <label>Scaffold Version</label>
+            <label class="checkbox-wrap"><input id="scaffoldToggle" type="checkbox" />Fill minuend/subtrahend numbers in table boxes</label>
+          </div>
+
+          <div class="field">
+            <label>Borrowing</label>
+            <label class="checkbox-wrap"><input id="requireBorrowing" type="checkbox" />Use borrowing problems</label>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button id="generateBtn" class="primary" type="button">Generate</button>
+          <button id="printBtn" type="button">Print</button>
+        </div>
+
+        <div class="note" id="statusText">Tip: custom mode accepts up to 6 comma-separated equations like <strong>537268-37917, 86421-5678</strong>.</div>
+      </section>
+    </div>
+
+    <div id="worksheetHost"></div>
+  </div>
+
+  <script>
+    const PROBLEMS_PER_PAGE = 6;
+
+    const els = {
+      host: document.getElementById("worksheetHost"),
+      digitsA: document.getElementById("digitsA"),
+      digitsB: document.getElementById("digitsB"),
+      problemMode: document.getElementById("problemMode"),
+      customProblem: document.getElementById("customProblem"),
+      sheetTitle: document.getElementById("sheetTitle"),
+      colorToggle: document.getElementById("colorToggle"),
+      showProblemEq: document.getElementById("showProblemEq"),
+      scaffoldToggle: document.getElementById("scaffoldToggle"),
+      requireBorrowing: document.getElementById("requireBorrowing"),
+      statusText: document.getElementById("statusText"),
+      generateBtn: document.getElementById("generateBtn"),
+      printBtn: document.getElementById("printBtn")
+    };
+
+    const PLACE_COLORS = [
+      "var(--p1)",
+      "var(--p2)",
+      "var(--p3)",
+      "var(--p4)",
+      "var(--p5)",
+      "var(--p6)",
+      "var(--p7)"
+    ];
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randomWithDigits(digits) {
+      const min = Math.pow(10, digits - 1);
+      const max = Math.pow(10, digits) - 1;
+      return randInt(min, max);
+    }
+
+    function hasBorrowing(a, b) {
+      const aLow = String(a).split("").reverse().map(Number);
+      const bLow = String(b).split("").reverse().map(Number);
+      const places = Math.max(aLow.length, bLow.length);
+      let borrowed = 0;
+
+      for (let i = 0; i < places; i += 1) {
+        const topRaw = aLow[i] ?? 0;
+        const bot = bLow[i] ?? 0;
+        const top = topRaw - borrowed;
+        if (top < bot) return true;
+        borrowed = 0;
+      }
+
+      return false;
+    }
+
+    function parseOneProblem(raw, aDigits, bDigits, requireBorrowing) {
+      const clean = String(raw || "").replace(/\s+/g, "");
+      const match = clean.match(/^(\d+)[-](\d+)$/);
+      if (!match) return null;
+      const aTxt = match[1];
+      const bTxt = match[2];
+      if (aTxt.length !== aDigits || bTxt.length !== bDigits) return null;
+      const a = Number(aTxt);
+      const b = Number(bTxt);
+      if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
+      if (a <= b) return null;
+      if (hasBorrowing(a, b) !== requireBorrowing) return null;
+      return { a, b };
+    }
+
+    function parseCustomList(raw, aDigits, bDigits, requireBorrowing) {
+      const chunks = String(raw || "")
+        .split(/[\n,;]+/)
+        .map(s => s.trim())
+        .filter(Boolean);
+
+      const valid = [];
+      for (let i = 0; i < chunks.length; i += 1) {
+        const parsed = parseOneProblem(chunks[i], aDigits, bDigits, requireBorrowing);
+        if (parsed) valid.push(parsed);
+      }
+      return valid;
+    }
+
+    function randomSubtractionProblem(aDigits, bDigits, requireBorrowing) {
+      while (true) {
+        const a = randomWithDigits(aDigits);
+        const b = randomWithDigits(bDigits);
+        if (a > b && hasBorrowing(a, b) === requireBorrowing) {
+          return { a, b };
+        }
+      }
+    }
+
+    function buildProblems(aDigits, bDigits, mode, customRaw, requireBorrowing) {
+      const problems = [];
+      let warning = false;
+      let message = "Generated random problems.";
+
+      if (mode === "custom") {
+        const custom = parseCustomList(customRaw, aDigits, bDigits, requireBorrowing);
+
+        for (let i = 0; i < PROBLEMS_PER_PAGE; i += 1) {
+          if (custom[i]) {
+            problems.push(custom[i]);
+          } else {
+            problems.push(randomSubtractionProblem(aDigits, bDigits, requireBorrowing));
+          }
+        }
+
+        if (custom.length === 0) {
+          warning = true;
+          message = `No valid custom problems for ${aDigits}-${bDigits} digits ${requireBorrowing ? "with borrowing" : "without borrowing"} (minuend must be greater). Used random problems.`;
+        } else if (custom.length < PROBLEMS_PER_PAGE) {
+          warning = true;
+          message = `Used ${custom.length} custom problem(s), filled the rest with random.`;
+        } else {
+          message = "Generated custom problems.";
+        }
+      } else {
+        for (let i = 0; i < PROBLEMS_PER_PAGE; i += 1) {
+          problems.push(randomSubtractionProblem(aDigits, bDigits, requireBorrowing));
+        }
+      }
+
+      return { problems, message, warning };
+    }
+
+    function cellStyleByColumn(colIndex, totalCols, colorOn) {
+      if (!colorOn) return "";
+      if (colIndex === 0) return "background:#fff;";
+      const placeFromRight = totalCols - 1 - colIndex;
+      const color = PLACE_COLORS[placeFromRight % PLACE_COLORS.length];
+      return `background:${color};`;
+    }
+
+    function numberToDigits(num, digits) {
+      return String(num).padStart(digits, "0").split("");
+    }
+
+    function alignedDigitRow(totalCols, number, digits, scaffoldOn) {
+      const row = new Array(totalCols).fill("");
+      if (!scaffoldOn) return row;
+      const vals = numberToDigits(number, digits);
+      const start = totalCols - digits;
+      for (let i = 0; i < vals.length; i += 1) {
+        row[start + i] = vals[i];
+      }
+      return row;
+    }
+
+    function rowCellsWithValues(totalCols, colorOn, values) {
+      const cells = [];
+      for (let i = 0; i < totalCols; i += 1) {
+        const value = values && values[i] !== "" && values[i] !== undefined ? values[i] : "&nbsp;";
+        cells.push(`<div class="digit-cell" style="${cellStyleByColumn(i, totalCols, colorOn)}">${value}</div>`);
+      }
+      return cells.join("");
+    }
+
+    function problemLetter(index) {
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      if (index < letters.length) return letters[index];
+      return `A${index - letters.length + 1}`;
+    }
+
+    function problemHtml(problem, index, totalCols, showEq, colorOn, scaffoldOn, aDigits, bDigits) {
+      const letter = problemLetter(index);
+      const headHtml = showEq
+        ? `<div class="problem-head"><span class="problem-badge">${letter}</span><span class="problem-text">${problem.a} - ${problem.b}</span></div>`
+        : `<div class="problem-head blank"><span class="problem-badge">${letter}</span><span class="problem-text">____ - ____</span></div>`;
+
+      const rowTemplate = `grid-template-columns: var(--op-width) repeat(${totalCols}, var(--cell-size));`;
+      const lineTemplate = `grid-template-columns: var(--op-width) calc(${totalCols} * var(--cell-size) + ${(totalCols - 1)} * var(--cell-gap));`;
+      const carryRow = new Array(totalCols).fill("");
+      const aRow = alignedDigitRow(totalCols, problem.a, aDigits, scaffoldOn);
+      const bRow = alignedDigitRow(totalCols, problem.b, bDigits, scaffoldOn);
+      const sRow = new Array(totalCols).fill("");
+
+      return `
+        <section class="problem-wrap">
+          <div class="problem-top">
+            ${headHtml}
+          </div>
+
+          <div class="add-table">
+            <div class="table-row carry-row" style="${rowTemplate}">
+              <div class="op-cell">&nbsp;</div>
+              ${rowCellsWithValues(totalCols, false, carryRow)}
+            </div>
+
+            <div class="table-row" style="${rowTemplate}">
+              <div class="op-cell">&nbsp;</div>
+              ${rowCellsWithValues(totalCols, colorOn, aRow)}
+            </div>
+
+            <div class="table-row" style="${rowTemplate}">
+              <div class="op-cell">-</div>
+              ${rowCellsWithValues(totalCols, colorOn, bRow)}
+            </div>
+
+            <div class="line-row" style="${lineTemplate}">
+              <div class="line-spacer"></div>
+              <div class="sum-line"></div>
+            </div>
+
+            <div class="table-row" style="${rowTemplate}">
+              <div class="op-cell">&nbsp;</div>
+              ${rowCellsWithValues(totalCols, colorOn, sRow)}
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderWorksheet() {
+      const aDigits = Number(els.digitsA.value);
+      const rawBDigits = Number(els.digitsB.value);
+      const mode = els.problemMode.value;
+      const colorOn = els.colorToggle.checked;
+      const showEq = els.showProblemEq.checked;
+      const scaffoldOn = els.scaffoldToggle.checked;
+      const requireBorrowing = els.requireBorrowing.checked;
+      const title = (els.sheetTitle.value || "").trim() || "Subtraction Graphic Organizer";
+      const safeBDigits = Math.min(rawBDigits, aDigits);
+      const adjustedDigits = safeBDigits !== rawBDigits;
+      if (adjustedDigits) els.digitsB.value = String(safeBDigits);
+
+      const built = buildProblems(aDigits, safeBDigits, mode, els.customProblem.value, requireBorrowing);
+      const totalCols = Math.max(aDigits, safeBDigits);
+      const cfgLabel = `${aDigits}-digit - ${safeBDigits}-digit`;
+
+      els.statusText.textContent = `${built.message} ${requireBorrowing ? "Borrowing problems only." : "No borrowing problems."}${adjustedDigits ? ` Subtrahend digits adjusted to ${safeBDigits} so top number stays larger.` : ""} Layout: 6 problems per page (3 rows x 2, ${cfgLabel}).`;
+      els.statusText.style.color = built.warning ? "#a33a3a" : "#5a677f";
+      els.customProblem.placeholder = `Example: ${"8".repeat(aDigits)}-${"7".repeat(safeBDigits)}, ${"6".repeat(aDigits)}-${"5".repeat(safeBDigits)}, ${"4".repeat(aDigits)}-${"3".repeat(safeBDigits)}`;
+
+      els.host.innerHTML = `
+        <section class="sheet ${colorOn ? "" : "no-color"}">
+          <header class="sheet-header">
+            <h2 class="sheet-title">${title}</h2>
+            <div class="name-line">Name:<span class="line"></span></div>
+          </header>
+
+          <div class="problems">
+            ${built.problems.map((p, i) => problemHtml(p, i, totalCols, showEq, colorOn, scaffoldOn, aDigits, safeBDigits)).join("")}
+          </div>
+
+          <div class="footer-note">${scaffoldOn ? "Scaffold organizer: minuend and subtrahend digits are prefilled in the table boxes." : "Advanced organizer: students place digits, borrow, and solve in the blank table."} ${requireBorrowing ? "Borrowing-problem set." : "No-borrowing problem set."}</div>
+        </section>
+      `;
+    }
+
+    els.generateBtn.addEventListener("click", renderWorksheet);
+    els.printBtn.addEventListener("click", () => window.print());
+    renderWorksheet();
+  </script>
+</body>
+</html>

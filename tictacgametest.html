@@ -1,612 +1,680 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Phonics Tic-Tac-Toe Game</title>
-  <script src="/ladder/fluencyDataFull_v8-2_clean.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <title>Tic Tac Toe Phonics Game</title>
+
+  <script>
+    (function loadData(){
+      const paths = [
+        '/ladder/fluencyDataFull_v8-2_clean.js',
+        'fluencyDataFull_v8-2_clean.js',
+        '/fluencyDataFull_v8-2_clean.js',
+        '/ladder/fluencyDataFull_v6.js',
+        'fluencyDataFull_v6.js'
+      ];
+      let i = 0;
+      function next(){
+        if (i >= paths.length) return;
+        const s = document.createElement('script');
+        s.src = paths[i++];
+        s.onload = () => { window.__fluencyLoaded = true; };
+        s.onerror = next;
+        document.head.appendChild(s);
+      }
+      next();
+    })();
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
-    :root {
-      --sky: #dff4ff;
-      --mint: #e8fff3;
-      --sun: #fff8d9;
-      --card: #ffffff;
-      --ink: #213547;
-      --x: #ef476f;
-      --o: #118ab2;
-      --line: #d7e7f7;
-      --win: #06d6a0;
-      --btn1: #ff9f1c;
-      --btn2: #ff6b6b;
+    :root{
+      --cvc:#e9f2ff;          --cvc-selected:#1976d2;
+      --dig:#f3e9ff;          --dig-selected:#8e24aa;
+      --glued:#e8fff4;        --glued-selected:#2e7d32;
+      --vce:#fff5e6;          --vce-selected:#ef6c00;
+      --rctrl:#f0f5ff;        --rctrl-selected:#3f51b5;
+      --vteams:#fff0f6;       --vteams-selected:#d81b60;
+      --dip:#eefcfb;          --dip-selected:#00897b;
+      --variant:#fff8e1;      --variant-selected:#f9a825;
+      --soft:#eef4ff;         --soft-selected:#455a64;
+      --chip-bg:#f3f6fb; --chip-text:#263238; --chip-x:#546e7a;
+
+      --page-bg-1:#e9f7ff;
+      --page-bg-2:#f3fff3;
+      --card:#ffffff;
+      --ink:#22303a;
+      --x:#e53935;
+      --o:#1e88e5;
+      --win:#43a047;
     }
 
     * { box-sizing: border-box; }
     body {
-      margin: 0;
-      font-family: "Baloo 2", sans-serif;
+      font-family:'Poppins',sans-serif;
+      margin:24px;
+      text-align:center;
       color: var(--ink);
-      min-height: 100vh;
       background:
-        radial-gradient(circle at 10% 15%, #ffffff 0 8%, transparent 9%),
-        radial-gradient(circle at 88% 18%, #ffffff 0 6%, transparent 7%),
-        linear-gradient(145deg, var(--sky), var(--mint) 55%, var(--sun));
-      padding: 20px;
+        radial-gradient(circle at 12% 10%, #ffffff 0 9%, transparent 10%),
+        radial-gradient(circle at 88% 14%, #ffffff 0 7%, transparent 8%),
+        linear-gradient(140deg, var(--page-bg-1), var(--page-bg-2));
     }
 
-    .app { max-width: 1100px; margin: 0 auto; }
-    h1 { margin: 0 0 8px; font-size: 42px; text-align: center; }
-    .sub { text-align: center; margin: 0 0 14px; font-size: 19px; }
+    h1 { font-size: 34px; margin-bottom: 6px; }
+    .subtitle { color:#425466; margin:0 0 14px; }
 
-    .panel {
-      background: var(--card);
-      border-radius: 24px;
-      padding: 16px;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
-      display: grid;
-      grid-template-columns: 1.35fr 1fr 1fr 1fr auto;
-      gap: 10px;
-      align-items: end;
-    }
-    label { display: block; margin-bottom: 5px; font-weight: 800; font-size: 14px; }
-    select, button {
+    .layout {
       width: 100%;
-      border: none;
-      border-radius: 12px;
-      padding: 11px 12px;
-      font: 700 16px "Baloo 2", sans-serif;
-    }
-    select { background: #f5f9ff; color: var(--ink); }
-    button {
-      cursor: pointer;
-      background: linear-gradient(135deg, var(--btn1), var(--btn2));
-      color: #fff;
-      transition: transform .12s ease;
-    }
-    button:active { transform: translateY(1px); }
-    .ghost { background: #e2ecf6; color: #15324a; }
-
-    .status {
-      margin-top: 12px;
-      background: var(--card);
-      border-radius: 18px;
-      padding: 12px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
-      display: flex;
-      flex-wrap: wrap;
+      max-width: 1100px;
+      margin: 0 auto 14px auto;
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) 380px;
       gap: 8px;
-      align-items: center;
-      justify-content: center;
+      align-items: start;
     }
-    .pill {
-      background: #eff6ff;
-      border-radius: 999px;
-      padding: 6px 12px;
-      font-weight: 800;
-      font-size: 16px;
+    .layout .left { grid-column: 1; }
+    .layout .right { grid-column: 2; display: flex; flex-direction: column; gap: 12px; padding-bottom: 20px; }
+
+    .table-section {
+      border: 2px solid #000;
+      padding: 12px;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: left;
+      border-radius: 12px;
+      background: var(--card);
+      box-shadow: 0 8px 18px rgba(25, 55, 77, 0.08);
+      height: auto;
+    }
+    .section-label { font-weight: 700; font-size: 18px; margin-bottom: 8px; text-align: center; }
+
+    .skill-block { border:1px solid #bbb; border-radius:12px; overflow:hidden; margin-bottom:12px; background:#fff; }
+    .skill-header { display:flex; align-items:center; justify-content:center; padding:10px 14px; font-weight:700; font-size:18px; cursor:pointer; user-select:none; }
+    .skill-header .arrow { font-size:22px; line-height:1; margin:0 10px; width:22px; text-align:center; }
+    .skill-header .title { white-space:nowrap; }
+    .skills-inner { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; padding:12px; }
+    .skills-inner.collapsed { display:none; }
+
+    .bg-cvc .skill-header { background:var(--cvc); }
+    .bg-dig .skill-header { background:var(--dig); }
+    .bg-glued .skill-header { background:var(--glued); }
+    .bg-vce .skill-header { background:var(--vce); }
+    .bg-rctrl .skill-header { background:var(--rctrl); }
+    .bg-vteams .skill-header { background:var(--vteams); }
+    .bg-dip .skill-header { background:var(--dip); }
+    .bg-variant .skill-header { background:var(--variant); }
+    .bg-soft .skill-header { background:var(--soft); }
+
+    .skill-button {
+      border:2px solid #000;
+      padding:8px 14px;
+      border-radius:14px;
+      font-weight:700;
+      font-size:16px;
+      cursor:pointer;
+      background:#fff;
+      transition:transform .08s ease, background-color .2s ease, color .2s ease;
+      user-select:none;
+      line-height:1.2;
+      min-height:36px;
+    }
+    .skill-button:active { transform:translateY(1px); }
+
+    .skill-button.cvc.selected { background:var(--cvc-selected); color:#fff; }
+    .skill-button.dig.selected { background:var(--dig-selected); color:#fff; }
+    .skill-button.glued.selected { background:var(--glued-selected); color:#fff; }
+    .skill-button.vce.selected { background:var(--vce-selected); color:#fff; }
+    .skill-button.rctrl.selected { background:var(--rctrl-selected); color:#fff; }
+    .skill-button.vteams.selected { background:var(--vteams-selected); color:#fff; }
+    .skill-button.dip.selected { background:var(--dip-selected); color:#fff; }
+    .skill-button.variant.selected { background:var(--variant-selected); color:#fff; }
+    .skill-button.soft.selected { background:var(--soft-selected); color:#fff; }
+
+    .chips-title { margin-top:12px; text-align:center; font-weight:700; font-size:14px; }
+    .chips-wrap { margin-top:8px; display:flex; justify-content:center; flex-wrap:wrap; gap:8px; }
+    .chip { background:var(--chip-bg); color:var(--chip-text); border:none; border-radius:999px; padding:6px 10px; font-size:14px; display:flex; align-items:center; gap:8px; }
+    .chip .x { width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:11px; cursor:pointer; background:#e8edf2; color:#546e7a; }
+
+    .option-grid { display:flex; flex-direction:column; align-items:center; gap:8px; }
+    .option-box { display:inline-block; padding:8px 12px; border:2px solid #000; border-radius:12px; font-weight:600; font-size:16px; background:#fff; cursor:pointer; }
+    .option-box.selected { background-color:#d0f0ff; }
+
+    #output { display:flex; justify-content:center; padding:16px 0; }
+
+    .game-card {
+      width: min(980px, calc(100% - 20px));
+      background:#fff;
+      border:2px solid #000;
+      border-radius:16px;
+      box-shadow: 0 10px 22px rgba(24, 56, 76, 0.15);
+      padding:16px;
+      text-align:center;
+    }
+
+    .game-header { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .game-sub { font-size: 14px; margin-bottom: 10px; }
+
+    .score-row {
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .score-pill {
+      background:#eff6ff;
+      border-radius:999px;
+      padding:6px 12px;
+      font-weight:700;
+      font-size:14px;
     }
     .x { color: var(--x); }
     .o { color: var(--o); }
 
-    .board-wrap {
-      margin-top: 12px;
-      background: var(--card);
-      border-radius: 24px;
-      padding: 16px;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
-    }
     .board {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(120px, 1fr));
+      margin: 10px auto 8px;
+      width: min(640px, 100%);
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 10px;
     }
+
     .cell {
-      min-height: 165px;
+      min-height: 170px;
       border: none;
-      border-radius: 16px;
-      background: linear-gradient(180deg, #f9fcff, #eef6ff);
-      box-shadow: inset 0 0 0 3px var(--line);
+      border-radius: 14px;
+      background: linear-gradient(180deg, #f9fcff, #edf4ff);
+      box-shadow: inset 0 0 0 3px #dbe8ff;
       padding: 8px;
       display: grid;
       grid-template-rows: 1fr auto;
       align-items: center;
       cursor: pointer;
     }
-    .cell:disabled { cursor: not-allowed; opacity: 0.8; }
+    .cell:disabled { cursor: not-allowed; opacity: 0.88; }
 
     .prompt {
-      text-align: center;
-      font-size: 27px;
-      font-weight: 700;
-      line-height: 1.04;
-      padding: 4px;
+      font-weight:700;
+      font-size:26px;
+      line-height:1.06;
+      text-align:center;
+      padding:4px;
       word-break: break-word;
     }
-    .prompt.sentence { font-size: 18px; line-height: 1.15; }
+    .prompt.sentence { font-size:21px; line-height:1.14; }
+    .prompt.sentence.long { font-size:19px; line-height:1.12; }
+    .prompt.sentence.very-long { font-size:17px; line-height:1.08; }
 
     .mark {
-      text-align: center;
-      height: 56px;
-      line-height: 56px;
-      font-weight: 800;
-      font-size: 52px;
+      height:56px;
+      line-height:56px;
+      font-size:54px;
+      font-weight:700;
+      text-align:center;
     }
-    .mark.x { color: var(--x); }
-    .mark.o { color: var(--o); }
 
-    .win {
+    .cell.win {
       outline: 5px solid var(--win);
-      animation: pop 0.25s ease;
+      animation: pop .25s ease;
     }
-    @keyframes pop { from { transform: scale(0.97); } to { transform: scale(1); } }
 
     .actions {
-      margin-top: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
+      margin-top:8px;
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      flex-wrap:wrap;
     }
-    .actions button { width: auto; padding: 9px 14px; }
 
-    .confetti {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
+    .btn-ghost {
+      border:2px solid #000;
+      background:#e6eff9;
+      color:#1c3347;
+      border-radius:10px;
+      padding:8px 12px;
+      font-weight:700;
+      cursor:pointer;
     }
-    .dot {
-      position: absolute;
-      width: 10px;
-      height: 16px;
-      border-radius: 4px;
-      animation: fall 1300ms linear forwards;
-    }
-    @keyframes fall {
-      from { transform: translateY(-20px) rotate(0deg); opacity: 1; }
-      to { transform: translateY(110vh) rotate(600deg); opacity: 0.9; }
-    }
+
+    @keyframes pop { from { transform: scale(0.97); } to { transform: scale(1); } }
 
     @media (max-width: 980px) {
-      .panel { grid-template-columns: 1fr; }
-      .board { grid-template-columns: repeat(3, 1fr); }
+      .layout { grid-template-columns: 1fr; }
+      .layout .left, .layout .right { grid-column: auto; }
+      .board { width: 100%; }
       .cell { min-height: 130px; }
-      .prompt { font-size: 20px; }
-      .prompt.sentence { font-size: 15px; }
+      .prompt { font-size: 19px; }
+      .prompt.sentence { font-size: 17px; }
+      .prompt.sentence.long { font-size: 15px; }
+      .prompt.sentence.very-long { font-size: 14px; }
+    }
+
+    @media print {
+      .layout, .subtitle, #floatingActions, .actions, #btnGenerate, #resetScore { display: none !important; }
+      body { background:#fff !important; }
+      .game-card { border: none; box-shadow: none; }
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <h1>Phonics Tic-Tac-Toe</h1>
-    <p class="sub">Pick a skill, click Play, and start right away.</p>
+  <h1>Tic Tac Toe Generator</h1>
+  <div class="subtitle">Step 1: skills → Step 2: blends → Step 3: words/sentences/both → Step 4: Generate game.</div>
 
-    <div class="panel">
-      <div>
-        <label for="skill">Skill</label>
-        <select id="skill"></select>
-      </div>
-      <div>
-        <label for="blends">Include Blends?</label>
-        <select id="blends">
-          <option value="no">No (3 sounds)</option>
-          <option value="yes">Yes (4+ sounds)</option>
-        </select>
-      </div>
-      <div>
-        <label for="mode">Grid Content</label>
-        <select id="mode">
-          <option value="words">Words</option>
-          <option value="sentences">Sentences</option>
-          <option value="both">Both</option>
-        </select>
-      </div>
-      <div>
-        <label for="gameMode">Game Mode</label>
-        <select id="gameMode">
-          <option value="pvp">2 Players</option>
-          <option value="cpu-easy">Vs Computer (Easy)</option>
-          <option value="cpu-medium">Vs Computer (Medium)</option>
-        </select>
-      </div>
-      <div>
-        <label>&nbsp;</label>
-        <button id="playBtn">Play</button>
+  <div class="layout">
+    <div class="left">
+      <div id="step1" class="table-section">
+        <div class="section-label">Step 1: Select Skills</div>
+
+        <div class="skill-block bg-cvc">
+          <div class="skill-header" data-target="cvc"><span class="arrow">▲</span><span class="title">CVC Short Vowels</span><span class="arrow">▲</span></div>
+          <div class="skills-inner" id="section-cvc">
+            <button class="skill-button cvc" data-skill="Short A">Short A</button>
+            <button class="skill-button cvc" data-skill="Short E">Short E</button>
+            <button class="skill-button cvc" data-skill="Short I">Short I</button>
+            <button class="skill-button cvc" data-skill="Short O">Short O</button>
+            <button class="skill-button cvc" data-skill="Short U">Short U</button>
+            <button class="skill-button cvc" data-skill="Mixed CVC">Mixed CVC</button>
+            <button class="skill-button cvc" data-skill="FLSZ">FLSZ</button>
+          </div>
+        </div>
+
+        <div class="skill-block bg-dig">
+          <div class="skill-header" data-target="dig"><span class="arrow">▼</span><span class="title">Digraphs</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-dig">
+            <button class="skill-button dig" data-skill="ck">ck</button>
+            <button class="skill-button dig" data-skill="sh">sh</button>
+            <button class="skill-button dig" data-skill="th">th</button>
+            <button class="skill-button dig" data-skill="ch">ch</button>
+            <button class="skill-button dig" data-skill="wh">wh</button>
+            <button class="skill-button dig" data-skill="Digraphs Mixed">Digraphs Mixed</button>
+          </div>
+        </div>
+
+        <div class="skill-block bg-glued">
+          <div class="skill-header" data-target="glued"><span class="arrow">▼</span><span class="title">Glued Sounds</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-glued">
+            <button class="skill-button glued" data-skill="-all">-all</button>
+            <button class="skill-button glued" data-skill="-ng">-ng</button>
+            <button class="skill-button glued" data-skill="-nk">-nk</button>
+            <button class="skill-button glued" data-skill="Glued Mixed">Glued Mixed</button>
+          </div>
+        </div>
+
+        <div class="skill-block bg-vce">
+          <div class="skill-header" data-target="vce"><span class="arrow">▼</span><span class="title">Silent E (VCe)</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-vce">
+            <button class="skill-button vce" data-skill="a_e">a_e</button>
+            <button class="skill-button vce" data-skill="i_e">i_e</button>
+            <button class="skill-button vce" data-skill="o_e">o_e</button>
+            <button class="skill-button vce" data-skill="u_e">u_e</button>
+            <button class="skill-button vce" data-skill="Mixed VCe">Mixed VCe</button>
+          </div>
+        </div>
+
+        <div class="skill-block bg-rctrl">
+          <div class="skill-header" data-target="rctrl"><span class="arrow">▼</span><span class="title">R-Controlled</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-rctrl">
+            <button class="skill-button rctrl" data-skill="ar">ar</button>
+            <button class="skill-button rctrl" data-skill="or">or</button>
+            <button class="skill-button rctrl" data-skill="er/ir/ur">er/ir/ur</button>
+            <button class="skill-button rctrl" data-skill="Mixed R-Controlled">Mixed R-Controlled</button>
+          </div>
+        </div>
+
+        <div class="skill-block bg-vteams">
+          <div class="skill-header" data-target="vteams"><span class="arrow">▼</span><span class="title">Vowel Teams</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-vteams">
+            <button class="skill-button vteams" data-skill="Long A (ai/ay)">Long A (ai/ay)</button>
+            <button class="skill-button vteams" data-skill="Long E (ee/ea)">Long E (ee/ea)</button>
+            <button class="skill-button vteams" data-skill="Long I (igh/y/ie)">Long I (igh/y/ie)</button>
+            <button class="skill-button vteams" data-skill="Long O (oa/ow/oe)">Long O (oa/ow/oe)</button>
+            <button class="skill-button vteams" data-skill="Long U (oo/ew/ue)">Long U (oo/ew/ue)</button>
+            <button class="skill-button vteams" data-skill="Mixed Vowel Teams">Mixed Vowel Teams</button>
+          </div>
+        </div>
+
+        <div class="skill-block bg-dip">
+          <div class="skill-header" data-target="dip"><span class="arrow">▼</span><span class="title">Diphthongs</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-dip">
+            <button class="skill-button dip" data-skill="Diphthongs (oy/oi)">oy/oi</button>
+            <button class="skill-button dip" data-skill="Diphthongs (ow/ou)">ow/ou</button>
+          </div>
+        </div>
+
+        <div class="skill-block bg-variant">
+          <div class="skill-header" data-target="variant"><span class="arrow">▼</span><span class="title">Variant Vowels</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-variant">
+            <button class="skill-button variant" data-skill="Variant Vowels (au/aw)">au/aw</button>
+            <button class="skill-button variant" data-skill="Variant Vowel (oo)">oo</button>
+          </div>
+        </div>
+
+        <div class="skill-block bg-soft">
+          <div class="skill-header" data-target="soft"><span class="arrow">▼</span><span class="title">Soft C/G Endings</span><span class="arrow">▼</span></div>
+          <div class="skills-inner collapsed" id="section-soft">
+            <button class="skill-button soft" data-skill="Soft C (-ce)">Soft C (-ce)</button>
+            <button class="skill-button soft" data-skill="Soft G (-ge)">Soft G (-ge)</button>
+            <button class="skill-button soft" data-skill="Soft G (-dge)">Soft G (-dge)</button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="status">
-      <div class="pill" id="skillTag">Skill: --</div>
-      <div class="pill">Turn: <span id="turn" class="x">X</span></div>
-      <div class="pill" id="msg">Press Play to begin.</div>
-      <div class="pill">X Wins: <span id="scoreX">0</span></div>
-      <div class="pill">O Wins: <span id="scoreO">0</span></div>
-      <div class="pill">Ties: <span id="scoreT">0</span></div>
-    </div>
+    <div class="right">
+      <div class="table-section tight">
+        <div class="section-label">Step 2: Include Blends?</div>
+        <div class="option-grid" id="blendOptions">
+          <div class="option-box" data-blends="no">No – 3 Sounds</div>
+          <div class="option-box" data-blends="yes">Yes – 4+ Sounds</div>
+        </div>
+      </div>
 
-    <div class="board-wrap">
-      <div class="board" id="board"></div>
-      <div class="actions">
-        <button id="sameWords" class="ghost">Play Again (Same Words)</button>
-        <button id="newWords" class="ghost">New Words</button>
-        <button id="resetScore" class="ghost">Reset Score</button>
+      <div class="table-section tight">
+        <div class="section-label">Step 3: What would you like in the grid?</div>
+        <div class="option-grid" id="contentOptions">
+          <div class="option-box" data-mode="words">Words Only</div>
+          <div class="option-box" data-mode="sentences">Sentences Only</div>
+          <div class="option-box" data-mode="both">Both</div>
+        </div>
+      </div>
+
+      <div class="table-section tight">
+        <div class="section-label">Step 4: Generate & Play</div>
+        <div class="chips-title">Skills Selected:</div>
+        <div id="chips" class="chips-wrap"></div>
+
+        <div style="text-align:center; margin-top:10px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+          <button id="btnGenerate" style="font-size: 18px; padding: 10px 24px;">Generate</button>
+          <button id="btnPrint" style="font-size: 18px; padding: 10px 24px;">Print</button>
+          <button id="resetScore" style="font-size: 18px; padding: 10px 24px;">Reset Score</button>
+        </div>
       </div>
     </div>
   </div>
-  <div id="confetti" class="confetti"></div>
 
-  <script>
-    const PREFIX = {
-      "Short A": "0.1 - Short A",
-      "Short O": "0.2 - Short O",
-      "Short I": "0.3 - Short I",
-      "Short U": "0.4 - Short U",
-      "Short E": "0.5 - Short E",
-      "FLSZ": "0.6 - FLSZ",
-      "ck": "1.1 - ck",
-      "sh": "1.2 - sh",
-      "th": "1.3 - th",
-      "ch": "1.4 - ch",
-      "wh": "1.5 - wh",
-      "-all": "3.1 - all",
-      "-ng": "3.2 - ng",
-      "-nk": "3.3 - nk",
-      "a_e": "2.1 - a_e",
-      "i_e": "2.2 - i_e",
-      "o_e": "2.3 - o_e",
-      "u_e": "2.4 - u_e",
-      "ar": "4.1 - ar",
-      "or": "4.2 - or",
-      "er/ir/ur": "4.3 - er, ir, ur",
-      "Soft C (-ce)": "10.1 - ce",
-      "Soft G (-ge)": "10.2 - ge",
-      "Soft G (-dge)": "10.3 - dge"
-    };
+  <div id="output"></div>
 
-    const MIXED_RULES = {
-      "Mixed CVC": ["0.1 - Short A", "0.5 - Short E", "0.3 - Short I", "0.2 - Short O", "0.4 - Short U", "0.6 - FLSZ"],
-      "Digraphs Mixed": ["1.1 - ck", "1.2 - sh", "1.3 - th", "1.4 - ch", "1.5 - wh"],
-      "Glued Mixed": ["3.1 - all", "3.2 - ng", "3.3 - nk"],
-      "Mixed VCe": ["2.1 - a_e", "2.2 - i_e", "2.3 - o_e", "2.4 - u_e"],
-      "Mixed R-Controlled": ["4.1 - ar", "4.2 - or", "4.3 - er, ir, ur"],
-      "Long A (ai/ay)": ["6.1 - ay", "6.2 - ai"],
-      "Long E (ee/ea)": ["6.4 - ee", "6.5 - ea"],
-      "Long I (igh/y/ie)": ["6.6 - igh", "6.7 - Final y", "6.8 - ie"],
-      "Long O (oa/ow/oe)": ["6.9 - oa", "6.10 - ow", "6.11 - oe"],
-      "Long U (oo/ew/ue)": ["6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
-      "Mixed Vowel Teams": ["6.1 - ay", "6.2 - ai", "6.4 - ee", "6.5 - ea", "6.6 - igh", "6.7 - Final y", "6.8 - ie", "6.9 - oa", "6.10 - ow", "6.11 - oe", "6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
-      "Diphthongs (oy/oi)": ["7.4 - oy", "7.3 - oi"],
-      "Diphthongs (ow/ou)": ["7.2 - ow", "7.1 - ou"],
-      "Variant Vowels (au/aw)": ["7.5 - aw", "7.6 - au"],
-      "Variant Vowel (oo)": ["7.7 - oo variant"]
-    };
+<script>
+if (typeof CSS === 'undefined' || typeof CSS.escape !== 'function') {
+  window.CSS = window.CSS || {};
+  CSS.escape = CSS.escape || function(sel){ return (sel + '').replace(/[^a-zA-Z0-9_-]/g, '\\$&'); };
+}
 
-    const SKILLS = [
-      "Short A", "Short E", "Short I", "Short O", "Short U", "Mixed CVC", "FLSZ",
-      "ck", "sh", "th", "ch", "wh", "Digraphs Mixed",
-      "-all", "-ng", "-nk", "Glued Mixed",
-      "a_e", "i_e", "o_e", "u_e", "Mixed VCe",
-      "ar", "or", "er/ir/ur", "Mixed R-Controlled",
-      "Long A (ai/ay)", "Long E (ee/ea)", "Long I (igh/y/ie)", "Long O (oa/ow/oe)", "Long U (oo/ew/ue)", "Mixed Vowel Teams",
-      "Diphthongs (oy/oi)", "Diphthongs (ow/ou)",
-      "Variant Vowels (au/aw)", "Variant Vowel (oo)",
-      "Soft C (-ce)", "Soft G (-ge)", "Soft G (-dge)"
+function toArray(x){ if (Array.isArray(x)) return x.slice(); if (x == null) return []; try { return Array.from(x); } catch { return []; } }
+function shuffle(list){ const a = toArray(list); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function uniqueByLowercase(list){ const seen=new Set(), out=[]; for (const item of toArray(list)){ const v=String(item).trim(); const key=v.toLowerCase(); if (v && !seen.has(key)){ seen.add(key); out.push(v); } } return out; }
+function fillToN(list,n){ const base=toArray(list); if (!base.length || !Number.isFinite(n) || n<=0) return []; const out=[]; let bag=shuffle(base); while (out.length<n){ if (!bag.length) bag=shuffle(base); out.push(bag.shift()); } return out.slice(0,n); }
+
+const PREFIX = {
+  "Short A": "0.1 - Short A", "Short O": "0.2 - Short O", "Short I": "0.3 - Short I", "Short U": "0.4 - Short U", "Short E": "0.5 - Short E", "FLSZ": "0.6 - FLSZ",
+  "ck": "1.1 - ck", "sh": "1.2 - sh", "th": "1.3 - th", "ch": "1.4 - ch", "wh": "1.5 - wh",
+  "-all": "3.1 - all", "-ng": "3.2 - ng", "-nk": "3.3 - nk",
+  "a_e": "2.1 - a_e", "i_e": "2.2 - i_e", "o_e": "2.3 - o_e", "u_e": "2.4 - u_e",
+  "ar": "4.1 - ar", "or": "4.2 - or", "er/ir/ur": "4.3 - er, ir, ur",
+  "Soft C (-ce)": "10.1 - ce", "Soft G (-ge)": "10.2 - ge", "Soft G (-dge)": "10.3 - dge"
+};
+
+const MIXED_RULES = {
+  "Mixed CVC": ["0.1 - Short A","0.5 - Short E","0.3 - Short I","0.2 - Short O","0.4 - Short U","0.6 - FLSZ"],
+  "Digraphs Mixed": ["1.1 - ck","1.2 - sh","1.3 - th","1.4 - ch","1.5 - wh"],
+  "Glued Mixed": ["3.1 - all","3.2 - ng","3.3 - nk"],
+  "Mixed VCe": ["2.1 - a_e","2.2 - i_e","2.3 - o_e","2.4 - u_e"],
+  "Mixed R-Controlled": ["4.1 - ar","4.2 - or","4.3 - er, ir, ur"],
+  "Long A (ai/ay)": ["6.1 - ay","6.2 - ai"],
+  "Long E (ee/ea)": ["6.4 - ee","6.5 - ea"],
+  "Long I (igh/y/ie)": ["6.6 - igh","6.7 - Final y","6.8 - ie"],
+  "Long O (oa/ow/oe)": ["6.9 - oa","6.10 - ow","6.11 - oe"],
+  "Long U (oo/ew/ue)": ["6.12 - oo (long u)","6.13 - ew","6.14 - ue"],
+  "Mixed Vowel Teams": ["6.1 - ay","6.2 - ai","6.4 - ee","6.5 - ea","6.6 - igh","6.7 - Final y","6.8 - ie","6.9 - oa","6.10 - ow","6.11 - oe","6.12 - oo (long u)","6.13 - ew","6.14 - ue"],
+  "Diphthongs (oy/oi)": ["7.4 - oy","7.3 - oi"],
+  "Diphthongs (ow/ou)": ["7.2 - ow","7.1 - ou"],
+  "Variant Vowels (au/aw)": ["7.5 - aw","7.6 - au"],
+  "Variant Vowel (oo)": ["7.7 - oo variant"]
+};
+
+function wordsDict(){ return (typeof fluencyWords !== 'undefined') ? fluencyWords : (window.fluencyData?.words || {}); }
+function sentsDict(){ return (typeof fluencySentences !== 'undefined') ? fluencySentences : (window.fluencyData?.sentences || {}); }
+function readDict(dict,key){ return Array.isArray(dict[key]) ? dict[key] : []; }
+
+function readWithBlends(dict,prefix,type,blends){
+  const typeLower = type.toLowerCase();
+  let base = [];
+  [ `${prefix} ${type}`, `${prefix} ${typeLower}`, `${prefix}` ].forEach(k => { base = base.concat(readDict(dict,k)); });
+
+  if (blends){
+    const bPrefix = prefix.replace(' - ', 'b - ');
+    const candidates = [
+      `${prefix} with Blends ${type}`, `${prefix} with blends ${type}`,
+      `${prefix} with Blends ${typeLower}`, `${prefix} with blends ${typeLower}`,
+      `${prefix} with BLENDS ${type}`,
+      `${bPrefix} with Blends ${type}`, `${bPrefix} with blends ${type}`,
+      `${bPrefix} with Blends ${typeLower}`, `${bPrefix} with blends ${typeLower}`
     ];
-
-    const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-    const $ = (s) => document.querySelector(s);
-
-    const state = {
-      prompts: [],
-      board: Array(9).fill(""),
-      turn: "X",
-      over: false,
-      winLine: [],
-      scores: { X: 0, O: 0, T: 0 }
-    };
-
-    function wordsDict() {
-      return window.fluencyWords || window.fluencyData?.words || {};
+    for (const k of candidates){
+      const got = readDict(dict,k);
+      if (got.length) return (got.length < 9) ? uniqueByLowercase(got.concat(base)) : got;
     }
+  }
+  return base;
+}
 
-    function sentsDict() {
-      return window.fluencySentences || window.fluencyData?.sentences || {};
-    }
+function getList(label,type,blends){
+  const dict = (type === 'Words') ? wordsDict() : sentsDict();
+  if (Object.prototype.hasOwnProperty.call(MIXED_RULES,label)){
+    let all=[];
+    for (const p of MIXED_RULES[label]) all = all.concat(readWithBlends(dict,p,type,blends));
+    return all;
+  }
+  const prefix = PREFIX[label];
+  if (prefix) return readWithBlends(dict,prefix,type,blends);
 
-    function readDict(dict, key) {
-      return Array.isArray(dict[key]) ? dict[key] : [];
-    }
+  const want = label.toLowerCase();
+  const t1 = ' ' + type;
+  const t2 = ' ' + type.toLowerCase();
+  const guess = Object.keys(dict).find(k => k.toLowerCase().includes(want) && (k.endsWith(t1) || k.endsWith(t2)));
+  return guess ? readDict(dict,guess) : [];
+}
 
-    function uniqueByLowercase(list) {
-      const out = [];
-      const seen = new Set();
-      for (const item of list || []) {
-        const v = String(item).trim();
-        const k = v.toLowerCase();
-        if (v && !seen.has(k)) {
-          seen.add(k);
-          out.push(v);
-        }
-      }
-      return out;
-    }
+const selected = new Set();
+let includeBlends = false;
+let mode = null;
 
-    function shuffle(arr) {
-      const a = [...arr];
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
-    }
+const game = {
+  prompts: [],
+  marks: Array(9).fill(''),
+  turn: 'X',
+  over: false,
+  winLine: [],
+  score: { X: 0, O: 0, T: 0 }
+};
 
-    function fillToN(list, n) {
-      if (!list.length) return [];
-      const out = [];
-      let bag = shuffle(list);
-      while (out.length < n) {
-        if (!bag.length) bag = shuffle(list);
-        out.push(bag.shift());
-      }
-      return out.slice(0, n);
-    }
+const LINES = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 
-    function readWithBlends(dict, prefix, type, blends) {
-      const tl = type.toLowerCase();
-      let base = [];
+function renderChips(){
+  const wrap = document.getElementById('chips');
+  wrap.innerHTML = '';
+  Array.from(selected).forEach(label => {
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.innerHTML = '<span>' + label + '</span><span class="x" title="Remove">×</span>';
+    chip.querySelector('.x').addEventListener('click', () => {
+      selected.delete(label);
+      const btn = document.querySelector('.skill-button[data-skill="' + CSS.escape(label) + '"]');
+      if (btn) btn.classList.remove('selected');
+      renderChips();
+    });
+    wrap.appendChild(chip);
+  });
+}
 
-      const baseKeys = [
-        `${prefix} ${type}`,
-        `${prefix} ${tl}`,
-        `${prefix}`
-      ];
-      for (const k of baseKeys) base = base.concat(readDict(dict, k));
+document.querySelectorAll('.skill-header').forEach(header => {
+  header.addEventListener('click', () => {
+    const target = header.getAttribute('data-target');
+    const inner = document.getElementById('section-' + target);
+    const arrows = header.querySelectorAll('.arrow');
+    const isCollapsed = inner.classList.contains('collapsed');
+    if (isCollapsed) { inner.classList.remove('collapsed'); arrows.forEach(a => a.textContent = '▲'); }
+    else { inner.classList.add('collapsed'); arrows.forEach(a => a.textContent = '▼'); }
+  });
+});
 
-      if (!blends) return base;
+document.querySelectorAll('.skill-button').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const label = btn.dataset.skill;
+    if (selected.has(label)) { selected.delete(label); btn.classList.remove('selected'); }
+    else { selected.add(label); btn.classList.add('selected'); }
+    renderChips();
+  });
+});
 
-      const bPrefix = prefix.replace(" - ", "b - ");
-      const blendKeys = [
-        `${prefix} with Blends ${type}`,
-        `${prefix} with blends ${type}`,
-        `${prefix} with Blends ${tl}`,
-        `${prefix} with blends ${tl}`,
-        `${prefix} with BLENDS ${type}`,
-        `${bPrefix} with Blends ${type}`,
-        `${bPrefix} with blends ${type}`,
-        `${bPrefix} with Blends ${tl}`,
-        `${bPrefix} with blends ${tl}`
-      ];
+document.querySelectorAll('#blendOptions .option-box').forEach(box => {
+  box.addEventListener('click', () => {
+    document.querySelectorAll('#blendOptions .option-box').forEach(b => b.classList.remove('selected'));
+    box.classList.add('selected');
+    includeBlends = (box.dataset.blends === 'yes');
+  });
+});
 
-      for (const k of blendKeys) {
-        const got = readDict(dict, k);
-        if (got.length) {
-          if (got.length < 9) return uniqueByLowercase(got.concat(base));
-          return got;
-        }
-      }
+document.querySelectorAll('#contentOptions .option-box').forEach(box => {
+  box.addEventListener('click', () => {
+    document.querySelectorAll('#contentOptions .option-box').forEach(b => b.classList.remove('selected'));
+    box.classList.add('selected');
+    mode = box.dataset.mode;
+  });
+});
 
-      return base;
-    }
+function winningLine(marks){
+  return LINES.find(([a,b,c]) => marks[a] && marks[a] === marks[b] && marks[b] === marks[c]) || null;
+}
 
-    function getList(label, type, blends) {
-      const dict = type === "Words" ? wordsDict() : sentsDict();
+function renderGame(){
+  const output = document.getElementById('output');
+  const skillText = Array.from(selected).join(' • ');
 
-      if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)) {
-        let all = [];
-        for (const p of MIXED_RULES[label]) {
-          all = all.concat(readWithBlends(dict, p, type, blends));
-        }
-        return all;
-      }
+  output.innerHTML = `
+    <div class="game-card">
+      <div class="game-header">Phonics Tic Tac Toe</div>
+      <div class="game-sub"><strong>Skills:</strong> ${skillText || '—'} | <strong>Turn:</strong> <span class="${game.turn === 'X' ? 'x' : 'o'}">${game.turn}</span></div>
+      <div class="score-row">
+        <div class="score-pill">X Wins: <span class="x">${game.score.X}</span></div>
+        <div class="score-pill">O Wins: <span class="o">${game.score.O}</span></div>
+        <div class="score-pill">Ties: ${game.score.T}</div>
+      </div>
+      <div id="board" class="board"></div>
+      <div class="actions">
+        <button id="newRound" class="btn-ghost">Play Again (Same Board)</button>
+        <button id="newWords" class="btn-ghost">New Words</button>
+      </div>
+    </div>`;
 
-      const prefix = PREFIX[label];
-      if (prefix) return readWithBlends(dict, prefix, type, blends);
+  const board = document.getElementById('board');
+  game.prompts.forEach((text, idx) => {
+    const mark = game.marks[idx] || '';
+    const isSentence = String(text).includes(' ');
+    const sentenceClass = isSentence
+      ? (String(text).length > 42 ? ' very-long' : String(text).length > 28 ? ' long' : '')
+      : '';
+    const btn = document.createElement('button');
+    btn.className = 'cell' + (game.winLine.includes(idx) ? ' win' : '');
+    btn.disabled = !!mark || game.over;
+    btn.innerHTML = `<div class="prompt ${isSentence ? 'sentence' : ''}${sentenceClass}">${text}</div><div class="mark ${mark === 'X' ? 'x' : mark === 'O' ? 'o' : ''}">${mark}</div>`;
+    btn.addEventListener('click', () => makeMove(idx));
+    board.appendChild(btn);
+  });
 
-      const want = label.toLowerCase();
-      const tail1 = " " + type;
-      const tail2 = " " + type.toLowerCase();
-      const keys = Object.keys(dict);
-      const guess = keys.find((k) => k.toLowerCase().includes(want) && (k.endsWith(tail1) || k.endsWith(tail2)));
-      return guess ? readDict(dict, guess) : [];
-    }
+  document.getElementById('newRound').addEventListener('click', () => {
+    game.marks = Array(9).fill('');
+    game.turn = 'X';
+    game.over = false;
+    game.winLine = [];
+    renderGame();
+  });
 
-    function buildPrompts() {
-      const skill = $("#skill").value;
-      const mode = $("#mode").value;
-      const blends = $("#blends").value === "yes";
+  document.getElementById('newWords').addEventListener('click', () => {
+    generateGame();
+  });
+}
 
-      if (mode === "words") {
-        const words = uniqueByLowercase(getList(skill, "Words", blends));
-        return fillToN(shuffle(words), 9);
-      }
+function makeMove(idx){
+  if (game.over || game.marks[idx]) return;
+  game.marks[idx] = game.turn;
 
-      if (mode === "sentences") {
-        const sents = uniqueByLowercase(getList(skill, "Sentences", blends));
-        return fillToN(shuffle(sents), 9);
-      }
+  const line = winningLine(game.marks);
+  if (line){
+    game.over = true;
+    game.winLine = line;
+    game.score[game.turn] += 1;
+  } else if (game.marks.every(Boolean)){
+    game.over = true;
+    game.score.T += 1;
+  } else {
+    game.turn = (game.turn === 'X') ? 'O' : 'X';
+  }
 
-      const words = uniqueByLowercase(getList(skill, "Words", blends));
-      const sents = uniqueByLowercase(getList(skill, "Sentences", blends));
-      const w = fillToN(shuffle(words), 5);
-      const s = fillToN(shuffle(sents), 4);
-      return shuffle(w.concat(s));
-    }
+  renderGame();
+}
 
-    function winningLine(board) {
-      return LINES.find(([a, b, c]) => board[a] && board[a] === board[b] && board[b] === board[c]) || null;
-    }
+function buildPrompts(labels){
+  const total = 9;
 
-    function openSpots(board) {
-      return board.map((v, i) => (v ? null : i)).filter((i) => i !== null);
-    }
+  if (mode === 'words'){
+    const pool = uniqueByLowercase(labels.flatMap(lbl => getList(lbl, 'Words', includeBlends)));
+    return fillToN(shuffle(pool), total);
+  }
 
-    function findLineMove(board, mark) {
-      for (const [a, b, c] of LINES) {
-        const line = [a, b, c];
-        const vals = line.map((i) => board[i]);
-        const marks = vals.filter((v) => v === mark).length;
-        const empties = line.filter((i) => !board[i]);
-        if (marks === 2 && empties.length === 1) return empties[0];
-      }
-      return null;
-    }
+  if (mode === 'sentences'){
+    const pool = uniqueByLowercase(labels.flatMap(lbl => getList(lbl, 'Sentences', includeBlends)));
+    return fillToN(shuffle(pool), total);
+  }
 
-    function isComputerTurn() {
-      const gm = $("#gameMode").value;
-      return gm !== "pvp" && state.turn === "O" && !state.over;
-    }
+  const words = uniqueByLowercase(labels.flatMap(lbl => getList(lbl, 'Words', includeBlends)));
+  const sents = uniqueByLowercase(labels.flatMap(lbl => getList(lbl, 'Sentences', includeBlends)));
 
-    function setTurnUI() {
-      $("#turn").textContent = state.turn;
-      $("#turn").className = state.turn.toLowerCase();
-    }
+  if (!words.length && !sents.length) return [];
+  if (!words.length) return fillToN(shuffle(sents), total);
+  if (!sents.length) return fillToN(shuffle(words), total);
 
-    function renderScores() {
-      $("#scoreX").textContent = state.scores.X;
-      $("#scoreO").textContent = state.scores.O;
-      $("#scoreT").textContent = state.scores.T;
-    }
+  const w = fillToN(shuffle(words), 5);
+  const s = fillToN(shuffle(sents), 4);
+  return shuffle(w.concat(s));
+}
 
-    function renderBoard() {
-      const boardEl = $("#board");
-      boardEl.innerHTML = "";
+function dataLoaded(){
+  return !!(window.fluencyWords || window.fluencySentences || window.fluencyData);
+}
 
-      state.prompts.forEach((text, i) => {
-        const btn = document.createElement("button");
-        btn.className = "cell" + (state.winLine.includes(i) ? " win" : "");
-        btn.disabled = state.over || !!state.board[i] || isComputerTurn();
+function generateGame(){
+  if (!dataLoaded()) return alert('Fluency data file is not loaded yet. Refresh and try again.');
+  if (selected.size === 0) return alert('Select at least one skill in Step 1.');
+  if (!mode) return alert('Choose Words Only / Sentences Only / Both in Step 3.');
 
-        const isSentence = String(text).includes(" ");
-        btn.innerHTML = `<div class="prompt ${isSentence ? "sentence" : ""}">${text}</div><div class="mark ${state.board[i] === "X" ? "x" : state.board[i] === "O" ? "o" : ""}">${state.board[i] || ""}</div>`;
+  const labels = Array.from(selected);
+  const prompts = buildPrompts(labels);
 
-        btn.onclick = () => makeMove(i);
-        boardEl.appendChild(btn);
-      });
-    }
+  if (prompts.length < 9){
+    return alert('Not enough content found from the JS data for those settings. Add more skills or switch options.');
+  }
 
-    function burst() {
-      const root = $("#confetti");
-      const colors = ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#8338ec"];
-      for (let i = 0; i < 70; i++) {
-        const d = document.createElement("div");
-        d.className = "dot";
-        d.style.left = (Math.random() * 100) + "vw";
-        d.style.background = colors[Math.floor(Math.random() * colors.length)];
-        d.style.animationDuration = (900 + Math.random() * 800) + "ms";
-        root.appendChild(d);
-        setTimeout(() => d.remove(), 1800);
-      }
-    }
+  game.prompts = prompts;
+  game.marks = Array(9).fill('');
+  game.turn = 'X';
+  game.over = false;
+  game.winLine = [];
+  renderGame();
+  document.getElementById('output').scrollIntoView({ behavior:'smooth', block:'start' });
+}
 
-    function finishRound(line) {
-      if (line) {
-        state.over = true;
-        state.winLine = line;
-        state.scores[state.turn] += 1;
-        renderScores();
-        const cpu = $("#gameMode").value !== "pvp" && state.turn === "O";
-        $("#msg").textContent = cpu ? "Computer wins!" : `Player ${state.turn} wins!`;
-        burst();
-      } else if (state.board.every(Boolean)) {
-        state.over = true;
-        state.scores.T += 1;
-        renderScores();
-        $("#msg").textContent = "Tie game!";
-      } else {
-        state.turn = state.turn === "X" ? "O" : "X";
-        $("#msg").textContent = "Great reading! Keep going.";
-      }
-
-      setTurnUI();
-      renderBoard();
-
-      if (isComputerTurn()) {
-        setTimeout(computerMove, 450);
-      }
-    }
-
-    function makeMove(i) {
-      if (state.over || state.board[i]) return;
-      state.board[i] = state.turn;
-      finishRound(winningLine(state.board));
-    }
-
-    function computerMove() {
-      if (!isComputerTurn()) return;
-      const gm = $("#gameMode").value;
-      let move = null;
-
-      if (gm === "cpu-easy") {
-        const spots = openSpots(state.board);
-        move = spots[Math.floor(Math.random() * spots.length)];
-      } else {
-        move = findLineMove(state.board, "O");
-        if (move === null) move = findLineMove(state.board, "X");
-        if (move === null && !state.board[4]) move = 4;
-        if (move === null) {
-          const corners = [0,2,6,8].filter((i) => !state.board[i]);
-          if (corners.length) move = corners[Math.floor(Math.random() * corners.length)];
-        }
-        if (move === null) {
-          const spots = openSpots(state.board);
-          move = spots[Math.floor(Math.random() * spots.length)];
-        }
-      }
-
-      state.board[move] = "O";
-      finishRound(winningLine(state.board));
-    }
-
-    function startGame(newWords) {
-      if (newWords) {
-        const prompts = buildPrompts();
-        if (!prompts.length) {
-          alert("No matching content found for this skill/mode in your JS data.");
-          return;
-        }
-        state.prompts = prompts;
-      }
-
-      state.board = Array(9).fill("");
-      state.turn = "X";
-      state.over = false;
-      state.winLine = [];
-
-      setTurnUI();
-      $("#skillTag").textContent = `Skill: ${$("#skill").value}`;
-      $("#msg").textContent = "Tap a square after reading it out loud.";
-      renderBoard();
-
-      if (isComputerTurn()) {
-        setTimeout(computerMove, 450);
-      }
-    }
-
-    function resetScores() {
-      state.scores = { X: 0, O: 0, T: 0 };
-      renderScores();
-    }
-
-    (function init() {
-      const skill = $("#skill");
-      SKILLS.forEach((s) => {
-        const o = document.createElement("option");
-        o.value = s;
-        o.textContent = s;
-        skill.appendChild(o);
-      });
-
-      $("#playBtn").onclick = () => startGame(true);
-      $("#newWords").onclick = () => startGame(true);
-      $("#sameWords").onclick = () => startGame(false);
-      $("#resetScore").onclick = resetScores;
-
-      renderScores();
-    })();
-  </script>
+document.getElementById('btnGenerate').addEventListener('click', generateGame);
+document.getElementById('btnPrint').addEventListener('click', () => window.print());
+document.getElementById('resetScore').addEventListener('click', () => {
+  game.score = { X: 0, O: 0, T: 0 };
+  if (game.prompts.length) renderGame();
+});
+</script>
 </body>
 </html>
-```
-
-If you want, I can also send a second version with the JS path changed to a relative path (`fluencyDataFull_v8-2_clean.js`) in case your page is not in `/ladder/`.

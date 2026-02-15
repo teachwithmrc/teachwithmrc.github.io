@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manipulatives Worksheet Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1d2430;
+      --panel: #ffffff;
+      --paper: #ffffff;
+      --line: #121212;
+      --p1: #f5f5f5;
+      --p2: #f7ead8;
+      --p3: #e7f2fb;
+      --p4: #e5f6e9;
+      --p5: #fcecc8;
+      --p6: #f9e3f1;
+      --p7: #e1f4f6;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", sans-serif;
+      color: var(--ink);
+      background: #ffffff;
+    }
+
+    .app {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 14px 14px 34px;
+    }
+
+    .screen-only h1 {
+      margin: 2px 0 2px;
+      text-align: center;
+      font-size: clamp(1.28rem, 2.8vw, 2rem);
+      line-height: 1.2;
+      font-weight: 800;
+    }
+
+    .screen-only .subtitle {
+      margin: 0 0 12px;
+      text-align: center;
+      color: #42546f;
+      font-size: 0.95rem;
+    }
+
+    .controls-card {
+      background: var(--panel);
+      border: 2px solid #d8dfec;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(22, 32, 49, 0.06);
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .op-switch {
+      display: inline-grid;
+      grid-template-columns: 1fr 1fr;
+      width: 340px;
+      max-width: 100%;
+      border: 2px solid #1f2b3e;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 0 auto 12px;
+      background: #fff;
+    }
+
+    .op-switch button {
+      border: 0;
+      background: #fff;
+      color: #1f2b3e;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 800;
+      padding: 9px 10px;
+      cursor: pointer;
+    }
+
+    .op-switch button.active {
+      background: #1f2b3e;
+      color: #fff;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      align-items: end;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .field label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      color: #4b5a74;
+    }
+
+    .field select,
+    .field input {
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--ink);
+      background: #fff;
+      border: 2px solid #cfd8e7;
+      border-radius: 10px;
+      padding: 8px 10px;
+      outline: none;
+    }
+
+    .checkbox-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      border: 2px solid #cfd8e7;
+      border-radius: 10px;
+      padding: 7px 10px;
+      background: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #2f415f;
+    }
+
+    .checkbox-wrap input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .button-row button {
+      border: 2px solid #1f2b3e;
+      border-radius: 10px;
+      background: #fff;
+      color: #1f2b3e;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+
+    .button-row button.primary {
+      background: #1f2b3e;
+      color: #fff;
+    }
+
+    .note {
+      margin-top: 8px;
+      font-size: 0.84rem;
+      color: #5a677f;
+    }
+
+    #worksheetHost {
+      margin-top: 12px;
+    }
+
+    .sheet {
+      width: 8.5in;
+      min-height: 11in;
+      margin: 0 auto;
+      background: var(--paper);
+      border: 1px solid #d6dce8;
+      box-shadow: 0 12px 30px rgba(20, 32, 50, 0.1);
+      padding: 0.34in;
+      position: relative;
+    }
+
+    .sheet-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 2px solid #ced7e6;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+    }
+
+    .sheet-title {
+      margin: 0;
+      font-size: 1.06rem;
+      font-weight: 800;
+      line-height: 1.22;
+    }
+
+    .name-line {
+      white-space: nowrap;
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    .name-line .line {
+      display: inline-block;
+      width: 140px;
+      border-bottom: 2px solid #111;
+      transform: translateY(-2px);
+      margin-left: 5px;
+    }
+
+    .problems {
+      display: flex;
+      flex-direction: column;
+      border-top: 2px solid #cfd6e3;
+      border-left: 2px solid #cfd6e3;
+      margin-top: 8px;
+      padding-bottom: 0.25in;
+    }
+
+    .problems.layout-stack {
+      gap: 10px;
+      border: 0;
+    }
+
+    .problems.layout-quad {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: 1fr;
+      gap: 10px;
+      border: 0;
+    }
+
+    .problems.layout-chart2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: 1fr;
+      gap: 10px;
+      border: 0;
+    }
+
+    .problems.layout-stack .problem-body {
+      width: 100%;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .problem-wrap {
+      --cell-size: 40px;
+      --cell-gap: 5px;
+      --op-width: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px 10px;
+      border-right: 2px solid #cfd6e3;
+      border-bottom: 2px solid #cfd6e3;
+    }
+
+    .problems.layout-stack .problem-wrap {
+      border: 2px solid #cfd6e3;
+    }
+
+    .problems.layout-quad .problem-wrap {
+      --cell-size: 30px;
+      --cell-gap: 3px;
+      --op-width: 22px;
+      gap: 8px;
+      padding: 7px 7px 8px;
+      border: 2px solid #cfd6e3;
+    }
+
+    .problems.layout-chart2 .problem-wrap {
+      gap: 8px;
+      padding: 8px;
+      border: 2px solid #cfd6e3;
+    }
+
+    .problem-top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .problem-head {
+      border: 2px solid #111;
+      border-radius: 4px;
+      background: #fff;
+      padding: 6px 12px;
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .problem-badge {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #111;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 800;
+      line-height: 1;
+      background: #fff;
+      flex: 0 0 auto;
+    }
+
+    .problem-text {
+      display: inline-flex;
+      align-items: center;
+      line-height: 1.05;
+      font-size: 1.24rem;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+
+    .problem-head.blank {
+      border-style: dashed;
+      color: #8c96a8;
+      font-weight: 600;
+    }
+
+    .blank-ink {
+      font-family: "Courier New", "SFMono-Regular", Menlo, Consolas, monospace;
+      font-weight: 700;
+      letter-spacing: 0;
+      white-space: pre;
+    }
+
+    .problem-head.vertical {
+      padding: 6px 8px;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .mini-setup {
+      --mini-cell: 26px;
+      --mini-gap: 3px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: center;
+      justify-content: center;
+      min-width: calc(var(--mini-cell) * 3 + var(--mini-gap) * 2 + 22px);
+    }
+
+    .mini-carry {
+      display: grid;
+      grid-template-columns: repeat(var(--mini-cols), var(--mini-cell));
+      gap: var(--mini-gap);
+      margin-left: 22px;
+    }
+
+    .mini-carry-cell {
+      width: var(--mini-cell);
+      height: calc(var(--mini-cell) * 0.6);
+      border: 2px solid #a2afc7;
+      background: #fff;
+    }
+
+    .mini-line {
+      display: grid;
+      grid-template-columns: 20px repeat(var(--mini-cols), var(--mini-cell));
+      gap: var(--mini-gap);
+      align-items: center;
+    }
+
+    .mini-op {
+      width: 20px;
+      text-align: center;
+      font-size: 1.02rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .mini-cell {
+      width: var(--mini-cell);
+      height: var(--mini-cell);
+      border: 2px solid #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 800;
+      line-height: 1;
+      background: #fff;
+    }
+
+    .mini-rule {
+      height: 0;
+      border-top: 4px solid #000;
+      width: calc(var(--mini-cell) * var(--mini-cols) + var(--mini-gap) * (var(--mini-cols) - 1));
+      margin-left: 22px;
+    }
+
+    .problem-body {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .chart-problem-body {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .add-table {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      align-items: center;
+    }
+
+    .table-row {
+      display: grid;
+      gap: var(--cell-gap);
+      align-items: center;
+      justify-items: stretch;
+      width: max-content;
+    }
+
+    .op-cell {
+      width: var(--op-width);
+      height: var(--cell-size);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+      color: #111;
+    }
+
+    .digit-cell {
+      width: var(--cell-size);
+      height: var(--cell-size);
+      border: 2px solid #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      font-weight: 800;
+      line-height: 1;
+      background: #fff;
+    }
+
+    .carry-row {
+      margin-bottom: 7px;
+    }
+
+    .carry-row .op-cell {
+      height: calc(var(--cell-size) * 0.68);
+      font-size: 1.2rem;
+    }
+
+    .carry-row .digit-cell {
+      height: calc(var(--cell-size) * 0.68);
+      font-size: 1.12rem;
+      border-color: #9ba6bb;
+    }
+
+    .line-row {
+      display: grid;
+      gap: var(--cell-gap);
+      align-items: center;
+      margin: 0;
+      width: max-content;
+    }
+
+    .line-spacer {
+      width: var(--op-width);
+      height: 0;
+    }
+
+    .sum-line {
+      height: 0;
+      border-top: 5px solid #000;
+      align-self: center;
+      margin: 1px 0;
+    }
+
+    .manip-panel {
+      border: 0;
+      border-radius: 0;
+      padding: 4px 0 0;
+      width: auto;
+      min-height: 0;
+      background: transparent;
+    }
+
+    .problems.layout-stack .manip-panel {
+      width: 100%;
+    }
+
+    .manip-add-grid {
+      display: grid;
+      grid-template-columns: 58px max-content max-content;
+      column-gap: 8px;
+      row-gap: 2px;
+      align-items: start;
+      justify-content: start;
+    }
+
+    .manip-add-grid.has-hundreds {
+      grid-template-columns: 58px max-content max-content max-content;
+    }
+
+    .manip-add-grid .row-bottom {
+      margin-top: 12px;
+    }
+
+    .manip-col-head {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #111;
+      text-align: center;
+      line-height: 1;
+      padding-top: 0;
+      margin: 0;
+      align-self: start;
+      border: 2px solid #111;
+      border-radius: 4px;
+      padding: 2px 8px;
+      background: #fff;
+    }
+
+    .manip-num {
+      font-size: 1.08rem;
+      font-weight: 800;
+      text-align: center;
+      color: #111;
+      line-height: 1;
+      min-height: 94px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .manip-num-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 32px;
+      padding: 2px 8px;
+      border: 2px solid #111;
+      border-radius: 6px;
+      background: #fff;
+      line-height: 1;
+    }
+
+    .tens-col {
+      min-height: 94px;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .ones-col {
+      min-height: 94px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+
+    .manip-bin {
+      border: 0;
+      border-radius: 0;
+      min-height: 94px;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(5, max-content);
+      grid-auto-rows: max-content;
+      align-content: flex-start;
+      justify-content: flex-start;
+      gap: 4px 6px;
+      background: transparent;
+    }
+
+    .manip-bin.hundreds-bin {
+      min-height: 74px;
+    }
+
+    .block-img {
+      display: block;
+      object-fit: contain;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .block-img-one {
+      width: 15px;
+      height: 15px;
+    }
+
+    .block-img-ten {
+      width: 22px;
+      height: 90px;
+    }
+
+    .block-img-hundred {
+      width: 52px;
+      height: 52px;
+    }
+
+    .tenframe {
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      width: 76px;
+      height: 94px;
+      max-width: 76px;
+      padding: 0;
+    }
+
+    .tfgrid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      gap: 2px;
+      height: 100%;
+    }
+
+    .tfcell {
+      border: 1px dotted #c8d0dd;
+      width: auto;
+      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .sub-manip-cols {
+      display: grid;
+      grid-template-columns: repeat(2, max-content);
+      gap: 2px;
+      align-items: start;
+      justify-content: start;
+    }
+
+    .sub-manip-cols.has-hundreds {
+      grid-template-columns: repeat(3, max-content);
+    }
+
+    .sub-manip-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-start;
+    }
+
+    .sub-instruction {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #111;
+      line-height: 1.05;
+      margin-bottom: 1px;
+    }
+
+    .sub-col-title {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #111;
+      line-height: 1;
+      border: 2px solid #111;
+      border-radius: 4px;
+      padding: 2px 8px;
+      background: #fff;
+    }
+
+    .sub-ones-current {
+      width: 126px;
+      height: 48px;
+    }
+
+    .sub-tenframe {
+      width: 126px;
+      height: 48px;
+      padding: 0;
+      background: transparent;
+      border: 0;
+    }
+
+    .sub-tfgrid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 2px;
+      height: 100%;
+      width: 100%;
+    }
+
+    .sub-tfcell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dotted #c8d0dd;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .sub-tenframe.invisible .sub-tfcell {
+      border-color: transparent;
+    }
+
+    .borrow-label {
+      font-size: 0.66rem;
+      font-weight: 800;
+      color: #111;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-top: 1px;
+    }
+
+    .borrow-tenframe {
+      width: 126px;
+      max-width: 126px;
+    }
+
+    .problems.layout-stack .manip-add-grid {
+      column-gap: 10px;
+    }
+
+    .problems.layout-stack .block-img-one {
+      width: 17px;
+      height: 17px;
+    }
+
+    .problems.layout-stack .block-img-ten {
+      width: 24px;
+      height: 98px;
+    }
+
+    .problems.layout-stack .block-img-hundred {
+      width: 60px;
+      height: 60px;
+    }
+
+    .problems.layout-stack .tenframe {
+      width: 84px;
+      height: 102px;
+      max-width: 84px;
+    }
+
+    .problems.layout-stack .manip-num,
+    .problems.layout-stack .tens-col,
+    .problems.layout-stack .ones-col,
+    .problems.layout-stack .manip-bin {
+      min-height: 102px;
+    }
+
+    .problems.layout-stack .sub-ones-current,
+    .problems.layout-stack .sub-tenframe,
+    .problems.layout-stack .borrow-tenframe {
+      width: 136px;
+      height: 52px;
+      max-width: 136px;
+    }
+
+    .hc-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-start;
+    }
+
+    .hc-title {
+      font-size: 0.74rem;
+      font-weight: 800;
+      border: 2px solid #111;
+      border-radius: 4px;
+      padding: 2px 8px;
+      background: #fff;
+      line-height: 1;
+    }
+
+    .hc-instruction {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #111;
+      line-height: 1.12;
+    }
+
+    .hc-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 19px);
+      grid-template-rows: repeat(10, 19px);
+      border: 1px solid #8f98aa;
+      background: #fff;
+    }
+
+    .hc-cell {
+      border: 1px dotted #b4bfd3;
+      font-size: 0.5rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #111;
+      font-weight: 600;
+    }
+
+    .hc-cell.start {
+      background: #e8f1ff;
+      border-color: #7ba1d8;
+      font-weight: 800;
+    }
+
+    .hc-cell.tens {
+      background: #eaf8e9;
+      border-color: #76b275;
+      font-weight: 800;
+    }
+
+    .hc-cell.result {
+      background: #fff0d8;
+      border-color: #dca462;
+      font-weight: 900;
+    }
+
+    .hc-equation {
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .problems.layout-stack .hc-grid {
+      grid-template-columns: repeat(10, 21px);
+      grid-template-rows: repeat(10, 21px);
+    }
+
+    .problems.layout-chart2 .hc-grid {
+      grid-template-columns: repeat(10, 23px);
+      grid-template-rows: repeat(10, 23px);
+    }
+
+    .count-note {
+      font-size: 0.66rem;
+      font-weight: 700;
+      color: #111;
+      align-self: center;
+      margin-left: 2px;
+    }
+
+    .footer-note {
+      position: absolute;
+      left: 0.34in;
+      right: 0.34in;
+      bottom: 0.2in;
+      text-align: left;
+      font-size: 0.66rem;
+      color: #6a7485;
+    }
+
+    .no-color .digit-cell {
+      background: #fff !important;
+    }
+
+    @media (max-width: 980px) {
+      .sheet {
+        width: 100%;
+        min-height: 0;
+        padding: 12px;
+      }
+
+      .problem-wrap {
+        --cell-size: 34px;
+        --cell-gap: 4px;
+        --op-width: 24px;
+      }
+
+      .problem-head {
+        min-height: 36px;
+      }
+
+      .problem-badge {
+        width: 22px;
+        height: 22px;
+        font-size: 0.72rem;
+      }
+
+      .problem-text {
+        font-size: 1.04rem;
+      }
+
+      .digit-cell {
+        font-size: 1.34rem;
+      }
+
+      .problem-body {
+        width: 100%;
+      }
+
+      .footer-note {
+        position: static;
+        margin-top: 8px;
+      }
+    }
+
+    @media print {
+      @page {
+        size: Letter;
+        margin: 0.28in;
+      }
+
+      body { background: #fff; }
+      .screen-only { display: none !important; }
+      .app { margin: 0; max-width: none; padding: 0; }
+      #worksheetHost { margin: 0; }
+
+      .sheet {
+        width: auto;
+        min-height: 0;
+        margin: 0;
+        border: 0;
+        box-shadow: none;
+        padding: 0;
+      }
+
+      .problem-wrap {
+        --cell-size: 38px;
+        --cell-gap: 4px;
+        --op-width: 26px;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .footer-note {
+        position: fixed;
+        left: 0.28in;
+        right: 0.28in;
+        bottom: 0.1in;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="screen-only">
+      <h1>Manipulatives Worksheet Generator</h1>
+      <p class="subtitle">Problem on top, visuals on bottom. Generate 3 stacked or 4 in a 2x2 table.</p>
+
+      <section class="controls-card">
+        <div class="op-switch" role="tablist" aria-label="Operation">
+          <button id="opAddBtn" type="button" class="active" data-op="add">Addition</button>
+          <button id="opSubBtn" type="button" data-op="sub">Subtraction</button>
+        </div>
+
+        <div class="controls-grid">
+          <input id="operation" type="hidden" value="add" />
+
+          <div class="field">
+            <label for="digitsA">Top Number Digits</label>
+            <select id="digitsA">
+              <option value="2" selected>2 digits</option>
+              <option value="3">3 digits</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="digitsB">Bottom Number Digits</label>
+            <select id="digitsB">
+              <option value="1" selected>1 digit</option>
+              <option value="2">2 digits</option>
+              <option value="3">3 digits</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="pageLayout">Page Layout</label>
+            <select id="pageLayout">
+              <option value="stack2">2 problems (stacked)</option>
+              <option value="stack3" selected>3 problems (stacked)</option>
+              <option value="grid4">4 problems (2x2 table)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="visualMode">Visual Type</label>
+            <select id="visualMode">
+              <option value="blocks" selected>Base-10 Blocks</option>
+              <option value="chart">Hundreds Chart</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="chartOrder">Chart Problem Order</label>
+            <select id="chartOrder">
+              <option value="problemTop" selected>Problem on top, chart on bottom</option>
+              <option value="chartTop">Chart on top, problem on bottom</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="problemMode">Problem Source</label>
+            <select id="problemMode">
+              <option value="random" selected>Random problems</option>
+              <option value="custom">Custom problems</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="customProblem">Custom Problems</label>
+            <input id="customProblem" type="text" placeholder="Example: 76+4, 58+9, 43+7, 92+6" />
+          </div>
+
+          <div class="field">
+            <label for="sheetTitle">Worksheet Title</label>
+            <input id="sheetTitle" type="text" value="" placeholder="Auto title (operation + digits)" />
+          </div>
+
+          <div class="field">
+            <label>Equation Label</label>
+            <label class="checkbox-wrap"><input id="showProblemEq" type="checkbox" checked />Show boxed problem equation</label>
+          </div>
+
+          <div class="field">
+            <label for="problemStyle">Problem Style</label>
+            <select id="problemStyle">
+              <option value="equation" selected>Equation (58 + 82 = _____)</option>
+              <option value="stacked">Stacked Box (vertical)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Scaffold Version</label>
+            <label class="checkbox-wrap"><input id="scaffoldToggle" type="checkbox" />Fill numbers in algorithm table</label>
+          </div>
+
+          <div class="field">
+            <label>Addition Order</label>
+            <label class="checkbox-wrap"><input id="addLargerTop" type="checkbox" />Put larger addition number on top</label>
+          </div>
+
+          <div class="field">
+            <label id="requireLabel">Regroup/Borrow</label>
+            <label class="checkbox-wrap"><input id="requireSpecial" type="checkbox" />Use regrouping problems</label>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button id="generateBtn" class="primary" type="button">Generate</button>
+          <button id="printBtn" type="button">Print</button>
+        </div>
+
+        <div class="note" id="statusText">Tip: custom mode accepts comma-separated equations like <strong>784+49, 912+38, 665+27</strong>.</div>
+      </section>
+    </div>
+
+    <div id="worksheetHost"></div>
+  </div>
+
+  <script>
+    const els = {
+      host: document.getElementById("worksheetHost"),
+      operation: document.getElementById("operation"),
+      opAddBtn: document.getElementById("opAddBtn"),
+      opSubBtn: document.getElementById("opSubBtn"),
+      digitsA: document.getElementById("digitsA"),
+      digitsB: document.getElementById("digitsB"),
+      pageLayout: document.getElementById("pageLayout"),
+      visualMode: document.getElementById("visualMode"),
+      chartOrder: document.getElementById("chartOrder"),
+      problemMode: document.getElementById("problemMode"),
+      customProblem: document.getElementById("customProblem"),
+      sheetTitle: document.getElementById("sheetTitle"),
+      showProblemEq: document.getElementById("showProblemEq"),
+      problemStyle: document.getElementById("problemStyle"),
+      scaffoldToggle: document.getElementById("scaffoldToggle"),
+      addLargerTop: document.getElementById("addLargerTop"),
+      requireSpecial: document.getElementById("requireSpecial"),
+      requireLabel: document.getElementById("requireLabel"),
+      statusText: document.getElementById("statusText"),
+      generateBtn: document.getElementById("generateBtn"),
+      printBtn: document.getElementById("printBtn")
+    };
+
+    const PLACE_COLORS = [
+      "var(--p1)",
+      "var(--p2)",
+      "var(--p3)",
+      "var(--p4)",
+      "var(--p5)",
+      "var(--p6)",
+      "var(--p7)"
+    ];
+
+    const MANIP_ASSETS = {
+      one: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6991b7ac36a392985e69ed13.png",
+      ten: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6991b7ac24813caed1b26a70.png",
+      hundred: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6991b7ac899b887a5ac1bcac.png"
+    };
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randomWithDigits(digits) {
+      const min = Math.pow(10, digits - 1);
+      const max = Math.pow(10, digits) - 1;
+      return randInt(min, max);
+    }
+
+    function hasRegrouping(a, b) {
+      const aLow = String(a).split("").reverse().map(Number);
+      const bLow = String(b).split("").reverse().map(Number);
+      const places = Math.max(aLow.length, bLow.length);
+      for (let i = 0; i < places; i += 1) {
+        const ad = aLow[i] ?? 0;
+        const bd = bLow[i] ?? 0;
+        if (ad + bd >= 10) return true;
+      }
+      return false;
+    }
+
+    function hasBorrowing(a, b) {
+      const aLow = String(a).split("").reverse().map(Number);
+      const bLow = String(b).split("").reverse().map(Number);
+      const places = Math.max(aLow.length, bLow.length);
+      let borrowed = 0;
+      for (let i = 0; i < places; i += 1) {
+        const top = (aLow[i] ?? 0) - borrowed;
+        const bot = bLow[i] ?? 0;
+        if (top < bot) return true;
+        borrowed = 0;
+      }
+      return false;
+    }
+
+    function problemsPerPageFromLayout(layout) {
+      if (layout === "grid4") return 4;
+      if (layout === "stack2") return 2;
+      return 3;
+    }
+
+    function syncOperationButtons(op) {
+      const isAdd = op === "add";
+      els.opAddBtn.classList.toggle("active", isAdd);
+      els.opSubBtn.classList.toggle("active", !isAdd);
+    }
+
+    function normalizeProblemOrder(problem, op, largerTopForAdd) {
+      if (op === "add" && largerTopForAdd && problem.b > problem.a) {
+        return { a: problem.b, b: problem.a };
+      }
+      return problem;
+    }
+
+    function chartCompatible(a, b, op) {
+      if (a < 1 || a > 100 || b < 1 || b > 99) return false;
+      const result = op === "add" ? (a + b) : (a - b);
+      return result >= 1 && result <= 100;
+    }
+
+    function parseOneProblem(raw, aDigits, bDigits, op, requireSpecial, largerTopForAdd, visualMode) {
+      const clean = String(raw || "").replace(/\s+/g, "");
+      const rgx = op === "add" ? /^(\d+)[+](\d+)$/ : /^(\d+)[-](\d+)$/;
+      const match = clean.match(rgx);
+      if (!match) return null;
+
+      const aTxt = match[1];
+      const bTxt = match[2];
+      if (aTxt.length !== aDigits || bTxt.length !== bDigits) return null;
+
+      const normalized = normalizeProblemOrder({ a: Number(aTxt), b: Number(bTxt) }, op, largerTopForAdd);
+      const { a, b } = normalized;
+      if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
+
+      if (op === "sub" && a <= b) return null;
+      if (op === "add" && hasRegrouping(a, b) !== requireSpecial) return null;
+      if (op === "sub" && hasBorrowing(a, b) !== requireSpecial) return null;
+      if (visualMode === "chart" && !chartCompatible(a, b, op)) return null;
+      return { a, b };
+    }
+
+    function parseCustomList(raw, aDigits, bDigits, op, requireSpecial, largerTopForAdd, visualMode) {
+      const chunks = String(raw || "")
+        .split(/[\n,;]+/)
+        .map(s => s.trim())
+        .filter(Boolean);
+
+      const valid = [];
+      for (let i = 0; i < chunks.length; i += 1) {
+        const parsed = parseOneProblem(chunks[i], aDigits, bDigits, op, requireSpecial, largerTopForAdd, visualMode);
+        if (parsed) valid.push(parsed);
+      }
+      return valid;
+    }
+
+    function randomProblem(aDigits, bDigits, op, requireSpecial, largerTopForAdd, visualMode) {
+      while (true) {
+        const normalized = normalizeProblemOrder(
+          { a: randomWithDigits(aDigits), b: randomWithDigits(bDigits) },
+          op,
+          largerTopForAdd
+        );
+        const { a, b } = normalized;
+        if (op === "sub" && a <= b) continue;
+        if (op === "add" && hasRegrouping(a, b) !== requireSpecial) continue;
+        if (op === "sub" && hasBorrowing(a, b) !== requireSpecial) continue;
+        if (visualMode === "chart" && !chartCompatible(a, b, op)) continue;
+        return { a, b };
+      }
+    }
+
+    function buildProblems(aDigits, bDigits, op, mode, customRaw, requireSpecial, largerTopForAdd, problemsPerPage, visualMode) {
+      const problems = [];
+      let warning = false;
+      let message = "Generated random problems.";
+
+      if (mode === "custom") {
+        const custom = parseCustomList(customRaw, aDigits, bDigits, op, requireSpecial, largerTopForAdd, visualMode);
+
+        for (let i = 0; i < problemsPerPage; i += 1) {
+          if (custom[i]) {
+            problems.push(custom[i]);
+          } else {
+            problems.push(randomProblem(aDigits, bDigits, op, requireSpecial, largerTopForAdd, visualMode));
+          }
+        }
+
+        if (custom.length === 0) {
+          warning = true;
+          const chartHint = visualMode === "chart" ? " (chart mode needs values in 1-100)." : "";
+          message = `No valid custom problems for ${aDigits}${op === "add" ? "+" : "-"}${bDigits} digits ${requireSpecial ? (op === "add" ? "with regrouping" : "with borrowing") : (op === "add" ? "without regrouping" : "without borrowing")}${chartHint} Used random problems.`;
+        } else if (custom.length < problemsPerPage) {
+          warning = true;
+          message = `Used ${custom.length} custom problem(s), filled the rest with random.`;
+        } else {
+          message = "Generated custom problems.";
+        }
+      } else {
+        for (let i = 0; i < problemsPerPage; i += 1) {
+          problems.push(randomProblem(aDigits, bDigits, op, requireSpecial, largerTopForAdd, visualMode));
+        }
+      }
+
+      return { problems, message, warning };
+    }
+
+    function cellStyleByColumn(colIndex, totalCols, colorOn) {
+      if (!colorOn) return "";
+      if (colIndex === 0) return "background:#fff;";
+      const placeFromRight = totalCols - 1 - colIndex;
+      const color = PLACE_COLORS[placeFromRight % PLACE_COLORS.length];
+      return `background:${color};`;
+    }
+
+    function numberToDigits(num, digits) {
+      return String(num).padStart(digits, "0").split("").map(ch => Number(ch));
+    }
+
+    function alignedDigitRow(totalCols, number, digits, scaffoldOn) {
+      const row = new Array(totalCols).fill("");
+      if (!scaffoldOn) return row;
+      const vals = numberToDigits(number, digits);
+      const start = totalCols - digits;
+      for (let i = 0; i < vals.length; i += 1) row[start + i] = vals[i];
+      return row;
+    }
+
+    function rowCellsWithValues(totalCols, colorOn, values) {
+      const cells = [];
+      for (let i = 0; i < totalCols; i += 1) {
+        const value = values && values[i] !== "" && values[i] !== undefined ? values[i] : "&nbsp;";
+        cells.push(`<div class="digit-cell" style="${cellStyleByColumn(i, totalCols, colorOn)}">${value}</div>`);
+      }
+      return cells.join("");
+    }
+
+    function problemLetter(index) {
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      if (index < letters.length) return letters[index];
+      return `A${index - letters.length + 1}`;
+    }
+
+    function miniSetupLine(values, opSymbol = "&nbsp;") {
+      return `
+        <div class="mini-line">
+          <div class="mini-op">${opSymbol}</div>
+          ${values.map(v => `<div class="mini-cell">${v !== "" ? v : "&nbsp;"}</div>`).join("")}
+        </div>
+      `;
+    }
+
+    function stackedProblemHtml(problem, op, totalCols, showEq, aDigits, bDigits) {
+      const topVals = alignedDigitRow(totalCols, problem.a, aDigits, showEq);
+      const bottomVals = alignedDigitRow(totalCols, problem.b, bDigits, showEq);
+      const resultVals = new Array(totalCols).fill("");
+      const carryVals = new Array(totalCols).fill("");
+      const opSymbol = op === "add" ? "+" : "-";
+      return `
+        <div class="mini-setup" style="--mini-cols:${totalCols};">
+          <div class="mini-carry">${carryVals.map(() => '<div class="mini-carry-cell"></div>').join("")}</div>
+          ${miniSetupLine(topVals)}
+          ${miniSetupLine(bottomVals, opSymbol)}
+          <div class="mini-rule"></div>
+          ${miniSetupLine(resultVals)}
+        </div>
+      `;
+    }
+
+    function blockImage(type) {
+      return `<img class="block-img block-img-${type}" src="${MANIP_ASSETS[type]}" alt="" loading="lazy" decoding="async" />`;
+    }
+
+    function blocksMarkup(count, type) {
+      if (count <= 0) return "";
+      const maxRender = type === "ten" ? 16 : 20;
+      const display = Math.min(count, maxRender);
+      const blocks = [];
+      for (let i = 0; i < display; i += 1) blocks.push(blockImage(type));
+      if (count > maxRender) blocks.push(`<span class="count-note">x${count}</span>`);
+      return blocks.join("");
+    }
+
+    function onesMarkup(count, fillOnes = true) {
+      const cappedCount = Math.max(0, Math.min(10, count));
+      const cells = [];
+      for (let i = 0; i < 10; i += 1) {
+        const filled = fillOnes && i < cappedCount ? blockImage("one") : "";
+        cells.push(`<div class="tfcell">${filled}</div>`);
+      }
+      return `<div class="tenframe"><div class="tfgrid">${cells.join("")}</div></div>`;
+    }
+
+    function subOnesFrameMarkup(count, fillOnes = true, invisible = false) {
+      const cappedCount = Math.max(0, Math.min(10, count));
+      const cells = [];
+      for (let i = 0; i < 10; i += 1) {
+        const filled = fillOnes && i < cappedCount ? blockImage("one") : "";
+        cells.push(`<div class="sub-tfcell">${filled}</div>`);
+      }
+      const modeClass = invisible ? "invisible" : "";
+      return `<div class="sub-tenframe ${modeClass}"><div class="sub-tfgrid">${cells.join("")}</div></div>`;
+    }
+
+    function placeValueCounts(number) {
+      const n = Math.max(0, Number(number) || 0);
+      return {
+        hundreds: Math.floor(n / 100),
+        tens: Math.floor((n % 100) / 10),
+        ones: n % 10
+      };
+    }
+
+    function placeHeader(label) {
+      return `<div class="manip-col-head">${label}</div>`;
+    }
+
+    function manipAddRow(number, rowClass, includeHundreds) {
+      const { hundreds, tens, ones } = placeValueCounts(number);
+      const cells = [];
+      cells.push(`<div class="manip-num ${rowClass}"><span class="manip-num-chip">${number}</span></div>`);
+      if (includeHundreds) {
+        cells.push(`
+          <div class="tens-col ${rowClass}">
+            <div class="manip-bin">${blocksMarkup(hundreds, "hundred")}</div>
+          </div>
+        `);
+      }
+      cells.push(`
+        <div class="tens-col ${rowClass}">
+          <div class="manip-bin">${blocksMarkup(tens, "ten")}</div>
+        </div>
+      `);
+      cells.push(`<div class="ones-col ${rowClass}">${onesMarkup(ones, true)}</div>`);
+      return cells.join("");
+    }
+
+    function additionManipHtml(problem, includeHundreds) {
+      const headerCols = [placeHeader("Tens"), placeHeader("Ones")];
+      if (includeHundreds) headerCols.unshift(placeHeader("Hundreds"));
+      return `
+        <div class="manip-add-grid ${includeHundreds ? "has-hundreds" : ""}">
+          <div></div>
+          ${headerCols.join("")}
+          ${manipAddRow(problem.a, "row-top", includeHundreds)}
+          ${manipAddRow(problem.b, "row-bottom", includeHundreds)}
+        </div>
+      `;
+    }
+
+    function subtractionManipHtml(problem, includeHundreds, showBorrowSpot) {
+      const { hundreds: aH, tens: aT, ones: aO } = placeValueCounts(problem.a);
+      const { hundreds: bH } = placeValueCounts(problem.b);
+      const bT = Math.floor(problem.b / 10);
+      const bO = problem.b % 10;
+      const columns = [];
+
+      if (includeHundreds) {
+        columns.push(`
+          <div class="sub-manip-col">
+            <div class="sub-instruction">Subtract ${bH} hundreds.</div>
+            <div class="sub-col-title">Hundreds</div>
+            <div class="manip-bin">${blocksMarkup(aH, "hundred")}</div>
+          </div>
+        `);
+      }
+
+      columns.push(`
+        <div class="sub-manip-col">
+          <div class="sub-instruction">Subtract ${bT} tens.</div>
+          <div class="sub-col-title">Tens</div>
+          <div class="manip-bin">${blocksMarkup(aT, "ten")}</div>
+        </div>
+      `);
+
+      columns.push(`
+        <div class="sub-manip-col">
+          <div class="sub-instruction">Subtract ${bO} ones.</div>
+          <div class="sub-col-title">Ones</div>
+          <div class="sub-ones-current">${subOnesFrameMarkup(aO, true, true)}</div>
+          ${showBorrowSpot ? `<div class="borrow-label">Borrow 10 Ones</div>` : ""}
+          ${showBorrowSpot ? `<div class="borrow-tenframe">${subOnesFrameMarkup(0, false, false)}</div>` : ""}
+        </div>
+      `);
+
+      return `
+        <div class="sub-manip-cols ${includeHundreds ? "has-hundreds" : ""}">
+          ${columns.join("")}
+        </div>
+      `;
+    }
+
+    function hundredChartHtml(problem, op, scaffoldOn) {
+      const bT = Math.floor(problem.b / 10);
+      const bO = problem.b % 10;
+      const start = problem.a;
+      const tensStep = op === "add" ? (start + bT * 10) : (start - bT * 10);
+      const result = op === "add" ? (start + problem.b) : (start - problem.b);
+      const cells = [];
+      for (let n = 1; n <= 100; n += 1) {
+        const marks = [];
+        if (scaffoldOn && n === start) marks.push("start");
+        if (scaffoldOn && n === tensStep) marks.push("tens");
+        if (scaffoldOn && n === result) marks.push("result");
+        cells.push(`<div class="hc-cell ${marks.join(" ")}">${n}</div>`);
+      }
+      const tensMove = op === "add" ? "down" : "up";
+      const onesMove = op === "add" ? "right" : "left";
+      return `
+        <div class="hc-wrap">
+          <div class="hc-title">Hundreds Chart</div>
+          <div class="hc-instruction">Start at ${problem.a}. Move ${tensMove} ${bT} tens and ${onesMove} ${bO} ones.</div>
+          <div class="hc-grid">${cells.join("")}</div>
+          <div class="hc-equation">${problem.a} ${op === "add" ? "+" : "-"} ${problem.b} = <span class="blank-ink">_____</span></div>
+        </div>
+      `;
+    }
+
+    function problemHtml(problem, index, cfg) {
+      const { op, totalCols, showEq, colorOn, scaffoldOn, aDigits, bDigits, requireSpecial, visualMode, chartOrder, problemStyle } = cfg;
+      const opSymbol = op === "add" ? "+" : "-";
+
+      const letter = problemLetter(index);
+      const headHtml = problemStyle === "stacked"
+        ? `<div class="problem-head vertical"><span class="problem-badge">${letter}</span>${stackedProblemHtml(problem, op, totalCols, showEq, aDigits, bDigits)}</div>`
+        : (showEq
+            ? `<div class="problem-head"><span class="problem-badge">${letter}</span><span class="problem-text">${problem.a} ${opSymbol} ${problem.b}</span></div>`
+            : `<div class="problem-head blank"><span class="problem-badge">${letter}</span><span class="problem-text"><span class="blank-ink">_____</span> ${opSymbol} <span class="blank-ink">_____</span></span></div>`);
+
+      const rowTemplate = `grid-template-columns: var(--op-width) repeat(${totalCols}, var(--cell-size));`;
+      const lineTemplate = `grid-template-columns: var(--op-width) calc(${totalCols} * var(--cell-size) + ${(totalCols - 1)} * var(--cell-gap));`;
+
+      const carryRow = new Array(totalCols).fill("");
+      const aRow = alignedDigitRow(totalCols, problem.a, aDigits, scaffoldOn);
+      const bRow = alignedDigitRow(totalCols, problem.b, bDigits, scaffoldOn);
+      const sRow = new Array(totalCols).fill("");
+
+      const includeHundreds = Math.max(aDigits, bDigits) >= 3;
+      const manipHtml = visualMode === "chart"
+        ? hundredChartHtml(problem, op, scaffoldOn)
+        : (op === "sub"
+            ? subtractionManipHtml(problem, includeHundreds, requireSpecial)
+            : additionManipHtml(problem, includeHundreds));
+
+      if (visualMode === "chart") {
+        const chartFirst = chartOrder === "chartTop";
+        return `
+          <section class="problem-wrap">
+            <div class="chart-problem-body">
+              ${chartFirst ? manipHtml : headHtml}
+              ${chartFirst ? headHtml : manipHtml}
+            </div>
+          </section>
+        `;
+      }
+
+      return `
+        <section class="problem-wrap">
+          <div class="problem-top">
+            ${headHtml}
+          </div>
+
+          <div class="problem-body">
+            <div class="add-table">
+              <div class="table-row carry-row" style="${rowTemplate}">
+                <div class="op-cell">&nbsp;</div>
+                ${rowCellsWithValues(totalCols, false, carryRow)}
+              </div>
+
+              <div class="table-row" style="${rowTemplate}">
+                <div class="op-cell">&nbsp;</div>
+                ${rowCellsWithValues(totalCols, colorOn, aRow)}
+              </div>
+
+              <div class="table-row" style="${rowTemplate}">
+                <div class="op-cell">${opSymbol}</div>
+                ${rowCellsWithValues(totalCols, colorOn, bRow)}
+              </div>
+
+              <div class="line-row" style="${lineTemplate}">
+                <div class="line-spacer"></div>
+                <div class="sum-line"></div>
+              </div>
+
+              <div class="table-row" style="${rowTemplate}">
+                <div class="op-cell">&nbsp;</div>
+                ${rowCellsWithValues(totalCols, colorOn, sRow)}
+              </div>
+            </div>
+
+            <div class="manip-panel">
+              ${manipHtml}
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function updateRequirementText() {
+      const op = els.operation.value;
+      const isAdd = op === "add";
+      const aDigits = Number(els.digitsA.value);
+      const bDigits = Number(els.digitsB.value);
+      const visualMode = els.visualMode.value;
+      const hasHundredsVisual = visualMode === "blocks" && Math.max(aDigits, bDigits) >= 3;
+      const forceStack = hasHundredsVisual;
+      const grid4Opt = els.pageLayout.querySelector('option[value="grid4"]');
+      const stack3Opt = els.pageLayout.querySelector('option[value="stack3"]');
+      if (visualMode === "chart") {
+        if (grid4Opt) grid4Opt.disabled = false;
+        if (stack3Opt) stack3Opt.disabled = true;
+        if (els.pageLayout.value === "stack3") els.pageLayout.value = "grid4";
+      } else {
+        if (grid4Opt) grid4Opt.disabled = forceStack;
+        if (stack3Opt) stack3Opt.disabled = hasHundredsVisual;
+        if (hasHundredsVisual && els.pageLayout.value !== "stack2") els.pageLayout.value = "stack2";
+        if (!hasHundredsVisual && forceStack && els.pageLayout.value === "grid4") els.pageLayout.value = "stack3";
+      }
+      if (visualMode === "chart") {
+        const a3 = els.digitsA.querySelector('option[value="3"]');
+        const b3 = els.digitsB.querySelector('option[value="3"]');
+        if (a3) a3.disabled = true;
+        if (b3) b3.disabled = true;
+        if (aDigits > 2) els.digitsA.value = "2";
+        if (bDigits > 2) els.digitsB.value = "2";
+      } else {
+        const a3 = els.digitsA.querySelector('option[value="3"]');
+        const b3 = els.digitsB.querySelector('option[value="3"]');
+        if (a3) a3.disabled = false;
+        if (b3) b3.disabled = false;
+      }
+
+      els.requireLabel.textContent = isAdd ? "Regrouping" : "Borrowing";
+      const cbLabel = els.requireSpecial.closest("label.checkbox-wrap");
+      cbLabel.lastChild.textContent = isAdd ? "Use regrouping problems" : "Use borrowing problems";
+      const activeADigits = Number(els.digitsA.value);
+      const activeBDigits = Number(els.digitsB.value);
+      const opSymbol = isAdd ? "+" : "-";
+      const bSafe = isAdd ? activeBDigits : Math.min(activeADigits, activeBDigits);
+      const perPage = problemsPerPageFromLayout(els.pageLayout.value);
+      const examplePool = [
+        `${"8".repeat(activeADigits)}${opSymbol}${"7".repeat(bSafe)}`,
+        `${"6".repeat(activeADigits)}${opSymbol}${"5".repeat(bSafe)}`,
+        `${"4".repeat(activeADigits)}${opSymbol}${"3".repeat(bSafe)}`,
+        `${"9".repeat(activeADigits)}${opSymbol}${"2".repeat(bSafe)}`
+      ];
+      els.customProblem.placeholder = `Example: ${examplePool.slice(0, perPage).join(", ")}`;
+      els.addLargerTop.disabled = !isAdd;
+      els.chartOrder.disabled = visualMode !== "chart";
+      syncOperationButtons(op);
+    }
+
+    function renderWorksheet() {
+      const op = els.operation.value;
+      const visualMode = els.visualMode.value;
+      const aDigits = Number(els.digitsA.value);
+      const rawBDigits = Number(els.digitsB.value);
+      const bDigits = op === "sub" ? Math.min(rawBDigits, aDigits) : rawBDigits;
+      if (op === "sub" && rawBDigits !== bDigits) els.digitsB.value = String(bDigits);
+      const hasHundredsVisual = visualMode === "blocks" && Math.max(aDigits, bDigits) >= 3;
+      const forceStack = hasHundredsVisual;
+      let pageLayout = els.pageLayout.value;
+      if (visualMode === "chart") {
+        if (pageLayout === "stack3") pageLayout = "grid4";
+      } else if (hasHundredsVisual) {
+        pageLayout = "stack2";
+      } else if (forceStack && pageLayout === "grid4") {
+        pageLayout = "stack3";
+      }
+      if (els.pageLayout.value !== pageLayout) els.pageLayout.value = pageLayout;
+      const problemsPerPage = problemsPerPageFromLayout(pageLayout);
+
+      const mode = els.problemMode.value;
+      const colorOn = false;
+      const showEq = els.showProblemEq.checked;
+      const scaffoldOn = els.scaffoldToggle.checked;
+      const requireSpecial = els.requireSpecial.checked;
+      const largerTopForAdd = els.addLargerTop.checked;
+      const symbol = op === "add" ? "+" : "-";
+
+      const opName = op === "add" ? "Addition" : "Subtraction";
+      const visualName = visualMode === "chart" ? "Hundreds Chart" : "Base-10 Blocks";
+      const autoTitle = `${opName} ${aDigits}-digit ${symbol} ${bDigits}-digit ${visualName} Graphic Organizer`;
+      const rawTitle = (els.sheetTitle.value || "").trim();
+      const title = (!rawTitle || /^manipulatives worksheet$/i.test(rawTitle)) ? autoTitle : rawTitle;
+      const built = buildProblems(
+        aDigits,
+        bDigits,
+        op,
+        mode,
+        els.customProblem.value,
+        requireSpecial,
+        largerTopForAdd,
+        problemsPerPage,
+        visualMode
+      );
+      const totalCols = Math.max(aDigits, bDigits);
+      const label = `${aDigits}-digit ${symbol} ${bDigits}-digit`;
+      const layoutLabel = pageLayout === "grid4"
+        ? "4 problems (2x2 table)"
+        : (pageLayout === "stack2"
+            ? (visualMode === "chart" ? "2 problems (left/right split)" : "2 problems (stacked)")
+            : "3 problems (stacked)");
+      const addOrderLabel = (op === "add" && largerTopForAdd) ? " Larger number is on top." : "";
+      const forcedLayoutLabel = forceStack
+        ? (hasHundredsVisual
+            ? " 3-digit base-10 visual mode uses 2 stacked problems."
+            : (visualMode === "chart"
+                ? " Hundreds chart mode uses stacked layout only."
+                : " 3-digit mode uses stacked layout only."))
+        : "";
+      const chartLayoutHint = visualMode === "chart"
+        ? (pageLayout === "grid4" ? " Hundreds chart: 4 problems in 2x2." : " Hundreds chart: 2 problems split left/right.")
+        : "";
+
+      const specialText = op === "add"
+        ? (requireSpecial ? "Regrouping problems only." : "No regrouping problems.")
+        : (requireSpecial ? "Borrowing problems only." : "No borrowing problems.");
+      els.statusText.textContent = `${built.message} ${specialText} Layout: ${layoutLabel} (${label}).${addOrderLabel}${forcedLayoutLabel}${chartLayoutHint}`;
+      els.statusText.style.color = built.warning ? "#a33a3a" : "#5a677f";
+
+      const cfg = {
+        op,
+        totalCols,
+        showEq,
+        colorOn,
+        scaffoldOn,
+        aDigits,
+        bDigits,
+        requireSpecial,
+        visualMode,
+        chartOrder: els.chartOrder.value,
+        problemStyle: els.problemStyle.value
+      };
+
+      const problemsClass = visualMode === "chart"
+        ? (pageLayout === "grid4" ? "layout-quad" : "layout-chart2")
+        : (pageLayout === "grid4" ? "layout-quad" : "layout-stack");
+
+      els.host.innerHTML = `
+        <section class="sheet no-color">
+          <header class="sheet-header">
+            <h2 class="sheet-title">${title}</h2>
+            <div class="name-line">Name:<span class="line"></span></div>
+          </header>
+
+          <div class="problems ${problemsClass}">
+            ${built.problems.map((p, i) => problemHtml(p, i, cfg)).join("")}
+          </div>
+
+          <div class="footer-note">${visualMode === "chart"
+            ? "Hundreds chart strategy: tens move vertically by rows, ones move horizontally by columns."
+            : "Manipulatives are aligned by place value: number, tens, and ones ten-frame."}</div>
+        </section>
+      `;
+    }
+
+    els.generateBtn.addEventListener("click", renderWorksheet);
+    els.printBtn.addEventListener("click", () => window.print());
+    els.opAddBtn.addEventListener("click", () => {
+      els.operation.value = "add";
+      updateRequirementText();
+      renderWorksheet();
+    });
+    els.opSubBtn.addEventListener("click", () => {
+      els.operation.value = "sub";
+      updateRequirementText();
+      renderWorksheet();
+    });
+    els.digitsA.addEventListener("change", () => {
+      updateRequirementText();
+      renderWorksheet();
+    });
+    els.digitsB.addEventListener("change", () => {
+      updateRequirementText();
+      renderWorksheet();
+    });
+    els.pageLayout.addEventListener("change", () => {
+      updateRequirementText();
+      renderWorksheet();
+    });
+    els.visualMode.addEventListener("change", () => {
+      updateRequirementText();
+      renderWorksheet();
+    });
+    els.chartOrder.addEventListener("change", renderWorksheet);
+    els.problemStyle.addEventListener("change", renderWorksheet);
+    els.addLargerTop.addEventListener("change", renderWorksheet);
+    els.problemMode.addEventListener("change", renderWorksheet);
+    els.showProblemEq.addEventListener("change", renderWorksheet);
+    els.scaffoldToggle.addEventListener("change", renderWorksheet);
+    els.requireSpecial.addEventListener("change", renderWorksheet);
+
+    updateRequirementText();
+    renderWorksheet();
+  </script>
+</body>
+</html>

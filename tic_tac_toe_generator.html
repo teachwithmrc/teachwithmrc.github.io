@@ -2,193 +2,183 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tic Tac Toe Sentence Game</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <title>Tic Tac Toe Fluency Grid Generator</title>
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
-      margin: 20px;
-      padding: 0;
-      background: white;
+      font-family: Poppins, sans-serif;
+      margin: 40px;
     }
-    .controls {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    h1 {
+      text-align: center;
+    }
+    #setupSection {
       margin-bottom: 20px;
     }
     label {
-      font-weight: bold;
+      margin-right: 10px;
     }
-    .checkboxes label {
-      display: block;
-    }
-    #gamesContainer {
+    .grid-row {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
       page-break-inside: avoid;
     }
-    .game {
-      margin-bottom: 40px;
-      page-break-inside: avoid;
+    .grid-cell {
+      width: 45%;
+      margin-bottom: 20px;
     }
-    .game h2 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-    table.tic-tac-toe {
+    table {
       width: 100%;
-      table-layout: fixed;
       border-collapse: collapse;
-      margin: 0 auto;
+      margin-top: 5px;
     }
-    table.tic-tac-toe td {
+    td {
+      border: 1px solid #000;
+      padding: 12px;
       text-align: center;
       vertical-align: middle;
-      padding: 15px;
       font-size: 16px;
-      height: 80px;
-      border: none;
     }
-    /* Custom borders to resemble Tic Tac Toe */
-    table.tic-tac-toe tr:nth-child(1) td {
-      border-bottom: 4px solid black;
+    .small td {
+      font-size: 14px;
+      padding: 10px;
     }
-    table.tic-tac-toe tr:nth-child(2) td {
-      border-top: 4px solid black;
-      border-bottom: 4px solid black;
+    .xsmall td {
+      font-size: 12px;
+      padding: 8px;
     }
-    table.tic-tac-toe tr:nth-child(3) td {
-      border-top: 4px solid black;
-    }
-    table.tic-tac-toe td:nth-child(1) {
-      border-right: 4px solid black;
-    }
-    table.tic-tac-toe td:nth-child(2) {
-      border-left: 4px solid black;
-      border-right: 4px solid black;
-    }
-    table.tic-tac-toe td:nth-child(3) {
-      border-left: 4px solid black;
-    }
-    .print-button {
-      margin-top: 20px;
+    .copyright {
+      font-size: 10px;
+      text-align: center;
+      margin-top: 50px;
     }
     @media print {
-      .controls, .print-button {
+      #setupSection, #printButton {
         display: none;
+      }
+      .copyright {
+        position: fixed;
+        bottom: 20px;
+        width: 100%;
       }
     }
   </style>
 </head>
 <body>
-  <div class="controls">
-    <div>
-      <label for="skillSelect">Select Skill(s):</label>
-      <div class="checkboxes" id="skillSelect"></div>
-    </div>
-    <div>
-      <label for="numGames">Number of Games:</label>
-      <select id="numGames">
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-      </select>
-    </div>
-    <button onclick="generateGames()">Generate Games</button>
-    <button class="print-button" onclick="window.print()">Print</button>
+  <h1>Tic Tac Toe Fluency Grid Generator</h1>
+  <div id="setupSection">
+    <p><strong>Select Sentence Sets:</strong></p>
+    <label><input type="checkbox" value="0.1"> 0.1 - Short A</label>
+    <label><input type="checkbox" value="0.2"> 0.2 - Short O</label>
+    <label><input type="checkbox" value="0.3"> 0.3 - Short I</label>
+    <label><input type="checkbox" value="0.4"> 0.4 - Short U</label>
+    <label><input type="checkbox" value="0.5"> 0.5 - Short E</label>
+    <label><input type="checkbox" value="0.6"> 0.6 - FSZ</label>
+    <label><input type="checkbox" value="mixed"> Mixed CVC</label>
+    <br /><br />
+    <label for="gridCount">Number of Games Per Page:</label>
+    <select id="gridCount">
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+    <br /><br />
+    <button onclick="generateTicTacToeGrids()">Generate Grids</button>
+    <button id="printButton" onclick="window.print()">Print</button>
   </div>
-
-  <div id="gamesContainer"></div>
+  <div id="gridContainer"></div>
+  <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
 
   <script>
     const sentenceData = {
-      "0.1 - Short A": [
-        "A ham sat at a mat.", "I had a jam at the pan.", "Pam sat at a mat.",
-        "The bat and the cat ran.", "Sam had a tan cap.", "A bag had a tag.",
-        "I am at the van.", "The can had a jam.", "A man sat at a cab.",
-        "Pat the Cat had a nap."
+      "0.1": [
+        "A ham sat at a mat.", "I had a jam at the pan.", "Pam sat at a mat.", "The bat and the cat ran.",
+        "Sam had a tan cap.", "A bag had a tag.", "I am at the van.", "The can had a jam.",
+        "A man sat at a cab.", "Pat the Cat had a nap.", "I had a bag.", "A cat sat at the mat.",
+        "Sam the Ram sat at the mat.", "Pam and Pat had a map.", "The bat and the cap sat.",
+        "A man had a cap.", "I sat at the van.", "Dan and Sam sat.", "A rat ran at the bag.",
+        "The cat ran at a cab."
       ],
-      "0.2 - Short O": [
-        "Bob got a hot dog.", "Tom ran to the box.", "A fox sat on a log.",
-        "Ron had a mop.", "The pot is on top.", "The dog is not sad.",
-        "A cob is on the pod.", "Dot had a big top.", "Pop is in the van.",
-        "A lot of fog hid the van."
+      "0.2": [
+        "Tom the dog got the box.", "Dot had a pot of jam.", "Pam had a hot dog.", "The top of the box is hot.",
+        "Mom had a big pot.", "The fox is not in the box.", "Hop on top of the box.", "Jan and the dog had a log.",
+        "The dog is on the box.", "Dot had a job."
       ],
-      "0.3 - Short I": [
-        "Tim the Pig did a big jig.", "Sid the Kid hid in a bin.",
-        "Kim the Cat can zip it.", "Dan the Man had a kit.",
-        "Pam the Ham did a dip.", "Kit the Kid hit the rim.",
-        "Jim had a wig.", "The kid hid in the bin.",
-        "I did a big jig.", "The pig had a big fig."
+      "0.3": [
+        "Tim the pig did a big jig.", "Sid the kid hid in a bin.", "Kim the cat can zip it.",
+        "Dan the man had a kit.", "Pam the ham did a dip.", "Kit the kid hit the rim.",
+        "Jim hid the fig.", "The kid had a wig.", "I sit in a big bin.", "The lid is on the kit."
       ],
-      "0.4 - Short U": [
-        "Bud had a cup.", "The pup is in the tub.", "Tug cut the bun.",
-        "Gus got a hug.", "Cub sat in the sun.", "Pam had a big sub.",
-        "Dan dug in the mud.", "The rug is red.", "The bug is on the cup.",
-        "Pug had fun in the tub."
+      "0.4": [
+        "Bud had a cup.", "The pup is in the tub.", "Tug cut the bun.", "Gus got a hug.",
+        "Cub sat in the sun.", "Pam had a big sub.", "Dan dug in the mud.", "The rug is red.",
+        "The bug is on the cup.", "Pug had fun in the tub."
       ],
-      "0.5 - Short E": [
-        "Ken the Hen sat in the red pen.", "Bev the Vet had to fix the sad pet.",
-        "Jed the Pet got wet in the tub.", "Jen the Web hid in the den.",
-        "Ted the Rex met a big vet.", "Mel the Cub fell off the bed.",
-        "Ned the Leg ran to the van.", "Deb the Jet sat on the log.",
-        "Ben the Ten had a red pen.", "Ken met Bev at the vet."
+      "0.5": [
+        "Ken the hen sat on a bed.", "Bev the vet had to fix the red leg.", "Ben the ten had a red pen.",
+        "Deb the jet sat on the log.", "Ted the rex met a big vet.", "Mel the peg fell off the bed.",
+        "Jen the web hid in the den.", "Jed the pet got wet in the tub.", "Ned the leg ran to the van.",
+        "Ken met Bev at the vet."
       ],
-      "0.6 - FLSZ": [
-        "I will buzz the bell.", "The cat will hiss at the dog.",
-        "Jill had a puff.", "The glass will miss the ledge.",
-        "Tess fell off the bed.", "I will quill a pass.",
-        "The doll had a loss.", "I will yell at the mass.",
-        "Will had a jazz gig.", "Jess will toss the pill."
-      ]
+      "0.6": [
+        "Will had a bell.", "Gus will tell Bev.", "The fuzz is in the box.", "I had a muff on the bed.",
+        "The dog has a puff.", "Mom will sell the sub.", "The huff is not fun.", "Buzz sat in the sun.",
+        "I fell off the log.", "Jan has a doll."
+      ],
+      "mixed": [] // filled below
     };
 
-    const skillSelect = document.getElementById("skillSelect");
-    Object.keys(sentenceData).forEach(skill => {
-      const label = document.createElement("label");
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.value = skill;
-      checkbox.checked = true;
-      label.appendChild(checkbox);
-      label.appendChild(document.createTextNode(" " + skill));
-      skillSelect.appendChild(label);
-    });
+    // Create the mixed list
+    sentenceData["mixed"] = [
+      ...sentenceData["0.1"],
+      ...sentenceData["0.2"],
+      ...sentenceData["0.3"],
+      ...sentenceData["0.4"],
+      ...sentenceData["0.5"]
+    ];
 
-    function getRandomSentences(skills, count) {
-      let all = skills.flatMap(skill => sentenceData[skill] || []);
-      const shuffled = all.sort(() => 0.5 - Math.random());
-      return shuffled.slice(0, count);
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
     }
 
-    function generateGames() {
-      const selectedSkills = Array.from(skillSelect.querySelectorAll("input:checked")).map(cb => cb.value);
-      const numGames = parseInt(document.getElementById("numGames").value);
-      const container = document.getElementById("gamesContainer");
+    function generateTicTacToeGrids() {
+      const selectedKeys = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+      const gridCount = parseInt(document.getElementById("gridCount").value, 10);
+
+      let sentences = [];
+      selectedKeys.forEach(key => {
+        if (sentenceData[key]) {
+          sentences = sentences.concat(sentenceData[key]);
+        }
+      });
+
+      const container = document.getElementById("gridContainer");
       container.innerHTML = "";
 
-      for (let g = 1; g <= numGames; g++) {
-        const game = document.createElement("div");
-        game.className = "game";
-        const title = document.createElement("h2");
-        title.textContent = `Game ${g}`;
-        game.appendChild(title);
+      let layout = "";
+      for (let g = 0; g < gridCount; g++) {
+        const shuffled = shuffle([...sentences]).slice(0, 9);
+        const sizeClass = gridCount === 2 ? "" : (gridCount === 3 ? "small" : "xsmall");
 
-        const table = document.createElement("table");
-        table.className = "tic-tac-toe";
-        const sentences = getRandomSentences(selectedSkills, 9);
-        for (let i = 0; i < 3; i++) {
-          const row = document.createElement("tr");
-          for (let j = 0; j < 3; j++) {
-            const cell = document.createElement("td");
-            cell.textContent = sentences[i * 3 + j] || "";
-            row.appendChild(cell);
-          }
-          table.appendChild(row);
-        }
-        game.appendChild(table);
-        container.appendChild(game);
+        const gameHTML = `
+          <div class="grid-cell">
+            <h3>Game ${g + 1}:</h3>
+            <table class="${sizeClass}">
+              <tr><td>${shuffled[0]}</td><td>${shuffled[1]}</td><td>${shuffled[2]}</td></tr>
+              <tr><td>${shuffled[3]}</td><td>${shuffled[4]}</td><td>${shuffled[5]}</td></tr>
+              <tr><td>${shuffled[6]}</td><td>${shuffled[7]}</td><td>${shuffled[8]}</td></tr>
+            </table>
+          </div>
+        `;
+
+        layout += gameHTML;
       }
+
+      container.innerHTML = `<div class="grid-row">${layout}</div>`;
     }
   </script>
 </body>

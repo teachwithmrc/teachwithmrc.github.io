@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2-Digit by 1-Digit Partial Products Organizer Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1d2430;
+      --panel: #ffffff;
+      --surface: #f4f6fa;
+      --line: #171717;
+      --soft-line: #8e98aa;
+      --teal: #a9ddd3;
+      --cream: #e9dfb8;
+      --green: #9ae3a6;
+      --orange: #ffb703;
+      --purple: #d798df;
+      --pp-tens-fill: rgba(190, 142, 220, 0.16);
+      --pp-ones-fill: rgba(255, 196, 102, 0.16);
+      --pp-tens-line: #c9a8df;
+      --pp-ones-line: #f3c883;
+      --tone0-fill: rgba(190, 142, 220, 0.15);
+      --tone1-fill: rgba(255, 200, 110, 0.15);
+      --tone2-fill: rgba(145, 205, 230, 0.15);
+      --tone3-fill: rgba(178, 220, 170, 0.15);
+      --tone0-line: #c9a8df;
+      --tone1-line: #f3c883;
+      --tone2-line: #9ecbe2;
+      --tone3-line: #b3d5a8;
+      --paper: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #f8f9fc 0%, #f1f3f7 55%, #edf0f5 100%);
+      color: var(--ink);
+      font-family: "Poppins", sans-serif;
+    }
+
+    .app {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 14px 14px 36px;
+    }
+
+    .screen-only h1 {
+      margin: 2px 0 2px;
+      font-size: clamp(1.3rem, 2.8vw, 2rem);
+      line-height: 1.2;
+      text-align: center;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+
+    .screen-only .subtitle {
+      margin: 0 0 12px;
+      text-align: center;
+      font-size: 0.95rem;
+      color: #425066;
+    }
+
+    .controls-card {
+      background: var(--panel);
+      border: 2px solid #d9dfeb;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(33, 43, 63, 0.06);
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      align-items: end;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .field label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      color: #43516a;
+      text-transform: uppercase;
+    }
+
+    .field-hint {
+      font-size: 0.78rem;
+      color: #5a677f;
+      line-height: 1.25;
+    }
+
+    .field select,
+    .field input,
+    .field textarea {
+      font-family: inherit;
+      border: 2px solid #cfd7e5;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      font-size: 0.95rem;
+      padding: 8px 10px;
+      outline: none;
+      width: 100%;
+    }
+
+    .field textarea {
+      min-height: 66px;
+      resize: vertical;
+    }
+
+    .field input:disabled,
+    .field select:disabled,
+    .field textarea:disabled {
+      background: #eef2f7;
+      color: #4d5a73;
+      cursor: not-allowed;
+      font-weight: 600;
+    }
+
+    .checkbox-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      border: 2px solid #cfd7e5;
+      border-radius: 10px;
+      padding: 7px 10px;
+      background: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #32415a;
+    }
+
+    .checkbox-wrap input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .button-row button {
+      border: 2px solid #1f2b3e;
+      border-radius: 10px;
+      background: #fff;
+      color: #1f2b3e;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+
+    .button-row button.primary {
+      background: #1f2b3e;
+      color: #fff;
+    }
+
+    .note {
+      margin-top: 8px;
+      font-size: 0.84rem;
+      color: #5a677f;
+    }
+
+    #worksheetHost {
+      margin-top: 12px;
+    }
+
+    .sheet {
+      width: 8.5in;
+      min-height: 11in;
+      margin: 0 auto;
+      background: var(--paper);
+      border: 1px solid #d6dbe7;
+      box-shadow: 0 12px 30px rgba(25, 35, 55, 0.1);
+      padding: 0.34in;
+      position: relative;
+    }
+
+    .sheet-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 2px solid #ced5e3;
+      padding-bottom: 7px;
+      margin-bottom: 10px;
+    }
+
+    .sheet-title {
+      margin: 0;
+      font-size: 1.08rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .name-line {
+      white-space: nowrap;
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    .name-line .line {
+      display: inline-block;
+      width: 140px;
+      border-bottom: 2px solid #111;
+      transform: translateY(-2px);
+      margin-left: 5px;
+    }
+
+    .problem-grid {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: 1fr;
+    }
+
+    .problem-card {
+      border: 2px solid #111;
+      border-radius: 4px;
+      padding: 6px 6px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 2.94in;
+    }
+
+    .problem-card + .problem-card {
+      border-top: 2px solid #7d889b;
+      margin-top: 4px;
+      padding-top: 12px;
+    }
+
+    .problem-top {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+    }
+
+    .problem-id {
+      font-size: 0.9rem;
+      font-weight: 800;
+      min-width: 0;
+      border: 2px solid #111;
+      border-radius: 3px;
+      padding: 3px 8px;
+      background: #fff;
+    }
+
+    .problem-eq {
+      font-size: 1.02rem;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      text-align: left;
+      flex: 0 0 auto;
+      border: 2px solid #111;
+      border-radius: 3px;
+      padding: 3px 10px;
+      background: #fff;
+    }
+
+    .problem-eq.blank-problem-eq {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 170px;
+      justify-content: center;
+    }
+
+    .decompose {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 0.92rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: #192235;
+      margin-top: -1px;
+    }
+
+    .arrow {
+      font-size: 1.2rem;
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .step-boxes {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .pv-box {
+      min-width: 42px;
+      min-height: 34px;
+      border: 2px solid #18212f;
+      border-radius: 2px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.04rem;
+      padding: 2px 8px;
+      line-height: 1;
+      color: #0f1621;
+    }
+
+    .pv-box.multiplier {
+      min-width: 44px;
+      background: #fff;
+    }
+
+    .pv-box.tens {
+      background: #fff;
+    }
+
+    .pv-box.ones {
+      background: #fff;
+    }
+
+    .pv-box.pp-ones {
+      background: var(--orange);
+    }
+
+    .pv-box.pp-tens {
+      background: var(--purple);
+    }
+
+    .no-color .pv-box {
+      background: #fff !important;
+    }
+
+    .workspace-row {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(220px, 1fr);
+      gap: 9px;
+      align-items: start;
+    }
+
+    .workspace-row.alg-under {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .workspace-row.alg-under .algorithm-panel {
+      margin: 0 auto;
+    }
+
+    .area-panel {
+      border: 0;
+      padding: 0;
+      display: grid;
+      grid-template-rows: auto auto auto;
+      gap: 7px;
+    }
+
+    .area-labels {
+      display: grid;
+      grid-template-columns: 62px 1fr 1fr;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .area-labels .spacer {
+      height: 1px;
+    }
+
+    .area-top-grid {
+      display: grid;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .area-body-grid {
+      display: grid;
+      grid-template-columns: 62px 1fr;
+      gap: 7px;
+      align-items: stretch;
+    }
+
+    .area-left-grid {
+      display: grid;
+      gap: 0;
+      align-items: stretch;
+    }
+
+    .area-grid {
+      display: grid;
+      border-top: 2px solid #111;
+      border-left: 2px solid #111;
+      background: #fff;
+      min-height: 78px;
+    }
+
+    .area-part {
+      min-height: 78px;
+      background: #fff;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 2px solid #111;
+      border-bottom: 2px solid #111;
+    }
+
+    .color-fill .area-part.tone-0 { background: var(--tone0-fill); }
+    .color-fill .area-part.tone-1 { background: var(--tone1-fill); }
+    .color-fill .area-part.tone-2 { background: var(--tone2-fill); }
+    .color-fill .area-part.tone-3 { background: var(--tone3-fill); }
+
+    .color-line .area-part.tone-0 { box-shadow: inset 0 0 0 3px var(--tone0-line); }
+    .color-line .area-part.tone-1 { box-shadow: inset 0 0 0 3px var(--tone1-line); }
+    .color-line .area-part.tone-2 { box-shadow: inset 0 0 0 3px var(--tone2-line); }
+    .color-line .area-part.tone-3 { box-shadow: inset 0 0 0 3px var(--tone3-line); }
+
+    .partial-box {
+      border: 2px solid #111;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+    }
+
+    .partial-box > div {
+      min-height: 56px;
+      border-right: 2px solid #111;
+    }
+
+    .partial-box > div:last-child {
+      border-right: 0;
+    }
+
+    .blank-slot {
+      display: inline-block;
+      border-bottom: 3px solid #111;
+      height: 1.1em;
+      min-width: 34px;
+    }
+
+    .blank-slot.long {
+      min-width: 46px;
+    }
+
+    .algorithm-panel {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .algorithm-table {
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .alg-sign {
+      width: 20px;
+      text-align: center;
+      font-size: 1.55rem;
+      font-weight: 700;
+      line-height: 1;
+      color: #111;
+      padding: 0 2px;
+    }
+
+    .alg-cell {
+      width: 32px;
+      height: 32px;
+      border: 2px solid #111;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 800;
+      line-height: 1;
+      background: #fff;
+      color: #111;
+    }
+
+    .alg-separator .alg-sign {
+      font-size: 0;
+      line-height: 0;
+      padding: 0;
+    }
+
+    .alg-line {
+      border-top: 6px solid #000;
+      height: 8px;
+      padding: 0;
+    }
+
+    .alg-cell.partial {
+      background: #fff;
+    }
+
+    .color-fill .alg-cell.partial.tone-0 { background: var(--tone0-fill); }
+    .color-fill .alg-cell.partial.tone-1 { background: var(--tone1-fill); }
+    .color-fill .alg-cell.partial.tone-2 { background: var(--tone2-fill); }
+    .color-fill .alg-cell.partial.tone-3 { background: var(--tone3-fill); }
+
+    .color-line .alg-cell.partial.tone-0 { border-color: var(--tone0-line); }
+    .color-line .alg-cell.partial.tone-1 { border-color: var(--tone1-line); }
+    .color-line .alg-cell.partial.tone-2 { border-color: var(--tone2-line); }
+    .color-line .alg-cell.partial.tone-3 { border-color: var(--tone3-line); }
+
+    .no-color .alg-cell {
+      background: #fff !important;
+    }
+
+    .eq-prompt {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      gap: 4px;
+      font-size: 0.98rem;
+      font-weight: 700;
+      white-space: normal;
+      max-width: 100%;
+      width: 100%;
+      height: 100%;
+      line-height: 1.05;
+      padding: 4px 4px 2px;
+    }
+
+    .eq-top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      width: 100%;
+      white-space: nowrap;
+    }
+
+    .eq-spacer {
+      flex: 1 1 auto;
+      min-height: 24px;
+    }
+
+    .eq-tight-spacer {
+      flex: 1 1 auto;
+      min-height: 8px;
+    }
+
+    .eq-answer-line {
+      width: 100%;
+      min-width: 86px;
+      border-bottom: 3px solid #111;
+      height: 1.05em;
+      display: inline-block;
+    }
+
+    .eq-answer-table {
+      border-collapse: collapse;
+      margin: 0 auto;
+    }
+
+    .eq-answer-table .alg-cell {
+      background: #fff;
+    }
+
+    .color-fill .eq-prompt.tone-0 .eq-answer-line { background: linear-gradient(to top, var(--tone0-fill) 0 60%, transparent 60% 100%); }
+    .color-fill .eq-prompt.tone-1 .eq-answer-line { background: linear-gradient(to top, var(--tone1-fill) 0 60%, transparent 60% 100%); }
+    .color-fill .eq-prompt.tone-2 .eq-answer-line { background: linear-gradient(to top, var(--tone2-fill) 0 60%, transparent 60% 100%); }
+    .color-fill .eq-prompt.tone-3 .eq-answer-line { background: linear-gradient(to top, var(--tone3-fill) 0 60%, transparent 60% 100%); }
+
+    .color-line .eq-prompt.tone-0 .eq-answer-line { border-bottom-color: var(--tone0-line); }
+    .color-line .eq-prompt.tone-1 .eq-answer-line { border-bottom-color: var(--tone1-line); }
+    .color-line .eq-prompt.tone-2 .eq-answer-line { border-bottom-color: var(--tone2-line); }
+    .color-line .eq-prompt.tone-3 .eq-answer-line { border-bottom-color: var(--tone3-line); }
+
+    .directions {
+      border: 2px solid #bfc9db;
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: #f9fbff;
+    }
+
+    .directions .label {
+      margin: 0 0 4px;
+      font-weight: 800;
+      font-size: 0.88rem;
+    }
+
+    .directions ol {
+      margin: 0;
+      padding-left: 19px;
+      font-size: 0.86rem;
+      line-height: 1.25;
+      font-weight: 600;
+    }
+
+    .multiples-block {
+      margin-top: 6px;
+      border: 2px solid #111;
+      border-radius: 4px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .multiples-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      padding: 3px 6px;
+      border-bottom: 2px solid #111;
+      background: #f7f9fd;
+    }
+
+    .multiples-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .multiples-table td {
+      border-right: 2px solid #111;
+      border-bottom: 2px solid #111;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      height: 28px;
+      padding: 2px;
+    }
+
+    .multiples-head-row td {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .multiples-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .multiples-table td:last-child {
+      border-right: 0;
+    }
+
+    .footer-note {
+      position: absolute;
+      left: 0.34in;
+      right: 0.34in;
+      bottom: 0.2in;
+      text-align: left;
+      font-size: 0.66rem;
+      color: #6a7485;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
+      .sheet {
+        width: 100%;
+        min-height: 0;
+        padding: 12px;
+      }
+
+      .workspace-row {
+        grid-template-columns: 1fr;
+      }
+
+      .problem-card {
+        min-height: 0;
+      }
+
+      .footer-note {
+        position: static;
+        margin-top: 8px;
+      }
+    }
+
+    @media print {
+      @page {
+        size: Letter;
+        margin: 0.28in;
+      }
+
+      body {
+        background: #fff;
+      }
+
+      .screen-only {
+        display: none !important;
+      }
+
+      .app {
+        margin: 0;
+        max-width: none;
+        padding: 0;
+      }
+
+      #worksheetHost {
+        margin: 0;
+      }
+
+      .sheet {
+        width: auto;
+        min-height: 0;
+        margin: 0;
+        border: 0;
+        box-shadow: none;
+        padding: 0;
+      }
+
+      .problem-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        min-height: 2.72in;
+        padding: 5px 5px;
+        gap: 6px;
+      }
+
+      .problem-card + .problem-card {
+        padding-top: 10px;
+      }
+
+      .problem-eq {
+        font-size: 1.05rem;
+      }
+
+      .pv-box {
+        min-width: 37px;
+        min-height: 31px;
+      }
+
+      .alg-cell {
+        width: 29px;
+        height: 29px;
+      }
+
+      .area-part {
+        min-height: 64px;
+      }
+
+      .footer-note {
+        position: fixed;
+        left: 0.28in;
+        right: 0.28in;
+        bottom: 0.1in;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="screen-only">
+      <h1>Partial Products Organizer Generator</h1>
+      <p class="subtitle">2-digit by 1-digit multiplication with area model + lined-up addition table</p>
+
+      <section class="controls-card">
+        <div class="controls-grid">
+          <div class="field">
+            <label for="problemType">Problem Type</label>
+            <select id="problemType">
+              <option value="2x1" selected>2 x 1</option>
+              <option value="3x1">3 x 1</option>
+              <option value="4x1">4 x 1</option>
+              <option value="2x2">2 x 2</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="stackInfo">Page Layout</label>
+            <input id="stackInfo" type="text" value="3 Problems (stacked vertically)" disabled />
+          </div>
+
+          <div class="field">
+            <label for="scaffoldLevel">Scaffold Level</label>
+            <select id="scaffoldLevel">
+              <option value="full" selected>Full Scaffold</option>
+              <option value="guided">Guided</option>
+              <option value="basic">Basic</option>
+              <option value="blank">Blank Template</option>
+            </select>
+            <div class="field-hint" id="scaffoldHelp"></div>
+          </div>
+
+          <div class="field">
+            <label for="problemMode">Problem Source</label>
+            <select id="problemMode">
+              <option value="random" selected>Random problems</option>
+              <option value="custom">Custom list (use textbox)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="additionLayout">Addition Table Layout</label>
+            <select id="additionLayout">
+              <option value="right" selected>Right Side</option>
+              <option value="under">Under Area Model</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="customProblems">Custom Problems</label>
+            <textarea id="customProblems" placeholder="Example: 85x8, 47x6, 93x4"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="sheetTitle">Worksheet Title</label>
+            <input id="sheetTitle" type="text" value="Multiplying 2 Digit by 1 Digit Numbers - Partial Products - Area Model" />
+          </div>
+
+          <div class="field">
+            <label>Color Coding</label>
+            <label class="checkbox-wrap"><input id="colorToggle" type="checkbox" checked />Use matching colors</label>
+          </div>
+
+          <div class="field">
+            <label for="colorStyle">Color Style</label>
+            <select id="colorStyle">
+              <option value="fill" selected>Inside Fill (light)</option>
+              <option value="line">Line/Outline Only</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="boxPromptStyle">Box Prompts</label>
+            <select id="boxPromptStyle">
+              <option value="facts" selected>Show factors (80 x 8 =)</option>
+              <option value="blank">Show blanks (____ x ____ = ____)</option>
+              <option value="off">No prompt in boxes</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Multiples Table</label>
+            <label class="checkbox-wrap"><input id="showMultiplesBox" type="checkbox" checked />Show table (Guided/Basic)</label>
+          </div>
+
+          <div class="field">
+            <label>Multiples Values</label>
+            <label class="checkbox-wrap"><input id="fillMultiplesValues" type="checkbox" checked />Fill values (Guided/Basic)</label>
+          </div>
+
+          <div class="field">
+            <label>Zero Hints</label>
+            <label class="checkbox-wrap"><input id="zeroHints" type="checkbox" checked />Prefill place-value zeros</label>
+          </div>
+
+          <div class="field">
+            <label>Number Types</label>
+            <label class="checkbox-wrap"><input id="allowZeroOnes" type="checkbox" checked />Allow ones digit = 0</label>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button id="generateBtn" class="primary" type="button">Generate</button>
+          <button id="printBtn" type="button">Print</button>
+        </div>
+
+        <div class="note" id="statusText">Tip: Use custom mode for exact problems. Format each as <strong>85x8</strong>.</div>
+      </section>
+    </div>
+
+    <div id="worksheetHost"></div>
+  </div>
+
+  <script>
+    const els = {
+      host: document.getElementById("worksheetHost"),
+      problemType: document.getElementById("problemType"),
+      stackInfo: document.getElementById("stackInfo"),
+      scaffoldLevel: document.getElementById("scaffoldLevel"),
+      problemMode: document.getElementById("problemMode"),
+      additionLayout: document.getElementById("additionLayout"),
+      colorStyle: document.getElementById("colorStyle"),
+      boxPromptStyle: document.getElementById("boxPromptStyle"),
+      customProblems: document.getElementById("customProblems"),
+      sheetTitle: document.getElementById("sheetTitle"),
+      colorToggle: document.getElementById("colorToggle"),
+      zeroHints: document.getElementById("zeroHints"),
+      allowZeroOnes: document.getElementById("allowZeroOnes"),
+      showMultiplesBox: document.getElementById("showMultiplesBox"),
+      fillMultiplesValues: document.getElementById("fillMultiplesValues"),
+      scaffoldHelp: document.getElementById("scaffoldHelp"),
+      statusText: document.getElementById("statusText"),
+      generateBtn: document.getElementById("generateBtn"),
+      printBtn: document.getElementById("printBtn")
+    };
+
+    const TYPE_CONFIG = {
+      "2x1": { aDigits: 2, bDigits: 1, label: "2 x 1", pageCount: 3, example: "85x8" },
+      "3x1": { aDigits: 3, bDigits: 1, label: "3 x 1", pageCount: 2, example: "487x6" },
+      "4x1": { aDigits: 4, bDigits: 1, label: "4 x 1", pageCount: 2, example: "3264x7" },
+      "2x2": { aDigits: 2, bDigits: 2, label: "2 x 2", pageCount: 2, example: "76x24" }
+    };
+
+    const SCAFFOLD = {
+      full: { showAreaFactors: true, showSetupDigits: true, showProblemEquation: true },
+      guided: { showAreaFactors: true, showSetupDigits: false, showProblemEquation: true },
+      basic: { showAreaFactors: false, showSetupDigits: false, showProblemEquation: true },
+      blank: { showAreaFactors: false, showSetupDigits: false, showProblemEquation: false }
+    };
+
+    const SCAFFOLD_HELP = {
+      full: "Full: place-value headers and setup digits are shown.",
+      guided: "Guided: headers stay visible, but setup digits are blank.",
+      basic: "Basic: headers and setup digits are both blank.",
+      blank: "Blank Template: everything is left open so the sheet is reusable."
+    };
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function getTypeConfig() {
+      return TYPE_CONFIG[els.problemType.value] || TYPE_CONFIG["2x1"];
+    }
+
+    function splitPlaceParts(value, digits) {
+      const txt = String(Math.max(0, value)).padStart(digits, "0");
+      return txt.split("").map((ch, idx) => Number(ch) * Math.pow(10, digits - idx - 1));
+    }
+
+    function toneClass(index) {
+      return `tone-${index % 4}`;
+    }
+
+    function parseProblemToken(token, cfg) {
+      const clean = token.trim().replace(/\s+/g, "");
+      if (!clean) return null;
+
+      const match = clean.match(/^(\d+)[x×](\d+)$/i);
+      if (!match) return null;
+
+      const left = match[1];
+      const right = match[2];
+      if (left.length !== cfg.aDigits || right.length !== cfg.bDigits) return null;
+
+      const a = Number(left);
+      const b = Number(right);
+      if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
+
+      const aMin = Math.pow(10, cfg.aDigits - 1);
+      const aMax = Math.pow(10, cfg.aDigits) - 1;
+      const bMin = cfg.bDigits === 1 ? 2 : Math.pow(10, cfg.bDigits - 1);
+      const bMax = cfg.bDigits === 1 ? 9 : Math.pow(10, cfg.bDigits) - 1;
+      if (a < aMin || a > aMax || b < bMin || b > bMax) return null;
+
+      return { a, b };
+    }
+
+    function parseCustomProblems(raw, cfg) {
+      const chunks = raw.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean);
+      const valid = [];
+      const invalid = [];
+
+      for (const chunk of chunks) {
+        const parsed = parseProblemToken(chunk, cfg);
+        if (parsed) valid.push(parsed);
+        else invalid.push(chunk);
+      }
+      return { valid, invalid };
+    }
+
+    function randomWithDigits(digits, allowZeroOnes) {
+      if (digits === 1) return randInt(2, 9);
+      const highMin = Math.pow(10, digits - 1);
+      const highMax = Math.pow(10, digits) - 1;
+      if (allowZeroOnes) return randInt(highMin, highMax);
+
+      const prefixMin = Math.pow(10, digits - 2);
+      const prefixMax = Math.pow(10, digits - 1) - 1;
+      return (randInt(prefixMin, prefixMax) * 10) + randInt(1, 9);
+    }
+
+    function makeRandomProblem(cfg, allowZeroOnes) {
+      const a = randomWithDigits(cfg.aDigits, allowZeroOnes);
+      const b = cfg.bDigits === 1 ? randInt(2, 9) : randomWithDigits(cfg.bDigits, true);
+      return { a, b };
+    }
+
+    function buildProblemList(count, problemMode, customRaw, allowZeroOnes, cfg) {
+      if (problemMode === "custom") {
+        const parsed = parseCustomProblems(customRaw, cfg);
+        if (!parsed.valid.length) {
+          return {
+            problems: [],
+            message: `No valid custom problems found. Use format like ${cfg.example}.`,
+            warning: true
+          };
+        }
+
+        const picked = [];
+        for (let i = 0; i < count; i += 1) picked.push(parsed.valid[i % parsed.valid.length]);
+        const invalidNote = parsed.invalid.length ? ` Ignored: ${parsed.invalid.join(", ")}.` : "";
+
+        return {
+          problems: picked,
+          message: `Generated ${count} custom problem${count === 1 ? "" : "s"}.${invalidNote}`,
+          warning: parsed.invalid.length > 0
+        };
+      }
+
+      const generated = [];
+      const seen = new Set();
+      while (generated.length < count) {
+        const p = makeRandomProblem(cfg, allowZeroOnes);
+        const key = `${p.a}x${p.b}`;
+        if (seen.has(key)) continue;
+        generated.push(p);
+        seen.add(key);
+      }
+      return { problems: generated, message: `Generated ${count} random problem${count === 1 ? "" : "s"}.`, warning: false };
+    }
+
+    function rightAlignDigits(value, cols, enabled) {
+      const arr = new Array(cols).fill("&nbsp;");
+      if (!enabled) return arr;
+      const txt = String(value);
+      let idx = cols - txt.length;
+      for (const ch of txt) {
+        if (idx >= 0 && idx < cols) arr[idx] = ch;
+        idx += 1;
+      }
+      return arr;
+    }
+
+    function answerBoxesHtml(digits) {
+      const count = Math.max(1, digits || 1);
+      const cells = new Array(count).fill('<td class="alg-cell">&nbsp;</td>').join("");
+      return `<table class="eq-answer-table" aria-hidden="true"><tr>${cells}</tr></table>`;
+    }
+
+    function equationPromptHtml(tone, text, promptStyle, answerMode, answerDigits) {
+      if (promptStyle === "off") return "";
+
+      const answerHtml = answerMode === "digitBoxes"
+        ? answerBoxesHtml(answerDigits)
+        : '<span class="eq-answer-line"></span>';
+      const spacerHtml = answerMode === "digitBoxes"
+        ? '<div class="eq-tight-spacer"></div>'
+        : '<div class="eq-spacer"></div>';
+
+      if (promptStyle === "answerOnly") {
+        return `
+          <div class="eq-prompt ${tone}">
+            ${spacerHtml}
+            ${answerHtml}
+          </div>
+        `;
+      }
+
+      if (promptStyle === "blank") {
+        return `
+          <div class="eq-prompt ${tone}">
+            <div class="eq-top">
+              <span class="blank-slot"></span>
+              <span>&times;</span>
+              <span class="blank-slot long"></span>
+              <span>=</span>
+            </div>
+            ${spacerHtml}
+            ${answerHtml}
+          </div>
+        `;
+      }
+
+      return `
+        <div class="eq-prompt ${tone}">
+          <div class="eq-top">
+            <span>${text}</span>
+            <span>=</span>
+          </div>
+          ${spacerHtml}
+          ${answerHtml}
+        </div>
+      `;
+    }
+
+    function buildAlgorithmTable(problem, cfg, opts, scaffold, partials) {
+      const isBasic = opts.scaffoldLevel === "basic" || opts.scaffoldLevel === "blank";
+      const productDigits = String(problem.a * problem.b).length;
+      const partialMax = partials.reduce((m, p) => {
+        const len = String(Math.abs(p.leftPart * p.topPart)).length;
+        return Math.max(m, len);
+      }, productDigits);
+      const cols = Math.max(3, partialMax);
+
+      const setupA = rightAlignDigits(problem.a, cols, scaffold.showSetupDigits);
+      const setupB = rightAlignDigits(problem.b, cols, scaffold.showSetupDigits);
+
+      const rowHtml = (sign, cells, className = "") => `
+        <tr>
+          <td class="alg-sign">${sign}</td>
+          ${cells.map(v => `<td class="alg-cell ${className}">${v}</td>`).join("")}
+        </tr>
+      `;
+
+      const partialRows = partials.map((p, idx) => {
+        const cells = new Array(cols).fill("&nbsp;");
+        if (opts.zeroHints && !isBasic) {
+          for (let i = 0; i < Math.min(p.shift, cols); i += 1) {
+            cells[cols - 1 - i] = "0";
+          }
+        }
+        const sign = idx === partials.length - 1 ? "+" : "&nbsp;";
+        return rowHtml(sign, cells, `partial ${p.tone}`);
+      }).join("");
+
+      const lineRow = `
+        <tr class="alg-separator">
+          <td class="alg-sign">&nbsp;</td>
+          <td class="alg-line" colspan="${cols}"></td>
+        </tr>
+      `;
+
+      return `
+        <table class="algorithm-table" aria-label="Aligned addition table">
+          ${rowHtml("&nbsp;", setupA)}
+          ${rowHtml("&times;", setupB)}
+          ${lineRow}
+          ${partialRows}
+          ${rowHtml("&nbsp;", new Array(cols).fill("&nbsp;"))}
+        </table>
+      `;
+    }
+
+    function buildMultiplesTable(problem, cfg, opts) {
+      const showForLevel = opts.scaffoldLevel === "guided" || opts.scaffoldLevel === "basic";
+      if (!showForLevel || !opts.showMultiplesBox || cfg.bDigits !== 1) return "";
+
+      const base = problem.b;
+      const headers = Array.from({ length: 9 }, (_, i) => `<td>x${i + 1}</td>`).join("");
+      const values = Array.from({ length: 9 }, (_, i) => {
+        if (opts.fillMultiplesValues) return `<td>${base * (i + 1)}</td>`;
+        return "<td>&nbsp;</td>";
+      }).join("");
+
+      return `
+        <div class="multiples-block">
+          <div class="multiples-title">Multiples</div>
+          <table class="multiples-table" aria-label="Multiples helper table">
+            <tr class="multiples-head-row">${headers}</tr>
+            <tr class="multiples-values-row">${values}</tr>
+          </table>
+        </div>
+      `;
+    }
+
+    function problemCardHtml(problem, index, opts, cfg) {
+      const scaffold = SCAFFOLD[opts.scaffoldLevel];
+      const showAreaFactors = scaffold.showAreaFactors;
+      const showProblemEquation = scaffold.showProblemEquation;
+
+      const aParts = splitPlaceParts(problem.a, cfg.aDigits);
+      const bParts = splitPlaceParts(problem.b, cfg.bDigits);
+
+      const partials = [];
+      for (let r = 0; r < bParts.length; r += 1) {
+        for (let c = 0; c < aParts.length; c += 1) {
+          partials.push({
+            row: r,
+            col: c,
+            leftPart: bParts[r],
+            topPart: aParts[c],
+            shift: (cfg.aDigits - c - 1) + (cfg.bDigits - r - 1),
+            tone: toneClass((r * aParts.length) + c)
+          });
+        }
+      }
+
+      const topCols = aParts.map(part => `
+        <div style="display:flex; justify-content:center;">
+          <span class="pv-box">${showAreaFactors ? part : "&nbsp;"}</span>
+        </div>
+      `).join("");
+
+      const leftRows = bParts.map(part => `
+        <div style="display:flex; align-items:center; justify-content:center;">
+          <span class="pv-box">${showAreaFactors ? part : "&nbsp;"}</span>
+        </div>
+      `).join("");
+
+      const areaCells = partials.map(p => `
+        <div class="area-part ${p.tone}">
+          ${(() => {
+            const partialProduct = p.leftPart * p.topPart;
+            const answerDigits = String(Math.abs(partialProduct)).length;
+
+            let promptStyle = opts.boxPromptStyle;
+            if (opts.scaffoldLevel === "full") promptStyle = "facts";
+            if (opts.scaffoldLevel === "basic") promptStyle = "answerOnly";
+
+            const answerMode = opts.scaffoldLevel === "full" ? "digitBoxes" : "line";
+            return equationPromptHtml(
+              p.tone,
+              `${p.leftPart} x ${p.topPart}`,
+              promptStyle,
+              answerMode,
+              answerDigits
+            );
+          })()}
+        </div>
+      `).join("");
+
+      const problemEqInner = showProblemEquation
+        ? `${problem.a} x ${problem.b}`
+        : `<span class="blank-slot"></span><span>&times;</span><span class="blank-slot"></span>`;
+
+      const workPanelHtml = `
+        <div class="area-panel">
+          <div class="area-top-grid" style="grid-template-columns: 62px repeat(${aParts.length}, 1fr);">
+            <div class="spacer"></div>
+            ${topCols}
+          </div>
+
+          <div class="area-body-grid">
+            <div class="area-left-grid" style="grid-template-rows: repeat(${bParts.length}, 1fr);">
+              ${leftRows}
+            </div>
+            <div class="area-grid"
+              style="grid-template-columns: repeat(${aParts.length}, 1fr); grid-template-rows: repeat(${bParts.length}, 1fr);">
+              ${areaCells}
+            </div>
+          </div>
+          ${buildMultiplesTable(problem, cfg, opts)}
+        </div>
+      `;
+
+      return `
+        <article class="problem-card">
+          <div class="problem-top">
+            <div class="problem-id">Problem ${index + 1}:</div>
+            <div class="problem-eq ${showProblemEquation ? "" : "blank-problem-eq"}">${problemEqInner}</div>
+          </div>
+
+          <div class="workspace-row ${opts.algPlacement === "under" ? "alg-under" : ""}">
+            ${workPanelHtml}
+
+            <div class="algorithm-panel">
+              ${buildAlgorithmTable(problem, cfg, opts, scaffold, partials)}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function pickAlgorithmPlacement(pref) {
+      return pref === "under" ? "under" : "right";
+    }
+
+    function updateScaffoldHelp() {
+      const level = els.scaffoldLevel.value;
+      els.scaffoldHelp.textContent = SCAFFOLD_HELP[level] || "";
+    }
+
+    function syncBlankTemplatePromptOptions() {
+      const isBlankTemplate = els.scaffoldLevel.value === "blank";
+      const factsOption = els.boxPromptStyle.querySelector('option[value="facts"]');
+      if (factsOption) factsOption.disabled = isBlankTemplate;
+
+      if (isBlankTemplate && els.boxPromptStyle.value === "facts") {
+        els.boxPromptStyle.value = "blank";
+      }
+    }
+
+    function syncMultiplesControls() {
+      const level = els.scaffoldLevel.value;
+      const allowed = level === "guided" || level === "basic";
+      els.showMultiplesBox.disabled = !allowed;
+      els.fillMultiplesValues.disabled = !allowed || !els.showMultiplesBox.checked;
+    }
+
+    function syncAdditionLayoutControl() {
+      const cfg = getTypeConfig();
+      const forceUnder = cfg.aDigits === 4 && cfg.bDigits === 1;
+      if (forceUnder) {
+        els.additionLayout.value = "under";
+      }
+      els.additionLayout.disabled = forceUnder;
+    }
+
+    function renderWorksheet() {
+      syncAdditionLayoutControl();
+      syncBlankTemplatePromptOptions();
+      syncMultiplesControls();
+      const cfg = getTypeConfig();
+      const scaffoldLevel = els.scaffoldLevel.value;
+      const problemMode = els.problemMode.value;
+      const additionLayout = els.additionLayout.value;
+      const colorStyle = els.colorStyle.value;
+      const boxPromptStyle = els.boxPromptStyle.value;
+      const showMultiplesBox = els.showMultiplesBox.checked;
+      const fillMultiplesValues = els.fillMultiplesValues.checked;
+      const sheetTitle = (els.sheetTitle.value || "").trim() || `Multiplying ${cfg.label} Numbers - Partial Products - Area Model`;
+      const colorOn = els.colorToggle.checked;
+      const zeroHints = els.zeroHints.checked;
+      const allowZeroOnes = els.allowZeroOnes.checked;
+      const forceUnder = cfg.aDigits === 4 && cfg.bDigits === 1;
+      const algPlacement = forceUnder ? "under" : pickAlgorithmPlacement(additionLayout);
+      const count = cfg.pageCount;
+
+      els.stackInfo.value = `${count} problem${count === 1 ? "" : "s"} on one page (${cfg.label})`;
+      els.customProblems.placeholder = `Example: ${cfg.example}`;
+
+      const source = buildProblemList(count, problemMode, els.customProblems.value, allowZeroOnes, cfg);
+      const layoutNote = forceUnder
+        ? "Addition table: underneath area model (4 x 1 spacing fix)."
+        : (algPlacement === "right" ? "Addition table: right side." : "Addition table: underneath area model.");
+      const promptNote = scaffoldLevel === "full"
+        ? "Box prompts: factors shown with digit-count answer boxes."
+        : (scaffoldLevel === "basic"
+          ? "Box prompts: answer lines only (basic)."
+          : (boxPromptStyle === "facts"
+            ? "Box prompts: factors shown."
+            : (boxPromptStyle === "blank" ? "Box prompts: blank equation lines." : "Box prompts: off.")));
+      const multiplesNote = (scaffoldLevel === "guided" || scaffoldLevel === "basic")
+        ? (showMultiplesBox
+          ? (fillMultiplesValues ? "Multiples table: on (filled)." : "Multiples table: on (blank).")
+          : "Multiples table: off.")
+        : "Multiples table: hidden for this scaffold level.";
+      els.statusText.textContent = `${source.message} ${layoutNote} ${promptNote} ${multiplesNote}`;
+      els.statusText.style.color = source.warning ? "#a33a3a" : "#5a677f";
+
+      if (!source.problems.length) {
+        els.host.innerHTML = "";
+        return;
+      }
+
+      const cards = source.problems
+        .map((p, i) => problemCardHtml(
+          p,
+          i,
+          { scaffoldLevel, zeroHints, algPlacement, boxPromptStyle, showMultiplesBox, fillMultiplesValues },
+          cfg
+        ))
+        .join("");
+
+      const colorClass = colorOn ? `color-${colorStyle}` : "no-color";
+
+      els.host.innerHTML = `
+        <section class="sheet ${colorClass}">
+          <header class="sheet-header">
+            <h2 class="sheet-title">${sheetTitle}</h2>
+            <div class="name-line">Name:<span class="line"></span></div>
+          </header>
+
+          <div class="problem-grid">
+            ${cards}
+          </div>
+
+          <div class="footer-note">Generated organizer: answers are intentionally blank so students complete each step.</div>
+        </section>
+      `;
+    }
+
+    els.generateBtn.addEventListener("click", renderWorksheet);
+    els.printBtn.addEventListener("click", () => window.print());
+    els.problemType.addEventListener("change", syncAdditionLayoutControl);
+    els.scaffoldLevel.addEventListener("change", () => {
+      updateScaffoldHelp();
+      syncBlankTemplatePromptOptions();
+      syncMultiplesControls();
+      renderWorksheet();
+    });
+    els.showMultiplesBox.addEventListener("change", () => {
+      syncMultiplesControls();
+      renderWorksheet();
+    });
+    els.fillMultiplesValues.addEventListener("change", renderWorksheet);
+
+    updateScaffoldHelp();
+    syncBlankTemplatePromptOptions();
+    syncMultiplesControls();
+    syncAdditionLayoutControl();
+    renderWorksheet();
+  </script>
+</body>
+</html>

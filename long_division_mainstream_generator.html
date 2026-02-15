@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Long Division Mainstream Organizer Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1d2430;
+      --panel: #ffffff;
+      --surface: #f4f6fa;
+      --line: #171717;
+      --soft-line: #8e98aa;
+      --teal: #a9ddd3;
+      --cream: #efe7c8;
+      --paper: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #f8f9fc 0%, #f1f3f7 55%, #edf0f5 100%);
+      color: var(--ink);
+      font-family: "Poppins", sans-serif;
+    }
+
+    .app {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 14px 14px 36px;
+    }
+
+    .screen-only h1 {
+      margin: 2px 0 2px;
+      font-size: clamp(1.3rem, 2.8vw, 2rem);
+      line-height: 1.2;
+      text-align: center;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+
+    .screen-only .subtitle {
+      margin: 0 0 12px;
+      text-align: center;
+      font-size: 0.95rem;
+      color: #425066;
+    }
+
+    .controls-card {
+      background: var(--panel);
+      border: 2px solid #d9dfeb;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(33, 43, 63, 0.06);
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      align-items: end;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .field label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      color: #43516a;
+      text-transform: uppercase;
+    }
+
+    .field-hint {
+      font-size: 0.78rem;
+      color: #5a677f;
+      line-height: 1.25;
+    }
+
+    .field select,
+    .field input,
+    .field textarea {
+      font-family: inherit;
+      border: 2px solid #cfd7e5;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      font-size: 0.95rem;
+      padding: 8px 10px;
+      outline: none;
+      width: 100%;
+    }
+
+    .field textarea {
+      min-height: 64px;
+      resize: vertical;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .button-row button {
+      border: 2px solid #1f2b3e;
+      border-radius: 10px;
+      background: #fff;
+      color: #1f2b3e;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+
+    .button-row button.primary {
+      background: #1f2b3e;
+      color: #fff;
+    }
+
+    .note {
+      margin-top: 8px;
+      font-size: 0.84rem;
+      color: #5a677f;
+    }
+
+    #worksheetHost {
+      margin-top: 12px;
+    }
+
+    .sheet {
+      width: 8.5in;
+      min-height: 11in;
+      margin: 0 auto;
+      background: var(--paper);
+      border: 1px solid #d6dbe7;
+      box-shadow: 0 12px 30px rgba(25, 35, 55, 0.1);
+      padding: 0.3in;
+      position: relative;
+    }
+
+    .sheet-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 2px solid #ced5e3;
+      padding-bottom: 7px;
+      margin-bottom: 10px;
+    }
+
+    .sheet-title {
+      margin: 0;
+      font-size: 1.02rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .name-line {
+      white-space: nowrap;
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    .name-line .line {
+      display: inline-block;
+      width: 140px;
+      border-bottom: 2px solid #111;
+      transform: translateY(-2px);
+      margin-left: 5px;
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px;
+    }
+
+    .problem-card {
+      border: 2px solid #111;
+      border-radius: 4px;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-height: 3.07in;
+    }
+
+    .problem-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .problem-id {
+      font-size: 0.82rem;
+      font-weight: 800;
+      border: 2px solid #111;
+      border-radius: 4px;
+      padding: 2px 8px;
+      min-width: 36px;
+      text-align: center;
+    }
+
+    .problem-eq {
+      font-size: 0.84rem;
+      font-weight: 700;
+      border: 2px solid #111;
+      border-radius: 4px;
+      padding: 2px 8px;
+      text-align: center;
+      flex: 1 1 auto;
+    }
+
+    .problem-main {
+      display: grid;
+      grid-template-columns: 102px minmax(0, 1fr);
+      gap: 6px;
+      min-height: 0;
+      flex: 1 1 auto;
+    }
+
+    .multiples-panel {
+      border: 2px solid #111;
+      border-radius: 3px;
+      background: var(--cream);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .multiples-head {
+      border-bottom: 2px solid #111;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-align: center;
+      padding: 3px 2px;
+      background: var(--teal);
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+    }
+
+    .multiples-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .multiples-table td {
+      border-top: 1px solid #111;
+      padding: 2px 3px;
+      text-align: center;
+      height: 20px;
+    }
+
+    .multiples-table td:first-child {
+      width: 38%;
+      border-right: 1px solid #111;
+      background: rgba(255, 255, 255, 0.45);
+    }
+
+    .multiple-answer.blank {
+      border-bottom: 2px solid #111;
+      height: 14px;
+      width: 90%;
+      margin: 0 auto;
+    }
+
+    .problem-panel {
+      border: 2px solid #111;
+      border-radius: 3px;
+      padding: 4px 4px 5px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-height: 0;
+    }
+
+    .problem-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      border-bottom: 2px solid #111;
+      padding-bottom: 2px;
+    }
+
+    .ld-grid {
+      display: grid;
+      grid-template-columns: 30px repeat(var(--digit-count), 28px);
+      grid-auto-rows: 26px;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-top: 2px;
+    }
+
+    .ld-cell {
+      border: 1px solid transparent;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1;
+      min-height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .q-cell {
+      border: 2px solid #111;
+      background: #fff;
+      margin: 0 1px;
+      min-height: 23px;
+      font-size: 0.9rem;
+    }
+
+    .divisor-cell {
+      border: 2px solid #111;
+      background: #fff;
+      margin-right: 2px;
+      min-height: 24px;
+      font-size: 1.02rem;
+    }
+
+    .dividend-cell {
+      border: 2px solid #111;
+      border-top-width: 4px;
+      border-left-width: 4px;
+      background: #fff;
+      min-height: 24px;
+      margin: 0 1px;
+      font-size: 1.02rem;
+    }
+
+    .work-cell {
+      border: 2px solid #111;
+      background: #fff;
+      min-height: 22px;
+      margin: 0 1px;
+    }
+
+    .minus-sign {
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .blank-line {
+      border-bottom: 2px solid #111;
+      width: 92%;
+      margin: 0 auto;
+      height: 14px;
+    }
+
+    .footer-note {
+      position: absolute;
+      left: 0.3in;
+      right: 0.3in;
+      bottom: 0.16in;
+      text-align: left;
+      font-size: 0.64rem;
+      color: #6a7485;
+    }
+
+    @media (max-width: 980px) {
+      .sheet {
+        width: 100%;
+        min-height: 0;
+        padding: 12px;
+      }
+
+      .problem-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .problem-card {
+        min-height: 0;
+      }
+
+      .footer-note {
+        position: static;
+        margin-top: 10px;
+      }
+    }
+
+    @media print {
+      @page {
+        size: Letter;
+        margin: 0.28in;
+      }
+
+      body {
+        background: #fff;
+      }
+
+      .screen-only {
+        display: none !important;
+      }
+
+      .app {
+        margin: 0;
+        max-width: none;
+        padding: 0;
+      }
+
+      #worksheetHost {
+        margin: 0;
+      }
+
+      .sheet {
+        width: auto;
+        min-height: 0;
+        margin: 0;
+        border: 0;
+        box-shadow: none;
+        padding: 0;
+      }
+
+      .problem-card {
+        min-height: 2.96in;
+      }
+
+      .footer-note {
+        position: fixed;
+        left: 0.28in;
+        right: 0.28in;
+        bottom: 0.1in;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="screen-only">
+      <h1>Long Division Mainstream Organizer Generator</h1>
+      <p class="subtitle">3x3 layout with Multiples + Problem in each box</p>
+
+      <section class="controls-card">
+        <div class="controls-grid">
+          <div class="field">
+            <label for="problemType">Problem Type</label>
+            <select id="problemType">
+              <option value="2x1" selected>2-digit dividend / 1-digit divisor</option>
+              <option value="3x1">3-digit dividend / 1-digit divisor</option>
+              <option value="4x1">4-digit dividend / 1-digit divisor</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="problemMode">Problem Source</label>
+            <select id="problemMode">
+              <option value="random" selected>Random problems</option>
+              <option value="custom">Custom list (use textbox)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="multiplesMode">Multiples Mode</label>
+            <select id="multiplesMode">
+              <option value="blank" selected>Blank (students fill in)</option>
+              <option value="filled">Filled multiples</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="sheetTitle">Worksheet Title</label>
+            <input id="sheetTitle" type="text" value="Long Division Practice Organizer (3x3)" />
+          </div>
+
+          <div class="field">
+            <label for="customProblems">Custom Problems</label>
+            <textarea id="customProblems" placeholder="Examples: 482/3, 3)654, 297÷9"></textarea>
+            <div class="field-hint">Use comma, semicolon, or line break between problems.</div>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button id="generateBtn" class="primary" type="button">Generate</button>
+          <button id="printBtn" type="button">Print</button>
+        </div>
+
+        <div class="note" id="statusText">Tip: switch multiples mode to filled for immediate support, or blank for student fluency.</div>
+      </section>
+    </div>
+
+    <div id="worksheetHost"></div>
+  </div>
+
+  <script>
+    const els = {
+      host: document.getElementById("worksheetHost"),
+      problemType: document.getElementById("problemType"),
+      problemMode: document.getElementById("problemMode"),
+      multiplesMode: document.getElementById("multiplesMode"),
+      sheetTitle: document.getElementById("sheetTitle"),
+      customProblems: document.getElementById("customProblems"),
+      statusText: document.getElementById("statusText"),
+      generateBtn: document.getElementById("generateBtn"),
+      printBtn: document.getElementById("printBtn")
+    };
+
+    const TYPE_CONFIG = {
+      "2x1": { dividendDigits: 2, dividendMin: 10, dividendMax: 99, label: "2-digit by 1-digit" },
+      "3x1": { dividendDigits: 3, dividendMin: 100, dividendMax: 999, label: "3-digit by 1-digit" },
+      "4x1": { dividendDigits: 4, dividendMin: 1000, dividendMax: 9999, label: "4-digit by 1-digit" }
+    };
+
+    const CARD_COUNT = 9;
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function getTypeConfig() {
+      return TYPE_CONFIG[els.problemType.value] || TYPE_CONFIG["2x1"];
+    }
+
+    function parseProblemToken(token, cfg) {
+      const clean = token.trim().replace(/\s+/g, "");
+      if (!clean) return null;
+
+      let dividend = null;
+      let divisor = null;
+
+      const slashMatch = clean.match(/^(\d+)(?:\/|÷)(\d+)$/);
+      if (slashMatch) {
+        dividend = Number(slashMatch[1]);
+        divisor = Number(slashMatch[2]);
+      }
+
+      const bracketMatch = clean.match(/^(\d+)\)(\d+)$/);
+      if (bracketMatch) {
+        divisor = Number(bracketMatch[1]);
+        dividend = Number(bracketMatch[2]);
+      }
+
+      if (!Number.isFinite(dividend) || !Number.isFinite(divisor)) return null;
+      if (divisor < 2 || divisor > 9) return null;
+      if (dividend < cfg.dividendMin || dividend > cfg.dividendMax) return null;
+
+      return { dividend, divisor };
+    }
+
+    function parseCustomProblems(raw, cfg) {
+      const chunks = raw.split(/[\n,;]+/).map((s) => s.trim()).filter(Boolean);
+      const valid = [];
+      const invalid = [];
+
+      for (const chunk of chunks) {
+        const parsed = parseProblemToken(chunk, cfg);
+        if (parsed) valid.push(parsed);
+        else invalid.push(chunk);
+      }
+
+      return { valid, invalid };
+    }
+
+    function makeRandomProblem(cfg) {
+      return {
+        dividend: randInt(cfg.dividendMin, cfg.dividendMax),
+        divisor: randInt(2, 9)
+      };
+    }
+
+    function buildProblemList(count, problemMode, customRaw, cfg) {
+      if (problemMode === "custom") {
+        const parsed = parseCustomProblems(customRaw, cfg);
+        if (!parsed.valid.length) {
+          return {
+            problems: [],
+            warning: true,
+            message: "No valid custom problems were found. Format examples: 482/3 or 3)482."
+          };
+        }
+
+        const picked = [];
+        for (let i = 0; i < count; i += 1) {
+          picked.push(parsed.valid[i % parsed.valid.length]);
+        }
+
+        const invalidNote = parsed.invalid.length ? ` Ignored: ${parsed.invalid.join(", ")}.` : "";
+        return {
+          problems: picked,
+          warning: parsed.invalid.length > 0,
+          message: `Generated ${count} custom problems.${invalidNote}`
+        };
+      }
+
+      const generated = [];
+      const seen = new Set();
+      while (generated.length < count) {
+        const p = makeRandomProblem(cfg);
+        const key = `${p.dividend}/${p.divisor}`;
+        if (seen.has(key)) continue;
+        generated.push(p);
+        seen.add(key);
+      }
+      return { problems: generated, warning: false, message: `Generated ${count} random problems.` };
+    }
+
+    function multiplesRowsHtml(divisor, mode) {
+      let rows = "";
+      for (let i = 1; i <= 10; i += 1) {
+        const answer = mode === "filled"
+          ? `<span class="multiple-answer">${divisor * i}</span>`
+          : `<span class="multiple-answer blank"></span>`;
+
+        rows += `
+          <tr>
+            <td>x${i}</td>
+            <td>${answer}</td>
+          </tr>
+        `;
+      }
+      return rows;
+    }
+
+    function longDivisionGridHtml(problem, cfg) {
+      const digits = String(problem.dividend).split("");
+      const quotientBoxes = new Array(cfg.dividendDigits).fill("<div class='ld-cell q-cell'>&nbsp;</div>").join("");
+
+      let rows = `
+        <div class="ld-cell"></div>
+        ${quotientBoxes}
+        <div class="ld-cell divisor-cell">${problem.divisor}</div>
+        ${digits.map((d) => `<div class="ld-cell dividend-cell">${d}</div>`).join("")}
+      `;
+
+      const workRows = cfg.dividendDigits + 1;
+      for (let i = 0; i < workRows; i += 1) {
+        const gutter = i % 2 === 0 ? "&minus;" : "&nbsp;";
+        rows += `<div class="ld-cell minus-sign">${gutter}</div>`;
+        for (let c = 0; c < cfg.dividendDigits; c += 1) {
+          rows += `<div class="ld-cell work-cell"><span class="blank-line"></span></div>`;
+        }
+      }
+
+      return `<div class="ld-grid" style="--digit-count:${cfg.dividendDigits};">${rows}</div>`;
+    }
+
+    function renderProblemCard(problem, index, cfg, multiplesMode) {
+      return `
+        <article class="problem-card">
+          <div class="problem-top">
+            <div class="problem-id">${index + 1}</div>
+            <div class="problem-eq">${problem.dividend} &divide; ${problem.divisor}</div>
+          </div>
+
+          <div class="problem-main">
+            <div class="multiples-panel">
+              <div class="multiples-head">Multiples</div>
+              <table class="multiples-table" aria-label="Multiples chart">
+                <tbody>
+                  ${multiplesRowsHtml(problem.divisor, multiplesMode)}
+                </tbody>
+              </table>
+            </div>
+
+            <div class="problem-panel">
+              <div class="problem-label">Problem</div>
+              ${longDivisionGridHtml(problem, cfg)}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderWorksheet() {
+      const cfg = getTypeConfig();
+      const source = buildProblemList(CARD_COUNT, els.problemMode.value, els.customProblems.value, cfg);
+      const title = els.sheetTitle.value.trim() || "Long Division Practice Organizer (3x3)";
+      const cards = source.problems.map((p, idx) => renderProblemCard(p, idx, cfg, els.multiplesMode.value)).join("");
+
+      els.statusText.textContent = source.message;
+      els.statusText.style.color = source.warning ? "#a33a3a" : "#5a677f";
+
+      if (!source.problems.length) {
+        els.host.innerHTML = "";
+        return;
+      }
+
+      els.host.innerHTML = `
+        <section class="sheet">
+          <header class="sheet-header">
+            <h2 class="sheet-title">${title} (${cfg.label})</h2>
+            <div class="name-line">Name:<span class="line"></span></div>
+          </header>
+
+          <section class="problem-grid">
+            ${cards}
+          </section>
+
+          <div class="footer-note">Mainstream organizer: each box includes multiples + long-division workspace.</div>
+        </section>
+      `;
+    }
+
+    els.generateBtn.addEventListener("click", renderWorksheet);
+    els.printBtn.addEventListener("click", () => window.print());
+
+    renderWorksheet();
+  </script>
+</body>
+</html>
