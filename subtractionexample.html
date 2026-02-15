@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Subtraction with Regrouping — Vertical + Base-10 Blocks</title>
+  <title>Subtraction with Regrouping Worksheet</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -21,68 +21,41 @@
 
     h1 {
       text-align: center;
-      margin: 0 0 4px;
-      font-size: 1.05rem;
-    }
-
-    /* Step panel at top (3 columns, text + images) */
-    .steps-panel {
-      border: 2px solid #000;
-      border-radius: 4px;
-      margin-bottom: 6px;
-    }
-
-    .steps-table {
-      width: 100%;
-      border-collapse: collapse;
-      table-layout: fixed;
-    }
-
-    .steps-table td {
-      border-right: 1px solid #000;
-    }
-    .steps-table td:last-child {
-      border-right: none;
-    }
-
-    .steps-top {
-      padding: 3px;
-      border-bottom: 1px solid #000;
-      vertical-align: top;
-    }
-
-    .steps-bottom {
-      padding: 3px;
-      text-align: center;
-      vertical-align: middle;
-    }
-
-    .step-title {
-      font-weight: 700;
-      font-size: 0.8rem;     /* smaller */
-      text-align: center;
-      margin-bottom: 1px;
-    }
-
-    .step-text {
-      font-size: 0.7rem;      /* smaller */
-      text-align: center;
-      line-height: 1.2;
-    }
-
-    .steps-bottom img {
-      max-width: 100%;
-      height: auto;
-      max-height: 1.6in;      /* bigger pictures */
-      display: inline-block;
+      margin: 0 0 8px;
+      font-size: 1.12rem;
     }
 
     .controls {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
       gap: 6px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       font-size: 0.8rem;
+      border: 2px solid #000;
+      border-radius: 6px;
+      padding: 6px 8px;
+    }
+
+    .options {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .options label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .options input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      margin: 0;
     }
 
     button {
@@ -123,6 +96,10 @@
       gap: 14px;
       justify-content: space-between;
       align-items: flex-start;
+    }
+
+    .two-columns.single-view {
+      justify-content: center;
     }
 
     .left-side {
@@ -304,62 +281,21 @@
       h1 {
         margin-bottom: 2px;
       }
-      .steps-panel {
-        margin-bottom: 4px;
-      }
     }
   </style>
 </head>
 <body>
   <div class="page">
-    <h1>Subtraction with Regrouping — Vertical + Base-10 Blocks</h1>
-
-    <!-- Steps explanation panel -->
-    <div class="steps-panel">
-      <table class="steps-table">
-        <tr>
-          <td class="steps-top">
-            <div class="step-title">Step 1: Try to subtract the ones.</div>
-            <div class="step-text">
-              Look at the ones.<br>
-              If you can’t take away 8 ones from 5 ones,<br>
-              you need to <strong>break apart a ten</strong>.
-            </div>
-          </td>
-          <td class="steps-top">
-            <div class="step-title">Step 2: Break apart 1 ten into 10 ones.</div>
-            <div class="step-text">
-              Cross out a ten.<br>
-              Break it apart into <strong>10 ones</strong>.<br>
-              Now you have <strong>4 tens</strong> and <strong>15 ones</strong>.
-            </div>
-          </td>
-          <td class="steps-top">
-            <div class="step-title">Step 3: Subtract the ones and subtract the tens.</div>
-            <div class="step-text">
-              15 ones − 8 ones = 7<br>
-              4 tens − 1 ten = 3 tens<br>
-              Your answer is <strong>37</strong>.
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td class="steps-bottom">
-            <img src="sub1.png" alt="Step 1 subtraction setup">
-          </td>
-          <td class="steps-bottom">
-            <img src="sub2.png" alt="Step 2 breaking apart a ten">
-          </td>
-          <td class="steps-bottom">
-            <img src="sub3.png" alt="Step 3 subtracting tens and ones">
-          </td>
-        </tr>
-      </table>
-    </div>
+    <h1>Subtraction with Regrouping</h1>
 
     <div class="controls">
-      <button id="generateBtn">Generate New</button>
-      <button id="printBtn">Print</button>
+      <div class="options">
+        <label><input id="useManipulativesToggle" type="checkbox" checked>Use Manipulatives</label>
+      </div>
+      <div>
+        <button id="generateBtn">Generate New</button>
+        <button id="printBtn">Print</button>
+      </div>
     </div>
 
     <div class="problems-column" id="problemsColumn"></div>
@@ -398,7 +334,7 @@
       }
     }
 
-    function renderCard(problem) {
+    function renderCard(problem, useManipulatives) {
       const { a, b } = problem;
 
       const card = document.createElement("div");
@@ -411,6 +347,7 @@
 
       const row = document.createElement("div");
       row.classList.add("two-columns");
+      if (!useManipulatives) row.classList.add("single-view");
 
       /* LEFT: vertical algorithm */
       const left = document.createElement("div");
@@ -449,63 +386,67 @@
       left.appendChild(vtable);
       row.appendChild(left);
 
-      /* RIGHT: base-10 blocks */
-      const right = document.createElement("div");
-      right.classList.add("right-side");
+      if (useManipulatives) {
+        /* RIGHT: base-10 blocks */
+        const right = document.createElement("div");
+        right.classList.add("right-side");
 
-      const blocksPanel = document.createElement("div");
-      blocksPanel.classList.add("blocks-panel");
+        const blocksPanel = document.createElement("div");
+        blocksPanel.classList.add("blocks-panel");
 
-      blocksPanel.innerHTML = `
-        <div class="instruction-row">
-          <span class="blocks-instruction tens-inst"></span>
-          <span class="blocks-instruction ones-inst"></span>
-        </div>
-        <div class="blocks-columns">
-          <div class="block-col">
-            <div class="panel-label">Tens</div>
-            <div class="tens-stack">
-              <div class="blocks-row-tens tens-row"></div>
+        blocksPanel.innerHTML = `
+          <div class="instruction-row">
+            <span class="blocks-instruction tens-inst"></span>
+            <span class="blocks-instruction ones-inst"></span>
+          </div>
+          <div class="blocks-columns">
+            <div class="block-col">
+              <div class="panel-label">Tens</div>
+              <div class="tens-stack">
+                <div class="blocks-row-tens tens-row"></div>
+              </div>
+            </div>
+            <div class="block-col">
+              <div class="panel-label">Ones</div>
+              <div class="ones-stack">
+                <div class="blocks-row-ones ones-row"></div>
+                <div class="regroup-box-under"></div>
+              </div>
             </div>
           </div>
-          <div class="block-col">
-            <div class="panel-label">Ones</div>
-            <div class="ones-stack">
-              <div class="blocks-row-ones ones-row"></div>
-              <div class="regroup-box-under"></div>
-            </div>
-          </div>
-        </div>
-      `;
+        `;
 
-      right.appendChild(blocksPanel);
-      row.appendChild(right);
+        right.appendChild(blocksPanel);
+        row.appendChild(right);
+
+        // Fill base-10 blocks
+        createBlocks(blocksPanel.querySelector(".tens-row"), aT, "ten");
+        createBlocks(blocksPanel.querySelector(".ones-row"), aO, "one");
+        fillTenFrame(blocksPanel.querySelector(".regroup-box-under"));
+
+        // Tiny instructions above Tens/Ones
+        const tensInst = blocksPanel.querySelector(".tens-inst");
+        const onesInst = blocksPanel.querySelector(".ones-inst");
+        tensInst.textContent = `Subtract ${bT} tens.`;
+        onesInst.textContent = `Subtract ${bO} ones.`;
+      }
 
       card.appendChild(row);
-
-      // Fill base-10 blocks
-      createBlocks(blocksPanel.querySelector(".tens-row"), aT, "ten");
-      createBlocks(blocksPanel.querySelector(".ones-row"), aO, "one");
-      fillTenFrame(blocksPanel.querySelector(".regroup-box-under"));
-
-      // Tiny instructions above Tens/Ones
-      const tensInst = blocksPanel.querySelector(".tens-inst");
-      const onesInst = blocksPanel.querySelector(".ones-inst");
-      tensInst.textContent = `Subtract ${bT} tens.`;
-      onesInst.textContent = `Subtract ${bO} ones.`;
 
       return card;
     }
 
     function generateWorksheet() {
       const container = document.getElementById("problemsColumn");
+      const useManipulatives = document.getElementById("useManipulativesToggle").checked;
       container.innerHTML = "";
       for (let i = 0; i < 3; i++) {
-        container.appendChild(renderCard(generateProblem()));
+        container.appendChild(renderCard(generateProblem(), useManipulatives));
       }
     }
 
     document.getElementById("generateBtn").addEventListener("click", generateWorksheet);
+    document.getElementById("useManipulativesToggle").addEventListener("change", generateWorksheet);
     document.getElementById("printBtn").addEventListener("click", () => window.print());
 
     generateWorksheet();
