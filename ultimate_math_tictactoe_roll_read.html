@@ -11,12 +11,12 @@
       --bg1: #eef8ff;
       --bg2: #f4fff3;
       --card: #ffffff;
-      --line: #c8d5e2;
       --accent: #1565c0;
       --accent-soft: #e8f2ff;
       --x: #d32f2f;
       --o: #1976d2;
       --ok: #2e7d32;
+      --line: #c9d7e6;
     }
 
     * { box-sizing: border-box; }
@@ -33,7 +33,7 @@
     }
 
     .app {
-      max-width: 1150px;
+      max-width: 1160px;
       margin: 0 auto;
     }
 
@@ -81,8 +81,9 @@
       background: #fff;
       cursor: pointer;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.93rem;
       user-select: none;
+      line-height: 1;
     }
 
     .pill.selected {
@@ -98,14 +99,13 @@
       padding: 4px 10px;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
     }
 
     select {
       border: none;
       font: inherit;
       background: transparent;
-      min-width: 150px;
+      min-width: 180px;
       color: #1d2a38;
       outline: none;
       padding: 4px 0;
@@ -143,6 +143,7 @@
       margin-top: 14px;
       display: flex;
       justify-content: center;
+      width: 100%;
     }
 
     .sheet {
@@ -158,13 +159,13 @@
       text-align: center;
       font-size: 1.55rem;
       font-weight: 800;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .sheet-meta {
       text-align: center;
       margin-bottom: 10px;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       color: #3f4f5e;
     }
 
@@ -189,15 +190,14 @@
 
     .board {
       margin: 0 auto 8px;
-      width: min(700px, 100%);
+      width: min(760px, 100%);
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
     }
 
     .cell {
-      min-height: 170px;
-      border: none;
+      min-height: 190px;
       border-radius: 12px;
       background: linear-gradient(180deg, #f9fcff, #edf4ff);
       box-shadow: inset 0 0 0 3px #d9e7fb;
@@ -206,65 +206,295 @@
       grid-template-rows: 1fr auto;
       align-items: center;
       cursor: pointer;
+      user-select: none;
+      position: relative;
     }
 
-    .cell:disabled {
+    .cell.locked {
       cursor: not-allowed;
-      opacity: 0.92;
+      opacity: 0.94;
     }
 
     .cell.win {
       outline: 4px solid var(--ok);
     }
 
+    .mark {
+      min-height: 46px;
+      line-height: 46px;
+      font-size: 2.8rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
     .prompt-wrap {
       text-align: center;
       display: grid;
       place-items: center;
-      gap: 6px;
+      gap: 5px;
       padding: 4px;
     }
 
     .prompt-math {
-      font-size: 1.9rem;
-      line-height: 1.08;
+      font-size: 1.8rem;
+      line-height: 1.05;
       font-weight: 700;
     }
 
-    .mark {
-      min-height: 48px;
-      line-height: 48px;
-      font-size: 2.8rem;
-      font-weight: 800;
+    .stack-problem {
+      display: inline-grid;
+      justify-items: end;
+      gap: 1px;
+      min-width: 7ch;
+      font-family: "Courier New", monospace;
+      line-height: 1;
+    }
+
+    .stack-line {
+      width: 100%;
+      text-align: right;
+      font-size: 1.75rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.22em;
+      white-space: nowrap;
+    }
+
+    .stack-line .op {
+      width: 1ch;
       text-align: center;
+      font-weight: 700;
+    }
+
+    .stack-bar {
+      width: 100%;
+      border-top: 2px solid #27394d;
+      margin-top: 1px;
+      min-height: 0;
+    }
+
+    .rounding-wrap,
+    .counting-wrap {
+      font-weight: 700;
+      text-align: center;
+      display: grid;
+      gap: 4px;
+    }
+
+    .rounding-line {
+      font-size: 1.18rem;
+      line-height: 1.15;
+    }
+
+    .under {
+      text-decoration: underline;
+      text-decoration-thickness: 3px;
+      text-underline-offset: 2px;
+      text-decoration-skip-ink: none;
+    }
+
+    .numline-wrap {
+      width: min(270px, 100%);
+      margin: 3px auto 0;
+      display: grid;
+      gap: 2px;
+    }
+
+    .numline-track {
+      position: relative;
+      height: 10px;
+      border-top: 2px solid #24384f;
+      margin-top: 8px;
+    }
+
+    .numline-end {
+      position: absolute;
+      top: -7px;
+      width: 2px;
+      height: 12px;
+      background: #24384f;
+    }
+
+    .numline-end.left { left: 0; }
+    .numline-end.right { right: 0; }
+
+    .numline-marker {
+      position: absolute;
+      top: -11px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #e53935;
+      transform: translateX(-50%);
+    }
+
+    .numline-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #32495f;
+      margin-top: 2px;
+    }
+
+    .numline-target {
+      text-align: center;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #41586e;
+      margin-top: 1px;
+    }
+
+    .counting-line {
+      font-size: 1.45rem;
+      letter-spacing: 0.02em;
+    }
+
+    .counting-dir {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #3a526a;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .missing-token {
+      font-family: "Courier New", monospace;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .tenframe-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      max-width: 100%;
+    }
+
+    .tenframe {
+      border: 2px solid #111;
+      border-radius: 2px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .tfgrid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    .tfcell {
+      border: 2px solid #111;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 1px;
+      position: relative;
+      background: #fff;
+    }
+
+    .tfdot {
+      width: 76%;
+      height: 76%;
+      border-radius: 50%;
+      background: #111;
+      display: block;
+      margin-top: 1px;
+    }
+
+    .coin-prompt {
+      display: grid;
+      gap: 4px;
+      justify-items: center;
+      align-items: center;
+      padding: 2px;
     }
 
     .coin-strip {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      align-items: center;
-      gap: 5px;
+      align-items: flex-start;
+      gap: 6px;
       max-width: 100%;
     }
 
-    .coin-strip img {
-      width: 34px;
-      height: 34px;
+    .coin-strip.coin-grid {
+      display: grid;
+      grid-template-columns: repeat(var(--coin-cols, 2), max-content);
+      justify-content: center;
+      align-content: center;
+      align-items: start;
+      gap: 6px 8px;
+    }
+
+    .coin-face {
+      position: relative;
+      width: var(--coin-size, 64px);
+      height: var(--coin-size, 64px);
+      border-radius: 50%;
+      overflow: visible;
+      flex: 0 0 auto;
+    }
+
+    .coin-face img {
+      width: 100%;
+      height: 100%;
       object-fit: contain;
+      display: block;
       border-radius: 50%;
     }
 
-    .coin-plus {
-      font-weight: 700;
-      color: #5a6d7e;
-      font-size: 0.95rem;
+    .coin-dot {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid #5c4e24;
+      background: #ffe27a;
+      color: #2d2818;
+      font-size: 0.69rem;
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+      transform: translate(-50%, -50%);
+      transition: transform 0.08s ease, background-color 0.12s ease;
+      z-index: 2;
+      padding: 0;
     }
 
-    .coin-prompt-label {
-      font-size: 0.85rem;
+    .coin-dot.hit {
+      background: #3cb86f;
+      border-color: #1d6f42;
+      color: #fff;
+      cursor: default;
+    }
+
+    .coin-dot.star {
+      border-color: #7f4e80;
+      background: #ffe8f7;
+      color: #7a1d67;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+
+    .coin-dot.star.hit {
+      background: #3cb86f;
+      border-color: #1d6f42;
+      color: #fff;
+    }
+
+    .coin-total {
+      font-size: 0.86rem;
       font-weight: 700;
-      color: #304356;
+      color: #31485f;
+      min-height: 1em;
     }
 
     .ttt-actions {
@@ -279,7 +509,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       flex-wrap: wrap;
       margin: 8px 0 12px;
       padding: 10px;
@@ -326,17 +556,18 @@
     .roll-table {
       margin: 0 auto;
       border-collapse: collapse;
-      width: min(100%, 920px);
+      width: min(100%, 940px);
       table-layout: fixed;
     }
 
     .roll-table td {
       border: 1px solid #000;
       width: calc(100% / 6);
-      height: 82px;
+      height: 88px;
       text-align: center;
       vertical-align: middle;
-      padding: 6px;
+      padding: 5px;
+      overflow: hidden;
     }
 
     .roll-table .dice-cell {
@@ -361,15 +592,144 @@
       background: #eef8ee;
     }
 
-    .rr-math {
-      font-size: 1.7rem;
-      font-weight: 700;
-      line-height: 1.05;
+    .roll-table .prompt-math {
+      font-size: 1.35rem;
     }
 
-    .rr-coin .coin-strip img {
-      width: 28px;
-      height: 28px;
+    .roll-table .stack-line {
+      font-size: 1.24rem;
+    }
+
+    .roll-table .tenframe {
+      border-width: 1.5px;
+    }
+
+    .roll-table .tfcell {
+      width: 14px;
+      height: 14px;
+      border-width: 1.5px;
+    }
+
+    .roll-table .coin-face {
+      width: var(--coin-size-roll, 50px);
+      height: var(--coin-size-roll, 50px);
+    }
+
+    .roll-table .coin-dot {
+      width: 16px;
+      height: 16px;
+      font-size: 0.56rem;
+      border-width: 1px;
+    }
+
+    .roll-table .coin-total {
+      font-size: 0.72rem;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 19, 30, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 14px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      width: min(460px, 100%);
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 12px 25px rgba(10, 20, 30, 0.25);
+    }
+
+    .modal-title {
+      margin: 0 0 8px;
+      font-size: 1.08rem;
+      font-weight: 800;
+    }
+
+    .modal-prompt {
+      margin: 0 0 10px;
+      font-size: 0.95rem;
+      color: #3b4e61;
+    }
+
+    .modal-problem {
+      border: 2px dashed #9fb5cc;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
+      min-height: 110px;
+      display: grid;
+      place-items: center;
+      background: #f8fcff;
+    }
+
+    .modal-problem .prompt-math {
+      font-size: 2rem;
+    }
+
+    .modal-problem .stack-line {
+      font-size: 2rem;
+    }
+
+    .modal-problem .coin-face {
+      width: var(--coin-size-modal, 82px);
+      height: var(--coin-size-modal, 82px);
+    }
+
+    .modal-problem .coin-dot {
+      pointer-events: none;
+      width: 24px;
+      height: 24px;
+      font-size: 0.72rem;
+    }
+
+    .modal-problem .tenframe {
+      border-width: 2px;
+    }
+
+    .modal-problem .tfcell {
+      width: 16px;
+      height: 16px;
+      border-width: 2px;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #8aa4be;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      outline: none;
+    }
+
+    .modal-input:focus {
+      border-color: #1c63a8;
+    }
+
+    .modal-msg {
+      min-height: 1.2em;
+      margin-bottom: 8px;
+      font-size: 0.88rem;
+      color: #a12222;
+      font-weight: 700;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
     }
 
     @keyframes spin {
@@ -379,27 +739,36 @@
       100% { transform: rotate(360deg) scale(1); }
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 980px) {
       .cell {
-        min-height: 140px;
+        min-height: 160px;
       }
 
       .prompt-math {
-        font-size: 1.45rem;
+        font-size: 1.35rem;
       }
 
-      .coin-strip img {
-        width: 30px;
-        height: 30px;
+      .stack-line {
+        font-size: 1.35rem;
       }
 
-      .roll-table td {
-        height: 74px;
-        padding: 4px;
+      .coin-face {
+        width: var(--coin-size-mobile, 52px);
+        height: var(--coin-size-mobile, 52px);
       }
 
-      .rr-math {
-        font-size: 1.2rem;
+      .coin-dot {
+        width: 18px;
+        height: 18px;
+        font-size: 0.59rem;
+      }
+
+      .modal-problem .prompt-math {
+        font-size: 1.5rem;
+      }
+
+      .modal-problem .stack-line {
+        font-size: 1.5rem;
       }
     }
 
@@ -417,7 +786,8 @@
       #btnPrint,
       #btnResetScore,
       .ttt-actions,
-      .roll-controls {
+      .roll-controls,
+      .modal-backdrop {
         display: none !important;
       }
 
@@ -455,29 +825,34 @@
 
       .cell {
         min-height: 130px !important;
-        box-shadow: inset 0 0 0 2px #d9e7fb !important;
       }
 
       .prompt-math {
-        font-size: 22px !important;
+        font-size: 20px !important;
       }
 
-      .coin-strip img {
-        width: 28px !important;
-        height: 28px !important;
+      .stack-line {
+        font-size: 19px !important;
+      }
+
+      .coin-face {
+        width: 52px !important;
+        height: 52px !important;
+      }
+
+      .coin-dot {
+        width: 16px !important;
+        height: 16px !important;
+        font-size: 9px !important;
       }
 
       .roll-table td {
-        height: 64px !important;
+        height: 67px !important;
       }
 
       .roll-table .dice-cell img {
         width: 42px !important;
         height: 42px !important;
-      }
-
-      .rr-math {
-        font-size: 17px !important;
       }
     }
   </style>
@@ -501,11 +876,20 @@
         <button type="button" class="pill" data-operation="subtraction">Subtraction</button>
         <button type="button" class="pill" data-operation="multiplication">Multiplication</button>
         <button type="button" class="pill" data-operation="division">Division</button>
+        <button type="button" class="pill" data-operation="rounding">Rounding</button>
+        <button type="button" class="pill" data-operation="counting">Counting</button>
+        <button type="button" class="pill" data-operation="tenframes">Ten Frames</button>
+      </div>
+
+      <div class="row" id="answerModeRow">
+        <span class="label">Answer Check:</span>
+        <button type="button" class="pill selected" data-answer-mode="free">Free Play</button>
+        <button type="button" class="pill" data-answer-mode="required">Require Correct Answer</button>
       </div>
 
       <div class="row">
-        <span class="label">Difficulty:</span>
-        <div class="select-wrap">
+        <span class="label" id="difficultyText">Difficulty:</span>
+        <div class="select-wrap" id="difficultySelectWrap">
           <select id="difficultySelect"></select>
         </div>
 
@@ -515,6 +899,57 @@
             <option value="18">18 cells (3 rows)</option>
             <option value="24">24 cells (4 rows)</option>
             <option value="30">30 cells (5 rows)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row" id="regroupRow">
+        <span class="label">Regrouping (Addition/Subtraction):</span>
+        <div class="select-wrap">
+          <select id="regroupSelect">
+            <option value="mixed">Mixed</option>
+            <option value="with">With Regrouping</option>
+            <option value="none">No Regrouping</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row" id="roundingRow">
+        <span class="label">Rounding View:</span>
+        <div class="select-wrap">
+          <select id="roundingStyleSelect">
+            <option value="standard">Standard</option>
+            <option value="numberline">With Number Line</option>
+          </select>
+        </div>
+        <span class="label">Nearest:</span>
+        <div class="select-wrap">
+          <select id="roundingNearestSelect">
+            <option value="10">10</option>
+            <option value="100">100</option>
+            <option value="1000">1,000</option>
+            <option value="10000">10,000</option>
+          </select>
+        </div>
+        <span class="label">Numbers Up To:</span>
+        <div class="select-wrap">
+          <select id="roundingWithinSelect">
+            <option value="100">100</option>
+            <option value="1000">1,000</option>
+            <option value="10000">10,000</option>
+            <option value="100000">100,000</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row" id="countingRow">
+        <span class="label">Counting Type:</span>
+        <div class="select-wrap">
+          <select id="countingStyleSelect">
+            <option value="mixed">Mixed</option>
+            <option value="forward">Count Forward</option>
+            <option value="backward">Count Backward</option>
+            <option value="missing">Missing Number</option>
           </select>
         </div>
       </div>
@@ -529,76 +964,111 @@
     <div id="output"></div>
   </div>
 
+  <div id="answerModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h2 id="modalTitle" class="modal-title">Enter Answer</h2>
+      <p id="modalPrompt" class="modal-prompt"></p>
+      <div id="modalProblem" class="modal-problem"></div>
+      <input id="modalInput" class="modal-input" type="text" inputmode="numeric" autocomplete="off" />
+      <div id="modalMsg" class="modal-msg"></div>
+      <div class="modal-actions">
+        <button id="modalCancel" type="button">Cancel</button>
+        <button id="modalSubmit" class="primary" type="button">Check</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const COINS = {
+    const COIN_DEFS = {
       quarter: {
         key: "quarter",
         label: "Quarter",
         value: 25,
+        ratio: 1.35,
+        chunkValues: [5, 5, 5, 5, 5],
         img: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f715cda9ca3b4afc8.png"
       },
       dime: {
         key: "dime",
         label: "Dime",
         value: 10,
+        ratio: 1,
+        chunkValues: [5, 5],
         img: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f7213971802a4d866.png"
       },
       nickel: {
         key: "nickel",
         label: "Nickel",
         value: 5,
+        ratio: 1.18,
+        chunkValues: [5],
         img: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f30ec4a3836469e61.png"
       },
       penny: {
         key: "penny",
         label: "Penny",
         value: 1,
+        ratio: 1.06,
+        chunkValues: [1],
         img: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f3fdd0e810fca84ef.png"
       }
     };
 
+    const COIN_ORDER = ["quarter", "dime", "nickel", "penny"];
+
+    const DOT_POSITIONS = {
+      1: [{ x: 50, y: 50 }],
+      2: [{ x: 34, y: 50 }, { x: 66, y: 50 }],
+      5: [
+        { x: 50, y: 23 },
+        { x: 72, y: 40 },
+        { x: 64, y: 68 },
+        { x: 36, y: 68 },
+        { x: 28, y: 40 }
+      ]
+    };
+
     const DIFFICULTY_BY_OPERATION = {
       coins: [
-        { value: "single", label: "Single digit totals (up to 30¢)" },
-        { value: "double", label: "Double digit totals (up to 99¢)" },
-        { value: "multi", label: "Multi digit totals (up to 200¢)" }
+        { value: "single", label: "Single digit totals (up to 35c)" },
+        { value: "double", label: "Double digit totals (up to 99c)" },
+        { value: "multi", label: "Multi digit totals (up to 250c)" }
       ],
       addition: [
         { value: "single", label: "Single digit" },
         { value: "double", label: "2-digit" },
-        { value: "multi", label: "Multi-digit" }
+        { value: "multi", label: "3-digit" }
       ],
       subtraction: [
         { value: "single", label: "Single digit" },
         { value: "double", label: "2-digit" },
-        { value: "multi", label: "Multi-digit" }
+        { value: "multi", label: "3-digit" }
       ],
       multiplication: [
-        { value: "single", label: "Single digit facts" },
+        { value: "single", label: "1-digit by 1-digit" },
         { value: "double", label: "2-digit by 1-digit" },
         { value: "multi", label: "3-digit by 1-digit" }
       ],
       division: [
-        { value: "single", label: "Single digit facts" },
+        { value: "single", label: "1-digit by 1-digit facts" },
         { value: "double", label: "2-digit by 1-digit" },
         { value: "multi", label: "3-digit by 1-digit" }
+      ],
+      rounding: [
+        { value: "single", label: "Round 2-digit to nearest 10" },
+        { value: "double", label: "Round 3-digit to nearest 100" },
+        { value: "multi", label: "Round 4-digit to nearest 1000" }
+      ],
+      counting: [
+        { value: "single", label: "Within 20" },
+        { value: "double", label: "Within 50" },
+        { value: "multi", label: "Within 100" }
+      ],
+      tenframes: [
+        { value: "single", label: "Up to 10" },
+        { value: "double", label: "Up to 20" },
+        { value: "multi", label: "Up to 40" }
       ]
-    };
-
-    const state = {
-      gameType: "tictactoe",
-      operation: "coins",
-      difficulty: "single",
-      gridSize: 18,
-      ttt: {
-        prompts: [],
-        marks: Array(9).fill(""),
-        turn: "X",
-        over: false,
-        winLine: [],
-        score: { X: 0, O: 0, T: 0 }
-      },
-      roll: null
     };
 
     const WIN_LINES = [
@@ -612,8 +1082,64 @@
       [2, 4, 6]
     ];
 
+    let promptIdCounter = 1;
+    const ROUNDING_WITHIN_OPTIONS = [100, 1000, 10000, 100000];
+
+    const state = {
+      gameType: "tictactoe",
+      operation: "coins",
+      difficulty: "single",
+      regroupMode: "mixed",
+      roundingStyle: "standard",
+      roundingNearest: 10,
+      roundingWithin: 100,
+      countingStyle: "mixed",
+      requireCorrect: false,
+      gridSize: 18,
+      promptIndex: new Map(),
+      ttt: {
+        prompts: [],
+        marks: Array(9).fill(""),
+        turn: "X",
+        over: false,
+        winLine: [],
+        score: { X: 0, O: 0, T: 0 }
+      },
+      roll: null,
+      modal: {
+        resolver: null,
+        prompt: null,
+        sourceLabel: ""
+      }
+    };
+
+    const difficultyTextEl = document.getElementById("difficultyText");
+    const difficultySelectWrapEl = document.getElementById("difficultySelectWrap");
+    const outputEl = document.getElementById("output");
     const difficultySelect = document.getElementById("difficultySelect");
     const gridSizeSelect = document.getElementById("gridSizeSelect");
+    const regroupSelect = document.getElementById("regroupSelect");
+    const regroupRow = document.getElementById("regroupRow");
+    const roundingStyleSelect = document.getElementById("roundingStyleSelect");
+    const roundingNearestSelect = document.getElementById("roundingNearestSelect");
+    const roundingWithinSelect = document.getElementById("roundingWithinSelect");
+    const roundingRow = document.getElementById("roundingRow");
+    const countingStyleSelect = document.getElementById("countingStyleSelect");
+    const countingRow = document.getElementById("countingRow");
+
+    const answerModal = document.getElementById("answerModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalPrompt = document.getElementById("modalPrompt");
+    const modalProblem = document.getElementById("modalProblem");
+    const modalInput = document.getElementById("modalInput");
+    const modalMsg = document.getElementById("modalMsg");
+    const modalSubmit = document.getElementById("modalSubmit");
+    const modalCancel = document.getElementById("modalCancel");
+    regroupSelect.value = state.regroupMode;
+    roundingStyleSelect.value = state.roundingStyle;
+    roundingNearestSelect.value = String(state.roundingNearest);
+    roundingWithinSelect.value = String(state.roundingWithin);
+    countingStyleSelect.value = state.countingStyle;
 
     function randInt(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -623,27 +1149,32 @@
       return arr[randInt(0, arr.length - 1)];
     }
 
-    function escapeHtml(text) {
-      return String(text)
+    function formatNumber(value) {
+      return Number(value).toLocaleString("en-US");
+    }
+
+    function htmlEscape(value) {
+      return String(value)
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;");
     }
 
-    function updateDifficultyOptions() {
-      const options = DIFFICULTY_BY_OPERATION[state.operation] || [];
-      const previous = state.difficulty;
-      difficultySelect.innerHTML = "";
-      options.forEach((opt) => {
-        const el = document.createElement("option");
-        el.value = opt.value;
-        el.textContent = opt.label;
-        difficultySelect.appendChild(el);
-      });
+    function nextPromptId() {
+      const id = "p" + String(promptIdCounter);
+      promptIdCounter += 1;
+      return id;
+    }
 
-      const hasPrevious = options.some((o) => o.value === previous);
-      state.difficulty = hasPrevious ? previous : options[0].value;
-      difficultySelect.value = state.difficulty;
+    function indexPrompts(prompts) {
+      const map = new Map();
+      prompts.forEach((p) => map.set(p.id, p));
+      state.promptIndex = map;
+    }
+
+    function getPromptById(id) {
+      if (!id) return null;
+      return state.promptIndex.get(id) || null;
     }
 
     function setSelectedInRow(rowId, attr, value) {
@@ -653,168 +1184,510 @@
       });
     }
 
-    function coinConfig() {
-      if (state.difficulty === "single") {
-        return { maxTotal: 30, countMin: 2, countMax: 4, allowed: ["penny", "nickel", "dime"] };
-      }
-      if (state.difficulty === "double") {
-        return { maxTotal: 99, countMin: 3, countMax: 6, allowed: ["penny", "nickel", "dime", "quarter"] };
-      }
-      return { maxTotal: 200, countMin: 4, countMax: 8, allowed: ["penny", "nickel", "dime", "quarter"] };
+    function updateDifficultyOptions() {
+      const options = DIFFICULTY_BY_OPERATION[state.operation] || [];
+      const previous = state.difficulty;
+      difficultySelect.innerHTML = "";
+      options.forEach((opt) => {
+        const element = document.createElement("option");
+        element.value = opt.value;
+        element.textContent = opt.label;
+        difficultySelect.appendChild(element);
+      });
+
+      const hasPrevious = options.some((x) => x.value === previous);
+      state.difficulty = hasPrevious ? previous : (options[0] ? options[0].value : "single");
+      difficultySelect.value = state.difficulty;
     }
 
-    function opRangeByDifficulty() {
-      if (state.difficulty === "single") {
-        return { min: 0, max: 9 };
-      }
-      if (state.difficulty === "double") {
-        return { min: 10, max: 99 };
-      }
-      return { min: 100, max: 999 };
+    function updateRegroupVisibility() {
+      const show = state.operation === "addition" || state.operation === "subtraction";
+      regroupRow.style.display = show ? "flex" : "none";
+      roundingRow.style.display = state.operation === "rounding" ? "flex" : "none";
+      countingRow.style.display = state.operation === "counting" ? "flex" : "none";
+      difficultyTextEl.style.display = state.operation === "rounding" ? "none" : "";
+      difficultySelectWrapEl.style.display = state.operation === "rounding" ? "none" : "inline-flex";
     }
 
-    function multiplicationPair() {
-      if (state.difficulty === "single") {
-        return { a: randInt(2, 12), b: randInt(2, 12) };
-      }
-      if (state.difficulty === "double") {
-        return { a: randInt(10, 99), b: randInt(2, 9) };
-      }
-      return { a: randInt(100, 999), b: randInt(2, 9) };
-    }
-
-    function divisionPair() {
-      if (state.difficulty === "single") {
-        const divisor = randInt(2, 12);
-        const quotient = randInt(2, 12);
-        return { dividend: divisor * quotient, divisor };
-      }
-      if (state.difficulty === "double") {
-        const divisor = randInt(2, 9);
-        const quotient = randInt(10, 99);
-        const dividend = divisor * quotient;
-        if (dividend > 999) {
-          return divisionPair();
-        }
-        return { dividend, divisor };
-      }
-      const divisor = randInt(2, 9);
-      const quotient = randInt(100, 999);
-      return { dividend: divisor * quotient, divisor };
-    }
-
-    function buildCoinPrompt() {
-      const cfg = coinConfig();
-      let picks = [];
-      let sum = 0;
-      const coinCount = randInt(cfg.countMin, cfg.countMax);
-      let tries = 0;
-      while (tries < 450) {
-        tries += 1;
-        picks = [];
-        for (let i = 0; i < coinCount; i += 1) {
-          picks.push(COINS[choose(cfg.allowed)]);
-        }
-        sum = picks.reduce((acc, coin) => acc + coin.value, 0);
-        if (sum > 0 && sum <= cfg.maxTotal) {
-          break;
-        }
-      }
-
-      picks.sort((a, b) => b.value - a.value);
-      const imgHtml = picks.map((coin, idx) => {
-        const plus = idx < picks.length - 1 ? '<span class="coin-plus">+</span>' : "";
-        return `<img src="${coin.img}" alt="${escapeHtml(coin.label)}">${plus}`;
-      }).join("");
-
-      return {
-        type: "coins",
-        text: "Count the coins",
-        mathText: "",
-        answer: sum,
-        html: `<div class="prompt-wrap"><div class="coin-strip">${imgHtml}</div><div class="coin-prompt-label">How much in all?</div></div>`
-      };
-    }
-
-    function buildAdditionPrompt() {
-      const r = opRangeByDifficulty();
-      const a = randInt(r.min, r.max);
-      const b = randInt(r.min, r.max);
-      return {
-        type: "math",
-        text: `${a} + ${b}`,
-        answer: a + b,
-        html: `<div class="prompt-wrap"><div class="prompt-math">${a} + ${b}</div></div>`
-      };
-    }
-
-    function buildSubtractionPrompt() {
-      const r = opRangeByDifficulty();
-      let a = randInt(r.min, r.max);
-      let b = randInt(r.min, r.max);
-      if (b > a) {
-        const t = a;
-        a = b;
-        b = t;
-      }
-      return {
-        type: "math",
-        text: `${a} - ${b}`,
-        answer: a - b,
-        html: `<div class="prompt-wrap"><div class="prompt-math">${a} - ${b}</div></div>`
-      };
-    }
-
-    function buildMultiplicationPrompt() {
-      const pair = multiplicationPair();
-      return {
-        type: "math",
-        text: `${pair.a} x ${pair.b}`,
-        answer: pair.a * pair.b,
-        html: `<div class="prompt-wrap"><div class="prompt-math">${pair.a} × ${pair.b}</div></div>`
-      };
-    }
-
-    function buildDivisionPrompt() {
-      const pair = divisionPair();
-      return {
-        type: "math",
-        text: `${pair.dividend} / ${pair.divisor}`,
-        answer: pair.dividend / pair.divisor,
-        html: `<div class="prompt-wrap"><div class="prompt-math">${pair.dividend} ÷ ${pair.divisor}</div></div>`
-      };
-    }
-
-    function buildPrompt() {
-      if (state.operation === "coins") return buildCoinPrompt();
-      if (state.operation === "addition") return buildAdditionPrompt();
-      if (state.operation === "subtraction") return buildSubtractionPrompt();
-      if (state.operation === "multiplication") return buildMultiplicationPrompt();
-      return buildDivisionPrompt();
-    }
-
-    function buildPrompts(total) {
-      const out = [];
-      for (let i = 0; i < total; i += 1) {
-        out.push(buildPrompt());
-      }
-      return out;
-    }
-
-    function labelForOperation() {
+    function operationLabel() {
       if (state.operation === "coins") return "Coins";
       if (state.operation === "addition") return "Addition";
       if (state.operation === "subtraction") return "Subtraction";
       if (state.operation === "multiplication") return "Multiplication";
-      return "Division";
+      if (state.operation === "division") return "Division";
+      if (state.operation === "rounding") return "Rounding";
+      if (state.operation === "counting") return "Counting";
+      return "Ten Frames";
     }
 
-    function labelForDifficulty() {
-      const option = (DIFFICULTY_BY_OPERATION[state.operation] || []).find((o) => o.value === state.difficulty);
-      return option ? option.label : state.difficulty;
+    function difficultyLabel() {
+      if (state.operation === "rounding") {
+        return `Nearest ${formatNumber(state.roundingNearest)} | Up To ${formatNumber(state.roundingWithin)}`;
+      }
+      const list = DIFFICULTY_BY_OPERATION[state.operation] || [];
+      const item = list.find((x) => x.value === state.difficulty);
+      return item ? item.label : state.difficulty;
     }
 
-    function winnerLine(marks) {
+    function enforceRoundingWithin() {
+      const minWithin = state.roundingNearest * 10;
+      if (state.roundingWithin < minWithin) {
+        state.roundingWithin = ROUNDING_WITHIN_OPTIONS.find((value) => value >= minWithin) || 100000;
+      }
+      roundingNearestSelect.value = String(state.roundingNearest);
+      roundingWithinSelect.value = String(state.roundingWithin);
+    }
+
+    function rangeByDifficulty() {
+      if (state.difficulty === "single") return { min: 0, max: 9 };
+      if (state.difficulty === "double") return { min: 10, max: 99 };
+      return { min: 100, max: 999 };
+    }
+
+    function digitsForDifficulty() {
+      if (state.difficulty === "single") return 1;
+      if (state.difficulty === "double") return 2;
+      return 3;
+    }
+
+    function hasAdditionRegroup(a, b, digits) {
+      let carry = 0;
+      for (let i = 0; i < digits; i += 1) {
+        const da = Math.floor(a / (10 ** i)) % 10;
+        const db = Math.floor(b / (10 ** i)) % 10;
+        const sum = da + db + carry;
+        if (sum >= 10) return true;
+        carry = sum >= 10 ? 1 : 0;
+      }
+      return false;
+    }
+
+    function hasSubtractionRegroup(a, b, digits) {
+      let borrow = 0;
+      for (let i = 0; i < digits; i += 1) {
+        let da = (Math.floor(a / (10 ** i)) % 10) - borrow;
+        const db = Math.floor(b / (10 ** i)) % 10;
+        if (da < db) return true;
+        borrow = 0;
+      }
+      return false;
+    }
+
+    function matchesRegroupMode(hasRegroup) {
+      if (state.regroupMode === "mixed") return true;
+      if (state.regroupMode === "with") return hasRegroup;
+      return !hasRegroup;
+    }
+
+    function coinConfig() {
+      if (state.difficulty === "single") {
+        return { maxTotal: 35, minCoins: 2, maxCoins: 4, allowed: ["penny", "nickel", "dime"] };
+      }
+      if (state.difficulty === "double") {
+        return { maxTotal: 99, minCoins: 3, maxCoins: 6, allowed: ["penny", "nickel", "dime", "quarter"] };
+      }
+      return { maxTotal: 250, minCoins: 4, maxCoins: 9, allowed: ["penny", "nickel", "dime", "quarter"] };
+    }
+
+    function makeCoinPrompt() {
+      const cfg = coinConfig();
+      let picks = [];
+      let total = 0;
+      let tries = 0;
+      const coinCount = randInt(cfg.minCoins, cfg.maxCoins);
+
+      while (tries < 400) {
+        tries += 1;
+        picks = [];
+        for (let i = 0; i < coinCount; i += 1) {
+          picks.push(COIN_DEFS[choose(cfg.allowed)]);
+        }
+        total = picks.reduce((sum, coin) => sum + coin.value, 0);
+        if (total > 0 && total <= cfg.maxTotal) break;
+      }
+
+      picks = picks.slice().sort((a, b) => {
+        if (b.value !== a.value) return b.value - a.value;
+        return COIN_ORDER.indexOf(a.key) - COIN_ORDER.indexOf(b.key);
+      });
+
+      return {
+        id: nextPromptId(),
+        kind: "coins",
+        answer: total,
+        counted: 0,
+        coins: picks.map((coin) => ({
+          key: coin.key,
+          label: coin.label,
+          value: coin.value,
+          ratio: coin.ratio,
+          img: coin.img,
+          chunkValues: coin.chunkValues.slice(),
+          dots: coin.chunkValues.map(() => false)
+        }))
+      };
+    }
+
+    function makeAdditionPrompt() {
+      const r = rangeByDifficulty();
+      const digits = digitsForDifficulty();
+      let a = 0;
+      let b = 0;
+      let found = false;
+      for (let tries = 0; tries < 1200; tries += 1) {
+        const minValue = digits === 1 ? 0 : r.min;
+        a = randInt(minValue, r.max);
+        b = randInt(minValue, r.max);
+        const regroup = hasAdditionRegroup(a, b, digits);
+        if (matchesRegroupMode(regroup)) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        a = randInt(digits === 1 ? 0 : r.min, r.max);
+        b = randInt(digits === 1 ? 0 : r.min, r.max);
+      }
+      return {
+        id: nextPromptId(),
+        kind: "math",
+        answer: a + b,
+        plain: `${a} + ${b}`,
+        htmlMath: `${formatNumber(a)} + ${formatNumber(b)}`
+      };
+    }
+
+    function makeSubtractionPrompt() {
+      const r = rangeByDifficulty();
+      const digits = digitsForDifficulty();
+      let a = 0;
+      let b = 0;
+      let found = false;
+      for (let tries = 0; tries < 1600; tries += 1) {
+        const minValue = digits === 1 ? 0 : r.min;
+        a = randInt(minValue, r.max);
+        b = randInt(minValue, r.max);
+        if (b > a) {
+          const t = a;
+          a = b;
+          b = t;
+        }
+        const regroup = hasSubtractionRegroup(a, b, digits);
+        if (matchesRegroupMode(regroup)) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        a = randInt(digits === 1 ? 0 : r.min, r.max);
+        b = randInt(digits === 1 ? 0 : r.min, r.max);
+        if (b > a) {
+          const t = a;
+          a = b;
+          b = t;
+        }
+      }
+      return {
+        id: nextPromptId(),
+        kind: "math",
+        answer: a - b,
+        plain: `${a} - ${b}`,
+        htmlMath: `${formatNumber(a)} - ${formatNumber(b)}`
+      };
+    }
+
+    function makeMultiplicationPrompt() {
+      let a;
+      let b;
+      if (state.difficulty === "single") {
+        a = randInt(2, 12);
+        b = randInt(2, 12);
+      } else if (state.difficulty === "double") {
+        a = randInt(10, 99);
+        b = randInt(2, 9);
+      } else {
+        a = randInt(100, 999);
+        b = randInt(2, 9);
+      }
+
+      return {
+        id: nextPromptId(),
+        kind: "math",
+        answer: a * b,
+        plain: `${a} x ${b}`,
+        htmlMath: `${formatNumber(a)} x ${formatNumber(b)}`
+      };
+    }
+
+    function makeDivisionPrompt() {
+      let divisor;
+      let quotient;
+      let dividend;
+
+      if (state.difficulty === "single") {
+        divisor = randInt(2, 12);
+        quotient = randInt(2, 12);
+      } else if (state.difficulty === "double") {
+        divisor = randInt(2, 9);
+        quotient = randInt(5, 45);
+      } else {
+        divisor = randInt(2, 9);
+        quotient = randInt(20, 111);
+      }
+
+      dividend = divisor * quotient;
+
+      if (state.difficulty === "double") {
+        while (dividend < 10 || dividend > 99) {
+          divisor = randInt(2, 9);
+          quotient = randInt(5, 45);
+          dividend = divisor * quotient;
+        }
+      } else if (state.difficulty === "multi") {
+        while (dividend < 100 || dividend > 999) {
+          divisor = randInt(2, 9);
+          quotient = randInt(20, 111);
+          dividend = divisor * quotient;
+        }
+      }
+
+      return {
+        id: nextPromptId(),
+        kind: "math",
+        answer: quotient,
+        plain: `${dividend} ÷ ${divisor}`,
+        htmlMath: `${formatNumber(dividend)} ÷ ${divisor}`
+      };
+    }
+
+    function roundNearest(value, place) {
+      return Math.round(value / place) * place;
+    }
+
+    function roundBounds(value, place) {
+      const lower = Math.floor(value / place) * place;
+      return { lower, upper: lower + place };
+    }
+
+    function makeRoundingPrompt() {
+      enforceRoundingWithin();
+      const place = state.roundingNearest;
+      const placeText = formatNumber(place);
+      const minValue = Math.min(place, state.roundingWithin - 1);
+      const maxValue = state.roundingWithin - 1;
+      const number = randInt(minValue, maxValue);
+
+      return {
+        id: nextPromptId(),
+        kind: "rounding",
+        number,
+        place,
+        placeText,
+        view: state.roundingStyle,
+        bounds: roundBounds(number, place),
+        answer: roundNearest(number, place),
+        plain: `Round ${formatNumber(number)} to nearest ${placeText}`
+      };
+    }
+
+    function makeCountingPrompt() {
+      const limit = state.difficulty === "single" ? 20 : state.difficulty === "double" ? 50 : 100;
+      const style = state.countingStyle === "mixed"
+        ? choose(["forward", "backward", "missing"])
+        : state.countingStyle;
+
+      let sequence;
+      let answer;
+
+      if (style === "forward") {
+        const start = randInt(0, Math.max(0, limit - 3));
+        sequence = [start, start + 1, start + 2, null];
+        answer = start + 3;
+      } else if (style === "backward") {
+        const start = randInt(3, limit);
+        sequence = [start, start - 1, start - 2, null];
+        answer = start - 3;
+      } else {
+        const direction = choose(["forward", "backward"]);
+        const start = direction === "forward"
+          ? randInt(0, Math.max(0, limit - 2))
+          : randInt(2, limit);
+        const base = direction === "forward"
+          ? [start, start + 1, start + 2]
+          : [start, start - 1, start - 2];
+        const blankIndex = randInt(0, 2);
+        answer = base[blankIndex];
+        sequence = base.map((n, idx) => (idx === blankIndex ? null : n));
+      }
+
+      return {
+        id: nextPromptId(),
+        kind: "counting",
+        style,
+        sequence,
+        answer,
+        plain: `Counting within ${limit}`
+      };
+    }
+
+    function makeTenFramePrompt() {
+      let total;
+      if (state.difficulty === "single") {
+        total = randInt(1, 10);
+      } else if (state.difficulty === "double") {
+        total = randInt(11, 20);
+      } else {
+        total = randInt(21, 40);
+      }
+
+      const frames = Math.ceil(total / 10);
+      return {
+        id: nextPromptId(),
+        kind: "tenframes",
+        total,
+        frames,
+        answer: total,
+        plain: `Count the ten-frame dots`
+      };
+    }
+
+    function makePrompt() {
+      if (state.operation === "coins") return makeCoinPrompt();
+      if (state.operation === "addition") return makeAdditionPrompt();
+      if (state.operation === "subtraction") return makeSubtractionPrompt();
+      if (state.operation === "multiplication") return makeMultiplicationPrompt();
+      if (state.operation === "division") return makeDivisionPrompt();
+      if (state.operation === "rounding") return makeRoundingPrompt();
+      if (state.operation === "counting") return makeCountingPrompt();
+      return makeTenFramePrompt();
+    }
+
+    function makePrompts(total) {
+      const out = [];
+      for (let i = 0; i < total; i += 1) out.push(makePrompt());
+      return out;
+    }
+
+    function renderTenFrames(total, context) {
+      let remaining = total;
+      const frameHtml = [];
+      const frameCount = Math.ceil(total / 10);
+      for (let f = 0; f < frameCount; f += 1) {
+        const fill = Math.min(10, remaining);
+        remaining -= fill;
+        const cells = [];
+        for (let i = 0; i < 10; i += 1) {
+          const dot = i < fill ? '<span class="tfdot"></span>' : "";
+          cells.push(`<span class="tfcell">${dot}</span>`);
+        }
+        frameHtml.push(`<div class="tenframe${context === "roll" ? " tenframe-roll" : ""}"><div class="tfgrid">${cells.join("")}</div></div>`);
+      }
+      return `<div class="prompt-wrap"><div class="tenframe-group">${frameHtml.join("")}</div></div>`;
+    }
+
+    function renderCoinPrompt(prompt, context) {
+      const isTtt = context === "ttt";
+      const base = context === "roll" ? 48 : context === "modal" ? 82 : isTtt ? 46 : 78;
+      const cols = isTtt ? (prompt.coins.length <= 4 ? 2 : 3) : 0;
+      const stripClass = cols ? "coin-strip coin-grid" : "coin-strip";
+      const stripStyle = cols ? ` style="--coin-cols:${cols}"` : "";
+      const coinHtml = prompt.coins.map((coin, coinIndex) => {
+        const size = Math.round(base * coin.ratio);
+        const dots = coin.chunkValues.map((chunkValue, dotIndex) => {
+          const pos = (DOT_POSITIONS[coin.chunkValues.length] || DOT_POSITIONS[1])[dotIndex] || { x: 50, y: 50 };
+          const hit = coin.dots[dotIndex] ? " hit" : "";
+          const star = chunkValue === 1 ? " star" : "";
+          const text = coin.dots[dotIndex] ? "&#10003;" : (chunkValue === 1 ? "&#9733;" : String(chunkValue));
+          return `
+            <button
+              type="button"
+              class="coin-dot${star}${hit}"
+              data-prompt-id="${prompt.id}"
+              data-coin-index="${coinIndex}"
+              data-dot-index="${dotIndex}"
+              style="left:${pos.x}%;top:${pos.y}%"
+              aria-label="${htmlEscape(coin.label)} dot ${dotIndex + 1}">${text}</button>`;
+        }).join("");
+
+        return `
+          <div class="coin-face" style="--coin-size:${size}px;--coin-size-mobile:${Math.round(size * 0.84)}px;--coin-size-roll:${Math.round(size * 0.74)}px;--coin-size-modal:${Math.round(size * 1.02)}px">
+            <img src="${coin.img}" alt="${htmlEscape(coin.label)}">
+            ${dots}
+          </div>`;
+      }).join("");
+
+      return `
+        <div class="coin-prompt">
+          <div class="${stripClass}"${stripStyle}>${coinHtml}</div>
+          <div class="coin-total" data-coin-total="${prompt.id}">${prompt.counted}c</div>
+        </div>`;
+    }
+
+    function renderStackPrompt(prompt) {
+      return `
+        <div class="prompt-wrap">
+          <div class="stack-problem" aria-label="${htmlEscape(prompt.plain)}">
+            <div class="stack-line"><span>${formatNumber(prompt.top)}</span></div>
+            <div class="stack-line"><span class="op">${prompt.op}</span><span>${formatNumber(prompt.bottom)}</span></div>
+            <div class="stack-bar"></div>
+          </div>
+        </div>`;
+    }
+
+    function renderUnderlinedRoundingNumber(number, place) {
+      const raw = String(number);
+      const placeDigits = String(place).length - 1;
+      const underlineIndex = raw.length - placeDigits - 1;
+      if (underlineIndex < 0 || underlineIndex >= raw.length) return raw;
+      return raw
+        .split("")
+        .map((ch, i) => (i === underlineIndex ? `<span class="under">${ch}</span>` : ch))
+        .join("");
+    }
+
+    function renderRoundingNumberLine(prompt) {
+      const lower = prompt.bounds.lower;
+      const upper = prompt.bounds.upper;
+      const pct = Math.max(0, Math.min(100, ((prompt.number - lower) / (upper - lower)) * 100));
+      return `
+        <div class="numline-wrap">
+          <div class="numline-track">
+            <span class="numline-end left"></span>
+            <span class="numline-end right"></span>
+            <span class="numline-marker" style="left:${pct}%"></span>
+          </div>
+          <div class="numline-labels"><span>${formatNumber(lower)}</span><span>${formatNumber(upper)}</span></div>
+          <div class="numline-target">Locate ${formatNumber(prompt.number)}</div>
+        </div>`;
+    }
+
+    function renderPromptHtml(prompt, context) {
+      if (prompt.kind === "coins") return renderCoinPrompt(prompt, context);
+      if (prompt.kind === "stack") return renderStackPrompt(prompt);
+      if (prompt.kind === "math") {
+        return `<div class="prompt-wrap"><div class="prompt-math">${htmlEscape(prompt.htmlMath)}</div></div>`;
+      }
+      if (prompt.kind === "rounding") {
+        const underlined = renderUnderlinedRoundingNumber(prompt.number, prompt.place);
+        const nl = prompt.view === "numberline" ? renderRoundingNumberLine(prompt) : "";
+        return `
+          <div class="prompt-wrap rounding-wrap">
+            <div class="rounding-line">Round ${underlined}</div>
+            <div class="rounding-line">to nearest ${prompt.placeText}</div>
+            ${nl}
+          </div>`;
+      }
+      if (prompt.kind === "counting") {
+        const seq = prompt.sequence.map((x) => (x === null ? '<span class="missing-token">____</span>' : formatNumber(x))).join(", ");
+        return `
+          <div class="prompt-wrap counting-wrap">
+            <div class="counting-line">${seq}</div>
+          </div>`;
+      }
+      return renderTenFrames(prompt.total, context);
+    }
+
+    function winningLine(marks) {
       return WIN_LINES.find(([a, b, c]) => marks[a] && marks[a] === marks[b] && marks[b] === marks[c]) || null;
     }
 
@@ -825,10 +1698,9 @@
       state.ttt.winLine = [];
     }
 
-    function makeTttMove(index) {
-      if (state.ttt.over || state.ttt.marks[index]) return;
+    function placeTttMark(index) {
       state.ttt.marks[index] = state.ttt.turn;
-      const line = winnerLine(state.ttt.marks);
+      const line = winningLine(state.ttt.marks);
       if (line) {
         state.ttt.over = true;
         state.ttt.winLine = line;
@@ -842,12 +1714,104 @@
       renderTicTacToe();
     }
 
+    function parseNumericInput(raw) {
+      const cleaned = String(raw || "").replace(/[^0-9-]/g, "");
+      if (!cleaned || cleaned === "-") return null;
+      const value = Number(cleaned);
+      return Number.isFinite(value) ? value : null;
+    }
+
+    function promptAnswerText(prompt) {
+      if (prompt.kind === "coins") return "Write total cents for this coin set.";
+      if (prompt.kind === "tenframes") return "Enter how many dots are shown.";
+      if (prompt.kind === "rounding") return `Enter rounded value for nearest ${prompt.placeText}.`;
+      if (prompt.kind === "counting") return "Enter the number that belongs in the blank.";
+      return `Enter answer for: ${prompt.plain || "problem"}`;
+    }
+
+    function showAnswerModal(prompt, sourceLabel) {
+      return new Promise((resolve) => {
+        state.modal.resolver = resolve;
+        state.modal.prompt = prompt;
+        state.modal.sourceLabel = sourceLabel || "";
+
+        modalTitle.textContent = state.modal.sourceLabel ? `${state.modal.sourceLabel}: Enter Answer` : "Enter Answer";
+        modalPrompt.textContent = promptAnswerText(prompt);
+        modalProblem.innerHTML = renderPromptHtml(prompt, "modal");
+        modalInput.value = "";
+        modalMsg.textContent = "";
+        answerModal.classList.add("open");
+        answerModal.setAttribute("aria-hidden", "false");
+        setTimeout(() => modalInput.focus(), 10);
+      });
+    }
+
+    function closeAnswerModal(result) {
+      answerModal.classList.remove("open");
+      answerModal.setAttribute("aria-hidden", "true");
+      const resolver = state.modal.resolver;
+      state.modal.resolver = null;
+      state.modal.prompt = null;
+      state.modal.sourceLabel = "";
+      modalProblem.innerHTML = "";
+      if (resolver) resolver(result);
+    }
+
+    function checkModalAnswer() {
+      const prompt = state.modal.prompt;
+      if (!prompt) {
+        closeAnswerModal(false);
+        return;
+      }
+      const value = parseNumericInput(modalInput.value);
+      if (value === null) {
+        modalMsg.textContent = "Enter a number.";
+        return;
+      }
+      if (value === prompt.answer) {
+        closeAnswerModal(true);
+      } else {
+        modalMsg.textContent = "Not yet. Try again.";
+        modalInput.select();
+      }
+    }
+
+    modalSubmit.addEventListener("click", checkModalAnswer);
+    modalCancel.addEventListener("click", () => closeAnswerModal(false));
+    modalInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        checkModalAnswer();
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        closeAnswerModal(false);
+      }
+    });
+
+    answerModal.addEventListener("click", (event) => {
+      if (event.target === answerModal) closeAnswerModal(false);
+    });
+
+    async function handleTttCellClick(index) {
+      if (state.ttt.over || state.ttt.marks[index]) return;
+      const prompt = state.ttt.prompts[index];
+      if (!prompt) return;
+
+      if (!state.requireCorrect) {
+        placeTttMark(index);
+        return;
+      }
+
+      const ok = await showAnswerModal(prompt, `Tic Tac Toe Square ${index + 1}`);
+      if (ok) placeTttMark(index);
+    }
+
     function renderTicTacToe() {
-      const output = document.getElementById("output");
-      const meta = `${labelForOperation()} | ${labelForDifficulty()} | Tic Tac Toe`;
+      indexPrompts(state.ttt.prompts);
+      const meta = `${operationLabel()} | ${difficultyLabel()} | Tic Tac Toe | ${state.requireCorrect ? "Answer Check On" : "Answer Check Off"}`;
       const turnClass = state.ttt.turn === "X" ? "x" : "o";
 
-      output.innerHTML = `
+      outputEl.innerHTML = `
         <article class="sheet">
           <div class="sheet-title">Math Tic Tac Toe</div>
           <div class="sheet-meta">${meta} | Turn: <span class="${turnClass}">${state.ttt.turn}</span></div>
@@ -861,21 +1825,31 @@
             <button id="btnSameBoard" type="button">Play Again (Same Board)</button>
             <button id="btnNewBoard" type="button">New Problems</button>
           </div>
-        </article>
-      `;
+        </article>`;
 
       const board = document.getElementById("tttBoard");
       state.ttt.prompts.forEach((prompt, idx) => {
         const mark = state.ttt.marks[idx] || "";
-        const button = document.createElement("button");
-        button.className = "cell" + (state.ttt.winLine.includes(idx) ? " win" : "");
-        button.disabled = Boolean(mark) || state.ttt.over;
-        button.innerHTML = `
-          ${prompt.html}
-          <div class="mark ${mark === "X" ? "x" : mark === "O" ? "o" : ""}">${mark}</div>
-        `;
-        button.addEventListener("click", () => makeTttMove(idx));
-        board.appendChild(button);
+        const locked = Boolean(mark) || state.ttt.over;
+        const cell = document.createElement("div");
+        cell.className = "cell" + (state.ttt.winLine.includes(idx) ? " win" : "") + (locked ? " locked" : "");
+        cell.dataset.index = String(idx);
+        cell.dataset.promptId = prompt.id;
+        cell.innerHTML = `
+          ${renderPromptHtml(prompt, "ttt")}
+          <div class="mark ${mark === "X" ? "x" : mark === "O" ? "o" : ""}">${mark}</div>`;
+        board.appendChild(cell);
+      });
+
+      board.addEventListener("click", async (event) => {
+        const dot = event.target.closest(".coin-dot");
+        if (dot) return;
+        const cell = event.target.closest(".cell");
+        if (!cell) return;
+        const index = Number(cell.dataset.index);
+        if (Number.isFinite(index)) {
+          await handleTttCellClick(index);
+        }
       });
 
       document.getElementById("btnSameBoard").addEventListener("click", () => {
@@ -902,25 +1876,22 @@
         td.appendChild(img);
       }
 
-      let i = 0;
+      let idx = 0;
       for (let r = 0; r < rows; r += 1) {
         const row = table.insertRow();
         for (let c = 0; c < cols; c += 1) {
           const td = row.insertCell();
           td.className = "rr-cell";
+          td.dataset.row = String(r + 1);
           td.dataset.col = String(c + 1);
-          const prompt = prompts[i];
+          const prompt = prompts[idx] || null;
           if (prompt) {
-            if (prompt.type === "coins") {
-              td.classList.add("rr-coin");
-            } else {
-              td.classList.add("rr-math");
-            }
-            td.innerHTML = prompt.html;
+            td.dataset.promptId = prompt.id;
+            td.innerHTML = renderPromptHtml(prompt, "roll");
           } else {
             td.innerHTML = "";
           }
-          i += 1;
+          idx += 1;
         }
       }
 
@@ -970,6 +1941,7 @@
       state.roll.columnPointers = Array(6).fill(0);
       state.roll.completed = 0;
       state.roll.current = null;
+      state.roll.pending = null;
       state.roll.rolling = false;
       state.roll.page.querySelectorAll(".rr-cell").forEach((td) => {
         td.classList.remove("current", "done");
@@ -980,8 +1952,48 @@
       state.roll.status.textContent = `Roll to start. 0 of ${state.roll.total} complete.`;
     }
 
+    function finishPendingRollCell() {
+      if (!state.roll || !state.roll.pending) return;
+      const pending = state.roll.pending;
+      pending.cell.classList.remove("current");
+      pending.cell.classList.add("done");
+      state.roll.columnPointers[pending.colIndex] += 1;
+      state.roll.completed += 1;
+      state.roll.current = pending.cell;
+      state.roll.pending = null;
+
+      if (state.roll.completed >= state.roll.total) {
+        state.roll.rollBtn.disabled = true;
+        state.roll.rollBtn.textContent = "Board Complete";
+        state.roll.status.textContent = `Board complete. ${state.roll.total} of ${state.roll.total} complete.`;
+        return;
+      }
+
+      const left = state.roll.total - state.roll.completed;
+      state.roll.rollBtn.disabled = false;
+      state.roll.status.textContent = `${state.roll.completed} of ${state.roll.total} complete (${left} left).`;
+    }
+
+    async function handleRollCellAnswer(cell) {
+      if (!state.roll || !state.requireCorrect || !state.roll.pending) return;
+      if (state.roll.pending.cell !== cell) return;
+      const row = cell.dataset.row || "?";
+      const col = cell.dataset.col || "?";
+      const ok = await showAnswerModal(state.roll.pending.prompt, `Roll and Read (R${row} C${col})`);
+      if (ok) {
+        finishPendingRollCell();
+      } else {
+        state.roll.status.textContent = "Answer the highlighted box to continue.";
+      }
+    }
+
     async function takeRollTurn() {
       if (!state.roll || state.roll.rolling) return;
+
+      if (state.requireCorrect && state.roll.pending) {
+        state.roll.status.textContent = "Answer the highlighted box to continue.";
+        return;
+      }
 
       const open = availableColumns();
       if (!open.length) {
@@ -997,56 +2009,57 @@
 
       const raw = randInt(1, 6);
       const final = open.includes(raw) ? raw : choose(open);
-      const rerollMessage = raw === final ? "" : ` Auto-reroll ${raw} → ${final}.`;
+      const rerollMessage = raw === final ? "" : ` Auto-reroll ${raw} -> ${final}.`;
       await animateRoll(final);
 
-      const col = final - 1;
-      const ptr = state.roll.columnPointers[col];
-      const target = state.roll.columnQueues[col][ptr] || null;
+      const colIndex = final - 1;
+      const ptr = state.roll.columnPointers[colIndex];
+      const target = state.roll.columnQueues[colIndex][ptr] || null;
 
-      if (state.roll.current) {
-        state.roll.current.classList.remove("current");
-        state.roll.current.classList.add("done");
-      }
-
-      if (target) {
-        state.roll.columnPointers[col] = ptr + 1;
-        state.roll.completed += 1;
-        target.classList.add("current");
-        target.classList.remove("done");
-        state.roll.current = target;
-      }
-
-      if (state.roll.completed >= state.roll.total) {
-        state.roll.rollBtn.disabled = true;
-        state.roll.rollBtn.textContent = "Board Complete";
-        state.roll.status.textContent = `Rolled ${final}. Read it. Board complete.${rerollMessage}`;
+      if (!target) {
         state.roll.rolling = false;
+        state.roll.rollBtn.disabled = false;
+        state.roll.status.textContent = "No open problem in that column.";
         return;
       }
 
-      const left = state.roll.total - state.roll.completed;
-      state.roll.status.textContent = `Rolled ${final}. Read highlighted box. ${state.roll.completed} of ${state.roll.total} complete (${left} left).${rerollMessage}`;
-      state.roll.rollBtn.disabled = false;
+      target.cell.classList.add("current");
+      state.roll.pending = { cell: target.cell, prompt: target.prompt, colIndex };
+
+      if (!state.requireCorrect) {
+        finishPendingRollCell();
+        if (state.roll && state.roll.completed < state.roll.total) {
+          state.roll.status.textContent = `Rolled ${final}.${rerollMessage}`;
+        }
+      } else {
+        state.roll.rollBtn.disabled = true;
+        state.roll.status.textContent = `Rolled ${final}. Click highlighted box and enter answer.${rerollMessage}`;
+      }
+
       state.roll.rolling = false;
     }
 
-    function wireRollState(page) {
+    function wireRollState(page, prompts) {
       const rollBtn = page.querySelector("#rollBtn");
       const resetBtn = page.querySelector("#resetRollBtn");
       const status = page.querySelector("#rollStatus");
       const dieImg = page.querySelector("#liveDie");
       const dieValue = page.querySelector("#dieValue");
 
+      const promptMap = new Map();
+      prompts.forEach((p) => promptMap.set(p.id, p));
+
       const columnQueues = Array.from({ length: 6 }, () => []);
-      page.querySelectorAll(".rr-cell").forEach((td) => {
-        if (td.textContent.trim()) {
-          const col = Number(td.dataset.col);
-          if (col >= 1 && col <= 6) {
-            columnQueues[col - 1].push(td);
-          }
+      page.querySelectorAll(".rr-cell").forEach((cell) => {
+        const promptId = cell.dataset.promptId || "";
+        const prompt = promptMap.get(promptId) || null;
+        if (!prompt) return;
+        const col = Number(cell.dataset.col || "0");
+        if (col >= 1 && col <= 6) {
+          columnQueues[col - 1].push({ cell, prompt });
         }
       });
+
       const total = columnQueues.reduce((sum, q) => sum + q.length, 0);
 
       state.roll = {
@@ -1061,20 +2074,27 @@
         completed: 0,
         total,
         current: null,
+        pending: null,
         rolling: false
       };
 
       rollBtn.addEventListener("click", takeRollTurn);
       resetBtn.addEventListener("click", resetRollRound);
+      page.querySelectorAll(".rr-cell").forEach((cell) => {
+        cell.addEventListener("click", () => {
+          handleRollCellAnswer(cell);
+        });
+      });
+
       resetRollRound();
     }
 
     function renderRollRead(prompts) {
-      const output = document.getElementById("output");
-      const meta = `${labelForOperation()} | ${labelForDifficulty()} | Roll and Read`;
+      indexPrompts(prompts);
+      const meta = `${operationLabel()} | ${difficultyLabel()} | Roll and Read | ${state.requireCorrect ? "Answer Check On" : "Answer Check Off"}`;
       const built = buildRollTable(prompts);
 
-      output.innerHTML = `
+      outputEl.innerHTML = `
         <article class="sheet">
           <div class="sheet-title">Math Roll and Read</div>
           <div class="sheet-meta">${meta}</div>
@@ -1088,23 +2108,55 @@
             <div id="rollStatus" class="status">Roll to start.</div>
           </div>
           <div id="rollTableMount"></div>
-        </article>
-      `;
+        </article>`;
 
       document.getElementById("rollTableMount").appendChild(built.table);
-      wireRollState(output.querySelector(".sheet"));
+      wireRollState(outputEl.querySelector(".sheet"), prompts);
     }
 
     function generate() {
       if (state.gameType === "tictactoe") {
-        state.ttt.prompts = buildPrompts(9);
+        state.ttt.prompts = makePrompts(9);
         resetTttBoardOnly();
         renderTicTacToe();
         return;
       }
-      const prompts = buildPrompts(state.gridSize);
+      const prompts = makePrompts(state.gridSize);
       renderRollRead(prompts);
     }
+
+    function handleCoinDotClick(button) {
+      const prompt = getPromptById(button.dataset.promptId);
+      if (!prompt || prompt.kind !== "coins") return;
+
+      const coinIndex = Number(button.dataset.coinIndex);
+      const dotIndex = Number(button.dataset.dotIndex);
+      if (!Number.isFinite(coinIndex) || !Number.isFinite(dotIndex)) return;
+
+      const coin = prompt.coins[coinIndex];
+      if (!coin) return;
+      if (coin.dots[dotIndex]) return;
+
+      coin.dots[dotIndex] = true;
+      const value = Number(coin.chunkValues[dotIndex] || 0);
+      prompt.counted += value;
+
+      button.classList.add("hit");
+      button.innerHTML = "&#10003;";
+
+      const totals = outputEl.querySelectorAll(`[data-coin-total='${prompt.id}']`);
+      totals.forEach((el) => {
+        el.textContent = `${prompt.counted}c`;
+      });
+    }
+
+    outputEl.addEventListener("click", (event) => {
+      const dot = event.target.closest(".coin-dot");
+      if (!dot) return;
+      event.preventDefault();
+      event.stopPropagation();
+      handleCoinDotClick(dot);
+    });
 
     document.querySelectorAll("#gameTypeRow .pill").forEach((button) => {
       button.addEventListener("click", () => {
@@ -1118,11 +2170,41 @@
         state.operation = button.dataset.operation;
         setSelectedInRow("operationRow", "data-operation", state.operation);
         updateDifficultyOptions();
+        updateRegroupVisibility();
+      });
+    });
+
+    document.querySelectorAll("#answerModeRow .pill").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.requireCorrect = button.dataset.answerMode === "required";
+        setSelectedInRow("answerModeRow", "data-answer-mode", state.requireCorrect ? "required" : "free");
       });
     });
 
     difficultySelect.addEventListener("change", () => {
       state.difficulty = difficultySelect.value;
+    });
+
+    regroupSelect.addEventListener("change", () => {
+      state.regroupMode = regroupSelect.value;
+    });
+
+    roundingStyleSelect.addEventListener("change", () => {
+      state.roundingStyle = roundingStyleSelect.value;
+    });
+
+    roundingNearestSelect.addEventListener("change", () => {
+      state.roundingNearest = Number(roundingNearestSelect.value) || 10;
+      enforceRoundingWithin();
+    });
+
+    roundingWithinSelect.addEventListener("change", () => {
+      state.roundingWithin = Number(roundingWithinSelect.value) || 100;
+      enforceRoundingWithin();
+    });
+
+    countingStyleSelect.addEventListener("change", () => {
+      state.countingStyle = countingStyleSelect.value;
     });
 
     gridSizeSelect.addEventListener("change", () => {
@@ -1139,6 +2221,7 @@
     });
 
     updateDifficultyOptions();
+    updateRegroupVisibility();
     generate();
   </script>
 </body>

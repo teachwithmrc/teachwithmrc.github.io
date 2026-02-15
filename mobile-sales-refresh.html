@@ -1,261 +1,823 @@
-diff --git a/mobile-sales-refresh.html b/mobile-sales-refresh.html
-new file mode 100644
-index 0000000000000000000000000000000000000000..59345fd5033dd333e6bf502e6791af2a5037dda5
---- /dev/null
-+++ b/mobile-sales-refresh.html
-@@ -0,0 +1,255 @@
-+<!doctype html>
-+<html lang="en">
-+<head>
-+  <meta charset="UTF-8" />
-+  <meta name="viewport" content="width=device-width, initial-scale=1" />
-+  <title>Intervention Station - Mobile Optimized Sales Layout</title>
-+  <style>
-+    :root{
-+      --brand-dark:#2f3e4e;
-+      --brand-blue:#66c9f4;
-+      --ink:#102246;
-+      --offwhite:#f3f5f7;
-+      --panel:#fff;
-+      --border:rgba(0,0,0,.2);
-+      --shadow:0 10px 30px rgba(0,0,0,.12);
-+    }
-+    *{box-sizing:border-box}
-+    body{margin:0;font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--offwhite);color:var(--ink)}
-+    a{text-decoration:none;color:inherit}
-+
-+    .is-ticker{background:var(--brand-dark);color:#fff;overflow:hidden}
-+    .is-ticker-track{display:flex;gap:24px;white-space:nowrap;padding:10px 0;animation:ticker 30s linear infinite;width:max-content}
-+    .is-ticker-item{font-size:12px;font-weight:700;opacity:.95}
-+    .is-ticker-star{color:#ffe08a;margin-right:6px}
-+    @keyframes ticker{to{transform:translateX(-50%)}}
-+
-+    .top-cta-wrap{position:sticky;top:0;z-index:1000;background:var(--brand-dark);box-shadow:0 4px 18px rgba(0,0,0,.22)}
-+    .top-cta-bar{max-width:1200px;margin:auto;padding:10px 14px;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center}
-+    .top-logo{max-width:250px;width:100%;height:auto}
-+    .top-buttons-row{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
-+    .top-btn{display:inline-flex;align-items:center;justify-content:center;background:var(--brand-blue);border:2px solid var(--brand-blue);color:#fff;font-weight:700;font-size:14px;min-height:42px;padding:0 14px;border-radius:12px;white-space:nowrap}
-+
-+    .is-home-sections{padding:14px}
-+    .is-layout{max-width:1200px;margin:auto;display:grid;grid-template-columns:290px minmax(0,1fr);gap:14px;align-items:start}
-+    .is-nav{position:sticky;top:88px}
-+    .is-nav-card,.is-page{background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
-+    .is-nav-header{background:#2f79b8;color:#fff;font-size:18px;font-weight:800;padding:12px}
-+    .is-nav-subhead{font-size:13px;font-weight:800;color:#2f3e4e;padding:10px 12px 0}
-+    .is-nav-group{padding:8px 12px 12px}
-+    .is-nav-link{display:block;padding:8px 0;font-size:15px;font-weight:600;color:#123b63}
-+    .is-nav-link:hover{text-decoration:underline}
-+
-+    .is-slider{position:relative;background:#fff;border-bottom:1px solid var(--border)}
-+    .is-slider-viewport{overflow:auto;scroll-snap-type:x mandatory;display:flex;scrollbar-width:none}
-+    .is-slider-viewport::-webkit-scrollbar{display:none}
-+    .is-slide{position:relative;min-width:100%;height:clamp(190px,40vw,320px);scroll-snap-align:start}
-+    .is-slide img{width:100%;height:100%;object-fit:cover}
-+    .is-slide-overlay{position:absolute;left:0;right:0;bottom:0;padding:14px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.75))}
-+    .is-slide-title{font-size:20px;font-weight:800}
-+    .is-slide-sub{font-size:13px;font-weight:500;opacity:.95}
-+
-+    .is-top-cta{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:16px;border-bottom:1px solid var(--border)}
-+    .is-top-cta h1{margin:0 0 8px;font-size:clamp(24px,4vw,34px);line-height:1.1}
-+    .is-top-cta p{margin:0;font-size:15px;line-height:1.45;color:#2b2b2b}
-+    .is-top-proof{margin-top:10px;font-size:13px;font-weight:800;color:#123b63}
-+    .is-join-btn{display:inline-flex;background:var(--brand-blue);color:#fff;padding:12px 18px;border-radius:12px;font-weight:700}
-+
-+    .is-intervention-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:12px}
-+    .is-intervention-card{border:1px solid #b9c7d6;border-radius:14px;overflow:hidden;background:#fff}
-+    .is-intervention-head{padding:10px 12px;background:#2f79b8;color:#fff;font-weight:800}
-+    .is-intervention-img{width:100%;aspect-ratio:16/10;object-fit:cover}
-+    .is-intervention-body{padding:12px}
-+    .is-intervention-body p{margin:0 0 8px;font-size:14px;color:#2b2b2b}
-+    .is-intervention-link{color:#2f79b8;font-weight:800}
-+
-+    .mobile-nav-toggle{display:none}
-+
-+    @media (max-width:1024px){
-+      .is-layout{grid-template-columns:1fr}
-+      .is-nav{position:static}
-+    }
-+
-+    @media (max-width:760px){
-+      .top-cta-bar{grid-template-columns:1fr;justify-items:center}
-+      .top-logo{max-width:230px}
-+      .top-buttons-row{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px}
-+      .top-buttons-row a:last-child{grid-column:1 / -1}
-+      .top-btn{width:100%}
-+
-+      .mobile-nav-toggle{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px;width:calc(100% - 24px);background:#fff;border:1px solid var(--border);border-radius:12px;padding:11px;font-weight:700}
-+      .is-nav{display:none}
-+      .is-nav.open{display:block;position:static}
-+
-+      .is-top-cta{grid-template-columns:1fr;padding:16px 14px}
-+      .is-join-btn{width:100%;justify-content:center}
-+
-+      .is-intervention-grid{grid-template-columns:1fr}
-+      .is-slide{height:220px}
-+      .is-slide-title{font-size:18px}
-+
-+      .is-ticker-track{animation-duration:44s}
-+    }
-+
-+    @media (prefers-reduced-motion: reduce){
-+      .is-ticker-track{animation:none}
-+    }
-+  </style>
-+</head>
-+<body>
-+  <div class="is-ticker" aria-label="Reviews ticker">
-+    <div class="is-ticker-track">
-+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>Best intervention resources ever — my kids LOVE it.</div>
-+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>Saved me hours every week. Worth every penny.</div>
-+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>The generators are unreal. Print and go.</div>
-+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>My small groups finally feel organized.</div>
-+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>Best intervention resources ever — my kids LOVE it.</div>
-+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>Saved me hours every week. Worth every penny.</div>
-+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>The generators are unreal. Print and go.</div>
-+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>My small groups finally feel organized.</div>
-+    </div>
-+  </div>
-+
-+  <div class="top-cta-wrap">
-+    <div class="top-cta-bar">
-+      <img src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png" alt="Intervention Station" class="top-logo" />
-+      <div class="top-buttons-row">
-+        <a href="https://member.interventionstation.com/join" class="top-btn">Join Membership</a>
-+        <a href="https://member.interventionstation.com/membership" class="top-btn">What's Inside?</a>
-+        <a href="https://member.interventionstation.com/login" class="top-btn">Log In</a>
-+      </div>
-+    </div>
-+  </div>
-+
-+  <section class="is-home-sections">
-+    <div class="is-layout">
-+      <button class="mobile-nav-toggle" id="mobileNavToggle" type="button" aria-expanded="false" aria-controls="leftNav">☰ Browse resources</button>
-+
-+      <aside class="is-nav" id="leftNav" aria-label="Navigation">
-+        <nav class="is-nav-card">
-+          <div class="is-nav-header">Math Resources</div>
-+          <div class="is-nav-subhead">Numbers &amp; Operations</div>
-+          <div class="is-nav-group">
-+            <a class="is-nav-link" href="https://interventionstation.com/placevalue-preview">Place Value</a>
-+            <a class="is-nav-link" href="https://interventionstation.com/rounding-preview">Rounding</a>
-+            <a class="is-nav-link" href="https://interventionstation.com/addition-preview">Addition (Multi Digit)</a>
-+          </div>
-+          <div class="is-nav-subhead">Fractions &amp; Decimals</div>
-+          <div class="is-nav-group">
-+            <a class="is-nav-link" href="https://interventionstation.com/fractions-preview">Fractions</a>
-+            <a class="is-nav-link" href="https://interventionstation.com/decimals-preview">Decimals</a>
-+            <a class="is-nav-link" href="https://interventionstation.com/division-preview">Long Division</a>
-+          </div>
-+
-+          <div class="is-nav-header">Reading &amp; Phonics</div>
-+          <div class="is-nav-subhead">Reading by Phonics Skills</div>
-+          <div class="is-nav-group">
-+            <a class="is-nav-link" href="https://interventionstation.com/phonics-comics-preview">Phonics Comics</a>
-+            <a class="is-nav-link" href="https://interventionstation.com/spelling-preview">Spelling by Phonics Skill</a>
-+            <a class="is-nav-link" href="https://interventionstation.com/heart-words-preview">Heart Words</a>
-+          </div>
-+          <div class="is-nav-subhead">Writing Practice</div>
-+          <div class="is-nav-group">
-+            <a class="is-nav-link" href="https://interventionstation.com/games-preview">Writing Practice</a>
-+            <a class="is-nav-link" href="https://interventionstation.com/fix-mixup-preview">Fix the Mix Up</a>
-+            <a class="is-nav-link" href="https://interventionstation.com/blending-slides-preview">Blending Slides</a>
-+          </div>
-+
-+          <div class="is-nav-header">Generators</div>
-+          <div class="is-nav-group">
-+            <a class="is-nav-link" href="https://interventionstation.com/fluencygridpreview">Fluency Grid Generator</a>
-+            <a class="is-nav-link" href="https://interventionstation.com/word-map-preview">Word Mapping</a>
-+            <a class="is-nav-link" href="https://interventionstation.com/rollreadpreview">Roll and Read</a>
-+          </div>
-+
-+          <div class="is-nav-header">Learning Songs</div>
-+          <div class="is-nav-group">
-+            <a class="is-nav-link" href="https://interventionstation.com/math-song-preview">Math Learning Songs</a>
-+            <a class="is-nav-link" href="https://interventionstation.com/math-song-preview">All Learning Songs + Resources</a>
-+          </div>
-+        </nav>
-+      </aside>
-+
-+      <main class="is-main">
-+        <section class="is-page">
-+          <section class="is-slider">
-+            <div class="is-slider-viewport" id="heroSlider">
-+              <a class="is-slide" href="https://interventionstation.com/phonics-comics-preview">
-+                <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530f8a93b0572969e8c.png" alt="Phonics Comics" />
-+                <div class="is-slide-overlay"><div class="is-slide-title">Phonics Comics</div><div class="is-slide-sub">Decodable stories kids actually want to read</div></div>
-+              </a>
-+              <a class="is-slide" href="https://interventionstation.com/fluencygridpreview">
-+                <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530e18638d0cfa07bbe.png" alt="Fluency Grid Generator" />
-+                <div class="is-slide-overlay"><div class="is-slide-title">Generators</div><div class="is-slide-sub">Build printable practice pages in seconds</div></div>
-+              </a>
-+              <a class="is-slide" href="https://interventionstation.com/math-song-preview">
-+                <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049e186383c509dc54f.png" alt="Learning Songs" />
-+                <div class="is-slide-overlay"><div class="is-slide-title">Learning Songs</div><div class="is-slide-sub">Songs + printables that make routines stick</div></div>
-+              </a>
-+              <a class="is-slide" href="https://interventionstation.com/multiplication-preview">
-+                <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/674515a001f2194ec471bb64.png" alt="Math Resources" />
-+                <div class="is-slide-overlay"><div class="is-slide-title">Math Resources</div><div class="is-slide-sub">Scaffolded intervention for every level</div></div>
-+              </a>
-+            </div>
-+          </section>
-+
-+          <section class="is-top-cta">
-+            <div>
-+              <h1>Printable Resources + Generators for Busy Teachers</h1>
-+              <p>Scaffolded math & reading support, learning songs, and print-in-seconds generators that save hours every week.</p>
-+              <p class="is-top-proof">Resources Used by Thousands of Teachers, Viewed Millions of Times On TeachWithMrC's Channel.</p>
-+            </div>
-+            <a href="https://member.interventionstation.com/join" class="is-join-btn">Join Membership</a>
-+          </section>
-+
-+          <section class="is-intervention-grid">
-+            <a class="is-intervention-card" href="https://interventionstation.com/multiplication-preview">
-+              <div class="is-intervention-head">Math Resources</div>
-+              <img class="is-intervention-img" src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/674515a001f2194ec471bb64.png" alt="Math resources preview">
-+              <div class="is-intervention-body"><p>Place value, rounding, multiplication, division, fractions, and more.</p><span class="is-intervention-link">Explore →</span></div>
-+            </a>
-+            <a class="is-intervention-card" href="https://interventionstation.com/phonics-comics-preview">
-+              <div class="is-intervention-head">Reading &amp; Phonics</div>
-+              <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b07d871dd47.png" alt="Reading and phonics preview">
-+              <div class="is-intervention-body"><p>Reading by phonics skill, writing practice, and print-ready literacy support.</p><span class="is-intervention-link">Explore →</span></div>
-+            </a>
-+            <a class="is-intervention-card" href="https://interventionstation.com/fluencygridpreview">
-+              <div class="is-intervention-head">Generators</div>
-+              <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b5d5571dd46.png" alt="Generators preview">
-+              <div class="is-intervention-body"><p>Fluency Grid, Word Mapping, Roll &amp; Read, and more click-to-create tools.</p><span class="is-intervention-link">Explore →</span></div>
-+            </a>
-+            <a class="is-intervention-card" href="https://interventionstation.com/math-song-preview">
-+              <div class="is-intervention-head">Learning Songs</div>
-+              <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049e186383c509dc54f.png" alt="Learning songs preview">
-+              <div class="is-intervention-body"><p>Learning songs with visual supports and printable resources for routines.</p><span class="is-intervention-link">Explore →</span></div>
-+            </a>
-+          </section>
-+        </section>
-+      </main>
-+    </div>
-+  </section>
-+
-+  <script>
-+    const toggle = document.getElementById('mobileNavToggle');
-+    const nav = document.getElementById('leftNav');
-+    if (toggle && nav) {
-+      toggle.addEventListener('click', () => {
-+        const isOpen = nav.classList.toggle('open');
-+        toggle.setAttribute('aria-expanded', String(isOpen));
-+      });
-+    }
-+
-+    const slider = document.getElementById('heroSlider');
-+    if (slider) {
-+      let index = 0;
-+      const slides = slider.querySelectorAll('.is-slide');
-+      if (slides.length > 1) {
-+        setInterval(() => {
-+          index = (index + 1) % slides.length;
-+          slider.scrollTo({ left: slider.clientWidth * index, behavior: 'smooth' });
-+        }, 3500);
-+      }
-+    }
-+  </script>
-+</body>
-+</html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intervention Station | Teaching Made Easy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --brand-dark:#2f3e4e;
+      --brand-blue:#66c9f4;
+      --ink:#102246;
+      --border:rgba(0,0,0,.55);
+      --offwhite:#f3f5f7;
+      --panel:#ffffff;
+
+      --is-ink:#123b63;
+      --is-blue:#2f79b8;
+      --is-border:#b9c7d6;
+      --is-text:#2b2b2b;
+
+      --slider-h:300px;
+      --slider-h-md:250px;
+      --slider-h-sm:220px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      padding:0;
+      font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--ink);
+      background:var(--offwhite);
+    }
+    body{overflow-x:hidden}
+    img{display:block;max-width:100%;height:auto}
+    a{text-decoration:none;color:inherit}
+
+    .top-cta-wrap{background:var(--brand-dark)}
+    .top-cta-bar{
+      position:sticky;
+      top:0;
+      z-index:9999;
+      background:var(--brand-dark);
+      width:min(1200px,calc(100% - 32px));
+      margin:0 auto;
+      padding:12px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:nowrap;
+    }
+    .top-logo{width:auto;height:auto;max-width:min(480px,40vw)}
+    .top-buttons-row{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:10px;
+      flex-wrap:nowrap;
+    }
+    .top-buttons-row a{display:inline-flex}
+    .top-btn,
+    .top-buttons-row button{
+      appearance:none;
+      -webkit-appearance:none;
+      width:168px;
+      min-width:168px;
+      height:46px;
+      padding:0 14px;
+      background:var(--brand-blue);
+      border:2px solid var(--brand-blue);
+      border-radius:12px;
+      color:#fff;
+      font-size:16px;
+      font-weight:600;
+      line-height:1;
+      white-space:nowrap;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      transition:filter .15s ease, box-shadow .15s ease;
+    }
+    .top-btn:hover,
+    .top-buttons-row button:hover{filter:brightness(.96);box-shadow:0 2px 6px rgba(0,0,0,.18)}
+    .top-btn:active,
+    .top-buttons-row button:active{filter:brightness(.94);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+    .top-buttons-row button span,
+    .top-buttons-row button .text,
+    .top-buttons-row button .main-text,
+    .top-buttons-row button .main-heading-button{
+      font:inherit;
+      color:inherit;
+      white-space:nowrap;
+    }
+
+    .is-ticker{
+      background:var(--brand-dark);
+      border-top:1px solid rgba(255,255,255,.18);
+      border-bottom:1px solid rgba(255,255,255,.18);
+      overflow:hidden;
+      width:100%;
+    }
+    .is-ticker-track{
+      display:flex;
+      align-items:center;
+      gap:28px;
+      padding:10px 0;
+      width:max-content;
+      white-space:nowrap;
+      animation:isTickerScroll 34s linear infinite;
+      will-change:transform;
+    }
+    .is-ticker:hover .is-ticker-track{animation-play-state:paused}
+    .is-ticker-item{
+      display:inline-flex;
+      align-items:center;
+      flex:0 0 auto;
+      color:#fff;
+      font-size:12px;
+      font-weight:650;
+      line-height:1.1;
+    }
+    .is-ticker-star{color:#ffe08a;margin-right:6px;font-weight:900}
+    @keyframes isTickerScroll{
+      from{transform:translate3d(0,0,0)}
+      to{transform:translate3d(-50%,0,0)}
+    }
+
+    .is-home-sections{background:var(--offwhite);padding:18px 0 34px}
+    .is-wrap{width:min(1200px,calc(100% - 32px));margin:0 auto;background:var(--offwhite)}
+    .is-layout{display:grid;grid-template-columns:320px minmax(0,1fr);gap:12px;align-items:start}
+    .is-main{min-width:0}
+
+    .is-nav{position:sticky;top:16px}
+    .is-nav-card{
+      background:var(--panel);
+      border:2px solid var(--border);
+      border-radius:0;
+      padding:0;
+      overflow:hidden;
+    }
+    .is-nav-group.is-nav-home{padding:10px 12px 8px;border-bottom:2px solid rgba(0,0,0,.18)}
+    .is-nav-header{
+      background:var(--brand-blue);
+      color:#fff;
+      font-weight:700;
+      font-size:22px;
+      line-height:1.1;
+      padding:12px 14px;
+      margin:0;
+    }
+    .is-nav-group{padding:6px 12px 10px}
+    .is-mt-12{margin-top:8px}
+    .is-nav-link{
+      display:block;
+      color:#102246;
+      font-weight:600;
+      font-size:15.5px;
+      line-height:1.35;
+      padding:8px 0;
+      transition:color .2s ease, padding-left .2s ease;
+    }
+    .is-nav-link:hover{text-decoration:underline}
+    .is-nav-link.is-active{
+      color:var(--is-blue);
+      font-weight:800;
+      padding-left:6px;
+      text-decoration:none;
+    }
+
+    .mobile-nav-toggle{
+      display:none;
+      width:100%;
+      border:2px solid var(--border);
+      background:#fff;
+      color:#102246;
+      height:46px;
+      padding:0 14px;
+      font-size:15px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .is-page{
+      background:var(--panel);
+      border:2px solid var(--border);
+      border-radius:0;
+      overflow:hidden;
+    }
+    .is-main-shell{
+      position:relative;
+      min-height:680px;
+    }
+    .is-home-view,
+    .is-detail-view{
+      opacity:1;
+      transform:translateY(0);
+      transition:opacity .2s ease, transform .2s ease;
+    }
+    .is-main-shell.is-transitioning .is-home-view,
+    .is-main-shell.is-transitioning .is-detail-view{
+      opacity:.45;
+      transform:translateY(3px);
+    }
+    .is-detail-view{display:none;background:#fff}
+    .is-main-shell.is-detail-mode .is-home-view{display:none}
+    .is-main-shell.is-detail-mode .is-detail-view{display:block}
+
+    .is-detail-head{
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      gap:10px;
+      align-items:center;
+      padding:10px 12px;
+      border-bottom:2px solid rgba(0,0,0,.18);
+      background:#fff;
+    }
+    .is-detail-back,
+    .is-detail-open{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      height:36px;
+      padding:0 12px;
+      border:2px solid var(--brand-blue);
+      background:var(--brand-blue);
+      color:#fff;
+      font-size:13px;
+      font-weight:700;
+      white-space:nowrap;
+      cursor:pointer;
+    }
+    .is-detail-open{justify-self:end}
+    .is-detail-title{
+      margin:0;
+      font-size:18px;
+      font-weight:800;
+      color:var(--is-ink);
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .is-detail-frame-wrap{
+      position:relative;
+      min-height:620px;
+      background:#fff;
+    }
+    .is-detail-loading{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:14px;
+      font-weight:700;
+      color:#334d62;
+      background:rgba(255,255,255,.9);
+      z-index:1;
+    }
+    .is-detail-frame{
+      width:100%;
+      min-height:620px;
+      border:0;
+      display:block;
+      background:#fff;
+    }
+
+    .is-slider-top{background:#fff;border-bottom:2px solid rgba(0,0,0,.18);position:relative}
+    .is-slider-viewport{height:var(--slider-h);overflow:hidden;position:relative}
+    .is-slider-track{
+      display:flex;
+      height:100%;
+      overflow-x:auto;
+      overflow-y:hidden;
+      scroll-snap-type:x mandatory;
+      scroll-behavior:smooth;
+      -webkit-overflow-scrolling:touch;
+      gap:0;
+      scrollbar-width:none;
+    }
+    .is-slider-track::-webkit-scrollbar{display:none}
+    .is-slide{
+      flex:0 0 100%;
+      min-width:100%;
+      height:100%;
+      scroll-snap-align:start;
+      position:relative;
+      display:block;
+    }
+    .is-slide-img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      background:#fff;
+    }
+    .is-slide-overlay{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      padding:12px 14px;
+      background:linear-gradient(to top,rgba(0,0,0,.65),rgba(0,0,0,0));
+      color:#fff;
+    }
+    .is-slide-title{font-size:18px;font-weight:900;margin:0 0 4px}
+    .is-slide-sub{font-size:12.5px;font-weight:650;opacity:.95}
+
+    .is-slider-arrow{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      z-index:5;
+      width:44px;
+      height:44px;
+      border-radius:999px;
+      border:2px solid rgba(0,0,0,.18);
+      background:rgba(255,255,255,.92);
+      color:#102246;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      user-select:none;
+      box-shadow:0 2px 10px rgba(0,0,0,.12);
+    }
+    .is-slider-arrow:hover{filter:brightness(.98)}
+    .is-slider-arrow:active{filter:brightness(.95)}
+    .is-slider-arrow svg{width:18px;height:18px}
+    .is-slider-prev{left:10px}
+    .is-slider-next{right:10px}
+
+    .is-top-cta{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:14px;
+      align-items:center;
+      padding:14px 16px;
+      background:#fff;
+      border-bottom:2px solid rgba(0,0,0,.18);
+    }
+    .is-top-cta h1{
+      margin:0 0 6px;
+      font-size:22px;
+      line-height:1.15;
+      font-weight:900;
+      color:var(--is-ink);
+    }
+    .is-top-cta p{margin:0;font-size:14px;line-height:1.45;color:var(--is-text);max-width:70ch}
+
+    .is-join-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      height:46px;
+      padding:0 18px;
+      background:var(--brand-blue);
+      border:2px solid var(--brand-blue);
+      border-radius:12px;
+      color:#fff;
+      font-size:16px;
+      font-weight:600;
+      white-space:nowrap;
+      transition:filter .15s ease, box-shadow .15s ease;
+    }
+    .is-join-btn:hover{filter:brightness(.96);box-shadow:0 2px 6px rgba(0,0,0,.18)}
+    .is-join-btn:active{filter:brightness(.94);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+
+    .is-intervention-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:12px;background:#fff}
+    .is-intervention-card{
+      display:block;
+      background:#fff;
+      border:1px solid var(--is-border);
+      overflow:hidden;
+      box-shadow:0 1px 0 rgba(0,0,0,.04);
+    }
+    .is-intervention-head{background:var(--is-blue);color:#fff;font-weight:900;padding:10px 12px;font-size:15px}
+    .is-intervention-img{
+      width:100%;
+      height:220px;
+      object-fit:contain;
+      background:#fff;
+    }
+    .is-intervention-body{padding:10px 12px 12px}
+    .is-intervention-body p{margin:0 0 8px;font-size:13.5px;line-height:1.35;color:var(--is-text)}
+    .is-intervention-link{font-weight:900;color:var(--is-blue)}
+
+    @media (max-width:1100px){
+      .is-layout{grid-template-columns:1fr}
+      .mobile-nav-toggle{display:inline-flex;align-items:center;justify-content:center}
+      .is-nav{position:relative;top:auto;display:none}
+      .is-nav.is-open{display:block}
+      .is-nav-card{max-height:58vh;overflow:auto}
+    }
+
+    @media (max-width:900px){
+      .top-cta-bar{flex-wrap:wrap;justify-content:center;text-align:center}
+      .top-logo{max-width:92vw}
+      .top-buttons-row{flex-wrap:wrap;justify-content:center}
+      .is-slider-viewport{height:var(--slider-h-md)}
+    }
+
+    @media (max-width:740px){
+      .is-top-cta{grid-template-columns:1fr}
+      .is-join-btn{width:100%}
+    }
+
+    @media (max-width:640px){
+      .is-slider-viewport{height:var(--slider-h-sm)}
+      .is-slider-arrow{width:40px;height:40px}
+      .is-intervention-grid{grid-template-columns:1fr}
+      .is-intervention-img{height:230px}
+      .is-detail-head{grid-template-columns:1fr}
+      .is-detail-title{white-space:normal}
+      .is-detail-back,.is-detail-open{width:100%}
+      .is-detail-frame-wrap,
+      .is-detail-frame{min-height:70vh}
+    }
+
+    @media (max-width:1050px){
+      .top-logo{max-width:min(420px,34vw)}
+    }
+  </style>
+</head>
+<body>
+  <div class="top-cta-wrap">
+    <div class="top-cta-bar">
+      <img class="top-logo" src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png" alt="Intervention Station" />
+      <div class="top-buttons-row">
+        <a href="https://member.interventionstation.com/join">
+          <button class="cbutton-Vk2PyOUxx6 btnshadow custom btn-vp btn-hp borderFull radius10 none buttonElevate" type="button">
+            <div class="main-heading-group">
+              <div class="main-heading-button">Join Membership</div>
+            </div>
+          </button>
+        </a>
+        <a href="https://member.interventionstation.com/membership">
+          <button class="cbutton-Vk2PyOUxx6 btnshadow custom btn-vp btn-hp borderFull radius10 none buttonElevate" type="button">
+            <div class="main-heading-group">
+              <div class="main-heading-button">What's Inside?</div>
+            </div>
+          </button>
+        </a>
+        <a href="https://member.interventionstation.com/login">
+          <button class="cbutton-Vk2PyOUxx6 btnshadow custom btn-vp btn-hp borderFull radius10 none buttonElevate" type="button">
+            <div class="main-heading-group">
+              <div class="main-heading-button">Log In</div>
+            </div>
+          </button>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="is-ticker" aria-label="Reviews ticker">
+    <div class="is-ticker-track">
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>&ldquo;Best intervention resources ever &mdash; my kids LOVE it.&rdquo;</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>&ldquo;Saved me hours every week. Worth every penny.&rdquo;</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>&ldquo;The generators are unreal. Print and go.&rdquo;</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>&ldquo;My small groups finally feel organized.&rdquo;</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>&ldquo;Best intervention resources ever &mdash; my kids LOVE it.&rdquo;</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>&ldquo;Saved me hours every week. Worth every penny.&rdquo;</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>&ldquo;The generators are unreal. Print and go.&rdquo;</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>&ldquo;My small groups finally feel organized.&rdquo;</div>
+    </div>
+  </div>
+
+  <section class="is-home-sections">
+    <div class="is-wrap is-layout">
+      <button class="mobile-nav-toggle" id="mobileNavToggle" type="button" aria-expanded="false" aria-controls="leftNav">Browse Resources</button>
+
+      <aside class="is-nav" id="leftNav" aria-label="Navigation">
+        <nav class="is-nav-card">
+          <div class="is-nav-group is-nav-home">
+            <a class="is-nav-link is-active" data-view="home" href="https://interventionstation.com/home-preview">&#127968; Home</a>
+          </div>
+
+          <div class="is-nav-header">Math Resources</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="https://interventionstation.com/placevalue-preview">Place Value</a>
+            <a class="is-nav-link" href="https://interventionstation.com/rounding-preview">Rounding</a>
+            <a class="is-nav-link" href="https://interventionstation.com/rounding-generator-preview">Rounding Generator</a>
+            <a class="is-nav-link" href="https://interventionstation.com/addition-preview">Addition (Multi Digit)</a>
+            <a class="is-nav-link" href="https://interventionstation.com/multiplication-preview">Multiplication</a>
+            <a class="is-nav-link" href="https://interventionstation.com/division-preview">Long Division</a>
+            <a class="is-nav-link" href="https://interventionstation.com/decimals-preview">Decimals</a>
+            <a class="is-nav-link" href="https://interventionstation.com/fractions-preview">Fractions</a>
+            <a class="is-nav-link" href="https://interventionstation.com/math-song-preview">Math Learning Songs</a>
+            <a class="is-nav-link" href="https://interventionstation.com/google-puzzle-preview">Self Checking Google Sheets Puzzle</a>
+            <a class="is-nav-link" href="https://interventionstation.com/math-riddle-preview">Math Fact Riddles</a>
+            <a class="is-nav-link" href="https://interventionstation.com/ten-frame-preview">Ten Frame Test</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">SOR Generators</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="https://interventionstation.com/word-map-preview">Word Mapping</a>
+            <a class="is-nav-link" href="https://interventionstation.com/tictacpreview">Tic Tac Toe</a>
+            <a class="is-nav-link" href="https://interventionstation.com/fluencygridpreview">Fluency Grid</a>
+            <a class="is-nav-link" href="https://interventionstation.com/rollreadpreview">Roll and Read</a>
+            <a class="is-nav-link" href="https://interventionstation.com/wordladderpreview">Word Ladder</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Reading / Phonics</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="https://interventionstation.com/games-preview">Learning Games</a>
+            <a class="is-nav-link" href="https://interventionstation.com/heart-words-preview">Heart Words</a>
+            <a class="is-nav-link" href="https://interventionstation.com/phonics-comics-preview">Phonics Comics</a>
+            <a class="is-nav-link" href="https://interventionstation.com/fix-mixup-preview">Fix the Mix Up</a>
+            <a class="is-nav-link" href="https://interventionstation.com/blending-slides-preview">Blending Slides</a>
+            <a class="is-nav-link" href="https://interventionstation.com/phonics-maze-preview">Phonics Path Maze</a>
+            <a class="is-nav-link" href="https://interventionstation.com/pick-the-pic-preview">Pick the Pic</a>
+            <a class="is-nav-link" href="https://interventionstation.com/hfw-pyramid-preview">High Frequency Word Pyramids</a>
+            <a class="is-nav-link" href="https://interventionstation.com/spelling-preview">Spelling by Phonics Skill</a>
+            <a class="is-nav-link" href="https://interventionstation.com/spelling-google-sheets-preview">Spelling Google Sheets</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Learning Songs</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="https://interventionstation.com/math-song-preview">All Learning Songs and Resources</a>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="is-main">
+        <section class="is-page is-home is-main-shell" id="mainShell">
+          <div class="is-home-view" id="homeView">
+            <section class="is-slider is-slider-top" aria-label="Highlights">
+              <button class="is-slider-arrow is-slider-prev" id="sliderPrev" type="button" aria-label="Previous slide">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M12.8 3.6 6.4 10l6.4 6.4-1.4 1.4L3.6 10l7.8-7.8 1.4 1.4z"></path>
+                </svg>
+              </button>
+
+              <div class="is-slider-viewport">
+                <div class="is-slider-track" id="isSliderTrack">
+                  <a class="is-slide" href="https://interventionstation.com/phonics-comics-preview">
+                    <img class="is-slide-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530f8a93b0572969e8c.png" alt="Phonics Comics" />
+                    <div class="is-slide-overlay">
+                      <p class="is-slide-title">Phonics Comics</p>
+                      <p class="is-slide-sub">Decodable stories kids actually want to read</p>
+                    </div>
+                  </a>
+
+                  <a class="is-slide" href="https://interventionstation.com/fluencygridpreview">
+                    <img class="is-slide-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530e18638d0cfa07bbe.png" alt="Fluency Grid Generator" />
+                    <div class="is-slide-overlay">
+                      <p class="is-slide-title">Fluency Grid Generator</p>
+                      <p class="is-slide-sub">Instant skill-based fluency practice</p>
+                    </div>
+                  </a>
+
+                  <a class="is-slide" href="https://interventionstation.com/math-song-preview">
+                    <img class="is-slide-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c53098efbd78ecbbad10.png" alt="Math Learning Songs" />
+                    <div class="is-slide-overlay">
+                      <p class="is-slide-title">Math Learning Songs</p>
+                      <p class="is-slide-sub">Songs + resources that make routines stick</p>
+                    </div>
+                  </a>
+
+                  <a class="is-slide" href="https://interventionstation.com/multiplication-preview">
+                    <img class="is-slide-img" src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/674515a001f2194ec471bb64.png" alt="Multiplication" />
+                    <div class="is-slide-overlay">
+                      <p class="is-slide-title">Multiplication Intervention</p>
+                      <p class="is-slide-sub">Scaffolds that make hard math doable</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+
+              <button class="is-slider-arrow is-slider-next" id="sliderNext" type="button" aria-label="Next slide">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M7.2 16.4 13.6 10 7.2 3.6 8.6 2.2 16.4 10l-7.8 7.8-1.4-1.4z"></path>
+                </svg>
+              </button>
+            </section>
+
+            <section class="is-top-cta" aria-label="Primary call to action">
+              <div class="is-top-cta-text">
+                <h1>Printable Resources + Generators for Busy Teachers</h1>
+                <p>Scaffolded math &amp; reading support, a growing library of learning songs, and print-in-seconds generators that save you hours every week.</p>
+              </div>
+              <div class="is-top-cta-action">
+                <a class="is-join-btn" href="https://member.interventionstation.com/join" target="_blank" rel="noopener noreferrer nofollow">Join Membership</a>
+              </div>
+            </section>
+
+            <section class="is-intervention-grid">
+              <a class="is-intervention-card" href="https://interventionstation.com/multiplication-preview">
+                <div class="is-intervention-head">Math Resources</div>
+                <img class="is-intervention-img" src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/674515a001f2194ec471bb64.png" alt="Math resources preview" />
+                <div class="is-intervention-body">
+                  <p>Place value, rounding, multiplication, division, fractions, and more</p>
+                  <span class="is-intervention-link">Explore &rarr;</span>
+                </div>
+              </a>
+
+              <a class="is-intervention-card" href="https://interventionstation.com/phonics-comics-preview">
+                <div class="is-intervention-head">Reading &amp; Phonics</div>
+                <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b07d871dd47.png" alt="Reading and phonics preview" />
+                <div class="is-intervention-body">
+                  <p>Phonics comics, heart words, Fix the Mix Up, and learning games</p>
+                  <span class="is-intervention-link">Explore &rarr;</span>
+                </div>
+              </a>
+
+              <a class="is-intervention-card" href="https://interventionstation.com/fluencygridpreview">
+                <div class="is-intervention-head">SOR Generators</div>
+                <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b5d5571dd46.png" alt="SOR generators preview" />
+                <div class="is-intervention-body">
+                  <p>Tic Tac Toe, Fluency Grid, Roll and Read, Word Mapping, and Word Ladder</p>
+                  <span class="is-intervention-link">Explore &rarr;</span>
+                </div>
+              </a>
+
+              <a class="is-intervention-card" href="https://interventionstation.com/math-song-preview">
+                <div class="is-intervention-head">Learning Songs</div>
+                <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049e186383c509dc54f.png" alt="Learning songs preview" />
+                <div class="is-intervention-body">
+                  <p>Math learning songs with printables, posters, and classroom routines</p>
+                  <span class="is-intervention-link">Explore &rarr;</span>
+                </div>
+              </a>
+            </section>
+
+          </div>
+
+          <section class="is-detail-view" id="detailView" hidden>
+            <header class="is-detail-head">
+              <button class="is-detail-back" id="detailBack" type="button">Back to Home</button>
+              <h2 class="is-detail-title" id="detailTitle">Resource</h2>
+              <a class="is-detail-open" id="detailOpen" href="#" target="_blank" rel="noopener">Open in New Tab</a>
+            </header>
+
+            <div class="is-detail-frame-wrap">
+              <div class="is-detail-loading" id="detailLoading">Loading resource...</div>
+              <iframe class="is-detail-frame" id="detailFrame" title="Resource content" loading="lazy"></iframe>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+  </section>
+
+  <script>
+    (function(){
+      const track = document.getElementById('isSliderTrack') || document.getElementById('sliderTrack');
+      const prevBtn = document.getElementById('sliderPrev');
+      const nextBtn = document.getElementById('sliderNext');
+      if (!track || !prevBtn || !nextBtn) return;
+
+      const slides = Array.from(track.querySelectorAll('.is-slide'));
+      if (!slides.length) return;
+
+      let currentIndex = 0;
+      let autoplayTimer = null;
+      const autoplayDelay = 3000;
+
+      function goTo(index){
+        currentIndex = (index + slides.length) % slides.length;
+        const width = track.clientWidth || 1;
+        const x = currentIndex * width;
+        track.scrollTo({ left: x, behavior: 'smooth' });
+      }
+
+      function updateIndexFromScroll(){
+        const width = track.clientWidth || 1;
+        currentIndex = Math.round(track.scrollLeft / width);
+      }
+
+      function startAutoplay(){
+        const shell = document.getElementById('mainShell');
+        if (shell && shell.classList.contains('is-detail-mode')) return;
+        stopAutoplay();
+        autoplayTimer = window.setInterval(function(){
+          goTo(currentIndex + 1);
+        }, autoplayDelay);
+      }
+
+      function stopAutoplay(){
+        if (autoplayTimer){
+          window.clearInterval(autoplayTimer);
+          autoplayTimer = null;
+        }
+      }
+
+      prevBtn.addEventListener('click', function(){
+        goTo(currentIndex - 1);
+        startAutoplay();
+      });
+
+      nextBtn.addEventListener('click', function(){
+        goTo(currentIndex + 1);
+        startAutoplay();
+      });
+
+      track.addEventListener('scroll', function(){
+        updateIndexFromScroll();
+      }, { passive: true });
+
+      track.addEventListener('mouseenter', stopAutoplay);
+      track.addEventListener('mouseleave', startAutoplay);
+      track.addEventListener('touchstart', stopAutoplay, { passive: true });
+      track.addEventListener('touchend', startAutoplay, { passive: true });
+
+      window.addEventListener('resize', function(){
+        goTo(currentIndex);
+      });
+
+      window.__isSliderControl = {
+        startAutoplay: startAutoplay,
+        stopAutoplay: stopAutoplay
+      };
+
+      startAutoplay();
+    })();
+
+    (function(){
+      const shell = document.getElementById('mainShell');
+      const nav = document.getElementById('leftNav');
+      const navToggle = document.getElementById('mobileNavToggle');
+      const navLinks = Array.from(document.querySelectorAll('.is-nav-link'));
+      const homeLink = navLinks.find(function(link){
+        if (link.dataset.view === 'home') return true;
+        const href = link.getAttribute('href') || '';
+        return href.indexOf('/home-preview') !== -1;
+      }) || navLinks[0];
+
+      const detailView = document.getElementById('detailView');
+      const detailTitle = document.getElementById('detailTitle');
+      const detailOpen = document.getElementById('detailOpen');
+      const detailFrame = document.getElementById('detailFrame');
+      const detailLoading = document.getElementById('detailLoading');
+      const detailBack = document.getElementById('detailBack');
+
+      if (!shell || !nav || !navLinks.length || !detailView || !detailTitle || !detailOpen || !detailFrame || !detailLoading || !detailBack) return;
+
+      let loadingHintTimer = null;
+
+      function setActiveLink(activeLink){
+        navLinks.forEach(function(link){
+          link.classList.toggle('is-active', link === activeLink);
+        });
+      }
+
+      function closeMobileNavIfNeeded(){
+        if (window.matchMedia('(max-width: 1100px)').matches){
+          nav.classList.remove('is-open');
+          if (navToggle) navToggle.setAttribute('aria-expanded', 'false');
+        }
+      }
+
+      function showDetail(link){
+        const href = link.getAttribute('href');
+        const title = link.textContent.trim() || 'Resource';
+        if (!href) return;
+
+        shell.classList.add('is-transitioning');
+        window.setTimeout(function(){
+          shell.classList.add('is-detail-mode');
+          detailView.hidden = false;
+          detailTitle.textContent = title;
+          detailOpen.href = href;
+          detailLoading.textContent = 'Loading resource...';
+          detailLoading.style.display = 'flex';
+          detailFrame.src = href;
+          shell.classList.remove('is-transitioning');
+
+          if (window.__isSliderControl) window.__isSliderControl.stopAutoplay();
+          window.clearTimeout(loadingHintTimer);
+          loadingHintTimer = window.setTimeout(function(){
+            detailLoading.textContent = 'If this takes too long, use Open in New Tab.';
+          }, 6000);
+        }, 120);
+      }
+
+      function showHome(){
+        shell.classList.add('is-transitioning');
+        window.setTimeout(function(){
+          shell.classList.remove('is-detail-mode');
+          detailView.hidden = true;
+          detailFrame.src = 'about:blank';
+          detailLoading.style.display = 'flex';
+          detailLoading.textContent = 'Loading resource...';
+          shell.classList.remove('is-transitioning');
+          if (window.__isSliderControl) window.__isSliderControl.startAutoplay();
+        }, 120);
+      }
+
+      detailFrame.addEventListener('load', function(){
+        detailLoading.style.display = 'none';
+        window.clearTimeout(loadingHintTimer);
+      });
+
+      detailBack.addEventListener('click', function(){
+        showHome();
+        setActiveLink(homeLink);
+      });
+
+      navLinks.forEach(function(link){
+        link.addEventListener('click', function(event){
+          event.preventDefault();
+          setActiveLink(link);
+          if (link.dataset.view === 'home'){
+            showHome();
+          } else {
+            showDetail(link);
+          }
+          closeMobileNavIfNeeded();
+        });
+      });
+
+      if (navToggle){
+        navToggle.addEventListener('click', function(){
+          const isOpen = nav.classList.toggle('is-open');
+          navToggle.setAttribute('aria-expanded', String(isOpen));
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
