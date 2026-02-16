@@ -32,6 +32,11 @@
       box-sizing: border-box;
     }
 
+    @page {
+      size: letter landscape;
+      margin: 0.25in;
+    }
+
     html, body {
       margin: 0;
       padding: 0;
@@ -172,8 +177,8 @@
     }
 
     .sheet {
-      width: 8.5in;
-      min-height: 11in;
+      width: 11in;
+      min-height: 8.5in;
       margin: 0 auto;
       background: var(--paper);
       border: 1px solid #d6dbe7;
@@ -214,13 +219,11 @@
     }
 
     .organizer {
-      border: 2px solid #111;
-      border-radius: 5px;
-      padding: 9px;
+      padding: 2px 0;
       display: grid;
       grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.34fr);
       gap: 9px;
-      min-height: 9.75in;
+      min-height: 7.1in;
     }
 
     .left-column {
@@ -232,29 +235,137 @@
     .problem-equation {
       font-size: 1.02rem;
       font-weight: 800;
-      border: 2px solid #111;
-      border-radius: 4px;
-      padding: 4px 10px;
-      text-align: center;
-      background: #fff;
+      padding: 0 2px 2px;
+      text-align: left;
+      background: transparent;
     }
 
     .workspace {
-      border: 2px solid #111;
-      border-radius: 4px;
-      padding: 8px 7px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      background: #fff;
+      padding: 2px 0 6px;
+      background: transparent;
     }
 
-    .setup-row {
-      display: flex;
-      align-items: flex-end;
-      gap: 8px;
-      justify-content: flex-start;
+    .workspace-layout {
+      display: block;
     }
+
+    .problem-canvas-wrap {
+      position: relative;
+      overflow: visible;
+    }
+
+    .problem-canvas {
+      position: relative;
+      display: grid;
+      grid-template-columns: 24px 48px repeat(var(--digits), 48px) 22px 48px;
+      grid-template-rows: repeat(var(--rows), 36px);
+      column-gap: 4px;
+      row-gap: 8px;
+      align-items: center;
+      justify-content: start;
+      overflow: visible;
+    }
+
+    .remainder-label {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      text-align: center;
+      align-self: center;
+      justify-self: center;
+      text-transform: uppercase;
+    }
+
+    .canvas-box {
+      width: 48px;
+      height: 36px;
+      border: 2px solid #111;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.94rem;
+      font-weight: 700;
+      background: #fff;
+      line-height: 1;
+    }
+
+    .canvas-box.ghost {
+      border: 0;
+      background: transparent;
+    }
+
+    .canvas-box.divisor {
+      background: #bdeee5;
+    }
+
+    .canvas-box.blank-gray {
+      background: #f0f0f0;
+    }
+
+    .canvas-box.minus-cell {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+      justify-content: center;
+      padding-right: 0;
+    }
+
+    .division-top-line {
+      align-self: start;
+      border-top: 6px solid #111;
+      height: 1px;
+      width: 100%;
+      z-index: 3;
+    }
+
+    .division-left-line {
+      justify-self: start;
+      width: 1px;
+      height: 100%;
+      border-left: 6px solid #111;
+      z-index: 3;
+      transform: translateX(-2px);
+    }
+
+    .down-arrow {
+      width: 16px;
+      height: 24px;
+      position: relative;
+      justify-self: center;
+      align-self: end;
+      transform: translateY(8px);
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .down-arrow::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 0;
+      width: 4px;
+      height: 14px;
+      border-radius: 2px;
+      background: currentColor;
+      opacity: 0.95;
+    }
+
+    .down-arrow::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 12px;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 12px solid currentColor;
+      opacity: 0.95;
+    }
+
+    .down-arrow.arrow-0 { color: #c9a8df; }
+    .down-arrow.arrow-1 { color: #f3c883; }
+    .down-arrow.arrow-2 { color: #9ecbe2; }
+    .down-arrow.arrow-3 { color: #b3d5a8; }
 
     .digit-box {
       min-width: 36px;
@@ -321,6 +432,14 @@
       padding-bottom: 3px;
     }
 
+    .remainder-value {
+      min-width: 18px;
+      text-align: center;
+      border-bottom: 2px solid #111;
+      line-height: 1;
+      padding-bottom: 1px;
+    }
+
     .step-panels {
       display: grid;
       grid-template-columns: repeat(var(--step-count), minmax(0, 1fr));
@@ -379,48 +498,6 @@
       top: -13px;
       font-size: 1.4rem;
       font-weight: 700;
-      line-height: 1;
-    }
-
-    .checklist-box {
-      border: 2px solid #111;
-      border-radius: 4px;
-      padding: 7px 8px;
-      background: #fff;
-    }
-
-    .checklist-title {
-      margin: 0 0 6px;
-      font-size: 0.82rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.2px;
-      border-bottom: 2px solid #111;
-      padding-bottom: 3px;
-    }
-
-    .steps-list {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      font-size: 0.85rem;
-      line-height: 1.3;
-      columns: 1;
-    }
-
-    .steps-list li {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      min-height: 1.08rem;
-    }
-
-    .checkbox-char {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 0.95rem;
-      font-size: 0.9rem;
       line-height: 1;
     }
 
@@ -502,15 +579,6 @@
       background: #fff;
     }
 
-    .multiple-cell.blank::after {
-      content: "";
-      position: absolute;
-      left: 14%;
-      right: 14%;
-      bottom: 5px;
-      border-bottom: 2px solid #111;
-    }
-
     .tone-0-bg { background: var(--tone0-fill); }
     .tone-1-bg { background: var(--tone1-fill); }
     .tone-2-bg { background: var(--tone2-fill); }
@@ -561,11 +629,19 @@
       background: #efefef !important;
     }
 
+    .no-color .canvas-box.divisor {
+      background: #fff !important;
+      box-shadow: none !important;
+    }
+
+    .color-line .canvas-box.divisor {
+      background: #fff;
+      box-shadow: inset 0 0 0 3px var(--tone1-line);
+    }
+
     .footer-note {
-      position: absolute;
-      left: 0.3in;
-      right: 0.3in;
-      bottom: 0.16in;
+      position: static;
+      margin-top: 8px;
       text-align: left;
       font-size: 0.64rem;
       color: #6a7485;
@@ -583,6 +659,10 @@
         grid-template-columns: 1fr;
       }
 
+      .workspace-layout {
+        display: block;
+      }
+
       .footer-note {
         position: static;
         margin-top: 8px;
@@ -591,12 +671,23 @@
 
     @media print {
       @page {
-        size: Letter;
-        margin: 0.28in;
+        size: letter landscape;
+        margin: 0.25in;
+      }
+
+      html,
+      body {
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
       }
 
       body {
         background: #fff;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
       }
 
       .screen-only {
@@ -607,30 +698,46 @@
         margin: 0;
         max-width: none;
         padding: 0;
+        width: 100%;
+        height: 100%;
       }
 
       #worksheetHost {
         margin: 0;
+        width: 100%;
+        height: 100%;
       }
 
       .sheet {
-        width: auto;
-        min-height: 0;
+        width: 100%;
+        min-height: 100%;
+        height: 100%;
         margin: 0;
         border: 0;
         box-shadow: none;
-        padding: 0;
+        padding: 0.2in;
+        box-sizing: border-box;
+        page-break-inside: avoid;
+        break-inside: avoid;
       }
 
       .organizer {
-        min-height: 9.95in;
+        min-height: 0;
+        grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.16fr);
+        gap: 6px;
+      }
+
+      .workspace-layout {
+        display: block;
+      }
+
+      .right-column {
+        gap: 5px;
       }
 
       .footer-note {
-        position: fixed;
-        left: 0.28in;
-        right: 0.28in;
-        bottom: 0.1in;
+        position: static;
+        margin-top: 8px;
       }
     }
   </style>
@@ -667,10 +774,18 @@
           </div>
 
           <div class="field">
-            <label for="multiplesMode">Multiples Mode</label>
+            <label for="multiplesMode">Step Fill Mode</label>
             <select id="multiplesMode">
-              <option value="blank" selected>Blank (students fill in)</option>
-              <option value="filled">Filled multiples</option>
+              <option value="blank" selected>Blank strips</option>
+              <option value="filled">Filled strips</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="remainderMode">Remainders</label>
+            <select id="remainderMode">
+              <option value="allow" selected>Allow remainders</option>
+              <option value="none">No remainder (exact division)</option>
             </select>
           </div>
 
@@ -717,6 +832,7 @@
       problemMode: document.getElementById("problemMode"),
       customProblem: document.getElementById("customProblem"),
       multiplesMode: document.getElementById("multiplesMode"),
+      remainderMode: document.getElementById("remainderMode"),
       colorToggle: document.getElementById("colorToggle"),
       colorStyle: document.getElementById("colorStyle"),
       answerKeyToggle: document.getElementById("answerKeyToggle"),
@@ -765,14 +881,30 @@
       return { dividend, divisor };
     }
 
-    function makeRandomProblem(cfg) {
+    function makeRandomProblem(cfg, allowRemainder) {
+      if (allowRemainder) {
+        return {
+          dividend: randInt(cfg.dividendMin, cfg.dividendMax),
+          divisor: randInt(2, 9)
+        };
+      }
+
+      for (let tries = 0; tries < 800; tries += 1) {
+        const divisor = randInt(2, 9);
+        const dividend = randInt(cfg.dividendMin, cfg.dividendMax);
+        if (dividend % divisor === 0) {
+          return { dividend, divisor };
+        }
+      }
+
       return {
-        dividend: randInt(cfg.dividendMin, cfg.dividendMax),
-        divisor: randInt(2, 9)
+        dividend: cfg.dividendMin,
+        divisor: 2
       };
     }
 
     function getProblem(cfg) {
+      const allowRemainder = els.remainderMode.value === "allow";
       if (els.problemMode.value === "custom") {
         const parsed = parseProblemToken(els.customProblem.value, cfg);
         if (!parsed) {
@@ -782,9 +914,20 @@
             message: "Invalid custom problem. Use examples like 654/6 or 6)654."
           };
         }
+        if (!allowRemainder && (parsed.dividend % parsed.divisor !== 0)) {
+          return {
+            problem: null,
+            warning: true,
+            message: "Custom problem has a remainder. Pick an exact-division problem or allow remainders."
+          };
+        }
         return { problem: parsed, warning: false, message: "Generated custom organizer." };
       }
-      return { problem: makeRandomProblem(cfg), warning: false, message: "Generated random organizer." };
+      return {
+        problem: makeRandomProblem(cfg, allowRemainder),
+        warning: false,
+        message: allowRemainder ? "Generated random organizer." : "Generated random organizer with no remainder."
+      };
     }
 
     function toneClass(index) {
@@ -795,6 +938,7 @@
       const digits = String(dividend).split("").map((d) => Number(d));
       const steps = [];
       let current = 0;
+      const toneFor = (idx) => `tone-${idx % 4}`;
 
       for (let i = 0; i < digits.length; i += 1) {
         current = (current * 10) + digits[i];
@@ -803,11 +947,19 @@
         const remainder = current - product;
         const nextDigit = i < digits.length - 1 ? digits[i + 1] : null;
         const nextPartial = nextDigit === null ? remainder : (remainder * 10) + nextDigit;
+        const partialDisplay = i === 0
+          ? String(current)
+          : `${steps[i - 1].remainder}${digits[i]}`;
+        const partialDigitTones = i === 0
+          ? [toneFor(0)]
+          : [toneFor(i - 1), toneFor(i)];
 
         steps.push({
           index: i,
-          tone: toneClass(i),
+          tone: toneFor(i),
           partialDividend: current,
+          partialDisplay,
+          partialDigitTones,
           quotientDigit: qDigit,
           product,
           remainder,
@@ -825,78 +977,96 @@
       };
     }
 
-    function buildChecklist(stepCount) {
-      const actions = ["Divide", "Multiply", "Subtract"];
-      for (let i = 1; i < stepCount; i += 1) {
-        actions.push("Bring Down", "Divide", "Multiply", "Subtract");
-      }
-      return actions;
+    function digitBoxesWithTones(text, tones, small = true) {
+      const chars = String(text).split("");
+      return chars.map((ch, idx) => {
+        const tone = tones[Math.min(idx, tones.length - 1)] || "tone-0";
+        return `<span class="digit-box ${small ? "small" : ""} ${tone}">${ch}</span>`;
+      }).join("");
     }
 
-    function digitBoxesForValue(value, tone, small = true) {
+    function rightAlignChars(value, len) {
       const chars = String(value).split("");
-      return chars.map((ch) => `<span class="digit-box ${small ? "small" : ""} ${tone}">${ch}</span>`).join("");
+      const out = new Array(len).fill("&nbsp;");
+      let k = len - 1;
+      for (let i = chars.length - 1; i >= 0 && k >= 0; i -= 1) {
+        out[k] = chars[i];
+        k -= 1;
+      }
+      return out;
     }
 
-    function renderSetup(problem, stepsData, showAnswers) {
+    function canvasBox(row, col, cls, value = "&nbsp;") {
+      return `<div class="canvas-box ${cls}" style="grid-row:${row};grid-column:${col};">${value}</div>`;
+    }
+
+    function renderProblemCanvas(problem, stepsData, cfg, showAnswers) {
+      const n = cfg.digits;
+      const rows = (2 * n) + 2;
+      const firstDigitCol = 3;
+      const remLabelCol = firstDigitCol + n;
+      const remCol = remLabelCol + 1;
       const dividendDigits = String(problem.dividend).split("");
-      const quotientBoxes = stepsData.quotientDigits.map((digit, idx) => {
-        const content = showAnswers ? digit : "&nbsp;";
-        return `<span class="digit-box ${toneClass(idx)}">${content}</span>`;
-      }).join("");
+      const chunks = [];
+      const toneForLane = (lane) => `tone-${Math.max(0, lane) % 4}`;
 
-      const dividendBoxes = dividendDigits.map((digit, idx) => {
-        return `<span class="digit-box ${toneClass(idx)}">${digit}</span>`;
-      }).join("");
+      for (let i = 0; i < n; i += 1) {
+        const qVal = showAnswers ? stepsData.quotientDigits[i] : "&nbsp;";
+        chunks.push(canvasBox(1, firstDigitCol + i, toneForLane(i), qVal));
+      }
+
+      chunks.push(`<div class="remainder-label" style="grid-row:1;grid-column:${remLabelCol};">R</div>`);
+      chunks.push(canvasBox(1, remCol, "blank-gray", showAnswers ? stepsData.finalRemainder : "&nbsp;"));
+
+      chunks.push(canvasBox(2, 2, "divisor", problem.divisor));
+      for (let i = 0; i < n; i += 1) {
+        chunks.push(canvasBox(2, firstDigitCol + i, toneForLane(i), dividendDigits[i]));
+      }
+
+      chunks.push(`<div class="division-top-line" style="grid-row:2;grid-column:${firstDigitCol} / ${firstDigitCol + n};"></div>`);
+      chunks.push(`<div class="division-left-line" style="grid-row:2;grid-column:${firstDigitCol};"></div>`);
+
+      let row = 3;
+
+      for (let i = 0; i < stepsData.steps.length; i += 1) {
+        const step = stepsData.steps[i];
+        const startDigit = i === 0 ? 0 : Math.min(i - 1, n - 2);
+        const startCol = firstDigitCol + startDigit;
+
+        chunks.push(canvasBox(row, startCol - 1, "ghost minus-cell", "&minus;"));
+
+        const productLen = i === 0 ? 1 : 2;
+        const productChars = showAnswers ? rightAlignChars(step.product, productLen) : new Array(productLen).fill("&nbsp;");
+        for (let j = 0; j < productLen; j += 1) {
+          const lane = startDigit + j;
+          chunks.push(canvasBox(row, startCol + j, toneForLane(lane), productChars[j]));
+        }
+
+        row += 1;
+
+        if (i < stepsData.steps.length - 1) {
+          const bringStartLane = startDigit + (productLen - 1);
+          const leftTone = toneForLane(bringStartLane);
+          const nextTone = toneForLane(Math.min(bringStartLane + 1, n - 1));
+          const bringChars = showAnswers ? rightAlignChars(step.nextPartial, 2) : ["&nbsp;", "&nbsp;"];
+          const bringStartCol = firstDigitCol + bringStartLane;
+          chunks.push(canvasBox(row, bringStartCol, leftTone, bringChars[0]));
+          chunks.push(canvasBox(row, bringStartCol + 1, nextTone, bringChars[1]));
+          const arrowTone = (bringStartLane + 1) % 4;
+          chunks.push(`<div class="down-arrow arrow-${arrowTone}" style="grid-row:${row - 1};grid-column:${bringStartCol + 1};"></div>`);
+          row += 1;
+        } else {
+          const remChars = showAnswers ? rightAlignChars(stepsData.finalRemainder, 2) : ["&nbsp;", "&nbsp;"];
+          chunks.push(canvasBox(row, startCol, "", remChars[0]));
+          chunks.push(canvasBox(row, startCol + 1, "", remChars[1]));
+        }
+      }
 
       return `
-        <div class="setup-row">
-          <span class="digit-box divisor-fixed">${problem.divisor}</span>
-
-          <div class="bracket-block">
-            <div class="quotient-row">
-              ${quotientBoxes}
-            </div>
-            <div class="dividend-row-wrap">
-              <span class="bracket-stem"></span>
-              <div class="dividend-row">
-                ${dividendBoxes}
-              </div>
-            </div>
+        <div class="problem-canvas-wrap">
+          <div class="problem-canvas" style="--digits:${n};--rows:${rows};">
+            ${chunks.join("")}
           </div>
-
-          <div class="remainder-wrap">
-            <span>r</span>
-            <span class="digit-box">${showAnswers ? stepsData.finalRemainder : "&nbsp;"}</span>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderStepPanels(steps, showAnswers) {
-      const panels = steps.map((step, idx) => `
-        <div class="step-panel">
-          <div class="step-title">Step ${idx + 1}</div>
-          <span class="digit-box small ${step.tone}">${showAnswers ? step.product : "&nbsp;"}</span>
-          <div class="minus-line"></div>
-          <span class="digit-box small ${step.tone}">${showAnswers ? step.remainder : "&nbsp;"}</span>
-          <span class="digit-box small ${step.tone}">${showAnswers && step.nextDigit !== null ? step.nextPartial : "&nbsp;"}</span>
-        </div>
-      `).join("");
-
-      return `<div class="step-panels" style="--step-count:${steps.length};">${panels}</div>`;
-    }
-
-    function renderChecklist(steps) {
-      const checklist = buildChecklist(steps.length);
-      const items = checklist.map((label, idx) => `
-        <li><span class="checkbox-char">&#x2610;</span> ${idx + 1}. ${label}</li>
-      `).join("");
-
-      return `
-        <div class="checklist-box">
-          <h3 class="checklist-title">Steps</h3>
-          <ul class="steps-list">${items}</ul>
         </div>
       `;
     }
@@ -905,8 +1075,7 @@
       let cells = "";
       for (let i = 0; i <= 10; i += 1) {
         const value = mode === "filled" ? String(divisor * i) : "&nbsp;";
-        const blankClass = mode === "blank" ? "blank" : "";
-        cells += `<td class="multiple-cell ${tone} ${blankClass}">${value}</td>`;
+        cells += `<td class="multiple-cell ${tone}">${value}</td>`;
       }
       return cells;
     }
@@ -922,7 +1091,7 @@
               How many times does
               <span class="digit-box small divisor-fixed">${problem.divisor}</span>
               go into
-              <span class="target-digits">${digitBoxesForValue(step.partialDividend, step.tone, true)}</span>
+              <span class="target-digits">${digitBoxesWithTones(step.partialDisplay, step.partialDigitTones, true)}</span>
               evenly or without going over?
             </p>
           </div>
@@ -966,12 +1135,12 @@
 
           <section class="organizer">
             <section class="left-column">
-              <div class="problem-equation">${source.problem.dividend} &divide; ${source.problem.divisor} =</div>
+              <div class="problem-equation">${source.problem.dividend} &divide; ${source.problem.divisor}</div>
               <div class="workspace">
-                ${renderSetup(source.problem, stepsData, showAnswers)}
-                ${renderStepPanels(stepsData.steps, showAnswers)}
+                <div class="workspace-layout">
+                  ${renderProblemCanvas(source.problem, stepsData, cfg, showAnswers)}
+                </div>
               </div>
-              ${renderChecklist(stepsData.steps)}
             </section>
 
             <section class="right-column">
@@ -979,7 +1148,7 @@
             </section>
           </section>
 
-          <div class="footer-note">Color-coded organizer: right-side strips are aligned to each long-division step.</div>
+          <div class="footer-note">Copyright - One Stop Intervention - Teach with Mr. C</div>
         </section>
       `;
     }
