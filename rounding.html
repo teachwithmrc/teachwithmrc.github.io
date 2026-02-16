@@ -114,6 +114,7 @@
   .learning-note{ color:#1d3a66; }
 
   .nameLine{
+    font-family:Arial,sans-serif;
     font-size:20px;
     font-weight:800;
     margin:4px 0 8px;
@@ -215,6 +216,22 @@
   }
   .answerLineBreak{ width:100%; flex-basis:100%; margin-top:6px; }
 
+  .finalAnswer{
+    width:100%;
+    margin-top:4px;
+    font-size:20px;
+    font-weight:800;
+    line-height:1.3;
+    text-align:center;
+  }
+  .finalAnswerPrompt{ display:block; margin-bottom:12px; }
+  .finalAnswerBlank{
+    display:block;
+    width:100%;
+    min-height:1.6em;
+    border-bottom:3px solid #111;
+  }
+
   .copyright{
     margin-top:10px;
     text-align:center;
@@ -240,6 +257,9 @@
     .nlWrap{ min-height:95px; }
     .answerLine{ font-size:14px; gap:4px; }
     .answerLineBreak{ margin-top:2px; }
+    .finalAnswer{ font-size:16px; margin-top:2px; text-align:center; }
+    .finalAnswerPrompt{ margin-bottom:8px; }
+    .finalAnswerBlank{ min-height:1.4em; border-bottom-width:2px; }
     .writeBlank{ border-bottom-width:2px; }
     .copyright{
       margin-top:6px;
@@ -561,6 +581,21 @@
         answer.appendChild(secondLine);
       }
       card.appendChild(answer);
+    }else{
+      const finalAnswer = document.createElement("div");
+      finalAnswer.className = "finalAnswer";
+
+      const finalPrompt = document.createElement("div");
+      finalPrompt.className = "finalAnswerPrompt";
+      finalPrompt.textContent = `${fmt(n)} rounded to the nearest ${fmt(place)} is`;
+
+      const finalBlank = document.createElement("span");
+      finalBlank.className = "finalAnswerBlank";
+      finalBlank.setAttribute("aria-hidden", "true");
+
+      finalAnswer.appendChild(finalPrompt);
+      finalAnswer.appendChild(finalBlank);
+      card.appendChild(finalAnswer);
     }
 
     return card;
