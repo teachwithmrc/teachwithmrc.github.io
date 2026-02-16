@@ -14,15 +14,15 @@
       --soft-line: #8e98aa;
       --teal: #a9ddd3;
       --paper: #ffffff;
-      --tone0-fill: rgba(190, 142, 220, 0.15);
+      --tone0-fill: rgba(182, 128, 224, 0.24);
       --tone1-fill: rgba(255, 200, 110, 0.15);
       --tone2-fill: rgba(145, 205, 230, 0.15);
       --tone3-fill: rgba(178, 220, 170, 0.15);
-      --tone0-line: #c9a8df;
+      --tone0-line: #bb86e0;
       --tone1-line: #f3c883;
       --tone2-line: #9ecbe2;
       --tone3-line: #b3d5a8;
-      --tone0-strong: #e8c9f7;
+      --tone0-strong: #dcb3f3;
       --tone1-strong: #ffe2b3;
       --tone2-strong: #d1ecf8;
       --tone3-strong: #dcefd5;
@@ -78,9 +78,39 @@
 
     .controls-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
       align-items: end;
+    }
+
+    .controls-top {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .type-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .type-btn {
+      border: 2px solid #1f2b3e;
+      border-radius: 10px;
+      background: #fff;
+      color: #1f2b3e;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 8px 10px;
+      cursor: pointer;
+      line-height: 1.2;
+    }
+
+    .type-btn.active {
+      background: #1f2b3e;
+      color: #fff;
     }
 
     .field {
@@ -121,6 +151,10 @@
     .field textarea {
       min-height: 64px;
       resize: vertical;
+    }
+
+    .field.custom-problem {
+      grid-column: 2;
     }
 
     .checkbox-wrap {
@@ -187,6 +221,10 @@
       position: relative;
     }
 
+    .sheet + .sheet {
+      margin-top: 14px;
+    }
+
     .sheet-header {
       display: flex;
       align-items: flex-end;
@@ -223,7 +261,26 @@
       display: grid;
       grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.34fr);
       gap: 9px;
-      min-height: 7.1in;
+      min-height: 0;
+    }
+
+    .two-up {
+      display: grid;
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .two-up.single {
+      grid-template-rows: minmax(0, 1fr);
+    }
+
+    .organizer-block {
+      padding: 2px 0 4px;
+    }
+
+    .organizer-block + .organizer-block {
+      border-top: 1px solid #d5dce9;
+      padding-top: 8px;
     }
 
     .left-column {
@@ -257,13 +314,17 @@
     .problem-canvas {
       position: relative;
       display: grid;
-      grid-template-columns: 24px 48px repeat(var(--digits), 48px) 22px 48px;
-      grid-template-rows: repeat(var(--rows), 36px);
+      grid-template-columns: 24px 50px repeat(var(--digits), 50px) 22px 50px;
+      grid-template-rows: repeat(var(--rows), 40px);
       column-gap: 4px;
       row-gap: 8px;
       align-items: center;
       justify-content: start;
       overflow: visible;
+    }
+
+    .problem-canvas.no-remainder {
+      grid-template-columns: 24px 50px repeat(var(--digits), 50px);
     }
 
     .remainder-label {
@@ -277,8 +338,8 @@
     }
 
     .canvas-box {
-      width: 48px;
-      height: 36px;
+      width: 50px;
+      height: 40px;
       border: 2px solid #111;
       border-radius: 2px;
       display: flex;
@@ -368,8 +429,8 @@
     .down-arrow.arrow-3 { color: #b3d5a8; }
 
     .digit-box {
-      min-width: 36px;
-      height: 36px;
+      min-width: 38px;
+      height: 38px;
       border: 2px solid #111;
       border-radius: 2px;
       display: inline-flex;
@@ -381,8 +442,8 @@
     }
 
     .digit-box.small {
-      min-width: 30px;
-      height: 30px;
+      min-width: 34px;
+      height: 34px;
       font-size: 0.98rem;
     }
 
@@ -563,7 +624,7 @@
     .strip-table td {
       border: 1px solid #111;
       text-align: center;
-      height: 29px;
+      height: 32px;
       font-size: 0.79rem;
       font-weight: 700;
       padding: 0;
@@ -648,6 +709,18 @@
     }
 
     @media (max-width: 980px) {
+      .controls-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .type-buttons {
+        grid-template-columns: 1fr;
+      }
+
+      .field.custom-problem {
+        grid-column: auto;
+      }
+
       .sheet {
         width: 100%;
         min-height: 0;
@@ -657,6 +730,10 @@
       .organizer {
         min-height: 0;
         grid-template-columns: 1fr;
+      }
+
+      .two-up {
+        grid-template-rows: auto;
       }
 
       .workspace-layout {
@@ -677,11 +754,8 @@
 
       html,
       body {
-        width: 100vw;
-        height: 100vh;
         margin: 0;
         padding: 0;
-        overflow: hidden;
       }
 
       body {
@@ -698,32 +772,38 @@
         margin: 0;
         max-width: none;
         padding: 0;
-        width: 100%;
-        height: 100%;
       }
 
       #worksheetHost {
         margin: 0;
-        width: 100%;
-        height: 100%;
       }
 
       .sheet {
-        width: 100%;
-        min-height: 100%;
-        height: 100%;
-        margin: 0;
+        width: 10.5in;
+        min-height: 8in;
+        margin: 0 auto;
         border: 0;
         box-shadow: none;
         padding: 0.2in;
         box-sizing: border-box;
         page-break-inside: avoid;
         break-inside: avoid;
+        page-break-after: always;
+        break-after: page;
+      }
+
+      .sheet:last-child {
+        page-break-after: auto;
+        break-after: auto;
       }
 
       .organizer {
         min-height: 0;
         grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.16fr);
+        gap: 6px;
+      }
+
+      .two-up {
         gap: 6px;
       }
 
@@ -749,35 +829,36 @@
       <p class="subtitle">Your right-side step-strip format with matching color logic</p>
 
       <section class="controls-card">
+        <div class="controls-top">
+          <label class="field-hint" for="problemType">Problem Type</label>
+          <div class="type-buttons" id="problemTypeButtons" role="group" aria-label="Problem type">
+            <button class="type-btn active" type="button" data-type="2x1">2-digit by 1-digit</button>
+            <button class="type-btn" type="button" data-type="3x1">3-digit by 1-digit</button>
+            <button class="type-btn" type="button" data-type="4x1">4-digit by 1-digit</button>
+          </div>
+          <input id="problemType" type="hidden" value="2x1" />
+        </div>
+
         <div class="controls-grid">
           <div class="field">
-            <label for="problemType">Problem Type</label>
-            <select id="problemType">
-              <option value="2x1" selected>2-digit dividend / 1-digit divisor</option>
-              <option value="3x1">3-digit dividend / 1-digit divisor</option>
-              <option value="4x1">4-digit dividend / 1-digit divisor</option>
-            </select>
+            <label for="problemSetCount">Total Problems</label>
+            <select id="problemSetCount"></select>
+            <div class="field-hint" id="problemCountHint"></div>
           </div>
 
           <div class="field">
-            <label for="problemMode">Problem Source</label>
-            <select id="problemMode">
-              <option value="random" selected>Random problem</option>
-              <option value="custom">Custom problem (use textbox)</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="customProblem">Custom Problem</label>
-            <input id="customProblem" type="text" placeholder="Examples: 654/6 or 6)654" />
-            <div class="field-hint">Single problem only for this organizer page.</div>
-          </div>
-
-          <div class="field">
-            <label for="multiplesMode">Step Fill Mode</label>
+            <label for="multiplesMode">Display Multiples</label>
             <select id="multiplesMode">
-              <option value="blank" selected>Blank strips</option>
-              <option value="filled">Filled strips</option>
+              <option value="blank" selected>No (students fill in)</option>
+              <option value="filled">Yes (show multiples)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="stepPromptMode">Fill Step Parts</label>
+            <select id="stepPromptMode">
+              <option value="blank" selected>No (students fill in)</option>
+              <option value="filled">Yes (show step parts)</option>
             </select>
           </div>
 
@@ -785,7 +866,7 @@
             <label for="remainderMode">Remainders</label>
             <select id="remainderMode">
               <option value="allow" selected>Allow remainders</option>
-              <option value="none">No remainder (exact division)</option>
+              <option value="none">No remainders (exact only)</option>
             </select>
           </div>
 
@@ -794,22 +875,10 @@
             <label class="checkbox-wrap"><input id="colorToggle" type="checkbox" checked />Use matching colors</label>
           </div>
 
-          <div class="field">
-            <label for="colorStyle">Color Style</label>
-            <select id="colorStyle">
-              <option value="fill" selected>Inside Fill (light)</option>
-              <option value="line">Line/Outline Only</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Answer Key View</label>
-            <label class="checkbox-wrap"><input id="answerKeyToggle" type="checkbox" />Prefill quotient + step boxes</label>
-          </div>
-
-          <div class="field">
-            <label for="sheetTitle">Worksheet Title</label>
-            <input id="sheetTitle" type="text" value="Long Division Color-Coded Step Organizer" />
+          <div class="field custom-problem">
+            <label for="customProblem">Custom Problem</label>
+            <input id="customProblem" type="text" placeholder="Examples: 654/6 or 6)654" />
+            <div class="field-hint">Optional. Leave blank for random. Add one or more problems separated by comma/new line.</div>
           </div>
         </div>
 
@@ -818,7 +887,7 @@
           <button id="printBtn" type="button">Print</button>
         </div>
 
-        <div class="note" id="statusText">Tip: use blank multiples for regular student practice and filled multiples for targeted support.</div>
+        <div class="note" id="statusText">Use custom problems only when you want specific numbers; otherwise it auto-generates.</div>
       </section>
     </div>
 
@@ -829,14 +898,14 @@
     const els = {
       host: document.getElementById("worksheetHost"),
       problemType: document.getElementById("problemType"),
-      problemMode: document.getElementById("problemMode"),
+      problemTypeButtons: Array.from(document.querySelectorAll(".type-btn")),
+      problemSetCount: document.getElementById("problemSetCount"),
+      problemCountHint: document.getElementById("problemCountHint"),
       customProblem: document.getElementById("customProblem"),
       multiplesMode: document.getElementById("multiplesMode"),
+      stepPromptMode: document.getElementById("stepPromptMode"),
       remainderMode: document.getElementById("remainderMode"),
       colorToggle: document.getElementById("colorToggle"),
-      colorStyle: document.getElementById("colorStyle"),
-      answerKeyToggle: document.getElementById("answerKeyToggle"),
-      sheetTitle: document.getElementById("sheetTitle"),
       statusText: document.getElementById("statusText"),
       generateBtn: document.getElementById("generateBtn"),
       printBtn: document.getElementById("printBtn")
@@ -854,6 +923,52 @@
 
     function getTypeConfig() {
       return TYPE_CONFIG[els.problemType.value] || TYPE_CONFIG["2x1"];
+    }
+
+    function setProblemType(typeKey) {
+      if (!TYPE_CONFIG[typeKey]) return;
+      els.problemType.value = typeKey;
+      els.problemTypeButtons.forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.type === typeKey);
+      });
+    }
+
+    function getProblemsPerPage(cfg) {
+      return cfg.digits >= 3 ? 1 : 2;
+    }
+
+    function populateProblemCountOptions() {
+      const cfg = getTypeConfig();
+      const perPage = getProblemsPerPage(cfg);
+      const previous = Number(els.problemSetCount.value);
+      let selectedValue = Number.isFinite(previous) ? previous : (perPage === 2 ? 4 : 3);
+
+      const options = [];
+      for (let pages = 1; pages <= 5; pages += 1) {
+        const total = pages * perPage;
+        const label = perPage === 2
+          ? `${total} (2 per page)`
+          : `${total} (1 per page)`;
+        options.push({ value: total, label });
+      }
+
+      if (!options.some((o) => o.value === selectedValue)) {
+        selectedValue = options[Math.min(2, options.length - 1)].value;
+      }
+
+      els.problemSetCount.innerHTML = options
+        .map((o) => `<option value="${o.value}"${o.value === selectedValue ? " selected" : ""}>${o.label}</option>`)
+        .join("");
+
+      els.problemCountHint.textContent = perPage === 2
+        ? "2-digit by 1-digit uses 2 problems per page."
+        : "3-digit/4-digit uses 1 problem per page.";
+    }
+
+    function getTotalProblemCount() {
+      const raw = Number(els.problemSetCount.value);
+      if (!Number.isFinite(raw)) return 1;
+      return Math.max(1, raw);
     }
 
     function parseProblemToken(token, cfg) {
@@ -903,30 +1018,61 @@
       };
     }
 
-    function getProblem(cfg) {
+    function getProblems(cfg, requestedCount) {
       const allowRemainder = els.remainderMode.value === "allow";
-      if (els.problemMode.value === "custom") {
-        const parsed = parseProblemToken(els.customProblem.value, cfg);
-        if (!parsed) {
-          return {
-            problem: null,
-            warning: true,
-            message: "Invalid custom problem. Use examples like 654/6 or 6)654."
-          };
+      const problemCount = Math.max(1, requestedCount);
+      const tokens = els.customProblem.value
+        .split(/[\n,;]+/)
+        .map((token) => token.trim())
+        .filter(Boolean);
+
+      if (tokens.length > 0) {
+        const parsed = [];
+        for (const token of tokens.slice(0, problemCount)) {
+          const problem = parseProblemToken(token, cfg);
+          if (!problem) {
+            return {
+              problems: [],
+              warning: true,
+              message: "Invalid custom problem. Use examples like 654/6 or 6)654."
+            };
+          }
+          parsed.push(problem);
         }
-        if (!allowRemainder && (parsed.dividend % parsed.divisor !== 0)) {
-          return {
-            problem: null,
-            warning: true,
-            message: "Custom problem has a remainder. Pick an exact-division problem or allow remainders."
-          };
+
+        const problems = new Array(problemCount).fill(0).map((_, idx) => {
+          const source = parsed[Math.min(idx, parsed.length - 1)];
+          return { ...source };
+        });
+
+        if (!allowRemainder) {
+          const hasRemainder = problems.some((p) => (p.dividend % p.divisor) !== 0);
+          if (hasRemainder) {
+            return {
+              problems: [],
+              warning: true,
+              message: "Custom problem has a remainder. Pick an exact-division problem or allow remainders."
+            };
+          }
         }
-        return { problem: parsed, warning: false, message: "Generated custom organizer." };
+
+        return {
+          problems,
+          warning: false,
+          message: problemCount === 1
+            ? "Generated custom problem."
+            : (parsed.length === 1
+              ? "Generated custom problems (duplicated input as needed)."
+              : "Generated custom problems.")
+        };
       }
+
       return {
-        problem: makeRandomProblem(cfg, allowRemainder),
+        problems: new Array(problemCount).fill(0).map(() => makeRandomProblem(cfg, allowRemainder)),
         warning: false,
-        message: allowRemainder ? "Generated random organizer." : "Generated random organizer with no remainder."
+        message: allowRemainder
+          ? `Generated ${problemCount} random problem${problemCount === 1 ? "" : "s"}.`
+          : `Generated ${problemCount} random problem${problemCount === 1 ? "" : "s"} with no remainders.`
       };
     }
 
@@ -977,11 +1123,12 @@
       };
     }
 
-    function digitBoxesWithTones(text, tones, small = true) {
+    function digitBoxesWithTones(text, tones, small = true, showValues = true) {
       const chars = String(text).split("");
       return chars.map((ch, idx) => {
         const tone = tones[Math.min(idx, tones.length - 1)] || "tone-0";
-        return `<span class="digit-box ${small ? "small" : ""} ${tone}">${ch}</span>`;
+        const val = showValues ? ch : "&nbsp;";
+        return `<span class="digit-box ${small ? "small" : ""} ${tone}">${val}</span>`;
       }).join("");
     }
 
@@ -1000,7 +1147,7 @@
       return `<div class="canvas-box ${cls}" style="grid-row:${row};grid-column:${col};">${value}</div>`;
     }
 
-    function renderProblemCanvas(problem, stepsData, cfg, showAnswers) {
+    function renderProblemCanvas(problem, stepsData, cfg, showAnswers, showRemainderHeader) {
       const n = cfg.digits;
       const rows = (2 * n) + 2;
       const firstDigitCol = 3;
@@ -1015,8 +1162,10 @@
         chunks.push(canvasBox(1, firstDigitCol + i, toneForLane(i), qVal));
       }
 
-      chunks.push(`<div class="remainder-label" style="grid-row:1;grid-column:${remLabelCol};">R</div>`);
-      chunks.push(canvasBox(1, remCol, "blank-gray", showAnswers ? stepsData.finalRemainder : "&nbsp;"));
+      if (showRemainderHeader) {
+        chunks.push(`<div class="remainder-label" style="grid-row:1;grid-column:${remLabelCol};">R</div>`);
+        chunks.push(canvasBox(1, remCol, "blank-gray", showAnswers ? stepsData.finalRemainder : "&nbsp;"));
+      }
 
       chunks.push(canvasBox(2, 2, "divisor", problem.divisor));
       for (let i = 0; i < n; i += 1) {
@@ -1064,7 +1213,7 @@
 
       return `
         <div class="problem-canvas-wrap">
-          <div class="problem-canvas" style="--digits:${n};--rows:${rows};">
+          <div class="problem-canvas${showRemainderHeader ? "" : " no-remainder"}" style="--digits:${n};--rows:${rows};">
             ${chunks.join("")}
           </div>
         </div>
@@ -1080,8 +1229,9 @@
       return cells;
     }
 
-    function renderStepStrip(step, problem, multiplesMode) {
+    function renderStepStrip(step, problem, multiplesMode, showPromptValues) {
       const headers = new Array(11).fill(0).map((_, i) => `<th class="tone-head ${step.tone}">x${i}</th>`).join("");
+      const divisorValue = showPromptValues ? problem.divisor : "&nbsp;";
 
       return `
         <section class="strip">
@@ -1089,9 +1239,9 @@
             <div class="strip-label ${step.tone}">Step ${step.index + 1}</div>
             <p class="strip-question">
               How many times does
-              <span class="digit-box small divisor-fixed">${problem.divisor}</span>
+              <span class="digit-box small divisor-fixed">${divisorValue}</span>
               go into
-              <span class="target-digits">${digitBoxesWithTones(step.partialDisplay, step.partialDigitTones, true)}</span>
+              <span class="target-digits">${digitBoxesWithTones(step.partialDisplay, step.partialDigitTones, true, showPromptValues)}</span>
               evenly or without going over?
             </p>
           </div>
@@ -1110,52 +1260,95 @@
 
     function renderWorksheet() {
       const cfg = getTypeConfig();
-      const source = getProblem(cfg);
-      const title = els.sheetTitle.value.trim() || "Long Division Color-Coded Step Organizer";
-      const colorClass = els.colorToggle.checked ? `color-${els.colorStyle.value}` : "no-color";
+      const perPage = getProblemsPerPage(cfg);
+      const totalProblemCount = getTotalProblemCount();
+      const setCount = Math.max(1, Math.ceil(totalProblemCount / perPage));
+      const source = getProblems(cfg, totalProblemCount);
+      const title = "Long Division Color-Coded Step Organizer";
+      const colorClass = els.colorToggle.checked ? "color-fill" : "no-color";
 
       els.statusText.textContent = source.message;
       els.statusText.style.color = source.warning ? "#a33a3a" : "#5a677f";
 
-      if (!source.problem) {
+      if (!source.problems || source.problems.length === 0) {
         els.host.innerHTML = "";
         return;
       }
 
-      const showAnswers = els.answerKeyToggle.checked;
-      const stepsData = computeLongDivisionSteps(source.problem.dividend, source.problem.divisor);
-      const strips = stepsData.steps.map((step) => renderStepStrip(step, source.problem, els.multiplesMode.value)).join("");
+      const showAnswers = false;
+      const showPromptValues = els.stepPromptMode.value === "filled";
+      const showRemainderHeader = els.remainderMode.value === "allow";
+      const sheets = new Array(setCount).fill(0).map((_, pageIndex) => {
+        const pageProblems = source.problems.slice(pageIndex * perPage, (pageIndex + 1) * perPage);
+        const organizerBlocks = pageProblems.map((problem) => {
+          const stepsData = computeLongDivisionSteps(problem.dividend, problem.divisor);
+          const strips = stepsData.steps
+            .map((step) => renderStepStrip(step, problem, els.multiplesMode.value, showPromptValues))
+            .join("");
 
-      els.host.innerHTML = `
-        <section class="sheet ${colorClass}">
-          <header class="sheet-header">
-            <h2 class="sheet-title">${title} (${cfg.label})</h2>
-            <div class="name-line">Name:<span class="line"></span></div>
-          </header>
+          return `
+            <section class="organizer-block">
+              <section class="organizer">
+                <section class="left-column">
+                  <div class="problem-equation">${problem.dividend} &divide; ${problem.divisor}</div>
+                  <div class="workspace">
+                    <div class="workspace-layout">
+                      ${renderProblemCanvas(problem, stepsData, cfg, showAnswers, showRemainderHeader)}
+                    </div>
+                  </div>
+                </section>
 
-          <section class="organizer">
-            <section class="left-column">
-              <div class="problem-equation">${source.problem.dividend} &divide; ${source.problem.divisor}</div>
-              <div class="workspace">
-                <div class="workspace-layout">
-                  ${renderProblemCanvas(source.problem, stepsData, cfg, showAnswers)}
-                </div>
-              </div>
+                <section class="right-column">
+                  ${strips}
+                </section>
+              </section>
+            </section>
+          `;
+        }).join("");
+
+        return `
+          <section class="sheet ${colorClass}">
+            <header class="sheet-header">
+              <h2 class="sheet-title">${title} (${cfg.label})</h2>
+              <div class="name-line">Name:<span class="line"></span></div>
+            </header>
+
+            <section class="two-up${perPage === 1 ? " single" : ""}">
+              ${organizerBlocks}
             </section>
 
-            <section class="right-column">
-              ${strips}
-            </section>
+            <div class="footer-note">Copyright - InterventionStation.com - @TeachwithMrC</div>
           </section>
+        `;
+      }).join("");
 
-          <div class="footer-note">Copyright - One Stop Intervention - Teach with Mr. C</div>
-        </section>
-      `;
+      els.host.innerHTML = sheets;
+    }
+
+    let refreshTimer = null;
+    function queueRender(delay = 120) {
+      window.clearTimeout(refreshTimer);
+      refreshTimer = window.setTimeout(renderWorksheet, delay);
     }
 
     els.generateBtn.addEventListener("click", renderWorksheet);
+    els.problemTypeButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        setProblemType(btn.dataset.type);
+        populateProblemCountOptions();
+        renderWorksheet();
+      });
+    });
+    [els.problemSetCount, els.multiplesMode, els.stepPromptMode, els.remainderMode].forEach((el) => {
+      el.addEventListener("change", renderWorksheet);
+    });
+    els.colorToggle.addEventListener("change", renderWorksheet);
+    els.customProblem.addEventListener("input", () => queueRender(180));
+    els.customProblem.addEventListener("change", renderWorksheet);
     els.printBtn.addEventListener("click", () => window.print());
 
+    setProblemType(els.problemType.value || "2x1");
+    populateProblemCountOptions();
     renderWorksheet();
   </script>
 </body>
