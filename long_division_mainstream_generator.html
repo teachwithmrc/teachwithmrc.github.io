@@ -141,8 +141,8 @@
     }
 
     .sheet {
-      width: 8.5in;
-      min-height: 11in;
+      width: 11in;
+      min-height: 8.5in;
       margin: 0 auto;
       background: var(--paper);
       border: 1px solid #d6dbe7;
@@ -195,7 +195,7 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      min-height: 3.07in;
+      min-height: 2.35in;
     }
 
     .problem-top {
@@ -218,16 +218,14 @@
     .problem-eq {
       font-size: 0.84rem;
       font-weight: 700;
-      border: 2px solid #111;
-      border-radius: 4px;
-      padding: 2px 8px;
-      text-align: center;
+      padding: 2px 0;
+      text-align: right;
       flex: 1 1 auto;
     }
 
     .problem-main {
       display: grid;
-      grid-template-columns: 102px minmax(0, 1fr);
+      grid-template-columns: 98px minmax(0, 1fr);
       gap: 6px;
       min-height: 0;
       flex: 1 1 auto;
@@ -274,98 +272,94 @@
       background: rgba(255, 255, 255, 0.45);
     }
 
-    .multiple-answer.blank {
-      border-bottom: 2px solid #111;
-      height: 14px;
-      width: 90%;
-      margin: 0 auto;
+    .multiple-answer {
+      display: inline-block;
+      min-width: 18px;
+      min-height: 14px;
     }
 
     .problem-panel {
-      border: 2px solid #111;
-      border-radius: 3px;
-      padding: 4px 4px 5px;
+      padding: 2px 0 0;
       display: flex;
       flex-direction: column;
-      gap: 5px;
       min-height: 0;
     }
 
-    .problem-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.2px;
-      border-bottom: 2px solid #111;
-      padding-bottom: 2px;
-    }
-
-    .ld-grid {
+    .ld-canvas {
+      position: relative;
       display: grid;
-      grid-template-columns: 30px repeat(var(--digit-count), 28px);
-      grid-auto-rows: 26px;
+      grid-template-columns: 14px repeat(var(--digit-count), 22px) 9px 22px;
+      grid-template-rows: repeat(var(--row-count), 18px);
+      column-gap: 3px;
+      row-gap: 3px;
       align-items: center;
-      justify-content: center;
-      gap: 0;
-      margin-top: 2px;
+      justify-content: start;
+      overflow: visible;
+      margin-top: 1px;
     }
 
-    .ld-cell {
-      border: 1px solid transparent;
-      text-align: center;
-      font-size: 1rem;
-      font-weight: 700;
-      line-height: 1;
-      min-height: 26px;
+    .ld-mini-box {
+      width: 22px;
+      height: 18px;
+      border: 2px solid #111;
+      border-radius: 2px;
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .q-cell {
-      border: 2px solid #111;
-      background: #fff;
-      margin: 0 1px;
-      min-height: 23px;
-      font-size: 0.9rem;
-    }
-
-    .divisor-cell {
-      border: 2px solid #111;
-      background: #fff;
-      margin-right: 2px;
-      min-height: 24px;
-      font-size: 1.02rem;
-    }
-
-    .dividend-cell {
-      border: 2px solid #111;
-      border-top-width: 4px;
-      border-left-width: 4px;
-      background: #fff;
-      min-height: 24px;
-      margin: 0 1px;
-      font-size: 1.02rem;
-    }
-
-    .work-cell {
-      border: 2px solid #111;
-      background: #fff;
-      min-height: 22px;
-      margin: 0 1px;
-    }
-
-    .minus-sign {
-      font-size: 1.2rem;
+      font-size: 0.72rem;
       font-weight: 700;
+      line-height: 1;
+      background: #fff;
+    }
+
+    .ld-divisor {
+      background: #dff6f2;
+    }
+
+    .ld-minus {
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+      transform: translateY(-1px);
+    }
+
+    .ld-rmark {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-align: center;
       line-height: 1;
     }
 
-    .blank-line {
-      border-bottom: 2px solid #111;
-      width: 92%;
-      margin: 0 auto;
-      height: 14px;
+    .ld-top-line {
+      align-self: start;
+      border-top: 4px solid #111;
+      height: 1px;
+      width: 100%;
+      z-index: 2;
+    }
+
+    .ld-left-line {
+      justify-self: start;
+      width: 1px;
+      height: 100%;
+      border-left: 4px solid #111;
+      z-index: 2;
+      transform: translateX(-2px);
+    }
+
+    .ld-rail-v {
+      justify-self: center;
+      width: 1px;
+      height: 100%;
+      border-left: 3px solid #111;
+    }
+
+    .ld-rail-h {
+      align-self: center;
+      width: 100%;
+      border-top: 3px solid #111;
+      height: 1px;
     }
 
     .footer-note {
@@ -401,7 +395,7 @@
 
     @media print {
       @page {
-        size: Letter;
+        size: Letter landscape;
         margin: 0.28in;
       }
 
@@ -433,7 +427,7 @@
       }
 
       .problem-card {
-        min-height: 2.96in;
+        min-height: 2.26in;
       }
 
       .footer-note {
@@ -617,9 +611,8 @@
     function multiplesRowsHtml(divisor, mode) {
       let rows = "";
       for (let i = 1; i <= 10; i += 1) {
-        const answer = mode === "filled"
-          ? `<span class="multiple-answer">${divisor * i}</span>`
-          : `<span class="multiple-answer blank"></span>`;
+        const value = mode === "filled" ? String(divisor * i) : "&nbsp;";
+        const answer = `<span class="multiple-answer">${value}</span>`;
 
         rows += `
           <tr>
@@ -632,26 +625,55 @@
     }
 
     function longDivisionGridHtml(problem, cfg) {
+      const n = cfg.dividendDigits;
+      const rowCount = (2 * n) + 2;
+      const remCol = n + 3;
       const digits = String(problem.dividend).split("");
-      const quotientBoxes = new Array(cfg.dividendDigits).fill("<div class='ld-cell q-cell'>&nbsp;</div>").join("");
+      const bits = [];
 
-      let rows = `
-        <div class="ld-cell"></div>
-        ${quotientBoxes}
-        <div class="ld-cell divisor-cell">${problem.divisor}</div>
-        ${digits.map((d) => `<div class="ld-cell dividend-cell">${d}</div>`).join("")}
-      `;
+      const box = (row, col, cls, val = "&nbsp;") =>
+        `<div class="ld-mini-box ${cls}" style="grid-row:${row};grid-column:${col};">${val}</div>`;
 
-      const workRows = cfg.dividendDigits + 1;
-      for (let i = 0; i < workRows; i += 1) {
-        const gutter = i % 2 === 0 ? "&minus;" : "&nbsp;";
-        rows += `<div class="ld-cell minus-sign">${gutter}</div>`;
-        for (let c = 0; c < cfg.dividendDigits; c += 1) {
-          rows += `<div class="ld-cell work-cell"><span class="blank-line"></span></div>`;
+      for (let i = 0; i < n; i += 1) {
+        bits.push(box(1, i + 2, "", "&nbsp;"));
+      }
+      bits.push(`<div class="ld-rmark" style="grid-row:1;grid-column:${n + 2};">r</div>`);
+      bits.push(box(1, remCol, "", "&nbsp;"));
+
+      bits.push(box(2, 1, "ld-divisor", problem.divisor));
+      for (let i = 0; i < n; i += 1) {
+        bits.push(box(2, i + 2, "", digits[i]));
+      }
+
+      bits.push(`<div class="ld-top-line" style="grid-row:2;grid-column:2 / ${n + 2};"></div>`);
+      bits.push(`<div class="ld-left-line" style="grid-row:2;grid-column:2;"></div>`);
+
+      let row = 3;
+      let finalStartCol = 2;
+      for (let i = 0; i < n; i += 1) {
+        const startDigit = Math.min(i + 1, n - 1);
+        const startCol = startDigit + 1;
+        finalStartCol = startCol;
+
+        bits.push(`<div class="ld-minus" style="grid-row:${row};grid-column:1;">-</div>`);
+        bits.push(box(row, startCol, "", "&nbsp;"));
+        if (i > 0) bits.push(box(row, startCol + 1, "", "&nbsp;"));
+        row += 1;
+
+        if (i < n - 1) {
+          bits.push(box(row, startCol, "", "&nbsp;"));
+          bits.push(box(row, startCol + 1, "", "&nbsp;"));
+          row += 1;
+        } else {
+          bits.push(box(row, startCol, "", "&nbsp;"));
+          bits.push(box(row, startCol + 1, "", "&nbsp;"));
         }
       }
 
-      return `<div class="ld-grid" style="--digit-count:${cfg.dividendDigits};">${rows}</div>`;
+      bits.push(`<div class="ld-rail-v" style="grid-row:2 / ${rowCount + 1};grid-column:${remCol};"></div>`);
+      bits.push(`<div class="ld-rail-h" style="grid-row:${rowCount};grid-column:${finalStartCol + 2} / ${remCol};"></div>`);
+
+      return `<div class="ld-canvas" style="--digit-count:${n};--row-count:${rowCount};">${bits.join("")}</div>`;
     }
 
     function renderProblemCard(problem, index, cfg, multiplesMode) {
@@ -673,7 +695,6 @@
             </div>
 
             <div class="problem-panel">
-              <div class="problem-label">Problem</div>
               ${longDivisionGridHtml(problem, cfg)}
             </div>
           </div>

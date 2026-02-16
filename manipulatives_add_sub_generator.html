@@ -426,6 +426,11 @@
       justify-content: flex-start;
     }
 
+    .problems.layout-quad .chart-problem-body {
+      align-items: center;
+      justify-content: flex-start;
+    }
+
     .add-table {
       display: flex;
       flex-direction: column;
@@ -598,6 +603,11 @@
       justify-content: flex-start;
       gap: 4px 6px;
       background: transparent;
+    }
+
+    .manip-bin.tens-inline {
+      grid-template-columns: repeat(10, max-content);
+      grid-auto-rows: max-content;
     }
 
     .manip-bin.hundreds-bin {
@@ -789,6 +799,12 @@
       align-items: flex-start;
     }
 
+    .problems.layout-quad .hc-wrap {
+      align-items: center;
+      width: max-content;
+      margin: 0 auto;
+    }
+
     .hc-title {
       font-size: 0.74rem;
       font-weight: 800;
@@ -806,12 +822,22 @@
       line-height: 1.12;
     }
 
+    .problems.layout-quad .hc-instruction {
+      text-align: center;
+      max-width: 238px;
+    }
+
     .hc-grid {
       display: grid;
       grid-template-columns: repeat(10, 19px);
       grid-template-rows: repeat(10, 19px);
       border: 1px solid #8f98aa;
       background: #fff;
+    }
+
+    .problems.layout-quad .hc-grid {
+      grid-template-columns: repeat(10, 21px);
+      grid-template-rows: repeat(10, 21px);
     }
 
     .hc-cell {
@@ -823,6 +849,11 @@
       justify-content: center;
       color: #111;
       font-weight: 600;
+    }
+
+    .problems.layout-quad .hc-cell {
+      font-size: 0.56rem;
+      font-weight: 700;
     }
 
     .hc-cell.start {
@@ -867,13 +898,11 @@
     }
 
     .footer-note {
-      position: absolute;
-      left: 0.34in;
-      right: 0.34in;
-      bottom: 0.2in;
+      position: static;
       text-align: left;
       font-size: 0.66rem;
       color: #6a7485;
+      margin-top: 10px;
     }
 
     .no-color .digit-cell {
@@ -941,19 +970,136 @@
         padding: 0;
       }
 
+      .sheet-header {
+        margin-bottom: 6px;
+        padding-bottom: 5px;
+        break-after: avoid;
+        page-break-after: avoid;
+      }
+
+      .problems {
+        margin-top: 4px;
+        padding-bottom: 0.16in;
+      }
+
+      .problems.layout-stack {
+        display: block;
+      }
+
       .problem-wrap {
         --cell-size: 38px;
         --cell-gap: 4px;
         --op-width: 26px;
         break-inside: avoid;
         page-break-inside: avoid;
+        margin: 0 0 6px;
+      }
+
+      .problems.layout-stack .problem-wrap:last-child {
+        margin-bottom: 0;
       }
 
       .footer-note {
         position: fixed;
         left: 0.28in;
         right: 0.28in;
-        bottom: 0.1in;
+        bottom: 0.06in;
+        margin: 0;
+        font-size: 0.58rem;
+        color: #111;
+        text-align: left;
+      }
+
+      .sheet.sheet-layout-stack3 .problems.layout-stack {
+        margin-top: 6px;
+        padding-bottom: 0.16in;
+      }
+
+      .sheet.sheet-layout-stack3 .problem-wrap {
+        --cell-size: 33px;
+        --cell-gap: 3px;
+        --op-width: 22px;
+        gap: 6px;
+        padding: 5px 6px 6px;
+        margin: 0 0 5px;
+      }
+
+      .sheet.sheet-layout-stack3 .problem-body {
+        gap: 5px;
+      }
+
+      .sheet.sheet-layout-stack3 .problem-head {
+        min-height: 34px;
+        padding: 4px 8px;
+      }
+
+      .sheet.sheet-layout-stack3 .problem-badge {
+        width: 20px;
+        height: 20px;
+        font-size: 0.68rem;
+      }
+
+      .sheet.sheet-layout-stack3 .problem-text {
+        font-size: 1rem;
+      }
+
+      .sheet.sheet-layout-stack3 .manip-add-grid {
+        column-gap: 7px;
+        row-gap: 1px;
+      }
+
+      .sheet.sheet-layout-stack3 .manip-add-grid .row-bottom {
+        margin-top: 6px;
+      }
+
+      .sheet.sheet-layout-stack3 .manip-num,
+      .sheet.sheet-layout-stack3 .tens-col,
+      .sheet.sheet-layout-stack3 .ones-col,
+      .sheet.sheet-layout-stack3 .manip-bin {
+        min-height: 78px;
+      }
+
+      .sheet.sheet-layout-stack3 .block-img-one {
+        width: 14px;
+        height: 14px;
+      }
+
+      .sheet.sheet-layout-stack3 .block-img-ten {
+        width: 20px;
+        height: 78px;
+      }
+
+      .sheet.sheet-layout-stack3 .block-img-hundred {
+        width: 48px;
+        height: 48px;
+      }
+
+      .sheet.sheet-layout-stack3 .tenframe {
+        width: 64px;
+        max-width: 64px;
+        height: 78px;
+      }
+
+      .sheet.sheet-layout-stack3 .tfgrid {
+        gap: 1px;
+      }
+
+      .sheet.sheet-layout-stack3 .footer-note {
+        font-size: 0.56rem;
+      }
+
+      .sheet.sheet-layout-grid4 .problems.layout-quad .hc-grid {
+        grid-template-columns: repeat(10, 20px);
+        grid-template-rows: repeat(10, 20px);
+      }
+
+      .sheet.sheet-layout-grid4 .problems.layout-quad .hc-cell {
+        font-size: 0.52rem;
+      }
+
+      .sheet.sheet-layout-grid4 .problems.layout-quad .hc-instruction {
+        max-width: 220px;
+        font-size: 0.62rem;
       }
     }
   </style>
@@ -1372,9 +1518,10 @@
       return `<div class="manip-col-head">${label}</div>`;
     }
 
-    function manipAddRow(number, rowClass, includeHundreds) {
+    function manipAddRow(number, rowClass, includeHundreds, inlineTens) {
       const { hundreds, tens, ones } = placeValueCounts(number);
       const cells = [];
+      const tensBinClass = inlineTens ? "manip-bin tens-inline" : "manip-bin";
       cells.push(`<div class="manip-num ${rowClass}"><span class="manip-num-chip">${number}</span></div>`);
       if (includeHundreds) {
         cells.push(`
@@ -1385,32 +1532,33 @@
       }
       cells.push(`
         <div class="tens-col ${rowClass}">
-          <div class="manip-bin">${blocksMarkup(tens, "ten")}</div>
+          <div class="${tensBinClass}">${blocksMarkup(tens, "ten")}</div>
         </div>
       `);
       cells.push(`<div class="ones-col ${rowClass}">${onesMarkup(ones, true)}</div>`);
       return cells.join("");
     }
 
-    function additionManipHtml(problem, includeHundreds) {
+    function additionManipHtml(problem, includeHundreds, inlineTens) {
       const headerCols = [placeHeader("Tens"), placeHeader("Ones")];
       if (includeHundreds) headerCols.unshift(placeHeader("Hundreds"));
       return `
         <div class="manip-add-grid ${includeHundreds ? "has-hundreds" : ""}">
           <div></div>
           ${headerCols.join("")}
-          ${manipAddRow(problem.a, "row-top", includeHundreds)}
-          ${manipAddRow(problem.b, "row-bottom", includeHundreds)}
+          ${manipAddRow(problem.a, "row-top", includeHundreds, inlineTens)}
+          ${manipAddRow(problem.b, "row-bottom", includeHundreds, inlineTens)}
         </div>
       `;
     }
 
-    function subtractionManipHtml(problem, includeHundreds, showBorrowSpot) {
+    function subtractionManipHtml(problem, includeHundreds, showBorrowSpot, inlineTens) {
       const { hundreds: aH, tens: aT, ones: aO } = placeValueCounts(problem.a);
       const { hundreds: bH } = placeValueCounts(problem.b);
       const bT = Math.floor(problem.b / 10);
       const bO = problem.b % 10;
       const columns = [];
+      const tensBinClass = inlineTens ? "manip-bin tens-inline" : "manip-bin";
 
       if (includeHundreds) {
         columns.push(`
@@ -1426,7 +1574,7 @@
         <div class="sub-manip-col">
           <div class="sub-instruction">Subtract ${bT} tens.</div>
           <div class="sub-col-title">Tens</div>
-          <div class="manip-bin">${blocksMarkup(aT, "ten")}</div>
+          <div class="${tensBinClass}">${blocksMarkup(aT, "ten")}</div>
         </div>
       `);
 
@@ -1493,11 +1641,12 @@
       const sRow = new Array(totalCols).fill("");
 
       const includeHundreds = Math.max(aDigits, bDigits) >= 3;
+      const inlineTens = visualMode === "blocks";
       const manipHtml = visualMode === "chart"
         ? hundredChartHtml(problem, op, scaffoldOn)
         : (op === "sub"
-            ? subtractionManipHtml(problem, includeHundreds, requireSpecial)
-            : additionManipHtml(problem, includeHundreds));
+            ? subtractionManipHtml(problem, includeHundreds, requireSpecial, inlineTens)
+            : additionManipHtml(problem, includeHundreds, inlineTens));
 
       if (visualMode === "chart") {
         const chartFirst = chartOrder === "chartTop";
@@ -1693,9 +1842,10 @@
       const problemsClass = visualMode === "chart"
         ? (pageLayout === "grid4" ? "layout-quad" : "layout-chart2")
         : (pageLayout === "grid4" ? "layout-quad" : "layout-stack");
+      const sheetLayoutClass = `sheet-layout-${pageLayout}`;
 
       els.host.innerHTML = `
-        <section class="sheet no-color">
+        <section class="sheet no-color ${sheetLayoutClass}">
           <header class="sheet-header">
             <h2 class="sheet-title">${title}</h2>
             <div class="name-line">Name:<span class="line"></span></div>
@@ -1705,9 +1855,7 @@
             ${built.problems.map((p, i) => problemHtml(p, i, cfg)).join("")}
           </div>
 
-          <div class="footer-note">${visualMode === "chart"
-            ? "Hundreds chart strategy: tens move vertically by rows, ones move horizontally by columns."
-            : "Manipulatives are aligned by place value: number, tens, and ones ten-frame."}</div>
+          <div class="footer-note">Copyright - InterventionStation.com - @TeachwithMrC</div>
         </section>
       `;
     }

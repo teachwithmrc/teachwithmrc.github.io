@@ -339,6 +339,12 @@
       background: #fff;
     }
 
+    .sheet.scaffold-basic .area-top-grid .pv-box {
+      min-width: 58px;
+      min-height: 38px;
+      padding: 2px 10px;
+    }
+
     .pv-box.pp-ones {
       background: var(--orange);
     }
@@ -557,7 +563,7 @@
 
     .eq-tight-spacer {
       flex: 1 1 auto;
-      min-height: 8px;
+      min-height: 2px;
     }
 
     .eq-answer-line {
@@ -575,6 +581,9 @@
 
     .eq-answer-table .alg-cell {
       background: #fff;
+      width: 36px;
+      height: 36px;
+      font-size: 1.12rem;
     }
 
     .color-fill .eq-prompt.tone-0 .eq-answer-line { background: linear-gradient(to top, var(--tone0-fill) 0 60%, transparent 60% 100%); }
@@ -610,10 +619,11 @@
 
     .multiples-block {
       margin-top: 6px;
-      border: 2px solid #111;
-      border-radius: 4px;
-      background: #fff;
-      overflow: hidden;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: stretch;
+      width: fit-content;
+      max-width: 100%;
     }
 
     .multiples-title {
@@ -621,39 +631,51 @@
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.2px;
-      padding: 3px 6px;
-      border-bottom: 2px solid #111;
-      background: #f7f9fd;
+      padding: 0 0 3px;
+      color: #111;
     }
 
     .multiples-table {
-      width: 100%;
+      width: auto;
       border-collapse: collapse;
-      table-layout: fixed;
+      table-layout: auto;
+      border: 2px solid #111;
     }
 
     .multiples-table td {
-      border-right: 2px solid #111;
-      border-bottom: 2px solid #111;
+      border: 2px solid #111;
       text-align: center;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-weight: 700;
-      height: 28px;
-      padding: 2px;
+      width: 50px;
+      min-width: 50px;
+      height: 36px;
+      padding: 0;
+      background: #fff;
+      color: #111;
     }
 
     .multiples-head-row td {
       font-size: 0.68rem;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 0.2px;
     }
 
-    .multiples-table tr:last-child td {
-      border-bottom: 0;
+    .multiple-blank-lines {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1px;
+      width: 100%;
+      height: 100%;
     }
 
-    .multiples-table td:last-child {
-      border-right: 0;
+    .multiple-blank-lines p {
+      margin: 0;
+      line-height: 1;
+      min-height: 0.62em;
+      width: 100%;
     }
 
     .footer-note {
@@ -663,7 +685,8 @@
       bottom: 0.2in;
       text-align: left;
       font-size: 0.66rem;
-      color: #6a7485;
+      color: #111;
+      background: transparent;
     }
 
     .hidden {
@@ -697,6 +720,11 @@
         margin: 0.28in;
       }
 
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
       body {
         background: #fff;
       }
@@ -727,31 +755,100 @@
       .problem-card {
         break-inside: avoid;
         page-break-inside: avoid;
-        min-height: 2.72in;
-        padding: 5px 5px;
-        gap: 6px;
+        min-height: 2.58in;
+        padding: 4px 4px;
+        gap: 4px;
       }
 
       .problem-card + .problem-card {
-        padding-top: 10px;
+        padding-top: 7px;
+        margin-top: 2px;
       }
 
       .problem-eq {
-        font-size: 1.05rem;
+        font-size: 0.95rem;
       }
 
       .pv-box {
-        min-width: 37px;
-        min-height: 31px;
+        min-width: 34px;
+        min-height: 28px;
+        font-size: 0.95rem;
+      }
+
+      .sheet.scaffold-basic .area-top-grid .pv-box {
+        min-width: 44px;
+        min-height: 30px;
+        padding: 1px 8px;
+      }
+
+      .problem-grid {
+        gap: 5px;
+      }
+
+      .workspace-row {
+        gap: 7px;
+      }
+
+      .area-panel {
+        gap: 4px;
       }
 
       .alg-cell {
-        width: 29px;
-        height: 29px;
+        width: 27px;
+        height: 27px;
+      }
+
+      .alg-sign {
+        font-size: 1.35rem;
       }
 
       .area-part {
-        min-height: 64px;
+        min-height: 56px;
+        padding: 4px;
+      }
+
+      .eq-prompt {
+        font-size: 0.84rem;
+        gap: 3px;
+        padding: 2px 2px 1px;
+      }
+
+      .eq-spacer {
+        min-height: 16px;
+      }
+
+      .eq-tight-spacer {
+        min-height: 1px;
+      }
+
+      .eq-answer-line {
+        min-width: 70px;
+      }
+
+      .eq-answer-table .alg-cell {
+        width: 31px;
+        height: 31px;
+        font-size: 1rem;
+      }
+
+      .multiples-block {
+        margin-top: 3px;
+      }
+
+      .multiples-title {
+        font-size: 0.64rem;
+        padding: 2px 5px;
+      }
+
+      .multiples-table td {
+        width: 36px;
+        min-width: 36px;
+        height: 26px;
+        font-size: 0.56rem;
+      }
+
+      .multiples-head-row td {
+        font-size: 0.52rem;
       }
 
       .footer-note {
@@ -759,6 +856,90 @@
         left: 0.28in;
         right: 0.28in;
         bottom: 0.1in;
+        font-size: 0.58rem;
+      }
+
+      .sheet.type-3x1 .problem-card,
+      .sheet.type-4x1 .problem-card {
+        min-height: 2.34in;
+        padding: 3px 3px;
+        gap: 3px;
+      }
+
+      .sheet.type-3x1 .problem-card + .problem-card,
+      .sheet.type-4x1 .problem-card + .problem-card {
+        padding-top: 5px;
+      }
+
+      .sheet.type-3x1 .alg-cell,
+      .sheet.type-4x1 .alg-cell {
+        width: 24px;
+        height: 24px;
+        font-size: 0.92rem;
+      }
+
+      .sheet.type-3x1 .alg-sign,
+      .sheet.type-4x1 .alg-sign {
+        width: 18px;
+        font-size: 1.1rem;
+      }
+
+      .sheet.type-3x1 .area-part,
+      .sheet.type-4x1 .area-part {
+        min-height: 48px;
+        padding: 3px;
+      }
+
+      .sheet.type-3x1 .pv-box,
+      .sheet.type-4x1 .pv-box {
+        min-width: 31px;
+        min-height: 25px;
+        font-size: 0.84rem;
+      }
+
+      .sheet.type-3x1.scaffold-basic .area-top-grid .pv-box,
+      .sheet.type-4x1.scaffold-basic .area-top-grid .pv-box {
+        min-width: 36px;
+        min-height: 25px;
+        padding: 1px 6px;
+      }
+
+      .sheet.type-3x1 .eq-prompt,
+      .sheet.type-4x1 .eq-prompt {
+        font-size: 0.74rem;
+        gap: 2px;
+        padding: 1px;
+      }
+
+      .sheet.type-3x1 .eq-answer-line,
+      .sheet.type-4x1 .eq-answer-line {
+        min-width: 58px;
+      }
+
+      .sheet.type-3x1 .eq-answer-table .alg-cell,
+      .sheet.type-4x1 .eq-answer-table .alg-cell {
+        width: 26px;
+        height: 26px;
+        font-size: 0.88rem;
+      }
+
+      .sheet.type-3x1 .multiples-title,
+      .sheet.type-4x1 .multiples-title {
+        font-size: 0.58rem;
+        padding: 1px 4px;
+      }
+
+      .sheet.type-3x1 .multiples-table td,
+      .sheet.type-4x1 .multiples-table td {
+        width: 28px;
+        min-width: 28px;
+        height: 20px;
+        font-size: 0.46rem;
+      }
+
+      .sheet.type-3x1 .multiples-head-row td,
+      .sheet.type-4x1 .multiples-head-row td {
+        font-size: 0.38rem;
       }
     }
   </style>
@@ -847,12 +1028,12 @@
 
           <div class="field">
             <label>Multiples Table</label>
-            <label class="checkbox-wrap"><input id="showMultiplesBox" type="checkbox" checked />Show table (Guided/Basic)</label>
+            <label class="checkbox-wrap"><input id="showMultiplesBox" type="checkbox" checked />Show table (Full/Guided/Basic/Blank)</label>
           </div>
 
           <div class="field">
             <label>Multiples Values</label>
-            <label class="checkbox-wrap"><input id="fillMultiplesValues" type="checkbox" checked />Fill values (Guided/Basic)</label>
+            <label class="checkbox-wrap"><input id="fillMultiplesValues" type="checkbox" checked />Fill values (Full/Guided/Basic)</label>
           </div>
 
           <div class="field">
@@ -905,20 +1086,20 @@
       "2x1": { aDigits: 2, bDigits: 1, label: "2 x 1", pageCount: 3, example: "85x8" },
       "3x1": { aDigits: 3, bDigits: 1, label: "3 x 1", pageCount: 2, example: "487x6" },
       "4x1": { aDigits: 4, bDigits: 1, label: "4 x 1", pageCount: 2, example: "3264x7" },
-      "2x2": { aDigits: 2, bDigits: 2, label: "2 x 2", pageCount: 2, example: "76x24" }
+      "2x2": { aDigits: 2, bDigits: 2, label: "2 x 2", pageCount: 1, example: "76x24" }
     };
 
     const SCAFFOLD = {
       full: { showAreaFactors: true, showSetupDigits: true, showProblemEquation: true },
-      guided: { showAreaFactors: true, showSetupDigits: false, showProblemEquation: true },
-      basic: { showAreaFactors: false, showSetupDigits: false, showProblemEquation: true },
+      guided: { showAreaFactors: true, showSetupDigits: true, showProblemEquation: true },
+      basic: { showAreaFactors: false, showSetupDigits: true, showProblemEquation: true },
       blank: { showAreaFactors: false, showSetupDigits: false, showProblemEquation: false }
     };
 
     const SCAFFOLD_HELP = {
       full: "Full: place-value headers and setup digits are shown.",
-      guided: "Guided: headers stay visible, but setup digits are blank.",
-      basic: "Basic: headers and setup digits are both blank.",
+      guided: "Guided: place-value headers and right-side setup digits are shown.",
+      basic: "Basic: area headers are blank, but right-side setup digits are shown.",
       blank: "Blank Template: everything is left open so the sheet is reusable."
     };
 
@@ -1039,17 +1220,23 @@
       return arr;
     }
 
-    function answerBoxesHtml(digits) {
-      const count = Math.max(1, digits || 1);
-      const cells = new Array(count).fill('<td class="alg-cell">&nbsp;</td>').join("");
+    function answerBoxesHtml(answerValue, prefillZeroCount) {
+      const txt = String(Math.abs(Number(answerValue) || 0));
+      const chars = txt.split("");
+      const trailingZerosToPrefill = Math.max(0, Math.min(prefillZeroCount || 0, chars.length));
+      const cells = chars.map((ch, idx) => {
+        const idxFromEnd = chars.length - 1 - idx;
+        if (idxFromEnd < trailingZerosToPrefill) return '<td class="alg-cell">0</td>';
+        return '<td class="alg-cell">&nbsp;</td>';
+      }).join("");
       return `<table class="eq-answer-table" aria-hidden="true"><tr>${cells}</tr></table>`;
     }
 
-    function equationPromptHtml(tone, text, promptStyle, answerMode, answerDigits) {
+    function equationPromptHtml(tone, text, promptStyle, answerMode, answerValue, prefillZeroCount) {
       if (promptStyle === "off") return "";
 
       const answerHtml = answerMode === "digitBoxes"
-        ? answerBoxesHtml(answerDigits)
+        ? answerBoxesHtml(answerValue, prefillZeroCount)
         : '<span class="eq-answer-line"></span>';
       const spacerHtml = answerMode === "digitBoxes"
         ? '<div class="eq-tight-spacer"></div>'
@@ -1092,7 +1279,7 @@
     }
 
     function buildAlgorithmTable(problem, cfg, opts, scaffold, partials) {
-      const isBasic = opts.scaffoldLevel === "basic" || opts.scaffoldLevel === "blank";
+      const isBlank = opts.scaffoldLevel === "blank";
       const productDigits = String(problem.a * problem.b).length;
       const partialMax = partials.reduce((m, p) => {
         const len = String(Math.abs(p.leftPart * p.topPart)).length;
@@ -1112,7 +1299,7 @@
 
       const partialRows = partials.map((p, idx) => {
         const cells = new Array(cols).fill("&nbsp;");
-        if (opts.zeroHints && !isBasic) {
+        if (opts.zeroHints && !isBlank) {
           for (let i = 0; i < Math.min(p.shift, cols); i += 1) {
             cells[cols - 1 - i] = "0";
           }
@@ -1140,14 +1327,15 @@
     }
 
     function buildMultiplesTable(problem, cfg, opts) {
-      const showForLevel = opts.scaffoldLevel === "guided" || opts.scaffoldLevel === "basic";
+      const showForLevel = opts.scaffoldLevel === "full" || opts.scaffoldLevel === "guided" || opts.scaffoldLevel === "basic" || opts.scaffoldLevel === "blank";
       if (!showForLevel || !opts.showMultiplesBox || cfg.bDigits !== 1) return "";
 
       const base = problem.b;
-      const headers = Array.from({ length: 9 }, (_, i) => `<td>x${i + 1}</td>`).join("");
-      const values = Array.from({ length: 9 }, (_, i) => {
-        if (opts.fillMultiplesValues) return `<td>${base * (i + 1)}</td>`;
-        return "<td>&nbsp;</td>";
+      const headers = Array.from({ length: 10 }, (_, i) => `<td>x${i + 1}</td>`).join("");
+      const shouldFillValues = opts.scaffoldLevel !== "blank" && opts.fillMultiplesValues;
+      const values = Array.from({ length: 10 }, (_, i) => {
+        if (shouldFillValues) return `<td>${base * (i + 1)}</td>`;
+        return '<td><div class="multiple-blank-lines"><p>&nbsp;</p><p>&nbsp;</p></div></td>';
       }).join("");
 
       return `
@@ -1199,19 +1387,20 @@
         <div class="area-part ${p.tone}">
           ${(() => {
             const partialProduct = p.leftPart * p.topPart;
-            const answerDigits = String(Math.abs(partialProduct)).length;
 
             let promptStyle = opts.boxPromptStyle;
             if (opts.scaffoldLevel === "full") promptStyle = "facts";
             if (opts.scaffoldLevel === "basic") promptStyle = "answerOnly";
 
             const answerMode = opts.scaffoldLevel === "full" ? "digitBoxes" : "line";
+            const prefillAreaZeroCount = (opts.scaffoldLevel === "full" && opts.zeroHints) ? p.shift : 0;
             return equationPromptHtml(
               p.tone,
               `${p.leftPart} x ${p.topPart}`,
               promptStyle,
               answerMode,
-              answerDigits
+              partialProduct,
+              prefillAreaZeroCount
             );
           })()}
         </div>
@@ -1280,18 +1469,20 @@
 
     function syncMultiplesControls() {
       const level = els.scaffoldLevel.value;
-      const allowed = level === "guided" || level === "basic";
+      const allowed = level === "full" || level === "guided" || level === "basic" || level === "blank";
       els.showMultiplesBox.disabled = !allowed;
-      els.fillMultiplesValues.disabled = !allowed || !els.showMultiplesBox.checked;
+      const isBlankTemplate = level === "blank";
+      els.fillMultiplesValues.disabled = !allowed || !els.showMultiplesBox.checked || isBlankTemplate;
     }
 
     function syncAdditionLayoutControl() {
       const cfg = getTypeConfig();
       const forceUnder = cfg.aDigits === 4 && cfg.bDigits === 1;
-      if (forceUnder) {
-        els.additionLayout.value = "under";
-      }
-      els.additionLayout.disabled = forceUnder;
+      const forceRight = (cfg.aDigits === 2 || cfg.aDigits === 3) && cfg.bDigits === 1;
+
+      if (forceUnder) els.additionLayout.value = "under";
+      if (forceRight) els.additionLayout.value = "right";
+      els.additionLayout.disabled = forceUnder || forceRight;
     }
 
     function renderWorksheet() {
@@ -1311,7 +1502,8 @@
       const zeroHints = els.zeroHints.checked;
       const allowZeroOnes = els.allowZeroOnes.checked;
       const forceUnder = cfg.aDigits === 4 && cfg.bDigits === 1;
-      const algPlacement = forceUnder ? "under" : pickAlgorithmPlacement(additionLayout);
+      const forceRight = (cfg.aDigits === 2 || cfg.aDigits === 3) && cfg.bDigits === 1;
+      const algPlacement = forceUnder ? "under" : (forceRight ? "right" : pickAlgorithmPlacement(additionLayout));
       const count = cfg.pageCount;
 
       els.stackInfo.value = `${count} problem${count === 1 ? "" : "s"} on one page (${cfg.label})`;
@@ -1320,7 +1512,9 @@
       const source = buildProblemList(count, problemMode, els.customProblems.value, allowZeroOnes, cfg);
       const layoutNote = forceUnder
         ? "Addition table: underneath area model (4 x 1 spacing fix)."
-        : (algPlacement === "right" ? "Addition table: right side." : "Addition table: underneath area model.");
+        : (forceRight
+          ? "Addition table: right side (locked for this problem type)."
+          : (algPlacement === "right" ? "Addition table: right side." : "Addition table: underneath area model."));
       const promptNote = scaffoldLevel === "full"
         ? "Box prompts: factors shown with digit-count answer boxes."
         : (scaffoldLevel === "basic"
@@ -1328,9 +1522,11 @@
           : (boxPromptStyle === "facts"
             ? "Box prompts: factors shown."
             : (boxPromptStyle === "blank" ? "Box prompts: blank equation lines." : "Box prompts: off.")));
-      const multiplesNote = (scaffoldLevel === "guided" || scaffoldLevel === "basic")
+      const multiplesNote = (scaffoldLevel === "full" || scaffoldLevel === "guided" || scaffoldLevel === "basic" || scaffoldLevel === "blank")
         ? (showMultiplesBox
-          ? (fillMultiplesValues ? "Multiples table: on (filled)." : "Multiples table: on (blank).")
+          ? (scaffoldLevel === "blank"
+            ? "Multiples table: on (blank template)."
+            : (fillMultiplesValues ? "Multiples table: on (filled)." : "Multiples table: on (blank)."))
           : "Multiples table: off.")
         : "Multiples table: hidden for this scaffold level.";
       els.statusText.textContent = `${source.message} ${layoutNote} ${promptNote} ${multiplesNote}`;
@@ -1351,9 +1547,11 @@
         .join("");
 
       const colorClass = colorOn ? `color-${colorStyle}` : "no-color";
+      const typeClass = `type-${els.problemType.value}`;
+      const scaffoldClass = `scaffold-${scaffoldLevel}`;
 
       els.host.innerHTML = `
-        <section class="sheet ${colorClass}">
+        <section class="sheet ${colorClass} ${typeClass} ${scaffoldClass}">
           <header class="sheet-header">
             <h2 class="sheet-title">${sheetTitle}</h2>
             <div class="name-line">Name:<span class="line"></span></div>
@@ -1363,7 +1561,7 @@
             ${cards}
           </div>
 
-          <div class="footer-note">Generated organizer: answers are intentionally blank so students complete each step.</div>
+          <div class="footer-note">Copyright - InterventionStation.com - @TeachwithMrC</div>
         </section>
       `;
     }

@@ -14,15 +14,15 @@
       --soft-line: #8e98aa;
       --teal: #a9ddd3;
       --paper: #ffffff;
-      --tone0-fill: rgba(190, 142, 220, 0.15);
+      --tone0-fill: rgba(182, 128, 224, 0.24);
       --tone1-fill: rgba(255, 200, 110, 0.15);
       --tone2-fill: rgba(145, 205, 230, 0.15);
       --tone3-fill: rgba(178, 220, 170, 0.15);
-      --tone0-line: #c9a8df;
+      --tone0-line: #bb86e0;
       --tone1-line: #f3c883;
       --tone2-line: #9ecbe2;
       --tone3-line: #b3d5a8;
-      --tone0-strong: #e8c9f7;
+      --tone0-strong: #dcb3f3;
       --tone1-strong: #ffe2b3;
       --tone2-strong: #d1ecf8;
       --tone3-strong: #dcefd5;
@@ -30,6 +30,11 @@
 
     * {
       box-sizing: border-box;
+    }
+
+    @page {
+      size: letter landscape;
+      margin: 0.25in;
     }
 
     html, body {
@@ -73,9 +78,39 @@
 
     .controls-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
       align-items: end;
+    }
+
+    .controls-top {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .type-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .type-btn {
+      border: 2px solid #1f2b3e;
+      border-radius: 10px;
+      background: #fff;
+      color: #1f2b3e;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 8px 10px;
+      cursor: pointer;
+      line-height: 1.2;
+    }
+
+    .type-btn.active {
+      background: #1f2b3e;
+      color: #fff;
     }
 
     .field {
@@ -116,6 +151,10 @@
     .field textarea {
       min-height: 64px;
       resize: vertical;
+    }
+
+    .field.custom-problem {
+      grid-column: 2;
     }
 
     .checkbox-wrap {
@@ -172,14 +211,18 @@
     }
 
     .sheet {
-      width: 8.5in;
-      min-height: 11in;
+      width: 11in;
+      min-height: 8.5in;
       margin: 0 auto;
       background: var(--paper);
       border: 1px solid #d6dbe7;
       box-shadow: 0 12px 30px rgba(25, 35, 55, 0.1);
       padding: 0.3in;
       position: relative;
+    }
+
+    .sheet + .sheet {
+      margin-top: 14px;
     }
 
     .sheet-header {
@@ -214,13 +257,30 @@
     }
 
     .organizer {
-      border: 2px solid #111;
-      border-radius: 5px;
-      padding: 9px;
+      padding: 2px 0;
       display: grid;
       grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.34fr);
       gap: 9px;
-      min-height: 9.75in;
+      min-height: 0;
+    }
+
+    .two-up {
+      display: grid;
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .two-up.single {
+      grid-template-rows: minmax(0, 1fr);
+    }
+
+    .organizer-block {
+      padding: 2px 0 4px;
+    }
+
+    .organizer-block + .organizer-block {
+      border-top: 1px solid #d5dce9;
+      padding-top: 8px;
     }
 
     .left-column {
@@ -232,33 +292,145 @@
     .problem-equation {
       font-size: 1.02rem;
       font-weight: 800;
-      border: 2px solid #111;
-      border-radius: 4px;
-      padding: 4px 10px;
-      text-align: center;
-      background: #fff;
+      padding: 0 2px 2px;
+      text-align: left;
+      background: transparent;
     }
 
     .workspace {
-      border: 2px solid #111;
-      border-radius: 4px;
-      padding: 8px 7px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      background: #fff;
+      padding: 2px 0 6px;
+      background: transparent;
     }
 
-    .setup-row {
-      display: flex;
-      align-items: flex-end;
-      gap: 8px;
-      justify-content: flex-start;
+    .workspace-layout {
+      display: block;
     }
+
+    .problem-canvas-wrap {
+      position: relative;
+      overflow: visible;
+    }
+
+    .problem-canvas {
+      position: relative;
+      display: grid;
+      grid-template-columns: 24px 50px repeat(var(--digits), 50px) 22px 50px;
+      grid-template-rows: repeat(var(--rows), 40px);
+      column-gap: 4px;
+      row-gap: 8px;
+      align-items: center;
+      justify-content: start;
+      overflow: visible;
+    }
+
+    .problem-canvas.no-remainder {
+      grid-template-columns: 24px 50px repeat(var(--digits), 50px);
+    }
+
+    .remainder-label {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      text-align: center;
+      align-self: center;
+      justify-self: center;
+      text-transform: uppercase;
+    }
+
+    .canvas-box {
+      width: 50px;
+      height: 40px;
+      border: 2px solid #111;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.94rem;
+      font-weight: 700;
+      background: #fff;
+      line-height: 1;
+    }
+
+    .canvas-box.ghost {
+      border: 0;
+      background: transparent;
+    }
+
+    .canvas-box.divisor {
+      background: #bdeee5;
+    }
+
+    .canvas-box.blank-gray {
+      background: #f0f0f0;
+    }
+
+    .canvas-box.minus-cell {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+      justify-content: center;
+      padding-right: 0;
+    }
+
+    .division-top-line {
+      align-self: start;
+      border-top: 6px solid #111;
+      height: 1px;
+      width: 100%;
+      z-index: 3;
+    }
+
+    .division-left-line {
+      justify-self: start;
+      width: 1px;
+      height: 100%;
+      border-left: 6px solid #111;
+      z-index: 3;
+      transform: translateX(-2px);
+    }
+
+    .down-arrow {
+      width: 16px;
+      height: 24px;
+      position: relative;
+      justify-self: center;
+      align-self: end;
+      transform: translateY(8px);
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .down-arrow::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 0;
+      width: 4px;
+      height: 14px;
+      border-radius: 2px;
+      background: currentColor;
+      opacity: 0.95;
+    }
+
+    .down-arrow::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 12px;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 12px solid currentColor;
+      opacity: 0.95;
+    }
+
+    .down-arrow.arrow-0 { color: #c9a8df; }
+    .down-arrow.arrow-1 { color: #f3c883; }
+    .down-arrow.arrow-2 { color: #9ecbe2; }
+    .down-arrow.arrow-3 { color: #b3d5a8; }
 
     .digit-box {
-      min-width: 36px;
-      height: 36px;
+      min-width: 38px;
+      height: 38px;
       border: 2px solid #111;
       border-radius: 2px;
       display: inline-flex;
@@ -270,8 +442,8 @@
     }
 
     .digit-box.small {
-      min-width: 30px;
-      height: 30px;
+      min-width: 34px;
+      height: 34px;
       font-size: 0.98rem;
     }
 
@@ -319,6 +491,14 @@
       font-size: 1.12rem;
       margin-left: 2px;
       padding-bottom: 3px;
+    }
+
+    .remainder-value {
+      min-width: 18px;
+      text-align: center;
+      border-bottom: 2px solid #111;
+      line-height: 1;
+      padding-bottom: 1px;
     }
 
     .step-panels {
@@ -379,48 +559,6 @@
       top: -13px;
       font-size: 1.4rem;
       font-weight: 700;
-      line-height: 1;
-    }
-
-    .checklist-box {
-      border: 2px solid #111;
-      border-radius: 4px;
-      padding: 7px 8px;
-      background: #fff;
-    }
-
-    .checklist-title {
-      margin: 0 0 6px;
-      font-size: 0.82rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.2px;
-      border-bottom: 2px solid #111;
-      padding-bottom: 3px;
-    }
-
-    .steps-list {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      font-size: 0.85rem;
-      line-height: 1.3;
-      columns: 1;
-    }
-
-    .steps-list li {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      min-height: 1.08rem;
-    }
-
-    .checkbox-char {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 0.95rem;
-      font-size: 0.9rem;
       line-height: 1;
     }
 
@@ -486,7 +624,7 @@
     .strip-table td {
       border: 1px solid #111;
       text-align: center;
-      height: 29px;
+      height: 32px;
       font-size: 0.79rem;
       font-weight: 700;
       padding: 0;
@@ -500,15 +638,6 @@
     .multiple-cell {
       position: relative;
       background: #fff;
-    }
-
-    .multiple-cell.blank::after {
-      content: "";
-      position: absolute;
-      left: 14%;
-      right: 14%;
-      bottom: 5px;
-      border-bottom: 2px solid #111;
     }
 
     .tone-0-bg { background: var(--tone0-fill); }
@@ -561,17 +690,37 @@
       background: #efefef !important;
     }
 
+    .no-color .canvas-box.divisor {
+      background: #fff !important;
+      box-shadow: none !important;
+    }
+
+    .color-line .canvas-box.divisor {
+      background: #fff;
+      box-shadow: inset 0 0 0 3px var(--tone1-line);
+    }
+
     .footer-note {
-      position: absolute;
-      left: 0.3in;
-      right: 0.3in;
-      bottom: 0.16in;
+      position: static;
+      margin-top: 8px;
       text-align: left;
       font-size: 0.64rem;
       color: #6a7485;
     }
 
     @media (max-width: 980px) {
+      .controls-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .type-buttons {
+        grid-template-columns: 1fr;
+      }
+
+      .field.custom-problem {
+        grid-column: auto;
+      }
+
       .sheet {
         width: 100%;
         min-height: 0;
@@ -583,6 +732,14 @@
         grid-template-columns: 1fr;
       }
 
+      .two-up {
+        grid-template-rows: auto;
+      }
+
+      .workspace-layout {
+        display: block;
+      }
+
       .footer-note {
         position: static;
         margin-top: 8px;
@@ -591,12 +748,20 @@
 
     @media print {
       @page {
-        size: Letter;
-        margin: 0.28in;
+        size: letter landscape;
+        margin: 0.25in;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
       }
 
       body {
         background: #fff;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
       }
 
       .screen-only {
@@ -614,23 +779,45 @@
       }
 
       .sheet {
-        width: auto;
-        min-height: 0;
-        margin: 0;
+        width: 10.5in;
+        min-height: 8in;
+        margin: 0 auto;
         border: 0;
         box-shadow: none;
-        padding: 0;
+        padding: 0.2in;
+        box-sizing: border-box;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        page-break-after: always;
+        break-after: page;
+      }
+
+      .sheet:last-child {
+        page-break-after: auto;
+        break-after: auto;
       }
 
       .organizer {
-        min-height: 9.95in;
+        min-height: 0;
+        grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.16fr);
+        gap: 6px;
+      }
+
+      .two-up {
+        gap: 6px;
+      }
+
+      .workspace-layout {
+        display: block;
+      }
+
+      .right-column {
+        gap: 5px;
       }
 
       .footer-note {
-        position: fixed;
-        left: 0.28in;
-        right: 0.28in;
-        bottom: 0.1in;
+        position: static;
+        margin-top: 8px;
       }
     }
   </style>
@@ -642,35 +829,44 @@
       <p class="subtitle">Your right-side step-strip format with matching color logic</p>
 
       <section class="controls-card">
+        <div class="controls-top">
+          <label class="field-hint" for="problemType">Problem Type</label>
+          <div class="type-buttons" id="problemTypeButtons" role="group" aria-label="Problem type">
+            <button class="type-btn active" type="button" data-type="2x1">2-digit by 1-digit</button>
+            <button class="type-btn" type="button" data-type="3x1">3-digit by 1-digit</button>
+            <button class="type-btn" type="button" data-type="4x1">4-digit by 1-digit</button>
+          </div>
+          <input id="problemType" type="hidden" value="2x1" />
+        </div>
+
         <div class="controls-grid">
           <div class="field">
-            <label for="problemType">Problem Type</label>
-            <select id="problemType">
-              <option value="2x1" selected>2-digit dividend / 1-digit divisor</option>
-              <option value="3x1">3-digit dividend / 1-digit divisor</option>
-              <option value="4x1">4-digit dividend / 1-digit divisor</option>
-            </select>
+            <label for="problemSetCount">Total Problems</label>
+            <select id="problemSetCount"></select>
+            <div class="field-hint" id="problemCountHint"></div>
           </div>
 
           <div class="field">
-            <label for="problemMode">Problem Source</label>
-            <select id="problemMode">
-              <option value="random" selected>Random problem</option>
-              <option value="custom">Custom problem (use textbox)</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="customProblem">Custom Problem</label>
-            <input id="customProblem" type="text" placeholder="Examples: 654/6 or 6)654" />
-            <div class="field-hint">Single problem only for this organizer page.</div>
-          </div>
-
-          <div class="field">
-            <label for="multiplesMode">Multiples Mode</label>
+            <label for="multiplesMode">Display Multiples</label>
             <select id="multiplesMode">
-              <option value="blank" selected>Blank (students fill in)</option>
-              <option value="filled">Filled multiples</option>
+              <option value="blank" selected>No (students fill in)</option>
+              <option value="filled">Yes (show multiples)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="stepPromptMode">Fill Step Parts</label>
+            <select id="stepPromptMode">
+              <option value="blank" selected>No (students fill in)</option>
+              <option value="filled">Yes (show step parts)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="remainderMode">Remainders</label>
+            <select id="remainderMode">
+              <option value="allow" selected>Allow remainders</option>
+              <option value="none">No remainders (exact only)</option>
             </select>
           </div>
 
@@ -679,22 +875,10 @@
             <label class="checkbox-wrap"><input id="colorToggle" type="checkbox" checked />Use matching colors</label>
           </div>
 
-          <div class="field">
-            <label for="colorStyle">Color Style</label>
-            <select id="colorStyle">
-              <option value="fill" selected>Inside Fill (light)</option>
-              <option value="line">Line/Outline Only</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Answer Key View</label>
-            <label class="checkbox-wrap"><input id="answerKeyToggle" type="checkbox" />Prefill quotient + step boxes</label>
-          </div>
-
-          <div class="field">
-            <label for="sheetTitle">Worksheet Title</label>
-            <input id="sheetTitle" type="text" value="Long Division Color-Coded Step Organizer" />
+          <div class="field custom-problem">
+            <label for="customProblem">Custom Problem</label>
+            <input id="customProblem" type="text" placeholder="Examples: 654/6 or 6)654" />
+            <div class="field-hint">Optional. Leave blank for random. Add one or more problems separated by comma/new line.</div>
           </div>
         </div>
 
@@ -703,7 +887,7 @@
           <button id="printBtn" type="button">Print</button>
         </div>
 
-        <div class="note" id="statusText">Tip: use blank multiples for regular student practice and filled multiples for targeted support.</div>
+        <div class="note" id="statusText">Use custom problems only when you want specific numbers; otherwise it auto-generates.</div>
       </section>
     </div>
 
@@ -714,13 +898,14 @@
     const els = {
       host: document.getElementById("worksheetHost"),
       problemType: document.getElementById("problemType"),
-      problemMode: document.getElementById("problemMode"),
+      problemTypeButtons: Array.from(document.querySelectorAll(".type-btn")),
+      problemSetCount: document.getElementById("problemSetCount"),
+      problemCountHint: document.getElementById("problemCountHint"),
       customProblem: document.getElementById("customProblem"),
       multiplesMode: document.getElementById("multiplesMode"),
+      stepPromptMode: document.getElementById("stepPromptMode"),
+      remainderMode: document.getElementById("remainderMode"),
       colorToggle: document.getElementById("colorToggle"),
-      colorStyle: document.getElementById("colorStyle"),
-      answerKeyToggle: document.getElementById("answerKeyToggle"),
-      sheetTitle: document.getElementById("sheetTitle"),
       statusText: document.getElementById("statusText"),
       generateBtn: document.getElementById("generateBtn"),
       printBtn: document.getElementById("printBtn")
@@ -738,6 +923,52 @@
 
     function getTypeConfig() {
       return TYPE_CONFIG[els.problemType.value] || TYPE_CONFIG["2x1"];
+    }
+
+    function setProblemType(typeKey) {
+      if (!TYPE_CONFIG[typeKey]) return;
+      els.problemType.value = typeKey;
+      els.problemTypeButtons.forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.type === typeKey);
+      });
+    }
+
+    function getProblemsPerPage(cfg) {
+      return cfg.digits >= 3 ? 1 : 2;
+    }
+
+    function populateProblemCountOptions() {
+      const cfg = getTypeConfig();
+      const perPage = getProblemsPerPage(cfg);
+      const previous = Number(els.problemSetCount.value);
+      let selectedValue = Number.isFinite(previous) ? previous : (perPage === 2 ? 4 : 3);
+
+      const options = [];
+      for (let pages = 1; pages <= 5; pages += 1) {
+        const total = pages * perPage;
+        const label = perPage === 2
+          ? `${total} (2 per page)`
+          : `${total} (1 per page)`;
+        options.push({ value: total, label });
+      }
+
+      if (!options.some((o) => o.value === selectedValue)) {
+        selectedValue = options[Math.min(2, options.length - 1)].value;
+      }
+
+      els.problemSetCount.innerHTML = options
+        .map((o) => `<option value="${o.value}"${o.value === selectedValue ? " selected" : ""}>${o.label}</option>`)
+        .join("");
+
+      els.problemCountHint.textContent = perPage === 2
+        ? "2-digit by 1-digit uses 2 problems per page."
+        : "3-digit/4-digit uses 1 problem per page.";
+    }
+
+    function getTotalProblemCount() {
+      const raw = Number(els.problemSetCount.value);
+      if (!Number.isFinite(raw)) return 1;
+      return Math.max(1, raw);
     }
 
     function parseProblemToken(token, cfg) {
@@ -765,26 +996,84 @@
       return { dividend, divisor };
     }
 
-    function makeRandomProblem(cfg) {
+    function makeRandomProblem(cfg, allowRemainder) {
+      if (allowRemainder) {
+        return {
+          dividend: randInt(cfg.dividendMin, cfg.dividendMax),
+          divisor: randInt(2, 9)
+        };
+      }
+
+      for (let tries = 0; tries < 800; tries += 1) {
+        const divisor = randInt(2, 9);
+        const dividend = randInt(cfg.dividendMin, cfg.dividendMax);
+        if (dividend % divisor === 0) {
+          return { dividend, divisor };
+        }
+      }
+
       return {
-        dividend: randInt(cfg.dividendMin, cfg.dividendMax),
-        divisor: randInt(2, 9)
+        dividend: cfg.dividendMin,
+        divisor: 2
       };
     }
 
-    function getProblem(cfg) {
-      if (els.problemMode.value === "custom") {
-        const parsed = parseProblemToken(els.customProblem.value, cfg);
-        if (!parsed) {
-          return {
-            problem: null,
-            warning: true,
-            message: "Invalid custom problem. Use examples like 654/6 or 6)654."
-          };
+    function getProblems(cfg, requestedCount) {
+      const allowRemainder = els.remainderMode.value === "allow";
+      const problemCount = Math.max(1, requestedCount);
+      const tokens = els.customProblem.value
+        .split(/[\n,;]+/)
+        .map((token) => token.trim())
+        .filter(Boolean);
+
+      if (tokens.length > 0) {
+        const parsed = [];
+        for (const token of tokens.slice(0, problemCount)) {
+          const problem = parseProblemToken(token, cfg);
+          if (!problem) {
+            return {
+              problems: [],
+              warning: true,
+              message: "Invalid custom problem. Use examples like 654/6 or 6)654."
+            };
+          }
+          parsed.push(problem);
         }
-        return { problem: parsed, warning: false, message: "Generated custom organizer." };
+
+        const problems = new Array(problemCount).fill(0).map((_, idx) => {
+          const source = parsed[Math.min(idx, parsed.length - 1)];
+          return { ...source };
+        });
+
+        if (!allowRemainder) {
+          const hasRemainder = problems.some((p) => (p.dividend % p.divisor) !== 0);
+          if (hasRemainder) {
+            return {
+              problems: [],
+              warning: true,
+              message: "Custom problem has a remainder. Pick an exact-division problem or allow remainders."
+            };
+          }
+        }
+
+        return {
+          problems,
+          warning: false,
+          message: problemCount === 1
+            ? "Generated custom problem."
+            : (parsed.length === 1
+              ? "Generated custom problems (duplicated input as needed)."
+              : "Generated custom problems.")
+        };
       }
-      return { problem: makeRandomProblem(cfg), warning: false, message: "Generated random organizer." };
+
+      return {
+        problems: new Array(problemCount).fill(0).map(() => makeRandomProblem(cfg, allowRemainder)),
+        warning: false,
+        message: allowRemainder
+          ? `Generated ${problemCount} random problem${problemCount === 1 ? "" : "s"}.`
+          : `Generated ${problemCount} random problem${problemCount === 1 ? "" : "s"} with no remainders.`
+      };
     }
 
     function toneClass(index) {
@@ -795,6 +1084,7 @@
       const digits = String(dividend).split("").map((d) => Number(d));
       const steps = [];
       let current = 0;
+      const toneFor = (idx) => `tone-${idx % 4}`;
 
       for (let i = 0; i < digits.length; i += 1) {
         current = (current * 10) + digits[i];
@@ -803,11 +1093,19 @@
         const remainder = current - product;
         const nextDigit = i < digits.length - 1 ? digits[i + 1] : null;
         const nextPartial = nextDigit === null ? remainder : (remainder * 10) + nextDigit;
+        const partialDisplay = i === 0
+          ? String(current)
+          : `${steps[i - 1].remainder}${digits[i]}`;
+        const partialDigitTones = i === 0
+          ? [toneFor(0)]
+          : [toneFor(i - 1), toneFor(i)];
 
         steps.push({
           index: i,
-          tone: toneClass(i),
+          tone: toneFor(i),
           partialDividend: current,
+          partialDisplay,
+          partialDigitTones,
           quotientDigit: qDigit,
           product,
           remainder,
@@ -825,78 +1123,99 @@
       };
     }
 
-    function buildChecklist(stepCount) {
-      const actions = ["Divide", "Multiply", "Subtract"];
-      for (let i = 1; i < stepCount; i += 1) {
-        actions.push("Bring Down", "Divide", "Multiply", "Subtract");
-      }
-      return actions;
+    function digitBoxesWithTones(text, tones, small = true, showValues = true) {
+      const chars = String(text).split("");
+      return chars.map((ch, idx) => {
+        const tone = tones[Math.min(idx, tones.length - 1)] || "tone-0";
+        const val = showValues ? ch : "&nbsp;";
+        return `<span class="digit-box ${small ? "small" : ""} ${tone}">${val}</span>`;
+      }).join("");
     }
 
-    function digitBoxesForValue(value, tone, small = true) {
+    function rightAlignChars(value, len) {
       const chars = String(value).split("");
-      return chars.map((ch) => `<span class="digit-box ${small ? "small" : ""} ${tone}">${ch}</span>`).join("");
+      const out = new Array(len).fill("&nbsp;");
+      let k = len - 1;
+      for (let i = chars.length - 1; i >= 0 && k >= 0; i -= 1) {
+        out[k] = chars[i];
+        k -= 1;
+      }
+      return out;
     }
 
-    function renderSetup(problem, stepsData, showAnswers) {
+    function canvasBox(row, col, cls, value = "&nbsp;") {
+      return `<div class="canvas-box ${cls}" style="grid-row:${row};grid-column:${col};">${value}</div>`;
+    }
+
+    function renderProblemCanvas(problem, stepsData, cfg, showAnswers, showRemainderHeader) {
+      const n = cfg.digits;
+      const rows = (2 * n) + 2;
+      const firstDigitCol = 3;
+      const remLabelCol = firstDigitCol + n;
+      const remCol = remLabelCol + 1;
       const dividendDigits = String(problem.dividend).split("");
-      const quotientBoxes = stepsData.quotientDigits.map((digit, idx) => {
-        const content = showAnswers ? digit : "&nbsp;";
-        return `<span class="digit-box ${toneClass(idx)}">${content}</span>`;
-      }).join("");
+      const chunks = [];
+      const toneForLane = (lane) => `tone-${Math.max(0, lane) % 4}`;
 
-      const dividendBoxes = dividendDigits.map((digit, idx) => {
-        return `<span class="digit-box ${toneClass(idx)}">${digit}</span>`;
-      }).join("");
+      for (let i = 0; i < n; i += 1) {
+        const qVal = showAnswers ? stepsData.quotientDigits[i] : "&nbsp;";
+        chunks.push(canvasBox(1, firstDigitCol + i, toneForLane(i), qVal));
+      }
+
+      if (showRemainderHeader) {
+        chunks.push(`<div class="remainder-label" style="grid-row:1;grid-column:${remLabelCol};">R</div>`);
+        chunks.push(canvasBox(1, remCol, "blank-gray", showAnswers ? stepsData.finalRemainder : "&nbsp;"));
+      }
+
+      chunks.push(canvasBox(2, 2, "divisor", problem.divisor));
+      for (let i = 0; i < n; i += 1) {
+        chunks.push(canvasBox(2, firstDigitCol + i, toneForLane(i), dividendDigits[i]));
+      }
+
+      chunks.push(`<div class="division-top-line" style="grid-row:2;grid-column:${firstDigitCol} / ${firstDigitCol + n};"></div>`);
+      chunks.push(`<div class="division-left-line" style="grid-row:2;grid-column:${firstDigitCol};"></div>`);
+
+      let row = 3;
+
+      for (let i = 0; i < stepsData.steps.length; i += 1) {
+        const step = stepsData.steps[i];
+        const startDigit = i === 0 ? 0 : Math.min(i - 1, n - 2);
+        const startCol = firstDigitCol + startDigit;
+
+        chunks.push(canvasBox(row, startCol - 1, "ghost minus-cell", "&minus;"));
+
+        const productLen = i === 0 ? 1 : 2;
+        const productChars = showAnswers ? rightAlignChars(step.product, productLen) : new Array(productLen).fill("&nbsp;");
+        for (let j = 0; j < productLen; j += 1) {
+          const lane = startDigit + j;
+          chunks.push(canvasBox(row, startCol + j, toneForLane(lane), productChars[j]));
+        }
+
+        row += 1;
+
+        if (i < stepsData.steps.length - 1) {
+          const bringStartLane = startDigit + (productLen - 1);
+          const leftTone = toneForLane(bringStartLane);
+          const nextTone = toneForLane(Math.min(bringStartLane + 1, n - 1));
+          const bringChars = showAnswers ? rightAlignChars(step.nextPartial, 2) : ["&nbsp;", "&nbsp;"];
+          const bringStartCol = firstDigitCol + bringStartLane;
+          chunks.push(canvasBox(row, bringStartCol, leftTone, bringChars[0]));
+          chunks.push(canvasBox(row, bringStartCol + 1, nextTone, bringChars[1]));
+          const arrowTone = (bringStartLane + 1) % 4;
+          chunks.push(`<div class="down-arrow arrow-${arrowTone}" style="grid-row:${row - 1};grid-column:${bringStartCol + 1};"></div>`);
+          row += 1;
+        } else {
+          const remChars = showAnswers ? rightAlignChars(stepsData.finalRemainder, 2) : ["&nbsp;", "&nbsp;"];
+          chunks.push(canvasBox(row, startCol, "", remChars[0]));
+          chunks.push(canvasBox(row, startCol + 1, "", remChars[1]));
+        }
+      }
 
       return `
-        <div class="setup-row">
-          <span class="digit-box divisor-fixed">${problem.divisor}</span>
-
-          <div class="bracket-block">
-            <div class="quotient-row">
-              ${quotientBoxes}
-            </div>
-            <div class="dividend-row-wrap">
-              <span class="bracket-stem"></span>
-              <div class="dividend-row">
-                ${dividendBoxes}
-              </div>
-            </div>
+        <div class="problem-canvas-wrap">
+          <div class="problem-canvas${showRemainderHeader ? "" : " no-remainder"}" style="--digits:${n};--rows:${rows};">
+            ${chunks.join("")}
           </div>
-
-          <div class="remainder-wrap">
-            <span>r</span>
-            <span class="digit-box">${showAnswers ? stepsData.finalRemainder : "&nbsp;"}</span>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderStepPanels(steps, showAnswers) {
-      const panels = steps.map((step, idx) => `
-        <div class="step-panel">
-          <div class="step-title">Step ${idx + 1}</div>
-          <span class="digit-box small ${step.tone}">${showAnswers ? step.product : "&nbsp;"}</span>
-          <div class="minus-line"></div>
-          <span class="digit-box small ${step.tone}">${showAnswers ? step.remainder : "&nbsp;"}</span>
-          <span class="digit-box small ${step.tone}">${showAnswers && step.nextDigit !== null ? step.nextPartial : "&nbsp;"}</span>
-        </div>
-      `).join("");
-
-      return `<div class="step-panels" style="--step-count:${steps.length};">${panels}</div>`;
-    }
-
-    function renderChecklist(steps) {
-      const checklist = buildChecklist(steps.length);
-      const items = checklist.map((label, idx) => `
-        <li><span class="checkbox-char">&#x2610;</span> ${idx + 1}. ${label}</li>
-      `).join("");
-
-      return `
-        <div class="checklist-box">
-          <h3 class="checklist-title">Steps</h3>
-          <ul class="steps-list">${items}</ul>
         </div>
       `;
     }
@@ -905,14 +1224,14 @@
       let cells = "";
       for (let i = 0; i <= 10; i += 1) {
         const value = mode === "filled" ? String(divisor * i) : "&nbsp;";
-        const blankClass = mode === "blank" ? "blank" : "";
-        cells += `<td class="multiple-cell ${tone} ${blankClass}">${value}</td>`;
+        cells += `<td class="multiple-cell ${tone}">${value}</td>`;
       }
       return cells;
     }
 
-    function renderStepStrip(step, problem, multiplesMode) {
+    function renderStepStrip(step, problem, multiplesMode, showPromptValues) {
       const headers = new Array(11).fill(0).map((_, i) => `<th class="tone-head ${step.tone}">x${i}</th>`).join("");
+      const divisorValue = showPromptValues ? problem.divisor : "&nbsp;";
 
       return `
         <section class="strip">
@@ -920,9 +1239,9 @@
             <div class="strip-label ${step.tone}">Step ${step.index + 1}</div>
             <p class="strip-question">
               How many times does
-              <span class="digit-box small divisor-fixed">${problem.divisor}</span>
+              <span class="digit-box small divisor-fixed">${divisorValue}</span>
               go into
-              <span class="target-digits">${digitBoxesForValue(step.partialDividend, step.tone, true)}</span>
+              <span class="target-digits">${digitBoxesWithTones(step.partialDisplay, step.partialDigitTones, true, showPromptValues)}</span>
               evenly or without going over?
             </p>
           </div>
@@ -941,52 +1260,95 @@
 
     function renderWorksheet() {
       const cfg = getTypeConfig();
-      const source = getProblem(cfg);
-      const title = els.sheetTitle.value.trim() || "Long Division Color-Coded Step Organizer";
-      const colorClass = els.colorToggle.checked ? `color-${els.colorStyle.value}` : "no-color";
+      const perPage = getProblemsPerPage(cfg);
+      const totalProblemCount = getTotalProblemCount();
+      const setCount = Math.max(1, Math.ceil(totalProblemCount / perPage));
+      const source = getProblems(cfg, totalProblemCount);
+      const title = "Long Division Color-Coded Step Organizer";
+      const colorClass = els.colorToggle.checked ? "color-fill" : "no-color";
 
       els.statusText.textContent = source.message;
       els.statusText.style.color = source.warning ? "#a33a3a" : "#5a677f";
 
-      if (!source.problem) {
+      if (!source.problems || source.problems.length === 0) {
         els.host.innerHTML = "";
         return;
       }
 
-      const showAnswers = els.answerKeyToggle.checked;
-      const stepsData = computeLongDivisionSteps(source.problem.dividend, source.problem.divisor);
-      const strips = stepsData.steps.map((step) => renderStepStrip(step, source.problem, els.multiplesMode.value)).join("");
+      const showAnswers = false;
+      const showPromptValues = els.stepPromptMode.value === "filled";
+      const showRemainderHeader = els.remainderMode.value === "allow";
+      const sheets = new Array(setCount).fill(0).map((_, pageIndex) => {
+        const pageProblems = source.problems.slice(pageIndex * perPage, (pageIndex + 1) * perPage);
+        const organizerBlocks = pageProblems.map((problem) => {
+          const stepsData = computeLongDivisionSteps(problem.dividend, problem.divisor);
+          const strips = stepsData.steps
+            .map((step) => renderStepStrip(step, problem, els.multiplesMode.value, showPromptValues))
+            .join("");
 
-      els.host.innerHTML = `
-        <section class="sheet ${colorClass}">
-          <header class="sheet-header">
-            <h2 class="sheet-title">${title} (${cfg.label})</h2>
-            <div class="name-line">Name:<span class="line"></span></div>
-          </header>
+          return `
+            <section class="organizer-block">
+              <section class="organizer">
+                <section class="left-column">
+                  <div class="problem-equation">${problem.dividend} &divide; ${problem.divisor}</div>
+                  <div class="workspace">
+                    <div class="workspace-layout">
+                      ${renderProblemCanvas(problem, stepsData, cfg, showAnswers, showRemainderHeader)}
+                    </div>
+                  </div>
+                </section>
 
-          <section class="organizer">
-            <section class="left-column">
-              <div class="problem-equation">${source.problem.dividend} &divide; ${source.problem.divisor} =</div>
-              <div class="workspace">
-                ${renderSetup(source.problem, stepsData, showAnswers)}
-                ${renderStepPanels(stepsData.steps, showAnswers)}
-              </div>
-              ${renderChecklist(stepsData.steps)}
+                <section class="right-column">
+                  ${strips}
+                </section>
+              </section>
+            </section>
+          `;
+        }).join("");
+
+        return `
+          <section class="sheet ${colorClass}">
+            <header class="sheet-header">
+              <h2 class="sheet-title">${title} (${cfg.label})</h2>
+              <div class="name-line">Name:<span class="line"></span></div>
+            </header>
+
+            <section class="two-up${perPage === 1 ? " single" : ""}">
+              ${organizerBlocks}
             </section>
 
-            <section class="right-column">
-              ${strips}
-            </section>
+            <div class="footer-note">Copyright - InterventionStation.com - @TeachwithMrC</div>
           </section>
+        `;
+      }).join("");
 
-          <div class="footer-note">Color-coded organizer: right-side strips are aligned to each long-division step.</div>
-        </section>
-      `;
+      els.host.innerHTML = sheets;
+    }
+
+    let refreshTimer = null;
+    function queueRender(delay = 120) {
+      window.clearTimeout(refreshTimer);
+      refreshTimer = window.setTimeout(renderWorksheet, delay);
     }
 
     els.generateBtn.addEventListener("click", renderWorksheet);
+    els.problemTypeButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        setProblemType(btn.dataset.type);
+        populateProblemCountOptions();
+        renderWorksheet();
+      });
+    });
+    [els.problemSetCount, els.multiplesMode, els.stepPromptMode, els.remainderMode].forEach((el) => {
+      el.addEventListener("change", renderWorksheet);
+    });
+    els.colorToggle.addEventListener("change", renderWorksheet);
+    els.customProblem.addEventListener("input", () => queueRender(180));
+    els.customProblem.addEventListener("change", renderWorksheet);
     els.printBtn.addEventListener("click", () => window.print());
 
+    setProblemType(els.problemType.value || "2x1");
+    populateProblemCountOptions();
     renderWorksheet();
   </script>
 </body>
