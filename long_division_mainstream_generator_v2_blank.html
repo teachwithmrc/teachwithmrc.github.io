@@ -148,12 +148,13 @@
     #worksheetHost { margin-top: 12px; }
 
     .sheet {
-      width: 11in;
-      min-height: 8.5in;
+      width: 8.5in;
+      min-height: 11in;
       margin: 0 auto;
       background: var(--paper);
       border: 2px solid #000;
-      padding: 0.2in;
+      padding: 0.14in 0.14in 0.28in;
+      position: relative;
     }
 
     .sheet-header {
@@ -168,7 +169,7 @@
 
     .sheet-title {
       margin: 0;
-      font-size: 0.9rem;
+      font-size: 1.04rem;
       font-weight: 800;
       text-transform: uppercase;
       line-height: 1.2;
@@ -182,7 +183,7 @@
 
     .name-line .line {
       display: inline-block;
-      width: 120px;
+      width: 100px;
       border-bottom: 2px solid #000;
       transform: translateY(-2px);
       margin-left: 5px;
@@ -190,21 +191,25 @@
 
     .problem-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
       align-items: start;
     }
 
     .problem-card {
-      min-height: 0;
+      min-height: 3.1in;
       display: flex;
       flex-direction: column;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      border: 2px solid #000;
+      padding: 5px;
     }
 
     .problem-main {
       display: grid;
-      grid-template-columns: 136px minmax(0, 1fr);
-      gap: 10px;
+      grid-template-columns: 104px minmax(0, 1fr);
+      gap: 6px;
       min-height: 0;
       flex: 1 1 auto;
       align-items: start;
@@ -221,25 +226,25 @@
     .multiples-head {
       border-bottom: 2px solid #000;
       text-align: center;
-      font-size: 0.95rem;
+      font-size: 0.74rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.2px;
-      padding: 5px 2px;
+      padding: 3px 1px;
     }
 
     .multiples-table {
       width: 100%;
       border-collapse: collapse;
       table-layout: fixed;
-      font-size: 1rem;
+      font-size: 0.8rem;
       font-weight: 700;
     }
 
     .multiples-table td {
       border-top: 2px solid #000;
       text-align: center;
-      height: 34px;
+      height: 24px;
       padding: 2px;
     }
 
@@ -252,66 +257,125 @@
       display: flex;
       align-items: flex-start;
       padding-top: 2px;
-    }
-
-    .ld-canvas {
-      position: relative;
-      display: grid;
-      grid-template-columns: var(--minus-col, 24px) repeat(var(--digit-count), var(--cell-w, 52px));
-      grid-template-rows: repeat(var(--row-count), var(--cell-h, 38px));
-      column-gap: 2px;
-      row-gap: 3px;
-      align-items: center;
-      justify-content: start;
-      overflow: visible;
-    }
-
-    .ld-mini-box {
-      width: var(--cell-w, 52px);
-      height: var(--cell-h, 38px);
       border: 2px solid #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: var(--cell-font, 1.5rem);
+      background: #fff;
+      padding: 4px;
+    }
+
+    .sheet.layout-4 .problem-grid {
+      gap: 10px;
+    }
+
+    .sheet.layout-4 .problem-card {
+      min-height: 4.2in;
+      padding: 7px;
+    }
+
+    .sheet.layout-4 .problem-main {
+      grid-template-columns: 122px minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .sheet.layout-4 .multiples-head {
+      font-size: 0.8rem;
+      padding: 4px 2px;
+    }
+
+    .sheet.layout-4 .multiples-table {
+      font-size: 0.9rem;
+    }
+
+    .sheet.layout-4 .multiples-table td {
+      height: 29px;
+    }
+
+    .ld-table-wrap {
+      --cell-w: 38px;
+      --cell-h: 27px;
+      --cell-font: 1.2rem;
+      --minus-w: 22px;
+      --minus-font: 1.4rem;
+      width: fit-content;
+    }
+
+    .ld-table {
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .ld-table td {
+      width: var(--cell-w);
+      height: var(--cell-h);
+      padding: 0;
+      text-align: center;
+      vertical-align: middle;
+      font-size: var(--cell-font);
       font-weight: 700;
       line-height: 1;
+    }
+
+    .ld-minus-col {
+      width: var(--minus-w) !important;
+      min-width: var(--minus-w);
+      max-width: var(--minus-w);
+    }
+
+    .ld-pad {
+      border: 0;
+      background: transparent;
+    }
+
+    .ld-box {
+      border: 2px solid #000;
       background: #fff;
     }
 
-    .ld-minus {
-      font-size: var(--minus-font, 1.8rem);
-      font-weight: 700;
+    .ld-minus-mark {
+      border: 0;
+      background: transparent;
+      font-size: var(--minus-font);
+      font-weight: 800;
       line-height: 1;
+      text-align: right;
+      padding-right: 2px;
+    }
+
+    .ld-rem-label {
+      border: 0;
+      background: transparent;
+      font-weight: 800;
+      font-size: calc(var(--cell-font) * 0.82);
+      width: 18px !important;
+      min-width: 18px;
+      max-width: 18px;
       text-align: center;
-      transform: translateY(-1px);
+      line-height: 1;
     }
 
-    .ld-top-line {
-      align-self: start;
-      border-top: var(--stroke, 6px) solid #000;
-      height: 1px;
-      width: 100%;
-      z-index: 2;
+    .ld-dividend-top {
+      border-top: 4px solid #000 !important;
     }
 
-    .ld-left-line {
-      justify-self: start;
-      width: 1px;
-      height: 100%;
-      border-left: var(--stroke, 6px) solid #000;
-      z-index: 2;
-      transform: translateX(-2px);
+    .ld-bracket-left {
+      border-left: 4px solid #000 !important;
     }
 
-    .ld-step-line {
-      align-self: center;
-      width: 100%;
-      border-top: var(--stroke, 6px) solid #000;
-      height: 1px;
+    .ld-line-under {
+      border-bottom: 4px solid #000 !important;
     }
 
-    @media (max-width: 980px) {
+    .footer-note {
+      margin-top: 8px;
+      padding-top: 5px;
+      border-top: 2px solid #000;
+      text-align: left;
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: #000;
+      line-height: 1.15;
+    }
+
+    @media screen and (max-width: 980px) {
       .sheet {
         width: 100%;
         min-height: 0;
@@ -324,8 +388,8 @@
 
     @media print {
       @page {
-        size: Letter landscape;
-        margin: 0.28in;
+        size: Letter;
+        margin: 0.25in;
       }
 
       body { background: #fff; }
@@ -345,9 +409,72 @@
         margin: 0;
         border: 0;
         padding: 0;
+        page-break-inside: avoid;
+        break-inside: avoid;
       }
 
-      .problem-card { min-height: 3.65in; }
+      .problem-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 6px;
+      }
+
+      .problem-card {
+        min-height: 2.98in;
+        border: 2px solid #000;
+        padding: 5px;
+      }
+
+      .problem-main {
+        grid-template-columns: 102px minmax(0, 1fr);
+        gap: 5px;
+      }
+
+      .multiples-head {
+        font-size: 0.7rem;
+        padding: 3px 1px;
+      }
+
+      .multiples-table {
+        font-size: 0.74rem;
+      }
+
+      .multiples-table td {
+        height: 22px;
+      }
+
+      .footer-note {
+        margin-top: 6px;
+        padding-top: 4px;
+        border-top: 2px solid #000;
+        font-size: 0.56rem;
+      }
+
+      .sheet.layout-4 .problem-grid {
+        gap: 6px;
+      }
+
+      .sheet.layout-4 .problem-card {
+        min-height: 4.28in;
+        padding: 8px;
+      }
+
+      .sheet.layout-4 .problem-main {
+        grid-template-columns: 126px minmax(0, 1fr);
+        gap: 8px;
+      }
+
+      .sheet.layout-4 .multiples-head {
+        font-size: 0.78rem;
+        padding: 4px 2px;
+      }
+
+      .sheet.layout-4 .multiples-table {
+        font-size: 0.84rem;
+      }
+
+      .sheet.layout-4 .multiples-table td {
+        height: 27px;
+      }
     }
   </style>
 </head>
@@ -355,7 +482,7 @@
   <div class="app">
     <div class="screen-only">
       <h1>Long Division Mainstream Organizer Generator</h1>
-      <p class="subtitle">2x3 layout with separate sheet types: 2 by 1, 3 by 1, or 4 by 1</p>
+      <p class="subtitle">2 by 1 prints 6-up, 3 by 1 and 4 by 1 print 4-up with larger writing space (blank template default)</p>
 
       <section class="controls-card">
         <div class="type-row" id="typeButtons" role="group" aria-label="Problem type">
@@ -371,6 +498,23 @@
             <select id="problemMode">
               <option value="random" selected>Random problems</option>
               <option value="custom">Custom list (use textbox)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="templateMode">Worksheet Mode</label>
+            <select id="templateMode">
+              <option value="normal">Normal (numbers shown)</option>
+              <option value="blank" selected>Blank template</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="remainderMode">Remainders</label>
+            <select id="remainderMode">
+              <option value="without" selected>No remainders</option>
+              <option value="with">Remainders</option>
+              <option value="mixed">Mixed</option>
             </select>
           </div>
 
@@ -412,6 +556,8 @@
       problemType: document.getElementById("problemType"),
       typeButtons: Array.from(document.querySelectorAll(".type-btn")),
       problemMode: document.getElementById("problemMode"),
+      templateMode: document.getElementById("templateMode"),
+      remainderMode: document.getElementById("remainderMode"),
       multiplesMode: document.getElementById("multiplesMode"),
       sheetTitle: document.getElementById("sheetTitle"),
       customProblems: document.getElementById("customProblems"),
@@ -421,12 +567,14 @@
     };
 
     const TYPE_CONFIG = {
-      "2x1": { digits: 2, min: 10, max: 99, label: "2-digit by 1-digit" },
-      "3x1": { digits: 3, min: 100, max: 999, label: "3-digit by 1-digit" },
-      "4x1": { digits: 4, min: 1000, max: 9999, label: "4-digit by 1-digit" }
+      "2x1": { digits: 2, min: 10, max: 99, label: "2-digit by 1-digit", cardCount: 6 },
+      "3x1": { digits: 3, min: 100, max: 999, label: "3-digit by 1-digit", cardCount: 4 },
+      "4x1": { digits: 4, min: 1000, max: 9999, label: "4-digit by 1-digit", cardCount: 4 }
     };
 
-    const CARD_COUNT = 6;
+    function getCardCount(cfg) {
+      return Number.isFinite(cfg.cardCount) ? cfg.cardCount : 6;
+    }
 
     function randInt(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -484,7 +632,14 @@
       return { valid, invalid };
     }
 
-    function makeRandomProblem(cfg) {
+    function matchesRemainderMode(problem, remainderMode) {
+      const rem = problem.dividend % problem.divisor;
+      if (remainderMode === "with") return rem !== 0;
+      if (remainderMode === "without") return rem === 0;
+      return true;
+    }
+
+    function makeRandomProblem(cfg, remainderMode) {
       for (let tries = 0; tries < 4000; tries += 1) {
         const divisor = randInt(2, 9);
         const firstDigit = randInt(1, divisor - 1);
@@ -494,7 +649,19 @@
         }
         const dividend = Number(`${firstDigit}${rest}`);
         if (dividend < cfg.min || dividend > cfg.max) continue;
-        return { dividend, divisor };
+        const problem = { dividend, divisor };
+        if (!matchesRemainderMode(problem, remainderMode)) continue;
+        return problem;
+      }
+
+      for (let divisor = 2; divisor <= 9; divisor += 1) {
+        for (let dividend = cfg.min; dividend <= cfg.max; dividend += 1) {
+          const firstDigit = Number(String(dividend)[0]);
+          const problem = { dividend, divisor };
+          if (firstDigit >= divisor) continue;
+          if (!matchesRemainderMode(problem, remainderMode)) continue;
+          return problem;
+        }
       }
 
       return { dividend: cfg.min, divisor: 2 };
@@ -505,38 +672,48 @@
       return Number.isFinite(firstDigit) && firstDigit < problem.divisor;
     }
 
-    function buildProblems(cfg) {
+    function buildProblems(cfg, cardCount, remainderMode) {
       if (els.problemMode.value === "custom") {
         const parsed = parseCustomProblems(els.customProblems.value, cfg);
-        const eligible = parsed.valid.filter((p) => hasInitialZeroStep(p));
+        const eligible = parsed.valid.filter((p) => (
+          hasInitialZeroStep(p) && matchesRemainderMode(p, remainderMode)
+        ));
         if (!eligible.length) {
+          const remainderHint = remainderMode === "with" ? " with remainders" : " without remainders";
           return {
             problems: [],
             warning: true,
-            message: `No valid custom problems for ${cfg.label}. Use first digit < divisor (example: 482/5).`
+            message: `No valid custom problems for ${cfg.label}${remainderHint}. Use first digit < divisor (example: 482/5).`
           };
         }
 
         const picked = [];
-        for (let i = 0; i < CARD_COUNT; i += 1) {
+        for (let i = 0; i < cardCount; i += 1) {
           picked.push({ ...eligible[i % eligible.length] });
         }
 
         const filteredOutCount = parsed.valid.length - eligible.length;
         const invalidNote = parsed.invalid.length ? ` Ignored: ${parsed.invalid.join(", ")}.` : "";
-        const filteredNote = filteredOutCount > 0 ? ` Ignored ${filteredOutCount} custom problem(s) that do not start with a 0-step.` : "";
+        const filteredNote = filteredOutCount > 0
+          ? ` Ignored ${filteredOutCount} custom problem(s) that do not match setup/remainder settings.`
+          : "";
         return {
           problems: picked,
           warning: parsed.invalid.length > 0 || filteredOutCount > 0,
-          message: `Generated ${CARD_COUNT} custom ${cfg.label} problems.${filteredNote}${invalidNote}`
+          message: `Generated ${cardCount} custom ${cfg.label} problems.${filteredNote}${invalidNote}`
         };
       }
 
       const problems = [];
       const seen = new Set();
       let tries = 0;
-      while (problems.length < CARD_COUNT && tries < 4000) {
-        const p = makeRandomProblem(cfg);
+      const modeTargets = remainderMode === "mixed"
+        ? Array.from({ length: cardCount }, (_, i) => (i % 2 === 0 ? "with" : "without"))
+        : null;
+
+      while (problems.length < cardCount && tries < 4000) {
+        const targetMode = modeTargets ? modeTargets[problems.length] : remainderMode;
+        const p = makeRandomProblem(cfg, targetMode);
         const key = `${p.dividend}/${p.divisor}`;
         tries += 1;
         if (seen.has(key)) continue;
@@ -551,86 +728,110 @@
       };
     }
 
-    function multiplesRowsHtml(divisor, mode) {
+    function multiplesRowsHtml(divisor, mode, blankTemplate) {
       let rows = "";
       for (let i = 1; i <= 9; i += 1) {
-        const value = mode === "filled" ? String(divisor * i) : "&nbsp;";
+        const value = blankTemplate
+          ? "&nbsp;"
+          : (mode === "filled" ? String(divisor * i) : "&nbsp;");
         rows += `<tr><td>x${i}</td><td>${value}</td></tr>`;
       }
       return rows;
     }
 
-    function longDivisionGridHtml(problem, cfg) {
+    function longDivisionGridHtml(problem, cfg, blankTemplate, cardCount, showRemainderBox) {
       const n = cfg.digits;
-      const rowCount = (3 * n) + 2;
       const digits = String(problem.dividend).split("");
-      const bits = [];
+      const rows = [];
 
-      const box = (row, col, cls, val = "&nbsp;") =>
-        `<div class="ld-mini-box ${cls}" style="grid-row:${row};grid-column:${col};">${val}</div>`;
+      const td = (content, cls) => `<td class="${cls}">${content}</td>`;
 
-      for (let i = 0; i < n; i += 1) {
-        bits.push(box(1, i + 2, "", "&nbsp;"));
+      let row = `<tr>${td("&nbsp;", "ld-pad ld-minus-col")}${td("&nbsp;", "ld-pad")}`;
+      for (let i = 0; i < n; i += 1) row += td("&nbsp;", "ld-box");
+      if (showRemainderBox) {
+        row += td("R", "ld-rem-label");
+        row += td("&nbsp;", "ld-box");
       }
+      row += "</tr>";
+      rows.push(row);
 
-      bits.push(box(2, 1, "", problem.divisor));
+      row = `<tr>${td("&nbsp;", "ld-pad ld-minus-col")}${td(blankTemplate ? "&nbsp;" : problem.divisor, "ld-box")}`;
       for (let i = 0; i < n; i += 1) {
-        bits.push(box(2, i + 2, "", digits[i]));
+        row += td(blankTemplate ? "&nbsp;" : digits[i], `ld-box ld-dividend-top${i === 0 ? " ld-bracket-left" : ""}`);
       }
+      if (showRemainderBox) {
+        row += td("&nbsp;", "ld-pad");
+        row += td("&nbsp;", "ld-pad");
+      }
+      row += "</tr>";
+      rows.push(row);
 
-      bits.push(`<div class="ld-top-line" style="grid-row:2;grid-column:2 / ${n + 2};"></div>`);
-      bits.push(`<div class="ld-left-line" style="grid-row:2;grid-column:2;"></div>`);
+      const totalCols = n + 2 + (showRemainderBox ? 2 : 0);
 
       for (let i = 0; i < n; i += 1) {
-        const rowSub = 3 + (i * 3);
-        const rowLine = rowSub + 1;
-        const rowNext = rowSub + 2;
-
         const startDigit = i === 0 ? 0 : Math.min(i - 1, n - 2);
         const startCol = 2 + startDigit;
         const productLen = i === 0 ? 1 : 2;
+        const bringStart = i < n - 1
+          ? 2 + Math.min(startDigit + (productLen - 1), n - 2)
+          : startCol;
 
-        bits.push(`<div class="ld-minus" style="grid-row:${rowSub};grid-column:1;">-</div>`);
-
-        for (let j = 0; j < productLen; j += 1) {
-          const col = startCol + j;
-          bits.push(box(rowSub, col, "", "&nbsp;"));
+        let sub = "<tr>";
+        for (let c = 0; c < totalCols; c += 1) {
+          if (c === 0) sub += td("&nbsp;", "ld-pad ld-minus-col");
+          else if (c === 1) sub += td("&minus;", "ld-minus-mark");
+          else if (c >= startCol && c < startCol + productLen) sub += td("&nbsp;", "ld-box ld-line-under");
+          else sub += td("&nbsp;", "ld-pad");
         }
+        sub += "</tr>";
+        rows.push(sub);
 
-        bits.push(`<div class="ld-step-line" style="grid-row:${rowLine};grid-column:${startCol} / ${startCol + productLen};"></div>`);
-
-        if (i < n - 1) {
-          const bringStartCol = 2 + Math.min(startDigit + (productLen - 1), n - 2);
-          bits.push(box(rowNext, bringStartCol, "", "&nbsp;"));
-          bits.push(box(rowNext, bringStartCol + 1, "", "&nbsp;"));
-        } else {
-          bits.push(box(rowNext, startCol, "", "&nbsp;"));
-          bits.push(box(rowNext, startCol + 1, "", "&nbsp;"));
+        let bring = "<tr>";
+        for (let c = 0; c < totalCols; c += 1) {
+          if (c <= 1) bring += td("&nbsp;", c === 0 ? "ld-pad ld-minus-col" : "ld-pad");
+          else if (c >= bringStart && c < bringStart + 2) bring += td("&nbsp;", "ld-box");
+          else bring += td("&nbsp;", "ld-pad");
         }
+        bring += "</tr>";
+        rows.push(bring);
       }
 
-      const cellW = n >= 4 ? 36 : (n === 3 ? 42 : 46);
-      const cellH = n >= 4 ? 26 : (n === 3 ? 30 : 34);
-      const cellFont = n >= 4 ? 1.15 : (n === 3 ? 1.3 : 1.45);
-      const minusFont = n >= 4 ? 1.35 : (n === 3 ? 1.55 : 1.75);
-      const stroke = n >= 4 ? 5 : 6;
+      const isFourUp = cardCount === 4;
+      const cellW = isFourUp
+        ? (n >= 4 ? 38 : (n === 3 ? 41 : 42))
+        : (n >= 4 ? 30 : (n === 3 ? 34 : 41));
+      const cellH = isFourUp
+        ? (n >= 4 ? 30 : (n === 3 ? 32 : 34))
+        : (n >= 4 ? 22 : (n === 3 ? 24 : 32));
+      const cellFont = isFourUp
+        ? (n >= 4 ? "1.18rem" : (n === 3 ? "1.3rem" : "1.36rem"))
+        : (n >= 4 ? "0.94rem" : (n === 3 ? "1.05rem" : "1.28rem"));
+      const minusFont = isFourUp
+        ? (n >= 4 ? "1.22rem" : (n === 3 ? "1.35rem" : "1.42rem"))
+        : (n >= 4 ? "1.05rem" : (n === 3 ? "1.2rem" : "1.48rem"));
 
-      return `<div class="ld-canvas" style="--digit-count:${n};--row-count:${rowCount};--cell-w:${cellW}px;--cell-h:${cellH}px;--cell-font:${cellFont}rem;--minus-font:${minusFont}rem;--stroke:${stroke}px;">${bits.join("")}</div>`;
+      return `
+        <div class="ld-table-wrap" style="--cell-w:${cellW}px;--cell-h:${cellH}px;--cell-font:${cellFont};--minus-font:${minusFont};">
+          <table class="ld-table" aria-label="Long division workspace">
+            <tbody>${rows.join("")}</tbody>
+          </table>
+        </div>
+      `;
     }
 
-    function renderProblemCard(problem, cfg) {
+    function renderProblemCard(problem, cfg, blankTemplate, cardCount, showRemainderBox) {
       return `
         <article class="problem-card">
           <div class="problem-main">
             <div class="multiples-panel">
               <div class="multiples-head">Multiples</div>
               <table class="multiples-table" aria-label="Multiples chart">
-                <tbody>${multiplesRowsHtml(problem.divisor, els.multiplesMode.value)}</tbody>
+                <tbody>${multiplesRowsHtml(problem.divisor, els.multiplesMode.value, blankTemplate)}</tbody>
               </table>
             </div>
 
             <div class="problem-panel">
-              ${longDivisionGridHtml(problem, cfg)}
+              ${longDivisionGridHtml(problem, cfg, blankTemplate, cardCount, showRemainderBox)}
             </div>
           </div>
         </article>
@@ -639,10 +840,18 @@
 
     function renderWorksheet() {
       const cfg = getTypeConfig();
-      const source = buildProblems(cfg);
+      const cardCount = getCardCount(cfg);
+      const remainderMode = els.remainderMode.value;
+      const source = buildProblems(cfg, cardCount, remainderMode);
+      const blankTemplate = els.templateMode.value === "blank";
+      const showRemainderBox = remainderMode !== "without";
       const title = (els.sheetTitle.value || "").trim() || "Long Division Practice Organizer";
 
-      els.statusText.textContent = source.message;
+      const modeNote = blankTemplate ? " Blank template mode on." : "";
+      const remainderNote = remainderMode === "with"
+        ? " Remainders."
+        : (remainderMode === "mixed" ? " Mixed remainders." : " No remainders.");
+      els.statusText.textContent = `${source.message}${modeNote}${remainderNote}`;
       els.statusText.style.color = "#000";
 
       if (!source.problems.length) {
@@ -650,10 +859,13 @@
         return;
       }
 
-      const cards = source.problems.map((p) => renderProblemCard(p, cfg)).join("");
+      const cards = source.problems.map((p) => (
+        renderProblemCard(p, cfg, blankTemplate, cardCount, showRemainderBox)
+      )).join("");
+      const layoutClass = cardCount === 4 ? "layout-4" : "layout-6";
 
       els.host.innerHTML = `
-        <section class="sheet">
+        <section class="sheet ${layoutClass}">
           <header class="sheet-header">
             <h2 class="sheet-title">${title} (${cfg.label})</h2>
             <div class="name-line">Name:<span class="line"></span></div>
@@ -662,6 +874,8 @@
           <section class="problem-grid">
             ${cards}
           </section>
+
+          <div class="footer-note">Copyright - InterventionStation.com - @TeachwithMrC</div>
         </section>
       `;
     }
@@ -674,6 +888,8 @@
       });
     });
     els.problemMode.addEventListener("change", renderWorksheet);
+    els.templateMode.addEventListener("change", renderWorksheet);
+    els.remainderMode.addEventListener("change", renderWorksheet);
     els.multiplesMode.addEventListener("change", renderWorksheet);
     els.printBtn.addEventListener("click", () => window.print());
 
