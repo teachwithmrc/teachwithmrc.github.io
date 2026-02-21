@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spelling Dictation Typing</title>
+  <script src="newtry_FULL.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #fff;
+      --line: #d8e0eb;
+      --text: #132033;
+      --muted: #5d6c82;
+      --primary: #0f172a;
+      --good: #0f8a46;
+      --bad: #c62828;
+      --accent: #e8f2ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Poppins", sans-serif;
+      padding: 20px;
+    }
+    .wrap {
+      width: min(1050px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 330px 1fr;
+      gap: 14px;
+    }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    h1 {
+      margin: 0 0 3px;
+      font-size: 26px;
+      line-height: 1.2;
+      font-weight: 800;
+    }
+    .subtitle {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .group { margin-bottom: 12px; }
+    .label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #32465f;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+    }
+    select, input[type="number"], textarea, input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      font: inherit;
+      color: var(--text);
+      padding: 9px 10px;
+      font-size: 14px;
+    }
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+      line-height: 1.35;
+    }
+    .mode-row {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+    .mode-btn {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 11px;
+      cursor: pointer;
+    }
+    .mode-btn.active {
+      border-color: #9ac1f6;
+      background: var(--accent);
+      color: #0b4c9f;
+    }
+    .row {
+      display: flex;
+      gap: 8px;
+    }
+    .btn {
+      border: 1px solid #111;
+      background: #111;
+      color: #fff;
+      border-radius: 10px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 9px 12px;
+      cursor: pointer;
+      line-height: 1.2;
+    }
+    .btn.light {
+      background: #fff;
+      color: var(--text);
+      border-color: var(--line);
+    }
+    .btn:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+    .hint {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .status {
+      padding: 7px 10px;
+      border: 1px dashed var(--line);
+      border-radius: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+    }
+    .workspace {
+      display: grid;
+      grid-template-rows: auto auto auto auto 1fr;
+      gap: 10px;
+      min-height: 580px;
+    }
+    .scorebar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 8px;
+      text-align: center;
+    }
+    .metric .k {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      font-weight: 700;
+    }
+    .metric .v {
+      font-size: 25px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-top: 2px;
+    }
+    .dictate-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 12px;
+    }
+    .prompt {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    .answer-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      gap: 8px;
+      align-items: stretch;
+    }
+    .result {
+      min-height: 56px;
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: 700;
+      background: #fff;
+    }
+    .result.good {
+      color: var(--good);
+      border-color: #c5eccf;
+      background: #f1fbf4;
+    }
+    .result.bad {
+      color: var(--bad);
+      border-color: #f7cfd0;
+      background: #fff3f3;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .queue {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px;
+      overflow: auto;
+    }
+    .queue h3 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: #2f4158;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .chip {
+      font-size: 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 8px;
+      background: #fff;
+    }
+    .chip.done { text-decoration: line-through; opacity: .55; }
+
+    @media (max-width: 980px) {
+      .wrap { grid-template-columns: 1fr; }
+      .workspace { min-height: 0; }
+      .scorebar { grid-template-columns: 1fr 1fr; }
+      .answer-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <aside class="panel">
+      <h1>Dictation Typing</h1>
+      <p class="subtitle">Say the word. Student types it. Check instantly.</p>
+
+      <div class="group">
+        <span class="label">Word Source</span>
+        <div class="mode-row">
+          <button class="mode-btn active" id="modeSkillBtn" type="button">Skill List</button>
+          <button class="mode-btn" id="modeCustomBtn" type="button">Custom List</button>
+        </div>
+      </div>
+
+      <div class="group" id="skillGroup">
+        <label class="label" for="skillSelect">Skill</label>
+        <select id="skillSelect"></select>
+      </div>
+
+      <div class="group" id="customGroup" style="display:none;">
+        <label class="label" for="customWords">Custom Words (comma or new lines)</label>
+        <textarea id="customWords" placeholder="cat, dog, fish"></textarea>
+      </div>
+
+      <div class="group row">
+        <div style="flex:1;">
+          <label class="label" for="wordCount">Words Per Round</label>
+          <input id="wordCount" type="number" min="3" max="40" value="12" />
+        </div>
+        <div style="flex:1;">
+          <label class="label" for="speechRate">Speech Rate</label>
+          <input id="speechRate" type="number" min="0.5" max="1.2" step="0.1" value="0.8" />
+        </div>
+      </div>
+
+      <div class="group">
+        <label class="label" for="voiceSelect">Voice</label>
+        <select id="voiceSelect"></select>
+        <div class="hint">If no voices appear, click Start and try again.</div>
+      </div>
+
+      <div class="group row">
+        <button id="startBtn" class="btn" type="button" style="flex:1;">Start Round</button>
+        <button id="resetBtn" class="btn light" type="button" style="flex:1;">Reset</button>
+      </div>
+
+      <div class="status" id="statusBox">Ready. Choose words and click Start Round.</div>
+    </aside>
+
+    <section class="workspace">
+      <div class="scorebar">
+        <div class="metric"><div class="k">Correct</div><div class="v" id="correctCount">0</div></div>
+        <div class="metric"><div class="k">Missed</div><div class="v" id="missedCount">0</div></div>
+        <div class="metric"><div class="k">Progress</div><div class="v"><span id="progressPos">0</span>/<span id="progressTotal">0</span></div></div>
+        <div class="metric"><div class="k">Accuracy</div><div class="v" id="accuracyPct">0%</div></div>
+      </div>
+
+      <div class="dictate-card">
+        <div class="prompt">Click <strong>Say Word</strong>, listen, type the word, then click <strong>Check</strong>.</div>
+        <div class="answer-row">
+          <input id="typedAnswer" type="text" placeholder="Type what you hear..." autocomplete="off" />
+          <button id="checkBtn" class="btn" type="button">Check</button>
+          <button id="nextBtn" class="btn light" type="button">Next</button>
+          <button id="revealBtn" class="btn light" type="button">Reveal</button>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="sayBtn" class="btn" type="button">Say Word</button>
+        <button id="repeatBtn" class="btn light" type="button">Repeat</button>
+        <button id="slowBtn" class="btn light" type="button">Slow Say</button>
+      </div>
+
+      <div id="resultBox" class="result">No active word yet.</div>
+
+      <div class="queue">
+        <h3>Round Word Queue</h3>
+        <div id="queueChips" class="chips"></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const BLOCKED_WORDS = new Set([
+      "sex", "cock", "assassinate", "agnostic"
+    ]);
+
+    const state = {
+      mode: "skill",
+      wordPool: [],
+      queue: [],
+      index: -1,
+      currentWord: "",
+      checkedCurrent: false,
+      correct: 0,
+      missed: 0,
+      voices: [],
+      voiceName: ""
+    };
+
+    const skillSelect = document.getElementById("skillSelect");
+    const customWords = document.getElementById("customWords");
+    const wordCount = document.getElementById("wordCount");
+    const speechRate = document.getElementById("speechRate");
+    const voiceSelect = document.getElementById("voiceSelect");
+    const typedAnswer = document.getElementById("typedAnswer");
+    const resultBox = document.getElementById("resultBox");
+    const statusBox = document.getElementById("statusBox");
+    const queueChips = document.getElementById("queueChips");
+    const progressPos = document.getElementById("progressPos");
+    const progressTotal = document.getElementById("progressTotal");
+    const correctCount = document.getElementById("correctCount");
+    const missedCount = document.getElementById("missedCount");
+    const accuracyPct = document.getElementById("accuracyPct");
+    const skillGroup = document.getElementById("skillGroup");
+    const customGroup = document.getElementById("customGroup");
+
+    function normWord(w) {
+      return String(w || "").trim().toLowerCase().replace(/[^a-z'-]/g, "");
+    }
+
+    function titleWord(w) {
+      if (!w) return "";
+      return w.charAt(0).toUpperCase() + w.slice(1);
+    }
+
+    function uniq(arr) {
+      return [...new Set(arr)];
+    }
+
+    function sample(arr, n) {
+      const copy = arr.slice();
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = copy[i];
+        copy[i] = copy[j];
+        copy[j] = tmp;
+      }
+      return copy.slice(0, n);
+    }
+
+    function getWordsFromSkill(skill) {
+      const bank = window.soundBoxWords && window.soundBoxWords[skill];
+      if (!Array.isArray(bank)) return [];
+      const words = bank
+        .map(item => normWord(item && item.word))
+        .filter(Boolean)
+        .filter(w => !BLOCKED_WORDS.has(w));
+      return uniq(words);
+    }
+
+    function getWordsFromCustom() {
+      const raw = customWords.value
+        .split(/[\n,]+/)
+        .map(normWord)
+        .filter(Boolean)
+        .filter(w => !BLOCKED_WORDS.has(w));
+      return uniq(raw);
+    }
+
+    function setStatus(msg) {
+      statusBox.textContent = msg;
+    }
+
+    function renderQueue() {
+      queueChips.innerHTML = "";
+      state.queue.forEach((word, i) => {
+        const c = document.createElement("span");
+        c.className = "chip";
+        if (i < state.index) c.classList.add("done");
+        if (i === state.index) c.style.borderColor = "#89b3ef";
+        c.textContent = titleWord(word);
+        queueChips.appendChild(c);
+      });
+    }
+
+    function refreshStats() {
+      const done = Math.max(0, state.index);
+      const total = state.queue.length;
+      progressPos.textContent = Math.min(done, total);
+      progressTotal.textContent = total;
+      correctCount.textContent = state.correct;
+      missedCount.textContent = state.missed;
+      const attempts = state.correct + state.missed;
+      const pct = attempts ? Math.round((state.correct / attempts) * 100) : 0;
+      accuracyPct.textContent = pct + "%";
+    }
+
+    function pickVoice() {
+      const selected = voiceSelect.value;
+      return state.voices.find(v => v.name === selected) || null;
+    }
+
+    function speakWord(rateOverride) {
+      if (!("speechSynthesis" in window)) {
+        setStatus("Speech not supported in this browser.");
+        return;
+      }
+      if (!state.currentWord) {
+        setStatus("Start a round first.");
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(state.currentWord);
+      const selectedVoice = pickVoice();
+      if (selectedVoice) u.voice = selectedVoice;
+      const baseRate = Number(speechRate.value) || 0.8;
+      u.rate = rateOverride || baseRate;
+      u.pitch = 1;
+      u.volume = 1;
+      window.speechSynthesis.speak(u);
+    }
+
+    function moveToIndex(i) {
+      state.index = i;
+      state.currentWord = state.queue[i] || "";
+      state.checkedCurrent = false;
+      typedAnswer.value = "";
+      typedAnswer.focus();
+      resultBox.className = "result";
+      resultBox.textContent = state.currentWord ? "Listen and type the word." : "Round complete.";
+      refreshStats();
+      renderQueue();
+    }
+
+    function startRound() {
+      const count = Math.max(3, Math.min(40, Number(wordCount.value) || 12));
+      const pool = state.mode === "skill"
+        ? getWordsFromSkill(skillSelect.value)
+        : getWordsFromCustom();
+
+      if (!pool.length) {
+        setStatus("No valid words found for this source.");
+        return;
+      }
+
+      state.queue = sample(pool, Math.min(count, pool.length));
+      state.index = -1;
+      state.currentWord = "";
+      state.correct = 0;
+      state.missed = 0;
+      setStatus("Round started. Click Say Word.");
+      moveToIndex(0);
+    }
+
+    function checkCurrent() {
+      if (!state.currentWord) return;
+      if (state.checkedCurrent) return;
+      const user = normWord(typedAnswer.value);
+      if (!user) {
+        setStatus("Type an answer first.");
+        return;
+      }
+
+      const ok = user === state.currentWord;
+      state.checkedCurrent = true;
+      if (ok) {
+        state.correct += 1;
+        resultBox.className = "result good";
+        resultBox.textContent = "Correct: " + titleWord(state.currentWord);
+      } else {
+        state.missed += 1;
+        resultBox.className = "result bad";
+        resultBox.textContent = "Not yet. Expected: " + titleWord(state.currentWord);
+      }
+      refreshStats();
+    }
+
+    function revealCurrent() {
+      if (!state.currentWord) return;
+      if (!state.checkedCurrent) {
+        state.missed += 1;
+        state.checkedCurrent = true;
+      }
+      resultBox.className = "result bad";
+      resultBox.textContent = "Answer: " + titleWord(state.currentWord);
+      refreshStats();
+    }
+
+    function nextWord() {
+      if (!state.queue.length) return;
+      const next = state.index + 1;
+      if (next >= state.queue.length) {
+        state.currentWord = "";
+        state.index = state.queue.length;
+        resultBox.className = "result";
+        resultBox.textContent = "Round complete. Start another round.";
+        renderQueue();
+        refreshStats();
+        setStatus("Round complete.");
+        return;
+      }
+      moveToIndex(next);
+    }
+
+    function resetAll() {
+      state.queue = [];
+      state.index = -1;
+      state.currentWord = "";
+      state.checkedCurrent = false;
+      state.correct = 0;
+      state.missed = 0;
+      typedAnswer.value = "";
+      resultBox.className = "result";
+      resultBox.textContent = "No active word yet.";
+      renderQueue();
+      refreshStats();
+      setStatus("Reset complete.");
+      window.speechSynthesis && window.speechSynthesis.cancel();
+    }
+
+    function loadSkills() {
+      const skills = Object.keys(window.soundBoxWords || {});
+      skillSelect.innerHTML = "";
+      skills.forEach(skill => {
+        const opt = document.createElement("option");
+        opt.value = skill;
+        opt.textContent = skill + " (" + getWordsFromSkill(skill).length + ")";
+        skillSelect.appendChild(opt);
+      });
+      if (!skills.length) {
+        setStatus("Word bank missing. Make sure newtry_FULL.js is available.");
+      }
+    }
+
+    function loadVoices() {
+      if (!("speechSynthesis" in window)) return;
+      state.voices = window.speechSynthesis.getVoices();
+      const prior = voiceSelect.value;
+      voiceSelect.innerHTML = "";
+
+      const defaultOpt = document.createElement("option");
+      defaultOpt.value = "";
+      defaultOpt.textContent = "Default Browser Voice";
+      voiceSelect.appendChild(defaultOpt);
+
+      state.voices.forEach(v => {
+        const opt = document.createElement("option");
+        opt.value = v.name;
+        opt.textContent = v.name + " (" + v.lang + ")";
+        voiceSelect.appendChild(opt);
+      });
+
+      if (prior && [...voiceSelect.options].some(o => o.value === prior)) {
+        voiceSelect.value = prior;
+      }
+    }
+
+    document.getElementById("modeSkillBtn").addEventListener("click", () => {
+      state.mode = "skill";
+      document.getElementById("modeSkillBtn").classList.add("active");
+      document.getElementById("modeCustomBtn").classList.remove("active");
+      skillGroup.style.display = "";
+      customGroup.style.display = "none";
+      setStatus("Mode: skill list.");
+    });
+
+    document.getElementById("modeCustomBtn").addEventListener("click", () => {
+      state.mode = "custom";
+      document.getElementById("modeCustomBtn").classList.add("active");
+      document.getElementById("modeSkillBtn").classList.remove("active");
+      skillGroup.style.display = "none";
+      customGroup.style.display = "";
+      setStatus("Mode: custom list.");
+    });
+
+    document.getElementById("startBtn").addEventListener("click", startRound);
+    document.getElementById("resetBtn").addEventListener("click", resetAll);
+    document.getElementById("sayBtn").addEventListener("click", () => speakWord());
+    document.getElementById("repeatBtn").addEventListener("click", () => speakWord());
+    document.getElementById("slowBtn").addEventListener("click", () => speakWord(0.55));
+    document.getElementById("checkBtn").addEventListener("click", checkCurrent);
+    document.getElementById("nextBtn").addEventListener("click", nextWord);
+    document.getElementById("revealBtn").addEventListener("click", revealCurrent);
+
+    typedAnswer.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (!state.checkedCurrent) checkCurrent();
+        else nextWord();
+      }
+    });
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    loadSkills();
+    loadVoices();
+    refreshStats();
+    renderQueue();
+  </script>
+</body>
+</html>

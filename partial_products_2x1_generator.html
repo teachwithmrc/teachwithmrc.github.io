@@ -725,6 +725,7 @@
         print-color-adjust: exact;
       }
 
+      html,
       body {
         background: #fff;
       }
@@ -750,19 +751,20 @@
         border: 0;
         box-shadow: none;
         padding: 0;
+        background: #fff !important;
       }
 
       .problem-card {
         break-inside: avoid;
         page-break-inside: avoid;
-        min-height: 2.58in;
-        padding: 4px 4px;
-        gap: 4px;
+        min-height: 0;
+        padding: 3px 3px;
+        gap: 3px;
       }
 
       .problem-card + .problem-card {
-        padding-top: 7px;
-        margin-top: 2px;
+        padding-top: 4px;
+        margin-top: 1px;
       }
 
       .problem-eq {
@@ -782,20 +784,30 @@
       }
 
       .problem-grid {
-        gap: 5px;
+        gap: 3px;
       }
 
       .workspace-row {
-        gap: 7px;
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) minmax(170px, 1fr);
+        align-items: start;
+      }
+
+      .workspace-row {
+        gap: 6px;
+      }
+
+      .workspace-row.alg-under {
+        grid-template-columns: 1fr;
       }
 
       .area-panel {
-        gap: 4px;
+        gap: 3px;
       }
 
       .alg-cell {
-        width: 27px;
-        height: 27px;
+        width: 29px;
+        height: 29px;
       }
 
       .alg-sign {
@@ -803,14 +815,14 @@
       }
 
       .area-part {
-        min-height: 56px;
-        padding: 4px;
+        min-height: 50px;
+        padding: 3px;
       }
 
       .eq-prompt {
-        font-size: 0.84rem;
-        gap: 3px;
-        padding: 2px 2px 1px;
+        font-size: 0.8rem;
+        gap: 2px;
+        padding: 1px;
       }
 
       .eq-spacer {
@@ -826,9 +838,9 @@
       }
 
       .eq-answer-table .alg-cell {
-        width: 31px;
-        height: 31px;
-        font-size: 1rem;
+        width: 28px;
+        height: 28px;
+        font-size: 0.92rem;
       }
 
       .multiples-block {
@@ -841,10 +853,10 @@
       }
 
       .multiples-table td {
-        width: 36px;
-        min-width: 36px;
-        height: 26px;
-        font-size: 0.56rem;
+        width: 34px;
+        min-width: 34px;
+        height: 23px;
+        font-size: 0.52rem;
       }
 
       .multiples-head-row td {
@@ -852,16 +864,14 @@
       }
 
       .footer-note {
-        position: fixed;
-        left: 0.28in;
-        right: 0.28in;
-        bottom: 0.1in;
-        font-size: 0.58rem;
+        position: static;
+        margin-top: 3px;
+        font-size: 0.56rem;
       }
 
       .sheet.type-3x1 .problem-card,
       .sheet.type-4x1 .problem-card {
-        min-height: 2.34in;
+        min-height: 0;
         padding: 3px 3px;
         gap: 3px;
       }
@@ -873,8 +883,8 @@
 
       .sheet.type-3x1 .alg-cell,
       .sheet.type-4x1 .alg-cell {
-        width: 24px;
-        height: 24px;
+        width: 25px;
+        height: 25px;
         font-size: 0.92rem;
       }
 
@@ -940,6 +950,64 @@
       .sheet.type-3x1 .multiples-head-row td,
       .sheet.type-4x1 .multiples-head-row td {
         font-size: 0.38rem;
+      }
+
+      .sheet.type-2x2 .problem-card {
+        min-height: 0;
+        padding: 2px 3px;
+        gap: 2px;
+      }
+
+      .sheet.type-2x2 .problem-card + .problem-card {
+        padding-top: 3px;
+        margin-top: 1px;
+      }
+
+      .sheet.type-2x2 .workspace-row {
+        grid-template-columns: minmax(0, 2fr) minmax(150px, 1fr);
+        gap: 5px;
+      }
+
+      .sheet.type-2x2 .area-panel {
+        gap: 2px;
+      }
+
+      .sheet.type-2x2 .pv-box {
+        min-width: 30px;
+        min-height: 24px;
+        font-size: 0.82rem;
+      }
+
+      .sheet.type-2x2 .area-part {
+        min-height: 44px;
+        padding: 2px;
+      }
+
+      .sheet.type-2x2 .eq-prompt {
+        font-size: 0.7rem;
+        gap: 1px;
+        padding: 1px;
+      }
+
+      .sheet.type-2x2 .eq-answer-line {
+        min-width: 54px;
+      }
+
+      .sheet.type-2x2 .eq-answer-table .alg-cell {
+        width: 24px;
+        height: 24px;
+        font-size: 0.8rem;
+      }
+
+      .sheet.type-2x2 .alg-cell {
+        width: 23px;
+        height: 23px;
+        font-size: 0.86rem;
+      }
+
+      .sheet.type-2x2 .alg-sign {
+        width: 16px;
+        font-size: 1rem;
       }
     }
   </style>
@@ -1086,7 +1154,7 @@
       "2x1": { aDigits: 2, bDigits: 1, label: "2 x 1", pageCount: 3, example: "85x8" },
       "3x1": { aDigits: 3, bDigits: 1, label: "3 x 1", pageCount: 2, example: "487x6" },
       "4x1": { aDigits: 4, bDigits: 1, label: "4 x 1", pageCount: 2, example: "3264x7" },
-      "2x2": { aDigits: 2, bDigits: 2, label: "2 x 2", pageCount: 1, example: "76x24" }
+      "2x2": { aDigits: 2, bDigits: 2, label: "2 x 2", pageCount: 2, example: "76x24" }
     };
 
     const SCAFFOLD = {
@@ -1478,7 +1546,7 @@
     function syncAdditionLayoutControl() {
       const cfg = getTypeConfig();
       const forceUnder = cfg.aDigits === 4 && cfg.bDigits === 1;
-      const forceRight = (cfg.aDigits === 2 || cfg.aDigits === 3) && cfg.bDigits === 1;
+      const forceRight = ((cfg.aDigits === 2 || cfg.aDigits === 3) && cfg.bDigits === 1) || (cfg.aDigits === 2 && cfg.bDigits === 2);
 
       if (forceUnder) els.additionLayout.value = "under";
       if (forceRight) els.additionLayout.value = "right";
@@ -1502,7 +1570,7 @@
       const zeroHints = els.zeroHints.checked;
       const allowZeroOnes = els.allowZeroOnes.checked;
       const forceUnder = cfg.aDigits === 4 && cfg.bDigits === 1;
-      const forceRight = (cfg.aDigits === 2 || cfg.aDigits === 3) && cfg.bDigits === 1;
+      const forceRight = ((cfg.aDigits === 2 || cfg.aDigits === 3) && cfg.bDigits === 1) || (cfg.aDigits === 2 && cfg.bDigits === 2);
       const algPlacement = forceUnder ? "under" : (forceRight ? "right" : pickAlgorithmPlacement(additionLayout));
       const count = cfg.pageCount;
 

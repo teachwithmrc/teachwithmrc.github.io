@@ -1,0 +1,2069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pyramid Spelling Worksheet Generator</title>
+
+  <script src="newtry_FULL.js" defer></script>
+  <script src="fluencyDataFull_v8-2_clean.js" defer></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: "BoxesFont";
+      src: url("fonts/boxes2.otf") format("opentype");
+    }
+
+    :root {
+      --ink: #1f2b38;
+      --panel: #ffffff;
+      --line: #1f2b38;
+      --bg1: #ecf6ff;
+      --bg2: #f4fff0;
+      --accent: #0d47a1;
+      --chip: #eaf2fb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 18px;
+      font-family: "Poppins", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 10%, #ffffff 0 8%, transparent 9%),
+        radial-gradient(circle at 84% 12%, #ffffff 0 7%, transparent 8%),
+        linear-gradient(140deg, var(--bg1), var(--bg2));
+    }
+
+    h1 {
+      text-align: center;
+      margin: 0 0 6px;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      margin: 0 0 14px;
+      color: #455a6f;
+      font-size: 0.96rem;
+    }
+
+    .layout {
+      max-width: 1150px;
+      margin: 0 auto 14px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 2px solid #000;
+      border-radius: 12px;
+      background: var(--panel);
+      padding: 11px;
+      box-shadow: 0 8px 16px rgba(26, 44, 70, 0.08);
+    }
+
+    .section-title {
+      text-align: center;
+      font-weight: 800;
+      font-size: 1rem;
+      margin: 0 0 9px;
+    }
+
+    .skill-block { border: 1px solid #b8c7d6; border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+    .skill-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.96rem;
+      font-weight: 800;
+      padding: 8px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .skill-header .arrow { width: 20px; text-align: center; line-height: 1; font-size: 1rem; }
+    .skills-inner { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; padding: 8px; }
+    .skills-inner.collapsed { display: none; }
+    .skills-inner .break { flex-basis: 100%; height: 0; }
+
+    .bg-cvc .skill-header { background: #e9f2ff; }
+    .bg-dig .skill-header { background: #f3e9ff; }
+    .bg-glued .skill-header { background: #e8fff4; }
+    .bg-vce .skill-header { background: #fff5e6; }
+    .bg-rctrl .skill-header { background: #f0f5ff; }
+    .bg-vteams .skill-header { background: #fff0f6; }
+    .bg-dip .skill-header { background: #eefcfb; }
+    .bg-variant .skill-header { background: #fff8e1; }
+    .bg-soft .skill-header { background: #eef4ff; }
+
+    .skill-button {
+      border: 2px solid #000;
+      border-radius: 9px;
+      padding: 6px 9px;
+      min-height: 32px;
+      background: #fff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .skill-button.cvc.selected { background: #1976d2; color: #fff; }
+    .skill-button.dig.selected { background: #8e24aa; color: #fff; }
+    .skill-button.glued.selected { background: #2e7d32; color: #fff; }
+    .skill-button.vce.selected { background: #ef6c00; color: #fff; }
+    .skill-button.rctrl.selected { background: #3f51b5; color: #fff; }
+    .skill-button.vteams.selected { background: #d81b60; color: #fff; }
+    .skill-button.dip.selected { background: #00897b; color: #fff; }
+    .skill-button.variant.selected { background: #f9a825; color: #fff; }
+    .skill-button.soft.selected { background: #455a64; color: #fff; }
+
+    .option-grid { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+    .option-box {
+      border: 2px solid #000;
+      border-radius: 10px;
+      padding: 7px 10px;
+      font-weight: 700;
+      font-size: 0.83rem;
+      background: #fff;
+      cursor: pointer;
+    }
+    .option-box.selected { background: #d9c9ff; }
+
+    .layout-title {
+      text-align: center;
+      font-weight: 800;
+      font-size: 0.86rem;
+      color: #314762;
+      margin: 6px 0 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .layout-picker {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .layout-choice {
+      display: grid;
+      justify-items: center;
+      gap: 5px;
+      padding: 8px 8px 7px;
+      min-height: 84px;
+    }
+
+    .layout-preview {
+      width: 100%;
+      max-width: 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 2px 0;
+    }
+
+    .mini-row {
+      height: 10px;
+      border: 2px solid #1f2b38;
+      border-radius: 3px;
+      background: #fff;
+      display: block;
+    }
+
+    .layout-preview.pyramid .mini-row { margin-inline: auto; }
+    .layout-preview.pyramid .mini-row.r1 { width: 26%; }
+    .layout-preview.pyramid .mini-row.r2 { width: 52%; }
+    .layout-preview.pyramid .mini-row.r3 { width: 78%; }
+
+    .layout-preview.left .mini-row { margin-inline: 0 auto; }
+    .layout-preview.left .mini-row.r1 { width: 26%; }
+    .layout-preview.left .mini-row.r2 { width: 52%; }
+    .layout-preview.left .mini-row.r3 { width: 78%; }
+
+    .layout-choice .layout-label {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: #223650;
+      line-height: 1;
+    }
+
+    .mode-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 7px;
+    }
+
+    .mode-pill {
+      border: 2px solid #000;
+      border-radius: 999px;
+      background: #fff;
+      padding: 7px 12px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.9rem;
+      user-select: none;
+    }
+
+    .mode-pill input { display: none; }
+    .mode-pill.selected {
+      background: #e5f0ff;
+      color: #0d47a1;
+      border-color: #0d47a1;
+    }
+
+    .hint {
+      margin: 9px 0 0;
+      text-align: center;
+      font-size: 0.82rem;
+      color: #556b80;
+      min-height: 2.5em;
+      line-height: 1.3;
+    }
+
+    .search-label {
+      display: block;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 6px;
+      align-items: center;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      border: 2px solid #000;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font: inherit;
+      background: #fff;
+    }
+
+    button {
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      font: inherit;
+      font-weight: 700;
+      padding: 8px 11px;
+      cursor: pointer;
+    }
+
+    button.primary {
+      background: #111;
+      color: #fff;
+    }
+
+    .small-meta {
+      margin-top: 6px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: #5f7388;
+      min-height: 1.25em;
+    }
+
+    .search-results {
+      margin-top: 7px;
+      border: 1px solid #b8c8d8;
+      border-radius: 8px;
+      background: #fcfeff;
+      max-height: 250px;
+      overflow: auto;
+      padding: 5px;
+    }
+
+    .result-btn {
+      width: 100%;
+      border: 1px solid #b8c8d8;
+      border-radius: 7px;
+      text-align: left;
+      background: #fff;
+      padding: 6px 8px;
+      margin-bottom: 5px;
+      cursor: pointer;
+    }
+
+    .result-word {
+      font-weight: 800;
+      font-size: 1rem;
+      line-height: 1.1;
+      color: #12293f;
+    }
+
+    .result-meta {
+      margin-top: 2px;
+      font-size: 0.73rem;
+      color: #4f657b;
+      line-height: 1.2;
+    }
+
+    .chips {
+      min-height: 46px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border-radius: 999px;
+      border: 1px solid #9cb4c9;
+      background: var(--chip);
+      padding: 5px 9px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .chip .x {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid #6b839a;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      font-size: 0.72rem;
+      line-height: 1;
+      background: #fff;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 7px;
+      margin-top: 8px;
+    }
+
+    .status {
+      margin-top: 8px;
+      text-align: center;
+      font-size: 0.8rem;
+      min-height: 1.3em;
+      color: #273a4f;
+    }
+
+    #printArea {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      gap: 12px;
+    }
+
+    .page {
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(30, 45, 67, 0.12);
+      width: 8.5in;
+      max-width: calc(100% - 18px);
+      margin: 0 auto;
+      padding: 0.38in;
+      break-after: page;
+      page-break-after: always;
+    }
+
+    .page-title {
+      text-align: center;
+      font-size: 1.65rem;
+      font-weight: 800;
+      margin: 0;
+      line-height: 1.1;
+    }
+
+    .name-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      gap: 7px;
+      margin: 0 0 6px;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .name-line {
+      width: 250px;
+      min-width: 250px;
+      border-bottom: 2px solid #000;
+      height: 14px;
+    }
+
+    .directions {
+      text-align: center;
+      font-size: 0.84rem;
+      margin: 4px 0 4px;
+      line-height: 1.25;
+    }
+
+    .page-meta {
+      text-align: center;
+      font-size: 0.77rem;
+      color: #415a73;
+      margin-bottom: 8px;
+    }
+
+    .pyramid-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .page.sound-mode .pyramid-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      align-items: start;
+      grid-template-rows: none;
+      flex: 1;
+      align-content: start;
+    }
+
+    .page.letter-mode .pyramid-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .page.letter-mode .pyramid-card {
+      padding: 6px 5px 7px;
+    }
+
+    .page.sound-mode {
+      display: flex;
+      flex-direction: column;
+      min-height: 11in;
+      height: 11in;
+    }
+
+    .page.sound-mode .name-row {
+      margin: 0 0 2px;
+      font-size: 0.92rem;
+    }
+
+    .page.sound-mode .name-line {
+      width: 220px;
+      min-width: 220px;
+      height: 12px;
+    }
+
+    .page.sound-mode .page-title {
+      font-size: 1.4rem;
+      line-height: 1.05;
+      margin-bottom: 1px;
+    }
+
+    .page.sound-mode .directions,
+    .page.sound-mode .page-meta {
+      display: none;
+    }
+
+    .pyramid-card {
+      border: 2px solid #000;
+      border-radius: 8px;
+      min-height: 0;
+      padding: 7px 6px 9px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: stretch;
+      --cell-h: 36px;
+      --cell-w: 44px;
+      --cell-font: 20px;
+    }
+
+    .pyramid-card.sound-card {
+      min-height: 0;
+      height: auto;
+      padding-top: 9px;
+      padding-bottom: 8px;
+      display: block;
+    }
+
+    .page.sound-mode.sound-9 .pyramid-card.sound-card { padding-top: 8px; }
+
+    .card-num {
+      position: absolute;
+      top: 5px;
+      left: 7px;
+      font-weight: 800;
+      font-size: 0.86rem;
+    }
+
+    .pyramid-wrap {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0;
+      flex: 0;
+    }
+
+    .pyramid-wrap.left-layout {
+      align-items: flex-start;
+      padding-left: 8px;
+    }
+
+    .p-row {
+      display: flex;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    .p-row.left-layout {
+      justify-content: flex-start;
+    }
+
+    .p-cell {
+      min-width: var(--cell-w);
+      height: var(--cell-h);
+      border: 1.6px solid #111;
+      display: grid;
+      place-items: center;
+      font-size: var(--cell-font);
+      font-weight: 600;
+      font-family: "BoxesFont", "Poppins", sans-serif;
+      text-align: center;
+      padding: 0 4px;
+      background: #fff;
+    }
+
+    .answer-page .p-cell {
+      background: #f8fbff;
+      color: #10263c;
+      font-weight: 700;
+    }
+
+    .target-word {
+      text-align: center;
+      font-weight: 800;
+      font-size: 1.9rem;
+      line-height: 1.1;
+      margin-top: 8px;
+      text-transform: lowercase;
+    }
+
+    .target-word.top {
+      margin-top: 2px;
+      margin-bottom: 8px;
+    }
+
+    .sound-only-wrap {
+      margin-top: 0;
+      padding-top: 8px;
+      display: grid;
+      grid-template-rows: auto auto;
+      row-gap: 2px;
+      justify-items: center;
+      align-content: start;
+      height: auto;
+    }
+
+    .sound-only-wrap.left {
+      justify-items: center;
+      padding-left: 0;
+    }
+
+    .sound-word {
+      width: 100%;
+      text-align: center;
+      font-family: "Poppins", sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1;
+      color: #10263d;
+      margin: 0;
+      align-self: start;
+      justify-self: center;
+    }
+
+    .sound-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      font-family: "BoxesFont", "Poppins", sans-serif;
+      color: #10263d;
+      margin: 0;
+      align-self: start;
+    }
+
+    .sound-stack.pyramid {
+      align-items: center;
+      justify-self: center;
+      width: max-content;
+    }
+
+    .sound-stack.left {
+      align-items: flex-start;
+      width: max-content;
+      justify-self: center;
+      margin-left: 0;
+    }
+
+    .sound-line {
+      display: block;
+      font-size: 52px;
+      line-height: 0.84;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .page.sound-mode.sound-9 .sound-word {
+      font-size: 30px;
+      margin-bottom: 3px;
+    }
+    .page.sound-mode.sound-9 .sound-line {
+      font-size: 72px;
+      line-height: 0.78;
+    }
+
+    .footer {
+      margin-top: 8px;
+      text-align: right;
+      font-size: 0.62rem;
+      color: #42586f;
+    }
+
+    @media (max-width: 1080px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .pyramid-grid {
+        grid-template-columns: 1fr;
+      }
+      .pyramid-card {
+        min-height: 3.5in;
+      }
+      .search-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      @page { size: Letter portrait; margin: 0.25in; }
+      body { margin: 0; padding: 0; background: #fff; }
+      h1, .subtitle, .layout { display: none !important; }
+      #printArea { display: block; }
+      .page {
+        width: auto;
+        max-width: none;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        margin: 0;
+        padding: 0.14in;
+      }
+      .page-title { font-size: 1.42rem; }
+      .name-row { margin-bottom: 4px; font-size: 0.92rem; }
+      .name-line { width: 210px; min-width: 210px; height: 12px; }
+      .directions { margin: 2px 0 3px; font-size: 0.75rem; }
+      .page-meta { margin-bottom: 5px; font-size: 0.7rem; }
+      .pyramid-grid { gap: 7px; }
+      .page.letter-mode .pyramid-grid { gap: 6px; }
+      .pyramid-card { min-height: 0; padding: 5px 5px 8px; }
+      .page.sound-mode {
+        min-height: 10.5in;
+        height: 10.5in;
+      }
+      .page.sound-mode .pyramid-grid {
+        gap: 4px;
+        grid-template-rows: none;
+        flex: 1;
+        align-content: start;
+      }
+      .page.sound-mode .directions,
+      .page.sound-mode .page-meta { display: none !important; }
+      .card-num { top: 3px; left: 5px; font-size: 0.78rem; }
+      .p-cell { border-width: 1.4px; }
+      .target-word { font-size: 1.55rem; margin-top: 7px; }
+      .target-word.top { margin-top: 1px; margin-bottom: 6px; }
+      .pyramid-wrap.left-layout { padding-left: 6px; }
+      .sound-only-wrap { margin-top: 0; padding-top: 5px; row-gap: 1px; }
+      .page.sound-mode.sound-9 .sound-word { font-size: 28px; margin-bottom: 3px; }
+      .page.sound-mode.sound-9 .sound-line { font-size: 66px; line-height: 0.78; }
+      .footer { margin-top: 6px; font-size: 0.56rem; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Pyramid Spelling Worksheet Generator</h1>
+  <p class="subtitle">Use the same phonics skill menu, then search/add words and generate pyramid spelling pages.</p>
+
+  <div class="layout">
+    <section class="panel">
+      <h2 class="section-title">Step 1: Select Skills</h2>
+
+      <div class="skill-block bg-cvc">
+        <div class="skill-header" data-target="cvc"><span class="arrow">▲</span><span>CVC Short Vowels</span><span class="arrow">▲</span></div>
+        <div class="skills-inner" id="section-cvc">
+          <button class="skill-button cvc" data-skill="Short A">Short A</button>
+          <button class="skill-button cvc" data-skill="Short E">Short E</button>
+          <button class="skill-button cvc" data-skill="Short I">Short I</button>
+          <button class="skill-button cvc" data-skill="Short O">Short O</button>
+          <button class="skill-button cvc" data-skill="Short U">Short U</button>
+          <button class="skill-button cvc" data-skill="Mixed CVC">Mixed CVC</button>
+          <button class="skill-button cvc" data-skill="FLSZ Words">FLSZ</button>
+        </div>
+      </div>
+
+      <div class="skill-block bg-dig">
+        <div class="skill-header" data-target="dig"><span class="arrow">▼</span><span>Digraphs</span><span class="arrow">▼</span></div>
+        <div class="skills-inner collapsed" id="section-dig">
+          <button class="skill-button dig" data-skill="Digraph(ck)">ck</button>
+          <button class="skill-button dig" data-skill="Digraph(sh)">sh</button>
+          <button class="skill-button dig" data-skill="Digraph(th)">th</button>
+          <button class="skill-button dig" data-skill="Digraph(ch)">ch</button>
+          <button class="skill-button dig" data-skill="Digraph(wh)">wh</button>
+          <button class="skill-button dig" data-skill="Digraphs Mixed">Digraphs Mixed</button>
+        </div>
+      </div>
+
+      <div class="skill-block bg-glued">
+        <div class="skill-header" data-target="glued"><span class="arrow">▼</span><span>Glued Sounds</span><span class="arrow">▼</span></div>
+        <div class="skills-inner collapsed" id="section-glued">
+          <button class="skill-button glued" data-skill="Glued(all)">-all</button>
+          <button class="skill-button glued" data-skill="Glued(-ng)">-ng</button>
+          <button class="skill-button glued" data-skill="Glued(-nk)">-nk</button>
+          <button class="skill-button glued" data-skill="Glued Mixed">Glued Mixed</button>
+        </div>
+      </div>
+
+      <div class="skill-block bg-vce">
+        <div class="skill-header" data-target="vce"><span class="arrow">▼</span><span>Silent E (VCe)</span><span class="arrow">▼</span></div>
+        <div class="skills-inner collapsed" id="section-vce">
+          <button class="skill-button vce" data-skill="VCe(a_e)">a_e</button>
+          <button class="skill-button vce" data-skill="VCe(i_e)">i_e</button>
+          <button class="skill-button vce" data-skill="VCe(o_e)">o_e</button>
+          <button class="skill-button vce" data-skill="VCe(u_e)">u_e</button>
+          <button class="skill-button vce" data-skill="Mixed VCe">Mixed VCe</button>
+        </div>
+      </div>
+
+      <div class="skill-block bg-rctrl">
+        <div class="skill-header" data-target="rctrl"><span class="arrow">▼</span><span>R-Controlled</span><span class="arrow">▼</span></div>
+        <div class="skills-inner collapsed" id="section-rctrl">
+          <button class="skill-button rctrl" data-skill="R-Controlled(ar)">ar</button>
+          <button class="skill-button rctrl" data-skill="R-Controlled(or)">or</button>
+          <button class="skill-button rctrl" data-skill="R-Controlled(er,ir,ur)">er/ir/ur</button>
+          <button class="skill-button rctrl" data-skill="Mixed R-Controlled">Mixed R-Controlled</button>
+        </div>
+      </div>
+
+      <div class="skill-block bg-vteams">
+        <div class="skill-header" data-target="vteams"><span class="arrow">▼</span><span>Vowel Teams</span><span class="arrow">▼</span></div>
+        <div class="skills-inner collapsed" id="section-vteams">
+          <button class="skill-button vteams" data-skill="Long A (ai/ay)">Long A (ai/ay)</button>
+          <button class="skill-button vteams" data-skill="Long E (ee/ea)">Long E (ee/ea)</button>
+          <button class="skill-button vteams" data-skill="Long I (igh/y/ie)">Long I (igh/y/ie)</button>
+          <span class="break"></span>
+          <button class="skill-button vteams" data-skill="Long O (oa/ow/oe)">Long O (oa/ow/oe)</button>
+          <button class="skill-button vteams" data-skill="Long U (oo/ew/ue)">Long U (oo/ew/ue)</button>
+          <button class="skill-button vteams" data-skill="Mixed Vowel Teams">Mixed Vowel Teams</button>
+        </div>
+      </div>
+
+      <div class="skill-block bg-dip">
+        <div class="skill-header" data-target="dip"><span class="arrow">▼</span><span>Diphthongs</span><span class="arrow">▼</span></div>
+        <div class="skills-inner collapsed" id="section-dip">
+          <button class="skill-button dip" data-skill="Diphthongs (oy/oi)">oy/oi</button>
+          <button class="skill-button dip" data-skill="Diphthongs (ow/ou)">ow/ou</button>
+        </div>
+      </div>
+
+      <div class="skill-block bg-variant">
+        <div class="skill-header" data-target="variant"><span class="arrow">▼</span><span>Variant Vowels</span><span class="arrow">▼</span></div>
+        <div class="skills-inner collapsed" id="section-variant">
+          <button class="skill-button variant" data-skill="Variant Vowels (au/aw)">au/aw</button>
+          <button class="skill-button variant" data-skill="Variant Vowel (oo)">oo</button>
+        </div>
+      </div>
+
+      <div class="skill-block bg-soft">
+        <div class="skill-header" data-target="soft"><span class="arrow">▼</span><span>Soft C/G Endings</span><span class="arrow">▼</span></div>
+        <div class="skills-inner collapsed" id="section-soft">
+          <button class="skill-button soft" data-skill="Soft Endings">Soft C/G Endings (-ce/-ge/-dge)</button>
+        </div>
+      </div>
+      <div id="skillMeta" class="small-meta"></div>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">Step 2: Blends + Build Mode + Search</h2>
+
+      <div class="option-grid" id="blendModeRow">
+        <div class="option-box selected" data-blend-mode="three">None (3 Sounds)</div>
+        <div class="option-box" data-blend-mode="mix">Mix (3 and 4+ Sounds)</div>
+        <div class="option-box" data-blend-mode="blends">Only (4+ Sounds)</div>
+      </div>
+
+      <div class="mode-row" id="modeRow">
+        <label class="mode-pill selected" data-mode="letter"><input type="radio" name="buildMode" value="letter" checked>By Letter</label>
+        <label class="mode-pill" data-mode="sound"><input type="radio" name="buildMode" value="sound">By Sound</label>
+        <label class="mode-pill" data-mode="syllable"><input type="radio" name="buildMode" value="syllable">By Syllable</label>
+      </div>
+      <p id="modeHelp" class="hint"></p>
+
+      <div class="layout-title">Layout</div>
+      <div class="layout-picker" id="soundLayoutRow">
+        <div class="option-box layout-choice selected" data-sound-layout="pyramid">
+          <div class="layout-preview pyramid">
+            <span class="mini-row r1"></span>
+            <span class="mini-row r2"></span>
+            <span class="mini-row r3"></span>
+          </div>
+          <div class="layout-label">Pyramid</div>
+        </div>
+        <div class="option-box layout-choice" data-sound-layout="left">
+          <div class="layout-preview left">
+            <span class="mini-row r1"></span>
+            <span class="mini-row r2"></span>
+            <span class="mini-row r3"></span>
+          </div>
+          <div class="layout-label">Left Aligned</div>
+        </div>
+      </div>
+
+      <div class="option-grid" id="soundCountRow">
+        <div class="option-box selected" data-sound-count="9">9 per page (optimized)</div>
+      </div>
+      <div id="soundLayoutMeta" class="small-meta"></div>
+
+      <label class="search-label" for="searchInput">Type a word to search the current skill pool</label>
+      <div class="search-row">
+        <input id="searchInput" type="text" placeholder="Type to find a word (example: might)">
+        <button id="btnAddTop">Add Top Match</button>
+        <button id="btnAddRandom">Add Random</button>
+      </div>
+      <div id="searchMeta" class="small-meta"></div>
+      <div id="searchResults" class="search-results"></div>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">Step 3: Build Worksheet</h2>
+      <div id="selectedChips" class="chips"></div>
+      <div class="button-row">
+        <button id="btnAddSix">Add 6 Random</button>
+        <button id="btnClearWords">Clear Words</button>
+      </div>
+      <div class="button-row">
+        <button id="btnGenerate" class="primary">Generate Worksheet</button>
+        <button id="btnPrint">Print</button>
+      </div>
+      <div id="wordBankMeta" class="small-meta"></div>
+      <div id="status" class="status"></div>
+    </section>
+  </div>
+
+  <div id="printArea"></div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const MODE_HELP = {
+        letter: "Each row adds one letter: m -> mi -> mig -> might",
+        sound: "Each row adds one sound chunk. Pattern guide appears like 2 -> 21 -> 211 (example: ship).",
+        syllable: "Each row adds one syllable chunk using estimated syllable breaks."
+      };
+
+      const SOUND_CHUNKS = [
+        "eigh", "igh", "air", "are", "ear", "ure", "tch", "dge", "tion", "sion",
+        "ch", "sh", "th", "wh", "ck", "ng", "nk", "ee", "ea", "oa", "ow", "oe",
+        "ai", "ay", "oi", "oy", "ou", "aw", "au", "er", "ir", "ur", "ar", "or",
+        "oo", "ew", "ue", "ie"
+      ];
+
+      const MAX_SELECTED = 16;
+      const SEARCH_LIMIT = 80;
+      const WORD_MIN_LEN = 2;
+      const WORD_MAX_LEN = 15;
+      const DEFAULT_PER_PAGE = 4;
+      const LETTER_PER_PAGE = 9;
+
+      const state = {
+        mode: "letter",
+        blendMode: "three",
+        soundLayout: "pyramid",
+        soundPerPage: 9,
+        query: "",
+        wordBank: [],
+        skillPool: [],
+        byKey: new Map(),
+        selectedSkills: new Set(),
+        selectedKeys: [],
+        sourceCount: 0
+      };
+
+      const skillMeta = document.getElementById("skillMeta");
+      const modeRow = document.getElementById("modeRow");
+      const modeHelp = document.getElementById("modeHelp");
+      const soundLayoutMeta = document.getElementById("soundLayoutMeta");
+      const searchInput = document.getElementById("searchInput");
+      const searchResults = document.getElementById("searchResults");
+      const searchMeta = document.getElementById("searchMeta");
+      const selectedChips = document.getElementById("selectedChips");
+      const statusEl = document.getElementById("status");
+      const wordBankMeta = document.getElementById("wordBankMeta");
+      const printArea = document.getElementById("printArea");
+
+      document.getElementById("btnAddTop").addEventListener("click", addTopMatch);
+      document.getElementById("btnAddRandom").addEventListener("click", () => addRandomWords(1));
+      document.getElementById("btnAddSix").addEventListener("click", () => addRandomWords(6));
+      document.getElementById("btnClearWords").addEventListener("click", clearSelectedWords);
+      document.getElementById("btnGenerate").addEventListener("click", generateWorksheet);
+      document.getElementById("btnPrint").addEventListener("click", () => {
+        if (!printArea.children.length) {
+          setStatus("Generate a worksheet first.");
+          return;
+        }
+        window.print();
+      });
+
+      document.querySelectorAll(".skill-header").forEach((header) => {
+        header.addEventListener("click", () => {
+          const target = header.getAttribute("data-target");
+          const inner = document.getElementById("section-" + target);
+          if (!inner) return;
+          const arrows = header.querySelectorAll(".arrow");
+          const collapsed = inner.classList.contains("collapsed");
+          if (collapsed) {
+            inner.classList.remove("collapsed");
+            arrows.forEach((a) => { a.textContent = "▲"; });
+          } else {
+            inner.classList.add("collapsed");
+            arrows.forEach((a) => { a.textContent = "▼"; });
+          }
+        });
+      });
+
+      document.querySelectorAll(".skill-button").forEach((button) => {
+        button.addEventListener("click", (event) => {
+          event.stopPropagation();
+          const skill = button.dataset.skill;
+          if (!skill) return;
+          if (state.selectedSkills.has(skill)) {
+            state.selectedSkills.delete(skill);
+            button.classList.remove("selected");
+          } else {
+            state.selectedSkills.add(skill);
+            button.classList.add("selected");
+          }
+          refreshSkillPool();
+          renderSearchResults();
+          renderSelectedChips();
+          renderSkillMeta();
+        });
+      });
+
+      document.querySelectorAll("#blendModeRow .option-box").forEach((option) => {
+        option.addEventListener("click", () => {
+          const mode = option.getAttribute("data-blend-mode");
+          if (!mode) return;
+          state.blendMode = mode;
+          document.querySelectorAll("#blendModeRow .option-box").forEach((el) => {
+            el.classList.toggle("selected", el === option);
+          });
+          refreshSkillPool();
+          renderSearchResults();
+          renderSkillMeta();
+        });
+      });
+
+      document.querySelectorAll("#soundLayoutRow .option-box").forEach((option) => {
+        option.addEventListener("click", () => {
+          const layout = option.getAttribute("data-sound-layout");
+          if (!layout) return;
+          state.soundLayout = layout;
+          document.querySelectorAll("#soundLayoutRow .option-box").forEach((el) => {
+            el.classList.toggle("selected", el === option);
+          });
+          renderSoundLayoutMeta();
+        });
+      });
+
+      document.querySelectorAll("#soundCountRow .option-box").forEach((option) => {
+        option.addEventListener("click", () => {
+          const count = Number(option.getAttribute("data-sound-count"));
+          if (count !== 9) return;
+          state.soundPerPage = count;
+          document.querySelectorAll("#soundCountRow .option-box").forEach((el) => {
+            el.classList.toggle("selected", el === option);
+          });
+          renderSoundLayoutMeta();
+        });
+      });
+
+      modeRow.addEventListener("click", (event) => {
+        const pill = event.target.closest(".mode-pill");
+        if (!pill) return;
+        state.mode = pill.dataset.mode || "letter";
+        modeRow.querySelectorAll(".mode-pill").forEach((el) => {
+          el.classList.toggle("selected", el === pill);
+          const input = el.querySelector("input");
+          if (input) input.checked = (el === pill);
+        });
+        modeHelp.textContent = MODE_HELP[state.mode];
+        renderSoundLayoutMeta();
+        renderSearchResults();
+        renderSelectedChips();
+      });
+
+      searchInput.addEventListener("input", () => {
+        state.query = searchInput.value.trim().toLowerCase();
+        renderSearchResults();
+      });
+
+      searchInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          addTopMatch();
+        }
+      });
+
+      initialize();
+
+      async function initialize() {
+        setStatus("Loading word bank...");
+        await buildWordBank();
+        refreshSkillPool();
+        renderSkillMeta();
+        renderSoundLayoutMeta();
+        modeHelp.textContent = MODE_HELP[state.mode];
+        renderSearchResults();
+        renderSelectedChips();
+        setStatus("Ready.");
+      }
+
+      function setStatus(message) {
+        statusEl.textContent = message;
+      }
+
+      function normalizeAlpha(word) {
+        return String(word || "").toLowerCase().replace(/[^a-z]/g, "");
+      }
+
+      function sanitizeWordToken(raw) {
+        const token = String(raw || "").replace(/[’]/g, "'").toLowerCase().trim();
+        if (!/^[a-z]+(?:'[a-z]+)?$/.test(token)) return "";
+        const alphaLen = token.replace(/[^a-z]/g, "").length;
+        if (alphaLen < WORD_MIN_LEN || alphaLen > WORD_MAX_LEN) return "";
+        return token;
+      }
+
+      function sanitizeSplitPart(raw) {
+        const token = String(raw || "").replace(/[’]/g, "'").toLowerCase().trim();
+        if (!/^[a-z]+(?:'[a-z]+)?$/.test(token)) return "";
+        const alphaLen = token.replace(/[^a-z]/g, "").length;
+        if (alphaLen < 1 || alphaLen > WORD_MAX_LEN) return "";
+        return token;
+      }
+
+      function looksLikePath(value) {
+        const text = String(value || "").trim();
+        if (!text) return true;
+        if (/^https?:\/\//i.test(text)) return true;
+        if (/^\.?\/?images\//i.test(text)) return true;
+        if (/\.(png|jpg|jpeg|webp|gif|svg)$/i.test(text)) return true;
+        return false;
+      }
+
+      function normalizePattern(patternRaw) {
+        const value = String(patternRaw || "").replace(/[^0-9]/g, "");
+        if (!value) return "";
+        if (value.length < 1 || value.length > WORD_MAX_LEN) return "";
+        return value;
+      }
+
+      function addPattern(entry, patternRaw) {
+        const pattern = normalizePattern(patternRaw);
+        if (!pattern) return;
+        if (!entry.patternSet.has(pattern)) {
+          entry.patternSet.add(pattern);
+          entry.patterns.push(pattern);
+        }
+      }
+
+      function addWord(word, sourceName, splitParts, collector, patternValue) {
+        const cleanWord = sanitizeWordToken(word);
+        if (!cleanWord) return;
+        const key = cleanWord;
+        let entry = collector.get(key);
+        if (!entry) {
+          entry = {
+            key,
+            word: cleanWord,
+            splits: [],
+            splitKeys: new Set(),
+            patterns: [],
+            patternSet: new Set(),
+            sources: new Set()
+          };
+          collector.set(key, entry);
+        }
+        entry.sources.add(sourceName);
+        addPattern(entry, patternValue);
+
+        if (Array.isArray(splitParts) && splitParts.length) {
+          const normalizedParts = splitParts
+            .map((part) => sanitizeSplitPart(String(part || "").replace(/[^a-zA-Z']/g, "")))
+            .filter(Boolean);
+          if (!normalizedParts.length) return;
+          const joined = normalizedParts.join("");
+          const cleanAlpha = normalizeAlpha(cleanWord);
+          if (joined !== cleanAlpha) return;
+          const splitKey = normalizedParts.join("|");
+          if (entry.splitKeys.has(splitKey)) return;
+          entry.splitKeys.add(splitKey);
+          entry.splits.push(normalizedParts);
+          const derivedPattern = normalizedParts.map((part) => String(normalizeAlpha(part).length || 1)).join("");
+          addPattern(entry, derivedPattern);
+        }
+      }
+
+      function addWordsFromString(value, sourceName, collector) {
+        const text = String(value || "").trim();
+        if (!text) return;
+        if (/^[01]+$/.test(text)) return;
+        if (looksLikePath(text)) return;
+
+        const matches = text.match(/[A-Za-z]+(?:['’][A-Za-z]+)?/g) || [];
+        matches.forEach((token) => addWord(token, sourceName, null, collector));
+      }
+
+      function shouldSkipObjectKey(key) {
+        return /^(image|images|src|url|path|pattern|download_url)$/i.test(String(key || ""));
+      }
+
+      function harvestFromScriptText(text, sourceName, collector) {
+        if (!text) return;
+
+        const objectRegex = /\{[\s\S]{0,260}?\bword\s*:\s*["']([^"']+)["'][\s\S]{0,260}?\}/gi;
+        let objectMatch;
+        while ((objectMatch = objectRegex.exec(text)) !== null) {
+          const body = objectMatch[0];
+          const rawWord = objectMatch[1];
+          let splitParts = null;
+          let patternValue = "";
+
+          const splitMatch = body.match(/\bsplit\s*:\s*\[([^\]]+)\]/i);
+          if (splitMatch) {
+            splitParts = [];
+            const splitItemRegex = /["']([^"']+)["']/g;
+            let splitItemMatch;
+            while ((splitItemMatch = splitItemRegex.exec(splitMatch[1])) !== null) {
+              splitParts.push(splitItemMatch[1]);
+            }
+          }
+
+          const patternMatch = body.match(/\bpattern\s*:\s*["']([^"']+)["']/i);
+          if (patternMatch) patternValue = patternMatch[1];
+
+          addWord(rawWord, sourceName, splitParts, collector, patternValue);
+        }
+
+        const wordSplitRegex = /\bword\s*:\s*["']([^"']+)["'][\s\S]{0,180}?\bsplit\s*:\s*\[([^\]]+)\]/gi;
+        let match;
+
+        while ((match = wordSplitRegex.exec(text)) !== null) {
+          const rawWord = match[1];
+          const splitRaw = match[2];
+          const splitParts = [];
+          const splitItemRegex = /["']([^"']+)["']/g;
+          let splitMatch;
+          while ((splitMatch = splitItemRegex.exec(splitRaw)) !== null) {
+            splitParts.push(splitMatch[1]);
+          }
+          addWord(rawWord, sourceName, splitParts, collector);
+        }
+
+        const literalRegex = /["']([^"'\\\n]{1,40})["']/g;
+        while ((match = literalRegex.exec(text)) !== null) {
+          addWordsFromString(match[1], sourceName, collector);
+        }
+      }
+
+      function harvestWords(value, sourceName, collector, visited) {
+        if (value == null) return;
+        const kind = typeof value;
+        if (kind === "string") {
+          addWordsFromString(value, sourceName, collector);
+          return;
+        }
+        if (kind !== "object") return;
+        if (visited.has(value)) return;
+        visited.add(value);
+
+        if (Array.isArray(value)) {
+          for (const item of value) {
+            harvestWords(item, sourceName, collector, visited);
+          }
+          return;
+        }
+
+        if (typeof value.word === "string") {
+          addWord(value.word, sourceName, value.split, collector, value.pattern);
+        }
+
+        for (const [key, nested] of Object.entries(value)) {
+          if (/^[A-Za-z][A-Za-z']{1,14}$/.test(key)) {
+            addWord(key, sourceName, null, collector);
+          }
+          if (key === "word" || key === "split" || shouldSkipObjectKey(key)) continue;
+          harvestWords(nested, sourceName, collector, visited);
+        }
+      }
+
+      async function buildWordBank() {
+        const collector = new Map();
+        const visited = new WeakSet();
+        const loadedSourceNames = new Set();
+
+        const sourceSpecs = [
+          { name: "newtry_FULL:soundBoxWords", getter: () => (typeof soundBoxWords !== "undefined" ? soundBoxWords : undefined) },
+          { name: "window.soundBoxWords", getter: () => window.soundBoxWords },
+          { name: "blendsmaster:shortVowelLadderSets", getter: () => (typeof shortVowelLadderSets !== "undefined" ? shortVowelLadderSets : undefined) },
+          { name: "digraph:digraphWordLadders", getter: () => (typeof digraphWordLadders !== "undefined" ? digraphWordLadders : undefined) },
+          { name: "digraph:digraphBlendLadders", getter: () => (typeof digraphBlendLadders !== "undefined" ? digraphBlendLadders : undefined) },
+          { name: "digraph:rWordPatterns", getter: () => (typeof rWordPatterns !== "undefined" ? rWordPatterns : undefined) },
+          { name: "glued:gluedWordLadders", getter: () => (typeof gluedWordLadders !== "undefined" ? gluedWordLadders : undefined) },
+          { name: "glued:gluedWordPatterns", getter: () => (typeof gluedWordPatterns !== "undefined" ? gluedWordPatterns : undefined) },
+          { name: "vce:vceWordLadders", getter: () => (typeof vceWordLadders !== "undefined" ? vceWordLadders : undefined) },
+          { name: "vce:vceWordPatterns", getter: () => (typeof vceWordPatterns !== "undefined" ? vceWordPatterns : undefined) },
+          { name: "rcontrolled:rWordLadders", getter: () => (typeof rWordLadders !== "undefined" ? rWordLadders : undefined) },
+          { name: "rcontrolled:RWordsIncludesBlends_Ladders", getter: () => (typeof RWordsIncludesBlends_Ladders !== "undefined" ? RWordsIncludesBlends_Ladders : undefined) },
+          { name: "rcontrolled:RWordsBlendsOnly_Ladders", getter: () => (typeof RWordsBlendsOnly_Ladders !== "undefined" ? RWordsBlendsOnly_Ladders : undefined) },
+          { name: "window.rWordLadders_NoBlends", getter: () => window.rWordLadders_NoBlends },
+          { name: "fluency:fluencyWords", getter: () => (typeof fluencyWords !== "undefined" ? fluencyWords : undefined) },
+          { name: "fluency:trickyWords", getter: () => (typeof trickyWords !== "undefined" ? trickyWords : undefined) },
+          { name: "fluencyData.words", getter: () => (window.fluencyData && window.fluencyData.words ? window.fluencyData.words : undefined) },
+          { name: "fluencyData.tricky", getter: () => (window.fluencyData && window.fluencyData.tricky ? window.fluencyData.tricky : undefined) }
+        ];
+
+        sourceSpecs.forEach((spec) => {
+          let value;
+          try {
+            value = spec.getter();
+          } catch (error) {
+            value = undefined;
+          }
+          if (typeof value === "undefined" || value === null) return;
+          loadedSourceNames.add(spec.name);
+          harvestWords(value, spec.name, collector, visited);
+        });
+
+        // Uses the same core JS sources from spelling.html + additional phonics banks.
+        const textSourceFiles = [
+          // Core spelling sources
+          "newtry_FULL.js",
+          "blendsmaster.js",
+          "digraphs_master_FINAL_v2.js",
+          "glued_sounds_full.js",
+          "vceWordLadders_6words_full.js",
+          "rControlled_full_max_SUPERCOMBINED.js",
+          // Additional word banks
+          "soundBoxWords_base.js",
+          "soundBoxWords_blends.js",
+          "fluencyDataFull_v8-2_clean.js",
+          "cvcWordLadders.js",
+          "cvcWordLadders_6words.js",
+          "digraphWordLadders_6words_full.js",
+          "digraphWordLadders_6words_variety.js",
+          "longA_and_VCe_Ladders_combined.js",
+          "longE_words_and_ladders.js",
+          "rladders.js"
+        ];
+
+        await Promise.all(textSourceFiles.map(async (filePath) => {
+          try {
+            const response = await fetch(filePath, { cache: "no-store" });
+            if (!response.ok) return;
+            const text = await response.text();
+            const sourceName = "file:" + filePath;
+            loadedSourceNames.add(sourceName);
+            harvestFromScriptText(text, sourceName, collector);
+          } catch (error) {
+            // Keep going if a source file is missing or blocked.
+          }
+        }));
+
+        const list = Array.from(collector.values())
+          .map((entry) => ({
+            key: entry.key,
+            word: entry.word,
+            splits: entry.splits.slice(),
+            patterns: entry.patterns.slice(),
+            sources: Array.from(entry.sources)
+          }))
+          .sort((a, b) => {
+            if (a.word.length !== b.word.length) return a.word.length - b.word.length;
+            return a.word.localeCompare(b.word);
+          });
+
+        state.wordBank = list;
+        state.byKey = new Map(list.map((entry) => [entry.key, entry]));
+        state.sourceCount = loadedSourceNames.size;
+        wordBankMeta.textContent = "Loaded " + list.length + " unique words from " + state.sourceCount + " JS sources.";
+      }
+
+      function getWordsForSkill(skill, source, blendMode) {
+        const blendSuffixes = [" with Blends", " with Digraphs and Blends"];
+
+        function dedupe(list) {
+          const seen = new Set();
+          const out = [];
+          for (const w of list) {
+            const key = (w && w.word && w.pattern) ? (w.word + "|" + w.pattern) : JSON.stringify(w);
+            if (!seen.has(key)) {
+              seen.add(key);
+              out.push(w);
+            }
+          }
+          return out;
+        }
+
+        function fetchBase(base) {
+          const baseWords = source[base] || [];
+          let blendWords = [];
+          blendSuffixes.forEach((suffix) => {
+            const key = base + suffix;
+            if (source[key]) blendWords = blendWords.concat(source[key]);
+          });
+          if (blendMode === "blends") return blendWords;
+          if (blendMode === "mix") return dedupe([].concat(baseWords, blendWords));
+          return baseWords;
+        }
+
+        switch (skill) {
+          case "Short A": return fetchBase("Short A");
+          case "Short E": return fetchBase("Short E");
+          case "Short I": return fetchBase("Short I");
+          case "Short O": return fetchBase("Short O");
+          case "Short U": return fetchBase("Short U");
+          case "FLSZ Words": return fetchBase("FLSZ Words");
+          case "Mixed CVC":
+            return [].concat(
+              fetchBase("Short A"), fetchBase("Short E"), fetchBase("Short I"),
+              fetchBase("Short O"), fetchBase("Short U")
+            );
+
+          case "Digraph(ck)": return fetchBase("Digraph(ck)");
+          case "Digraph(sh)": return fetchBase("Digraph(sh)");
+          case "Digraph(th)": return fetchBase("Digraph(th)");
+          case "Digraph(ch)": return fetchBase("Digraph(ch)");
+          case "Digraph(wh)": return fetchBase("Digraph(wh)");
+          case "Digraphs Mixed":
+            return [].concat(
+              fetchBase("Digraph(ck)"), fetchBase("Digraph(sh)"),
+              fetchBase("Digraph(th)"), fetchBase("Digraph(ch)"),
+              fetchBase("Digraph(wh)")
+            );
+
+          case "Glued(all)": return fetchBase("Glued(all)");
+          case "Glued(-ng)":
+            return dedupe([].concat(
+              fetchBase("Glued(ang)"), fetchBase("Glued(ing)"),
+              fetchBase("Glued(ong)"), fetchBase("Glued(ung)")
+            ));
+          case "Glued(-nk)":
+            return dedupe([].concat(
+              fetchBase("Glued(ank)"), fetchBase("Glued(ink)"),
+              fetchBase("Glued(onk)"), fetchBase("Glued(unk)")
+            ));
+          case "Glued Mixed":
+            return dedupe([].concat(
+              fetchBase("Glued(all)"),
+              fetchBase("Glued(ang)"), fetchBase("Glued(ing)"),
+              fetchBase("Glued(ong)"), fetchBase("Glued(ung)"),
+              fetchBase("Glued(ank)"), fetchBase("Glued(ink)"),
+              fetchBase("Glued(onk)"), fetchBase("Glued(unk)")
+            ));
+
+          case "VCe(a_e)": return fetchBase("VCe(a_e)");
+          case "VCe(i_e)": return fetchBase("VCe(i_e)");
+          case "VCe(o_e)": return fetchBase("VCe(o_e)");
+          case "VCe(u_e)": return fetchBase("VCe(u_e)");
+          case "Mixed VCe":
+            return [].concat(
+              fetchBase("VCe(a_e)"), fetchBase("VCe(i_e)"),
+              fetchBase("VCe(o_e)"), fetchBase("VCe(u_e)")
+            );
+
+          case "R-Controlled(ar)": return fetchBase("R-Controlled(ar)");
+          case "R-Controlled(or)": return fetchBase("R-Controlled(or)");
+          case "R-Controlled(er,ir,ur)": return fetchBase("R-Controlled(er,ir,ur)");
+          case "Mixed R-Controlled":
+            return [].concat(
+              fetchBase("R-Controlled(ar)"), fetchBase("R-Controlled(or)"),
+              fetchBase("R-Controlled(er,ir,ur)")
+            );
+
+          case "Long A (ai/ay)": return [].concat(fetchBase("Long A(ai)"), fetchBase("Long A(ay)"));
+          case "Long E (ee/ea)": return [].concat(fetchBase("Long E(ee)"), fetchBase("Long E(ea)"));
+          case "Long I (igh/y/ie)": return [].concat(fetchBase("Long I(igh)"), fetchBase("Long I(y)"), fetchBase("Long I(ie)"));
+          case "Long O (oa/ow/oe)": return [].concat(fetchBase("Long O(oa)"), fetchBase("Long O(ow)"), fetchBase("Long O(oe)"));
+          case "Long U (oo/ew/ue)": return [].concat(fetchBase("Long U(oo)"), fetchBase("Long U(ew)"), fetchBase("Long U(ue)"));
+          case "Mixed Vowel Teams":
+            return [].concat(
+              fetchBase("Long A(ai)"), fetchBase("Long A(ay)"),
+              fetchBase("Long E(ee)"), fetchBase("Long E(ea)"),
+              fetchBase("Long I(igh)"), fetchBase("Long I(y)"), fetchBase("Long I(ie)"),
+              fetchBase("Long O(oa)"), fetchBase("Long O(ow)"), fetchBase("Long O(oe)"),
+              fetchBase("Long U(oo)"), fetchBase("Long U(ew)"), fetchBase("Long U(ue)")
+            );
+
+          case "Diphthongs (oy/oi)": return [].concat(fetchBase("Diphthong(oy)"), fetchBase("Diphthong(oi)"));
+          case "Diphthongs (ow/ou)": return [].concat(fetchBase("Diphthong(ow)"), fetchBase("Diphthong(ou)"));
+
+          case "Variant Vowels (au/aw)": return [].concat(fetchBase("Variant Vowel(aw)"), fetchBase("Variant Vowel(au)"));
+          case "Variant Vowel (oo)": return fetchBase("Variant Vowel(oo)");
+
+          case "Soft Endings":
+            return [].concat(fetchBase("Soft C(ce)"), fetchBase("Soft G(ge)"), fetchBase("Soft G(dge)"));
+
+          default:
+            return fetchBase(skill);
+        }
+      }
+
+      function toPublicEntry(entry) {
+        return {
+          key: entry.key,
+          word: entry.word,
+          splits: entry.splits.slice(),
+          patterns: entry.patterns.slice(),
+          sources: Array.from(entry.sources)
+        };
+      }
+
+      function buildSkillPool() {
+        if (!state.selectedSkills.size) return [];
+        if (typeof window.soundBoxWords === "undefined") return [];
+
+        const collector = new Map();
+        state.selectedSkills.forEach((skill) => {
+          const words = getWordsForSkill(skill, window.soundBoxWords, state.blendMode);
+          words.forEach((item) => {
+            if (item && typeof item === "object") {
+              addWord(item.word, "skill:" + skill, item.split, collector, item.pattern);
+            } else {
+              addWord(item, "skill:" + skill, null, collector);
+            }
+          });
+        });
+
+        return Array.from(collector.values())
+          .map((entry) => toPublicEntry(entry))
+          .sort((a, b) => {
+            if (a.word.length !== b.word.length) return a.word.length - b.word.length;
+            return a.word.localeCompare(b.word);
+          });
+      }
+
+      function refreshSkillPool() {
+        state.skillPool = buildSkillPool();
+      }
+
+      function getActiveWordPool() {
+        if (state.skillPool.length) return state.skillPool;
+        return state.wordBank;
+      }
+
+      function blendModeLabel(mode) {
+        if (mode === "mix") return "Mix (3 and 4+ Sounds)";
+        if (mode === "blends") return "Only (4+ Sounds)";
+        return "None (3 Sounds)";
+      }
+
+      function renderSkillMeta() {
+        if (!skillMeta) return;
+        if (!state.selectedSkills.size) {
+          skillMeta.textContent = "No skills selected yet. Search uses full JS bank.";
+          return;
+        }
+        skillMeta.textContent =
+          state.selectedSkills.size + " skill(s) selected | Blends: " +
+          blendModeLabel(state.blendMode) +
+          " | Pool: " + state.skillPool.length + " words";
+      }
+
+      function renderSoundLayoutMeta() {
+        if (!soundLayoutMeta) return;
+        if (state.mode !== "sound" && state.mode !== "letter") {
+          soundLayoutMeta.textContent = "Layout applies to By Letter and By Sound modes.";
+          return;
+        }
+        if (state.mode === "letter") {
+          soundLayoutMeta.textContent =
+            "By Letter layout: " + (state.soundLayout === "left" ? "Left Aligned" : "Pyramid") +
+            " | word appears on top | " + LETTER_PER_PAGE + " per page.";
+          return;
+        }
+        soundLayoutMeta.textContent =
+          "By Sound preview: ship, 2, 21, 211 (" +
+          (state.soundLayout === "left" ? "Left Aligned" : "Pyramid") +
+          ") | " + state.soundPerPage + " per page";
+      }
+
+      function pickSplitForSound(entry) {
+        if (!entry || !Array.isArray(entry.splits) || !entry.splits.length) return null;
+        const sorted = entry.splits.slice().sort((a, b) => b.length - a.length);
+        return sorted[0] || null;
+      }
+
+      function normalizeSourceSplit(split) {
+        if (!Array.isArray(split) || !split.length) return [];
+        const out = [];
+        split.forEach((unit) => {
+          const parts = segmentBySound(String(unit || ""));
+          if (parts.length) out.push(...parts);
+        });
+        return out;
+      }
+
+      function segmentBySound(word) {
+        const clean = normalizeAlpha(word);
+        if (!clean) return [];
+        const parts = [];
+        let index = 0;
+        while (index < clean.length) {
+          let found = "";
+          for (const chunk of SOUND_CHUNKS) {
+            if (clean.startsWith(chunk, index)) {
+              found = chunk;
+              break;
+            }
+          }
+          if (found) {
+            parts.push(found);
+            index += found.length;
+          } else {
+            parts.push(clean[index]);
+            index += 1;
+          }
+        }
+        return parts;
+      }
+
+      function splitIntoSyllables(word) {
+        const clean = normalizeAlpha(word);
+        if (!clean) return [];
+        const vowels = new Set(["a", "e", "i", "o", "u", "y"]);
+        const groups = [];
+        let i = 0;
+        while (i < clean.length) {
+          if (vowels.has(clean[i])) {
+            const start = i;
+            while (i + 1 < clean.length && vowels.has(clean[i + 1])) i += 1;
+            groups.push({ start, end: i });
+          }
+          i += 1;
+        }
+        if (groups.length <= 1) return [clean];
+
+        const breaks = [];
+        for (let g = 1; g < groups.length; g += 1) {
+          const prev = groups[g - 1];
+          const curr = groups[g];
+          const clusterStart = prev.end + 1;
+          const clusterEnd = curr.start - 1;
+          const consonantCount = Math.max(0, clusterEnd - clusterStart + 1);
+
+          let breakIndex = curr.start;
+          if (consonantCount === 1) {
+            breakIndex = clusterStart;
+          } else if (consonantCount >= 2) {
+            breakIndex = curr.start - 1;
+          }
+          if (breakIndex > 0 && breakIndex < clean.length) {
+            breaks.push(breakIndex);
+          }
+        }
+
+        const uniqueBreaks = Array.from(new Set(breaks)).sort((a, b) => a - b);
+        const parts = [];
+        let start = 0;
+        for (const brk of uniqueBreaks) {
+          const part = clean.slice(start, brk);
+          if (part) parts.push(part);
+          start = brk;
+        }
+        const tail = clean.slice(start);
+        if (tail) parts.push(tail);
+        return parts.length ? parts : [clean];
+      }
+
+      function getUnits(entry) {
+        if (!entry) return [];
+        if (state.mode === "letter") {
+          return normalizeAlpha(entry.word).split("").filter(Boolean);
+        }
+        if (state.mode === "sound") {
+          const split = pickSplitForSound(entry);
+          const normalized = normalizeSourceSplit(split);
+          if (normalized.length) return normalized;
+          return segmentBySound(entry.word);
+        }
+        const syllables = splitIntoSyllables(entry.word);
+        return syllables.length ? syllables : [normalizeAlpha(entry.word)];
+      }
+
+      function unitLabel() {
+        if (state.mode === "sound") return "sounds";
+        if (state.mode === "syllable") return "syllables";
+        return "letters";
+      }
+
+      function getMatches() {
+        const query = state.query;
+        const all = getActiveWordPool();
+        if (!query) return all.slice(0, SEARCH_LIMIT);
+
+        const starts = [];
+        const contains = [];
+        all.forEach((entry) => {
+          if (entry.word.startsWith(query)) {
+            starts.push(entry);
+          } else if (entry.word.includes(query)) {
+            contains.push(entry);
+          }
+        });
+
+        return starts.concat(contains).slice(0, SEARCH_LIMIT);
+      }
+
+      function previewUnits(units) {
+        const max = 6;
+        const visible = units.slice(0, max);
+        const text = visible.join(" | ");
+        if (units.length > max) return text + " ...";
+        return text;
+      }
+
+      function renderSearchResults() {
+        const matches = getMatches();
+        searchResults.innerHTML = "";
+
+        if (!matches.length) {
+          searchResults.innerHTML = "<div class='small-meta'>No matches for this search.</div>";
+          searchMeta.textContent = "Showing 0 matches.";
+          return;
+        }
+
+        matches.forEach((entry) => {
+          const units = getUnits(entry);
+          const guide = getPatternGuide(entry, units);
+          const guideText = (state.mode === "sound" && guide)
+            ? (" | guide: " + guide.split("").map((_, idx) => guide.slice(0, idx + 1)).join(" / "))
+            : "";
+          const btn = document.createElement("button");
+          btn.className = "result-btn";
+          btn.type = "button";
+          btn.innerHTML =
+            "<div class='result-word'>" + entry.word + "</div>" +
+            "<div class='result-meta'>" + units.length + " " + unitLabel() + " | " + previewUnits(units) + guideText + "</div>";
+          btn.addEventListener("click", () => addWordByKey(entry.key));
+          searchResults.appendChild(btn);
+        });
+
+        const baseSize = getActiveWordPool().length;
+        searchMeta.textContent = "Showing " + matches.length + " of " + baseSize + " words.";
+      }
+
+      function addWordByKey(key) {
+        if (!state.byKey.has(key)) {
+          const active = getActiveWordPool().find((entry) => entry.key === key);
+          if (!active) return;
+          state.byKey.set(key, active);
+        }
+        if (state.selectedKeys.includes(key)) {
+          setStatus("Word already selected.");
+          return;
+        }
+        if (state.selectedKeys.length >= MAX_SELECTED) {
+          setStatus("Maximum selected words reached (" + MAX_SELECTED + ").");
+          return;
+        }
+        state.selectedKeys.push(key);
+        renderSelectedChips();
+        setStatus("Added: " + key);
+      }
+
+      function addTopMatch() {
+        const matches = getMatches();
+        if (!matches.length) {
+          setStatus("No matching word to add.");
+          return;
+        }
+        addWordByKey(matches[0].key);
+      }
+
+      function shuffle(list) {
+        const out = list.slice();
+        for (let i = out.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const temp = out[i];
+          out[i] = out[j];
+          out[j] = temp;
+        }
+        return out;
+      }
+
+      function addRandomWords(count) {
+        const already = new Set(state.selectedKeys);
+        const pool = getActiveWordPool().filter((entry) => {
+          if (already.has(entry.key)) return false;
+          const units = getUnits(entry);
+          return units.length >= 2;
+        });
+
+        if (!pool.length) {
+          setStatus("No random words available for this mode.");
+          return;
+        }
+
+        const take = Math.min(count, MAX_SELECTED - state.selectedKeys.length, pool.length);
+        if (take <= 0) {
+          setStatus("Selection is full.");
+          return;
+        }
+
+        const picked = shuffle(pool).slice(0, take);
+        picked.forEach((entry) => state.selectedKeys.push(entry.key));
+        renderSelectedChips();
+        setStatus("Added " + picked.length + " random words.");
+      }
+
+      function clearSelectedWords() {
+        state.selectedKeys = [];
+        renderSelectedChips();
+        setStatus("Cleared selected words.");
+      }
+
+      function renderSelectedChips() {
+        selectedChips.innerHTML = "";
+        if (!state.selectedKeys.length) {
+          selectedChips.innerHTML = "<div class='small-meta'>No words selected yet.</div>";
+          return;
+        }
+
+        state.selectedKeys.forEach((key) => {
+          const entry = state.byKey.get(key);
+          if (!entry) return;
+          const units = getUnits(entry);
+          const chip = document.createElement("div");
+          chip.className = "chip";
+          chip.innerHTML =
+            "<span>" + entry.word + " (" + units.length + ")</span>" +
+            "<span class='x' title='Remove' role='button' tabindex='0'>x</span>";
+          chip.querySelector(".x").addEventListener("click", () => {
+            state.selectedKeys = state.selectedKeys.filter((item) => item !== key);
+            renderSelectedChips();
+          });
+          selectedChips.appendChild(chip);
+        });
+      }
+
+      function chunk(list, size) {
+        const out = [];
+        for (let i = 0; i < list.length; i += size) {
+          out.push(list.slice(i, i + size));
+        }
+        return out;
+      }
+
+      function getPerPage() {
+        if (state.mode === "sound") return state.soundPerPage;
+        if (state.mode === "letter") return LETTER_PER_PAGE;
+        return DEFAULT_PER_PAGE;
+      }
+
+      function pageDirections(showAnswers) {
+        if (showAnswers) {
+          return "Answer Key: Completed pyramid sequence for each word.";
+        }
+        if (state.mode === "sound") {
+          return "Directions: Write the sound pattern stack in Boxes font (example: ship, 2, 21, 211).";
+        }
+        if (state.mode === "syllable") {
+          return "Directions: Build each pyramid by adding one syllable each row until the full word is complete.";
+        }
+        return "Directions: Build each pyramid by adding one letter each row until the full word is complete.";
+      }
+
+      function getCellMetrics(units) {
+        const count = units.length;
+        const longest = units.reduce((max, item) => Math.max(max, item.length), 1);
+        let height = 38;
+        if (count >= 10) height = 25;
+        else if (count >= 8) height = 30;
+        else if (count >= 6) height = 34;
+
+        const width = Math.min(110, Math.max(height + 6, 18 + longest * 10));
+        const font = Math.max(14, Math.min(24, height * 0.64));
+        return { height, width, font };
+      }
+
+      function getTopWordFontSize(word, mode) {
+        const len = normalizeAlpha(word).length;
+        if (mode === "letter") {
+          if (len >= 10) return 20;
+          if (len >= 8) return 23;
+          if (len >= 6) return 26;
+          return 29;
+        }
+        if (len >= 10) return 24;
+        if (len >= 8) return 28;
+        return 32;
+      }
+
+      function getSoundFontSizes(item, perPage) {
+        const guideLen = (item.patternGuide || "").length || Math.max(1, item.units.length);
+        const wordLen = normalizeAlpha(item.entry.word).length;
+        const baseLine = perPage === 9 ? 72 : 62;
+        const baseWord = perPage === 9 ? 30 : 27;
+
+        let line = baseLine - Math.max(0, guideLen - 3) * 9;
+        let word = baseWord - Math.max(0, guideLen - 3) * 1.2;
+        if (wordLen >= 7) word -= Math.min(6, (wordLen - 6) * 0.8);
+
+        return {
+          line: Math.max(perPage === 9 ? 38 : 34, line),
+          word: Math.max(20, word)
+        };
+      }
+
+      function makePyramid(units, showAnswers) {
+        const leftLayout = state.mode === "letter" && state.soundLayout === "left";
+        const wrap = document.createElement("div");
+        wrap.className = "pyramid-wrap" + (leftLayout ? " left-layout" : "");
+
+        for (let row = 1; row <= units.length; row += 1) {
+          const rowEl = document.createElement("div");
+          rowEl.className = "p-row" + (leftLayout ? " left-layout" : "");
+
+          for (let i = 0; i < row; i += 1) {
+            const cell = document.createElement("div");
+            cell.className = "p-cell";
+            cell.textContent = showAnswers ? units[i] : "";
+            rowEl.appendChild(cell);
+          }
+          wrap.appendChild(rowEl);
+        }
+
+        return wrap;
+      }
+
+      function getPatternGuide(entry, units) {
+        if (state.mode !== "sound") return "";
+        if (!Array.isArray(units) || !units.length) return "";
+
+        const derived = units.map((unit) => String(Math.max(1, normalizeAlpha(unit).length))).join("");
+        const candidates = Array.isArray(entry.patterns) ? entry.patterns.filter((p) => p.length === units.length) : [];
+        const numericCandidates = candidates
+          .map((p) => String(p))
+          .filter((p) => /^\d+$/.test(p));
+        if (!numericCandidates.length) return derived;
+        const exact = numericCandidates.find((p) => p === derived);
+        return exact || numericCandidates[0];
+      }
+
+      function makeSoundStackBlock(item, showAnswers, perPage) {
+        const wrap = document.createElement("div");
+        wrap.className = "sound-only-wrap " + (state.soundLayout === "left" ? "left" : "pyramid");
+        const sizes = getSoundFontSizes(item, perPage);
+
+        const wordLine = document.createElement("div");
+        wordLine.className = "sound-word";
+        wordLine.textContent = item.entry.word;
+        wordLine.style.fontSize = sizes.word + "px";
+        wrap.appendChild(wordLine);
+
+        const stack = document.createElement("div");
+        stack.className = "sound-stack " + (state.soundLayout === "left" ? "left" : "pyramid");
+        const fallbackGuide = (Array.isArray(item.units) ? item.units : [])
+          .map((unit) => String(Math.max(1, normalizeAlpha(unit).length)))
+          .join("");
+        const guide = /^\d+$/.test(String(item.patternGuide || "")) ? String(item.patternGuide) : fallbackGuide;
+        const leftWidth = Math.max(1.4, guide.length * 1.05) + "ch";
+        for (let i = 1; i <= guide.length; i += 1) {
+          const line = document.createElement("div");
+          line.className = "sound-line";
+          line.style.width = state.soundLayout === "left"
+            ? leftWidth
+            : (Math.max(1.4, i * 1.05) + "ch");
+          line.style.fontSize = sizes.line + "px";
+          line.style.textAlign = state.soundLayout === "left" ? "left" : "center";
+          line.textContent = guide.slice(0, i);
+          stack.appendChild(line);
+        }
+        wrap.appendChild(stack);
+        return wrap;
+      }
+
+      function fitSoundPageToHeight(page) {
+        if (!page || !page.classList.contains("sound-mode")) return;
+        let steps = 0;
+        while (page.scrollHeight > page.clientHeight + 2 && steps < 10) {
+          page.querySelectorAll(".sound-word").forEach((el) => {
+            const current = parseFloat(el.style.fontSize || window.getComputedStyle(el).fontSize || "24");
+            el.style.fontSize = Math.max(18, current - 1) + "px";
+          });
+          page.querySelectorAll(".sound-line").forEach((el) => {
+            const current = parseFloat(el.style.fontSize || window.getComputedStyle(el).fontSize || "44");
+            el.style.fontSize = Math.max(34, current - 2) + "px";
+          });
+          steps += 1;
+        }
+      }
+
+      function buildPage(items, pageNo, totalPages, showAnswers, perPage) {
+        const page = document.createElement("div");
+        page.className = "page" + (showAnswers ? " answer-page" : "");
+        if (state.mode === "sound") {
+          page.classList.add("sound-mode");
+          page.classList.add("sound-" + String(perPage));
+        } else if (state.mode === "letter") {
+          page.classList.add("letter-mode");
+          page.classList.add("letter-" + String(perPage));
+        }
+
+        const nameRow = document.createElement("div");
+        nameRow.className = "name-row";
+        nameRow.innerHTML = "<span>Name:</span><span class='name-line' aria-hidden='true'></span>";
+        page.appendChild(nameRow);
+
+        const title = document.createElement("h2");
+        title.className = "page-title";
+        title.textContent = showAnswers ? "Pyramid Spelling Answer Key" : "Pyramid Spelling";
+        page.appendChild(title);
+
+        if (state.mode !== "sound") {
+          const directions = document.createElement("p");
+          directions.className = "directions";
+          directions.textContent = pageDirections(showAnswers);
+          page.appendChild(directions);
+
+          const meta = document.createElement("div");
+          meta.className = "page-meta";
+          meta.textContent =
+            "Build Mode: " + state.mode + " | Page " + pageNo + " of " + totalPages;
+          page.appendChild(meta);
+        }
+
+        const grid = document.createElement("div");
+        grid.className = "pyramid-grid";
+
+        items.forEach((item, index) => {
+          const card = document.createElement("div");
+          card.className = "pyramid-card";
+          if (state.mode === "sound") card.classList.add("sound-card");
+
+          const number = document.createElement("div");
+          number.className = "card-num";
+          number.textContent = String(index + 1 + ((pageNo - 1) * perPage)) + ".";
+          card.appendChild(number);
+
+          const metrics = getCellMetrics(item.units);
+          card.style.setProperty("--cell-h", metrics.height + "px");
+          card.style.setProperty("--cell-w", metrics.width + "px");
+          card.style.setProperty("--cell-font", metrics.font + "px");
+
+          if (state.mode === "sound") {
+            card.appendChild(makeSoundStackBlock(item, showAnswers, perPage));
+          } else {
+            const word = document.createElement("div");
+            word.className = "target-word";
+            word.textContent = item.entry.word;
+            word.style.fontSize = getTopWordFontSize(item.entry.word, state.mode) + "px";
+            if (state.mode === "letter") {
+              word.classList.add("top");
+              card.appendChild(word);
+              card.appendChild(makePyramid(item.units, showAnswers));
+            } else {
+              card.appendChild(makePyramid(item.units, showAnswers));
+              card.appendChild(word);
+            }
+          }
+
+          grid.appendChild(card);
+        });
+
+        page.appendChild(grid);
+
+        const footer = document.createElement("div");
+        footer.className = "footer";
+        footer.textContent = "Copyright - InterventionStation.com - @TeachwithMrC";
+        page.appendChild(footer);
+
+        return page;
+      }
+
+      function generateWorksheet() {
+        const selectedMode = document.querySelector('input[name="buildMode"]:checked');
+        if (selectedMode && selectedMode.value) {
+          state.mode = selectedMode.value;
+          modeHelp.textContent = MODE_HELP[state.mode];
+        }
+
+        if (!state.selectedKeys.length) {
+          setStatus("Select at least one word.");
+          return;
+        }
+
+        const items = state.selectedKeys
+          .map((key) => state.byKey.get(key))
+          .filter(Boolean)
+          .map((entry) => {
+            const units = getUnits(entry);
+            return { entry, units, patternGuide: getPatternGuide(entry, units) };
+          })
+          .filter((item) => item.units.length > 0);
+
+        if (!items.length) {
+          setStatus("Could not build pyramids from selected words.");
+          return;
+        }
+
+        const perPage = getPerPage();
+        const studentChunks = chunk(items, perPage);
+        const totalStudentPages = studentChunks.length;
+        const totalPages = totalStudentPages * 2;
+
+        printArea.innerHTML = "";
+
+        studentChunks.forEach((group, idx) => {
+          const page = buildPage(group, idx + 1, totalStudentPages, false, perPage);
+          printArea.appendChild(page);
+          fitSoundPageToHeight(page);
+        });
+
+        studentChunks.forEach((group, idx) => {
+          const page = buildPage(group, idx + 1, totalStudentPages, true, perPage);
+          printArea.appendChild(page);
+          fitSoundPageToHeight(page);
+        });
+
+        setStatus(
+          "Generated " + items.length + " pyramids in " + totalPages +
+          " printable pages (" + totalStudentPages + " student + " + totalStudentPages + " answer). " +
+          "Mode: " + state.mode + " | " + perPage + " per page."
+        );
+        printArea.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  </script>
+</body>
+</html>
