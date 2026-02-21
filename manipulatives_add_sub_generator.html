@@ -88,10 +88,176 @@
       color: #fff;
     }
 
-    .controls-grid {
+    .setup-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: 1.1fr 1fr;
       gap: 10px;
+      align-items: stretch;
+      margin-bottom: 10px;
+    }
+
+    .panel-box {
+      border: 2px solid #d6ddec;
+      border-radius: 12px;
+      padding: 10px;
+      background: #fbfdff;
+    }
+
+    .control-heading {
+      margin: 0 0 8px;
+      font-size: 0.86rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #23344e;
+    }
+
+    .number-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      align-items: end;
+    }
+
+    .visual-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .visual-card {
+      border: 2px solid #cfd8e7;
+      border-radius: 10px;
+      background: #fff;
+      padding: 8px;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+      color: #1f2b3e;
+    }
+
+    .visual-card.active {
+      border-color: #1f2b3e;
+      box-shadow: inset 0 0 0 1px #1f2b3e;
+      background: #f4f8ff;
+    }
+
+    .visual-thumb {
+      min-height: 62px;
+      border: 1px solid #dbe2ef;
+      border-radius: 8px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      margin-bottom: 6px;
+      padding: 5px;
+    }
+
+    .visual-card-title {
+      font-size: 0.8rem;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .visual-card-sub {
+      font-size: 0.68rem;
+      color: #5a6a83;
+      line-height: 1.1;
+      margin-top: 2px;
+    }
+
+    .mini-hc-thumb {
+      width: 62px;
+      height: 62px;
+      border: 1px solid #cad4e5;
+      background:
+        linear-gradient(#d4dceb 1px, transparent 1px) 0 0 / 6px 6px,
+        linear-gradient(90deg, #d4dceb 1px, transparent 1px) 0 0 / 6px 6px,
+        #fff;
+    }
+
+    .source-box {
+      margin-bottom: 0;
+    }
+
+    .source-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .source-options .checkbox-wrap {
+      min-height: 38px;
+      padding: 6px 10px;
+    }
+
+    .custom-panel {
+      margin-top: 8px;
+      border-top: 1px dashed #cfd8e7;
+      padding-top: 8px;
+      display: none;
+    }
+
+    .custom-panel.visible {
+      display: block;
+    }
+
+    .custom-rows {
+      display: grid;
+      gap: 6px;
+    }
+
+    .custom-row {
+      display: grid;
+      grid-template-columns: 96px 58px 96px;
+      gap: 6px;
+      align-items: center;
+      justify-content: start;
+    }
+
+    .custom-row .custom-op {
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--ink);
+      background: #fff;
+      border: 2px solid #cfd8e7;
+      border-radius: 10px;
+      padding: 8px 10px;
+      outline: none;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .custom-row .custom-a,
+    .custom-row .custom-b {
+      width: 96px;
+      text-align: center;
+      padding: 6px 8px;
+      font-size: 0.9rem;
+    }
+
+    .custom-help {
+      margin-top: 7px;
+      font-size: 0.75rem;
+      color: #607089;
+      line-height: 1.2;
+    }
+
+    .source-settings-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+      align-items: start;
+    }
+
+    .options-box .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
       align-items: end;
     }
 
@@ -111,7 +277,8 @@
     }
 
     .field select,
-    .field input {
+    .field input,
+    .field textarea {
       width: 100%;
       font-family: inherit;
       font-size: 0.95rem;
@@ -121,6 +288,11 @@
       border-radius: 10px;
       padding: 8px 10px;
       outline: none;
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 66px;
     }
 
     .checkbox-wrap {
@@ -166,6 +338,19 @@
       color: #fff;
     }
 
+    .source-box .button-row {
+      margin-top: 8px;
+      justify-content: flex-start;
+    }
+
+    .source-box .button-row button {
+      font-size: 1.06rem;
+      font-weight: 800;
+      padding: 12px 24px;
+      min-width: 148px;
+      border-radius: 12px;
+    }
+
     .note {
       margin-top: 8px;
       font-size: 0.84rem;
@@ -174,6 +359,8 @@
 
     #worksheetHost {
       margin-top: 12px;
+      overflow-x: auto;
+      padding-bottom: 12px;
     }
 
     .sheet {
@@ -185,6 +372,19 @@
       box-shadow: 0 12px 30px rgba(20, 32, 50, 0.1);
       padding: 0.34in;
       position: relative;
+    }
+
+    @media screen {
+      .sheet {
+        height: 11in;
+        overflow: hidden;
+      }
+
+      .sheet.scaled-preview .problems {
+        transform-origin: top left;
+        transform: scale(var(--preview-scale, 1));
+        width: calc(100% / var(--preview-scale, 1));
+      }
     }
 
     .sheet-header {
@@ -910,9 +1110,32 @@
     }
 
     @media (max-width: 980px) {
+      .setup-row {
+        grid-template-columns: 1fr;
+      }
+
+      .visual-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .source-settings-row {
+        grid-template-columns: 1fr;
+      }
+
+      .custom-row {
+        grid-template-columns: 88px 56px 88px;
+      }
+
+      .custom-row .custom-a,
+      .custom-row .custom-b {
+        width: 88px;
+      }
+
       .sheet {
         width: 100%;
         min-height: 0;
+        height: auto;
+        overflow: visible;
         padding: 12px;
       }
 
@@ -1116,104 +1339,116 @@
           <button id="opSubBtn" type="button" data-op="sub">Subtraction</button>
         </div>
 
-        <div class="controls-grid">
-          <input id="operation" type="hidden" value="add" />
+        <input id="operation" type="hidden" value="add" />
+        <input id="visualMode" type="hidden" value="blocks" />
+        <input id="problemMode" type="hidden" value="random" />
 
-          <div class="field">
-            <label for="digitsA">Top Number Digits</label>
-            <select id="digitsA">
-              <option value="2" selected>2 digits</option>
-              <option value="3">3 digits</option>
-            </select>
+        <div class="setup-row">
+          <div class="panel-box">
+            <h3 class="control-heading">Number Setup</h3>
+            <div class="number-grid">
+              <div class="field">
+                <label for="digitsA">Top Number Digits</label>
+                <select id="digitsA">
+                  <option value="2" selected>2 digits</option>
+                  <option value="3">3 digits</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="digitsB">Bottom Number Digits</label>
+                <select id="digitsB">
+                  <option value="1" selected>1 digit</option>
+                  <option value="2">2 digits</option>
+                  <option value="3">3 digits</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field" style="margin-top:8px;">
+              <label for="pageLayout">Page Layout</label>
+              <select id="pageLayout">
+                <option value="stack2">2 problems (stacked)</option>
+                <option value="stack3">3 problems (stacked)</option>
+                <option value="grid4" selected>4 problems (2x2 table)</option>
+              </select>
+            </div>
           </div>
 
-          <div class="field">
-            <label for="digitsB">Bottom Number Digits</label>
-            <select id="digitsB">
-              <option value="1" selected>1 digit</option>
-              <option value="2">2 digits</option>
-              <option value="3">3 digits</option>
-            </select>
-          </div>
+          <div class="panel-box">
+            <h3 class="control-heading">Choose Visual</h3>
+            <div class="visual-cards">
+              <button id="visualBlocksCard" class="visual-card active" type="button" data-visual="blocks" aria-pressed="true">
+                <div class="visual-thumb">
+                  <img class="block-img block-img-hundred" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6991b7ac899b887a5ac1bcac.png" alt="" loading="lazy" decoding="async" />
+                  <img class="block-img block-img-ten" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6991b7ac24813caed1b26a70.png" alt="" loading="lazy" decoding="async" />
+                  <img class="block-img block-img-one" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6991b7ac36a392985e69ed13.png" alt="" loading="lazy" decoding="async" />
+                </div>
+                <div class="visual-card-title">Base-10 Blocks</div>
+                <div class="visual-card-sub">Ones, tens, hundreds</div>
+              </button>
 
-          <div class="field">
-            <label for="pageLayout">Page Layout</label>
-            <select id="pageLayout">
-              <option value="stack2">2 problems (stacked)</option>
-              <option value="stack3" selected>3 problems (stacked)</option>
-              <option value="grid4">4 problems (2x2 table)</option>
-            </select>
-          </div>
+              <button id="visualChartCard" class="visual-card" type="button" data-visual="chart" aria-pressed="false">
+                <div class="visual-thumb"><div class="mini-hc-thumb"></div></div>
+                <div class="visual-card-title">Hundreds Chart</div>
+                <div class="visual-card-sub">Move tens and ones</div>
+              </button>
+            </div>
 
-          <div class="field">
-            <label for="visualMode">Visual Type</label>
-            <select id="visualMode">
-              <option value="blocks" selected>Base-10 Blocks</option>
-              <option value="chart">Hundreds Chart</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="chartOrder">Chart Problem Order</label>
-            <select id="chartOrder">
-              <option value="problemTop" selected>Problem on top, chart on bottom</option>
-              <option value="chartTop">Chart on top, problem on bottom</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="problemMode">Problem Source</label>
-            <select id="problemMode">
-              <option value="random" selected>Random problems</option>
-              <option value="custom">Custom problems</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="customProblem">Custom Problems</label>
-            <input id="customProblem" type="text" placeholder="Example: 76+4, 58+9, 43+7, 92+6" />
-          </div>
-
-          <div class="field">
-            <label for="sheetTitle">Worksheet Title</label>
-            <input id="sheetTitle" type="text" value="" placeholder="Auto title (operation + digits)" />
-          </div>
-
-          <div class="field">
-            <label>Equation Label</label>
-            <label class="checkbox-wrap"><input id="showProblemEq" type="checkbox" checked />Show boxed problem equation</label>
-          </div>
-
-          <div class="field">
-            <label for="problemStyle">Problem Style</label>
-            <select id="problemStyle">
-              <option value="equation" selected>Equation (58 + 82 = _____)</option>
-              <option value="stacked">Stacked Box (vertical)</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Scaffold Version</label>
-            <label class="checkbox-wrap"><input id="scaffoldToggle" type="checkbox" />Fill numbers in algorithm table</label>
-          </div>
-
-          <div class="field">
-            <label>Addition Order</label>
-            <label class="checkbox-wrap"><input id="addLargerTop" type="checkbox" />Put larger addition number on top</label>
-          </div>
-
-          <div class="field">
-            <label id="requireLabel">Regroup/Borrow</label>
-            <label class="checkbox-wrap"><input id="requireSpecial" type="checkbox" />Use regrouping problems</label>
+            <div class="field" id="chartOrderField" style="margin-top:8px;">
+              <label for="chartOrder">Chart Order</label>
+              <select id="chartOrder">
+                <option value="problemTop" selected>Problem first, chart second</option>
+                <option value="chartTop">Chart first, problem second</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        <div class="button-row">
-          <button id="generateBtn" class="primary" type="button">Generate</button>
-          <button id="printBtn" type="button">Print</button>
+        <div class="source-settings-row">
+          <div class="panel-box source-box">
+            <h3 class="control-heading">Problem Source</h3>
+            <div class="source-options">
+              <label class="checkbox-wrap"><input id="sourceRandom" type="checkbox" checked />Random Problems</label>
+              <label class="checkbox-wrap"><input id="sourceCustom" type="checkbox" />Custom Problems</label>
+            </div>
+
+            <div id="customProblemPanel" class="custom-panel">
+              <div id="customRows" class="custom-rows"></div>
+              <div class="field" style="margin-top:8px;">
+                <label for="customProblem">Or paste one problem per line</label>
+                <textarea id="customProblem" placeholder="44 + 56&#10;38 + 27"></textarea>
+              </div>
+              <div class="custom-help">You can type rows above or paste lines here. Extra blanks are ignored.</div>
+            </div>
+
+            <div class="button-row">
+              <button id="generateBtn" class="primary" type="button">Generate</button>
+              <button id="printBtn" type="button">Print</button>
+            </div>
+          </div>
+
+          <div class="panel-box options-box">
+            <h3 class="control-heading">Worksheet Options</h3>
+            <div class="options-grid">
+              <div class="field">
+                <label>Scaffold Version</label>
+                <label class="checkbox-wrap"><input id="scaffoldToggle" type="checkbox" />Fill numbers in algorithm table</label>
+              </div>
+
+              <div class="field">
+                <label>Addition Order</label>
+                <label class="checkbox-wrap"><input id="addLargerTop" type="checkbox" />Put larger addition number on top</label>
+              </div>
+
+              <div class="field">
+                <label id="requireLabel">Regroup/Borrow</label>
+                <label class="checkbox-wrap"><input id="requireSpecial" type="checkbox" />Use regrouping problems</label>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="note" id="statusText">Tip: custom mode accepts comma-separated equations like <strong>784+49, 912+38, 665+27</strong>.</div>
       </section>
     </div>
 
@@ -1230,12 +1465,16 @@
       digitsB: document.getElementById("digitsB"),
       pageLayout: document.getElementById("pageLayout"),
       visualMode: document.getElementById("visualMode"),
+      visualBlocksCard: document.getElementById("visualBlocksCard"),
+      visualChartCard: document.getElementById("visualChartCard"),
+      chartOrderField: document.getElementById("chartOrderField"),
       chartOrder: document.getElementById("chartOrder"),
       problemMode: document.getElementById("problemMode"),
+      sourceRandom: document.getElementById("sourceRandom"),
+      sourceCustom: document.getElementById("sourceCustom"),
+      customProblemPanel: document.getElementById("customProblemPanel"),
+      customRows: document.getElementById("customRows"),
       customProblem: document.getElementById("customProblem"),
-      sheetTitle: document.getElementById("sheetTitle"),
-      showProblemEq: document.getElementById("showProblemEq"),
-      problemStyle: document.getElementById("problemStyle"),
       scaffoldToggle: document.getElementById("scaffoldToggle"),
       addLargerTop: document.getElementById("addLargerTop"),
       requireSpecial: document.getElementById("requireSpecial"),
@@ -1307,6 +1546,82 @@
       const isAdd = op === "add";
       els.opAddBtn.classList.toggle("active", isAdd);
       els.opSubBtn.classList.toggle("active", !isAdd);
+    }
+
+    function customOpSymbol(op) {
+      return op === "add" ? "+" : "-";
+    }
+
+    function syncCustomRowOps(op) {
+      const symbol = customOpSymbol(op);
+      if (!els.customRows) return;
+      els.customRows.querySelectorAll(".custom-op").forEach((select) => {
+        select.value = symbol;
+      });
+    }
+
+    function setOperation(op) {
+      els.operation.value = op;
+      syncOperationButtons(op);
+      syncCustomRowOps(op);
+    }
+
+    function setVisualMode(mode) {
+      els.visualMode.value = mode;
+      const isBlocks = mode === "blocks";
+      els.visualBlocksCard.classList.toggle("active", isBlocks);
+      els.visualChartCard.classList.toggle("active", !isBlocks);
+      els.visualBlocksCard.setAttribute("aria-pressed", isBlocks ? "true" : "false");
+      els.visualChartCard.setAttribute("aria-pressed", !isBlocks ? "true" : "false");
+      els.chartOrderField.style.display = isBlocks ? "none" : "";
+    }
+
+    function setProblemMode(mode) {
+      els.problemMode.value = mode;
+      const customOn = mode === "custom";
+      els.sourceRandom.checked = !customOn;
+      els.sourceCustom.checked = customOn;
+      els.customProblemPanel.classList.toggle("visible", customOn);
+      els.customRows.querySelectorAll("input, select").forEach((el) => { el.disabled = !customOn; });
+      els.customProblem.disabled = !customOn;
+    }
+
+    function buildCustomRows(count = 8) {
+      if (!els.customRows) return;
+      const symbol = customOpSymbol(els.operation.value);
+      let html = "";
+      for (let i = 0; i < count; i += 1) {
+        html += `
+          <div class="custom-row">
+            <input class="custom-a" type="text" inputmode="numeric" placeholder="Top number" />
+            <select class="custom-op">
+              <option value="+" ${symbol === "+" ? "selected" : ""}>+</option>
+              <option value="-" ${symbol === "-" ? "selected" : ""}>-</option>
+            </select>
+            <input class="custom-b" type="text" inputmode="numeric" placeholder="Bottom number" />
+          </div>
+        `;
+      }
+      els.customRows.innerHTML = html;
+    }
+
+    function collectCustomRaw() {
+      const fromRows = [];
+      if (els.customRows) {
+        els.customRows.querySelectorAll(".custom-row").forEach((row) => {
+          const a = row.querySelector(".custom-a")?.value.trim() || "";
+          const op = row.querySelector(".custom-op")?.value.trim() || customOpSymbol(els.operation.value);
+          const b = row.querySelector(".custom-b")?.value.trim() || "";
+          if (a && b) fromRows.push(`${a}${op}${b}`);
+        });
+      }
+
+      const fromText = String(els.customProblem.value || "")
+        .split(/\n+/)
+        .map((s) => s.trim())
+        .filter(Boolean);
+
+      return fromRows.concat(fromText).join(",");
     }
 
     function normalizeProblemOrder(problem, op, largerTopForAdd) {
@@ -1442,32 +1757,6 @@
       const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       if (index < letters.length) return letters[index];
       return `A${index - letters.length + 1}`;
-    }
-
-    function miniSetupLine(values, opSymbol = "&nbsp;") {
-      return `
-        <div class="mini-line">
-          <div class="mini-op">${opSymbol}</div>
-          ${values.map(v => `<div class="mini-cell">${v !== "" ? v : "&nbsp;"}</div>`).join("")}
-        </div>
-      `;
-    }
-
-    function stackedProblemHtml(problem, op, totalCols, showEq, aDigits, bDigits) {
-      const topVals = alignedDigitRow(totalCols, problem.a, aDigits, showEq);
-      const bottomVals = alignedDigitRow(totalCols, problem.b, bDigits, showEq);
-      const resultVals = new Array(totalCols).fill("");
-      const carryVals = new Array(totalCols).fill("");
-      const opSymbol = op === "add" ? "+" : "-";
-      return `
-        <div class="mini-setup" style="--mini-cols:${totalCols};">
-          <div class="mini-carry">${carryVals.map(() => '<div class="mini-carry-cell"></div>').join("")}</div>
-          ${miniSetupLine(topVals)}
-          ${miniSetupLine(bottomVals, opSymbol)}
-          <div class="mini-rule"></div>
-          ${miniSetupLine(resultVals)}
-        </div>
-      `;
     }
 
     function blockImage(type) {
@@ -1622,15 +1911,11 @@
     }
 
     function problemHtml(problem, index, cfg) {
-      const { op, totalCols, showEq, colorOn, scaffoldOn, aDigits, bDigits, requireSpecial, visualMode, chartOrder, problemStyle } = cfg;
+      const { op, totalCols, colorOn, scaffoldOn, aDigits, bDigits, requireSpecial, visualMode, chartOrder } = cfg;
       const opSymbol = op === "add" ? "+" : "-";
 
       const letter = problemLetter(index);
-      const headHtml = problemStyle === "stacked"
-        ? `<div class="problem-head vertical"><span class="problem-badge">${letter}</span>${stackedProblemHtml(problem, op, totalCols, showEq, aDigits, bDigits)}</div>`
-        : (showEq
-            ? `<div class="problem-head"><span class="problem-badge">${letter}</span><span class="problem-text">${problem.a} ${opSymbol} ${problem.b}</span></div>`
-            : `<div class="problem-head blank"><span class="problem-badge">${letter}</span><span class="problem-text"><span class="blank-ink">_____</span> ${opSymbol} <span class="blank-ink">_____</span></span></div>`);
+      const headHtml = `<div class="problem-head"><span class="problem-badge">${letter}</span><span class="problem-text">${problem.a} ${opSymbol} ${problem.b}</span></div>`;
 
       const rowTemplate = `grid-template-columns: var(--op-width) repeat(${totalCols}, var(--cell-size));`;
       const lineTemplate = `grid-template-columns: var(--op-width) calc(${totalCols} * var(--cell-size) + ${(totalCols - 1)} * var(--cell-gap));`;
@@ -1750,10 +2035,38 @@
         `${"4".repeat(activeADigits)}${opSymbol}${"3".repeat(bSafe)}`,
         `${"9".repeat(activeADigits)}${opSymbol}${"2".repeat(bSafe)}`
       ];
-      els.customProblem.placeholder = `Example: ${examplePool.slice(0, perPage).join(", ")}`;
+      const lines = examplePool.slice(0, perPage).map((eq) => eq.replace(/([+-])/, " $1 "));
+      els.customProblem.placeholder = lines.join("\n");
       els.addLargerTop.disabled = !isAdd;
       els.chartOrder.disabled = visualMode !== "chart";
-      syncOperationButtons(op);
+      setOperation(op);
+    }
+
+    function fitSheetPreview() {
+      const sheet = els.host.querySelector(".sheet");
+      if (!sheet || window.matchMedia("print").matches) return;
+      sheet.classList.remove("scaled-preview");
+      sheet.style.setProperty("--preview-scale", "1");
+
+      const header = sheet.querySelector(".sheet-header");
+      const footer = sheet.querySelector(".footer-note");
+      const problems = sheet.querySelector(".problems");
+      if (!header || !footer || !problems) return;
+
+      const headerH = header.offsetHeight;
+      const footerH = footer.offsetHeight;
+      const sheetStyle = window.getComputedStyle(sheet);
+      const padTop = parseFloat(sheetStyle.paddingTop) || 0;
+      const padBottom = parseFloat(sheetStyle.paddingBottom) || 0;
+      const available = sheet.clientHeight - padTop - padBottom - headerH - footerH - 14;
+      const needed = problems.scrollHeight;
+      if (!Number.isFinite(available) || !Number.isFinite(needed) || needed <= 0) return;
+
+      const scale = Math.min(1, available / needed);
+      if (scale < 0.999) {
+        sheet.style.setProperty("--preview-scale", String(scale));
+        sheet.classList.add("scaled-preview");
+      }
     }
 
     function renderWorksheet() {
@@ -1778,23 +2091,20 @@
 
       const mode = els.problemMode.value;
       const colorOn = false;
-      const showEq = els.showProblemEq.checked;
       const scaffoldOn = els.scaffoldToggle.checked;
       const requireSpecial = els.requireSpecial.checked;
       const largerTopForAdd = els.addLargerTop.checked;
       const symbol = op === "add" ? "+" : "-";
+      const customRaw = collectCustomRaw();
 
       const opName = op === "add" ? "Addition" : "Subtraction";
-      const visualName = visualMode === "chart" ? "Hundreds Chart" : "Base-10 Blocks";
-      const autoTitle = `${opName} ${aDigits}-digit ${symbol} ${bDigits}-digit ${visualName} Graphic Organizer`;
-      const rawTitle = (els.sheetTitle.value || "").trim();
-      const title = (!rawTitle || /^manipulatives worksheet$/i.test(rawTitle)) ? autoTitle : rawTitle;
+      const title = `${opName} Manipulatives Practice`;
       const built = buildProblems(
         aDigits,
         bDigits,
         op,
         mode,
-        els.customProblem.value,
+        customRaw,
         requireSpecial,
         largerTopForAdd,
         problemsPerPage,
@@ -1822,21 +2132,21 @@
       const specialText = op === "add"
         ? (requireSpecial ? "Regrouping problems only." : "No regrouping problems.")
         : (requireSpecial ? "Borrowing problems only." : "No borrowing problems.");
-      els.statusText.textContent = `${built.message} ${specialText} Layout: ${layoutLabel} (${label}).${addOrderLabel}${forcedLayoutLabel}${chartLayoutHint}`;
-      els.statusText.style.color = built.warning ? "#a33a3a" : "#5a677f";
+      if (els.statusText) {
+        els.statusText.textContent = `${built.message} ${specialText} Layout: ${layoutLabel} (${label}).${addOrderLabel}${forcedLayoutLabel}${chartLayoutHint}`;
+        els.statusText.style.color = built.warning ? "#a33a3a" : "#5a677f";
+      }
 
       const cfg = {
         op,
         totalCols,
-        showEq,
         colorOn,
         scaffoldOn,
         aDigits,
         bDigits,
         requireSpecial,
         visualMode,
-        chartOrder: els.chartOrder.value,
-        problemStyle: els.problemStyle.value
+        chartOrder: els.chartOrder.value
       };
 
       const problemsClass = visualMode === "chart"
@@ -1858,17 +2168,21 @@
           <div class="footer-note">Copyright - InterventionStation.com - @TeachwithMrC</div>
         </section>
       `;
+      fitSheetPreview();
+      els.host.querySelectorAll("img").forEach((img) => {
+        if (!img.complete) img.addEventListener("load", fitSheetPreview, { once: true });
+      });
     }
 
     els.generateBtn.addEventListener("click", renderWorksheet);
     els.printBtn.addEventListener("click", () => window.print());
     els.opAddBtn.addEventListener("click", () => {
-      els.operation.value = "add";
+      setOperation("add");
       updateRequirementText();
       renderWorksheet();
     });
     els.opSubBtn.addEventListener("click", () => {
-      els.operation.value = "sub";
+      setOperation("sub");
       updateRequirementText();
       renderWorksheet();
     });
@@ -1884,18 +2198,51 @@
       updateRequirementText();
       renderWorksheet();
     });
-    els.visualMode.addEventListener("change", () => {
+    els.visualBlocksCard.addEventListener("click", () => {
+      setVisualMode("blocks");
+      updateRequirementText();
+      renderWorksheet();
+    });
+    els.visualChartCard.addEventListener("click", () => {
+      setVisualMode("chart");
       updateRequirementText();
       renderWorksheet();
     });
     els.chartOrder.addEventListener("change", renderWorksheet);
-    els.problemStyle.addEventListener("change", renderWorksheet);
     els.addLargerTop.addEventListener("change", renderWorksheet);
-    els.problemMode.addEventListener("change", renderWorksheet);
-    els.showProblemEq.addEventListener("change", renderWorksheet);
+    els.sourceRandom.addEventListener("change", () => {
+      setProblemMode(els.sourceRandom.checked ? "random" : "custom");
+      renderWorksheet();
+    });
+    els.sourceCustom.addEventListener("change", () => {
+      setProblemMode(els.sourceCustom.checked ? "custom" : "random");
+      renderWorksheet();
+    });
+    els.customRows.addEventListener("change", (event) => {
+      const target = event.target;
+      if (target && target.classList.contains("custom-op")) {
+        setOperation(target.value === "+" ? "add" : "sub");
+        updateRequirementText();
+      }
+      if (els.problemMode.value === "custom") renderWorksheet();
+    });
+    els.customRows.addEventListener("input", () => {
+      if (els.problemMode.value === "custom") renderWorksheet();
+    });
+    els.customProblem.addEventListener("input", () => {
+      if (els.problemMode.value === "custom") renderWorksheet();
+    });
     els.scaffoldToggle.addEventListener("change", renderWorksheet);
     els.requireSpecial.addEventListener("change", renderWorksheet);
+    window.addEventListener("resize", fitSheetPreview);
+    window.addEventListener("load", fitSheetPreview);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => fitSheetPreview());
+    }
 
+    buildCustomRows(8);
+    setVisualMode("blocks");
+    setProblemMode("random");
     updateRequirementText();
     renderWorksheet();
   </script>

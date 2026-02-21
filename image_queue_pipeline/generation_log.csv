@@ -1,0 +1,9 @@
+timestamp_utc,word,filename,status,detail
+2026-02-19T04:49:33Z,bay,bay.png,dry_run,
+2026-02-19T04:49:33Z,braid,braid.png,dry_run,
+2026-02-19T04:49:33Z,eight,eight.png,dry_run,
+2026-02-19T04:49:33Z,day,day.png,dry_run,
+2026-02-19T04:49:33Z,brain,brain.png,skipped_exists,
+2026-02-19T04:51:28Z,bay,bay.png,dry_run,
+2026-02-19T04:51:28Z,braid,braid.png,dry_run,
+2026-02-19T04:51:28Z,eight,eight.png,dry_run,
