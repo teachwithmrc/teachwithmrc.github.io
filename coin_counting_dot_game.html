@@ -154,11 +154,15 @@
       min-height: 240px;
       padding: 14px;
       display: flex;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
+      align-content: flex-start;
       align-items: flex-start;
+      justify-content: flex-start;
       gap: 14px;
       background: #fff;
-      overflow-x: auto;
+      overflow-x: hidden;
+      overflow-y: auto;
+      max-width: 100%;
     }
 
     .coin {
@@ -393,7 +397,8 @@
       clickGoal: 0,
       history: [],
       coinClicks: [],
-      coinCompletionTotals: []
+      coinCompletionTotals: [],
+      lastRoundTotal: null
     };
 
     function buildCoinSelectors() {
@@ -428,27 +433,72 @@
       return COIN_RENDER_ORDER.flatMap((key) => picks.filter((coin) => coin.key === key));
     }
 
-    function buildRound(allowed, topAmount) {
-      const coinCount = randomInt(3, 9);
-      let picks = [];
+    function buildCombinationBuckets(allowed, topAmount, maxCoins) {
+      const buckets = new Map();
+      const counts = Array(allowed.length).fill(0);
 
-      let safety = 0;
-      while (safety < 350) {
-        safety += 1;
-        picks = [];
-        for (let i = 0; i < coinCount; i += 1) {
-          picks.push(allowed[randomInt(0, allowed.length - 1)]);
+      function addCurrentCombination(total) {
+        const picks = [];
+        for (let idx = 0; idx < allowed.length; idx += 1) {
+          for (let c = 0; c < counts[idx]; c += 1) {
+            picks.push(allowed[idx]);
+          }
         }
-        const total = picks.reduce((sum, c) => sum + c.value, 0);
-        if (total > 0 && total <= topAmount) {
-          return orderCoinsForDisplay(picks);
+        const ordered = orderCoinsForDisplay(picks);
+        if (!buckets.has(total)) {
+          buckets.set(total, []);
         }
+        buckets.get(total).push(ordered);
       }
 
+      function walk(index, remainingAmount, remainingCoins, runningTotal, usedCoins) {
+        if (index === allowed.length) {
+          if (usedCoins > 0 && runningTotal > 0) {
+            addCurrentCombination(runningTotal);
+          }
+          return;
+        }
+
+        const coin = allowed[index];
+        const maxByAmount = Math.floor(remainingAmount / coin.value);
+        const maxCount = Math.min(maxByAmount, remainingCoins);
+
+        for (let count = 0; count <= maxCount; count += 1) {
+          counts[index] = count;
+          walk(
+            index + 1,
+            remainingAmount - count * coin.value,
+            remainingCoins - count,
+            runningTotal + count * coin.value,
+            usedCoins + count
+          );
+        }
+        counts[index] = 0;
+      }
+
+      walk(0, topAmount, maxCoins, 0, 0);
+      return buckets;
+    }
+
+    function buildRound(allowed, topAmount) {
       const smallest = allowed.reduce((min, c) => Math.min(min, c.value), Number.POSITIVE_INFINITY);
-      const fallbackCount = Math.max(1, Math.min(coinCount, Math.floor(topAmount / smallest)));
-      const fallbackCoin = allowed.find((c) => c.value === smallest) || allowed[0];
-      return orderCoinsForDisplay(Array.from({ length: fallbackCount }, () => fallbackCoin));
+      const maxCoins = Math.max(1, Math.min(15, Math.floor(topAmount / smallest)));
+      const buckets = buildCombinationBuckets(allowed, topAmount, maxCoins);
+      const totals = [...buckets.keys()];
+
+      if (!totals.length) {
+        const fallbackCoin = allowed.find((c) => c.value === smallest) || allowed[0];
+        return { picks: [fallbackCoin], total: fallbackCoin.value };
+      }
+
+      const nonRepeatTotals = Number.isFinite(state.lastRoundTotal) && totals.length > 1
+        ? totals.filter((value) => value !== state.lastRoundTotal)
+        : totals;
+      const totalChoices = nonRepeatTotals.length ? nonRepeatTotals : totals;
+      const selectedTotal = totalChoices[randomInt(0, totalChoices.length - 1)];
+      const combosForTotal = buckets.get(selectedTotal) || [];
+      const selectedPicks = combosForTotal[randomInt(0, combosForTotal.length - 1)];
+      return { picks: selectedPicks, total: selectedTotal };
     }
 
     function getCoinSizePx(coin) {
@@ -600,8 +650,9 @@
         return;
       }
 
-      const coins = buildRound(allowed, topAmount);
-      startRound(coins);
+      const round = buildRound(allowed, topAmount);
+      state.lastRoundTotal = round.total;
+      startRound(round.picks);
     }
 
     function resetSameCoins() {

@@ -379,30 +379,59 @@
       return COIN_RENDER_ORDER.flatMap((key) => picks.filter((coin) => coin.key === key));
     }
 
-    function buildProblem(allowed, topAmount) {
-      const coinCount = randomInt(3, 9);
-      const picks = [];
+    function shuffleInPlace(items) {
+      for (let i = items.length - 1; i > 0; i -= 1) {
+        const j = randomInt(0, i);
+        [items[i], items[j]] = [items[j], items[i]];
+      }
+      return items;
+    }
 
-      let safety = 0;
-      while (safety < 350) {
-        safety += 1;
-        picks.length = 0;
+    function buildCombinationBuckets(allowed, topAmount, maxCoins) {
+      const buckets = new Map();
+      const counts = Array(allowed.length).fill(0);
 
-        for (let i = 0; i < coinCount; i += 1) {
-          picks.push(allowed[randomInt(0, allowed.length - 1)]);
+      function addCurrentCombination(total) {
+        const picks = [];
+        for (let idx = 0; idx < allowed.length; idx += 1) {
+          for (let c = 0; c < counts[idx]; c += 1) {
+            picks.push(allowed[idx]);
+          }
         }
-
-        const total = picks.reduce((sum, c) => sum + c.value, 0);
-        if (total > 0 && total <= topAmount) {
-          return { picks, total };
+        const ordered = orderCoinsForDisplay(picks);
+        if (!buckets.has(total)) {
+          buckets.set(total, []);
         }
+        buckets.get(total).push({ picks: ordered, total });
       }
 
-      const smallest = allowed.reduce((min, c) => Math.min(min, c.value), Number.POSITIVE_INFINITY);
-      const fallbackCount = Math.max(1, Math.min(coinCount, Math.floor(topAmount / smallest)));
-      const fallbackCoin = allowed.find((c) => c.value === smallest) || allowed[0];
-      const fallbackPicks = Array.from({ length: fallbackCount }, () => fallbackCoin);
-      return { picks: orderCoinsForDisplay(fallbackPicks), total: fallbackPicks.reduce((s, c) => s + c.value, 0) };
+      function walk(index, remainingAmount, remainingCoins, runningTotal, usedCoins) {
+        if (index === allowed.length) {
+          if (usedCoins > 0 && runningTotal > 0) {
+            addCurrentCombination(runningTotal);
+          }
+          return;
+        }
+
+        const coin = allowed[index];
+        const maxByAmount = Math.floor(remainingAmount / coin.value);
+        const maxCount = Math.min(maxByAmount, remainingCoins);
+
+        for (let count = 0; count <= maxCount; count += 1) {
+          counts[index] = count;
+          walk(
+            index + 1,
+            remainingAmount - count * coin.value,
+            remainingCoins - count,
+            runningTotal + count * coin.value,
+            usedCoins + count
+          );
+        }
+        counts[index] = 0;
+      }
+
+      walk(0, topAmount, maxCoins, 0, 0);
+      return buckets;
     }
 
     function getCoinImageUrl(coin, styleMode, sideMode) {
@@ -445,9 +474,23 @@
         return;
       }
 
+      const maxCoins = Math.max(1, Math.min(15, Math.floor(topAmount / smallest)));
+      const buckets = buildCombinationBuckets(allowed, topAmount, maxCoins);
+      const allTotals = [...buckets.keys()];
+      if (!allTotals.length) {
+        alert("No valid coin combinations found for this setup.");
+        return;
+      }
+
+      const totalsPool = shuffleInPlace([...allTotals]);
       const rows = [];
       for (let i = 1; i <= 6; i += 1) {
-        const problem = buildProblem(allowed, topAmount);
+        if (!totalsPool.length) {
+          totalsPool.push(...shuffleInPlace([...allTotals]));
+        }
+        const total = totalsPool.pop();
+        const combosForTotal = buckets.get(total) || [];
+        const problem = combosForTotal[randomInt(0, combosForTotal.length - 1)];
         const orderedPicks = orderCoinsForDisplay(problem.picks);
         rows.push(`
           <article class="problem">
