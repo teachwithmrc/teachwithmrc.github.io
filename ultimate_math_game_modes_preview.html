@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ultimate Math Game Modes Preview</title>
+  <title>Math Game Modes Preview - Subtraction Playable</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --ink: #1b2b3d;
@@ -21,10 +22,10 @@
 
     body {
       margin: 0;
-      background: radial-gradient(circle at 88% -10%, #ffffff 0%, #edf4ff 45%, #e7f0ff 100%);
+      padding: 20px;
       color: var(--ink);
       font-family: "Poppins", "Avenir Next", "Segoe UI", sans-serif;
-      padding: 20px;
+      background: radial-gradient(circle at 88% -10%, #ffffff 0%, #edf4ff 45%, #e7f0ff 100%);
       user-select: none;
       -webkit-user-select: none;
     }
@@ -37,7 +38,7 @@
     h1 {
       margin: 0 0 6px;
       text-align: center;
-      font-size: 1.95rem;
+      font-size: 2rem;
     }
 
     .subtitle {
@@ -47,44 +48,42 @@
       font-weight: 600;
     }
 
-    .preview-note {
-      text-align: center;
-      margin: 0 auto 14px;
-      max-width: 960px;
+    .note {
       border: 2px solid #000;
       border-radius: 12px;
       background: #fff;
       padding: 10px 12px;
+      text-align: center;
       font-weight: 700;
+      margin-bottom: 14px;
     }
 
-    .mode-tabs {
+    .tabs {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
       margin-bottom: 14px;
     }
 
-    .mode-tab {
+    .tab {
       border: 2px solid #000;
       border-radius: 12px;
       background: #fff;
-      color: var(--ink);
-      padding: 10px 8px;
       font: inherit;
       font-weight: 800;
+      color: var(--ink);
+      padding: 10px 8px;
       cursor: pointer;
       min-height: 58px;
     }
 
-    .mode-tab.active {
+    .tab.active {
       background: #111;
       color: #fff;
     }
 
     .panel {
       display: none;
-      position: relative;
       background: var(--card);
       border: 2px solid #000;
       border-radius: 14px;
@@ -95,121 +94,248 @@
     .panel.active { display: block; }
 
     .panel h2 {
-      margin: 0 0 10px;
+      margin: 0 0 6px;
       text-align: center;
       font-size: 1.35rem;
     }
 
     .meta {
       text-align: center;
-      margin-bottom: 10px;
+      margin: 0 0 10px;
       color: #455e78;
       font-weight: 700;
       font-size: 0.95rem;
     }
 
-    .lock-shell {
+    .score {
+      text-align: center;
+      margin: 0 0 10px;
+      color: #425d78;
+      font-weight: 700;
+      min-height: 1.4rem;
+    }
+
+    .turn-indicator {
+      margin: 0 0 10px;
+      text-align: center;
+      font-weight: 900;
+      font-size: 1.05rem;
+      min-height: 1.5rem;
+      color: #2a4560;
+      letter-spacing: 0.02em;
+    }
+
+    .turn-indicator.x { color: var(--x); }
+    .turn-indicator.o { color: var(--o); }
+    .turn-indicator.r { color: #e53935; }
+    .turn-indicator.y { color: #cc9300; }
+
+    .game-stack {
       position: relative;
-      border: 2px solid var(--line);
-      border-radius: 12px;
-      padding: 10px;
-      min-height: 360px;
-      background: linear-gradient(180deg, #fefeff, #f3f8ff);
-      overflow: hidden;
     }
 
-    .static-preview {
-      pointer-events: none;
-    }
-
-    .overlay {
+    .game-overlay {
       position: absolute;
       inset: 0;
-      display: grid;
-      place-items: center;
-      background:
-        linear-gradient(rgba(255, 255, 255, 0.66), rgba(255, 255, 255, 0.66)),
-        repeating-linear-gradient(-35deg, rgba(24, 74, 125, 0.1) 0 12px, rgba(24, 74, 125, 0.03) 12px 24px);
-      z-index: 5;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      pointer-events: none;
+      background: rgba(10, 21, 34, 0.18);
+      border-radius: 12px;
     }
 
-    .overlay-card {
+    .game-overlay.show {
+      display: flex;
+    }
+
+    .game-overlay-card {
       border: 2px solid #000;
-      border-radius: 12px;
+      border-radius: 14px;
       background: #111;
       color: #fff;
-      padding: 14px 16px;
+      padding: 14px 18px;
+      font-size: clamp(1.1rem, 4vw, 1.8rem);
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      box-shadow: 0 16px 28px rgba(0, 0, 0, 0.35);
+      animation: slamIn 280ms ease-out both;
       text-align: center;
-      max-width: 420px;
-      font-weight: 700;
-      line-height: 1.35;
+      text-transform: uppercase;
     }
 
-    .math-grid {
-      margin: 0 auto;
-      width: min(650px, 100%);
+    @keyframes slamIn {
+      0% { transform: scale(0.7) translateY(-10px); opacity: 0; }
+      70% { transform: scale(1.08) translateY(0); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .board {
+      margin: 0 auto 10px;
+      width: min(700px, 100%);
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
     }
 
-    .math-cell {
-      border: 2px solid #1d2f43;
-      border-radius: 10px;
-      min-height: 92px;
+    .cell {
+      border: 2px solid #1a3046;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #f9fcff, #eef4ff);
+      min-height: 135px;
+      padding: 8px;
       display: grid;
-      place-items: center;
-      font-size: clamp(1.15rem, 3.2vw, 1.65rem);
-      font-weight: 800;
-      background: #fff;
+      grid-template-rows: 1fr auto;
+      gap: 6px;
+      cursor: pointer;
     }
 
-    .connect-head {
+    .cell.locked {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .prompt {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-size: clamp(1.05rem, 3vw, 1.35rem);
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .mark {
+      min-height: 40px;
+      line-height: 40px;
+      text-align: center;
+      font-size: 2.2rem;
+      font-weight: 900;
+    }
+
+    .mark.x { color: var(--x); }
+    .mark.o { color: var(--o); }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      padding: 8px 12px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .connect-top {
       margin: 0 auto 8px;
-      width: min(760px, 100%);
+      width: min(780px, 100%);
       display: grid;
       grid-template-columns: repeat(7, minmax(0, 1fr));
       gap: 6px;
     }
 
     .drop-btn {
-      border: 2px solid #6f87a0;
+      border: 2px solid #315b83;
       border-radius: 10px;
-      background: #eef5ff;
+      background: #eaf3ff;
+      color: #0f3f6b;
+      font: inherit;
       font-weight: 800;
-      padding: 6px 4px;
-      color: #5f7388;
+      padding: 7px 4px;
+      cursor: pointer;
+    }
+
+    .drop-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .connect-wrap {
+      margin: 0 auto 10px;
+      width: min(780px, 100%);
+      border: 2px solid #15426f;
+      border-radius: 12px;
+      background: #2f6fa8;
+      padding: 8px;
     }
 
     .connect-grid {
-      margin: 0 auto;
-      width: min(760px, 100%);
       display: grid;
       grid-template-columns: repeat(7, minmax(0, 1fr));
       gap: 6px;
-      padding: 8px;
-      border: 2px solid #163f69;
-      border-radius: 12px;
-      background: #2f6fa8;
     }
 
     .slot {
       aspect-ratio: 1 / 1;
       border-radius: 999px;
-      border: 2px solid #15426e;
+      border: 2px solid #184f80;
       background: #fff;
     }
 
-    .slot.red { background: #e53935; }
-    .slot.yellow { background: #f2c900; }
+    .slot.r { background: #e53935; }
+    .slot.y { background: #f2ca00; }
+
+    .prompt-card {
+      margin: 0 auto 10px;
+      width: min(580px, 100%);
+      border: 2px solid #1d3349;
+      border-radius: 12px;
+      background: #f8fbff;
+      padding: 10px;
+      text-align: center;
+      font-size: clamp(1.05rem, 2.7vw, 1.25rem);
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .roll-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .die {
+      width: 46px;
+      height: 46px;
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      display: grid;
+      place-items: center;
+    }
+
+    .die-img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .status {
+      font-weight: 700;
+      color: #38536d;
+      min-height: 1.2rem;
+      text-align: center;
+      width: 100%;
+    }
 
     .roll-table {
-      margin: 0 auto;
-      width: min(760px, 100%);
+      margin: 0 auto 10px;
+      width: min(820px, 100%);
       border-collapse: collapse;
       table-layout: fixed;
-      background: #fff;
       border: 2px solid #000;
+      background: #fff;
     }
 
     .roll-table th,
@@ -222,113 +348,34 @@
     }
 
     .roll-table th {
-      background: #eef4ff;
+      background: #edf4ff;
       font-size: 0.95rem;
+      padding: 6px 4px;
+    }
+
+    .dice-head-img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
     }
 
     .roll-table td {
-      height: 72px;
-      font-size: clamp(1rem, 2.6vw, 1.2rem);
-    }
-
-    .demo-card {
-      margin-top: 16px;
-      background: var(--card);
-      border: 2px solid #000;
-      border-radius: 14px;
-      padding: 14px;
-      box-shadow: 0 10px 20px rgba(18, 40, 70, 0.1);
-    }
-
-    .demo-card h3 {
-      margin: 0 0 6px;
-      text-align: center;
-      font-size: 1.3rem;
-    }
-
-    .demo-sub {
-      margin: 0 0 10px;
-      text-align: center;
-      color: #3f5a73;
-      font-weight: 600;
-    }
-
-    .demo-status {
-      text-align: center;
-      font-weight: 700;
-      margin: 0 0 10px;
-      min-height: 1.4rem;
-    }
-
-    .demo-status.good { color: var(--ok); }
-    .demo-status.bad { color: var(--bad); }
-
-    .demo-grid {
-      margin: 0 auto 10px;
-      width: min(640px, 100%);
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .demo-cell {
-      border: 2px solid #1b2f44;
-      border-radius: 10px;
-      background: #f8fbff;
-      min-height: 108px;
-      padding: 8px 8px 4px;
-      display: grid;
-      grid-template-rows: 1fr auto;
-      gap: 4px;
+      height: 78px;
+      font-size: clamp(0.92rem, 2.4vw, 1.05rem);
       cursor: pointer;
+      line-height: 1.2;
     }
 
-    .demo-cell.locked {
-      opacity: 0.62;
-      cursor: not-allowed;
+    .roll-table td.current {
+      outline: 3px solid #1e6fbf;
+      background: #e7f2ff;
     }
 
-    .demo-prompt {
-      font-size: clamp(0.95rem, 2.5vw, 1.15rem);
-      font-weight: 800;
-      text-align: center;
-      display: grid;
-      place-items: center;
-    }
-
-    .demo-mark {
-      min-height: 36px;
-      line-height: 36px;
-      text-align: center;
-      font-size: 2rem;
-      font-weight: 900;
-    }
-
-    .demo-mark.x { color: var(--x); }
-    .demo-mark.o { color: var(--o); }
-
-    .demo-actions {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .demo-btn {
-      border: 2px solid #000;
-      border-radius: 10px;
-      background: #fff;
-      padding: 8px 12px;
-      font: inherit;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .score {
-      text-align: center;
-      margin-bottom: 10px;
-      font-weight: 700;
-      color: #354f68;
+    .roll-table td.done {
+      background: #e7f6eb;
+      color: #2a7441;
     }
 
     .dialog {
@@ -362,8 +409,9 @@
     .dialog-problem {
       margin: 0 0 8px;
       text-align: center;
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 800;
+      line-height: 1.3;
     }
 
     .dialog-input {
@@ -391,212 +439,199 @@
       justify-content: center;
     }
 
+    .skills-available {
+      margin-top: 14px;
+      border: 2px solid #000;
+      border-radius: 14px;
+      background: #fff;
+      padding: 12px;
+      box-shadow: 0 8px 18px rgba(22, 45, 73, 0.08);
+    }
+
+    .skills-title {
+      margin: 0 0 4px;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .skills-subtitle {
+      margin: 0 0 10px;
+      text-align: center;
+      color: #3f5972;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .skills-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .skills-table td {
+      border: 1px solid #c8d7e7;
+      padding: 6px;
+      width: 50%;
+      background: #f9fbff;
+    }
+
+    .skill-lock-btn {
+      width: 100%;
+      border: 2px solid #1b334a;
+      border-radius: 10px;
+      background: #fff;
+      color: #173451;
+      font: inherit;
+      font-weight: 800;
+      padding: 8px 10px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .skill-lock-btn:hover {
+      background: #edf5ff;
+    }
+
     @media (max-width: 760px) {
-      .mode-tabs {
-        grid-template-columns: 1fr;
-      }
-
-      .lock-shell {
-        min-height: 310px;
-      }
-
-      .overlay-card {
-        max-width: 280px;
-        font-size: 0.9rem;
-      }
-
-      .math-cell {
-        min-height: 72px;
-      }
-
-      .demo-cell {
-        min-height: 90px;
-      }
-
-      .roll-table td {
-        height: 58px;
-        font-size: 0.92rem;
-      }
+      .tabs { grid-template-columns: 1fr; }
+      .cell { min-height: 108px; }
+      .prompt { font-size: 0.92rem; }
+      .roll-table td { font-size: 0.84rem; height: 64px; }
     }
   </style>
 </head>
 <body oncontextmenu="return false;">
   <main class="app">
     <h1>Math Game Modes Preview</h1>
-    <p class="subtitle">Tic Tac Toe, 4 in a Row, and Roll and Read</p>
-    <div class="preview-note">Preview is locked for mode layouts. One counting demo is playable below so families can try the game flow.</div>
+    <p class="subtitle">Basic subtraction is fully playable here.</p>
+    <div class="note">Playable teaser unlocked: Basic subtraction only. To use other math skills, open the full generator.</div>
 
-    <div class="mode-tabs" id="modeTabs">
-      <button type="button" class="mode-tab active" data-mode="ttt">Tic Tac Toe Preview</button>
-      <button type="button" class="mode-tab" data-mode="connect4">4 in a Row Preview</button>
-      <button type="button" class="mode-tab" data-mode="rollread">Roll and Read Preview</button>
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-mode="ttt" type="button">Subtraction Tic Tac Toe</button>
+      <button class="tab" data-mode="connect4" type="button">Subtraction 4 in a Row</button>
+      <button class="tab" data-mode="rollread" type="button">Subtraction Roll and Read</button>
     </div>
 
     <section class="panel active" data-panel="ttt">
-      <h2>Math Tic Tac Toe</h2>
-      <div class="meta">Static preview layout</div>
-      <div class="lock-shell static-preview">
-        <div class="math-grid" aria-hidden="true">
-          <div class="math-cell">6 + 3</div>
-          <div class="math-cell">14 - 5</div>
-          <div class="math-cell">8 + 7</div>
-          <div class="math-cell">9 - 2</div>
-          <div class="math-cell">5 + 6</div>
-          <div class="math-cell">13 - 4</div>
-          <div class="math-cell">4 + 8</div>
-          <div class="math-cell">12 - 7</div>
-          <div class="math-cell">7 + 5</div>
+      <h2>Subtraction Tic Tac Toe</h2>
+      <p class="meta">Solve the subtraction problem to claim your square.</p>
+      <p class="score" id="tttScore"></p>
+      <p class="turn-indicator" id="tttTurn"></p>
+      <div class="game-stack">
+        <div class="board" id="tttBoard"></div>
+        <div class="game-overlay" id="tttOverlay">
+          <div class="game-overlay-card" id="tttOverlayText"></div>
         </div>
-        <div class="overlay">
-          <div class="overlay-card">Preview Mode: visual sample only. Interactive play is locked for this mode preview.</div>
-        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" id="tttSame" type="button">Play Again (Same Prompts)</button>
+        <button class="btn" id="tttNew" type="button">New Subtraction Board</button>
       </div>
     </section>
 
     <section class="panel" data-panel="connect4">
-      <h2>Math 4 in a Row</h2>
-      <div class="meta">Static preview layout</div>
-      <div class="lock-shell static-preview">
-        <div class="connect-head" aria-hidden="true">
-          <button class="drop-btn" type="button">Drop</button>
-          <button class="drop-btn" type="button">Drop</button>
-          <button class="drop-btn" type="button">Drop</button>
-          <button class="drop-btn" type="button">Drop</button>
-          <button class="drop-btn" type="button">Drop</button>
-          <button class="drop-btn" type="button">Drop</button>
-          <button class="drop-btn" type="button">Drop</button>
+      <h2>Subtraction 4 in a Row</h2>
+      <p class="meta">Answer the prompt card correctly, then drop your checker.</p>
+      <p class="score" id="c4Score"></p>
+      <p class="turn-indicator" id="c4Turn"></p>
+      <div class="prompt-card" id="c4Prompt"></div>
+      <div class="game-stack">
+        <div class="connect-top" id="c4Top"></div>
+        <div class="connect-wrap">
+          <div class="connect-grid" id="c4Grid"></div>
         </div>
-        <div class="connect-grid" aria-hidden="true">
-          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
-          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
-          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
-          <div class="slot"></div><div class="slot yellow"></div><div class="slot red"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
-          <div class="slot"></div><div class="slot yellow"></div><div class="slot red"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
-          <div class="slot yellow"></div><div class="slot yellow"></div><div class="slot red"></div><div class="slot red"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+        <div class="game-overlay" id="c4Overlay">
+          <div class="game-overlay-card" id="c4OverlayText"></div>
         </div>
-        <div class="overlay">
-          <div class="overlay-card">Preview Mode: this mode is display-only in preview.</div>
-        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" id="c4Same" type="button">Reset Board</button>
+        <button class="btn" id="c4New" type="button">New Prompt Flow</button>
       </div>
     </section>
 
     <section class="panel" data-panel="rollread">
-      <h2>Math Roll and Read</h2>
-      <div class="meta">Static preview layout</div>
-      <div class="lock-shell static-preview">
-        <table class="roll-table" aria-hidden="true">
-          <thead>
-            <tr>
-              <th>Die 1</th>
-              <th>Die 2</th>
-              <th>Die 3</th>
-              <th>Die 4</th>
-              <th>Die 5</th>
-              <th>Die 6</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>5 + 2</td><td>11 - 3</td><td>7 + 4</td><td>10 - 6</td><td>9 + 5</td><td>12 - 8</td></tr>
-            <tr><td>4 + 6</td><td>13 - 7</td><td>3 + 8</td><td>14 - 9</td><td>8 + 3</td><td>15 - 5</td></tr>
-            <tr><td>6 + 7</td><td>16 - 4</td><td>2 + 9</td><td>17 - 8</td><td>5 + 5</td><td>18 - 9</td></tr>
-            <tr><td>7 + 1</td><td>19 - 6</td><td>6 + 6</td><td>20 - 7</td><td>4 + 9</td><td>21 - 9</td></tr>
-          </tbody>
-        </table>
-        <div class="overlay">
-          <div class="overlay-card">Preview Mode: this roll-table is locked and non-clickable.</div>
-        </div>
+      <h2>Subtraction Roll and Read</h2>
+      <p class="meta">Roll, answer the highlighted subtraction problem, and keep going.</p>
+      <div class="roll-controls">
+        <div class="die"><img id="rrDieImg" class="die-img" src="images/dice1.png" alt="Current die: 1"></div>
+        <button class="btn" id="rrRoll" type="button">Roll</button>
+        <button class="btn" id="rrReset" type="button">Reset Round</button>
+        <div class="status" id="rrStatus"></div>
+      </div>
+      <table class="roll-table" id="rrTable"></table>
+      <div class="actions">
+        <button class="btn" id="rrNew" type="button">New Subtraction Grid</button>
       </div>
     </section>
 
-    <section class="demo-card" aria-label="Playable counting demo">
-      <h3>Playable Counting Demo (Try This One)</h3>
-      <p class="demo-sub">Answer the counting prompt correctly to place your X or O.</p>
-      <p class="score" id="scoreLine">X Wins: 0 | O Wins: 0 | Ties: 0</p>
-      <p class="demo-status" id="demoStatus">Turn: X</p>
-      <div class="demo-grid" id="demoGrid"></div>
-      <div class="demo-actions">
-        <button type="button" class="demo-btn" id="demoSameBoard">Play Again (Same Prompts)</button>
-        <button type="button" class="demo-btn" id="demoNewBoard">New Counting Board</button>
-      </div>
+    <section class="skills-available">
+      <h3 class="skills-title">Skills Available</h3>
+      <p class="skills-subtitle">Tap any skill to unlock in the full members version.</p>
+      <table class="skills-table">
+        <tbody>
+          <tr>
+            <td><button type="button" class="skill-lock-btn" data-skill="Addition">Addition</button></td>
+            <td><button type="button" class="skill-lock-btn" data-skill="Subtraction">Subtraction</button></td>
+          </tr>
+          <tr>
+            <td><button type="button" class="skill-lock-btn" data-skill="Multiplication">Multiplication</button></td>
+            <td><button type="button" class="skill-lock-btn" data-skill="Division">Division</button></td>
+          </tr>
+          <tr>
+            <td><button type="button" class="skill-lock-btn" data-skill="Rounding">Rounding</button></td>
+            <td><button type="button" class="skill-lock-btn" data-skill="Telling Time">Telling Time</button></td>
+          </tr>
+          <tr>
+            <td><button type="button" class="skill-lock-btn" data-skill="Ten Frames">Ten Frames</button></td>
+            <td><button type="button" class="skill-lock-btn" data-skill="Coins">Coins</button></td>
+          </tr>
+          <tr>
+            <td><button type="button" class="skill-lock-btn" data-skill="Place Value">Place Value</button></td>
+            <td><button type="button" class="skill-lock-btn" data-skill="Word Problems">Word Problems</button></td>
+          </tr>
+          <tr>
+            <td><button type="button" class="skill-lock-btn" data-skill="Fractions">Fractions</button></td>
+            <td><button type="button" class="skill-lock-btn" data-skill="Decimals">Decimals</button></td>
+          </tr>
+        </tbody>
+      </table>
     </section>
   </main>
 
-  <div class="dialog" id="answerDialog" aria-hidden="true">
+  <div class="dialog" id="dialog" aria-hidden="true">
     <div class="dialog-card" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
       <div class="dialog-title" id="dialogTitle">Enter Answer</div>
       <div class="dialog-problem" id="dialogProblem"></div>
       <input id="dialogInput" class="dialog-input" type="text" inputmode="numeric" autocomplete="off" />
-      <div id="dialogMsg" class="dialog-msg"></div>
+      <div class="dialog-msg" id="dialogMsg"></div>
       <div class="dialog-actions">
-        <button type="button" class="demo-btn" id="dialogCancel">Cancel</button>
-        <button type="button" class="demo-btn" id="dialogSubmit">Check</button>
+        <button type="button" class="btn" id="dialogCancel">Cancel</button>
+        <button type="button" class="btn" id="dialogSubmit">Check</button>
       </div>
     </div>
   </div>
 
   <script>
-    const tabs = Array.from(document.querySelectorAll(".mode-tab"));
-    const panels = Array.from(document.querySelectorAll(".panel"));
+    const WIN_LINES = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8],
+      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+      [0, 4, 8], [2, 4, 6]
+    ];
 
-    function selectMode(mode) {
-      tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.mode === mode));
-      panels.forEach((panel) => panel.classList.toggle("active", panel.dataset.panel === mode));
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    tabs.forEach((tab) => {
-      tab.addEventListener("click", () => selectMode(tab.dataset.mode));
-    });
-
-    const WIN_LINES = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6]
-    ];
-
-    const COUNTING_POOL = [
-      { seq: "1, 2, 3, __", answer: 4 },
-      { seq: "5, 6, 7, __", answer: 8 },
-      { seq: "9, 8, 7, __", answer: 6 },
-      { seq: "10, 11, 12, __", answer: 13 },
-      { seq: "15, 14, 13, __", answer: 12 },
-      { seq: "2, 4, 6, __", answer: 8 },
-      { seq: "12, 10, 8, __", answer: 6 },
-      { seq: "3, 6, 9, __", answer: 12 },
-      { seq: "20, 19, 18, __", answer: 17 },
-      { seq: "7, 9, 11, __", answer: 13 },
-      { seq: "4, 5, 6, __", answer: 7 },
-      { seq: "18, 16, 14, __", answer: 12 }
-    ];
-
-    const demoGrid = document.getElementById("demoGrid");
-    const demoStatus = document.getElementById("demoStatus");
-    const scoreLine = document.getElementById("scoreLine");
-
-    const answerDialog = document.getElementById("answerDialog");
-    const dialogProblem = document.getElementById("dialogProblem");
-    const dialogInput = document.getElementById("dialogInput");
-    const dialogMsg = document.getElementById("dialogMsg");
-    const dialogSubmit = document.getElementById("dialogSubmit");
-    const dialogCancel = document.getElementById("dialogCancel");
-
-    const demo = {
-      prompts: [],
-      marks: Array(9).fill(""),
-      turn: "X",
-      over: false,
-      score: { X: 0, O: 0, T: 0 },
-      pendingIndex: -1
-    };
+    function choose(list) {
+      return list[randInt(0, list.length - 1)];
+    }
 
     function shuffle(list) {
       const out = list.slice();
       for (let i = out.length - 1; i > 0; i -= 1) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = randInt(0, i);
         const t = out[i];
         out[i] = out[j];
         out[j] = t;
@@ -604,148 +639,466 @@
       return out;
     }
 
-    function newPromptSet() {
-      return shuffle(COUNTING_POOL).slice(0, 9);
+    function subtractionPrompt() {
+      const top = randInt(4, 20);
+      const bottom = randInt(0, Math.min(10, top));
+      return { text: `${top} - ${bottom} = __`, answer: top - bottom };
     }
 
-    function winningLine() {
-      return WIN_LINES.find(([a, b, c]) => {
-        return demo.marks[a] && demo.marks[a] === demo.marks[b] && demo.marks[b] === demo.marks[c];
-      }) || null;
+    function makeSubtractionPrompts(total) {
+      return Array.from({ length: total }, () => subtractionPrompt());
     }
 
-    function updateScoreLine() {
-      scoreLine.textContent = `X Wins: ${demo.score.X} | O Wins: ${demo.score.O} | Ties: ${demo.score.T}`;
-    }
-
-    function updateStatus(text, kind) {
-      demoStatus.textContent = text;
-      demoStatus.className = "demo-status" + (kind === "good" ? " good" : kind === "bad" ? " bad" : "");
-    }
-
-    function renderDemoBoard() {
-      demoGrid.innerHTML = "";
-      demo.prompts.forEach((prompt, index) => {
-        const mark = demo.marks[index];
-        const locked = Boolean(mark) || demo.over;
-        const cell = document.createElement("button");
-        cell.type = "button";
-        cell.className = "demo-cell" + (locked ? " locked" : "");
-        cell.dataset.index = String(index);
-        cell.innerHTML = `<div class=\"demo-prompt\">${prompt.seq}</div><div class=\"demo-mark ${mark === "X" ? "x" : mark === "O" ? "o" : ""}\">${mark}</div>`;
-        if (locked) cell.disabled = true;
-        demoGrid.appendChild(cell);
+    function setActiveMode(mode) {
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.classList.toggle("active", tab.dataset.mode === mode);
+      });
+      document.querySelectorAll(".panel").forEach((panel) => {
+        panel.classList.toggle("active", panel.dataset.panel === mode);
       });
     }
 
-    function resetBoardOnly() {
-      demo.marks = Array(9).fill("");
-      demo.turn = "X";
-      demo.over = false;
-      demo.pendingIndex = -1;
-      renderDemoBoard();
-      updateStatus("Turn: X");
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => setActiveMode(tab.dataset.mode));
+    });
+
+    document.querySelectorAll(".skill-lock-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        const skill = button.dataset.skill || "This skill";
+        window.alert(`${skill}: Members only`);
+      });
+    });
+
+    const dialog = {
+      el: document.getElementById("dialog"),
+      problem: document.getElementById("dialogProblem"),
+      input: document.getElementById("dialogInput"),
+      msg: document.getElementById("dialogMsg"),
+      submit: document.getElementById("dialogSubmit"),
+      cancel: document.getElementById("dialogCancel"),
+      resolver: null,
+      answer: null
+    };
+
+    function openDialog(prompt) {
+      return new Promise((resolve) => {
+        dialog.resolver = resolve;
+        dialog.answer = prompt.answer;
+        dialog.problem.textContent = prompt.text;
+        dialog.input.value = "";
+        dialog.msg.textContent = "";
+        dialog.el.classList.add("open");
+        dialog.el.setAttribute("aria-hidden", "false");
+        setTimeout(() => dialog.input.focus(), 10);
+      });
     }
 
-    function newBoard() {
-      demo.prompts = newPromptSet();
-      resetBoardOnly();
+    function closeDialog(result) {
+      dialog.el.classList.remove("open");
+      dialog.el.setAttribute("aria-hidden", "true");
+      const resolver = dialog.resolver;
+      dialog.resolver = null;
+      dialog.answer = null;
+      if (resolver) resolver(result);
     }
 
-    function openDialog(index) {
-      demo.pendingIndex = index;
-      dialogProblem.textContent = demo.prompts[index].seq;
-      dialogInput.value = "";
-      dialogMsg.textContent = "";
-      answerDialog.classList.add("open");
-      answerDialog.setAttribute("aria-hidden", "false");
-      setTimeout(() => dialogInput.focus(), 10);
-    }
-
-    function closeDialog() {
-      answerDialog.classList.remove("open");
-      answerDialog.setAttribute("aria-hidden", "true");
-      dialogMsg.textContent = "";
-      demo.pendingIndex = -1;
-    }
-
-    function commitMark(index) {
-      demo.marks[index] = demo.turn;
-      const line = winningLine();
-      if (line) {
-        demo.over = true;
-        demo.score[demo.turn] += 1;
-        updateScoreLine();
-        updateStatus(`${demo.turn} wins this counting round.`, "good");
-      } else if (demo.marks.every(Boolean)) {
-        demo.over = true;
-        demo.score.T += 1;
-        updateScoreLine();
-        updateStatus("Tie game on this counting round.", "good");
-      } else {
-        demo.turn = demo.turn === "X" ? "O" : "X";
-        updateStatus(`Turn: ${demo.turn}`);
-      }
-      renderDemoBoard();
-    }
-
-    function checkDialogAnswer() {
-      const idx = demo.pendingIndex;
-      if (idx < 0 || idx > 8) {
-        closeDialog();
-        return;
-      }
-      const raw = dialogInput.value.trim();
+    function checkDialog() {
+      const raw = dialog.input.value.trim();
       const value = Number(raw);
       if (!raw || !Number.isFinite(value)) {
-        dialogMsg.textContent = "Enter a number.";
+        dialog.msg.textContent = "Enter a number.";
         return;
       }
-
-      const needed = demo.prompts[idx].answer;
-      if (value === needed) {
-        closeDialog();
-        commitMark(idx);
+      if (value === dialog.answer) {
+        closeDialog(true);
       } else {
-        dialogMsg.textContent = "Not correct yet. Try again.";
+        dialog.msg.textContent = "Not yet. Try again.";
       }
     }
 
-    demoGrid.addEventListener("click", (event) => {
-      const cell = event.target.closest(".demo-cell");
-      if (!cell || demo.over) return;
-      const index = Number(cell.dataset.index);
-      if (!Number.isFinite(index) || demo.marks[index]) return;
-      openDialog(index);
-    });
-
-    dialogSubmit.addEventListener("click", checkDialogAnswer);
-    dialogCancel.addEventListener("click", closeDialog);
-    answerDialog.addEventListener("click", (event) => {
-      if (event.target === answerDialog) closeDialog();
-    });
-
-    dialogInput.addEventListener("keydown", (event) => {
+    dialog.submit.addEventListener("click", checkDialog);
+    dialog.cancel.addEventListener("click", () => closeDialog(false));
+    dialog.input.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
         event.preventDefault();
-        checkDialogAnswer();
+        checkDialog();
       }
       if (event.key === "Escape") {
         event.preventDefault();
-        closeDialog();
+        closeDialog(false);
+      }
+    });
+    dialog.el.addEventListener("click", (event) => {
+      if (event.target === dialog.el) closeDialog(false);
+    });
+
+    const ttt = {
+      prompts: [],
+      marks: Array(9).fill(""),
+      turn: "X",
+      over: false,
+      celebration: "",
+      score: { X: 0, O: 0, T: 0 }
+    };
+
+    function tttWinningLine() {
+      return WIN_LINES.find(([a, b, c]) => ttt.marks[a] && ttt.marks[a] === ttt.marks[b] && ttt.marks[b] === ttt.marks[c]) || null;
+    }
+
+    function renderTttScore(extra) {
+      const msg = extra ? ` | ${extra}` : "";
+      document.getElementById("tttScore").textContent = `X Wins: ${ttt.score.X} | O Wins: ${ttt.score.O} | Ties: ${ttt.score.T}${msg}`;
+      const turnEl = document.getElementById("tttTurn");
+      if (ttt.over) {
+        turnEl.textContent = "Round Over";
+        turnEl.className = "turn-indicator";
+      } else {
+        turnEl.textContent = `Turn: ${ttt.turn}`;
+        turnEl.className = "turn-indicator " + (ttt.turn === "X" ? "x" : "o");
+      }
+    }
+
+    function renderTtt() {
+      const board = document.getElementById("tttBoard");
+      board.innerHTML = "";
+      ttt.prompts.forEach((prompt, idx) => {
+        const mark = ttt.marks[idx];
+        const cell = document.createElement("button");
+        cell.type = "button";
+        cell.className = "cell" + ((ttt.over || mark) ? " locked" : "");
+        cell.dataset.index = String(idx);
+        cell.innerHTML = `<div class=\"prompt\">${prompt.text}</div><div class=\"mark ${mark === "X" ? "x" : mark === "O" ? "o" : ""}\">${mark}</div>`;
+        if (ttt.over || mark) cell.disabled = true;
+        board.appendChild(cell);
+      });
+      const overlay = document.getElementById("tttOverlay");
+      const overlayText = document.getElementById("tttOverlayText");
+      overlayText.textContent = ttt.celebration;
+      overlay.classList.toggle("show", Boolean(ttt.celebration));
+      renderTttScore();
+    }
+
+    function newTttBoard() {
+      ttt.prompts = makeSubtractionPrompts(9);
+      ttt.marks = Array(9).fill("");
+      ttt.turn = "X";
+      ttt.over = false;
+      ttt.celebration = "";
+      renderTtt();
+    }
+
+    document.getElementById("tttBoard").addEventListener("click", async (event) => {
+      const cell = event.target.closest(".cell");
+      if (!cell || ttt.over) return;
+      const idx = Number(cell.dataset.index);
+      if (!Number.isFinite(idx) || ttt.marks[idx]) return;
+
+      const ok = await openDialog(ttt.prompts[idx]);
+      if (!ok) return;
+
+      ttt.marks[idx] = ttt.turn;
+      const line = tttWinningLine();
+      if (line) {
+        ttt.over = true;
+        ttt.score[ttt.turn] += 1;
+        ttt.celebration = `${ttt.turn} wins!`;
+        renderTtt();
+        renderTttScore(`${ttt.turn} wins!`);
+        return;
+      }
+
+      if (ttt.marks.every(Boolean)) {
+        ttt.over = true;
+        ttt.score.T += 1;
+        ttt.celebration = "Tie game!";
+        renderTtt();
+        renderTttScore("Tie game.");
+        return;
+      }
+
+      ttt.turn = ttt.turn === "X" ? "O" : "X";
+      ttt.celebration = "";
+      renderTtt();
+    });
+
+    document.getElementById("tttSame").addEventListener("click", () => {
+      ttt.marks = Array(9).fill("");
+      ttt.turn = "X";
+      ttt.over = false;
+      ttt.celebration = "";
+      renderTtt();
+    });
+    document.getElementById("tttNew").addEventListener("click", newTttBoard);
+
+    const C4_ROWS = 6;
+    const C4_COLS = 7;
+
+    const c4 = {
+      board: Array.from({ length: C4_ROWS }, () => Array.from({ length: C4_COLS }, () => "")),
+      turn: "R",
+      over: false,
+      celebration: "",
+      score: { R: 0, Y: 0, T: 0 },
+      currentPrompt: subtractionPrompt()
+    };
+
+    function c4Label(mark) {
+      return mark === "R" ? "Red" : "Yellow";
+    }
+
+    function c4FindWin(row, col, mark) {
+      const dirs = [[1, 0], [0, 1], [1, 1], [1, -1]];
+      const collect = (dr, dc) => {
+        const out = [];
+        let r = row + dr;
+        let c = col + dc;
+        while (r >= 0 && r < C4_ROWS && c >= 0 && c < C4_COLS && c4.board[r][c] === mark) {
+          out.push([r, c]);
+          r += dr;
+          c += dc;
+        }
+        return out;
+      };
+      for (const [dr, dc] of dirs) {
+        const line = [...collect(-dr, -dc).reverse(), [row, col], ...collect(dr, dc)];
+        if (line.length >= 4) return true;
+      }
+      return false;
+    }
+
+    function renderC4Score(extra) {
+      const msg = extra ? ` | ${extra}` : "";
+      document.getElementById("c4Score").textContent = `Red Wins: ${c4.score.R} | Yellow Wins: ${c4.score.Y} | Ties: ${c4.score.T}${msg}`;
+      const turnEl = document.getElementById("c4Turn");
+      if (c4.over) {
+        turnEl.textContent = "Round Over";
+        turnEl.className = "turn-indicator";
+      } else {
+        turnEl.textContent = `Turn: ${c4Label(c4.turn)}`;
+        turnEl.className = "turn-indicator " + (c4.turn === "R" ? "r" : "y");
+      }
+    }
+
+    function renderC4() {
+      document.getElementById("c4Prompt").textContent = c4.currentPrompt.text;
+
+      const top = document.getElementById("c4Top");
+      top.innerHTML = "";
+      for (let col = 0; col < C4_COLS; col += 1) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "drop-btn";
+        btn.dataset.col = String(col);
+        btn.textContent = "Drop";
+        if (c4.over) btn.disabled = true;
+        top.appendChild(btn);
+      }
+
+      const grid = document.getElementById("c4Grid");
+      grid.innerHTML = "";
+      for (let r = 0; r < C4_ROWS; r += 1) {
+        for (let c = 0; c < C4_COLS; c += 1) {
+          const slot = document.createElement("div");
+          const mark = c4.board[r][c];
+          slot.className = "slot" + (mark === "R" ? " r" : mark === "Y" ? " y" : "");
+          grid.appendChild(slot);
+        }
+      }
+
+      const overlay = document.getElementById("c4Overlay");
+      const overlayText = document.getElementById("c4OverlayText");
+      overlayText.textContent = c4.celebration;
+      overlay.classList.toggle("show", Boolean(c4.celebration));
+      renderC4Score();
+    }
+
+    function resetC4Board(newPromptFlow) {
+      c4.board = Array.from({ length: C4_ROWS }, () => Array.from({ length: C4_COLS }, () => ""));
+      c4.turn = "R";
+      c4.over = false;
+      c4.celebration = "";
+      if (newPromptFlow) c4.currentPrompt = subtractionPrompt();
+      renderC4();
+    }
+
+    document.getElementById("c4Top").addEventListener("click", async (event) => {
+      const btn = event.target.closest(".drop-btn");
+      if (!btn || c4.over) return;
+      const col = Number(btn.dataset.col);
+      if (!Number.isFinite(col)) return;
+
+      let row = -1;
+      for (let r = C4_ROWS - 1; r >= 0; r -= 1) {
+        if (!c4.board[r][col]) {
+          row = r;
+          break;
+        }
+      }
+      if (row < 0) return;
+
+      const ok = await openDialog(c4.currentPrompt);
+      if (!ok) return;
+
+      const mark = c4.turn;
+      c4.board[row][col] = mark;
+
+      if (c4FindWin(row, col, mark)) {
+        c4.over = true;
+        c4.score[mark] += 1;
+        c4.celebration = `${c4Label(mark)} wins!`;
+        renderC4();
+        renderC4Score(`${c4Label(mark)} wins!`);
+        return;
+      }
+
+      if (c4.board.every((line) => line.every(Boolean))) {
+        c4.over = true;
+        c4.score.T += 1;
+        c4.celebration = "Tie game!";
+        renderC4();
+        renderC4Score("Tie game.");
+        return;
+      }
+
+      c4.turn = mark === "R" ? "Y" : "R";
+      c4.celebration = "";
+      c4.currentPrompt = subtractionPrompt();
+      renderC4();
+    });
+
+    document.getElementById("c4Same").addEventListener("click", () => resetC4Board(false));
+    document.getElementById("c4New").addEventListener("click", () => resetC4Board(true));
+
+    const rr = {
+      prompts: [],
+      pointers: Array(6).fill(0),
+      pending: null,
+      done: 0,
+      total: 24,
+      tableCells: []
+    };
+
+    function setRrDie(value) {
+      const img = document.getElementById("rrDieImg");
+      img.src = `images/dice${value}.png`;
+      img.alt = `Current die: ${value}`;
+    }
+
+    function buildRrGrid() {
+      rr.prompts = makeSubtractionPrompts(rr.total);
+      rr.pointers = Array(6).fill(0);
+      rr.pending = null;
+      rr.done = 0;
+
+      const table = document.getElementById("rrTable");
+      table.innerHTML = "";
+      rr.tableCells = [];
+
+      const thead = document.createElement("thead");
+      const hRow = document.createElement("tr");
+      for (let d = 1; d <= 6; d += 1) {
+        const th = document.createElement("th");
+        const img = document.createElement("img");
+        img.className = "dice-head-img";
+        img.src = `images/dice${d}.png`;
+        img.alt = `Die ${d}`;
+        th.appendChild(img);
+        hRow.appendChild(th);
+      }
+      thead.appendChild(hRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+      let idx = 0;
+      for (let r = 0; r < 4; r += 1) {
+        const row = document.createElement("tr");
+        for (let c = 0; c < 6; c += 1) {
+          const td = document.createElement("td");
+          td.dataset.col = String(c + 1);
+          td.dataset.row = String(r + 1);
+          td.textContent = rr.prompts[idx].text;
+          td.dataset.index = String(idx);
+          idx += 1;
+          rr.tableCells.push(td);
+          row.appendChild(td);
+        }
+        tbody.appendChild(row);
+      }
+      table.appendChild(tbody);
+
+      setRrDie(1);
+      document.getElementById("rrStatus").textContent = "Roll to start.";
+    }
+
+    function rrOpenColumns() {
+      const open = [];
+      for (let i = 0; i < 6; i += 1) {
+        if (rr.pointers[i] < 4) open.push(i + 1);
+      }
+      return open;
+    }
+
+    function rrCellAt(col1, row0) {
+      return rr.tableCells.find((td) => Number(td.dataset.col) === col1 && Number(td.dataset.row) === row0 + 1) || null;
+    }
+
+    document.getElementById("rrRoll").addEventListener("click", async () => {
+      if (rr.pending) {
+        document.getElementById("rrStatus").textContent = "Answer the highlighted prompt first.";
+        return;
+      }
+
+      const open = rrOpenColumns();
+      if (!open.length) {
+        document.getElementById("rrStatus").textContent = "Board complete.";
+        return;
+      }
+
+      const raw = randInt(1, 6);
+      const die = open.includes(raw) ? raw : choose(open);
+      setRrDie(die);
+
+      const row = rr.pointers[die - 1];
+      const cell = rrCellAt(die, row);
+      if (!cell) return;
+      cell.classList.add("current");
+
+      const prompt = rr.prompts[Number(cell.dataset.index)];
+      rr.pending = { col: die, row, cell, prompt };
+      document.getElementById("rrStatus").textContent = `Rolled ${die}. Solve this prompt.`;
+
+      const ok = await openDialog(prompt);
+      if (!rr.pending || rr.pending.cell !== cell) return;
+
+      if (ok) {
+        cell.classList.remove("current");
+        cell.classList.add("done");
+        rr.pointers[die - 1] += 1;
+        rr.done += 1;
+        rr.pending = null;
+        if (rr.done >= rr.total) {
+          document.getElementById("rrStatus").textContent = "Board complete.";
+        } else {
+          document.getElementById("rrStatus").textContent = `${rr.done} of ${rr.total} complete.`;
+        }
+      } else {
+        cell.classList.remove("current");
+        rr.pending = null;
+        document.getElementById("rrStatus").textContent = "Try rolling again when ready.";
       }
     });
 
-    document.getElementById("demoSameBoard").addEventListener("click", resetBoardOnly);
-    document.getElementById("demoNewBoard").addEventListener("click", newBoard);
+    document.getElementById("rrReset").addEventListener("click", buildRrGrid);
+    document.getElementById("rrNew").addEventListener("click", buildRrGrid);
 
     window.addEventListener("keydown", (event) => {
       const blocked = (event.ctrlKey || event.metaKey) && ["s", "p", "u"].includes(event.key.toLowerCase());
       if (blocked) event.preventDefault();
     });
 
-    updateScoreLine();
-    newBoard();
+    newTttBoard();
+    resetC4Board(true);
+    buildRrGrid();
   </script>
 </body>
 </html>

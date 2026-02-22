@@ -6,14 +6,12 @@
   function splitByPattern(word, pattern) {
     const chunks = [];
     let i = 0;
-    const digits = String(pattern || "");
-    for (let j = 0; j < digits.length; j++) {
-      const d = digits[j];
+    for (let j = 0; j < String(pattern || "").length; j++) {
+      const d = String(pattern)[j];
       const len = d === "3" ? 3 : d === "2" ? 2 : 1;
       chunks.push(String(word || "").slice(i, i + len));
       i += len;
     }
-    if (!chunks.length && word) return String(word).split("");
     return chunks;
   }
 
@@ -66,23 +64,25 @@
       let idx = -1;
       for (let i = 0; i < A.length; i++) {
         if (A[i] !== B[i]) {
-          if (idx !== -1) return "? -> ?";
+          if (idx !== -1) return "? → ?";
           idx = i;
         }
       }
-      if (idx === -1) return "? -> ?";
+      if (idx === -1) return "? → ?";
       const a = A[idx];
       const b = B[idx];
 
       if (b.length === a.length + 1 && (b.startsWith(a) || b.endsWith(a))) {
         const add = b.startsWith(a) ? b.slice(-1) : b.slice(0, b.length - a.length);
-        return `+ ${add}`;
+        const micro = b.startsWith(a) ? `${a} → ${a}<b>${add}</b>` : `${a} → <b>${add}</b>${a}`;
+        return `+ ${add} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
       }
       if (a.length === b.length + 1 && (a.startsWith(b) || a.endsWith(b))) {
         const rem = a.startsWith(b) ? a.slice(-1) : a.slice(0, a.length - b.length);
-        return `- ${rem}`;
+        const micro = a.startsWith(b) ? `${a.slice(0, -1)}<b>${rem}</b> → ${b}` : `<b>${rem}</b>${a.slice(1)} → ${b}`;
+        return `- ${rem} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
       }
-      return `${a} -> ${b}`;
+      return `${a} → ${b}`;
     }
 
     if (B.length === A.length + 1) {
@@ -90,7 +90,7 @@
         const test = B.slice(0, k).concat(B.slice(k + 1));
         if (eq(A, test)) return `+ ${B[k]}`;
       }
-      return "? -> ?";
+      return "? → ?";
     }
 
     if (A.length === B.length + 1) {
@@ -98,10 +98,10 @@
         const test = A.slice(0, k).concat(A.slice(k + 1));
         if (eq(B, test)) return `- ${A[k]}`;
       }
-      return "? -> ?";
+      return "? → ?";
     }
 
-    return "? -> ?";
+    return "? → ?";
   }
 
   function fallbackPattern(word) {
@@ -120,7 +120,6 @@
     const pageTitle = document.getElementById("pageTitle");
     const pageSubtitle = document.getElementById("pageSubtitle");
     const setButtons = document.getElementById("setButtons");
-    const activeSetLabel = document.getElementById("activeSetLabel");
     const ladderOutput = document.getElementById("ladderOutput");
     const generateBtn = document.getElementById("generateBtn");
     const printBtn = document.getElementById("printBtn");
@@ -132,28 +131,20 @@
       if (!setButtons) return;
       setButtons.innerHTML = "";
       data.setOrder.forEach((setId) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "chip" + (state.currentSet === setId ? " active" : "");
-        btn.textContent = (data.setLabels && data.setLabels[setId]) || setId;
-        btn.addEventListener("click", () => {
+        const label = document.createElement("label");
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = "setMode";
+        input.value = setId;
+        input.checked = state.currentSet === setId;
+        input.addEventListener("change", function () {
           state.currentSet = setId;
           renderSetButtons();
-          renderActiveSetLabel();
         });
-        setButtons.appendChild(btn);
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(" " + ((data.setLabels && data.setLabels[setId]) || setId)));
+        setButtons.appendChild(label);
       });
-    }
-
-    function renderActiveSetLabel() {
-      if (!activeSetLabel) return;
-      const label = (data.setLabels && data.setLabels[state.currentSet]) || state.currentSet;
-      const counts = data.counts && data.counts[state.currentSet];
-      if (counts) {
-        activeSetLabel.textContent = `${label}: ${counts.words} words, ${counts.ladders} ladder combos`;
-      } else {
-        activeSetLabel.textContent = label;
-      }
     }
 
     function getPattern(word) {
@@ -167,71 +158,91 @@
     }
 
     function generateLadder() {
-      const pools = (data.ladders && data.ladders[state.currentSet]) || [];
-      if (!pools.length) {
-        alert("No ladders available for this set yet.");
+      const ladders = (data.ladders && data.ladders[state.currentSet]) || [];
+      if (!ladders.length) {
+        alert("No ladders available for this set with current pictured words.");
         return;
       }
 
       const cellStyle = document.querySelector('input[name="cellStyle"]:checked')?.value || "elkonin";
-      const useFont = cellStyle === "underlines" ? "UnderlineFont" : "BoxesFont";
+      const useFont = (cellStyle === "underlines") ? "UnderlineFont" : "BoxesFont";
       const boldChanged = document.getElementById("boldChanged")?.checked ?? true;
 
-      const ladder = pools[Math.floor(Math.random() * pools.length)];
-      const cards = ladder.map((word, i) => {
-        const first = i === 0;
-        const last = i === ladder.length - 1;
+      const ladder = ladders[Math.floor(Math.random() * ladders.length)];
+
+      const rows = ladder.map((word, i) => {
+        const first = (i === 0);
+        const last = (i === ladder.length - 1);
         const prev = ladder[i - 1] || "";
 
         const patt = getPattern(word);
-        const prevP = first ? "" : getPattern(prev);
+        const prevP = getPattern(prev);
         const imgSrc = getImage(word);
         const resolvedImgSrc = window.ladderImageFallback
           ? window.ladderImageFallback.ensureSrc(imgSrc, word)
           : imgSrc;
 
-        let patternHTML = patt;
-        if (!first && boldChanged) {
-          const changedIdx = getChangedChunkIndex(prev, word, prevP, patt);
-          if (changedIdx !== -1) {
+        let patternHTML = "";
+        if (!first) {
+          const changedIdx = boldChanged ? getChangedChunkIndex(prev, word, prevP, patt) : -1;
+          if (changedIdx === -1) {
+            patternHTML = patt;
+          } else {
             let out = "";
             for (let j = 0; j < patt.length; j++) {
-              out += j === changedIdx ? `<span style="font-weight:700;">${patt[j]}</span>` : patt[j];
+              const ch = patt[j];
+              out += (j === changedIdx) ? `<span style="font-weight:700;">${ch}</span>` : ch;
             }
             patternHTML = out;
           }
         }
 
-        return `
-          <div style="display:inline-block;vertical-align:top;width:220px;margin:10px;padding:10px 8px;border:2px solid #cfd7ef;background:#f6f9ff;border-radius:14px;">
-            <h2 style="font-size:20px;margin:0 0 8px;color:#1f365f;">${first ? "Start Word" : (last ? "Finish Word" : "")}</h2>
-            <img src="${resolvedImgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;border-radius:12px;background:#fff;border:1px solid #d7e1f5;"
-                 onerror="window.ladderImageFallback && window.ladderImageFallback.handleError(this,'${word}')" />
-            <div style="font-size:26px;font-weight:700;margin-top:6px;color:#1f365f;">${word}</div>
-            <div style="font-size:16px;min-height:22px;color:#334d7a;margin:4px 0;">${first ? "&nbsp;" : getHint(prev, word, prevP, patt)}</div>
-            <div class="pattern ${cellStyle === "underlines" ? "underlines" : ""}" style="font-family:${useFont};">${patternHTML}</div>
-          </div>
-        `;
+        const display = first
+          ? `<div style="font-size:32px;font-weight:600;letter-spacing:2px;font-family:'Poppins',sans-serif;">${word}</div>`
+          : `<div class="pattern" style="font-family:'${useFont}',monospace;font-size:${useFont === 'UnderlineFont' ? '85px' : '100px'};letter-spacing:0;">${patternHTML}</div>`;
+
+        const imgTD = `<td style="padding:5px 7px;width:140px;">
+                         <img src="${resolvedImgSrc}" alt="${word}" data-word="${word}" onerror="window.ladderImageFallback && window.ladderImageFallback.handleError(this,this.dataset.word)" style="width:110px;height:110px;object-fit:contain;">
+                       </td>`;
+
+        const borders = !last
+          ? "border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;"
+          : "border-left:4px solid #000;border-right:4px solid #000;";
+
+        const wordTD = `<td style="padding:5px 7px;${borders}">${display}</td>`;
+
+        const hintTD = first
+          ? `<td style="padding:3px 5px;width:170px;"></td>`
+          : `<td style="padding:3px 5px;width:170px;">
+               <div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">
+                 ${getHint(prev, word, prevP, patt)}
+               </div>
+             </td>`;
+
+        return `<tr>${imgTD}${wordTD}${hintTD}</tr>`;
       }).join("");
 
-      if (ladderOutput) {
-        ladderOutput.innerHTML = `
-          <div style="margin:4px 0 10px;font-size:18px;font-weight:600;color:#1f365f;">
-            ${((data.setLabels && data.setLabels[state.currentSet]) || state.currentSet)}
+      const setLabel = ((data.setLabels && data.setLabels[state.currentSet]) || state.currentSet);
+      const html = `
+        <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
+          <div id="titleBlock" style="text-align:center;">
+            <h2 style="font-size:24px;">${setLabel} Word Ladder</h2>
+            <p style="font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
           </div>
-          <div style="display:flex;flex-wrap:wrap;justify-content:center;">
-            ${cards}
-          </div>
-          <div id="copyright" style="font-size:12px;text-align:right;width:100%;margin-top:14px;">(c) Intervention Station</div>
-        `;
-      }
+          <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">
+            ${rows}
+          </table>
+          <br><br>
+          <div id="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+        </div>
+      `;
+
+      if (ladderOutput) ladderOutput.innerHTML = html;
     }
 
     generateBtn?.addEventListener("click", generateLadder);
-    printBtn?.addEventListener("click", () => window.print());
+    printBtn?.addEventListener("click", function () { window.print(); });
 
     renderSetButtons();
-    renderActiveSetLabel();
-    generateLadder();
   };
 })();

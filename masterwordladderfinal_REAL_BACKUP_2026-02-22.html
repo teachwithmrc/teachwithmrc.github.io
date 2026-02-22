@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>InterventionStation.com - Word Ladder Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Fonts to match the ladder pages -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    @font-face { font-family:'BoxesFont'; src:url('fonts/boxes2.otf') format('opentype'); }
+    @font-face { font-family:'UnderlineFont'; src:url('fonts/underlines.otf') format('opentype'); }
+
+    :root{
+      --ink:#1f365f; --bg:#fff; --card:#f6f9ff; --card2:#fff7f0; --border:#cfd7ef; --border2:#f2d8bd;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+
+    /* Header */
+    header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--border);}
+    .wrap{max-width:1200px;margin:0 auto;padding:12px 16px;}
+    h1{font-size:20px;margin:0;font-weight:600;}
+
+    /* Tabs */
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .tab{appearance:none;border:1px solid var(--border);background:var(--card);color:var(--ink);padding:8px 12px;border-radius:999px;font-weight:600;cursor:pointer;transition:all .15s}
+    .tab[aria-selected="true"]{background:#1f365f;color:#fff;border-color:#1f365f;}
+    .tab:disabled{opacity:.45;cursor:not-allowed}
+
+    /* Content area */
+    .content{max-width:1200px;margin:16px auto;padding:0 16px 24px}
+    .panel{display:none;border:1px solid var(--border);background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 6px 18px rgba(31,54,95,.06)}
+    .panel.active{display:block}
+
+    /* Iframes */
+    .ladder-frame{width:100%;height:100vh;border:0;display:block;background:#fff}
+
+    /* Helper: loading */
+    .loading{display:flex;align-items:center;gap:10px;padding:18px 16px;font-weight:600;color:#5b6f99}
+    .spinner{width:14px;height:14px;border:2px solid #cfd7ef;border-top-color:#1f365f;border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Print: forward print command to the visible iframe */
+    @media print{ body > *:not(.panel.active){ display:none !important } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Phonics Word Ladder Generator by Skill</h1>
+      <div class="tabs" role="tablist" aria-label="Word Ladder Sets">
+        <!--
+          Update the data-target to match the panel id below.
+          You can add/remove tabs safely – the JS auto-wires them by [role=tab].
+        -->
+        <button class="tab" role="tab" aria-selected="true" data-target="#tab-cvc">CVC (with Blends)</button>
+        <button class="tab" role="tab" data-target="#tab-digraphs">Digraphs</button>
+        <button class="tab" role="tab" data-target="#tab-glued">Glued Sounds</button>
+        <button class="tab" role="tab" data-target="#tab-r">R‑Controlled</button>
+        <button class="tab" role="tab" data-target="#tab-vce">VCe</button>
+        <button class="tab" role="tab" data-target="#tab-vowelteams">Vowel Teams</button>
+        <button class="tab" role="tab" data-target="#tab-softcg">Soft C/G</button>
+        <button class="tab" role="tab" data-target="#tab-multisyllabic">Multisyllabic</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <!-- PANEL: CVC -->
+    <section id="tab-cvc" class="panel active" role="tabpanel" aria-labelledby="CVC">
+      <div class="loading"><span class="spinner"></span> Loading CVC ladders…</div>
+      <iframe class="ladder-frame" title="CVC Word Ladders" src="/blendsladder.html" loading="eager"></iframe>
+    </section>
+
+    <!-- PANEL: Digraphs -->
+    <section id="tab-digraphs" class="panel" role="tabpanel" aria-labelledby="Digraphs">
+      <div class="loading"><span class="spinner"></span> Loading Digraph ladders…</div>
+      <iframe class="ladder-frame" title="Digraph Word Ladders" src="/01digraphladderwithblends.html" loading="lazy"></iframe>
+    </section>
+
+    <!-- PANEL: Glued Sounds -->
+    <section id="tab-glued" class="panel" role="tabpanel" aria-labelledby="Glued Sounds">
+      <div class="loading"><span class="spinner"></span> Loading Glued Sounds ladders…</div>
+      <iframe class="ladder-frame" title="Glued Sounds Word Ladders" src="/01gluedladder.html" loading="lazy"></iframe>
+    </section>
+
+    <!-- PANEL: R-Controlled -->
+    <section id="tab-r" class="panel" role="tabpanel" aria-labelledby="R-Controlled">
+      <div class="loading"><span class="spinner"></span> Loading R‑Controlled ladders…</div>
+      <iframe class="ladder-frame" title="R‑Controlled Word Ladders" src="/01rcontrladders2.html" loading="lazy"></iframe>
+    </section>
+
+    <!-- PANEL: VCe -->
+    <section id="tab-vce" class="panel" role="tabpanel" aria-labelledby="VCe">
+      <div class="loading"><span class="spinner"></span> Loading VCe ladders…</div>
+      <iframe class="ladder-frame" title="VCe Word Ladders" src="01vceladders.html" loading="lazy"></iframe>
+    </section>
+
+    <!-- PANEL: Vowel Teams -->
+    <section id="tab-vowelteams" class="panel" role="tabpanel" aria-labelledby="Vowel Teams">
+      <div class="loading"><span class="spinner"></span> Loading Vowel Teams ladders…</div>
+      <iframe class="ladder-frame" title="Vowel Teams Word Ladders" src="01vowelteams_all_ladders.html" loading="lazy"></iframe>
+    </section>
+
+    <!-- PANEL: Soft C/G -->
+    <section id="tab-softcg" class="panel" role="tabpanel" aria-labelledby="Soft C/G">
+      <div class="loading"><span class="spinner"></span> Loading Soft C/G ladders…</div>
+      <iframe class="ladder-frame" title="Soft C/G Word Ladders" src="01softcgladders.html" loading="lazy"></iframe>
+    </section>
+
+    <!-- PANEL: Multisyllabic -->
+    <section id="tab-multisyllabic" class="panel" role="tabpanel" aria-labelledby="Multisyllabic">
+      <div class="loading"><span class="spinner"></span> Loading Multisyllabic ladders…</div>
+      <iframe class="ladder-frame" title="Multisyllabic Word Ladders" src="01multisyllabicladders.html" loading="lazy"></iframe>
+    </section>
+  </main>
+
+  <script>
+    // --- Seamless tab switcher (preloaded iframes) ---
+    const tabs = Array.from(document.querySelectorAll('.tab'));
+    const panels = Array.from(document.querySelectorAll('.panel'));
+
+    function activate(targetSel){
+      panels.forEach(p=>p.classList.toggle('active', '#'+p.id === targetSel));
+      tabs.forEach(t=>t.setAttribute('aria-selected', t.dataset.target===targetSel));
+      // Scroll to top of content for better UX on small screens
+      document.querySelector('.content').scrollIntoView({behavior:'smooth', block:'start'});
+    }
+    tabs.forEach(btn=>btn.addEventListener('click',()=>activate(btn.dataset.target)));
+
+    // --- Auto-hide the loading row for each iframe when it's ready ---
+    const frameSections = document.querySelectorAll('.panel');
+    frameSections.forEach(section=>{
+      const frame = section.querySelector('iframe');
+      const loadingRow = section.querySelector('.loading');
+      if(!frame) return;
+      frame.addEventListener('load',()=>{
+        loadingRow?.remove();
+        // Try to auto-size the visible iframe to its content height (same-origin assumption)
+        try{
+          const doc = frame.contentDocument || frame.contentWindow.document;
+          const resize = ()=>{ frame.style.height = Math.max(800, doc.body.scrollHeight + 1) + 'px'; };
+          resize();
+          // Observe mutations to keep height in sync when inner page changes
+          const mo = new MutationObserver(resize);
+          mo.observe(doc.body, {subtree:true, childList:true});
+          // Recalc on inner window resize too
+          frame.contentWindow.addEventListener('resize', resize);
+        }catch(e){ /* different origin – keep default height */ }
+      }, { once:true });
+    });
+
+    // --- Forward Ctrl/Cmd+P to the active iframe so teachers print the visible ladder page directly ---
+    window.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='p'){
+        const active = document.querySelector('.panel.active iframe');
+        if(active){ e.preventDefault(); active.contentWindow.focus(); active.contentWindow.print(); }
+      }
+    });
+  </script>
+</body>
+</html>

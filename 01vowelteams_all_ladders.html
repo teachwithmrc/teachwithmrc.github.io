@@ -17,18 +17,14 @@
       --ink:#1f365f; --bg:#ffffff;
       --card:#f6f9ff; --card2:#fff7f0;
       --border:#cfd7ef; --border2:#f2d8bd;
-      --btn:#1f365f; --btnText:#fff;
     }
 
     body { font-family: 'Poppins', sans-serif; margin: 10px; text-align: center; color: var(--ink); background: var(--bg); }
     h1 { font-size: 32px; margin-bottom: 6px; }
     .subtitle { font-size: 16px; margin-bottom: 8px; }
 
-    button { font-size: 16px; padding: 8px 14px; margin: 6px; cursor: pointer; border-radius: 10px; border: 2px solid var(--border); }
-    .primary { background: var(--btn); color: var(--btnText); border-color: var(--btn); }
-    .outline { background: #fff; color: var(--ink); }
-    .chip { padding: 8px 14px; border-radius: 999px; border: 2px solid var(--border); background: #fff; min-width: 80px; }
-    .chip.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+    button { font-size: 16px; padding: 6px 10px; margin: 6px; cursor: pointer; }
+    label { margin: 0 6px; font-size: 18px; }
 
     .card {
       display: inline-block; text-align: center; background: var(--card);
@@ -36,13 +32,13 @@
     }
     .card.alt { background: var(--card2); border-color: var(--border2); }
     .card h2 { margin: 0 0 8px; font-size: 20px; }
-    .controls { display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 18px; }
+    .controls { display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 18px; }
 
     .pattern { font-size: 100px; line-height: 1; margin-top: 4px; letter-spacing: 0; }
-    .pattern.underlines span { display:inline-block; margin:0 2px; }
 
     .screenOnly { display: block; font-size: 18px; }
     #ladderOutput { margin-top:8px; margin-bottom:60px; }
+    #copyright { font-size: 12px; text-align: right; width: 100%; }
 
     @media print {
       body * { visibility: hidden; }
@@ -77,12 +73,10 @@
   </div>
 
   <div style="margin: 8px 0 10px;">
-    <center><img src="images/chrome.png" alt="Chrome"></center>
-    <button id="generateBtn" class="primary">Generate Ladder</button>
-    <button id="printBtn" class="outline">Print Page</button>
+    <center><img src="images/chrome.png"></center>
+    <button id="generateBtn">Generate Ladder</button>
+    <button id="printBtn">Print Page</button>
   </div>
-
-  <div id="activeSetLabel" class="subtitle" style="font-weight:600;"></div>
   <div id="ladderOutput"></div>
 
   <script>
