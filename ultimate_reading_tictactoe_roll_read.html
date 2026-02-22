@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ultimate Reading Game Hub</title>
+  <script src="fluencyDataFull_v8-2_clean.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1f2c3a;
+      --bg1: #eef8ff;
+      --bg2: #f4fff3;
+      --card: #ffffff;
+      --line: #c9d7e6;
+      --x: #d32f2f;
+      --o: #1976d2;
+      --ok: #2e7d32;
+
+      --cvc: #f6ead6;
+      --dig: #fde0e0;
+      --glued: #e8dbf7;
+      --vce: #d9e8fb;
+      --rctrl: #d9f0e1;
+      --vteams: #fff3cd;
+      --dip: #ffe3cf;
+      --variant: #ead8f4;
+      --soft: #dde7f7;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 22px;
+      font-family: "Poppins", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 10%, #ffffff 0 8%, transparent 9%),
+        radial-gradient(circle at 90% 8%, #ffffff 0 7%, transparent 8%),
+        linear-gradient(145deg, var(--bg1), var(--bg2));
+    }
+
+    .app {
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      text-align: center;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      margin: 0 0 14px;
+      color: #445668;
+      font-size: 0.98rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .game-picker {
+      background: var(--card);
+      border: 2px solid #000;
+      border-radius: 14px;
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+      box-shadow: 0 8px 18px rgba(22, 48, 74, 0.08);
+      margin-bottom: 12px;
+    }
+
+    .game-picker h2 {
+      margin: 0;
+      text-align: center;
+      font-size: 1.35rem;
+      letter-spacing: 0.04em;
+    }
+
+    .picker-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .picker-btn {
+      min-height: 100px;
+      border: 2px solid #000;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #f9fcff, #ecf4ff);
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 4px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 800;
+      font-size: 1rem;
+      text-align: center;
+      padding: 8px;
+    }
+
+    .picker-desc {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #44576b;
+    }
+
+    .game-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 2px solid #1c538b;
+      background: #ecf5ff;
+      color: #0d3b67;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .controls {
+      background: var(--card);
+      border: 2px solid #000;
+      border-radius: 14px;
+      padding: 12px;
+      display: grid;
+      gap: 12px;
+      box-shadow: 0 8px 18px rgba(22, 48, 74, 0.08);
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-right: 2px;
+    }
+
+    .pill {
+      border: 2px solid #000;
+      border-radius: 999px;
+      background: #fff;
+      padding: 7px 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.85rem;
+    }
+
+    .pill.selected {
+      background: #111;
+      color: #fff;
+    }
+
+    .table-section {
+      border: 2px solid #000;
+      border-radius: 12px;
+      padding: 10px;
+      background: #fff;
+    }
+
+    .steps-2-3-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .section-label {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .skill-block {
+      border: 1px solid #bbb;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+
+    .skill-block-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      align-items: start;
+    }
+
+    .skill-block-grid .skill-block {
+      margin-bottom: 0;
+    }
+
+    .skill-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 12px;
+      margin: 8px;
+      border: 2px solid #000;
+      border-radius: 10px;
+      box-shadow: 0 2px 0 #000;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.15s ease, color 0.15s ease;
+      background: #fff;
+    }
+
+    .skill-header .arrow {
+      display: none !important;
+    }
+
+    .skill-header .title {
+      white-space: nowrap;
+    }
+
+    .skill-header:hover {
+      transform: translateY(-1px);
+    }
+
+    .skill-header:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 0 #000;
+    }
+
+    .skill-block.open .skill-header {
+      background: #111 !important;
+      color: #fff;
+      transform: translateY(1px);
+      box-shadow: 0 1px 0 #000;
+    }
+
+    .bg-cvc .skill-header { background: linear-gradient(180deg, #fff, var(--cvc)); }
+    .bg-dig .skill-header { background: linear-gradient(180deg, #fff, var(--dig)); }
+    .bg-glued .skill-header { background: linear-gradient(180deg, #fff, var(--glued)); }
+    .bg-vce .skill-header { background: linear-gradient(180deg, #fff, var(--vce)); }
+    .bg-rctrl .skill-header { background: linear-gradient(180deg, #fff, var(--rctrl)); }
+    .bg-vteams .skill-header { background: linear-gradient(180deg, #fff, var(--vteams)); }
+    .bg-dip .skill-header { background: linear-gradient(180deg, #fff, var(--dip)); }
+    .bg-variant .skill-header { background: linear-gradient(180deg, #fff, var(--variant)); }
+    .bg-soft .skill-header { background: linear-gradient(180deg, #fff, var(--soft)); }
+
+    .skills-inner {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      padding: 12px;
+    }
+
+    .skills-inner.collapsed {
+      display: none;
+    }
+
+    .skill-button {
+      border: 2px solid #000;
+      border-radius: 12px;
+      background: #fff;
+      padding: 8px 10px;
+      font-weight: 700;
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      width: 100%;
+      min-height: 42px;
+      text-align: center;
+      line-height: 1.15;
+    }
+
+    .skill-button.selected {
+      background: #111;
+      color: #fff;
+    }
+
+    .chips-title {
+      margin-top: 2px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .chips-wrap {
+      margin-top: 8px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 22px;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #eff3f8;
+      color: #22384b;
+      border: 1px solid #d7e1eb;
+    }
+
+    .chip .x {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      background: #d8e2ec;
+      color: #344a5f;
+    }
+
+    .option-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .option-box {
+      display: inline-block;
+      padding: 8px 12px;
+      border: 2px solid #000;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      background: #fff;
+      cursor: pointer;
+      min-width: 200px;
+      text-align: center;
+    }
+
+    .option-box.selected {
+      background-color: #d0f0ff;
+    }
+
+    .select-wrap {
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      padding: 1px 8px;
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+    }
+
+    select {
+      border: 0;
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 600;
+      outline: none;
+      padding: 5px 0;
+      min-width: 210px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 4px;
+    }
+
+    .toolbar button {
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      padding: 9px 12px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .toolbar .primary {
+      background: #dff1ff;
+    }
+
+    #output {
+      margin-top: 12px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .sheet {
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 10px 22px rgba(20, 40, 68, 0.1);
+    }
+
+    .sheet-title {
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin: 0;
+    }
+
+    .sheet-meta {
+      text-align: center;
+      margin: 4px 0 10px;
+      color: #4a5a6b;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .view-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 8px;
+    }
+
+    .view-actions button {
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      padding: 8px 10px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.86rem;
+    }
+
+    .score-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .score-pill {
+      border: 2px solid #000;
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: #fff;
+      font-weight: 700;
+      font-size: 0.84rem;
+    }
+
+    .score-pill .x { color: var(--x); font-weight: 800; }
+    .score-pill .o { color: var(--o); font-weight: 800; }
+
+    .board {
+      width: 100%;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .game-stack {
+      position: relative;
+      width: min(900px, 100%);
+      margin: 0 auto;
+    }
+
+    .game-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 12;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(8, 20, 39, 0.78);
+      animation: overlayFadeIn 180ms ease-out;
+    }
+
+    .game-overlay.show {
+      display: flex;
+    }
+
+    .game-overlay-card {
+      padding: 16px 22px;
+      border-radius: 16px;
+      border: 3px solid #fff;
+      background: linear-gradient(135deg, #ff4c3b, #0a7c63);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+      color: #fff;
+      font-size: clamp(2rem, 6.5vw, 4.2rem);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      animation: popWin 260ms ease-out;
+    }
+
+    @keyframes overlayFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes popWin {
+      from {
+        transform: scale(0.85);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .cell {
+      border: 3px solid #000;
+      border-radius: 12px;
+      min-height: 190px;
+      padding: 8px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .cell.locked { cursor: default; }
+    .cell.win { box-shadow: inset 0 0 0 4px #ffcc80; }
+
+    .prompt-word {
+      font-weight: 800;
+      text-align: center;
+      font-size: clamp(1.25rem, 2.8vw, 2rem);
+      line-height: 1.08;
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 4px;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+
+    .board .prompt-word {
+      width: 100%;
+      min-height: 0;
+      font-size: clamp(1.55rem, 3.2vw, 2.5rem);
+      line-height: 1.05;
+      padding: 6px 8px;
+    }
+
+    .mark {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(5rem, 13vw, 9rem);
+      font-weight: 900;
+      opacity: 0.98;
+      line-height: 1;
+      pointer-events: none;
+      text-shadow: 0 2px 0 #fff;
+    }
+
+    .mark.x { color: var(--x); }
+    .mark.o { color: var(--o); }
+
+    .ttt-actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .ttt-actions button {
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      padding: 8px 10px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .prompt-card {
+      border: 2px dashed #9fb5cc;
+      border-radius: 10px;
+      padding: 8px;
+      margin: 0 auto 10px;
+      width: min(560px, 100%);
+      background: #f8fcff;
+    }
+
+    .winner-banner {
+      text-align: center;
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: #0f4e2a;
+      background: #ebfff2;
+      border: 2px solid #2f7f46;
+      border-radius: 10px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+    }
+
+    .connect4-wrap {
+      margin: 0 auto 8px;
+      width: min(900px, 100%);
+      display: grid;
+      gap: 8px;
+      position: relative;
+    }
+
+    .connect4-top {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .drop-btn {
+      border-radius: 9px;
+      padding: 8px 4px;
+      font-size: 0.86rem;
+    }
+
+    .connect4-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+      background: #1f5ea3;
+      border: 2px solid #000;
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .c4-cell {
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: #e8eff8;
+      border: 2px solid #0f2c4f;
+    }
+
+    .c4-cell.red {
+      background: #df3f33;
+    }
+
+    .c4-cell.yellow {
+      background: #f2d03c;
+    }
+
+    .c4-cell.win {
+      box-shadow: 0 0 0 4px #2ec65f inset;
+    }
+
+    .roll-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .die-wrap {
+      border: 2px solid #000;
+      border-radius: 12px;
+      padding: 5px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #fff;
+    }
+
+    .live-die {
+      width: 46px;
+      height: 46px;
+      object-fit: contain;
+    }
+
+    .die-value {
+      font-size: 1.05rem;
+      font-weight: 800;
+      min-width: 10px;
+      text-align: center;
+    }
+
+    .roll-controls button {
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      padding: 8px 10px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .status {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #445566;
+      min-height: 20px;
+    }
+
+    .roll-table {
+      width: min(760px, 100%);
+      margin: 0 auto;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .roll-shell {
+      width: min(760px, 100%);
+      margin: 0 auto;
+    }
+
+    .roll-table td {
+      border: 2px solid #000;
+      padding: 7px 4px;
+      vertical-align: middle;
+      text-align: center;
+      background: #fff;
+      min-height: 92px;
+    }
+
+    .roll-table .dice-cell {
+      height: 60px;
+      background: #f5f9ff;
+    }
+
+    .roll-table .dice-cell img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+    }
+
+    .roll-table .prompt-word {
+      font-size: clamp(2.2rem, 4.1vw, 3.3rem);
+      line-height: 1.02;
+      min-height: 68px;
+      padding: 4px 4px;
+    }
+
+    #output:fullscreen,
+    #output:-webkit-full-screen {
+      margin-top: 0;
+      width: 100vw;
+      height: 100vh;
+      padding: 12px;
+      background: #fff;
+      overflow: auto;
+    }
+
+    #output:fullscreen .sheet,
+    #output:-webkit-full-screen .sheet {
+      width: 100vw;
+      height: 100vh;
+      max-width: 100vw;
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+      margin: 0 auto;
+      padding: 12px;
+    }
+
+    .rr-cell.current {
+      outline: 4px solid #f9a825;
+      outline-offset: -4px;
+    }
+
+    .rr-cell.done {
+      background: #edf8ef;
+      color: var(--ok);
+    }
+
+    .rr-cell.done .prompt-word {
+      text-decoration: line-through;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 980px) {
+      .picker-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .steps-2-3-row {
+        grid-template-columns: 1fr;
+      }
+
+      .skill-block-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .connect4-top,
+      .connect4-grid {
+        gap: 6px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .skill-block-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 800px) {
+      body { padding: 12px; }
+      .board { gap: 8px; }
+      .cell { min-height: 150px; }
+      .roll-table { width: min(560px, 100%); }
+      .roll-table td { min-height: 76px; }
+      select { min-width: 180px; }
+      .prompt-word {
+        font-size: clamp(1.1rem, 4.5vw, 1.6rem);
+        min-height: 46px;
+      }
+      .mark {
+        font-size: clamp(4rem, 16vw, 7rem);
+      }
+      .roll-table .prompt-word {
+        font-size: clamp(1.8rem, 6.7vw, 2.7rem);
+        min-height: 58px;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+
+      .game-picker,
+      .controls,
+      .toolbar { display: none !important; }
+
+      .view-actions { display: none !important; }
+
+      .sheet {
+        border: none;
+        box-shadow: none;
+        padding: 0.08in;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>Ultimate Reading Game Hub</h1>
+    <p class="subtitle">Pick a game first, then choose reading skills and generate.</p>
+
+    <section id="gamePicker" class="game-picker">
+      <h2>WHAT DO YOU WANT TO PLAY?</h2>
+      <div class="picker-grid">
+        <button type="button" class="picker-btn" data-pick-game="tictactoe">
+          <span>Tic Tac Toe</span>
+          <span class="picker-desc">Read to claim X or O</span>
+        </button>
+        <button type="button" class="picker-btn" data-pick-game="connect4">
+          <span>4 in a Row</span>
+          <span class="picker-desc">Read to drop a checker</span>
+        </button>
+        <button type="button" class="picker-btn" data-pick-game="rollread">
+          <span>Roll and Read</span>
+          <span class="picker-desc">Roll and fill each column</span>
+        </button>
+      </div>
+    </section>
+
+    <section id="controlsPanel" class="controls hidden">
+      <div class="row">
+        <span class="label">Selected Game:</span>
+        <span id="selectedGameBadge" class="game-badge">None</span>
+        <button id="btnChooseGame" type="button">Choose Different Game</button>
+      </div>
+
+      <div class="table-section">
+        <div class="section-label">Step 1: Select Skills</div>
+
+        <div class="skill-block-grid">
+          <div class="skill-block bg-cvc">
+            <div class="skill-header" data-target="cvc"><span class="title">CVC Short Vowels</span></div>
+            <div class="skills-inner collapsed" id="section-cvc">
+              <button class="skill-button" data-skill="Short A">Short A</button>
+              <button class="skill-button" data-skill="Short E">Short E</button>
+              <button class="skill-button" data-skill="Short I">Short I</button>
+              <button class="skill-button" data-skill="Short O">Short O</button>
+              <button class="skill-button" data-skill="Short U">Short U</button>
+              <button class="skill-button" data-skill="Mixed CVC">Mixed CVC</button>
+              <button class="skill-button" data-skill="FLSZ">FLSZ</button>
+            </div>
+          </div>
+
+          <div class="skill-block bg-dig">
+            <div class="skill-header" data-target="dig"><span class="title">Digraphs</span></div>
+            <div class="skills-inner collapsed" id="section-dig">
+              <button class="skill-button" data-skill="ck">ck</button>
+              <button class="skill-button" data-skill="sh">sh</button>
+              <button class="skill-button" data-skill="th">th</button>
+              <button class="skill-button" data-skill="ch">ch</button>
+              <button class="skill-button" data-skill="wh">wh</button>
+              <button class="skill-button" data-skill="Digraphs Mixed">Digraphs Mixed</button>
+            </div>
+          </div>
+
+          <div class="skill-block bg-glued">
+            <div class="skill-header" data-target="glued"><span class="title">Glued Sounds</span></div>
+            <div class="skills-inner collapsed" id="section-glued">
+              <button class="skill-button" data-skill="-all">-all</button>
+              <button class="skill-button" data-skill="-ng">-ng</button>
+              <button class="skill-button" data-skill="-nk">-nk</button>
+              <button class="skill-button" data-skill="Glued Mixed">Glued Mixed</button>
+            </div>
+          </div>
+
+          <div class="skill-block bg-vce">
+            <div class="skill-header" data-target="vce"><span class="title">Silent E (VCe)</span></div>
+            <div class="skills-inner collapsed" id="section-vce">
+              <button class="skill-button" data-skill="a_e">a_e</button>
+              <button class="skill-button" data-skill="i_e">i_e</button>
+              <button class="skill-button" data-skill="o_e">o_e</button>
+              <button class="skill-button" data-skill="u_e">u_e</button>
+              <button class="skill-button" data-skill="Mixed VCe">Mixed VCe</button>
+            </div>
+          </div>
+
+          <div class="skill-block bg-rctrl">
+            <div class="skill-header" data-target="rctrl"><span class="title">R-Controlled</span></div>
+            <div class="skills-inner collapsed" id="section-rctrl">
+              <button class="skill-button" data-skill="ar">ar</button>
+              <button class="skill-button" data-skill="or">or</button>
+              <button class="skill-button" data-skill="er/ir/ur">er/ir/ur</button>
+              <button class="skill-button" data-skill="Mixed R-Controlled">Mixed R-Controlled</button>
+            </div>
+          </div>
+
+          <div class="skill-block bg-vteams">
+            <div class="skill-header" data-target="vteams"><span class="title">Vowel Teams</span></div>
+            <div class="skills-inner collapsed" id="section-vteams">
+              <button class="skill-button" data-skill="Long A (ai/ay)">Long A (ai/ay)</button>
+              <button class="skill-button" data-skill="Long E (ee/ea)">Long E (ee/ea)</button>
+              <button class="skill-button" data-skill="Long I (igh/y/ie)">Long I (igh/y/ie)</button>
+              <button class="skill-button" data-skill="Long O (oa/ow/oe)">Long O (oa/ow/oe)</button>
+              <button class="skill-button" data-skill="Long U (oo/ew/ue)">Long U (oo/ew/ue)</button>
+              <button class="skill-button" data-skill="Mixed Vowel Teams">Mixed Vowel Teams</button>
+            </div>
+          </div>
+
+          <div class="skill-block bg-dip">
+            <div class="skill-header" data-target="dip"><span class="title">Diphthongs</span></div>
+            <div class="skills-inner collapsed" id="section-dip">
+              <button class="skill-button" data-skill="Diphthongs (oy/oi)">oy/oi</button>
+              <button class="skill-button" data-skill="Diphthongs (ow/ou)">ow/ou</button>
+            </div>
+          </div>
+
+          <div class="skill-block bg-variant">
+            <div class="skill-header" data-target="variant"><span class="title">Variant Vowels</span></div>
+            <div class="skills-inner collapsed" id="section-variant">
+              <button class="skill-button" data-skill="Variant Vowels (au/aw)">au/aw</button>
+              <button class="skill-button" data-skill="Variant Vowel (oo)">oo</button>
+            </div>
+          </div>
+
+          <div class="skill-block bg-soft">
+            <div class="skill-header" data-target="soft"><span class="title">Soft C/G Endings</span></div>
+            <div class="skills-inner collapsed" id="section-soft">
+              <button class="skill-button" data-skill="Soft C (-ce)">Soft C (-ce)</button>
+              <button class="skill-button" data-skill="Soft G (-ge)">Soft G (-ge)</button>
+              <button class="skill-button" data-skill="Soft G (-dge)">Soft G (-dge)</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="chips-title">Skills Selected:</div>
+        <div id="chips" class="chips-wrap"></div>
+      </div>
+
+      <div class="steps-2-3-row">
+        <div class="table-section">
+          <div class="section-label">Step 2: Include Blends?</div>
+          <div class="option-grid" id="blendOptions">
+            <div class="option-box selected" data-blends="no">No - 3 Sounds</div>
+            <div class="option-box" data-blends="yes">Yes - 4+ Sounds</div>
+          </div>
+        </div>
+
+        <div class="table-section">
+          <div class="section-label">Step 3: What would you like in the grid?</div>
+          <div class="option-grid" id="contentOptions">
+            <div class="option-box selected" data-mode="words">Words Only</div>
+            <div class="option-box" data-mode="sentences">Sentences Only</div>
+            <div class="option-box" data-mode="both">Both</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-section">
+        <div class="section-label">Step 4: Generate & Play</div>
+        <div class="row" id="rollGridSizeRow" style="justify-content:center;">
+          <span class="label">Roll Grid Size:</span>
+          <span class="select-wrap">
+            <select id="gridSizeSelect">
+              <option value="18">18 cells (3 rows)</option>
+              <option value="24" selected>24 cells (4 rows)</option>
+              <option value="30">30 cells (5 rows)</option>
+            </select>
+          </span>
+        </div>
+
+        <div class="toolbar">
+          <button id="btnGenerate" class="primary" type="button">Generate</button>
+          <button id="btnPrint" type="button">Print</button>
+          <button id="btnResetScore" type="button">Reset Scoreboard</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="output"></div>
+  </div>
+
+  <script>
+    if (typeof CSS === 'undefined' || typeof CSS.escape !== 'function') {
+      window.CSS = window.CSS || {};
+      CSS.escape = CSS.escape || function(sel){
+        return (sel + '').replace(/[^a-zA-Z0-9_-]/g, '\\$&');
+      };
+    }
+
+    const WIN_LINES = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8],
+      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+      [0, 4, 8], [2, 4, 6]
+    ];
+
+    const PREFIX = {
+      "Short A": "0.1 - Short A",
+      "Short O": "0.2 - Short O",
+      "Short I": "0.3 - Short I",
+      "Short U": "0.4 - Short U",
+      "Short E": "0.5 - Short E",
+      "FLSZ": "0.6 - FLSZ",
+      "ck": "1.1 - ck",
+      "sh": "1.2 - sh",
+      "th": "1.3 - th",
+      "ch": "1.4 - ch",
+      "wh": "1.5 - wh",
+      "-all": "3.1 - all",
+      "-ng": "3.2 - ng",
+      "-nk": "3.3 - nk",
+      "a_e": "2.1 - a_e",
+      "i_e": "2.2 - i_e",
+      "o_e": "2.3 - o_e",
+      "u_e": "2.4 - u_e",
+      "ar": "4.1 - ar",
+      "or": "4.2 - or",
+      "er/ir/ur": "4.3 - er, ir, ur",
+      "Soft C (-ce)": "10.1 - ce",
+      "Soft G (-ge)": "10.2 - ge",
+      "Soft G (-dge)": "10.3 - dge"
+    };
+
+    const MIXED_RULES = {
+      "Mixed CVC": ["0.1 - Short A", "0.5 - Short E", "0.3 - Short I", "0.2 - Short O", "0.4 - Short U", "0.6 - FLSZ"],
+      "Digraphs Mixed": ["1.1 - ck", "1.2 - sh", "1.3 - th", "1.4 - ch", "1.5 - wh"],
+      "Glued Mixed": ["3.1 - all", "3.2 - ng", "3.3 - nk"],
+      "Mixed VCe": ["2.1 - a_e", "2.2 - i_e", "2.3 - o_e", "2.4 - u_e"],
+      "Mixed R-Controlled": ["4.1 - ar", "4.2 - or", "4.3 - er, ir, ur"],
+      "Long A (ai/ay)": ["6.1 - ay", "6.2 - ai"],
+      "Long E (ee/ea)": ["6.4 - ee", "6.5 - ea"],
+      "Long I (igh/y/ie)": ["6.6 - igh", "6.7 - Final y", "6.8 - ie"],
+      "Long O (oa/ow/oe)": ["6.9 - oa", "6.10 - ow", "6.11 - oe"],
+      "Long U (oo/ew/ue)": ["6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
+      "Mixed Vowel Teams": [
+        "6.1 - ay", "6.2 - ai", "6.4 - ee", "6.5 - ea",
+        "6.6 - igh", "6.7 - Final y", "6.8 - ie",
+        "6.9 - oa", "6.10 - ow", "6.11 - oe",
+        "6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"
+      ],
+      "Diphthongs (oy/oi)": ["7.4 - oy", "7.3 - oi"],
+      "Diphthongs (ow/ou)": ["7.2 - ow", "7.1 - ou"],
+      "Variant Vowels (au/aw)": ["7.5 - aw", "7.6 - au"],
+      "Variant Vowel (oo)": ["7.7 - oo variant"]
+    };
+
+    const GAME_LABELS = {
+      tictactoe: "Tic Tac Toe",
+      connect4: "4 in a Row",
+      rollread: "Roll and Read"
+    };
+    const CONNECT4_ROWS = 6;
+    const CONNECT4_COLS = 7;
+
+    let promptIdCounter = 1;
+
+    const state = {
+      gameType: "",
+      includeBlends: false,
+      mode: "words",
+      gridSize: 24,
+      selectedSkills: new Set(),
+      ttt: {
+        prompts: [],
+        marks: Array(9).fill(""),
+        turn: "X",
+        over: false,
+        winLine: [],
+        celebration: "",
+        score: { X: 0, O: 0, T: 0 }
+      },
+      connect4: {
+        board: [],
+        turn: "R",
+        over: false,
+        winCells: [],
+        celebration: "",
+        score: { R: 0, Y: 0, T: 0 },
+        currentPrompt: null
+      },
+      roll: null
+    };
+
+    const gamePickerEl = document.getElementById("gamePicker");
+    const controlsPanelEl = document.getElementById("controlsPanel");
+    const selectedGameBadgeEl = document.getElementById("selectedGameBadge");
+    const btnChooseGameEl = document.getElementById("btnChooseGame");
+    const outputEl = document.getElementById("output");
+    const chipsEl = document.getElementById("chips");
+    const gridSizeSelect = document.getElementById("gridSizeSelect");
+    const rollGridSizeRow = document.getElementById("rollGridSizeRow");
+
+    function toArray(x) {
+      if (Array.isArray(x)) return x.slice();
+      if (x == null) return [];
+      try { return Array.from(x); } catch { return []; }
+    }
+
+    function shuffle(list) {
+      const a = toArray(list);
+      for (let i = a.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const t = a[i];
+        a[i] = a[j];
+        a[j] = t;
+      }
+      return a;
+    }
+
+    function uniqueByLowercase(list) {
+      const seen = new Set();
+      const out = [];
+      for (const item of toArray(list)) {
+        const v = String(item || "").trim();
+        const key = v.toLowerCase();
+        if (v && !seen.has(key)) {
+          seen.add(key);
+          out.push(v);
+        }
+      }
+      return out;
+    }
+
+    function fillToN(list, n) {
+      const base = toArray(list);
+      if (!base.length || !Number.isFinite(n) || n <= 0) return [];
+      const out = [];
+      let bag = shuffle(base);
+      while (out.length < n) {
+        if (!bag.length) bag = shuffle(base);
+        out.push(bag.shift());
+      }
+      return out.slice(0, n);
+    }
+
+    function htmlEscape(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function choose(arr) {
+      return arr[randInt(0, arr.length - 1)];
+    }
+
+    function makeGrid(rows, cols, value = "") {
+      return Array.from({ length: rows }, () => Array.from({ length: cols }, () => value));
+    }
+
+    function gameLabel(gameType) {
+      return GAME_LABELS[gameType] || "Unknown";
+    }
+
+    function fullscreenSupported() {
+      return Boolean(
+        document.fullscreenEnabled ||
+        document.webkitFullscreenEnabled ||
+        document.msFullscreenEnabled
+      );
+    }
+
+    function getFullscreenElement() {
+      return document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement || null;
+    }
+
+    function requestElementFullscreen(element) {
+      if (!element) return Promise.resolve();
+      if (element.requestFullscreen) return element.requestFullscreen();
+      if (element.webkitRequestFullscreen) return element.webkitRequestFullscreen();
+      if (element.msRequestFullscreen) return element.msRequestFullscreen();
+      return Promise.resolve();
+    }
+
+    function exitDocumentFullscreen() {
+      if (document.exitFullscreen) return document.exitFullscreen();
+      if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+      if (document.msExitFullscreen) return document.msExitFullscreen();
+      return Promise.resolve();
+    }
+
+    function updateFullscreenButtons() {
+      const isGameFullscreen = getFullscreenElement() === outputEl;
+      document.querySelectorAll("[data-action='fullscreen']").forEach((button) => {
+        if (!fullscreenSupported()) {
+          button.disabled = true;
+          button.textContent = "Full Screen Unavailable";
+          return;
+        }
+        button.disabled = false;
+        button.textContent = isGameFullscreen ? "Exit Full Screen" : "Full Screen";
+      });
+    }
+
+    function bindFullscreenControl() {
+      const button = outputEl.querySelector("[data-action='fullscreen']");
+      if (!button || button.dataset.bound === "1") return;
+      button.dataset.bound = "1";
+
+      button.addEventListener("click", async () => {
+        if (!fullscreenSupported()) return;
+        try {
+          if (getFullscreenElement() === outputEl) {
+            await exitDocumentFullscreen();
+          } else {
+            await requestElementFullscreen(outputEl);
+          }
+        } catch (_) {
+        } finally {
+          updateFullscreenButtons();
+        }
+      });
+
+      updateFullscreenButtons();
+    }
+
+    function updateGameControlVisibility() {
+      const isRollRead = state.gameType === "rollread";
+      rollGridSizeRow.style.display = isRollRead ? "flex" : "none";
+      const resetBtn = document.getElementById("btnResetScore");
+      resetBtn.style.display = state.gameType === "rollread" ? "none" : "";
+    }
+
+    function showGamePicker() {
+      state.gameType = "";
+      gamePickerEl.classList.remove("hidden");
+      controlsPanelEl.classList.add("hidden");
+      selectedGameBadgeEl.textContent = "None";
+      outputEl.innerHTML = "";
+      updateGameControlVisibility();
+    }
+
+    function selectGame(gameType) {
+      state.gameType = gameType;
+      selectedGameBadgeEl.textContent = gameLabel(gameType);
+      gamePickerEl.classList.add("hidden");
+      controlsPanelEl.classList.remove("hidden");
+      outputEl.innerHTML = "";
+      updateGameControlVisibility();
+    }
+
+    function nextPromptId() {
+      const id = "r" + String(promptIdCounter);
+      promptIdCounter += 1;
+      return id;
+    }
+
+    function wordsDict() {
+      return (typeof fluencyWords !== "undefined")
+        ? fluencyWords
+        : ((typeof fluencyData !== "undefined" && fluencyData.words) ? fluencyData.words : {});
+    }
+
+    function sentsDict() {
+      return (typeof fluencySentences !== "undefined")
+        ? fluencySentences
+        : ((typeof fluencyData !== "undefined" && fluencyData.sentences) ? fluencyData.sentences : {});
+    }
+
+    function readDict(dict, key) {
+      return Array.isArray(dict[key]) ? dict[key] : [];
+    }
+
+    function readWithBlends(dict, prefix, type, blends) {
+      const typeLower = type.toLowerCase();
+      const baseKeys = [`${prefix} ${type}`, `${prefix} ${typeLower}`, `${prefix}`];
+      let base = [];
+      for (const k of baseKeys) base = base.concat(readDict(dict, k));
+
+      if (blends) {
+        const candidates = [
+          `${prefix} with Blends ${type}`,
+          `${prefix} with blends ${type}`,
+          `${prefix} with Blends ${typeLower}`,
+          `${prefix} with blends ${typeLower}`,
+          `${prefix} with BLENDS ${type}`
+        ];
+        const bPrefix = prefix.replace(" - ", "b - ");
+        candidates.push(
+          `${bPrefix} with Blends ${type}`,
+          `${bPrefix} with blends ${type}`,
+          `${bPrefix} with Blends ${typeLower}`,
+          `${bPrefix} with blends ${typeLower}`
+        );
+
+        for (const k of candidates) {
+          const got = readDict(dict, k);
+          if (got.length) {
+            const MIN_BACKFILL = 9;
+            return got.length < MIN_BACKFILL ? uniqueByLowercase(got.concat(base)) : got;
+          }
+        }
+      }
+      return base;
+    }
+
+    function getList(label, type, blends) {
+      const dict = type === "Words" ? wordsDict() : sentsDict();
+
+      if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)) {
+        let all = [];
+        for (const p of MIXED_RULES[label]) {
+          all = all.concat(readWithBlends(dict, p, type, blends));
+        }
+        return all;
+      }
+
+      const prefix = PREFIX[label];
+      if (prefix) return readWithBlends(dict, prefix, type, blends);
+
+      const tail1 = " " + type;
+      const tail2 = " " + type.toLowerCase();
+      const want = label.toLowerCase();
+      const keys = Object.keys(dict);
+      const guess = keys.find((k) => k.toLowerCase().includes(want) && (k.endsWith(tail1) || k.endsWith(tail2)));
+      return guess ? readDict(dict, guess) : [];
+    }
+
+    function renderChips() {
+      chipsEl.innerHTML = "";
+      Array.from(state.selectedSkills).forEach((label) => {
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        chip.innerHTML = `<span>${htmlEscape(label)}</span><span class="x" title="Remove">&times;</span>`;
+        chip.querySelector(".x").addEventListener("click", () => {
+          state.selectedSkills.delete(label);
+          const btn = document.querySelector(`.skill-button[data-skill="${CSS.escape(label)}"]`);
+          if (btn) btn.classList.remove("selected");
+          renderChips();
+        });
+        chipsEl.appendChild(chip);
+      });
+    }
+
+    function selectedSkillLabel() {
+      return Array.from(state.selectedSkills).join(" • ");
+    }
+
+    function modeLabel() {
+      if (state.mode === "words") return "Words";
+      if (state.mode === "sentences") return "Sentences";
+      return "Both";
+    }
+
+    function buildContent(total) {
+      const labels = Array.from(state.selectedSkills);
+      const wantWords = state.mode === "words";
+      const wantSentences = state.mode === "sentences";
+
+      if (wantWords) {
+        const pool = uniqueByLowercase(labels.flatMap((lbl) => getList(lbl, "Words", state.includeBlends)));
+        return fillToN(shuffle(pool), total);
+      }
+
+      if (wantSentences) {
+        const pool = uniqueByLowercase(labels.flatMap((lbl) => getList(lbl, "Sentences", state.includeBlends)));
+        return fillToN(shuffle(pool), total);
+      }
+
+      const words = uniqueByLowercase(labels.flatMap((lbl) => getList(lbl, "Words", state.includeBlends)));
+      const sents = uniqueByLowercase(labels.flatMap((lbl) => getList(lbl, "Sentences", state.includeBlends)));
+      const half = Math.floor(total / 2);
+      const w = fillToN(shuffle(words), half);
+      const s = fillToN(shuffle(sents), total - w.length);
+      return shuffle(w.concat(s)).slice(0, total);
+    }
+
+    function makePrompts(total) {
+      const content = buildContent(total);
+      return content.map((text) => ({ id: nextPromptId(), text: String(text) }));
+    }
+
+    function makePrompt() {
+      const prompts = makePrompts(1);
+      return prompts.length ? prompts[0] : null;
+    }
+
+    function renderPrompt(prompt) {
+      return `<div class="prompt-word">${htmlEscape(prompt.text)}</div>`;
+    }
+
+    function winningLine(marks) {
+      return WIN_LINES.find(([a, b, c]) => marks[a] && marks[a] === marks[b] && marks[b] === marks[c]) || null;
+    }
+
+    function resetTttBoardOnly() {
+      state.ttt.marks = Array(9).fill("");
+      state.ttt.turn = "X";
+      state.ttt.over = false;
+      state.ttt.winLine = [];
+      state.ttt.celebration = "";
+    }
+
+    function placeTttMark(index) {
+      state.ttt.marks[index] = state.ttt.turn;
+      const line = winningLine(state.ttt.marks);
+      if (line) {
+        state.ttt.over = true;
+        state.ttt.winLine = line;
+        state.ttt.score[state.ttt.turn] += 1;
+        state.ttt.celebration = `${state.ttt.turn} WINS!`;
+      } else if (state.ttt.marks.every(Boolean)) {
+        state.ttt.over = true;
+        state.ttt.score.T += 1;
+        state.ttt.celebration = "TIE GAME!";
+      } else {
+        state.ttt.turn = state.ttt.turn === "X" ? "O" : "X";
+        state.ttt.celebration = "";
+      }
+      renderTicTacToe();
+    }
+
+    function renderTicTacToe() {
+      const turnClass = state.ttt.turn === "X" ? "x" : "o";
+
+      outputEl.innerHTML = `
+        <article class="sheet">
+          <div class="view-actions">
+            <button type="button" data-action="fullscreen">Full Screen</button>
+          </div>
+          <div class="sheet-title">Reading Tic Tac Toe</div>
+          <div class="sheet-meta">${htmlEscape(selectedSkillLabel())} | ${modeLabel()} | Turn: <span class="${turnClass}">${state.ttt.turn}</span></div>
+          <div class="score-row">
+            <div class="score-pill">X Wins: <span class="x">${state.ttt.score.X}</span></div>
+            <div class="score-pill">O Wins: <span class="o">${state.ttt.score.O}</span></div>
+            <div class="score-pill">Ties: ${state.ttt.score.T}</div>
+          </div>
+          <div class="game-stack">
+            <div id="tttBoard" class="board"></div>
+            <div class="game-overlay${state.ttt.celebration ? " show" : ""}">
+              <div class="game-overlay-card">${htmlEscape(state.ttt.celebration)}</div>
+            </div>
+          </div>
+          <div class="ttt-actions">
+            <button id="btnSameBoard" type="button">Play Again (Same Board)</button>
+            <button id="btnNewBoard" type="button">New Problems</button>
+          </div>
+        </article>`;
+
+      const board = document.getElementById("tttBoard");
+      state.ttt.prompts.forEach((prompt, idx) => {
+        const mark = state.ttt.marks[idx] || "";
+        const locked = Boolean(mark) || state.ttt.over;
+        const cell = document.createElement("div");
+        cell.className = "cell" + (state.ttt.winLine.includes(idx) ? " win" : "") + (locked ? " locked" : "");
+        cell.dataset.index = String(idx);
+        cell.innerHTML = `${renderPrompt(prompt)}<div class="mark ${mark === "X" ? "x" : mark === "O" ? "o" : ""}">${mark}</div>`;
+        board.appendChild(cell);
+      });
+
+      board.addEventListener("click", (event) => {
+        const cell = event.target.closest(".cell");
+        if (!cell) return;
+        const index = Number(cell.dataset.index);
+        if (!Number.isFinite(index)) return;
+        if (state.ttt.over || state.ttt.marks[index]) return;
+        placeTttMark(index);
+      });
+
+      document.getElementById("btnSameBoard").addEventListener("click", () => {
+        resetTttBoardOnly();
+        renderTicTacToe();
+      });
+
+      document.getElementById("btnNewBoard").addEventListener("click", () => {
+        generate();
+      });
+
+      bindFullscreenControl();
+    }
+
+    function resetConnect4RoundOnly() {
+      state.connect4.board = makeGrid(CONNECT4_ROWS, CONNECT4_COLS, "");
+      state.connect4.turn = "R";
+      state.connect4.over = false;
+      state.connect4.winCells = [];
+      state.connect4.celebration = "";
+      state.connect4.currentPrompt = makePrompt();
+    }
+
+    function connect4WinCells(row, col, mark) {
+      const board = state.connect4.board;
+      const dirs = [
+        [1, 0],
+        [0, 1],
+        [1, 1],
+        [1, -1]
+      ];
+
+      const collect = (dr, dc) => {
+        const out = [];
+        let r = row + dr;
+        let c = col + dc;
+        while (
+          r >= 0 && r < CONNECT4_ROWS &&
+          c >= 0 && c < CONNECT4_COLS &&
+          board[r][c] === mark
+        ) {
+          out.push([r, c]);
+          r += dr;
+          c += dc;
+        }
+        return out;
+      };
+
+      for (const [dr, dc] of dirs) {
+        const neg = collect(-dr, -dc).reverse();
+        const pos = collect(dr, dc);
+        const line = [...neg, [row, col], ...pos];
+        if (line.length >= 4) return line;
+      }
+      return [];
+    }
+
+    function connect4HasWinCell(row, col) {
+      return state.connect4.winCells.some(([r, c]) => r === row && c === col);
+    }
+
+    function handleConnect4ColumnClick(col) {
+      if (state.connect4.over) return;
+      if (col < 0 || col >= CONNECT4_COLS) return;
+
+      let row = -1;
+      for (let r = CONNECT4_ROWS - 1; r >= 0; r -= 1) {
+        if (!state.connect4.board[r][col]) {
+          row = r;
+          break;
+        }
+      }
+      if (row < 0) return;
+
+      if (!state.connect4.currentPrompt) {
+        state.connect4.currentPrompt = makePrompt();
+      }
+
+      const mark = state.connect4.turn;
+      state.connect4.board[row][col] = mark;
+      const win = connect4WinCells(row, col, mark);
+      if (win.length) {
+        state.connect4.over = true;
+        state.connect4.winCells = win;
+        state.connect4.score[mark] += 1;
+        state.connect4.celebration = `${mark === "R" ? "RED" : "YELLOW"} WINS!`;
+      } else if (state.connect4.board.every((line) => line.every(Boolean))) {
+        state.connect4.over = true;
+        state.connect4.score.T += 1;
+        state.connect4.celebration = "TIE GAME!";
+      } else {
+        state.connect4.turn = mark === "R" ? "Y" : "R";
+        state.connect4.currentPrompt = makePrompt();
+        state.connect4.celebration = "";
+      }
+
+      renderConnect4();
+    }
+
+    function renderConnect4() {
+      const turnName = state.connect4.turn === "R" ? "Red" : "Yellow";
+      const meta = `${htmlEscape(selectedSkillLabel())} | ${modeLabel()} | 4 in a Row | Turn: ${turnName}`;
+      const status = state.connect4.over
+        ? (state.connect4.winCells.length ? `${turnName} wins!` : "Tie game.")
+        : "";
+
+      const topButtons = Array.from({ length: CONNECT4_COLS }, (_, col) => `
+        <button type="button" class="drop-btn" data-c4-col="${col}">Drop</button>
+      `).join("");
+
+      let gridHtml = "";
+      for (let r = 0; r < CONNECT4_ROWS; r += 1) {
+        for (let c = 0; c < CONNECT4_COLS; c += 1) {
+          const mark = state.connect4.board[r][c];
+          const classes = [
+            "c4-cell",
+            mark === "R" ? "red" : "",
+            mark === "Y" ? "yellow" : "",
+            connect4HasWinCell(r, c) ? "win" : ""
+          ].filter(Boolean).join(" ");
+          gridHtml += `<div class="${classes}"></div>`;
+        }
+      }
+
+      outputEl.innerHTML = `
+        <article class="sheet">
+          <div class="view-actions">
+            <button type="button" data-action="fullscreen">Full Screen</button>
+          </div>
+          <div class="sheet-title">Reading 4 in a Row</div>
+          <div class="sheet-meta">${meta}</div>
+          <div class="score-row">
+            <div class="score-pill">Red Wins: <span class="x">${state.connect4.score.R}</span></div>
+            <div class="score-pill">Yellow Wins: <span class="o">${state.connect4.score.Y}</span></div>
+            <div class="score-pill">Ties: ${state.connect4.score.T}</div>
+          </div>
+          ${state.connect4.currentPrompt ? `<div class="prompt-card">${renderPrompt(state.connect4.currentPrompt)}</div>` : ""}
+          ${status ? `<div class="winner-banner">${status}</div>` : ""}
+          <div class="connect4-wrap">
+            <div class="connect4-top">${topButtons}</div>
+            <div class="connect4-grid">${gridHtml}</div>
+            <div class="game-overlay${state.connect4.celebration ? " show" : ""}">
+              <div class="game-overlay-card">${htmlEscape(state.connect4.celebration)}</div>
+            </div>
+          </div>
+          <div class="ttt-actions">
+            <button id="btnC4Reset" type="button">Reset Board (Same Prompt Flow)</button>
+            <button id="btnC4New" type="button">New Problems</button>
+          </div>
+        </article>`;
+
+      outputEl.querySelectorAll("[data-c4-col]").forEach((button) => {
+        button.addEventListener("click", () => {
+          handleConnect4ColumnClick(Number(button.dataset.c4Col));
+        });
+      });
+
+      document.getElementById("btnC4Reset").addEventListener("click", () => {
+        resetConnect4RoundOnly();
+        renderConnect4();
+      });
+
+      document.getElementById("btnC4New").addEventListener("click", () => {
+        generate();
+      });
+
+      bindFullscreenControl();
+    }
+
+    function buildRollTable(prompts) {
+      const cols = 6;
+      const rows = Math.ceil(prompts.length / cols);
+      const table = document.createElement("table");
+      table.className = "roll-table";
+
+      const head = table.insertRow();
+      for (let c = 0; c < cols; c += 1) {
+        const td = head.insertCell();
+        td.className = "dice-cell";
+        td.innerHTML = `<img src="images/dice${c + 1}.png" alt="Dice ${c + 1}">`;
+      }
+
+      let idx = 0;
+      for (let r = 0; r < rows; r += 1) {
+        const row = table.insertRow();
+        for (let c = 0; c < cols; c += 1) {
+          const td = row.insertCell();
+          td.className = "rr-cell";
+          td.dataset.col = String(c + 1);
+          const prompt = prompts[idx] || null;
+          if (prompt) {
+            td.dataset.promptId = prompt.id;
+            td.innerHTML = renderPrompt(prompt);
+          }
+          idx += 1;
+        }
+      }
+      return table;
+    }
+
+    function availableColumns() {
+      if (!state.roll) return [];
+      const out = [];
+      for (let i = 0; i < 6; i += 1) {
+        if (state.roll.columnPointers[i] < state.roll.columnQueues[i].length) out.push(i + 1);
+      }
+      return out;
+    }
+
+    function setDieFace(value) {
+      if (!state.roll) return;
+      state.roll.dieImg.src = `images/dice${value}.png`;
+      state.roll.dieImg.alt = `Current die: ${value}`;
+      state.roll.dieValue.textContent = String(value);
+    }
+
+    function setRollCelebration(message) {
+      if (!state.roll) return;
+      if (!state.roll.celebration || !state.roll.celebrationText) return;
+      const text = String(message || "").trim();
+      state.roll.celebrationText.textContent = text;
+      state.roll.celebration.classList.toggle("show", Boolean(text));
+    }
+
+    function resetRollRound() {
+      if (!state.roll) return;
+      state.roll.columnPointers = Array(6).fill(0);
+      state.roll.completed = 0;
+      state.roll.rolling = false;
+      state.roll.page.querySelectorAll(".rr-cell").forEach((td) => td.classList.remove("current", "done"));
+      state.roll.rollBtn.disabled = false;
+      state.roll.rollBtn.textContent = "Roll";
+      setDieFace(1);
+      state.roll.status.textContent = `Roll to start. 0 of ${state.roll.total} complete.`;
+      setRollCelebration("");
+    }
+
+    function completeCell(cell, colIndex) {
+      if (!state.roll) return;
+      cell.classList.remove("current");
+      cell.classList.add("done");
+      state.roll.columnPointers[colIndex] += 1;
+      state.roll.completed += 1;
+
+      if (state.roll.completed >= state.roll.total) {
+        state.roll.rollBtn.disabled = true;
+        state.roll.rollBtn.textContent = "Board Complete";
+        state.roll.status.textContent = `Board complete. ${state.roll.total} of ${state.roll.total} complete.`;
+        setRollCelebration("BOARD COMPLETE!");
+        return;
+      }
+
+      const left = state.roll.total - state.roll.completed;
+      state.roll.rollBtn.disabled = false;
+      state.roll.status.textContent = `${state.roll.completed} of ${state.roll.total} complete (${left} left).`;
+    }
+
+    function takeRollTurn() {
+      if (!state.roll || state.roll.rolling) return;
+      const open = availableColumns();
+      if (!open.length) {
+        state.roll.rollBtn.disabled = true;
+        state.roll.rollBtn.textContent = "Board Complete";
+        state.roll.status.textContent = `Board complete. ${state.roll.total} of ${state.roll.total} complete.`;
+        setRollCelebration("BOARD COMPLETE!");
+        return;
+      }
+
+      state.roll.rolling = true;
+      state.roll.rollBtn.disabled = true;
+      state.roll.status.textContent = "Rolling...";
+
+      const rolled = randInt(1, 6);
+      const final = open.includes(rolled) ? rolled : choose(open);
+      setDieFace(final);
+
+      const colIndex = final - 1;
+      const ptr = state.roll.columnPointers[colIndex];
+      const target = state.roll.columnQueues[colIndex][ptr] || null;
+
+      if (!target) {
+        state.roll.rolling = false;
+        state.roll.rollBtn.disabled = false;
+        state.roll.status.textContent = "No open word in that column.";
+        return;
+      }
+
+      target.classList.add("current");
+      setTimeout(() => completeCell(target, colIndex), 110);
+      state.roll.rolling = false;
+    }
+
+    function wireRollState(page) {
+      const rollBtn = page.querySelector("#rollBtn");
+      const resetBtn = page.querySelector("#resetRollBtn");
+      const status = page.querySelector("#rollStatus");
+      const dieImg = page.querySelector("#liveDie");
+      const dieValue = page.querySelector("#dieValue");
+      const celebration = page.querySelector("#rollOverlay");
+      const celebrationText = page.querySelector("#rollOverlayText");
+
+      const columnQueues = Array.from({ length: 6 }, () => []);
+      page.querySelectorAll(".rr-cell").forEach((cell) => {
+        if (!cell.dataset.promptId) return;
+        const col = Number(cell.dataset.col || "0");
+        if (col >= 1 && col <= 6) columnQueues[col - 1].push(cell);
+      });
+
+      const total = columnQueues.reduce((sum, q) => sum + q.length, 0);
+      state.roll = {
+        page,
+        rollBtn,
+        status,
+        resetBtn,
+        dieImg,
+        dieValue,
+        celebration,
+        celebrationText,
+        columnQueues,
+        columnPointers: Array(6).fill(0),
+        completed: 0,
+        total,
+        rolling: false
+      };
+
+      rollBtn.addEventListener("click", takeRollTurn);
+      resetBtn.addEventListener("click", resetRollRound);
+      resetRollRound();
+    }
+
+    function renderRollRead(prompts) {
+      const table = buildRollTable(prompts);
+      outputEl.innerHTML = `
+        <article class="sheet">
+          <div class="view-actions">
+            <button type="button" data-action="fullscreen">Full Screen</button>
+          </div>
+          <div class="sheet-title">Reading Roll and Read</div>
+          <div class="sheet-meta">${htmlEscape(selectedSkillLabel())} | ${modeLabel()}</div>
+          <div class="roll-controls">
+            <div class="die-wrap">
+              <img id="liveDie" class="live-die" src="images/dice1.png" alt="Current die: 1">
+              <div id="dieValue" class="die-value">1</div>
+            </div>
+            <button id="rollBtn" type="button">Roll</button>
+            <button id="resetRollBtn" type="button">Reset Round</button>
+            <div id="rollStatus" class="status">Roll to start.</div>
+          </div>
+          <div class="game-stack roll-shell">
+            <div id="rollTableMount"></div>
+            <div id="rollOverlay" class="game-overlay">
+              <div id="rollOverlayText" class="game-overlay-card"></div>
+            </div>
+          </div>
+        </article>`;
+      document.getElementById("rollTableMount").appendChild(table);
+      wireRollState(outputEl.querySelector(".sheet"));
+      bindFullscreenControl();
+    }
+
+    function generate() {
+      if (!state.gameType) return;
+
+      if (!wordsDict() && !sentsDict()) {
+        window.alert("Data not loaded. Check fluencyDataFull_v8-2_clean.js");
+        return;
+      }
+      if (state.selectedSkills.size === 0) {
+        window.alert("Select at least one skill in Step 1.");
+        return;
+      }
+
+      const probeType = state.mode === "sentences" ? "Sentences" : "Words";
+      const probe = uniqueByLowercase(Array.from(state.selectedSkills).flatMap((lbl) => getList(lbl, probeType, state.includeBlends)));
+      if (!probe.length) {
+        window.alert("No content found for the selected skill(s) with those settings. Try turning off blends or switching content mode.");
+        return;
+      }
+
+      if (state.gameType === "tictactoe") {
+        state.ttt.prompts = makePrompts(9);
+        resetTttBoardOnly();
+        renderTicTacToe();
+        return;
+      }
+
+      if (state.gameType === "connect4") {
+        resetConnect4RoundOnly();
+        renderConnect4();
+        return;
+      }
+
+      renderRollRead(makePrompts(state.gridSize));
+    }
+
+    document.querySelectorAll(".skill-header").forEach((header) => {
+      header.addEventListener("click", () => {
+        const target = header.getAttribute("data-target");
+        const inner = document.getElementById("section-" + target);
+        if (!inner) return;
+        const block = header.closest(".skill-block");
+        const isCollapsed = inner.classList.contains("collapsed");
+        if (isCollapsed) {
+          inner.classList.remove("collapsed");
+          if (block) block.classList.add("open");
+        } else {
+          inner.classList.add("collapsed");
+          if (block) block.classList.remove("open");
+        }
+      });
+    });
+
+    document.querySelectorAll(".skill-button").forEach((btn) => {
+      btn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const label = btn.dataset.skill;
+        if (!label) return;
+        if (state.selectedSkills.has(label)) {
+          state.selectedSkills.delete(label);
+          btn.classList.remove("selected");
+        } else {
+          state.selectedSkills.add(label);
+          btn.classList.add("selected");
+        }
+        renderChips();
+      });
+    });
+
+    document.querySelectorAll("#blendOptions .option-box").forEach((box) => {
+      box.addEventListener("click", () => {
+        document.querySelectorAll("#blendOptions .option-box").forEach((b) => b.classList.remove("selected"));
+        box.classList.add("selected");
+        state.includeBlends = box.dataset.blends === "yes";
+      });
+    });
+
+    document.querySelectorAll("#contentOptions .option-box").forEach((box) => {
+      box.addEventListener("click", () => {
+        document.querySelectorAll("#contentOptions .option-box").forEach((b) => b.classList.remove("selected"));
+        box.classList.add("selected");
+        state.mode = box.dataset.mode || "words";
+      });
+    });
+
+    document.querySelectorAll("[data-pick-game]").forEach((button) => {
+      button.addEventListener("click", () => {
+        selectGame(button.dataset.pickGame || "");
+      });
+    });
+
+    btnChooseGameEl.addEventListener("click", showGamePicker);
+
+    document.addEventListener("fullscreenchange", updateFullscreenButtons);
+    document.addEventListener("webkitfullscreenchange", updateFullscreenButtons);
+
+    gridSizeSelect.addEventListener("change", () => {
+      state.gridSize = Number(gridSizeSelect.value) || 24;
+    });
+
+    document.getElementById("btnGenerate").addEventListener("click", generate);
+    document.getElementById("btnPrint").addEventListener("click", () => window.print());
+    document.getElementById("btnResetScore").addEventListener("click", () => {
+      state.ttt.score = { X: 0, O: 0, T: 0 };
+      state.connect4.score = { R: 0, Y: 0, T: 0 };
+      if (state.gameType === "tictactoe" && state.ttt.prompts.length) renderTicTacToe();
+      if (state.gameType === "connect4" && state.connect4.board.length) renderConnect4();
+    });
+
+    renderChips();
+    updateGameControlVisibility();
+    showGamePicker();
+  </script>
+</body>
+</html>

@@ -1,0 +1,3371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ultimate Math Game Hub (Test)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1f2c3a;
+      --bg1: #eef8ff;
+      --bg2: #f4fff3;
+      --card: #ffffff;
+      --accent: #1565c0;
+      --accent-soft: #e8f2ff;
+      --x: #d32f2f;
+      --o: #1976d2;
+      --ok: #2e7d32;
+      --line: #c9d7e6;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 22px;
+      font-family: "Poppins", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 10%, #ffffff 0 8%, transparent 9%),
+        radial-gradient(circle at 90% 8%, #ffffff 0 7%, transparent 8%),
+        linear-gradient(145deg, var(--bg1), var(--bg2));
+    }
+
+    .app {
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      text-align: center;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      margin: 0 0 14px;
+      color: #445668;
+      font-size: 0.98rem;
+    }
+
+    .controls {
+      background: var(--card);
+      border: 2px solid #000;
+      border-radius: 14px;
+      padding: 12px;
+      display: grid;
+      gap: 12px;
+      box-shadow: 0 8px 18px rgba(22, 48, 74, 0.08);
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 10px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .label {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-right: 2px;
+    }
+
+    .pill {
+      border: 2px solid #000;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.93rem;
+      user-select: none;
+      line-height: 1;
+    }
+
+    .pill.selected {
+      background: var(--accent-soft);
+      color: #083d7a;
+      border-color: #083d7a;
+    }
+
+    .select-wrap {
+      border: 2px solid #000;
+      border-radius: 999px;
+      background: #fff;
+      padding: 4px 10px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    select {
+      border: none;
+      font: inherit;
+      background: transparent;
+      min-width: 180px;
+      color: #1d2a38;
+      outline: none;
+      padding: 4px 0;
+      cursor: pointer;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .game-picker {
+      background: var(--card);
+      border: 2px solid #000;
+      border-radius: 14px;
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+      box-shadow: 0 8px 18px rgba(22, 48, 74, 0.08);
+    }
+
+    .game-picker h2 {
+      margin: 0;
+      text-align: center;
+      font-size: 1.35rem;
+      letter-spacing: 0.04em;
+    }
+
+    .picker-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .picker-btn {
+      min-height: 100px;
+      border: 2px solid #000;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #f9fcff, #ecf4ff);
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 4px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 800;
+      font-size: 1rem;
+      text-align: center;
+      padding: 8px;
+    }
+
+    .picker-desc {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #44576b;
+    }
+
+    .game-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 2px solid #1c538b;
+      background: #ecf5ff;
+      color: #0d3b67;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    button {
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      padding: 9px 14px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: #e7f3ff;
+      color: #113a62;
+    }
+
+    .secondary {
+      background: #f6fff1;
+      color: #224b17;
+    }
+
+    #output {
+      margin-top: 14px;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .sheet {
+      width: min(980px, 100%);
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 10px 20px rgba(20, 40, 62, 0.12);
+    }
+
+    .sheet-title {
+      text-align: center;
+      font-size: 1.55rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .sheet-meta {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      color: #3f4f5e;
+    }
+
+    .score-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .score-pill {
+      border-radius: 999px;
+      background: #eff6ff;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .x { color: var(--x); }
+    .o { color: var(--o); }
+
+    .board {
+      margin: 0 auto 8px;
+      width: min(760px, 100%);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .cell {
+      min-height: 190px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #f9fcff, #edf4ff);
+      box-shadow: inset 0 0 0 3px #d9e7fb;
+      padding: 8px 8px 4px;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+
+    .cell.locked {
+      cursor: not-allowed;
+      opacity: 0.94;
+    }
+
+    .cell.win {
+      outline: 4px solid var(--ok);
+    }
+
+    .mark {
+      min-height: 46px;
+      line-height: 46px;
+      font-size: 2.8rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .prompt-wrap {
+      text-align: center;
+      display: grid;
+      place-items: center;
+      gap: 5px;
+      padding: 4px;
+    }
+
+    .prompt-math {
+      font-size: 1.8rem;
+      line-height: 1.05;
+      font-weight: 700;
+    }
+
+    .stack-problem {
+      display: inline-grid;
+      justify-items: end;
+      gap: 1px;
+      min-width: 7ch;
+      font-family: "Courier New", monospace;
+      line-height: 1;
+    }
+
+    .stack-line {
+      width: 100%;
+      text-align: right;
+      font-size: 1.75rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.22em;
+      white-space: nowrap;
+    }
+
+    .stack-line .op {
+      width: 1ch;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .stack-bar {
+      width: 100%;
+      border-top: 2px solid #27394d;
+      margin-top: 1px;
+      min-height: 0;
+    }
+
+    .rounding-wrap,
+    .counting-wrap {
+      font-weight: 700;
+      text-align: center;
+      display: grid;
+      gap: 4px;
+    }
+
+    .rounding-line {
+      font-size: 1.18rem;
+      line-height: 1.15;
+    }
+
+    .under {
+      text-decoration: underline;
+      text-decoration-thickness: 3px;
+      text-underline-offset: 2px;
+      text-decoration-skip-ink: none;
+    }
+
+    .numline-wrap {
+      width: min(270px, 100%);
+      margin: 3px auto 0;
+      display: grid;
+      gap: 2px;
+    }
+
+    .numline-track {
+      position: relative;
+      height: 10px;
+      border-top: 2px solid #24384f;
+      margin-top: 8px;
+    }
+
+    .numline-end {
+      position: absolute;
+      top: -7px;
+      width: 2px;
+      height: 12px;
+      background: #24384f;
+    }
+
+    .numline-end.left { left: 0; }
+    .numline-end.right { right: 0; }
+
+    .numline-marker {
+      position: absolute;
+      top: -11px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #e53935;
+      transform: translateX(-50%);
+    }
+
+    .numline-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #32495f;
+      margin-top: 2px;
+    }
+
+    .numline-target {
+      text-align: center;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #41586e;
+      margin-top: 1px;
+    }
+
+    .counting-line {
+      font-size: 1.45rem;
+      letter-spacing: 0.02em;
+    }
+
+    .counting-dir {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #3a526a;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .missing-token {
+      font-family: "Courier New", monospace;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .tenframe-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      max-width: 100%;
+    }
+
+    .tenframe {
+      border: 2px solid #111;
+      border-radius: 2px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .tfgrid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    .tfcell {
+      border: 2px solid #111;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 1px;
+      position: relative;
+      background: #fff;
+    }
+
+    .tfdot {
+      width: 76%;
+      height: 76%;
+      border-radius: 50%;
+      background: #111;
+      display: block;
+      margin-top: 1px;
+    }
+
+    .coin-prompt {
+      display: grid;
+      gap: 4px;
+      justify-items: center;
+      align-items: center;
+      padding: 2px;
+    }
+
+    .coin-strip {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 6px;
+      max-width: 100%;
+    }
+
+    .coin-strip.coin-grid {
+      display: grid;
+      grid-template-columns: repeat(var(--coin-cols, 2), max-content);
+      justify-content: center;
+      align-content: center;
+      align-items: start;
+      gap: 6px 8px;
+    }
+
+    .coin-face {
+      position: relative;
+      width: var(--coin-size, 64px);
+      height: var(--coin-size, 64px);
+      border-radius: 50%;
+      overflow: visible;
+      flex: 0 0 auto;
+    }
+
+    .coin-face img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: 50%;
+    }
+
+    .coin-dot {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid #5c4e24;
+      background: #ffe27a;
+      color: #2d2818;
+      font-size: 0.69rem;
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+      transform: translate(-50%, -50%);
+      transition: transform 0.08s ease, background-color 0.12s ease;
+      z-index: 2;
+      padding: 0;
+    }
+
+    .coin-dot.hit {
+      background: #3cb86f;
+      border-color: #1d6f42;
+      color: #fff;
+      cursor: default;
+    }
+
+    .coin-dot.star {
+      border-color: #7f4e80;
+      background: #ffe8f7;
+      color: #7a1d67;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+
+    .coin-dot.star.hit {
+      background: #3cb86f;
+      border-color: #1d6f42;
+      color: #fff;
+    }
+
+    .coin-total {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: #31485f;
+      min-height: 1em;
+    }
+
+    .ttt-actions {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .roll-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 8px 0 12px;
+      padding: 10px;
+      border: 2px dashed #aec5df;
+      border-radius: 12px;
+      background: #f6fbff;
+    }
+
+    .die-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .live-die {
+      width: 68px;
+      height: 68px;
+      border: 2px solid #000;
+      border-radius: 10px;
+      object-fit: contain;
+      background: #fff;
+    }
+
+    .live-die.rolling {
+      animation: spin 0.52s linear;
+    }
+
+    .die-value {
+      font-size: 1.35rem;
+      font-weight: 800;
+      min-width: 36px;
+      text-align: center;
+      color: #1e3957;
+    }
+
+    .status {
+      flex: 1 1 100%;
+      text-align: center;
+      font-size: 0.92rem;
+      color: #334b62;
+      min-height: 1.5em;
+    }
+
+    .roll-table {
+      margin: 0 auto;
+      border-collapse: collapse;
+      width: min(100%, 940px);
+      table-layout: fixed;
+    }
+
+    .roll-table td {
+      border: 1px solid #000;
+      width: calc(100% / 6);
+      height: 88px;
+      text-align: center;
+      vertical-align: middle;
+      padding: 5px;
+      overflow: hidden;
+    }
+
+    .roll-table .dice-cell {
+      height: 92px;
+      background: #fbfdff;
+    }
+
+    .roll-table .dice-cell img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+    }
+
+    .rr-cell.current {
+      background: #fff2c2;
+      box-shadow: inset 0 0 0 3px #f9a825;
+      transform: scale(1.02);
+      font-weight: 700;
+    }
+
+    .rr-cell.done {
+      background: #eef8ee;
+    }
+
+    .roll-table .prompt-math {
+      font-size: 1.35rem;
+    }
+
+    .roll-table .stack-line {
+      font-size: 1.24rem;
+    }
+
+    .roll-table .tenframe {
+      border-width: 1.5px;
+    }
+
+    .roll-table .tfcell {
+      width: 14px;
+      height: 14px;
+      border-width: 1.5px;
+    }
+
+    .roll-table .coin-face {
+      width: var(--coin-size-roll, 50px);
+      height: var(--coin-size-roll, 50px);
+    }
+
+    .roll-table .coin-dot {
+      width: 16px;
+      height: 16px;
+      font-size: 0.56rem;
+      border-width: 1px;
+    }
+
+    .roll-table .coin-total {
+      font-size: 0.72rem;
+    }
+
+    .treasure-stage {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+      width: min(980px, 100%);
+      margin: 0 auto 8px;
+    }
+
+    .treasure-stage.versus {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .treasure-board-card {
+      border: 2px solid #000;
+      border-radius: 12px;
+      padding: 8px;
+      background: #f9fcff;
+    }
+
+    .treasure-board-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #254465;
+    }
+
+    .treasure-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .treasure-cell {
+      min-height: 138px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #f8fbff, #eaf3ff);
+      box-shadow: inset 0 0 0 3px #d9e7fb;
+      padding: 8px 8px 6px;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      text-align: center;
+    }
+
+    .treasure-cell.open {
+      cursor: default;
+      background: #f8fbff;
+    }
+
+    .treasure-cell .coin-dot {
+      pointer-events: none;
+    }
+
+    .treasure-pick {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #406284;
+      margin-top: 4px;
+    }
+
+    .treasure-result {
+      font-size: 1.02rem;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+
+    .treasure-art {
+      display: grid;
+      place-items: center;
+      gap: 2px;
+    }
+
+    .treasure-art svg {
+      width: 76px;
+      height: 62px;
+      filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.25));
+      animation: treasurePop 0.85s ease-out;
+    }
+
+    .miss-icon {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .treasure-hit {
+      color: #1f7c35;
+    }
+
+    .treasure-miss {
+      color: #a43228;
+    }
+
+    .winner-banner {
+      text-align: center;
+      font-size: 1.08rem;
+      font-weight: 900;
+      color: #0f4e2a;
+      background: #ebfff2;
+      border: 2px solid #2f7f46;
+      border-radius: 10px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+    }
+
+    .prompt-card {
+      border: 2px dashed #9fb5cc;
+      border-radius: 10px;
+      padding: 8px;
+      margin: 0 auto 10px;
+      width: min(560px, 100%);
+      background: #f8fcff;
+    }
+
+    .connect4-wrap {
+      margin: 0 auto 8px;
+      width: min(900px, 100%);
+      display: grid;
+      gap: 8px;
+    }
+
+    .connect4-top {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .drop-btn {
+      border-radius: 9px;
+      padding: 8px 4px;
+      font-size: 0.86rem;
+    }
+
+    .connect4-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+      background: #1f5ea3;
+      border: 2px solid #000;
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .c4-cell {
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: #e8eff8;
+      border: 2px solid #0f2c4f;
+    }
+
+    .c4-cell.red {
+      background: #df3f33;
+    }
+
+    .c4-cell.yellow {
+      background: #f2d03c;
+    }
+
+    .c4-cell.win {
+      box-shadow: 0 0 0 4px #2ec65f inset;
+    }
+
+    .fleet-stage {
+      width: min(980px, 100%);
+      margin: 0 auto 8px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .fleet-card {
+      border: 2px solid #000;
+      border-radius: 12px;
+      padding: 8px;
+      background: #f8fcff;
+    }
+
+    .fleet-head {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #274867;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .fleet-grid {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .fleet-cell {
+      aspect-ratio: 1;
+      border: 2px solid #2d5278;
+      border-radius: 8px;
+      background: #deecfb;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .fleet-cell.locked {
+      cursor: default;
+      opacity: 0.6;
+    }
+
+    .fleet-cell.hit {
+      background: #ffdfdf;
+      color: #a5291e;
+      border-color: #8b281f;
+    }
+
+    .fleet-cell.miss {
+      background: #f0f5fb;
+      color: #5d738b;
+      border-color: #8da4bd;
+    }
+
+    .fleet-status {
+      display: grid;
+      gap: 5px;
+      margin: 8px 0 6px;
+    }
+
+    .fleet-ship-row {
+      border: 1px solid #b5c9df;
+      border-radius: 8px;
+      background: #fff;
+      padding: 4px 6px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .fleet-ship-art {
+      position: relative;
+      width: 68px;
+      height: 24px;
+      border-radius: 6px;
+      background: #edf3fb;
+      border: 1px solid #b9cbe0;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .fleet-ship-art img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .fleet-ship-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .fleet-ship-block {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: #44658a;
+    }
+
+    .fleet-ship-x {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #bb231a;
+      background: rgba(255, 255, 255, 0.68);
+    }
+
+    .fleet-ship-name {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: #214260;
+      line-height: 1.15;
+    }
+
+    .fleet-ship-progress {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #3f5e7d;
+    }
+
+    .fleet-ship-sunk {
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: #9f231b;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 19, 30, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 14px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      width: min(460px, 100%);
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 12px 25px rgba(10, 20, 30, 0.25);
+    }
+
+    .modal-title {
+      margin: 0 0 8px;
+      font-size: 1.08rem;
+      font-weight: 800;
+    }
+
+    .modal-prompt {
+      margin: 0 0 10px;
+      font-size: 0.95rem;
+      color: #3b4e61;
+    }
+
+    .modal-problem {
+      border: 2px dashed #9fb5cc;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
+      min-height: 110px;
+      display: grid;
+      place-items: center;
+      background: #f8fcff;
+    }
+
+    .modal-problem .prompt-math {
+      font-size: 2rem;
+    }
+
+    .modal-problem .stack-line {
+      font-size: 2rem;
+    }
+
+    .modal-problem .coin-face {
+      width: var(--coin-size-modal, 82px);
+      height: var(--coin-size-modal, 82px);
+    }
+
+    .modal-problem .coin-dot {
+      pointer-events: none;
+      width: 24px;
+      height: 24px;
+      font-size: 0.72rem;
+    }
+
+    .modal-problem .tenframe {
+      border-width: 2px;
+    }
+
+    .modal-problem .tfcell {
+      width: 16px;
+      height: 16px;
+      border-width: 2px;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #8aa4be;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      outline: none;
+    }
+
+    .modal-input:focus {
+      border-color: #1c63a8;
+    }
+
+    .modal-msg {
+      min-height: 1.2em;
+      margin-bottom: 8px;
+      font-size: 0.88rem;
+      color: #a12222;
+      font-weight: 700;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg) scale(1); }
+      35% { transform: rotate(130deg) scale(1.07); }
+      70% { transform: rotate(290deg) scale(0.97); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    @keyframes treasurePop {
+      0% { transform: scale(0.72) rotate(-7deg); opacity: 0.1; }
+      65% { transform: scale(1.08) rotate(3deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    @media (max-width: 980px) {
+      .picker-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cell {
+        min-height: 160px;
+      }
+
+      .treasure-stage.versus {
+        grid-template-columns: 1fr;
+      }
+
+      .treasure-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .treasure-cell {
+        min-height: 122px;
+      }
+
+      .connect4-top,
+      .connect4-grid {
+        gap: 6px;
+      }
+
+      .fleet-stage {
+        grid-template-columns: 1fr;
+      }
+
+      .prompt-math {
+        font-size: 1.35rem;
+      }
+
+      .stack-line {
+        font-size: 1.35rem;
+      }
+
+      .coin-face {
+        width: var(--coin-size-mobile, 52px);
+        height: var(--coin-size-mobile, 52px);
+      }
+
+      .coin-dot {
+        width: 18px;
+        height: 18px;
+        font-size: 0.59rem;
+      }
+
+      .modal-problem .prompt-math {
+        font-size: 1.5rem;
+      }
+
+      .modal-problem .stack-line {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media print {
+      @page { size: letter landscape; margin: 0.35in; }
+
+      body {
+        background: #fff !important;
+        padding: 0 !important;
+      }
+
+      .controls,
+      .game-picker,
+      .subtitle,
+      #btnGenerate,
+      #btnPrint,
+      #btnResetScore,
+      #btnChooseGame,
+      .ttt-actions,
+      .roll-controls,
+      .modal-backdrop {
+        display: none !important;
+      }
+
+      #output {
+        margin: 0 !important;
+      }
+
+      .sheet {
+        width: auto !important;
+        max-width: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.15in 0.2in !important;
+      }
+
+      .sheet-title {
+        font-size: 16px !important;
+        margin-bottom: 2px !important;
+      }
+
+      .sheet-meta {
+        font-size: 10px !important;
+        margin-bottom: 6px !important;
+      }
+
+      .score-row {
+        margin-bottom: 6px !important;
+      }
+
+      .score-pill {
+        font-size: 10px !important;
+        padding: 4px 8px !important;
+      }
+
+      .cell {
+        min-height: 130px !important;
+      }
+
+      .prompt-math {
+        font-size: 20px !important;
+      }
+
+      .stack-line {
+        font-size: 19px !important;
+      }
+
+      .coin-face {
+        width: 52px !important;
+        height: 52px !important;
+      }
+
+      .coin-dot {
+        width: 16px !important;
+        height: 16px !important;
+        font-size: 9px !important;
+      }
+
+      .roll-table td {
+        height: 67px !important;
+      }
+
+      .roll-table .dice-cell img {
+        width: 42px !important;
+        height: 42px !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>Ultimate Math Game Hub (Test)</h1>
+    <p class="subtitle">Pick the game first. Then set skill and difficulty for class practice.</p>
+
+    <section id="gamePicker" class="game-picker">
+      <h2>WHAT DO YOU WANT TO PLAY?</h2>
+      <div class="picker-grid">
+        <button type="button" class="picker-btn" data-pick-game="tictactoe">
+          <span>Tic Tac Toe</span>
+          <span class="picker-desc">Solve to claim X or O</span>
+        </button>
+        <button type="button" class="picker-btn" data-pick-game="rollread">
+          <span>Roll and Read</span>
+          <span class="picker-desc">Roll, solve, and fill the board</span>
+        </button>
+        <button type="button" class="picker-btn" data-pick-game="treasure">
+          <span>Buried Treasure</span>
+          <span class="picker-desc">Solve and reveal tiles</span>
+        </button>
+        <button type="button" class="picker-btn" data-pick-game="connect4">
+          <span>4 in a Row</span>
+          <span class="picker-desc">Solve to drop a checker</span>
+        </button>
+        <button type="button" class="picker-btn" data-pick-game="fleetstrike">
+          <span>Fleet Strike</span>
+          <span class="picker-desc">Solve to fire at enemy grid</span>
+        </button>
+      </div>
+    </section>
+
+    <section id="controlsPanel" class="controls hidden">
+      <div class="row">
+        <span class="label">Selected Game:</span>
+        <span id="selectedGameBadge" class="game-badge">None</span>
+        <button id="btnChooseGame" type="button">Choose Different Game</button>
+      </div>
+
+      <div class="row" id="operationRow">
+        <span class="label">Skill:</span>
+        <button type="button" class="pill selected" data-operation="addition">Addition</button>
+        <button type="button" class="pill" data-operation="subtraction">Subtraction</button>
+        <button type="button" class="pill" data-operation="multiplication">Multiplication</button>
+        <button type="button" class="pill" data-operation="division">Division</button>
+        <button type="button" class="pill" data-operation="rounding">Rounding</button>
+        <button type="button" class="pill" data-operation="counting">Counting</button>
+        <button type="button" class="pill" data-operation="tenframes">Ten Frames</button>
+        <button type="button" class="pill" data-operation="coins">Coins</button>
+      </div>
+
+      <div class="row" id="answerModeRow">
+        <span class="label">Answer Check:</span>
+        <button type="button" class="pill selected" data-answer-mode="free">Free Play</button>
+        <button type="button" class="pill" data-answer-mode="required">Require Correct Answer</button>
+      </div>
+
+      <div class="row">
+        <span class="label" id="difficultyText">Difficulty:</span>
+        <div class="select-wrap" id="difficultySelectWrap">
+          <select id="difficultySelect"></select>
+        </div>
+      </div>
+
+      <div class="row" id="treasureSettingsRow">
+        <span class="label">Treasure Problems:</span>
+        <div class="select-wrap">
+          <select id="treasureProblemCountSelect">
+            <option value="12">12</option>
+            <option value="16">16</option>
+            <option value="20">20</option>
+            <option value="25" selected>25</option>
+            <option value="30">30</option>
+          </select>
+        </div>
+        <span class="label">Teams:</span>
+        <div class="select-wrap">
+          <select id="treasureTeamsSelect">
+            <option value="1" selected>1 Team</option>
+            <option value="2">2 Teams (Race)</option>
+          </select>
+        </div>
+        <span class="label">Treasures to Find:</span>
+        <div class="select-wrap">
+          <select id="treasureCountSelect">
+            <option value="3">3</option>
+            <option value="4" selected>4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row" id="regroupRow">
+        <span class="label">Regrouping (Addition/Subtraction):</span>
+        <div class="select-wrap">
+          <select id="regroupSelect">
+            <option value="mixed">Mixed</option>
+            <option value="with">With Regrouping</option>
+            <option value="none">No Regrouping</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row" id="roundingRow">
+        <span class="label">Rounding View:</span>
+        <div class="select-wrap">
+          <select id="roundingStyleSelect">
+            <option value="standard">Standard</option>
+            <option value="numberline">With Number Line</option>
+          </select>
+        </div>
+        <span class="label">Nearest:</span>
+        <div class="select-wrap">
+          <select id="roundingNearestSelect">
+            <option value="10">10</option>
+            <option value="100">100</option>
+            <option value="1000">1,000</option>
+            <option value="10000">10,000</option>
+          </select>
+        </div>
+        <span class="label">Numbers Up To:</span>
+        <div class="select-wrap">
+          <select id="roundingWithinSelect">
+            <option value="100">100</option>
+            <option value="1000">1,000</option>
+            <option value="10000">10,000</option>
+            <option value="100000">100,000</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row" id="countingRow">
+        <span class="label">Counting Type:</span>
+        <div class="select-wrap">
+          <select id="countingStyleSelect">
+            <option value="mixed">Mixed</option>
+            <option value="forward">Count Forward</option>
+            <option value="backward">Count Backward</option>
+            <option value="missing">Missing Number</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="btnGenerate" class="primary" type="button">Start New Board</button>
+        <button id="btnPrint" class="secondary" type="button">Print</button>
+        <button id="btnResetScore" type="button">Reset Tic Tac Toe Score</button>
+      </div>
+    </section>
+
+    <div id="output"></div>
+  </div>
+
+  <div id="answerModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h2 id="modalTitle" class="modal-title">Enter Answer</h2>
+      <p id="modalPrompt" class="modal-prompt"></p>
+      <div id="modalProblem" class="modal-problem"></div>
+      <input id="modalInput" class="modal-input" type="text" inputmode="numeric" autocomplete="off" />
+      <div id="modalMsg" class="modal-msg"></div>
+      <div class="modal-actions">
+        <button id="modalCancel" type="button">Cancel</button>
+        <button id="modalSubmit" class="primary" type="button">Check</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const COIN_DEFS = {
+      quarter: {
+        key: "quarter",
+        label: "Quarter",
+        value: 25,
+        ratio: 1.35,
+        chunkValues: [5, 5, 5, 5, 5],
+        img: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f715cda9ca3b4afc8.png"
+      },
+      dime: {
+        key: "dime",
+        label: "Dime",
+        value: 10,
+        ratio: 1,
+        chunkValues: [5, 5],
+        img: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f7213971802a4d866.png"
+      },
+      nickel: {
+        key: "nickel",
+        label: "Nickel",
+        value: 5,
+        ratio: 1.18,
+        chunkValues: [5],
+        img: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f30ec4a3836469e61.png"
+      },
+      penny: {
+        key: "penny",
+        label: "Penny",
+        value: 1,
+        ratio: 1.06,
+        chunkValues: [1],
+        img: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f3fdd0e810fca84ef.png"
+      }
+    };
+
+    const COIN_ORDER = ["quarter", "dime", "nickel", "penny"];
+
+    const DOT_POSITIONS = {
+      1: [{ x: 50, y: 50 }],
+      2: [{ x: 34, y: 50 }, { x: 66, y: 50 }],
+      5: [
+        { x: 50, y: 23 },
+        { x: 72, y: 40 },
+        { x: 64, y: 68 },
+        { x: 36, y: 68 },
+        { x: 28, y: 40 }
+      ]
+    };
+
+    const DIFFICULTY_BY_OPERATION = {
+      coins: [
+        { value: "single", label: "Single digit totals (up to 35c)" },
+        { value: "double", label: "Double digit totals (up to 99c)" },
+        { value: "multi", label: "Multi digit totals (up to 250c)" }
+      ],
+      addition: [
+        { value: "single", label: "Single digit" },
+        { value: "double", label: "2-digit" },
+        { value: "multi", label: "3-digit" }
+      ],
+      subtraction: [
+        { value: "single", label: "Single digit" },
+        { value: "double", label: "2-digit" },
+        { value: "multi", label: "3-digit" }
+      ],
+      multiplication: [
+        { value: "single", label: "1-digit by 1-digit" },
+        { value: "double", label: "2-digit by 1-digit" },
+        { value: "multi", label: "3-digit by 1-digit" }
+      ],
+      division: [
+        { value: "single", label: "1-digit by 1-digit facts" },
+        { value: "double", label: "2-digit by 1-digit" },
+        { value: "multi", label: "3-digit by 1-digit" }
+      ],
+      rounding: [
+        { value: "single", label: "Round 2-digit to nearest 10" },
+        { value: "double", label: "Round 3-digit to nearest 100" },
+        { value: "multi", label: "Round 4-digit to nearest 1000" }
+      ],
+      counting: [
+        { value: "single", label: "Within 20" },
+        { value: "double", label: "Within 50" },
+        { value: "multi", label: "Within 100" }
+      ],
+      tenframes: [
+        { value: "single", label: "Up to 10" },
+        { value: "double", label: "Up to 20" },
+        { value: "multi", label: "Up to 40" }
+      ]
+    };
+
+    const WIN_LINES = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
+    const GAME_LABELS = {
+      tictactoe: "Tic Tac Toe",
+      rollread: "Roll and Read",
+      treasure: "Buried Treasure",
+      connect4: "4 in a Row",
+      fleetstrike: "Fleet Strike"
+    };
+    const ROLLREAD_PROMPT_COUNT = 18;
+    const TREASURE_DEFAULT_PROBLEM_COUNT = 25;
+    const TREASURE_DEFAULT_COUNT = 4;
+    const CONNECT4_ROWS = 6;
+    const CONNECT4_COLS = 7;
+    const FLEET_GRID_SIZE = 8;
+    const FLEET_SHIP_DEFS = [
+      { id: "carrier", name: "Carrier", length: 5, image: "images/fleet/carrier.png" },
+      { id: "battleship", name: "Battleship", length: 4, image: "images/fleet/battleship.png" },
+      { id: "cruiser", name: "Cruiser", length: 3, image: "images/fleet/cruiser.png" },
+      { id: "submarine", name: "Submarine", length: 3, image: "images/fleet/submarine.png" },
+      { id: "destroyer", name: "Destroyer", length: 2, image: "images/fleet/destroyer.png" }
+    ];
+
+    let promptIdCounter = 1;
+    const ROUNDING_WITHIN_OPTIONS = [100, 1000, 10000, 100000];
+
+    const state = {
+      gameType: "",
+      operation: "addition",
+      difficulty: "single",
+      regroupMode: "mixed",
+      roundingStyle: "standard",
+      roundingNearest: 10,
+      roundingWithin: 100,
+      countingStyle: "mixed",
+      requireCorrect: false,
+      promptIndex: new Map(),
+      ttt: {
+        prompts: [],
+        marks: Array(9).fill(""),
+        turn: "X",
+        over: false,
+        winLine: [],
+        score: { X: 0, O: 0, T: 0 }
+      },
+      roll: null,
+      connect4: {
+        board: [],
+        turn: "R",
+        over: false,
+        winCells: [],
+        score: { R: 0, Y: 0, T: 0 },
+        currentPrompt: null
+      },
+      fleet: {
+        layouts: { A: null, B: null },
+        shots: { A: [], B: [] },
+        hits: { A: 0, B: 0 },
+        turn: "A",
+        over: false,
+        winner: "",
+        currentPrompt: null
+      },
+      treasure: {
+        problemCount: TREASURE_DEFAULT_PROBLEM_COUNT,
+        count: TREASURE_DEFAULT_COUNT,
+        teams: 1,
+        winner: "",
+        boards: []
+      },
+      modal: {
+        resolver: null,
+        prompt: null,
+        sourceLabel: ""
+      }
+    };
+
+    const gamePickerEl = document.getElementById("gamePicker");
+    const controlsPanelEl = document.getElementById("controlsPanel");
+    const selectedGameBadgeEl = document.getElementById("selectedGameBadge");
+    const btnChooseGameEl = document.getElementById("btnChooseGame");
+    const difficultyTextEl = document.getElementById("difficultyText");
+    const difficultySelectWrapEl = document.getElementById("difficultySelectWrap");
+    const treasureSettingsRow = document.getElementById("treasureSettingsRow");
+    const treasureProblemCountSelect = document.getElementById("treasureProblemCountSelect");
+    const treasureTeamsSelect = document.getElementById("treasureTeamsSelect");
+    const treasureCountSelect = document.getElementById("treasureCountSelect");
+    const outputEl = document.getElementById("output");
+    const difficultySelect = document.getElementById("difficultySelect");
+    const regroupSelect = document.getElementById("regroupSelect");
+    const regroupRow = document.getElementById("regroupRow");
+    const roundingStyleSelect = document.getElementById("roundingStyleSelect");
+    const roundingNearestSelect = document.getElementById("roundingNearestSelect");
+    const roundingWithinSelect = document.getElementById("roundingWithinSelect");
+    const roundingRow = document.getElementById("roundingRow");
+    const countingStyleSelect = document.getElementById("countingStyleSelect");
+    const countingRow = document.getElementById("countingRow");
+
+    const answerModal = document.getElementById("answerModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalPrompt = document.getElementById("modalPrompt");
+    const modalProblem = document.getElementById("modalProblem");
+    const modalInput = document.getElementById("modalInput");
+    const modalMsg = document.getElementById("modalMsg");
+    const modalSubmit = document.getElementById("modalSubmit");
+    const modalCancel = document.getElementById("modalCancel");
+    regroupSelect.value = state.regroupMode;
+    roundingStyleSelect.value = state.roundingStyle;
+    roundingNearestSelect.value = String(state.roundingNearest);
+    roundingWithinSelect.value = String(state.roundingWithin);
+    countingStyleSelect.value = state.countingStyle;
+    treasureProblemCountSelect.value = String(state.treasure.problemCount);
+    treasureTeamsSelect.value = String(state.treasure.teams);
+    treasureCountSelect.value = String(state.treasure.count);
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function choose(arr) {
+      return arr[randInt(0, arr.length - 1)];
+    }
+
+    function makeGrid(rows, cols, value = "") {
+      return Array.from({ length: rows }, () => Array.from({ length: cols }, () => value));
+    }
+
+    function formatNumber(value) {
+      return Number(value).toLocaleString("en-US");
+    }
+
+    function htmlEscape(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    function gameLabel(gameType) {
+      return GAME_LABELS[gameType] || "Unknown";
+    }
+
+    function syncTreasureSettings() {
+      const maxTreasureCount = Math.max(1, Math.min(6, state.treasure.problemCount));
+      if (state.treasure.count > maxTreasureCount) {
+        state.treasure.count = maxTreasureCount;
+      }
+      treasureCountSelect.innerHTML = "";
+      for (let i = 1; i <= maxTreasureCount; i += 1) {
+        const option = document.createElement("option");
+        option.value = String(i);
+        option.textContent = String(i);
+        treasureCountSelect.appendChild(option);
+      }
+      treasureCountSelect.value = String(state.treasure.count);
+    }
+
+    function updateGameControlVisibility() {
+      const isTreasure = state.gameType === "treasure";
+      treasureSettingsRow.style.display = isTreasure ? "flex" : "none";
+      document.getElementById("btnResetScore").style.display = state.gameType === "tictactoe" ? "" : "none";
+      document.getElementById("btnGenerate").textContent = isTreasure ? "Start Treasure Board" : "Start New Board";
+    }
+
+    function showGamePicker() {
+      state.gameType = "";
+      gamePickerEl.classList.remove("hidden");
+      controlsPanelEl.classList.add("hidden");
+      selectedGameBadgeEl.textContent = "None";
+      outputEl.innerHTML = "";
+    }
+
+    function selectGame(gameType) {
+      state.gameType = gameType;
+      selectedGameBadgeEl.textContent = gameLabel(gameType);
+      gamePickerEl.classList.add("hidden");
+      controlsPanelEl.classList.remove("hidden");
+      updateGameControlVisibility();
+      generate();
+    }
+
+    function nextPromptId() {
+      const id = "p" + String(promptIdCounter);
+      promptIdCounter += 1;
+      return id;
+    }
+
+    function indexPrompts(prompts) {
+      const map = new Map();
+      prompts.forEach((p) => map.set(p.id, p));
+      state.promptIndex = map;
+    }
+
+    function getPromptById(id) {
+      if (!id) return null;
+      return state.promptIndex.get(id) || null;
+    }
+
+    function setSelectedInRow(rowId, attr, value) {
+      const row = document.getElementById(rowId);
+      row.querySelectorAll(".pill").forEach((pill) => {
+        pill.classList.toggle("selected", pill.getAttribute(attr) === value);
+      });
+    }
+
+    function updateDifficultyOptions() {
+      const options = DIFFICULTY_BY_OPERATION[state.operation] || [];
+      const previous = state.difficulty;
+      difficultySelect.innerHTML = "";
+      options.forEach((opt) => {
+        const element = document.createElement("option");
+        element.value = opt.value;
+        element.textContent = opt.label;
+        difficultySelect.appendChild(element);
+      });
+
+      const hasPrevious = options.some((x) => x.value === previous);
+      state.difficulty = hasPrevious ? previous : (options[0] ? options[0].value : "single");
+      difficultySelect.value = state.difficulty;
+    }
+
+    function updateRegroupVisibility() {
+      const show = state.operation === "addition" || state.operation === "subtraction";
+      regroupRow.style.display = show ? "flex" : "none";
+      roundingRow.style.display = state.operation === "rounding" ? "flex" : "none";
+      countingRow.style.display = state.operation === "counting" ? "flex" : "none";
+      difficultyTextEl.style.display = state.operation === "rounding" ? "none" : "";
+      difficultySelectWrapEl.style.display = state.operation === "rounding" ? "none" : "inline-flex";
+    }
+
+    function operationLabel() {
+      if (state.operation === "coins") return "Coins";
+      if (state.operation === "addition") return "Addition";
+      if (state.operation === "subtraction") return "Subtraction";
+      if (state.operation === "multiplication") return "Multiplication";
+      if (state.operation === "division") return "Division";
+      if (state.operation === "rounding") return "Rounding";
+      if (state.operation === "counting") return "Counting";
+      return "Ten Frames";
+    }
+
+    function difficultyLabel() {
+      if (state.operation === "rounding") {
+        return `Nearest ${formatNumber(state.roundingNearest)} | Up To ${formatNumber(state.roundingWithin)}`;
+      }
+      const list = DIFFICULTY_BY_OPERATION[state.operation] || [];
+      const item = list.find((x) => x.value === state.difficulty);
+      return item ? item.label : state.difficulty;
+    }
+
+    function enforceRoundingWithin() {
+      const minWithin = state.roundingNearest * 10;
+      if (state.roundingWithin < minWithin) {
+        state.roundingWithin = ROUNDING_WITHIN_OPTIONS.find((value) => value >= minWithin) || 100000;
+      }
+      roundingNearestSelect.value = String(state.roundingNearest);
+      roundingWithinSelect.value = String(state.roundingWithin);
+    }
+
+    function rangeByDifficulty() {
+      if (state.difficulty === "single") return { min: 0, max: 9 };
+      if (state.difficulty === "double") return { min: 10, max: 99 };
+      return { min: 100, max: 999 };
+    }
+
+    function digitsForDifficulty() {
+      if (state.difficulty === "single") return 1;
+      if (state.difficulty === "double") return 2;
+      return 3;
+    }
+
+    function hasAdditionRegroup(a, b, digits) {
+      let carry = 0;
+      for (let i = 0; i < digits; i += 1) {
+        const da = Math.floor(a / (10 ** i)) % 10;
+        const db = Math.floor(b / (10 ** i)) % 10;
+        const sum = da + db + carry;
+        if (sum >= 10) return true;
+        carry = sum >= 10 ? 1 : 0;
+      }
+      return false;
+    }
+
+    function hasSubtractionRegroup(a, b, digits) {
+      let borrow = 0;
+      for (let i = 0; i < digits; i += 1) {
+        let da = (Math.floor(a / (10 ** i)) % 10) - borrow;
+        const db = Math.floor(b / (10 ** i)) % 10;
+        if (da < db) return true;
+        borrow = 0;
+      }
+      return false;
+    }
+
+    function matchesRegroupMode(hasRegroup) {
+      if (state.regroupMode === "mixed") return true;
+      if (state.regroupMode === "with") return hasRegroup;
+      return !hasRegroup;
+    }
+
+    function coinConfig() {
+      if (state.difficulty === "single") {
+        return { maxTotal: 35, minCoins: 2, maxCoins: 4, allowed: ["penny", "nickel", "dime"] };
+      }
+      if (state.difficulty === "double") {
+        return { maxTotal: 99, minCoins: 3, maxCoins: 6, allowed: ["penny", "nickel", "dime", "quarter"] };
+      }
+      return { maxTotal: 250, minCoins: 4, maxCoins: 9, allowed: ["penny", "nickel", "dime", "quarter"] };
+    }
+
+    function makeCoinPrompt() {
+      const cfg = coinConfig();
+      let picks = [];
+      let total = 0;
+      let tries = 0;
+      const coinCount = randInt(cfg.minCoins, cfg.maxCoins);
+
+      while (tries < 400) {
+        tries += 1;
+        picks = [];
+        for (let i = 0; i < coinCount; i += 1) {
+          picks.push(COIN_DEFS[choose(cfg.allowed)]);
+        }
+        total = picks.reduce((sum, coin) => sum + coin.value, 0);
+        if (total > 0 && total <= cfg.maxTotal) break;
+      }
+
+      picks = picks.slice().sort((a, b) => {
+        if (b.value !== a.value) return b.value - a.value;
+        return COIN_ORDER.indexOf(a.key) - COIN_ORDER.indexOf(b.key);
+      });
+
+      return {
+        id: nextPromptId(),
+        kind: "coins",
+        answer: total,
+        counted: 0,
+        coins: picks.map((coin) => ({
+          key: coin.key,
+          label: coin.label,
+          value: coin.value,
+          ratio: coin.ratio,
+          img: coin.img,
+          chunkValues: coin.chunkValues.slice(),
+          dots: coin.chunkValues.map(() => false)
+        }))
+      };
+    }
+
+    function makeAdditionPrompt() {
+      const r = rangeByDifficulty();
+      const digits = digitsForDifficulty();
+      let a = 0;
+      let b = 0;
+      let found = false;
+      for (let tries = 0; tries < 1200; tries += 1) {
+        const minValue = digits === 1 ? 0 : r.min;
+        a = randInt(minValue, r.max);
+        b = randInt(minValue, r.max);
+        const regroup = hasAdditionRegroup(a, b, digits);
+        if (matchesRegroupMode(regroup)) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        a = randInt(digits === 1 ? 0 : r.min, r.max);
+        b = randInt(digits === 1 ? 0 : r.min, r.max);
+      }
+      return {
+        id: nextPromptId(),
+        kind: "math",
+        answer: a + b,
+        plain: `${a} + ${b}`,
+        htmlMath: `${formatNumber(a)} + ${formatNumber(b)}`
+      };
+    }
+
+    function makeSubtractionPrompt() {
+      const r = rangeByDifficulty();
+      const digits = digitsForDifficulty();
+      let a = 0;
+      let b = 0;
+      let found = false;
+      for (let tries = 0; tries < 1600; tries += 1) {
+        const minValue = digits === 1 ? 0 : r.min;
+        a = randInt(minValue, r.max);
+        b = randInt(minValue, r.max);
+        if (b > a) {
+          const t = a;
+          a = b;
+          b = t;
+        }
+        const regroup = hasSubtractionRegroup(a, b, digits);
+        if (matchesRegroupMode(regroup)) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        a = randInt(digits === 1 ? 0 : r.min, r.max);
+        b = randInt(digits === 1 ? 0 : r.min, r.max);
+        if (b > a) {
+          const t = a;
+          a = b;
+          b = t;
+        }
+      }
+      return {
+        id: nextPromptId(),
+        kind: "math",
+        answer: a - b,
+        plain: `${a} - ${b}`,
+        htmlMath: `${formatNumber(a)} - ${formatNumber(b)}`
+      };
+    }
+
+    function makeMultiplicationPrompt() {
+      let a;
+      let b;
+      if (state.difficulty === "single") {
+        a = randInt(2, 12);
+        b = randInt(2, 12);
+      } else if (state.difficulty === "double") {
+        a = randInt(10, 99);
+        b = randInt(2, 9);
+      } else {
+        a = randInt(100, 999);
+        b = randInt(2, 9);
+      }
+
+      return {
+        id: nextPromptId(),
+        kind: "math",
+        answer: a * b,
+        plain: `${a} x ${b}`,
+        htmlMath: `${formatNumber(a)} x ${formatNumber(b)}`
+      };
+    }
+
+    function makeDivisionPrompt() {
+      let divisor;
+      let quotient;
+      let dividend;
+
+      if (state.difficulty === "single") {
+        divisor = randInt(2, 12);
+        quotient = randInt(2, 12);
+      } else if (state.difficulty === "double") {
+        divisor = randInt(2, 9);
+        quotient = randInt(5, 45);
+      } else {
+        divisor = randInt(2, 9);
+        quotient = randInt(20, 111);
+      }
+
+      dividend = divisor * quotient;
+
+      if (state.difficulty === "double") {
+        while (dividend < 10 || dividend > 99) {
+          divisor = randInt(2, 9);
+          quotient = randInt(5, 45);
+          dividend = divisor * quotient;
+        }
+      } else if (state.difficulty === "multi") {
+        while (dividend < 100 || dividend > 999) {
+          divisor = randInt(2, 9);
+          quotient = randInt(20, 111);
+          dividend = divisor * quotient;
+        }
+      }
+
+      return {
+        id: nextPromptId(),
+        kind: "math",
+        answer: quotient,
+        plain: `${dividend} ÷ ${divisor}`,
+        htmlMath: `${formatNumber(dividend)} ÷ ${divisor}`
+      };
+    }
+
+    function roundNearest(value, place) {
+      return Math.round(value / place) * place;
+    }
+
+    function roundBounds(value, place) {
+      const lower = Math.floor(value / place) * place;
+      return { lower, upper: lower + place };
+    }
+
+    function makeRoundingPrompt() {
+      enforceRoundingWithin();
+      const place = state.roundingNearest;
+      const placeText = formatNumber(place);
+      const minValue = Math.min(place, state.roundingWithin - 1);
+      const maxValue = state.roundingWithin - 1;
+      const number = randInt(minValue, maxValue);
+
+      return {
+        id: nextPromptId(),
+        kind: "rounding",
+        number,
+        place,
+        placeText,
+        view: state.roundingStyle,
+        bounds: roundBounds(number, place),
+        answer: roundNearest(number, place),
+        plain: `Round ${formatNumber(number)} to nearest ${placeText}`
+      };
+    }
+
+    function makeCountingPrompt() {
+      const limit = state.difficulty === "single" ? 20 : state.difficulty === "double" ? 50 : 100;
+      const style = state.countingStyle === "mixed"
+        ? choose(["forward", "backward", "missing"])
+        : state.countingStyle;
+
+      let sequence;
+      let answer;
+
+      if (style === "forward") {
+        const start = randInt(0, Math.max(0, limit - 3));
+        sequence = [start, start + 1, start + 2, null];
+        answer = start + 3;
+      } else if (style === "backward") {
+        const start = randInt(3, limit);
+        sequence = [start, start - 1, start - 2, null];
+        answer = start - 3;
+      } else {
+        const direction = choose(["forward", "backward"]);
+        const start = direction === "forward"
+          ? randInt(0, Math.max(0, limit - 2))
+          : randInt(2, limit);
+        const base = direction === "forward"
+          ? [start, start + 1, start + 2]
+          : [start, start - 1, start - 2];
+        const blankIndex = randInt(0, 2);
+        answer = base[blankIndex];
+        sequence = base.map((n, idx) => (idx === blankIndex ? null : n));
+      }
+
+      return {
+        id: nextPromptId(),
+        kind: "counting",
+        style,
+        sequence,
+        answer,
+        plain: `Counting within ${limit}`
+      };
+    }
+
+    function makeTenFramePrompt() {
+      let total;
+      if (state.difficulty === "single") {
+        total = randInt(1, 10);
+      } else if (state.difficulty === "double") {
+        total = randInt(11, 20);
+      } else {
+        total = randInt(21, 40);
+      }
+
+      const frames = Math.ceil(total / 10);
+      return {
+        id: nextPromptId(),
+        kind: "tenframes",
+        total,
+        frames,
+        answer: total,
+        plain: `Count the ten-frame dots`
+      };
+    }
+
+    function makePrompt() {
+      if (state.operation === "coins") return makeCoinPrompt();
+      if (state.operation === "addition") return makeAdditionPrompt();
+      if (state.operation === "subtraction") return makeSubtractionPrompt();
+      if (state.operation === "multiplication") return makeMultiplicationPrompt();
+      if (state.operation === "division") return makeDivisionPrompt();
+      if (state.operation === "rounding") return makeRoundingPrompt();
+      if (state.operation === "counting") return makeCountingPrompt();
+      return makeTenFramePrompt();
+    }
+
+    function makePrompts(total) {
+      const out = [];
+      for (let i = 0; i < total; i += 1) out.push(makePrompt());
+      return out;
+    }
+
+    function renderTenFrames(total, context) {
+      let remaining = total;
+      const frameHtml = [];
+      const frameCount = Math.ceil(total / 10);
+      for (let f = 0; f < frameCount; f += 1) {
+        const fill = Math.min(10, remaining);
+        remaining -= fill;
+        const cells = [];
+        for (let i = 0; i < 10; i += 1) {
+          const dot = i < fill ? '<span class="tfdot"></span>' : "";
+          cells.push(`<span class="tfcell">${dot}</span>`);
+        }
+        frameHtml.push(`<div class="tenframe${context === "roll" ? " tenframe-roll" : ""}"><div class="tfgrid">${cells.join("")}</div></div>`);
+      }
+      return `<div class="prompt-wrap"><div class="tenframe-group">${frameHtml.join("")}</div></div>`;
+    }
+
+    function renderCoinPrompt(prompt, context) {
+      const isTtt = context === "ttt";
+      const base = context === "roll" ? 48 : context === "modal" ? 82 : isTtt ? 46 : 78;
+      const cols = isTtt ? (prompt.coins.length <= 4 ? 2 : 3) : 0;
+      const stripClass = cols ? "coin-strip coin-grid" : "coin-strip";
+      const stripStyle = cols ? ` style="--coin-cols:${cols}"` : "";
+      const coinHtml = prompt.coins.map((coin, coinIndex) => {
+        const size = Math.round(base * coin.ratio);
+        const dots = coin.chunkValues.map((chunkValue, dotIndex) => {
+          const pos = (DOT_POSITIONS[coin.chunkValues.length] || DOT_POSITIONS[1])[dotIndex] || { x: 50, y: 50 };
+          const hit = coin.dots[dotIndex] ? " hit" : "";
+          const star = chunkValue === 1 ? " star" : "";
+          const text = coin.dots[dotIndex] ? "&#10003;" : (chunkValue === 1 ? "&#9733;" : String(chunkValue));
+          return `
+            <button
+              type="button"
+              class="coin-dot${star}${hit}"
+              data-prompt-id="${prompt.id}"
+              data-coin-index="${coinIndex}"
+              data-dot-index="${dotIndex}"
+              style="left:${pos.x}%;top:${pos.y}%"
+              aria-label="${htmlEscape(coin.label)} dot ${dotIndex + 1}">${text}</button>`;
+        }).join("");
+
+        return `
+          <div class="coin-face" style="--coin-size:${size}px;--coin-size-mobile:${Math.round(size * 0.84)}px;--coin-size-roll:${Math.round(size * 0.74)}px;--coin-size-modal:${Math.round(size * 1.02)}px">
+            <img src="${coin.img}" alt="${htmlEscape(coin.label)}">
+            ${dots}
+          </div>`;
+      }).join("");
+
+      return `
+        <div class="coin-prompt">
+          <div class="${stripClass}"${stripStyle}>${coinHtml}</div>
+          <div class="coin-total" data-coin-total="${prompt.id}">${prompt.counted}c</div>
+        </div>`;
+    }
+
+    function renderStackPrompt(prompt) {
+      return `
+        <div class="prompt-wrap">
+          <div class="stack-problem" aria-label="${htmlEscape(prompt.plain)}">
+            <div class="stack-line"><span>${formatNumber(prompt.top)}</span></div>
+            <div class="stack-line"><span class="op">${prompt.op}</span><span>${formatNumber(prompt.bottom)}</span></div>
+            <div class="stack-bar"></div>
+          </div>
+        </div>`;
+    }
+
+    function renderUnderlinedRoundingNumber(number, place) {
+      const raw = String(number);
+      const placeDigits = String(place).length - 1;
+      const underlineIndex = raw.length - placeDigits - 1;
+      if (underlineIndex < 0 || underlineIndex >= raw.length) return raw;
+      return raw
+        .split("")
+        .map((ch, i) => (i === underlineIndex ? `<span class="under">${ch}</span>` : ch))
+        .join("");
+    }
+
+    function renderRoundingNumberLine(prompt) {
+      const lower = prompt.bounds.lower;
+      const upper = prompt.bounds.upper;
+      const pct = Math.max(0, Math.min(100, ((prompt.number - lower) / (upper - lower)) * 100));
+      return `
+        <div class="numline-wrap">
+          <div class="numline-track">
+            <span class="numline-end left"></span>
+            <span class="numline-end right"></span>
+            <span class="numline-marker" style="left:${pct}%"></span>
+          </div>
+          <div class="numline-labels"><span>${formatNumber(lower)}</span><span>${formatNumber(upper)}</span></div>
+          <div class="numline-target">Locate ${formatNumber(prompt.number)}</div>
+        </div>`;
+    }
+
+    function renderPromptHtml(prompt, context) {
+      if (prompt.kind === "coins") return renderCoinPrompt(prompt, context);
+      if (prompt.kind === "stack") return renderStackPrompt(prompt);
+      if (prompt.kind === "math") {
+        return `<div class="prompt-wrap"><div class="prompt-math">${htmlEscape(prompt.htmlMath)}</div></div>`;
+      }
+      if (prompt.kind === "rounding") {
+        const underlined = renderUnderlinedRoundingNumber(prompt.number, prompt.place);
+        const nl = prompt.view === "numberline" ? renderRoundingNumberLine(prompt) : "";
+        return `
+          <div class="prompt-wrap rounding-wrap">
+            <div class="rounding-line">Round ${underlined}</div>
+            <div class="rounding-line">to nearest ${prompt.placeText}</div>
+            ${nl}
+          </div>`;
+      }
+      if (prompt.kind === "counting") {
+        const seq = prompt.sequence.map((x) => (x === null ? '<span class="missing-token">____</span>' : formatNumber(x))).join(", ");
+        return `
+          <div class="prompt-wrap counting-wrap">
+            <div class="counting-line">${seq}</div>
+          </div>`;
+      }
+      return renderTenFrames(prompt.total, context);
+    }
+
+    function winningLine(marks) {
+      return WIN_LINES.find(([a, b, c]) => marks[a] && marks[a] === marks[b] && marks[b] === marks[c]) || null;
+    }
+
+    function resetTttBoardOnly() {
+      state.ttt.marks = Array(9).fill("");
+      state.ttt.turn = "X";
+      state.ttt.over = false;
+      state.ttt.winLine = [];
+    }
+
+    function placeTttMark(index) {
+      state.ttt.marks[index] = state.ttt.turn;
+      const line = winningLine(state.ttt.marks);
+      if (line) {
+        state.ttt.over = true;
+        state.ttt.winLine = line;
+        state.ttt.score[state.ttt.turn] += 1;
+      } else if (state.ttt.marks.every(Boolean)) {
+        state.ttt.over = true;
+        state.ttt.score.T += 1;
+      } else {
+        state.ttt.turn = state.ttt.turn === "X" ? "O" : "X";
+      }
+      renderTicTacToe();
+    }
+
+    function parseNumericInput(raw) {
+      const cleaned = String(raw || "").replace(/[^0-9-]/g, "");
+      if (!cleaned || cleaned === "-") return null;
+      const value = Number(cleaned);
+      return Number.isFinite(value) ? value : null;
+    }
+
+    function promptAnswerText(prompt) {
+      if (prompt.kind === "coins") return "Write total cents for this coin set.";
+      if (prompt.kind === "tenframes") return "Enter how many dots are shown.";
+      if (prompt.kind === "rounding") return `Enter rounded value for nearest ${prompt.placeText}.`;
+      if (prompt.kind === "counting") return "Enter the number that belongs in the blank.";
+      return `Enter answer for: ${prompt.plain || "problem"}`;
+    }
+
+    function showAnswerModal(prompt, sourceLabel) {
+      return new Promise((resolve) => {
+        state.modal.resolver = resolve;
+        state.modal.prompt = prompt;
+        state.modal.sourceLabel = sourceLabel || "";
+
+        modalTitle.textContent = state.modal.sourceLabel ? `${state.modal.sourceLabel}: Enter Answer` : "Enter Answer";
+        modalPrompt.textContent = promptAnswerText(prompt);
+        modalProblem.innerHTML = renderPromptHtml(prompt, "modal");
+        modalInput.value = "";
+        modalMsg.textContent = "";
+        answerModal.classList.add("open");
+        answerModal.setAttribute("aria-hidden", "false");
+        setTimeout(() => modalInput.focus(), 10);
+      });
+    }
+
+    function closeAnswerModal(result) {
+      answerModal.classList.remove("open");
+      answerModal.setAttribute("aria-hidden", "true");
+      const resolver = state.modal.resolver;
+      state.modal.resolver = null;
+      state.modal.prompt = null;
+      state.modal.sourceLabel = "";
+      modalProblem.innerHTML = "";
+      if (resolver) resolver(result);
+    }
+
+    function checkModalAnswer() {
+      const prompt = state.modal.prompt;
+      if (!prompt) {
+        closeAnswerModal(false);
+        return;
+      }
+      const value = parseNumericInput(modalInput.value);
+      if (value === null) {
+        modalMsg.textContent = "Enter a number.";
+        return;
+      }
+      if (value === prompt.answer) {
+        closeAnswerModal(true);
+      } else {
+        modalMsg.textContent = "Not yet. Try again.";
+        modalInput.select();
+      }
+    }
+
+    modalSubmit.addEventListener("click", checkModalAnswer);
+    modalCancel.addEventListener("click", () => closeAnswerModal(false));
+    modalInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        checkModalAnswer();
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        closeAnswerModal(false);
+      }
+    });
+
+    answerModal.addEventListener("click", (event) => {
+      if (event.target === answerModal) closeAnswerModal(false);
+    });
+
+    async function handleTttCellClick(index) {
+      if (state.ttt.over || state.ttt.marks[index]) return;
+      const prompt = state.ttt.prompts[index];
+      if (!prompt) return;
+
+      if (!state.requireCorrect) {
+        placeTttMark(index);
+        return;
+      }
+
+      const ok = await showAnswerModal(prompt, `Tic Tac Toe Square ${index + 1}`);
+      if (ok) placeTttMark(index);
+    }
+
+    function renderTicTacToe() {
+      indexPrompts(state.ttt.prompts);
+      const meta = `${operationLabel()} | ${difficultyLabel()} | Tic Tac Toe | ${state.requireCorrect ? "Answer Check On" : "Answer Check Off"}`;
+      const turnClass = state.ttt.turn === "X" ? "x" : "o";
+
+      outputEl.innerHTML = `
+        <article class="sheet">
+          <div class="sheet-title">Math Tic Tac Toe</div>
+          <div class="sheet-meta">${meta} | Turn: <span class="${turnClass}">${state.ttt.turn}</span></div>
+          <div class="score-row">
+            <div class="score-pill">X Wins: <span class="x">${state.ttt.score.X}</span></div>
+            <div class="score-pill">O Wins: <span class="o">${state.ttt.score.O}</span></div>
+            <div class="score-pill">Ties: ${state.ttt.score.T}</div>
+          </div>
+          <div id="tttBoard" class="board"></div>
+          <div class="ttt-actions">
+            <button id="btnSameBoard" type="button">Play Again (Same Board)</button>
+            <button id="btnNewBoard" type="button">New Problems</button>
+          </div>
+        </article>`;
+
+      const board = document.getElementById("tttBoard");
+      state.ttt.prompts.forEach((prompt, idx) => {
+        const mark = state.ttt.marks[idx] || "";
+        const locked = Boolean(mark) || state.ttt.over;
+        const cell = document.createElement("div");
+        cell.className = "cell" + (state.ttt.winLine.includes(idx) ? " win" : "") + (locked ? " locked" : "");
+        cell.dataset.index = String(idx);
+        cell.dataset.promptId = prompt.id;
+        cell.innerHTML = `
+          ${renderPromptHtml(prompt, "ttt")}
+          <div class="mark ${mark === "X" ? "x" : mark === "O" ? "o" : ""}">${mark}</div>`;
+        board.appendChild(cell);
+      });
+
+      board.addEventListener("click", async (event) => {
+        const dot = event.target.closest(".coin-dot");
+        if (dot) return;
+        const cell = event.target.closest(".cell");
+        if (!cell) return;
+        const index = Number(cell.dataset.index);
+        if (Number.isFinite(index)) {
+          await handleTttCellClick(index);
+        }
+      });
+
+      document.getElementById("btnSameBoard").addEventListener("click", () => {
+        resetTttBoardOnly();
+        renderTicTacToe();
+      });
+
+      document.getElementById("btnNewBoard").addEventListener("click", () => generate());
+    }
+
+    function buildRollTable(prompts) {
+      const cols = 6;
+      const rows = Math.ceil(prompts.length / cols);
+      const table = document.createElement("table");
+      table.className = "roll-table";
+
+      const header = table.insertRow();
+      for (let c = 0; c < cols; c += 1) {
+        const td = header.insertCell();
+        td.className = "dice-cell";
+        const img = document.createElement("img");
+        img.src = `images/dice${c + 1}.png`;
+        img.alt = `Dice ${c + 1}`;
+        td.appendChild(img);
+      }
+
+      let idx = 0;
+      for (let r = 0; r < rows; r += 1) {
+        const row = table.insertRow();
+        for (let c = 0; c < cols; c += 1) {
+          const td = row.insertCell();
+          td.className = "rr-cell";
+          td.dataset.row = String(r + 1);
+          td.dataset.col = String(c + 1);
+          const prompt = prompts[idx] || null;
+          if (prompt) {
+            td.dataset.promptId = prompt.id;
+            td.innerHTML = renderPromptHtml(prompt, "roll");
+          } else {
+            td.innerHTML = "";
+          }
+          idx += 1;
+        }
+      }
+
+      return { table, rows };
+    }
+
+    function setDieFace(value) {
+      if (!state.roll) return;
+      state.roll.dieImg.src = `images/dice${value}.png`;
+      state.roll.dieImg.alt = `Current die: ${value}`;
+      state.roll.dieValue.textContent = String(value);
+    }
+
+    function availableColumns() {
+      if (!state.roll) return [];
+      const out = [];
+      for (let i = 0; i < 6; i += 1) {
+        if (state.roll.columnPointers[i] < state.roll.columnQueues[i].length) out.push(i + 1);
+      }
+      return out;
+    }
+
+    function animateRoll(finalValue) {
+      return new Promise((resolve) => {
+        if (!state.roll) {
+          resolve();
+          return;
+        }
+        state.roll.dieImg.classList.add("rolling");
+        let ticks = 0;
+        const totalTicks = 8 + randInt(0, 3);
+        const timer = setInterval(() => {
+          ticks += 1;
+          setDieFace(randInt(1, 6));
+          if (ticks >= totalTicks) {
+            clearInterval(timer);
+            state.roll.dieImg.classList.remove("rolling");
+            setDieFace(finalValue);
+            resolve();
+          }
+        }, 70);
+      });
+    }
+
+    function resetRollRound() {
+      if (!state.roll) return;
+      state.roll.columnPointers = Array(6).fill(0);
+      state.roll.completed = 0;
+      state.roll.current = null;
+      state.roll.pending = null;
+      state.roll.rolling = false;
+      state.roll.page.querySelectorAll(".rr-cell").forEach((td) => {
+        td.classList.remove("current", "done");
+      });
+      state.roll.rollBtn.disabled = false;
+      state.roll.rollBtn.textContent = "Roll";
+      setDieFace(1);
+      state.roll.status.textContent = `Roll to start. 0 of ${state.roll.total} complete.`;
+    }
+
+    function finishPendingRollCell() {
+      if (!state.roll || !state.roll.pending) return;
+      const pending = state.roll.pending;
+      pending.cell.classList.remove("current");
+      pending.cell.classList.add("done");
+      state.roll.columnPointers[pending.colIndex] += 1;
+      state.roll.completed += 1;
+      state.roll.current = pending.cell;
+      state.roll.pending = null;
+
+      if (state.roll.completed >= state.roll.total) {
+        state.roll.rollBtn.disabled = true;
+        state.roll.rollBtn.textContent = "Board Complete";
+        state.roll.status.textContent = `Board complete. ${state.roll.total} of ${state.roll.total} complete.`;
+        return;
+      }
+
+      const left = state.roll.total - state.roll.completed;
+      state.roll.rollBtn.disabled = false;
+      state.roll.status.textContent = `${state.roll.completed} of ${state.roll.total} complete (${left} left).`;
+    }
+
+    async function handleRollCellAnswer(cell) {
+      if (!state.roll || !state.requireCorrect || !state.roll.pending) return;
+      if (state.roll.pending.cell !== cell) return;
+      const row = cell.dataset.row || "?";
+      const col = cell.dataset.col || "?";
+      const ok = await showAnswerModal(state.roll.pending.prompt, `Roll and Read (R${row} C${col})`);
+      if (ok) {
+        finishPendingRollCell();
+      } else {
+        state.roll.status.textContent = "Answer the highlighted box to continue.";
+      }
+    }
+
+    async function takeRollTurn() {
+      if (!state.roll || state.roll.rolling) return;
+
+      if (state.requireCorrect && state.roll.pending) {
+        state.roll.status.textContent = "Answer the highlighted box to continue.";
+        return;
+      }
+
+      const open = availableColumns();
+      if (!open.length) {
+        state.roll.rollBtn.disabled = true;
+        state.roll.rollBtn.textContent = "Board Complete";
+        state.roll.status.textContent = `Board complete. ${state.roll.total} of ${state.roll.total} complete.`;
+        return;
+      }
+
+      state.roll.rolling = true;
+      state.roll.rollBtn.disabled = true;
+      state.roll.status.textContent = "Rolling...";
+
+      const raw = randInt(1, 6);
+      const final = open.includes(raw) ? raw : choose(open);
+      const rerollMessage = raw === final ? "" : ` Auto-reroll ${raw} -> ${final}.`;
+      await animateRoll(final);
+
+      const colIndex = final - 1;
+      const ptr = state.roll.columnPointers[colIndex];
+      const target = state.roll.columnQueues[colIndex][ptr] || null;
+
+      if (!target) {
+        state.roll.rolling = false;
+        state.roll.rollBtn.disabled = false;
+        state.roll.status.textContent = "No open problem in that column.";
+        return;
+      }
+
+      target.cell.classList.add("current");
+      state.roll.pending = { cell: target.cell, prompt: target.prompt, colIndex };
+
+      if (!state.requireCorrect) {
+        finishPendingRollCell();
+        if (state.roll && state.roll.completed < state.roll.total) {
+          state.roll.status.textContent = `Rolled ${final}.${rerollMessage}`;
+        }
+      } else {
+        state.roll.rollBtn.disabled = true;
+        state.roll.status.textContent = `Rolled ${final}. Click highlighted box and enter answer.${rerollMessage}`;
+      }
+
+      state.roll.rolling = false;
+    }
+
+    function wireRollState(page, prompts) {
+      const rollBtn = page.querySelector("#rollBtn");
+      const resetBtn = page.querySelector("#resetRollBtn");
+      const status = page.querySelector("#rollStatus");
+      const dieImg = page.querySelector("#liveDie");
+      const dieValue = page.querySelector("#dieValue");
+
+      const promptMap = new Map();
+      prompts.forEach((p) => promptMap.set(p.id, p));
+
+      const columnQueues = Array.from({ length: 6 }, () => []);
+      page.querySelectorAll(".rr-cell").forEach((cell) => {
+        const promptId = cell.dataset.promptId || "";
+        const prompt = promptMap.get(promptId) || null;
+        if (!prompt) return;
+        const col = Number(cell.dataset.col || "0");
+        if (col >= 1 && col <= 6) {
+          columnQueues[col - 1].push({ cell, prompt });
+        }
+      });
+
+      const total = columnQueues.reduce((sum, q) => sum + q.length, 0);
+
+      state.roll = {
+        page,
+        rollBtn,
+        resetBtn,
+        status,
+        dieImg,
+        dieValue,
+        columnQueues,
+        columnPointers: Array(6).fill(0),
+        completed: 0,
+        total,
+        current: null,
+        pending: null,
+        rolling: false
+      };
+
+      rollBtn.addEventListener("click", takeRollTurn);
+      resetBtn.addEventListener("click", resetRollRound);
+      page.querySelectorAll(".rr-cell").forEach((cell) => {
+        cell.addEventListener("click", () => {
+          handleRollCellAnswer(cell);
+        });
+      });
+
+      resetRollRound();
+    }
+
+    function renderRollRead(prompts) {
+      indexPrompts(prompts);
+      const meta = `${operationLabel()} | ${difficultyLabel()} | Roll and Read | ${state.requireCorrect ? "Answer Check On" : "Answer Check Off"}`;
+      const built = buildRollTable(prompts);
+
+      outputEl.innerHTML = `
+        <article class="sheet">
+          <div class="sheet-title">Math Roll and Read</div>
+          <div class="sheet-meta">${meta}</div>
+          <div class="roll-controls">
+            <div class="die-wrap">
+              <img id="liveDie" class="live-die" src="images/dice1.png" alt="Current die: 1">
+              <div id="dieValue" class="die-value">1</div>
+            </div>
+            <button id="rollBtn" type="button">Roll</button>
+            <button id="resetRollBtn" type="button">Reset Round</button>
+            <div id="rollStatus" class="status">Roll to start.</div>
+          </div>
+          <div id="rollTableMount"></div>
+        </article>`;
+
+      document.getElementById("rollTableMount").appendChild(built.table);
+      wireRollState(outputEl.querySelector(".sheet"), prompts);
+    }
+
+    function makeTreasureCells(prompts, treasureCount) {
+      const total = Math.min(treasureCount, prompts.length);
+      const treasureIndexes = new Set();
+      while (treasureIndexes.size < total) {
+        treasureIndexes.add(randInt(0, prompts.length - 1));
+      }
+      return prompts.map((prompt, index) => ({
+        prompt,
+        isTreasure: treasureIndexes.has(index),
+        opened: false
+      }));
+    }
+
+    function makeTreasureBoard(teamName) {
+      const prompts = makePrompts(state.treasure.problemCount);
+      return {
+        teamName,
+        prompts,
+        cells: makeTreasureCells(prompts, state.treasure.count),
+        found: 0
+      };
+    }
+
+    function resetTreasureBoardOnly(board) {
+      board.found = 0;
+      board.cells.forEach((cell) => {
+        cell.opened = false;
+      });
+    }
+
+    function resetAllTreasureBoards() {
+      state.treasure.winner = "";
+      state.treasure.boards.forEach((board) => resetTreasureBoardOnly(board));
+    }
+
+    function openTreasureCell(board, index) {
+      const item = board.cells[index];
+      if (!item || item.opened) return;
+      item.opened = true;
+      if (item.isTreasure) {
+        board.found += 1;
+      }
+    }
+
+    function treasureFoundMarkup() {
+      return `
+        <div class="treasure-art">
+          <svg viewBox="0 0 120 90" aria-hidden="true" focusable="false">
+            <rect x="20" y="38" width="80" height="38" rx="8" fill="#8b4d24" stroke="#3f2412" stroke-width="3"></rect>
+            <rect x="20" y="32" width="80" height="14" rx="6" fill="#b96b2f" stroke="#3f2412" stroke-width="3"></rect>
+            <rect x="52" y="36" width="16" height="40" rx="3" fill="#f3c733" stroke="#7c5f12" stroke-width="3"></rect>
+            <circle cx="60" cy="54" r="6" fill="#ffe16a" stroke="#7c5f12" stroke-width="2"></circle>
+            <polygon points="16,20 22,24 28,20 24,27 28,34 22,30 16,34 20,27" fill="#ffd54f"></polygon>
+            <polygon points="92,14 98,18 104,14 100,21 104,28 98,24 92,28 96,21" fill="#ffd54f"></polygon>
+          </svg>
+          <div class="treasure-result treasure-hit">TREASURE FOUND!</div>
+        </div>`;
+    }
+
+    function treasureMissMarkup() {
+      return `
+        <div class="treasure-art">
+          <div class="miss-icon" aria-hidden="true">🗺️</div>
+          <div class="treasure-result treasure-miss">NO TREASURE</div>
+        </div>`;
+    }
+
+    async function handleTreasureCellClick(boardIndex, index) {
+      if (state.treasure.winner) return;
+      const board = state.treasure.boards[boardIndex];
+      if (!board) return;
+      const item = board.cells[index];
+      if (!item || item.opened) return;
+
+      if (!state.requireCorrect) {
+        openTreasureCell(board, index);
+      } else {
+        const label = `${board.teamName} Tile ${index + 1}`;
+        const ok = await showAnswerModal(item.prompt, label);
+        if (!ok) return;
+        openTreasureCell(board, index);
+      }
+
+      if (board.found >= state.treasure.count && !state.treasure.winner) {
+        state.treasure.winner = board.teamName;
+      }
+      renderTreasure();
+    }
+
+    function renderTreasureBoard(board, boardIndex) {
+      const opened = board.cells.filter((cell) => cell.opened).length;
+      const remaining = board.cells.length - opened;
+      const cells = board.cells.map((item, idx) => {
+        if (item.opened) {
+          return `
+            <div class="treasure-cell open" data-board-index="${boardIndex}" data-index="${idx}">
+              ${item.isTreasure ? treasureFoundMarkup() : treasureMissMarkup()}
+            </div>`;
+        }
+        return `
+          <div class="treasure-cell" data-board-index="${boardIndex}" data-index="${idx}">
+            ${renderPromptHtml(item.prompt, "ttt")}
+            <div class="treasure-pick">Pick This Tile</div>
+          </div>`;
+      }).join("");
+
+      return `
+        <section class="treasure-board-card">
+          <div class="treasure-board-head">
+            <span>${board.teamName}</span>
+            <span>${board.found}/${state.treasure.count} treasure${state.treasure.count === 1 ? "" : "s"} | ${remaining} tiles left</span>
+          </div>
+          <div class="treasure-grid">${cells}</div>
+        </section>`;
+    }
+
+    function renderTreasure() {
+      const allPrompts = state.treasure.boards.flatMap((board) => board.prompts);
+      indexPrompts(allPrompts);
+      const versus = state.treasure.teams === 2;
+      const meta = `${operationLabel()} | ${difficultyLabel()} | Buried Treasure | ${state.requireCorrect ? "Answer Check On" : "Answer Check Off"} | ${state.treasure.problemCount} problems`;
+      const winnerBanner = state.treasure.winner
+        ? `<div class="winner-banner">${state.treasure.winner} wins! They found all treasure first.</div>`
+        : "";
+
+      outputEl.innerHTML = `
+        <article class="sheet">
+          <div class="sheet-title">Math Buried Treasure</div>
+          <div class="sheet-meta">${meta}</div>
+          ${winnerBanner}
+          <div id="treasureStage" class="treasure-stage${versus ? " versus" : ""}">
+            ${state.treasure.boards.map((board, idx) => renderTreasureBoard(board, idx)).join("")}
+          </div>
+          <div class="ttt-actions">
+            <button id="btnTreasureReset" type="button">Reset Reveals (Same Board)</button>
+            <button id="btnTreasureNew" type="button">New Problems</button>
+          </div>
+        </article>`;
+
+      const stage = document.getElementById("treasureStage");
+      stage.addEventListener("click", async (event) => {
+        if (event.target.closest(".coin-dot")) return;
+        const cell = event.target.closest(".treasure-cell");
+        if (!cell) return;
+        const boardIndex = Number(cell.dataset.boardIndex);
+        const index = Number(cell.dataset.index);
+        if (Number.isFinite(boardIndex) && Number.isFinite(index)) {
+          await handleTreasureCellClick(boardIndex, index);
+        }
+      });
+
+      document.getElementById("btnTreasureReset").addEventListener("click", () => {
+        resetAllTreasureBoards();
+        renderTreasure();
+      });
+
+      document.getElementById("btnTreasureNew").addEventListener("click", () => {
+        generate();
+      });
+    }
+
+    function teamLabel(team) {
+      return team === "A" ? "Team 1" : "Team 2";
+    }
+
+    function resetConnect4RoundOnly() {
+      state.connect4.board = makeGrid(CONNECT4_ROWS, CONNECT4_COLS, "");
+      state.connect4.turn = "R";
+      state.connect4.over = false;
+      state.connect4.winCells = [];
+      state.connect4.currentPrompt = makePrompt();
+    }
+
+    function connect4WinCells(row, col, mark) {
+      const board = state.connect4.board;
+      const dirs = [
+        [1, 0],
+        [0, 1],
+        [1, 1],
+        [1, -1]
+      ];
+
+      const collect = (dr, dc) => {
+        const out = [];
+        let r = row + dr;
+        let c = col + dc;
+        while (
+          r >= 0 && r < CONNECT4_ROWS &&
+          c >= 0 && c < CONNECT4_COLS &&
+          board[r][c] === mark
+        ) {
+          out.push([r, c]);
+          r += dr;
+          c += dc;
+        }
+        return out;
+      };
+
+      for (const [dr, dc] of dirs) {
+        const neg = collect(-dr, -dc).reverse();
+        const pos = collect(dr, dc);
+        const line = [...neg, [row, col], ...pos];
+        if (line.length >= 4) return line;
+      }
+      return [];
+    }
+
+    function connect4HasWinCell(row, col) {
+      return state.connect4.winCells.some(([r, c]) => r === row && c === col);
+    }
+
+    async function handleConnect4ColumnClick(col) {
+      if (state.connect4.over) return;
+      if (col < 0 || col >= CONNECT4_COLS) return;
+
+      let row = -1;
+      for (let r = CONNECT4_ROWS - 1; r >= 0; r -= 1) {
+        if (!state.connect4.board[r][col]) {
+          row = r;
+          break;
+        }
+      }
+      if (row < 0) return;
+
+      const prompt = state.connect4.currentPrompt || makePrompt();
+      state.connect4.currentPrompt = prompt;
+
+      if (state.requireCorrect) {
+        const ok = await showAnswerModal(prompt, `${state.connect4.turn === "R" ? "Red" : "Yellow"} Turn`);
+        if (!ok) return;
+      }
+
+      const mark = state.connect4.turn;
+      state.connect4.board[row][col] = mark;
+      const win = connect4WinCells(row, col, mark);
+      if (win.length) {
+        state.connect4.over = true;
+        state.connect4.winCells = win;
+        state.connect4.score[mark] += 1;
+      } else if (state.connect4.board.every((line) => line.every(Boolean))) {
+        state.connect4.over = true;
+        state.connect4.score.T += 1;
+      } else {
+        state.connect4.turn = mark === "R" ? "Y" : "R";
+        state.connect4.currentPrompt = makePrompt();
+      }
+
+      renderConnect4();
+    }
+
+    function renderConnect4() {
+      indexPrompts(state.connect4.currentPrompt ? [state.connect4.currentPrompt] : []);
+      const turnName = state.connect4.turn === "R" ? "Red" : "Yellow";
+      const meta = `${operationLabel()} | ${difficultyLabel()} | 4 in a Row | ${state.requireCorrect ? "Answer Check On" : "Answer Check Off"} | Turn: ${turnName}`;
+      const status = state.connect4.over
+        ? (state.connect4.winCells.length ? `${turnName} wins!` : "Tie game.")
+        : "";
+
+      const topButtons = Array.from({ length: CONNECT4_COLS }, (_, col) => `
+        <button type="button" class="drop-btn" data-c4-col="${col}">Drop</button>
+      `).join("");
+
+      let gridHtml = "";
+      for (let r = 0; r < CONNECT4_ROWS; r += 1) {
+        for (let c = 0; c < CONNECT4_COLS; c += 1) {
+          const mark = state.connect4.board[r][c];
+          const classes = [
+            "c4-cell",
+            mark === "R" ? "red" : "",
+            mark === "Y" ? "yellow" : "",
+            connect4HasWinCell(r, c) ? "win" : ""
+          ].filter(Boolean).join(" ");
+          gridHtml += `<div class="${classes}"></div>`;
+        }
+      }
+
+      outputEl.innerHTML = `
+        <article class="sheet">
+          <div class="sheet-title">Math 4 in a Row</div>
+          <div class="sheet-meta">${meta}</div>
+          <div class="score-row">
+            <div class="score-pill">Red Wins: <span class="x">${state.connect4.score.R}</span></div>
+            <div class="score-pill">Yellow Wins: <span class="o">${state.connect4.score.Y}</span></div>
+            <div class="score-pill">Ties: ${state.connect4.score.T}</div>
+          </div>
+          ${state.connect4.currentPrompt ? `<div class="prompt-card">${renderPromptHtml(state.connect4.currentPrompt, "ttt")}</div>` : ""}
+          ${status ? `<div class="winner-banner">${status}</div>` : ""}
+          <div class="connect4-wrap">
+            <div class="connect4-top">${topButtons}</div>
+            <div class="connect4-grid">${gridHtml}</div>
+          </div>
+          <div class="ttt-actions">
+            <button id="btnC4Reset" type="button">Reset Board (Same Prompt Flow)</button>
+            <button id="btnC4New" type="button">New Problems</button>
+          </div>
+        </article>`;
+
+      outputEl.querySelectorAll("[data-c4-col]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          await handleConnect4ColumnClick(Number(button.dataset.c4Col));
+        });
+      });
+
+      document.getElementById("btnC4Reset").addEventListener("click", () => {
+        resetConnect4RoundOnly();
+        renderConnect4();
+      });
+
+      document.getElementById("btnC4New").addEventListener("click", () => {
+        generate();
+      });
+    }
+
+    function fleetCellKey(row, col) {
+      return `${row}-${col}`;
+    }
+
+    function createFleetLayout() {
+      const occupied = new Set();
+      const cellToShip = new Map();
+      const ships = [];
+
+      for (const def of FLEET_SHIP_DEFS) {
+        let placed = null;
+        for (let attempt = 0; attempt < 800; attempt += 1) {
+          const horizontal = Math.random() < 0.5;
+          const startRow = horizontal
+            ? randInt(0, FLEET_GRID_SIZE - 1)
+            : randInt(0, FLEET_GRID_SIZE - def.length);
+          const startCol = horizontal
+            ? randInt(0, FLEET_GRID_SIZE - def.length)
+            : randInt(0, FLEET_GRID_SIZE - 1);
+
+          const cells = [];
+          let blocked = false;
+          for (let i = 0; i < def.length; i += 1) {
+            const row = startRow + (horizontal ? 0 : i);
+            const col = startCol + (horizontal ? i : 0);
+            const key = fleetCellKey(row, col);
+            if (occupied.has(key)) {
+              blocked = true;
+              break;
+            }
+            cells.push(key);
+          }
+          if (!blocked) {
+            placed = cells;
+            break;
+          }
+        }
+
+        if (!placed) {
+          return createFleetLayout();
+        }
+
+        placed.forEach((key) => {
+          occupied.add(key);
+          cellToShip.set(key, def.id);
+        });
+
+        ships.push({
+          id: def.id,
+          name: def.name,
+          length: def.length,
+          image: def.image,
+          cells: placed,
+          hits: new Set(),
+          sunk: false
+        });
+      }
+
+      const shipById = new Map(ships.map((ship) => [ship.id, ship]));
+      return { ships, shipById, cellToShip };
+    }
+
+    function resetFleetRoundOnly() {
+      state.fleet.shots = {
+        A: makeGrid(FLEET_GRID_SIZE, FLEET_GRID_SIZE, ""),
+        B: makeGrid(FLEET_GRID_SIZE, FLEET_GRID_SIZE, "")
+      };
+      state.fleet.hits = { A: 0, B: 0 };
+      state.fleet.turn = "A";
+      state.fleet.over = false;
+      state.fleet.winner = "";
+      state.fleet.currentPrompt = makePrompt();
+
+      ["A", "B"].forEach((team) => {
+        const layout = state.fleet.layouts[team];
+        if (!layout) return;
+        layout.ships.forEach((ship) => {
+          ship.hits = new Set();
+          ship.sunk = false;
+        });
+      });
+    }
+
+    function initializeFleetBoards() {
+      state.fleet.layouts = {
+        A: createFleetLayout(),
+        B: createFleetLayout()
+      };
+      resetFleetRoundOnly();
+    }
+
+    function allFleetShipsSunk(team) {
+      const layout = state.fleet.layouts[team];
+      if (!layout) return false;
+      return layout.ships.every((ship) => ship.sunk);
+    }
+
+    function renderFleetShipStatus(targetTeam) {
+      const layout = state.fleet.layouts[targetTeam];
+      if (!layout) return { html: "", sunkCount: 0, remainingHits: 0 };
+
+      const sunkCount = layout.ships.filter((ship) => ship.sunk).length;
+      const remainingHits = layout.ships.reduce((sum, ship) => sum + (ship.length - ship.hits.size), 0);
+      const html = layout.ships.map((ship) => {
+        const fallbackBlocks = Array.from({ length: ship.length }, () => '<span class="fleet-ship-block"></span>').join("");
+        const progress = `${ship.hits.size}/${ship.length} hit`;
+        return `
+          <div class="fleet-ship-row">
+            <div class="fleet-ship-art">
+              <img src="${ship.image}" alt="${ship.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+              <div class="fleet-ship-fallback" style="display:none">${fallbackBlocks}</div>
+              ${ship.sunk ? '<span class="fleet-ship-x">X</span>' : ""}
+            </div>
+            <div>
+              <div class="fleet-ship-name">${ship.name}</div>
+              <div class="fleet-ship-progress">${progress}</div>
+            </div>
+            <div>${ship.sunk ? '<span class="fleet-ship-sunk">Sunk</span>' : ""}</div>
+          </div>`;
+      }).join("");
+
+      return { html, sunkCount, remainingHits };
+    }
+
+    function renderFleetGrid(attacker) {
+      const target = attacker === "A" ? "B" : "A";
+      const shots = state.fleet.shots[attacker];
+      const targetLayout = state.fleet.layouts[target];
+      const clickable = !state.fleet.over && state.fleet.turn === attacker;
+      const status = renderFleetShipStatus(target);
+
+      let cells = "";
+      for (let r = 0; r < FLEET_GRID_SIZE; r += 1) {
+        for (let c = 0; c < FLEET_GRID_SIZE; c += 1) {
+          const shot = shots[r][c];
+          const key = fleetCellKey(r, c);
+          const revealShip = state.fleet.over && !shot && targetLayout && targetLayout.cellToShip.has(key);
+          const classes = ["fleet-cell"];
+          if (shot === "hit") classes.push("hit");
+          if (shot === "miss") classes.push("miss");
+          if (!clickable || shot) classes.push("locked");
+          const label = shot === "hit" ? "X" : shot === "miss" ? "•" : (revealShip ? "S" : "");
+          cells += `<div class="${classes.join(" ")}" data-fleet-attacker="${attacker}" data-fleet-row="${r}" data-fleet-col="${c}">${label}</div>`;
+        }
+      }
+      return `
+        <section class="fleet-card">
+          <div class="fleet-head">
+            <span>${teamLabel(attacker)} firing at ${teamLabel(target)}</span>
+            <span>Ships sunk: ${status.sunkCount}/${FLEET_SHIP_DEFS.length} | Still needed: ${status.remainingHits} hits</span>
+          </div>
+          <div class="fleet-status">${status.html}</div>
+          <div class="fleet-grid">${cells}</div>
+        </section>`;
+    }
+
+    async function handleFleetCellClick(attacker, row, col) {
+      if (state.fleet.over) return;
+      if (state.fleet.turn !== attacker) return;
+      if (state.fleet.shots[attacker][row][col]) return;
+
+      const prompt = state.fleet.currentPrompt || makePrompt();
+      state.fleet.currentPrompt = prompt;
+
+      if (state.requireCorrect) {
+        const ok = await showAnswerModal(prompt, `${teamLabel(attacker)} Fire`);
+        if (!ok) return;
+      }
+
+      const target = attacker === "A" ? "B" : "A";
+      const targetLayout = state.fleet.layouts[target];
+      const key = fleetCellKey(row, col);
+      const shipId = targetLayout ? targetLayout.cellToShip.get(key) : null;
+      const hit = Boolean(shipId);
+      state.fleet.shots[attacker][row][col] = hit ? "hit" : "miss";
+
+      if (hit && targetLayout) {
+        state.fleet.hits[attacker] += 1;
+        const ship = targetLayout.shipById.get(shipId);
+        if (ship) {
+          ship.hits.add(key);
+          if (ship.hits.size >= ship.length) {
+            ship.sunk = true;
+          }
+        }
+      }
+
+      if (allFleetShipsSunk(target)) {
+        state.fleet.over = true;
+        state.fleet.winner = attacker;
+      } else {
+        state.fleet.turn = attacker === "A" ? "B" : "A";
+        state.fleet.currentPrompt = makePrompt();
+      }
+
+      renderFleetStrike();
+    }
+
+    function renderFleetStrike() {
+      indexPrompts(state.fleet.currentPrompt ? [state.fleet.currentPrompt] : []);
+      const turnText = state.fleet.over ? `${teamLabel(state.fleet.winner)} wins` : `${teamLabel(state.fleet.turn)} turn`;
+      const meta = `${operationLabel()} | ${difficultyLabel()} | Fleet Strike | ${state.requireCorrect ? "Answer Check On" : "Answer Check Off"} | ${turnText}`;
+
+      outputEl.innerHTML = `
+        <article class="sheet">
+          <div class="sheet-title">Math Fleet Strike</div>
+          <div class="sheet-meta">${meta}</div>
+          ${state.fleet.over ? `<div class="winner-banner">${teamLabel(state.fleet.winner)} sinks the fleet!</div>` : ""}
+          ${state.fleet.currentPrompt ? `<div class="prompt-card">${renderPromptHtml(state.fleet.currentPrompt, "ttt")}</div>` : ""}
+          <div id="fleetStage" class="fleet-stage">
+            ${renderFleetGrid("A")}
+            ${renderFleetGrid("B")}
+          </div>
+          <div class="ttt-actions">
+            <button id="btnFleetReset" type="button">Reset Shots (Same Ships)</button>
+            <button id="btnFleetNew" type="button">New Fleet Layout</button>
+          </div>
+        </article>`;
+
+      document.getElementById("fleetStage").addEventListener("click", async (event) => {
+        const cell = event.target.closest(".fleet-cell");
+        if (!cell) return;
+        await handleFleetCellClick(
+          cell.dataset.fleetAttacker,
+          Number(cell.dataset.fleetRow),
+          Number(cell.dataset.fleetCol)
+        );
+      });
+
+      document.getElementById("btnFleetReset").addEventListener("click", () => {
+        resetFleetRoundOnly();
+        renderFleetStrike();
+      });
+
+      document.getElementById("btnFleetNew").addEventListener("click", () => {
+        generate();
+      });
+    }
+
+    function generate() {
+      if (!state.gameType) return;
+
+      if (state.gameType === "tictactoe") {
+        state.ttt.prompts = makePrompts(9);
+        resetTttBoardOnly();
+        renderTicTacToe();
+        return;
+      }
+
+      if (state.gameType === "rollread") {
+        const prompts = makePrompts(ROLLREAD_PROMPT_COUNT);
+        renderRollRead(prompts);
+        return;
+      }
+
+      if (state.gameType === "connect4") {
+        resetConnect4RoundOnly();
+        renderConnect4();
+        return;
+      }
+
+      if (state.gameType === "fleetstrike") {
+        initializeFleetBoards();
+        renderFleetStrike();
+        return;
+      }
+
+      state.treasure.winner = "";
+      state.treasure.boards = state.treasure.teams === 2
+        ? [makeTreasureBoard("Team 1"), makeTreasureBoard("Team 2")]
+        : [makeTreasureBoard("Class Team")];
+      renderTreasure();
+    }
+
+    function handleCoinDotClick(button) {
+      const prompt = getPromptById(button.dataset.promptId);
+      if (!prompt || prompt.kind !== "coins") return;
+
+      const coinIndex = Number(button.dataset.coinIndex);
+      const dotIndex = Number(button.dataset.dotIndex);
+      if (!Number.isFinite(coinIndex) || !Number.isFinite(dotIndex)) return;
+
+      const coin = prompt.coins[coinIndex];
+      if (!coin) return;
+      if (coin.dots[dotIndex]) return;
+
+      coin.dots[dotIndex] = true;
+      const value = Number(coin.chunkValues[dotIndex] || 0);
+      prompt.counted += value;
+
+      button.classList.add("hit");
+      button.innerHTML = "&#10003;";
+
+      const totals = outputEl.querySelectorAll(`[data-coin-total='${prompt.id}']`);
+      totals.forEach((el) => {
+        el.textContent = `${prompt.counted}c`;
+      });
+    }
+
+    outputEl.addEventListener("click", (event) => {
+      const dot = event.target.closest(".coin-dot");
+      if (!dot) return;
+      event.preventDefault();
+      event.stopPropagation();
+      handleCoinDotClick(dot);
+    });
+
+    document.querySelectorAll("[data-pick-game]").forEach((button) => {
+      button.addEventListener("click", () => {
+        selectGame(button.dataset.pickGame);
+      });
+    });
+
+    btnChooseGameEl.addEventListener("click", showGamePicker);
+
+    document.querySelectorAll("#operationRow .pill").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.operation = button.dataset.operation;
+        setSelectedInRow("operationRow", "data-operation", state.operation);
+        updateDifficultyOptions();
+        updateRegroupVisibility();
+      });
+    });
+
+    document.querySelectorAll("#answerModeRow .pill").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.requireCorrect = button.dataset.answerMode === "required";
+        setSelectedInRow("answerModeRow", "data-answer-mode", state.requireCorrect ? "required" : "free");
+      });
+    });
+
+    difficultySelect.addEventListener("change", () => {
+      state.difficulty = difficultySelect.value;
+    });
+
+    regroupSelect.addEventListener("change", () => {
+      state.regroupMode = regroupSelect.value;
+    });
+
+    roundingStyleSelect.addEventListener("change", () => {
+      state.roundingStyle = roundingStyleSelect.value;
+    });
+
+    roundingNearestSelect.addEventListener("change", () => {
+      state.roundingNearest = Number(roundingNearestSelect.value) || 10;
+      enforceRoundingWithin();
+    });
+
+    roundingWithinSelect.addEventListener("change", () => {
+      state.roundingWithin = Number(roundingWithinSelect.value) || 100;
+      enforceRoundingWithin();
+    });
+
+    countingStyleSelect.addEventListener("change", () => {
+      state.countingStyle = countingStyleSelect.value;
+    });
+
+    treasureProblemCountSelect.addEventListener("change", () => {
+      state.treasure.problemCount = Number(treasureProblemCountSelect.value) || TREASURE_DEFAULT_PROBLEM_COUNT;
+      syncTreasureSettings();
+    });
+
+    treasureTeamsSelect.addEventListener("change", () => {
+      state.treasure.teams = Number(treasureTeamsSelect.value) === 2 ? 2 : 1;
+    });
+
+    treasureCountSelect.addEventListener("change", () => {
+      state.treasure.count = Number(treasureCountSelect.value) || TREASURE_DEFAULT_COUNT;
+      syncTreasureSettings();
+    });
+
+    document.getElementById("btnGenerate").addEventListener("click", generate);
+    document.getElementById("btnPrint").addEventListener("click", () => window.print());
+    document.getElementById("btnResetScore").addEventListener("click", () => {
+      state.ttt.score = { X: 0, O: 0, T: 0 };
+      if (state.gameType === "tictactoe" && state.ttt.prompts.length) {
+        renderTicTacToe();
+      }
+    });
+
+    updateDifficultyOptions();
+    updateRegroupVisibility();
+    syncTreasureSettings();
+    updateGameControlVisibility();
+    showGamePicker();
+  </script>
+</body>
+</html>

@@ -319,6 +319,16 @@
     .numline-end.left { left: 0; }
     .numline-end.right { right: 0; }
 
+    .numline-mid {
+      position: absolute;
+      left: 50%;
+      top: -6px;
+      width: 2px;
+      height: 10px;
+      background: #5f7285;
+      transform: translateX(-50%);
+    }
+
     .numline-marker {
       position: absolute;
       top: -11px;
@@ -330,13 +340,18 @@
     }
 
     .numline-labels {
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
       font-size: 0.78rem;
       font-weight: 800;
       color: #32495f;
       margin-top: 2px;
     }
+
+    .numline-labels .left { justify-self: start; }
+    .numline-labels .mid { justify-self: center; color: #41586e; }
+    .numline-labels .right { justify-self: end; }
 
     .numline-target {
       text-align: center;
@@ -871,14 +886,14 @@
 
       <div class="row" id="operationRow">
         <span class="label">Skill:</span>
-        <button type="button" class="pill selected" data-operation="coins">Coins</button>
-        <button type="button" class="pill" data-operation="addition">Addition</button>
+        <button type="button" class="pill selected" data-operation="addition">Addition</button>
         <button type="button" class="pill" data-operation="subtraction">Subtraction</button>
         <button type="button" class="pill" data-operation="multiplication">Multiplication</button>
         <button type="button" class="pill" data-operation="division">Division</button>
         <button type="button" class="pill" data-operation="rounding">Rounding</button>
         <button type="button" class="pill" data-operation="counting">Counting</button>
         <button type="button" class="pill" data-operation="tenframes">Ten Frames</button>
+        <button type="button" class="pill" data-operation="coins">Coins</button>
       </div>
 
       <div class="row" id="answerModeRow">
@@ -1087,7 +1102,7 @@
 
     const state = {
       gameType: "tictactoe",
-      operation: "coins",
+      operation: "addition",
       difficulty: "single",
       regroupMode: "mixed",
       roundingStyle: "standard",
@@ -1126,6 +1141,7 @@
     const roundingRow = document.getElementById("roundingRow");
     const countingStyleSelect = document.getElementById("countingStyleSelect");
     const countingRow = document.getElementById("countingRow");
+    const answerModeRow = document.getElementById("answerModeRow");
 
     const answerModal = document.getElementById("answerModal");
     const modalTitle = document.getElementById("modalTitle");
@@ -1207,6 +1223,10 @@
       countingRow.style.display = state.operation === "counting" ? "flex" : "none";
       difficultyTextEl.style.display = state.operation === "rounding" ? "none" : "";
       difficultySelectWrapEl.style.display = state.operation === "rounding" ? "none" : "inline-flex";
+    }
+
+    function updateAnswerModeVisibility() {
+      answerModeRow.style.display = "flex";
     }
 
     function operationLabel() {
@@ -1648,15 +1668,21 @@
     function renderRoundingNumberLine(prompt) {
       const lower = prompt.bounds.lower;
       const upper = prompt.bounds.upper;
+      const midpoint = lower + ((upper - lower) / 2);
       const pct = Math.max(0, Math.min(100, ((prompt.number - lower) / (upper - lower)) * 100));
       return `
         <div class="numline-wrap">
           <div class="numline-track">
             <span class="numline-end left"></span>
+            <span class="numline-mid"></span>
             <span class="numline-end right"></span>
             <span class="numline-marker" style="left:${pct}%"></span>
           </div>
-          <div class="numline-labels"><span>${formatNumber(lower)}</span><span>${formatNumber(upper)}</span></div>
+          <div class="numline-labels">
+            <span class="left">${formatNumber(lower)}</span>
+            <span class="mid">${formatNumber(midpoint)}</span>
+            <span class="right">${formatNumber(upper)}</span>
+          </div>
           <div class="numline-target">Locate ${formatNumber(prompt.number)}</div>
         </div>`;
     }
@@ -1810,10 +1836,11 @@
       indexPrompts(state.ttt.prompts);
       const meta = `${operationLabel()} | ${difficultyLabel()} | Tic Tac Toe | ${state.requireCorrect ? "Answer Check On" : "Answer Check Off"}`;
       const turnClass = state.ttt.turn === "X" ? "x" : "o";
+      const sheetTitle = "Math Tic Tac Toe";
 
       outputEl.innerHTML = `
         <article class="sheet">
-          <div class="sheet-title">Math Tic Tac Toe</div>
+          <div class="sheet-title">${sheetTitle}</div>
           <div class="sheet-meta">${meta} | Turn: <span class="${turnClass}">${state.ttt.turn}</span></div>
           <div class="score-row">
             <div class="score-pill">X Wins: <span class="x">${state.ttt.score.X}</span></div>
@@ -2093,10 +2120,11 @@
       indexPrompts(prompts);
       const meta = `${operationLabel()} | ${difficultyLabel()} | Roll and Read | ${state.requireCorrect ? "Answer Check On" : "Answer Check Off"}`;
       const built = buildRollTable(prompts);
+      const sheetTitle = "Math Roll and Read";
 
       outputEl.innerHTML = `
         <article class="sheet">
-          <div class="sheet-title">Math Roll and Read</div>
+          <div class="sheet-title">${sheetTitle}</div>
           <div class="sheet-meta">${meta}</div>
           <div class="roll-controls">
             <div class="die-wrap">
@@ -2171,6 +2199,7 @@
         setSelectedInRow("operationRow", "data-operation", state.operation);
         updateDifficultyOptions();
         updateRegroupVisibility();
+        updateAnswerModeVisibility();
       });
     });
 
@@ -2222,6 +2251,7 @@
 
     updateDifficultyOptions();
     updateRegroupVisibility();
+    updateAnswerModeVisibility();
     generate();
   </script>
 </body>

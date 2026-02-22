@@ -129,11 +129,15 @@
       border: 2px solid #cfd8e7;
       border-radius: 10px;
       background: #fff;
-      padding: 8px;
-      text-align: left;
+      padding: 10px 8px;
+      text-align: center;
       cursor: pointer;
       font-family: inherit;
       color: #1f2b3e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
     }
 
     .visual-card.active {
@@ -159,6 +163,7 @@
       font-size: 0.8rem;
       font-weight: 800;
       line-height: 1.1;
+      white-space: nowrap;
     }
 
     .visual-card-sub {
@@ -1115,7 +1120,7 @@
       }
 
       .visual-cards {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .source-settings-row {
@@ -1170,6 +1175,12 @@
       .footer-note {
         position: static;
         margin-top: 8px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .visual-card-title {
+        white-space: normal;
       }
     }
 
@@ -1379,19 +1390,11 @@
             <h3 class="control-heading">Choose Visual</h3>
             <div class="visual-cards">
               <button id="visualBlocksCard" class="visual-card active" type="button" data-visual="blocks" aria-pressed="true">
-                <div class="visual-thumb">
-                  <img class="block-img block-img-hundred" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6991b7ac899b887a5ac1bcac.png" alt="" loading="lazy" decoding="async" />
-                  <img class="block-img block-img-ten" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6991b7ac24813caed1b26a70.png" alt="" loading="lazy" decoding="async" />
-                  <img class="block-img block-img-one" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6991b7ac36a392985e69ed13.png" alt="" loading="lazy" decoding="async" />
-                </div>
                 <div class="visual-card-title">Base-10 Blocks</div>
-                <div class="visual-card-sub">Ones, tens, hundreds</div>
               </button>
 
               <button id="visualChartCard" class="visual-card" type="button" data-visual="chart" aria-pressed="false">
-                <div class="visual-thumb"><div class="mini-hc-thumb"></div></div>
                 <div class="visual-card-title">Hundreds Chart</div>
-                <div class="visual-card-sub">Move tens and ones</div>
               </button>
             </div>
 

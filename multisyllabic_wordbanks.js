@@ -5682,10 +5682,20 @@
     return Math.max(provided, expanded);
   }
 
+  // School-safe exclusions for K-6 worksheet output.
+  const BLOCKED_WORDS = new Set([
+    "agnostic",
+    "assassinate",
+    "assassin",
+    "sex",
+    "cock"
+  ]);
+
   function toWordEntry(item) {
     const word = normalizeWord(item.word);
     const syllables = sanitizeSyllables(item);
     if (!word || syllables.length < 2) return null;
+    if (BLOCKED_WORDS.has(word)) return null;
 
     const split = splitSyllableIntoUnits(word);
     const patternDigits = split.map((unit) => String(Math.min(3, unit.length)));
