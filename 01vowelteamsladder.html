@@ -6,6 +6,7 @@
 
   <!-- DATA: loads ayWordLadders, aiWordLadders, and word banks (ay/ai + blends) -->
   <script src="longA_and_VCe_Ladders_combined.js"></script>
+  <script src="ladder_image_fallback.js" defer></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -241,6 +242,9 @@
         const patt = patternFor(word);
         const prevP = first ? '' : patternFor(prev);
         const imgSrc = imgFor(word);
+        const resolvedImgSrc = window.ladderImageFallback
+          ? window.ladderImageFallback.ensureSrc(imgSrc, word)
+          : imgSrc;
 
         let patternHTML = '';
         if (!first) {
@@ -262,7 +266,7 @@
           : `<div class="pattern" style="font-family:'${useFont}',monospace;font-size:${useFont==='UnderlineFont'?'85px':'100px'};letter-spacing:0;">${patternHTML}</div>`;
 
         const imgTD = `<td style="padding:5px 7px;width:140px;">
-                         <img src="${imgSrc}" alt="${word}" style="width:110px;height:110px;object-fit:contain;">
+                         <img src="${resolvedImgSrc}" alt="${word}" data-word="${word}" onerror="window.ladderImageFallback && window.ladderImageFallback.handleError(this,this.dataset.word)" style="width:110px;height:110px;object-fit:contain;">
                        </td>`;
 
         const borders = !last

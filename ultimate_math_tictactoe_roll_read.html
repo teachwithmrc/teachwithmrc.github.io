@@ -374,6 +374,71 @@
       text-transform: uppercase;
     }
 
+    .clock-prompt {
+      display: grid;
+      justify-items: center;
+      gap: 4px;
+    }
+
+    .clock-face {
+      width: var(--clock-size, 100px);
+      height: var(--clock-size, 100px);
+    }
+
+    .clock-face.ttt { --clock-size: 100px; }
+    .clock-face.roll { --clock-size: 58px; }
+    .clock-face.modal { --clock-size: 126px; }
+
+    .clock-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .clock-outline {
+      fill: #fff;
+      stroke: #23384d;
+      stroke-width: 2.4;
+    }
+
+    .clock-tick {
+      stroke: #3e556c;
+      stroke-width: 1;
+      stroke-linecap: round;
+    }
+
+    .clock-tick.major {
+      stroke-width: 1.9;
+    }
+
+    .clock-num {
+      fill: #2f4459;
+      font-size: 6.4px;
+      font-weight: 700;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .clock-hand {
+      stroke: #192b3d;
+      stroke-linecap: round;
+    }
+
+    .clock-hand.hour { stroke-width: 3; }
+    .clock-hand.minute { stroke-width: 2.2; }
+    .clock-center { fill: #192b3d; }
+
+    .time-answer-line {
+      font-family: "Courier New", monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: #2f465d;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
     .missing-token {
       font-family: "Courier New", monospace;
       letter-spacing: 0;
@@ -641,6 +706,10 @@
       font-size: 0.72rem;
     }
 
+    .roll-table .clock-face.roll {
+      --clock-size: 52px;
+    }
+
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -718,6 +787,10 @@
       border-width: 2px;
     }
 
+    .modal-problem .clock-face.modal {
+      --clock-size: 120px;
+    }
+
     .modal-input {
       width: 100%;
       padding: 10px;
@@ -776,6 +849,14 @@
         width: 18px;
         height: 18px;
         font-size: 0.59rem;
+      }
+
+      .clock-face.ttt {
+        --clock-size: 86px;
+      }
+
+      .time-answer-line {
+        font-size: 0.68rem;
       }
 
       .modal-problem .prompt-math {
@@ -850,6 +931,14 @@
         font-size: 19px !important;
       }
 
+      .clock-face.ttt {
+        --clock-size: 72px;
+      }
+
+      .time-answer-line {
+        font-size: 9px !important;
+      }
+
       .coin-face {
         width: 52px !important;
         height: 52px !important;
@@ -892,6 +981,7 @@
         <button type="button" class="pill" data-operation="division">Division</button>
         <button type="button" class="pill" data-operation="rounding">Rounding</button>
         <button type="button" class="pill" data-operation="counting">Counting</button>
+        <button type="button" class="pill" data-operation="tellingtime">Telling Time</button>
         <button type="button" class="pill" data-operation="tenframes">Ten Frames</button>
         <button type="button" class="pill" data-operation="coins">Coins</button>
       </div>
@@ -1079,6 +1169,11 @@
         { value: "double", label: "Within 50" },
         { value: "multi", label: "Within 100" }
       ],
+      tellingtime: [
+        { value: "single", label: "Hour and half-hour" },
+        { value: "double", label: "5-minute intervals" },
+        { value: "multi", label: "Every minute" }
+      ],
       tenframes: [
         { value: "single", label: "Up to 10" },
         { value: "double", label: "Up to 20" },
@@ -1237,6 +1332,7 @@
       if (state.operation === "division") return "Division";
       if (state.operation === "rounding") return "Rounding";
       if (state.operation === "counting") return "Counting";
+      if (state.operation === "tellingtime") return "Telling Time";
       return "Ten Frames";
     }
 
@@ -1571,6 +1667,28 @@
       };
     }
 
+    function makeTellingTimePrompt() {
+      const hour = randInt(1, 12);
+      let minute;
+      if (state.difficulty === "single") {
+        minute = choose([0, 30]);
+      } else if (state.difficulty === "double") {
+        minute = randInt(0, 11) * 5;
+      } else {
+        minute = randInt(0, 59);
+      }
+
+      const answer = `${hour}:${String(minute).padStart(2, "0")}`;
+      return {
+        id: nextPromptId(),
+        kind: "tellingtime",
+        hour,
+        minute,
+        answer,
+        plain: `Tell the time (${answer})`
+      };
+    }
+
     function makePrompt() {
       if (state.operation === "coins") return makeCoinPrompt();
       if (state.operation === "addition") return makeAdditionPrompt();
@@ -1579,6 +1697,7 @@
       if (state.operation === "division") return makeDivisionPrompt();
       if (state.operation === "rounding") return makeRoundingPrompt();
       if (state.operation === "counting") return makeCountingPrompt();
+      if (state.operation === "tellingtime") return makeTellingTimePrompt();
       return makeTenFramePrompt();
     }
 
@@ -1687,6 +1806,53 @@
         </div>`;
     }
 
+    function pointAtAngle(cx, cy, radius, angleDegrees) {
+      const radians = (angleDegrees - 90) * (Math.PI / 180);
+      return {
+        x: cx + (radius * Math.cos(radians)),
+        y: cy + (radius * Math.sin(radians))
+      };
+    }
+
+    function renderTellingTimePrompt(prompt, context) {
+      const minuteAngle = prompt.minute * 6;
+      const hourAngle = ((prompt.hour % 12) + (prompt.minute / 60)) * 30;
+      const hourTip = pointAtAngle(50, 50, 21, hourAngle);
+      const minuteTip = pointAtAngle(50, 50, 32, minuteAngle);
+
+      const ticks = [];
+      for (let i = 0; i < 60; i += 1) {
+        const outer = pointAtAngle(50, 50, 45, i * 6);
+        const inner = pointAtAngle(50, 50, i % 5 === 0 ? 38 : 41.5, i * 6);
+        const major = i % 5 === 0 ? " major" : "";
+        ticks.push(`<line class="clock-tick${major}" x1="${inner.x.toFixed(2)}" y1="${inner.y.toFixed(2)}" x2="${outer.x.toFixed(2)}" y2="${outer.y.toFixed(2)}"></line>`);
+      }
+
+      const nums = [];
+      for (let n = 1; n <= 12; n += 1) {
+        const p = pointAtAngle(50, 50, 31, n * 30);
+        nums.push(`<text class="clock-num" x="${p.x.toFixed(2)}" y="${p.y.toFixed(2)}">${n}</text>`);
+      }
+
+      const faceClass = context === "roll" ? "clock-face roll" : context === "modal" ? "clock-face modal" : "clock-face ttt";
+      const caption = context === "modal" ? "" : '<div class="time-answer-line">___ : ___</div>';
+
+      return `
+        <div class="prompt-wrap clock-prompt">
+          <div class="${faceClass}">
+            <svg class="clock-svg" viewBox="0 0 100 100" role="img" aria-label="${htmlEscape(prompt.plain)}">
+              <circle class="clock-outline" cx="50" cy="50" r="46"></circle>
+              ${ticks.join("")}
+              ${nums.join("")}
+              <line class="clock-hand hour" x1="50" y1="50" x2="${hourTip.x.toFixed(2)}" y2="${hourTip.y.toFixed(2)}"></line>
+              <line class="clock-hand minute" x1="50" y1="50" x2="${minuteTip.x.toFixed(2)}" y2="${minuteTip.y.toFixed(2)}"></line>
+              <circle class="clock-center" cx="50" cy="50" r="2.5"></circle>
+            </svg>
+          </div>
+          ${caption}
+        </div>`;
+    }
+
     function renderPromptHtml(prompt, context) {
       if (prompt.kind === "coins") return renderCoinPrompt(prompt, context);
       if (prompt.kind === "stack") return renderStackPrompt(prompt);
@@ -1710,6 +1876,7 @@
             <div class="counting-line">${seq}</div>
           </div>`;
       }
+      if (prompt.kind === "tellingtime") return renderTellingTimePrompt(prompt, context);
       return renderTenFrames(prompt.total, context);
     }
 
@@ -1747,11 +1914,45 @@
       return Number.isFinite(value) ? value : null;
     }
 
+    function parseTimeInput(raw) {
+      const input = String(raw || "").trim();
+      if (!input) return null;
+
+      let hour;
+      let minute;
+      if (input.includes(":")) {
+        const [hPart, mPart] = input.split(":");
+        if (!hPart || !mPart) return null;
+        hour = Number(hPart.replace(/[^0-9]/g, ""));
+        minute = Number(mPart.replace(/[^0-9]/g, ""));
+      } else {
+        const digits = input.replace(/[^0-9]/g, "");
+        if (!digits) return null;
+        if (digits.length <= 2) {
+          hour = Number(digits);
+          minute = 0;
+        } else {
+          hour = Number(digits.slice(0, digits.length - 2));
+          minute = Number(digits.slice(-2));
+        }
+      }
+
+      if (!Number.isInteger(hour) || !Number.isInteger(minute)) return null;
+      if (hour < 1 || hour > 12 || minute < 0 || minute > 59) return null;
+      return `${hour}:${String(minute).padStart(2, "0")}`;
+    }
+
+    function parsePromptInput(prompt, raw) {
+      if (prompt.kind === "tellingtime") return parseTimeInput(raw);
+      return parseNumericInput(raw);
+    }
+
     function promptAnswerText(prompt) {
       if (prompt.kind === "coins") return "Write total cents for this coin set.";
       if (prompt.kind === "tenframes") return "Enter how many dots are shown.";
       if (prompt.kind === "rounding") return `Enter rounded value for nearest ${prompt.placeText}.`;
       if (prompt.kind === "counting") return "Enter the number that belongs in the blank.";
+      if (prompt.kind === "tellingtime") return "Enter time as h:mm (example: 3:05).";
       return `Enter answer for: ${prompt.plain || "problem"}`;
     }
 
@@ -1789,9 +1990,9 @@
         closeAnswerModal(false);
         return;
       }
-      const value = parseNumericInput(modalInput.value);
+      const value = parsePromptInput(prompt, modalInput.value);
       if (value === null) {
-        modalMsg.textContent = "Enter a number.";
+        modalMsg.textContent = prompt.kind === "tellingtime" ? "Enter time as h:mm (example: 3:05)." : "Enter a number.";
         return;
       }
       if (value === prompt.answer) {
