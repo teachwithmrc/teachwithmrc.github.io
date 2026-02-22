@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Spelling Picture Worksheet Generator</title>
   <script src="newtry_FULL.js" defer></script>
+  <script src="soft_cg_ladders_full.js" defer></script>
   <script src="multisyllabic_wordbanks.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -54,33 +55,66 @@
     }
     .section-label { text-align: center; font-weight: 700; font-size: 18px; margin-bottom: 10px; }
 
-    .skill-block { border: 1px solid #bbb; border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
-    .skill-header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font-weight: 700;
-      font-size: 18px;
-      padding: 9px 10px;
-      cursor: pointer;
-      user-select: none;
+    .skill-menu-compact { display: grid; gap: 10px; }
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
     }
-    .skill-header .arrow { width: 22px; text-align: center; font-size: 18px; line-height: 1; }
-    .skills-inner { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; padding: 8px; }
-    .skills-inner.collapsed { display: none; }
-    .skills-inner .break { flex-basis: 100%; height: 0; }
+    .category-tile {
+      border: 2px solid #000;
+      border-radius: 10px;
+      padding: 10px 8px;
+      min-height: 48px;
+      background: #fff;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      line-height: 1.05;
+      transition: transform .08s ease, box-shadow .18s ease, background-color .18s ease, color .18s ease;
+    }
+    .category-tile:active { transform: translateY(1px); }
+    .category-tile.active { color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22); }
+    .category-tile.cvc { background: var(--cvc); }
+    .category-tile.cvc.active { background: var(--cvc-selected); }
+    .category-tile.dig { background: var(--dig); }
+    .category-tile.dig.active { background: var(--dig-selected); }
+    .category-tile.glued { background: var(--glued); }
+    .category-tile.glued.active { background: var(--glued-selected); }
+    .category-tile.vce { background: var(--vce); }
+    .category-tile.vce.active { background: var(--vce-selected); }
+    .category-tile.rctrl { background: var(--rctrl); }
+    .category-tile.rctrl.active { background: var(--rctrl-selected); }
+    .category-tile.vteams { background: var(--vteams); }
+    .category-tile.vteams.active { background: var(--vteams-selected); }
+    .category-tile.dip { background: var(--dip); }
+    .category-tile.dip.active { background: var(--dip-selected); }
+    .category-tile.variant { background: var(--variant); }
+    .category-tile.variant.active { background: var(--variant-selected); color: #111; }
+    .category-tile.soft { background: var(--soft); }
+    .category-tile.soft.active { background: var(--soft-selected); }
+    .category-tile.multi { background: var(--multi); }
+    .category-tile.multi.active { background: var(--multi-selected); }
 
-    .bg-cvc .skill-header { background: var(--cvc); }
-    .bg-dig .skill-header { background: var(--dig); }
-    .bg-glued .skill-header { background: var(--glued); }
-    .bg-vce .skill-header { background: var(--vce); }
-    .bg-rctrl .skill-header { background: var(--rctrl); }
-    .bg-vteams .skill-header { background: var(--vteams); }
-    .bg-dip .skill-header { background: var(--dip); }
-    .bg-variant .skill-header { background: var(--variant); }
-    .bg-soft .skill-header { background: var(--soft); }
-    .bg-multi .skill-header { background: var(--multi); }
+    .subskill-panel {
+      border: 2px solid #000;
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px;
+    }
+    .subskill-title {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .subskills-wrap {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
 
     .skill-button {
       border: 2px solid #000;
@@ -381,6 +415,7 @@
       .table-section { margin-bottom: 12px; }
       .actions-sticky { position: static; }
       .page h2 { font-size: 24px; }
+      .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .worksheet-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
@@ -439,116 +474,17 @@
 </head>
 <body>
   <h1>Spelling Picture Worksheet Generator</h1>
-  <p class="subtitle">Select skills, click generate, and print worksheet + answer key.</p>
+  <p class="subtitle">Choose a category, pick skills, and the worksheet auto-updates. Print when ready.</p>
 
   <div class="layout">
     <div class="left">
       <div class="table-section">
-        <div class="section-label">Step 1: Select Skills</div>
-
-        <div class="skill-block bg-cvc">
-          <div class="skill-header" data-target="cvc"><span class="arrow">▲</span><span>CVC Short Vowels</span><span class="arrow">▲</span></div>
-          <div class="skills-inner" id="section-cvc">
-            <button class="skill-button cvc" data-skill="Short A">Short A</button>
-            <button class="skill-button cvc" data-skill="Short E">Short E</button>
-            <button class="skill-button cvc" data-skill="Short I">Short I</button>
-            <button class="skill-button cvc" data-skill="Short O">Short O</button>
-            <button class="skill-button cvc" data-skill="Short U">Short U</button>
-            <button class="skill-button cvc" data-skill="Mixed CVC">Mixed CVC</button>
-            <button class="skill-button cvc" data-skill="FLSZ Words">FLSZ</button>
-          </div>
-        </div>
-
-        <div class="skill-block bg-dig">
-          <div class="skill-header" data-target="dig"><span class="arrow">▼</span><span>Digraphs</span><span class="arrow">▼</span></div>
-          <div class="skills-inner collapsed" id="section-dig">
-            <button class="skill-button dig" data-skill="Digraph(ck)">ck</button>
-            <button class="skill-button dig" data-skill="Digraph(sh)">sh</button>
-            <button class="skill-button dig" data-skill="Digraph(th)">th</button>
-            <button class="skill-button dig" data-skill="Digraph(ch)">ch</button>
-            <button class="skill-button dig" data-skill="Digraph(wh)">wh</button>
-            <button class="skill-button dig" data-skill="Digraphs Mixed">Digraphs Mixed</button>
-          </div>
-        </div>
-
-        <div class="skill-block bg-glued">
-          <div class="skill-header" data-target="glued"><span class="arrow">▼</span><span>Glued Sounds</span><span class="arrow">▼</span></div>
-          <div class="skills-inner collapsed" id="section-glued">
-            <button class="skill-button glued" data-skill="Glued(all)">-all</button>
-            <button class="skill-button glued" data-skill="Glued(-ng)">-ng</button>
-            <button class="skill-button glued" data-skill="Glued(-nk)">-nk</button>
-            <button class="skill-button glued" data-skill="Glued Mixed">Glued Mixed</button>
-          </div>
-        </div>
-
-        <div class="skill-block bg-vce">
-          <div class="skill-header" data-target="vce"><span class="arrow">▼</span><span>Silent E (VCe)</span><span class="arrow">▼</span></div>
-          <div class="skills-inner collapsed" id="section-vce">
-            <button class="skill-button vce" data-skill="VCe(a_e)">a_e</button>
-            <button class="skill-button vce" data-skill="VCe(i_e)">i_e</button>
-            <button class="skill-button vce" data-skill="VCe(o_e)">o_e</button>
-            <button class="skill-button vce" data-skill="VCe(u_e)">u_e</button>
-            <button class="skill-button vce" data-skill="Mixed VCe">Mixed VCe</button>
-          </div>
-        </div>
-
-        <div class="skill-block bg-rctrl">
-          <div class="skill-header" data-target="rctrl"><span class="arrow">▼</span><span>R-Controlled</span><span class="arrow">▼</span></div>
-          <div class="skills-inner collapsed" id="section-rctrl">
-            <button class="skill-button rctrl" data-skill="R-Controlled(ar)">ar</button>
-            <button class="skill-button rctrl" data-skill="R-Controlled(or)">or</button>
-            <button class="skill-button rctrl" data-skill="R-Controlled(er,ir,ur)">er/ir/ur</button>
-            <button class="skill-button rctrl" data-skill="Mixed R-Controlled">Mixed R-Controlled</button>
-          </div>
-        </div>
-
-        <div class="skill-block bg-vteams">
-          <div class="skill-header" data-target="vteams"><span class="arrow">▼</span><span>Vowel Teams</span><span class="arrow">▼</span></div>
-          <div class="skills-inner collapsed" id="section-vteams">
-            <button class="skill-button vteams" data-skill="Long A (ai/ay)">Long A (ai/ay)</button>
-            <button class="skill-button vteams" data-skill="Long E (ee/ea)">Long E (ee/ea)</button>
-            <button class="skill-button vteams" data-skill="Long I (igh/y/ie)">Long I (igh/y/ie)</button>
-            <span class="break"></span>
-            <button class="skill-button vteams" data-skill="Long O (oa/ow/oe)">Long O (oa/ow/oe)</button>
-            <button class="skill-button vteams" data-skill="Long U (oo/ew/ue)">Long U (oo/ew/ue)</button>
-            <button class="skill-button vteams" data-skill="Mixed Vowel Teams">Mixed Vowel Teams</button>
-          </div>
-        </div>
-
-        <div class="skill-block bg-dip">
-          <div class="skill-header" data-target="dip"><span class="arrow">▼</span><span>Diphthongs</span><span class="arrow">▼</span></div>
-          <div class="skills-inner collapsed" id="section-dip">
-            <button class="skill-button dip" data-skill="Diphthongs (oy/oi)">oy/oi</button>
-            <button class="skill-button dip" data-skill="Diphthongs (ow/ou)">ow/ou</button>
-          </div>
-        </div>
-
-        <div class="skill-block bg-variant">
-          <div class="skill-header" data-target="variant"><span class="arrow">▼</span><span>Variant Vowels</span><span class="arrow">▼</span></div>
-          <div class="skills-inner collapsed" id="section-variant">
-            <button class="skill-button variant" data-skill="Variant Vowels (au/aw)">au/aw</button>
-            <button class="skill-button variant" data-skill="Variant Vowel (oo)">oo</button>
-          </div>
-        </div>
-
-        <div class="skill-block bg-soft">
-          <div class="skill-header" data-target="soft"><span class="arrow">▼</span><span>Soft C/G Endings</span><span class="arrow">▼</span></div>
-          <div class="skills-inner collapsed" id="section-soft">
-            <button class="skill-button soft" data-skill="Soft Endings">Soft C/G Endings (-ce/-ge/-dge)</button>
-          </div>
-        </div>
-
-        <div class="skill-block bg-multi">
-          <div class="skill-header" data-target="multi"><span class="arrow">▼</span><span>Multisyllabic Words</span><span class="arrow">▼</span></div>
-          <div class="skills-inner collapsed" id="section-multi">
-            <button class="skill-button multi" data-skill="Multisyllabic (Closed)">Closed</button>
-            <button class="skill-button multi" data-skill="Multisyllabic (Open)">Open</button>
-            <button class="skill-button multi" data-skill="Multisyllabic (VCe)">VCe</button>
-            <button class="skill-button multi" data-skill="Multisyllabic (R-Controlled)">R-Controlled</button>
-            <button class="skill-button multi" data-skill="Multisyllabic (Vowel Team)">Vowel Team</button>
-            <button class="skill-button multi" data-skill="Multisyllabic (C-le)">C-le</button>
-            <button class="skill-button multi" data-skill="Multisyllabic Mixed">Mixed</button>
-            <button class="skill-button multi" data-skill="Multisyllabic (All 6 Types)">All 6 Types</button>
+        <div class="section-label">Step 1: Select Category + Skills</div>
+        <div class="skill-menu-compact">
+          <div id="categoryGrid" class="category-grid" aria-label="Skill Categories"></div>
+          <div id="subSkillPanel" class="subskill-panel">
+            <div class="subskill-title">Choose a category above.</div>
+            <div class="subskills-wrap"></div>
           </div>
         </div>
       </div>
@@ -566,7 +502,7 @@
 
     <div class="right-bottom">
       <div class="table-section actions-sticky">
-        <div class="section-label">Step 3: Generate & Print</div>
+        <div class="section-label">Step 3: Auto-Generate & Print</div>
 
         <div class="chips-title">Skills Selected:</div>
         <div id="chips" class="chips-wrap"></div>
@@ -606,7 +542,7 @@
         </div>
 
         <div class="btn-row">
-          <button id="btnGenerate" class="action primary">Generate</button>
+          <button id="btnGenerate" class="action primary">Generate Now</button>
           <button id="btnPrint" class="action">Print</button>
         </div>
         <div id="status" class="status"></div>
@@ -651,6 +587,141 @@
       const formatNoteEl = document.getElementById("formatNote");
       const blendsYesEl = document.getElementById("includeBlendsYes");
       const blendsNoEl = document.getElementById("includeBlendsNo");
+      const categoryGridEl = document.getElementById("categoryGrid");
+      const subSkillPanelEl = document.getElementById("subSkillPanel");
+      const imageUrlCheckCache = new Map();
+      let activeCategoryId = "cvc";
+      let autoGenerateTimer = null;
+      let generating = false;
+      let rerunRequested = false;
+      let seededInlineMaps = false;
+      const CATEGORY_CONFIG = [
+        {
+          id: "cvc",
+          label: "CVC",
+          title: "CVC Short Vowels",
+          buttonClass: "cvc",
+          skills: [
+            { skill: "Short A", label: "Short A" },
+            { skill: "Short E", label: "Short E" },
+            { skill: "Short I", label: "Short I" },
+            { skill: "Short O", label: "Short O" },
+            { skill: "Short U", label: "Short U" },
+            { skill: "Mixed CVC", label: "Mixed CVC" },
+            { skill: "FLSZ Words", label: "FLSZ" }
+          ]
+        },
+        {
+          id: "dig",
+          label: "Digraphs",
+          title: "Digraphs",
+          buttonClass: "dig",
+          skills: [
+            { skill: "Digraph(ck)", label: "ck" },
+            { skill: "Digraph(sh)", label: "sh" },
+            { skill: "Digraph(th)", label: "th" },
+            { skill: "Digraph(ch)", label: "ch" },
+            { skill: "Digraph(wh)", label: "wh" },
+            { skill: "Digraphs Mixed", label: "Digraphs Mixed" }
+          ]
+        },
+        {
+          id: "glued",
+          label: "Glued Sounds",
+          title: "Glued Sounds",
+          buttonClass: "glued",
+          skills: [
+            { skill: "Glued(all)", label: "-all" },
+            { skill: "Glued(-ng)", label: "-ng" },
+            { skill: "Glued(-nk)", label: "-nk" },
+            { skill: "Glued Mixed", label: "Glued Mixed" }
+          ]
+        },
+        {
+          id: "vce",
+          label: "Silent E",
+          title: "Silent E (VCe)",
+          buttonClass: "vce",
+          skills: [
+            { skill: "VCe(a_e)", label: "a_e" },
+            { skill: "VCe(i_e)", label: "i_e" },
+            { skill: "VCe(o_e)", label: "o_e" },
+            { skill: "VCe(u_e)", label: "u_e" },
+            { skill: "Mixed VCe", label: "Mixed VCe" }
+          ]
+        },
+        {
+          id: "rctrl",
+          label: "R-Controlled",
+          title: "R-Controlled",
+          buttonClass: "rctrl",
+          skills: [
+            { skill: "R-Controlled(ar)", label: "ar" },
+            { skill: "R-Controlled(or)", label: "or" },
+            { skill: "R-Controlled(er,ir,ur)", label: "er/ir/ur" },
+            { skill: "Mixed R-Controlled", label: "Mixed R-Controlled" }
+          ]
+        },
+        {
+          id: "vteams",
+          label: "Vowel Teams",
+          title: "Vowel Teams",
+          buttonClass: "vteams",
+          skills: [
+            { skill: "Long A (ai/ay)", label: "Long A (ai/ay)" },
+            { skill: "Long E (ee/ea)", label: "Long E (ee/ea)" },
+            { skill: "Long I (igh/y/ie)", label: "Long I (igh/y/ie)" },
+            { skill: "Long O (oa/ow/oe)", label: "Long O (oa/ow/oe)" },
+            { skill: "Long U (oo/ew/ue)", label: "Long U (oo/ew/ue)" },
+            { skill: "Mixed Vowel Teams", label: "Mixed Vowel Teams" }
+          ]
+        },
+        {
+          id: "dip",
+          label: "Diphthongs",
+          title: "Diphthongs",
+          buttonClass: "dip",
+          skills: [
+            { skill: "Diphthongs (oy/oi)", label: "oy/oi" },
+            { skill: "Diphthongs (ow/ou)", label: "ow/ou" }
+          ]
+        },
+        {
+          id: "variant",
+          label: "Variant Vowels",
+          title: "Variant Vowels",
+          buttonClass: "variant",
+          skills: [
+            { skill: "Variant Vowels (au/aw)", label: "au/aw" },
+            { skill: "Variant Vowel (oo)", label: "oo" }
+          ]
+        },
+        {
+          id: "soft",
+          label: "Soft C/G",
+          title: "Soft C/G Endings",
+          buttonClass: "soft",
+          skills: [
+            { skill: "Soft Endings", label: "Soft Endings (-ce/-ge/-dge)" }
+          ]
+        },
+        {
+          id: "multi",
+          label: "Multisyllabic",
+          title: "Multisyllabic Words",
+          buttonClass: "multi",
+          skills: [
+            { skill: "Multisyllabic (Closed)", label: "Closed" },
+            { skill: "Multisyllabic (Open)", label: "Open" },
+            { skill: "Multisyllabic (VCe)", label: "VCe" },
+            { skill: "Multisyllabic (R-Controlled)", label: "R-Controlled" },
+            { skill: "Multisyllabic (Vowel Team)", label: "Vowel Team" },
+            { skill: "Multisyllabic (C-le)", label: "C-le" },
+            { skill: "Multisyllabic Mixed", label: "Mixed" },
+            { skill: "Multisyllabic (All 6 Types)", label: "All 6 Types" }
+          ]
+        }
+      ];
 
       function isWordBankMode() {
         return worksheetMode === "6";
@@ -693,37 +764,6 @@
         });
       }
 
-      document.querySelectorAll(".skill-header").forEach((header) => {
-        header.addEventListener("click", () => {
-          const target = header.getAttribute("data-target");
-          const inner = document.getElementById("section-" + target);
-          const arrows = header.querySelectorAll(".arrow");
-          const collapsed = inner.classList.contains("collapsed");
-          if (collapsed) {
-            inner.classList.remove("collapsed");
-            arrows.forEach((a) => { a.textContent = "▲"; });
-          } else {
-            inner.classList.add("collapsed");
-            arrows.forEach((a) => { a.textContent = "▼"; });
-          }
-        });
-      });
-
-      document.querySelectorAll(".skill-button").forEach((button) => {
-        button.addEventListener("click", (event) => {
-          event.stopPropagation();
-          const skill = button.dataset.skill;
-          if (selectedSkills.has(skill)) {
-            selectedSkills.delete(skill);
-            button.classList.remove("selected");
-          } else {
-            selectedSkills.add(skill);
-            button.classList.add("selected");
-          }
-          renderChips();
-        });
-      });
-
       function hasMultisyllabicSelected() {
         return Array.from(selectedSkills).some((skill) => MULTISYLLABIC_SKILLS.has(skill));
       }
@@ -739,42 +779,61 @@
         }
       }
 
-      document.getElementById("includeBlendsYes").addEventListener("click", () => {
-        if (blendsYesEl.classList.contains("disabled")) return;
-        includeBlends = true;
-        document.getElementById("includeBlendsYes").classList.add("selected");
-        document.getElementById("includeBlendsNo").classList.remove("selected");
-      });
+      function getCategoryById(id) {
+        return CATEGORY_CONFIG.find((group) => group.id === id) || CATEGORY_CONFIG[0];
+      }
 
-      document.getElementById("includeBlendsNo").addEventListener("click", () => {
-        if (blendsNoEl.classList.contains("disabled")) return;
-        includeBlends = false;
-        document.getElementById("includeBlendsNo").classList.add("selected");
-        document.getElementById("includeBlendsYes").classList.remove("selected");
-      });
-
-      document.getElementById("btnGenerate").addEventListener("click", async () => {
-        await ensureImageIndex();
-        await ensureSourceImageMaps();
-        await generateWorksheet();
-      });
-
-      document.querySelectorAll("input[name='worksheetMode']").forEach((radio) => {
-        radio.addEventListener("change", () => {
-          worksheetMode = document.querySelector("input[name='worksheetMode']:checked")?.value || "6";
-          updateFormatNote();
+      function renderCategoryTiles() {
+        if (!categoryGridEl) return;
+        categoryGridEl.innerHTML = "";
+        CATEGORY_CONFIG.forEach((group) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "category-tile " + group.buttonClass + (group.id === activeCategoryId ? " active" : "");
+          button.textContent = group.label;
+          button.addEventListener("click", () => {
+            activeCategoryId = group.id;
+            renderCategoryTiles();
+            renderSubSkillPanel();
+          });
+          categoryGridEl.appendChild(button);
         });
-      });
+      }
 
-      updateFormatNote();
+      function renderSubSkillPanel() {
+        if (!subSkillPanelEl) return;
+        const group = getCategoryById(activeCategoryId);
+        subSkillPanelEl.innerHTML = "";
 
-      document.getElementById("btnPrint").addEventListener("click", () => {
-        if (lastGenerated.length === 0) {
-          statusEl.textContent = "Generate a worksheet first.";
-          return;
-        }
-        window.print();
-      });
+        const title = document.createElement("div");
+        title.className = "subskill-title";
+        title.textContent = group.title;
+        subSkillPanelEl.appendChild(title);
+
+        const wrap = document.createElement("div");
+        wrap.className = "subskills-wrap";
+
+        group.skills.forEach((entry) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "skill-button " + group.buttonClass + (selectedSkills.has(entry.skill) ? " selected" : "");
+          button.dataset.skill = entry.skill;
+          button.textContent = entry.label;
+          button.addEventListener("click", () => {
+            if (selectedSkills.has(entry.skill)) {
+              selectedSkills.delete(entry.skill);
+              button.classList.remove("selected");
+            } else {
+              selectedSkills.add(entry.skill);
+              button.classList.add("selected");
+            }
+            renderChips();
+            scheduleAutoGenerate();
+          });
+          wrap.appendChild(button);
+        });
+        subSkillPanelEl.appendChild(wrap);
+      }
 
       function renderChips() {
         const wrap = document.getElementById("chips");
@@ -785,14 +844,95 @@
           chip.innerHTML = "<span>" + skill + "</span><span class='x' title='Remove'>×</span>";
           chip.querySelector(".x").addEventListener("click", () => {
             selectedSkills.delete(skill);
-            const btn = document.querySelector(".skill-button[data-skill='" + CSS.escape(skill) + "']");
-            if (btn) btn.classList.remove("selected");
+            renderSubSkillPanel();
             renderChips();
+            scheduleAutoGenerate();
           });
           wrap.appendChild(chip);
         });
         syncBlendControls();
       }
+
+      function scheduleAutoGenerate(delayMs = 200) {
+        if (autoGenerateTimer) clearTimeout(autoGenerateTimer);
+        autoGenerateTimer = window.setTimeout(() => {
+          autoGenerateTimer = null;
+          runGenerate(true);
+        }, delayMs);
+      }
+
+      async function runGenerate(autoMode) {
+        if (generating) {
+          rerunRequested = true;
+          return;
+        }
+        generating = true;
+        try {
+          if (autoMode && selectedSkills.size > 0) {
+            statusEl.textContent = "Auto-updating worksheet...";
+          }
+          await ensureImageIndex();
+          await generateWorksheet();
+        } finally {
+          generating = false;
+          if (rerunRequested) {
+            rerunRequested = false;
+            runGenerate(true);
+          }
+        }
+      }
+
+      document.getElementById("includeBlendsYes").addEventListener("click", () => {
+        if (blendsYesEl.classList.contains("disabled")) return;
+        includeBlends = true;
+        document.getElementById("includeBlendsYes").classList.add("selected");
+        document.getElementById("includeBlendsNo").classList.remove("selected");
+        scheduleAutoGenerate();
+      });
+
+      document.getElementById("includeBlendsNo").addEventListener("click", () => {
+        if (blendsNoEl.classList.contains("disabled")) return;
+        includeBlends = false;
+        document.getElementById("includeBlendsNo").classList.add("selected");
+        document.getElementById("includeBlendsYes").classList.remove("selected");
+        scheduleAutoGenerate();
+      });
+
+      document.getElementById("btnGenerate").addEventListener("click", async () => {
+        await runGenerate(false);
+      });
+
+      document.querySelectorAll("input[name='worksheetMode']").forEach((radio) => {
+        radio.addEventListener("change", () => {
+          worksheetMode = document.querySelector("input[name='worksheetMode']:checked")?.value || "6";
+          updateFormatNote();
+          scheduleAutoGenerate();
+        });
+      });
+
+      document.querySelectorAll("input[name='cellStyle'], input[name='patternMode'], input[name='multisyllCount'], input[name='divisionRule']")
+        .forEach((control) => {
+          control.addEventListener("change", () => {
+            scheduleAutoGenerate();
+          });
+        });
+
+      updateFormatNote();
+      renderCategoryTiles();
+      renderSubSkillPanel();
+      renderChips();
+      window.setTimeout(() => {
+        ensureImageIndex();
+        if (!seededInlineMaps) seedLoadedImageMaps();
+      }, 0);
+
+      document.getElementById("btnPrint").addEventListener("click", () => {
+        if (lastGenerated.length === 0) {
+          statusEl.textContent = "Generate a worksheet first.";
+          return;
+        }
+        window.print();
+      });
 
       async function ensureImageIndex() {
         if (imageIndex !== null) return;
@@ -829,10 +969,24 @@
             const base = item.name.replace(/\.[^.]+$/, "");
             const key = base.toLowerCase();
             const normalizedKey = normalizeWord(base);
+            const noCopy = base.replace(/\s+copy$/i, "");
+            const noCopyKey = noCopy.toLowerCase();
+            const noCopyNormalized = normalizeWord(noCopy);
+            const noDigits = noCopy.replace(/\d+$/g, "");
+            const noDigitsKey = noDigits.toLowerCase();
+            const noDigitsNormalized = normalizeWord(noDigits);
             setPreferredImage(key, item.name);
             setPreferredImage(normalizedKey, item.name);
+            setPreferredImage(noCopyKey, item.name);
+            setPreferredImage(noCopyNormalized, item.name);
+            setPreferredImage(noDigitsKey, item.name);
+            setPreferredImage(noDigitsNormalized, item.name);
             setPreferredDownload(key, item.name, item.download_url);
             setPreferredDownload(normalizedKey, item.name, item.download_url);
+            setPreferredDownload(noCopyKey, item.name, item.download_url);
+            setPreferredDownload(noCopyNormalized, item.name, item.download_url);
+            setPreferredDownload(noDigitsKey, item.name, item.download_url);
+            setPreferredDownload(noDigitsNormalized, item.name, item.download_url);
           }
           statusEl.textContent = "Image index loaded.";
         } catch (error) {
@@ -871,6 +1025,27 @@
         return added;
       }
 
+      function seedWordImageMap(mapObj) {
+        if (!mapObj || typeof mapObj !== "object") return 0;
+        let added = 0;
+        Object.entries(mapObj).forEach(([word, src]) => {
+          if (!word || !src || typeof src !== "string") return;
+          if (!/^images\/.+\.(png|jpg|jpeg|webp)$/i.test(src)) return;
+          addExplicitImage(word, src);
+          added += 1;
+        });
+        return added;
+      }
+
+      function seedLoadedImageMaps() {
+        let added = 0;
+        if (window.softCGLadderData && window.softCGLadderData.wordImages) {
+          added += seedWordImageMap(window.softCGLadderData.wordImages);
+        }
+        seededInlineMaps = true;
+        return added;
+      }
+
       async function loadImageMapFromSource(path) {
         try {
           const response = await fetch(path, { cache: "no-store" });
@@ -885,15 +1060,16 @@
       async function ensureSourceImageMaps() {
         if (sourceMapsLoaded) return;
         sourceMapsLoaded = true;
+        let totalAdded = seedLoadedImageMaps();
         const sources = [
           "./blendsmaster.js",
           "./digraphs_master_FINAL_v2.js",
           "./glued_sounds_full.js",
           "./vceWordLadders_6words_full.js",
-          "./rControlled_full_max_SUPERCOMBINED.js"
+          "./rControlled_full_max_SUPERCOMBINED.js",
+          "./soft_cg_ladders_full.js"
         ];
 
-        let totalAdded = 0;
         for (const src of sources) {
           // eslint-disable-next-line no-await-in-loop
           totalAdded += await loadImageMapFromSource(src);
@@ -964,12 +1140,15 @@
       }
 
       function canLoadImage(url) {
-        return new Promise((resolve) => {
+        if (imageUrlCheckCache.has(url)) return imageUrlCheckCache.get(url);
+        const pending = new Promise((resolve) => {
           const img = new Image();
           img.onload = () => resolve(true);
           img.onerror = () => resolve(false);
           img.src = url;
         });
+        imageUrlCheckCache.set(url, pending);
+        return pending;
       }
 
       async function getVerifiedImageSrc(word) {
@@ -1187,6 +1366,25 @@
         }
       }
 
+      async function collectImageMatches(wordList, targetCount) {
+        const selected = [];
+        const chunkSize = 12;
+        for (let i = 0; i < wordList.length && selected.length < targetCount; i += chunkSize) {
+          const chunk = wordList.slice(i, i + chunkSize);
+          // eslint-disable-next-line no-await-in-loop
+          const results = await Promise.all(chunk.map(async (item) => {
+            const src = await getVerifiedImageSrc(item.word);
+            return src ? { ...item, _imgSrc: src } : null;
+          }));
+          for (const match of results) {
+            if (!match) continue;
+            selected.push(match);
+            if (selected.length >= targetCount) break;
+          }
+        }
+        return selected;
+      }
+
       async function generateWorksheet() {
         if (selectedSkills.size === 0) {
           statusEl.textContent = "Select at least one skill.";
@@ -1196,6 +1394,7 @@
           statusEl.textContent = "Missing data: newtry_FULL.js did not load.";
           return;
         }
+        if (!seededInlineMaps) seedLoadedImageMaps();
 
         const count = getTargetWordCount();
         const source = soundBoxWords;
@@ -1204,15 +1403,18 @@
           allWords = allWords.concat(getWordsForSkill(skill, source, includeBlends));
         });
         const shuffled = shuffle(dedupeWords(allWords));
-        const selected = [];
+        let selected = [];
 
         statusEl.textContent = "Checking image matches...";
-        for (const item of shuffled) {
-          // eslint-disable-next-line no-await-in-loop
-          const src = await getVerifiedImageSrc(item.word);
-          if (!src) continue;
-          selected.push({ ...item, _imgSrc: src });
-          if (selected.length >= count) break;
+        selected = await collectImageMatches(shuffled, count);
+
+        if (selected.length < count && !sourceMapsLoaded) {
+          statusEl.textContent = "Checking extra image maps...";
+          await ensureSourceImageMaps();
+          const alreadyPicked = new Set(selected.map((item) => (item.word || "").toLowerCase()));
+          const remaining = shuffled.filter((item) => !alreadyPicked.has((item.word || "").toLowerCase()));
+          const topUp = await collectImageMatches(remaining, count - selected.length);
+          selected = selected.concat(topUp);
         }
 
         if (selected.length === 0) {

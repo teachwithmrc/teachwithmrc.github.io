@@ -120,7 +120,7 @@
       "ladders": 0
     },
     "mixed": {
-      "words": 6,
+      "words": 7,
       "ladders": 4
     }
   }

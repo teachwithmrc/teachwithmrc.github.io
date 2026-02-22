@@ -15,8 +15,18 @@
     return chunks;
   }
 
+  function normalizeChunk(chunk) {
+    const c = String(chunk || "").toLowerCase();
+    if (c === "igh" || c === "ie" || c === "y") return "long_i";
+    return c;
+  }
+
+  function chunkEqual(a, b) {
+    return normalizeChunk(a) === normalizeChunk(b);
+  }
+
   function arraysEqual(a, b) {
-    return a.length === b.length && a.every((v, i) => v === b[i]);
+    return a.length === b.length && a.every((v, i) => chunkEqual(v, b[i]));
   }
 
   function getChangedChunkIndex(prevWord, word, prevPat, pat) {
@@ -27,7 +37,7 @@
     if (A.length === B.length) {
       let idx = -1;
       for (let i = 0; i < A.length; i++) {
-        if ((A[i] || "") !== (B[i] || "")) {
+        if (!chunkEqual(A[i], B[i])) {
           if (idx !== -1) return -1;
           idx = i;
         }
@@ -63,7 +73,7 @@
     if (A.length === B.length) {
       let idx = -1;
       for (let i = 0; i < A.length; i++) {
-        if (A[i] !== B[i]) {
+        if (!chunkEqual(A[i], B[i])) {
           if (idx !== -1) return "? → ?";
           idx = i;
         }
