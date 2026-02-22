@@ -232,6 +232,17 @@
       color: #3f4f5e;
     }
 
+    .view-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 8px;
+    }
+
+    .view-actions button {
+      padding: 8px 10px;
+      font-size: 0.86rem;
+    }
+
     .score-row {
       display: flex;
       justify-content: center;
@@ -854,6 +865,29 @@
       object-fit: contain;
     }
 
+    #output:fullscreen,
+    #output:-webkit-full-screen {
+      margin-top: 0;
+      width: 100vw;
+      height: 100vh;
+      padding: 12px;
+      background: #fff;
+      overflow: auto;
+      display: block;
+    }
+
+    #output:fullscreen .sheet,
+    #output:-webkit-full-screen .sheet {
+      width: 100vw;
+      height: 100vh;
+      max-width: 100vw;
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+      margin: 0 auto;
+      padding: 12px;
+    }
+
     .rr-cell.current {
       background: #fff2c2;
       box-shadow: inset 0 0 0 3px #f9a825;
@@ -1083,6 +1117,7 @@
       .subtitle,
       #btnGenerate,
       #btnResetScore,
+      .view-actions,
       .ttt-actions,
       .roll-controls,
       .modal-backdrop {
@@ -1487,6 +1522,7 @@
     const modalMsg = document.getElementById("modalMsg");
     const modalSubmit = document.getElementById("modalSubmit");
     const modalCancel = document.getElementById("modalCancel");
+    const answerModalDefaultParent = answerModal.parentElement || document.body;
     regroupSelect.value = state.regroupMode;
     roundingStyleSelect.value = state.roundingStyle;
     roundingNearestSelect.value = String(state.roundingNearest);
@@ -1518,6 +1554,76 @@
 
     function gameLabel(gameType) {
       return GAME_LABELS[gameType] || "Unknown";
+    }
+
+    function fullscreenSupported() {
+      return Boolean(
+        document.fullscreenEnabled ||
+        document.webkitFullscreenEnabled ||
+        document.msFullscreenEnabled
+      );
+    }
+
+    function getFullscreenElement() {
+      return document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement || null;
+    }
+
+    function requestElementFullscreen(element) {
+      if (!element) return Promise.resolve();
+      if (element.requestFullscreen) return element.requestFullscreen();
+      if (element.webkitRequestFullscreen) return element.webkitRequestFullscreen();
+      if (element.msRequestFullscreen) return element.msRequestFullscreen();
+      return Promise.resolve();
+    }
+
+    function exitDocumentFullscreen() {
+      if (document.exitFullscreen) return document.exitFullscreen();
+      if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+      if (document.msExitFullscreen) return document.msExitFullscreen();
+      return Promise.resolve();
+    }
+
+    function updateFullscreenButtons() {
+      const isGameFullscreen = getFullscreenElement() === outputEl;
+      document.querySelectorAll("[data-action='fullscreen']").forEach((button) => {
+        if (!fullscreenSupported()) {
+          button.disabled = true;
+          button.textContent = "Full Screen Unavailable";
+          return;
+        }
+        button.disabled = false;
+        button.textContent = isGameFullscreen ? "Exit Full Screen" : "Full Screen";
+      });
+    }
+
+    function bindFullscreenControl() {
+      const button = outputEl.querySelector("[data-action='fullscreen']");
+      if (!button || button.dataset.bound === "1") return;
+      button.dataset.bound = "1";
+
+      button.addEventListener("click", async () => {
+        if (!fullscreenSupported()) return;
+        try {
+          if (getFullscreenElement() === outputEl) {
+            await exitDocumentFullscreen();
+          } else {
+            await requestElementFullscreen(outputEl);
+          }
+        } catch (_) {
+        } finally {
+          updateFullscreenButtons();
+        }
+      });
+
+      updateFullscreenButtons();
+    }
+
+    function syncAnswerModalHost(forceDefault = false) {
+      const fullscreenOnGame = getFullscreenElement() === outputEl;
+      const targetHost = forceDefault || !fullscreenOnGame ? answerModalDefaultParent : outputEl;
+      if (targetHost && answerModal.parentElement !== targetHost) {
+        targetHost.appendChild(answerModal);
+      }
     }
 
     function nextPromptId() {
@@ -2242,6 +2348,7 @@
         modalProblem.innerHTML = renderPromptHtml(prompt, "modal");
         modalInput.value = "";
         modalMsg.textContent = "";
+        syncAnswerModalHost();
         answerModal.classList.add("open");
         answerModal.setAttribute("aria-hidden", "false");
         setTimeout(() => modalInput.focus(), 10);
@@ -2251,6 +2358,7 @@
     function closeAnswerModal(result) {
       answerModal.classList.remove("open");
       answerModal.setAttribute("aria-hidden", "true");
+      syncAnswerModalHost(true);
       const resolver = state.modal.resolver;
       state.modal.resolver = null;
       state.modal.prompt = null;
@@ -2316,6 +2424,9 @@
 
       outputEl.innerHTML = `
         <article class="sheet">
+          <div class="view-actions">
+            <button type="button" data-action="fullscreen">Full Screen</button>
+          </div>
           <div class="sheet-title">${sheetTitle}</div>
           <div class="sheet-meta">${meta} | Turn: <span class="${turnClass}">${state.ttt.turn}</span></div>
           <div class="score-row">
@@ -2366,6 +2477,7 @@
       });
 
       document.getElementById("btnNewBoard").addEventListener("click", () => generate());
+      bindFullscreenControl();
     }
 
     function resetConnect4RoundOnly() {
@@ -2481,6 +2593,9 @@
 
       outputEl.innerHTML = `
         <article class="sheet">
+          <div class="view-actions">
+            <button type="button" data-action="fullscreen">Full Screen</button>
+          </div>
           <div class="sheet-title">Math 4 in a Row</div>
           <div class="sheet-meta">${meta}</div>
           <div class="score-row">
@@ -2514,6 +2629,7 @@
       document.getElementById("btnC4New").addEventListener("click", () => {
         generate();
       });
+      bindFullscreenControl();
     }
 
     function buildRollTable(prompts) {
@@ -2753,6 +2869,9 @@
 
       outputEl.innerHTML = `
         <article class="sheet">
+          <div class="view-actions">
+            <button type="button" data-action="fullscreen">Full Screen</button>
+          </div>
           <div class="sheet-title">${sheetTitle}</div>
           <div class="sheet-meta">${meta}</div>
           <div class="roll-controls">
@@ -2769,6 +2888,7 @@
 
       document.getElementById("rollTableMount").appendChild(built.table);
       wireRollState(outputEl.querySelector(".sheet"), prompts);
+      bindFullscreenControl();
     }
 
     function generate() {
@@ -2829,6 +2949,16 @@
         selectGame(button.dataset.pickGame);
       });
     });
+
+    function handleFullscreenChange() {
+      updateFullscreenButtons();
+      if (answerModal.classList.contains("open")) {
+        syncAnswerModalHost();
+      }
+    }
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
 
     btnChooseGameEl.addEventListener("click", showGamePicker);
     btnSwitchPrintableEl.addEventListener("click", () => {
