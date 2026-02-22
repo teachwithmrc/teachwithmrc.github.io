@@ -180,6 +180,29 @@
       gap: 10px;
     }
 
+    .ttt-two-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      justify-items: center;
+      gap: 12px;
+    }
+
+    .sheet.ttt-two .mini-game {
+      width: min(760px, 100%);
+      margin: 0 auto;
+    }
+
+    .sheet.ttt-two .ttt-board.medium {
+      width: min(360px, 100%);
+      height: 360px;
+    }
+
+    .sheet.ttt-two .ttt-board.medium .prompt-math { font-size: 1.28rem; }
+    .sheet.ttt-two .ttt-board.medium .stack-line { font-size: 1.34rem; }
+    .sheet.ttt-two .ttt-board.medium .counting-line { font-size: 1.12rem; }
+    .sheet.ttt-two .ttt-board.medium .clock-face.ttt { --clock-size: 92px; }
+    .sheet.ttt-two .ttt-board.medium .time-answer-line { font-size: 0.74rem; }
+
     .mini-game {
       border: 1px solid #111;
       border-radius: 10px;
@@ -208,8 +231,13 @@
     }
 
     .ttt-board.small {
-      width: min(250px, 100%);
-      height: 250px;
+      width: min(320px, 100%);
+      height: 320px;
+    }
+
+    .ttt-board.medium {
+      width: min(300px, 100%);
+      height: 300px;
     }
 
     .ttt-board td {
@@ -220,6 +248,11 @@
       vertical-align: middle;
       overflow: hidden;
       position: relative;
+    }
+
+    .ttt-board td.kind-coins,
+    .ttt-board td.kind-tellingtime {
+      overflow: visible;
     }
 
     .ttt-board td.has-bottom { border-bottom: 5px solid #000; }
@@ -236,8 +269,17 @@
       box-sizing: border-box;
     }
 
+    .ttt-cell-inner.cell-coins,
+    .ttt-cell-inner.cell-tellingtime {
+      overflow: visible;
+    }
+
     .ttt-board.small .ttt-cell-inner {
-      padding: 3px;
+      padding: 2px;
+    }
+
+    .ttt-board.medium .ttt-cell-inner {
+      padding: 4px;
     }
 
     .prompt-wrap {
@@ -254,6 +296,7 @@
     }
 
     .ttt-board.small .prompt-math { font-size: 1.03rem; }
+    .ttt-board.medium .prompt-math { font-size: 1.16rem; }
 
     .stack-problem {
       display: inline-grid;
@@ -276,6 +319,7 @@
     }
 
     .ttt-board.small .stack-line { font-size: 1.1rem; }
+    .ttt-board.medium .stack-line { font-size: 1.22rem; }
 
     .stack-line .op {
       width: 1ch;
@@ -309,6 +353,7 @@
     }
 
     .ttt-board.small .counting-line { font-size: 0.96rem; }
+    .ttt-board.medium .counting-line { font-size: 1.04rem; }
 
     .rounding-line {
       font-size: 1.02rem;
@@ -316,6 +361,82 @@
       line-height: 1.15;
       text-align: center;
     }
+
+    .clock-prompt {
+      display: grid;
+      justify-items: center;
+      gap: 3px;
+    }
+
+    .clock-face {
+      width: var(--clock-size, 112px);
+      height: var(--clock-size, 112px);
+    }
+
+    .clock-face.ttt { --clock-size: 98px; }
+    .clock-face.roll { --clock-size: 60px; }
+    .ttt-board.small .clock-face.ttt { --clock-size: 66px; }
+    .ttt-board.medium .clock-face.ttt { --clock-size: 82px; }
+
+    .clock-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .clock-outline {
+      fill: #fff;
+      stroke: #23384d;
+      stroke-width: 2.4;
+    }
+
+    .clock-tick {
+      stroke: #3e556c;
+      stroke-width: 1;
+      stroke-linecap: round;
+    }
+
+    .clock-tick.major { stroke-width: 1.9; }
+
+    .clock-num {
+      fill: #2f4459;
+      font-size: 6.4px;
+      font-weight: 700;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .clock-hand {
+      stroke: #192b3d;
+      stroke-linecap: round;
+    }
+
+    .clock-hand.hour { stroke-width: 3; }
+    .clock-hand.minute { stroke-width: 2.2; }
+
+    .clock-center { fill: #192b3d; }
+
+    .clock-caption {
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: #435a70;
+      letter-spacing: 0.03em;
+      line-height: 1;
+    }
+
+    .time-answer-line {
+      font-family: "Courier New", monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: #2f465d;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .ttt-board.small .time-answer-line { font-size: 0.62rem; }
+    .ttt-board.medium .time-answer-line { font-size: 0.68rem; }
 
     .under {
       text-decoration: underline;
@@ -436,7 +557,7 @@
       justify-content: center;
       align-content: center;
       align-items: start;
-      gap: 6px 8px;
+      gap: var(--coin-gap-y, 6px) var(--coin-gap-x, 8px);
     }
 
     .coin-face {
@@ -457,14 +578,14 @@
 
     .coin-dot {
       position: absolute;
-      width: 14px;
-      height: 14px;
+      width: var(--dot-size, 14px);
+      height: var(--dot-size, 14px);
       border-radius: 50%;
       transform: translate(-50%, -50%);
       border: 1px solid #5c4e24;
       background: #ffe27a;
       color: #2d2818;
-      font-size: 0.5rem;
+      font-size: var(--dot-font, 7px);
       font-weight: 800;
       display: grid;
       place-items: center;
@@ -475,7 +596,7 @@
       border-color: #7f4e80;
       background: #ffe8f7;
       color: #7a1d67;
-      font-size: 0.63rem;
+      font-size: calc(var(--dot-font, 7px) + 1px);
       font-weight: 900;
     }
 
@@ -521,6 +642,7 @@
       .stack-line { font-size: 1.3rem; }
       .roll-table td { height: 72px; }
       .ttt-four-grid { grid-template-columns: 1fr; }
+      .ttt-two-grid { grid-template-columns: 1fr; }
     }
 
     @media print {
@@ -569,23 +691,37 @@
       .roll-table td { height: 64px !important; }
       .roll-table .dice-cell img { width: 40px !important; height: 40px !important; }
       .ttt-four-grid { gap: 8px !important; }
+      .ttt-two-grid {
+        grid-template-columns: 1fr !important;
+        justify-items: center !important;
+        gap: 6px !important;
+      }
       .ttt-board { width: 3.08in !important; height: 3.08in !important; }
-      .ttt-board.small { width: 2.24in !important; height: 2.24in !important; }
+      .ttt-board.small { width: 2.9in !important; height: 2.9in !important; }
       .ttt-board.small .prompt-math { font-size: 15px !important; }
       .ttt-board.small .stack-line { font-size: 15px !important; }
-      .ttt-board.small .coin-face { width: 40px !important; height: 40px !important; }
-      .ttt-board.small .coin-dot { width: 10px !important; height: 10px !important; font-size: 6px !important; }
       .ttt-board.small .tfcell { width: 15px !important; height: 15px !important; border-width: 1.5px !important; }
+      .ttt-board.medium .tfcell { width: 17px !important; height: 17px !important; border-width: 1.8px !important; }
       .ttt-board .tfcell { width: 18px !important; height: 18px !important; }
       .numline-wrap { width: 190px !important; }
-      .coin-face { width: 46px !important; height: 46px !important; }
-      .coin-dot { width: 11px !important; height: 11px !important; font-size: 6px !important; }
+      .ttt-board.medium { width: 3.2in !important; height: 3.2in !important; }
+      .sheet.ttt-two .mini-game {
+        width: 100% !important;
+        max-width: 6.2in !important;
+        margin: 0 auto !important;
+        padding: 6px !important;
+      }
+      .sheet.ttt-two .ttt-board.medium { width: 3.32in !important; height: 3.32in !important; }
+      .sheet.ttt-two .ttt-board.medium .prompt-math { font-size: 16px !important; }
+      .sheet.ttt-two .ttt-board.medium .stack-line { font-size: 16px !important; }
+      .sheet.ttt-two .ttt-board.medium .clock-face.ttt { --clock-size: 82px !important; }
+      .sheet.ttt-two .ttt-board.medium .time-answer-line { font-size: 10px !important; }
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <h1>Ultimate Math Generator</h1>
+    <h1 id="appTitle">Intervention Station Coins Generator</h1>
     <p class="subtitle">Welcome. Choose online play or printable worksheet creation.</p>
 
     <section id="welcomePanel" class="panel">
@@ -624,6 +760,7 @@
           <button type="button" class="pill" data-operation="division">Division</button>
           <button type="button" class="pill" data-operation="rounding">Rounding</button>
           <button type="button" class="pill" data-operation="counting">Counting</button>
+          <button type="button" class="pill" data-operation="tellingtime">Telling Time</button>
           <button type="button" class="pill" data-operation="tenframes">Ten Frames</button>
         </div>
 
@@ -633,6 +770,14 @@
 
           <span class="label">Copies:</span>
           <div class="select-wrap"><input id="copiesInput" type="number" min="1" max="12" value="4" /></div>
+
+          <span class="label" id="tttPerPageLabel">Games/Page:</span>
+          <div class="select-wrap" id="tttPerPageWrap">
+            <select id="tttPerPageSelect">
+              <option value="4" selected>4 games</option>
+              <option value="2">2 games</option>
+            </select>
+          </div>
 
           <span class="label">Roll Grid:</span>
           <div class="select-wrap">
@@ -691,6 +836,16 @@
               <option value="forward">Count Forward</option>
               <option value="backward">Count Backward</option>
               <option value="missing">Missing Number</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row" id="coinMarkerRow">
+          <span class="label">Coin Markers:</span>
+          <div class="select-wrap">
+            <select id="coinMarkerSelect">
+              <option value="show" selected>With dots/numbers</option>
+              <option value="hide">No dots/numbers</option>
             </select>
           </div>
         </div>
@@ -791,6 +946,11 @@
         { value: "double", label: "Within 50" },
         { value: "multi", label: "Within 100" }
       ],
+      tellingtime: [
+        { value: "single", label: "Hour and half-hour" },
+        { value: "double", label: "5-minute intervals" },
+        { value: "multi", label: "Every minute" }
+      ],
       tenframes: [
         { value: "single", label: "Up to 10" },
         { value: "double", label: "Up to 20" },
@@ -800,6 +960,7 @@
 
     let promptIdCounter = 1;
     const ROUNDING_WITHIN_OPTIONS = [100, 1000, 10000, 100000];
+    const coinBankCache = new Map();
 
     const state = {
       gameType: "tictactoe",
@@ -811,6 +972,9 @@
       roundingWithin: 100,
       countingStyle: "mixed",
       copies: 4,
+      tttPerPage: 4,
+      coinMarkerMode: "show",
+      recentCoinTotals: [],
       gridSize: 24
     };
 
@@ -825,8 +989,14 @@
     const roundingRow = document.getElementById("roundingRow");
     const countingStyleSelect = document.getElementById("countingStyleSelect");
     const countingRow = document.getElementById("countingRow");
+    const coinMarkerSelect = document.getElementById("coinMarkerSelect");
+    const coinMarkerRow = document.getElementById("coinMarkerRow");
     const gridSizeSelect = document.getElementById("gridSizeSelect");
+    const tttPerPageLabel = document.getElementById("tttPerPageLabel");
+    const tttPerPageWrap = document.getElementById("tttPerPageWrap");
+    const tttPerPageSelect = document.getElementById("tttPerPageSelect");
     const copiesInput = document.getElementById("copiesInput");
+    const appTitleEl = document.getElementById("appTitle");
     const outputEl = document.getElementById("output");
 
     function randInt(min, max) {
@@ -880,6 +1050,10 @@
       regroupRow.style.display = (state.operation === "addition" || state.operation === "subtraction") ? "flex" : "none";
       roundingRow.style.display = state.operation === "rounding" ? "flex" : "none";
       countingRow.style.display = state.operation === "counting" ? "flex" : "none";
+      coinMarkerRow.style.display = state.operation === "coins" ? "flex" : "none";
+      const showTttPerPage = state.gameType === "tictactoe";
+      tttPerPageLabel.style.display = showTttPerPage ? "" : "none";
+      tttPerPageWrap.style.display = showTttPerPage ? "inline-flex" : "none";
       const hideDifficulty = state.operation === "rounding";
       difficultyTextEl.style.display = hideDifficulty ? "none" : "";
       difficultySelectWrapEl.style.display = hideDifficulty ? "none" : "inline-flex";
@@ -893,7 +1067,18 @@
       if (state.operation === "division") return "Division";
       if (state.operation === "rounding") return "Rounding";
       if (state.operation === "counting") return "Counting";
+      if (state.operation === "tellingtime") return "Telling Time";
       return "Ten Frames";
+    }
+
+    function generatorTitle() {
+      return `Intervention Station ${operationLabel()} Generator`;
+    }
+
+    function updateGeneratorTitle() {
+      const title = generatorTitle();
+      if (appTitleEl) appTitleEl.textContent = title;
+      document.title = title;
     }
 
     function difficultyLabel() {
@@ -956,27 +1141,91 @@
     }
 
     function coinConfig() {
-      if (state.difficulty === "single") {
-        return { maxTotal: 35, minCoins: 2, maxCoins: 4, allowed: ["penny", "nickel", "dime"] };
+      const base = state.difficulty === "single"
+        ? { maxTotal: 35, minCoins: 2, maxCoins: 4, allowed: ["penny", "nickel", "dime"] }
+        : state.difficulty === "double"
+          ? { maxTotal: 99, minCoins: 3, maxCoins: 6, allowed: ["penny", "nickel", "dime", "quarter"] }
+          : { maxTotal: 250, minCoins: 4, maxCoins: 9, allowed: ["penny", "nickel", "dime", "quarter"] };
+
+      if (state.gameType === "tictactoe") {
+        const tttMaxCoins = state.tttPerPage === 4 ? 5 : 7;
+        base.maxCoins = Math.min(base.maxCoins, tttMaxCoins);
+        base.minCoins = Math.min(base.minCoins, base.maxCoins);
       }
-      if (state.difficulty === "double") {
-        return { maxTotal: 99, minCoins: 3, maxCoins: 6, allowed: ["penny", "nickel", "dime", "quarter"] };
+      return base;
+    }
+
+    function makeCoinBankKey(cfg) {
+      return `${cfg.allowed.join(",")}|${cfg.minCoins}|${cfg.maxCoins}|${cfg.maxTotal}`;
+    }
+
+    function buildCoinBank(cfg) {
+      const key = makeCoinBankKey(cfg);
+      const cached = coinBankCache.get(key);
+      if (cached) return cached;
+
+      const allowedCoins = cfg.allowed.map((coinKey) => COIN_DEFS[coinKey]).sort((a, b) => b.value - a.value);
+      const byTotal = new Map();
+      const picks = [];
+
+      function walk(index, usedCount, total) {
+        if (total > cfg.maxTotal || usedCount > cfg.maxCoins) return;
+        if (index >= allowedCoins.length) {
+          if (total > 0 && usedCount >= cfg.minCoins && usedCount <= cfg.maxCoins) {
+            const combo = picks.slice();
+            if (!byTotal.has(total)) byTotal.set(total, []);
+            byTotal.get(total).push(combo);
+          }
+          return;
+        }
+
+        const coin = allowedCoins[index];
+        const maxCount = Math.min(cfg.maxCoins - usedCount, Math.floor((cfg.maxTotal - total) / coin.value));
+        for (let count = 0; count <= maxCount; count += 1) {
+          for (let i = 0; i < count; i += 1) picks.push(coin.key);
+          walk(index + 1, usedCount + count, total + (count * coin.value));
+          for (let i = 0; i < count; i += 1) picks.pop();
+        }
       }
-      return { maxTotal: 250, minCoins: 4, maxCoins: 9, allowed: ["penny", "nickel", "dime", "quarter"] };
+
+      walk(0, 0, 0);
+      const totals = [...byTotal.keys()].sort((a, b) => a - b);
+      const bank = { totals, byTotal };
+      coinBankCache.set(key, bank);
+      return bank;
+    }
+
+    function pickCoinTotal(totals) {
+      const recent = new Set(state.recentCoinTotals.slice(-10));
+      const fresh = totals.filter((total) => !recent.has(total));
+      const pool = fresh.length ? fresh : totals;
+      const picked = choose(pool);
+      state.recentCoinTotals.push(picked);
+      if (state.recentCoinTotals.length > 50) {
+        state.recentCoinTotals = state.recentCoinTotals.slice(-25);
+      }
+      return picked;
     }
 
     function makeCoinPrompt() {
       const cfg = coinConfig();
-      let picks = [];
-      let total = 0;
-      const coinCount = randInt(cfg.minCoins, cfg.maxCoins);
-
-      for (let tries = 0; tries < 420; tries += 1) {
-        picks = [];
-        for (let i = 0; i < coinCount; i += 1) picks.push(COIN_DEFS[choose(cfg.allowed)]);
-        total = picks.reduce((sum, coin) => sum + coin.value, 0);
-        if (total > 0 && total <= cfg.maxTotal) break;
+      const bank = buildCoinBank(cfg);
+      if (!bank.totals.length) {
+        const fallback = COIN_DEFS.penny;
+        return {
+          id: nextPromptId(),
+          kind: "coins",
+          answer: 2,
+          coins: [
+            { key: fallback.key, label: fallback.label, value: fallback.value, ratio: fallback.ratio, img: fallback.img, chunkValues: fallback.chunkValues.slice() },
+            { key: fallback.key, label: fallback.label, value: fallback.value, ratio: fallback.ratio, img: fallback.img, chunkValues: fallback.chunkValues.slice() }
+          ]
+        };
       }
+      const target = pickCoinTotal(bank.totals);
+      const combos = bank.byTotal.get(target) || [];
+      const comboKeys = combos.length ? choose(combos) : ["penny", "penny"];
+      let picks = comboKeys.map((coinKey) => COIN_DEFS[coinKey]);
 
       picks = picks.slice().sort((a, b) => {
         if (b.value !== a.value) return b.value - a.value;
@@ -986,7 +1235,7 @@
       return {
         id: nextPromptId(),
         kind: "coins",
-        answer: total,
+        answer: target,
         coins: picks.map((coin) => ({
           key: coin.key,
           label: coin.label,
@@ -1209,6 +1458,28 @@
       };
     }
 
+    function makeTellingTimePrompt() {
+      const hour = randInt(1, 12);
+      let minute;
+      if (state.difficulty === "single") {
+        minute = choose([0, 30]);
+      } else if (state.difficulty === "double") {
+        minute = randInt(0, 11) * 5;
+      } else {
+        minute = randInt(0, 59);
+      }
+
+      const answer = `${hour}:${String(minute).padStart(2, "0")}`;
+      return {
+        id: nextPromptId(),
+        kind: "tellingtime",
+        hour,
+        minute,
+        answer,
+        plain: `Tell the time (${answer})`
+      };
+    }
+
     function makePrompt() {
       if (state.operation === "coins") return makeCoinPrompt();
       if (state.operation === "addition") return makeAdditionPrompt();
@@ -1217,6 +1488,7 @@
       if (state.operation === "division") return makeDivisionPrompt();
       if (state.operation === "rounding") return makeRoundingPrompt();
       if (state.operation === "counting") return makeCountingPrompt();
+      if (state.operation === "tellingtime") return makeTellingTimePrompt();
       return makeTenFramePrompt();
     }
 
@@ -1244,21 +1516,49 @@
     }
 
     function renderCoinPrompt(prompt, context) {
-      const isTtt = context === "ttt";
-      const base = isTtt ? 44 : 58;
-      const cols = isTtt ? (prompt.coins.length <= 4 ? 2 : 3) : 0;
+      const isTtt = context.startsWith("ttt");
+      const base = context === "ttt-small" ? 26 : context === "ttt-medium" ? 34 : isTtt ? 42 : 58;
+      const count = prompt.coins.length;
+      const cols = isTtt ? (count <= 3 ? count : count <= 6 ? 3 : 4) : 0;
       const stripClass = cols ? "coin-strip coin-grid" : "coin-strip";
-      const stripStyle = cols ? ` style="--coin-cols:${cols}"` : "";
-      const html = prompt.coins.map((coin) => {
-        const size = Math.round(base * coin.ratio);
-        const dots = coin.chunkValues.map((chunkValue, idx) => {
-          const pos = (DOT_POSITIONS[coin.chunkValues.length] || DOT_POSITIONS[1])[idx] || { x: 50, y: 50 };
-          const star = chunkValue === 1 ? " star" : "";
-          const text = chunkValue === 1 ? "&#9733;" : String(chunkValue);
-          return `<span class="coin-dot${star}" style="left:${pos.x}%;top:${pos.y}%">${text}</span>`;
-        }).join("");
+      let stripStyle = cols ? ` style="--coin-cols:${cols}"` : "";
+      const showMarkers = state.coinMarkerMode === "show";
+      const shrink = count >= 8 ? 0.5 : count >= 6 ? 0.62 : count >= 4 ? 0.78 : 1;
+      let coinGapX = 8;
+      let coinGapY = 6;
 
-        return `<div class="coin-face" style="--coin-size:${size}px"><img src="${coin.img}" alt="${htmlEscape(coin.label)}">${dots}</div>`;
+      let maxCoinPx = Infinity;
+      if (isTtt && cols > 0) {
+        const cellPx = context === "ttt-small" ? 102 : context === "ttt-medium" ? 94 : 106;
+        const rows = Math.max(1, Math.ceil(count / cols));
+        if (cols >= 4) {
+          coinGapX = 4;
+          coinGapY = 4;
+        } else if (cols === 3) {
+          coinGapX = 6;
+          coinGapY = 5;
+        }
+        const widthMax = Math.floor((cellPx - (coinGapX * (cols - 1))) / cols);
+        const heightMax = Math.floor((cellPx - (coinGapY * (rows - 1))) / rows);
+        maxCoinPx = Math.max(12, Math.min(widthMax, heightMax));
+        stripStyle = ` style="--coin-cols:${cols};--coin-gap-x:${coinGapX}px;--coin-gap-y:${coinGapY}px"`;
+      }
+
+      const html = prompt.coins.map((coin) => {
+        const natural = Math.round(base * coin.ratio * (isTtt ? shrink : 1));
+        const size = Math.max(12, Math.min(natural, maxCoinPx));
+        const dotSize = Math.max(6, Math.round(size * 0.26));
+        const dotFont = Math.max(5, Math.round(dotSize * 0.52));
+        const dots = showMarkers
+          ? coin.chunkValues.map((chunkValue, idx) => {
+            const pos = (DOT_POSITIONS[coin.chunkValues.length] || DOT_POSITIONS[1])[idx] || { x: 50, y: 50 };
+            const star = chunkValue === 1 ? " star" : "";
+            const text = chunkValue === 1 ? "&#9733;" : String(chunkValue);
+            return `<span class="coin-dot${star}" style="left:${pos.x}%;top:${pos.y}%">${text}</span>`;
+          }).join("")
+          : "";
+
+        return `<div class="coin-face" style="--coin-size:${size}px;--dot-size:${dotSize}px;--dot-font:${dotFont}px"><img src="${coin.img}" alt="${htmlEscape(coin.label)}">${dots}</div>`;
       }).join("");
 
       return `
@@ -1305,6 +1605,53 @@
         </div>`;
     }
 
+    function pointAtAngle(cx, cy, radius, angleDegrees) {
+      const radians = (angleDegrees - 90) * (Math.PI / 180);
+      return {
+        x: cx + (radius * Math.cos(radians)),
+        y: cy + (radius * Math.sin(radians))
+      };
+    }
+
+    function renderTellingTimePrompt(prompt, context) {
+      const minuteAngle = prompt.minute * 6;
+      const hourAngle = ((prompt.hour % 12) + (prompt.minute / 60)) * 30;
+      const hourTip = pointAtAngle(50, 50, 21, hourAngle);
+      const minuteTip = pointAtAngle(50, 50, 32, minuteAngle);
+
+      const ticks = [];
+      for (let i = 0; i < 60; i += 1) {
+        const outer = pointAtAngle(50, 50, 45, i * 6);
+        const inner = pointAtAngle(50, 50, i % 5 === 0 ? 38 : 41.5, i * 6);
+        const major = i % 5 === 0 ? " major" : "";
+        ticks.push(`<line class="clock-tick${major}" x1="${inner.x.toFixed(2)}" y1="${inner.y.toFixed(2)}" x2="${outer.x.toFixed(2)}" y2="${outer.y.toFixed(2)}"></line>`);
+      }
+
+      const nums = [];
+      for (let n = 1; n <= 12; n += 1) {
+        const p = pointAtAngle(50, 50, 31, n * 30);
+        nums.push(`<text class="clock-num" x="${p.x.toFixed(2)}" y="${p.y.toFixed(2)}">${n}</text>`);
+      }
+
+      const faceClass = context === "roll" ? "clock-face roll" : "clock-face ttt";
+      const caption = '<div class="time-answer-line">___ : ___</div>';
+
+      return `
+        <div class="prompt-wrap clock-prompt">
+          <div class="${faceClass}">
+            <svg class="clock-svg" viewBox="0 0 100 100" role="img" aria-label="${htmlEscape(prompt.plain)}">
+              <circle class="clock-outline" cx="50" cy="50" r="46"></circle>
+              ${ticks.join("")}
+              ${nums.join("")}
+              <line class="clock-hand hour" x1="50" y1="50" x2="${hourTip.x.toFixed(2)}" y2="${hourTip.y.toFixed(2)}"></line>
+              <line class="clock-hand minute" x1="50" y1="50" x2="${minuteTip.x.toFixed(2)}" y2="${minuteTip.y.toFixed(2)}"></line>
+              <circle class="clock-center" cx="50" cy="50" r="2.5"></circle>
+            </svg>
+          </div>
+          ${caption}
+        </div>`;
+    }
+
     function renderPromptHtml(prompt, context) {
       if (prompt.kind === "coins") return renderCoinPrompt(prompt, context);
       if (prompt.kind === "stack") return renderStackPrompt(prompt);
@@ -1328,13 +1675,17 @@
             <div class="counting-line">${seq}</div>
           </div>`;
       }
+      if (prompt.kind === "tellingtime") return renderTellingTimePrompt(prompt, context);
       return renderTenFrames(prompt.total);
     }
 
-    function buildTttBoard(prompts, small) {
+    function buildTttBoard(prompts, sizeMode = "full") {
       const table = document.createElement("table");
-      table.className = small ? "ttt-board small" : "ttt-board";
+      table.className = "ttt-board";
+      if (sizeMode === "small") table.classList.add("small");
+      if (sizeMode === "medium") table.classList.add("medium");
       const tbody = document.createElement("tbody");
+      const promptContext = sizeMode === "small" ? "ttt-small" : sizeMode === "medium" ? "ttt-medium" : "ttt";
 
       let idx = 0;
       for (let r = 0; r < 3; r += 1) {
@@ -1344,7 +1695,8 @@
           if (r < 2) td.classList.add("has-bottom");
           if (c < 2) td.classList.add("has-right");
           const prompt = prompts[idx++];
-          td.innerHTML = `<div class="ttt-cell-inner">${renderPromptHtml(prompt, "ttt")}</div>`;
+          td.classList.add(`kind-${prompt.kind}`);
+          td.innerHTML = `<div class="ttt-cell-inner cell-${prompt.kind}">${renderPromptHtml(prompt, promptContext)}</div>`;
           tr.appendChild(td);
         }
         tbody.appendChild(tr);
@@ -1354,39 +1706,24 @@
       return table;
     }
 
-    function buildTttSheet(prompts, pageIndex) {
+    function buildTttGamesSheet(pageIndex, gamesPerPage) {
+      const isFour = gamesPerPage === 4;
       const article = document.createElement("article");
-      article.className = "sheet";
+      article.className = isFour ? "sheet ttt-four" : "sheet ttt-two";
       article.innerHTML = `
-        <div class="sheet-title">Math Tic Tac Toe</div>
-        <div class="sheet-meta">${operationLabel()} | ${difficultyLabel()} | Page ${pageIndex}</div>
-        <div id="board-${pageIndex}"></div>
+        <div class="sheet-title">${generatorTitle()}</div>
+        <div class="sheet-meta">Tic Tac Toe (${gamesPerPage} Games) | ${difficultyLabel()} | Page ${pageIndex}</div>
+        <div class="${isFour ? "ttt-four-grid" : "ttt-two-grid"}" id="tttGrid-${pageIndex}"></div>
         <div class="copy">Copyright - InterventionStation.com - @TeachwithMrC</div>
       `;
 
-      const board = article.querySelector(`#board-${pageIndex}`);
-      board.appendChild(buildTttBoard(prompts, false));
-
-      return article;
-    }
-
-    function buildTttFourSheet(pageIndex) {
-      const article = document.createElement("article");
-      article.className = "sheet ttt-four";
-      article.innerHTML = `
-        <div class="sheet-title">Math Tic Tac Toe (4 Games)</div>
-        <div class="sheet-meta">${operationLabel()} | ${difficultyLabel()} | Page ${pageIndex}</div>
-        <div class="ttt-four-grid" id="tttFour-${pageIndex}"></div>
-        <div class="copy">Copyright - InterventionStation.com - @TeachwithMrC</div>
-      `;
-
-      const mount = article.querySelector(`#tttFour-${pageIndex}`);
-      for (let gameNum = 1; gameNum <= 4; gameNum += 1) {
+      const mount = article.querySelector(`#tttGrid-${pageIndex}`);
+      for (let gameNum = 1; gameNum <= gamesPerPage; gameNum += 1) {
         const prompts = makePrompts(9);
         const wrap = document.createElement("section");
         wrap.className = "mini-game";
         wrap.innerHTML = `<div class="mini-title">Game ${gameNum}</div>`;
-        wrap.appendChild(buildTttBoard(prompts, true));
+        wrap.appendChild(buildTttBoard(prompts, isFour ? "small" : "medium"));
 
         mount.appendChild(wrap);
       }
@@ -1427,8 +1764,8 @@
       const article = document.createElement("article");
       article.className = "sheet";
       article.innerHTML = `
-        <div class="sheet-title">Math Roll and Read</div>
-        <div class="sheet-meta">${operationLabel()} | ${difficultyLabel()} | Page ${pageIndex}</div>
+        <div class="sheet-title">${generatorTitle()}</div>
+        <div class="sheet-meta">Roll and Read | ${difficultyLabel()} | Page ${pageIndex}</div>
         <div id="tableMount-${pageIndex}"></div>
         <div class="copy">Copyright - InterventionStation.com - @TeachwithMrC</div>
       `;
@@ -1440,20 +1777,12 @@
       const copies = Math.max(1, Math.min(12, Number(copiesInput.value) || 1));
       state.copies = copies;
       copiesInput.value = String(copies);
-
-      const fourPerPage =
-        state.gameType === "tictactoe" &&
-        state.operation !== "coins" &&
-        !(state.operation === "rounding" && state.roundingStyle === "numberline");
+      const tttGamesPerPage = state.tttPerPage === 2 ? 2 : 4;
 
       outputEl.innerHTML = "";
       for (let i = 1; i <= copies; i += 1) {
         if (state.gameType === "tictactoe") {
-          if (fourPerPage) {
-            outputEl.appendChild(buildTttFourSheet(i));
-          } else {
-            outputEl.appendChild(buildTttSheet(makePrompts(9), i));
-          }
+          outputEl.appendChild(buildTttGamesSheet(i, tttGamesPerPage));
         } else {
           outputEl.appendChild(buildRollSheet(makePrompts(state.gridSize), i));
         }
@@ -1479,16 +1808,26 @@
     document.querySelectorAll("#gameTypeRow .pill").forEach((button) => {
       button.addEventListener("click", () => {
         state.gameType = button.dataset.gameType;
+        if (state.gameType === "tictactoe" && state.operation === "coins" && state.tttPerPage !== 2) {
+          state.tttPerPage = 2;
+          tttPerPageSelect.value = "2";
+        }
         setSelectedInRow("gameTypeRow", "data-game-type", state.gameType);
+        updateRegroupVisibility();
       });
     });
 
     document.querySelectorAll("#operationRow .pill").forEach((button) => {
       button.addEventListener("click", () => {
         state.operation = button.dataset.operation;
+        if (state.operation === "coins" && state.gameType === "tictactoe") {
+          state.tttPerPage = 2;
+          tttPerPageSelect.value = "2";
+        }
         setSelectedInRow("operationRow", "data-operation", state.operation);
         updateDifficultyOptions();
         updateRegroupVisibility();
+        updateGeneratorTitle();
       });
     });
 
@@ -1518,6 +1857,14 @@
       state.countingStyle = countingStyleSelect.value;
     });
 
+    coinMarkerSelect.addEventListener("change", () => {
+      state.coinMarkerMode = coinMarkerSelect.value === "hide" ? "hide" : "show";
+    });
+
+    tttPerPageSelect.addEventListener("change", () => {
+      state.tttPerPage = Number(tttPerPageSelect.value) === 2 ? 2 : 4;
+    });
+
     gridSizeSelect.addEventListener("change", () => {
       state.gridSize = Number(gridSizeSelect.value) || 24;
     });
@@ -1527,11 +1874,14 @@
 
     updateDifficultyOptions();
     updateRegroupVisibility();
+    updateGeneratorTitle();
     roundingStyleSelect.value = state.roundingStyle;
     roundingNearestSelect.value = String(state.roundingNearest);
     roundingWithinSelect.value = String(state.roundingWithin);
     enforceRoundingWithin();
     countingStyleSelect.value = state.countingStyle;
+    coinMarkerSelect.value = state.coinMarkerMode;
+    tttPerPageSelect.value = String(state.tttPerPage);
   </script>
 </body>
 </html>
