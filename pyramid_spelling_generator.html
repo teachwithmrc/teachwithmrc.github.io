@@ -135,6 +135,22 @@
     }
     .option-box.selected { background: #d9c9ff; }
 
+    .source-picker {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .source-choice {
+      text-align: center;
+      user-select: none;
+    }
+
+    .source-choice input {
+      display: none;
+    }
+
     .layout-title {
       text-align: center;
       font-weight: 800;
@@ -283,6 +299,25 @@
       max-height: 250px;
       overflow: auto;
       padding: 5px;
+    }
+
+    .typed-words-wrap {
+      margin-top: 8px;
+    }
+
+    .typed-words-wrap.collapsed {
+      display: none;
+    }
+
+    .typed-words-wrap textarea {
+      width: 100%;
+      min-height: 120px;
+      border: 2px solid #000;
+      border-radius: 10px;
+      padding: 9px 10px;
+      font: inherit;
+      resize: vertical;
+      background: #fff;
     }
 
     .result-btn {
@@ -547,6 +582,13 @@
       background: #f8fbff;
       color: #10263c;
       font-weight: 700;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .answer-page .sound-stack,
+    .answer-page .sound-line {
+      font-family: "Poppins", sans-serif;
+      letter-spacing: 0;
     }
 
     .target-word {
@@ -702,7 +744,7 @@
 </head>
 <body>
   <h1>Pyramid Spelling Worksheet Generator</h1>
-  <p class="subtitle">Use the same phonics skill menu, then search/add words and generate pyramid spelling pages.</p>
+  <p class="subtitle">Select skills, choose word format, then build pyramid spelling pages with prefill or typed words.</p>
 
   <div class="layout">
     <section class="panel">
@@ -803,14 +845,9 @@
     </section>
 
     <section class="panel">
-      <h2 class="section-title">Step 2: Blends + Build Mode + Search</h2>
+      <h2 class="section-title">Step 2: Word Format + Words</h2>
 
-      <div class="option-grid" id="blendModeRow">
-        <div class="option-box selected" data-blend-mode="three">None (3 Sounds)</div>
-        <div class="option-box" data-blend-mode="mix">Mix (3 and 4+ Sounds)</div>
-        <div class="option-box" data-blend-mode="blends">Only (4+ Sounds)</div>
-      </div>
-
+      <div class="layout-title">Word Format</div>
       <div class="mode-row" id="modeRow">
         <label class="mode-pill selected" data-mode="letter"><input type="radio" name="buildMode" value="letter" checked>By Letter</label>
         <label class="mode-pill" data-mode="sound"><input type="radio" name="buildMode" value="sound">By Sound</label>
@@ -818,7 +855,36 @@
       </div>
       <p id="modeHelp" class="hint"></p>
 
-      <div class="layout-title">Layout</div>
+      <div class="layout-title">Blends</div>
+      <div class="option-grid" id="blendModeRow">
+        <div class="option-box selected" data-blend-mode="three">None (3 Sounds)</div>
+        <div class="option-box" data-blend-mode="mix">Mix (3 and 4+ Sounds)</div>
+        <div class="option-box" data-blend-mode="blends">Only (4+ Sounds)</div>
+      </div>
+
+      <div class="layout-title">Word Source</div>
+      <div class="source-picker" id="wordSourceRow">
+        <label class="option-box source-choice selected" data-word-source="prefill">
+          <input type="radio" name="wordSource" value="prefill" checked>
+          Prefill Words
+        </label>
+        <label class="option-box source-choice" data-word-source="custom">
+          <input type="radio" name="wordSource" value="custom">
+          Pick Words (Type)
+        </label>
+      </div>
+      <div id="wordSourceMeta" class="small-meta"></div>
+
+      <div id="manualWordsWrap" class="typed-words-wrap collapsed">
+        <label class="search-label" for="manualWordsInput">Type one word per line (or comma separated)</label>
+        <textarea id="manualWordsInput" placeholder="ship&#10;train&#10;green"></textarea>
+        <div id="manualWordsMeta" class="small-meta"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title">Step 3: Build Worksheet</h2>
+      <div class="layout-title">Spelling Format</div>
       <div class="layout-picker" id="soundLayoutRow">
         <div class="option-box layout-choice selected" data-sound-layout="pyramid">
           <div class="layout-preview pyramid">
@@ -837,34 +903,13 @@
           <div class="layout-label">Left Aligned</div>
         </div>
       </div>
-
-      <div class="option-grid" id="soundCountRow">
-        <div class="option-box selected" data-sound-count="9">9 per page (optimized)</div>
-      </div>
       <div id="soundLayoutMeta" class="small-meta"></div>
-
-      <label class="search-label" for="searchInput">Type a word to search the current skill pool</label>
-      <div class="search-row">
-        <input id="searchInput" type="text" placeholder="Type to find a word (example: might)">
-        <button id="btnAddTop">Add Top Match</button>
-        <button id="btnAddRandom">Add Random</button>
-      </div>
-      <div id="searchMeta" class="small-meta"></div>
-      <div id="searchResults" class="search-results"></div>
-    </section>
-
-    <section class="panel">
-      <h2 class="section-title">Step 3: Build Worksheet</h2>
-      <div id="selectedChips" class="chips"></div>
+      <div id="wordBankMeta" class="small-meta"></div>
       <div class="button-row">
-        <button id="btnAddSix">Add 6 Random</button>
+        <button id="btnGenerate" class="primary">Generate</button>
+        <button id="btnPrint">Print</button>
         <button id="btnClearWords">Clear Words</button>
       </div>
-      <div class="button-row">
-        <button id="btnGenerate" class="primary">Generate Worksheet</button>
-        <button id="btnPrint">Print</button>
-      </div>
-      <div id="wordBankMeta" class="small-meta"></div>
       <div id="status" class="status"></div>
     </section>
   </div>
@@ -886,8 +931,7 @@
         "oo", "ew", "ue", "ie"
       ];
 
-      const MAX_SELECTED = 16;
-      const SEARCH_LIMIT = 80;
+      const MAX_CUSTOM_WORDS = 80;
       const WORD_MIN_LEN = 2;
       const WORD_MAX_LEN = 15;
       const DEFAULT_PER_PAGE = 4;
@@ -898,7 +942,7 @@
         blendMode: "three",
         soundLayout: "pyramid",
         soundPerPage: 9,
-        query: "",
+        wordSource: "prefill",
         wordBank: [],
         skillPool: [],
         byKey: new Map(),
@@ -911,17 +955,15 @@
       const modeRow = document.getElementById("modeRow");
       const modeHelp = document.getElementById("modeHelp");
       const soundLayoutMeta = document.getElementById("soundLayoutMeta");
-      const searchInput = document.getElementById("searchInput");
-      const searchResults = document.getElementById("searchResults");
-      const searchMeta = document.getElementById("searchMeta");
-      const selectedChips = document.getElementById("selectedChips");
+      const wordSourceRow = document.getElementById("wordSourceRow");
+      const wordSourceMeta = document.getElementById("wordSourceMeta");
+      const manualWordsWrap = document.getElementById("manualWordsWrap");
+      const manualWordsInput = document.getElementById("manualWordsInput");
+      const manualWordsMeta = document.getElementById("manualWordsMeta");
       const statusEl = document.getElementById("status");
       const wordBankMeta = document.getElementById("wordBankMeta");
       const printArea = document.getElementById("printArea");
 
-      document.getElementById("btnAddTop").addEventListener("click", addTopMatch);
-      document.getElementById("btnAddRandom").addEventListener("click", () => addRandomWords(1));
-      document.getElementById("btnAddSix").addEventListener("click", () => addRandomWords(6));
       document.getElementById("btnClearWords").addEventListener("click", clearSelectedWords);
       document.getElementById("btnGenerate").addEventListener("click", generateWorksheet);
       document.getElementById("btnPrint").addEventListener("click", () => {
@@ -962,8 +1004,6 @@
             button.classList.add("selected");
           }
           refreshSkillPool();
-          renderSearchResults();
-          renderSelectedChips();
           renderSkillMeta();
         });
       });
@@ -977,7 +1017,6 @@
             el.classList.toggle("selected", el === option);
           });
           refreshSkillPool();
-          renderSearchResults();
           renderSkillMeta();
         });
       });
@@ -988,18 +1027,6 @@
           if (!layout) return;
           state.soundLayout = layout;
           document.querySelectorAll("#soundLayoutRow .option-box").forEach((el) => {
-            el.classList.toggle("selected", el === option);
-          });
-          renderSoundLayoutMeta();
-        });
-      });
-
-      document.querySelectorAll("#soundCountRow .option-box").forEach((option) => {
-        option.addEventListener("click", () => {
-          const count = Number(option.getAttribute("data-sound-count"));
-          if (count !== 9) return;
-          state.soundPerPage = count;
-          document.querySelectorAll("#soundCountRow .option-box").forEach((el) => {
             el.classList.toggle("selected", el === option);
           });
           renderSoundLayoutMeta();
@@ -1017,20 +1044,25 @@
         });
         modeHelp.textContent = MODE_HELP[state.mode];
         renderSoundLayoutMeta();
-        renderSearchResults();
-        renderSelectedChips();
+        syncSelectedWordsFromSource();
+        renderWordSourceMeta();
       });
 
-      searchInput.addEventListener("input", () => {
-        state.query = searchInput.value.trim().toLowerCase();
-        renderSearchResults();
+      wordSourceRow.addEventListener("click", (event) => {
+        const choice = event.target.closest("[data-word-source]");
+        if (!choice) return;
+        const source = choice.getAttribute("data-word-source");
+        if (!source) return;
+        state.wordSource = source;
+        renderWordSourceUi();
+        syncSelectedWordsFromSource();
+        renderWordSourceMeta();
       });
 
-      searchInput.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-          event.preventDefault();
-          addTopMatch();
-        }
+      manualWordsInput.addEventListener("input", () => {
+        if (state.wordSource !== "custom") return;
+        syncSelectedWordsFromSource();
+        renderWordSourceMeta();
       });
 
       initialize();
@@ -1041,9 +1073,10 @@
         refreshSkillPool();
         renderSkillMeta();
         renderSoundLayoutMeta();
+        renderWordSourceUi();
+        syncSelectedWordsFromSource();
+        renderWordSourceMeta();
         modeHelp.textContent = MODE_HELP[state.mode];
-        renderSearchResults();
-        renderSelectedChips();
         setStatus("Ready.");
       }
 
@@ -1315,7 +1348,7 @@
         state.wordBank = list;
         state.byKey = new Map(list.map((entry) => [entry.key, entry]));
         state.sourceCount = loadedSourceNames.size;
-        wordBankMeta.textContent = "Loaded " + list.length + " unique words from " + state.sourceCount + " JS sources.";
+        wordBankMeta.textContent = "Select a skill to prefill words, or type your own words.";
       }
 
       function getWordsForSkill(skill, source, blendMode) {
@@ -1474,11 +1507,12 @@
 
       function refreshSkillPool() {
         state.skillPool = buildSkillPool();
+        syncSelectedWordsFromSource();
+        renderWordSourceMeta();
       }
 
       function getActiveWordPool() {
-        if (state.skillPool.length) return state.skillPool;
-        return state.wordBank;
+        return state.skillPool;
       }
 
       function blendModeLabel(mode) {
@@ -1490,7 +1524,7 @@
       function renderSkillMeta() {
         if (!skillMeta) return;
         if (!state.selectedSkills.size) {
-          skillMeta.textContent = "No skills selected yet. Search uses full JS bank.";
+          skillMeta.textContent = "No skills selected yet. Choose a skill for Prefill, or switch to Pick Words (Type).";
           return;
         }
         skillMeta.textContent =
@@ -1515,6 +1549,19 @@
           "By Sound preview: ship, 2, 21, 211 (" +
           (state.soundLayout === "left" ? "Left Aligned" : "Pyramid") +
           ") | " + state.soundPerPage + " per page";
+      }
+
+      function renderWordSourceUi() {
+        if (!wordSourceRow) return;
+        wordSourceRow.querySelectorAll(".source-choice").forEach((choice) => {
+          const selected = choice.getAttribute("data-word-source") === state.wordSource;
+          choice.classList.toggle("selected", selected);
+          const input = choice.querySelector("input");
+          if (input) input.checked = selected;
+        });
+        if (manualWordsWrap) {
+          manualWordsWrap.classList.toggle("collapsed", state.wordSource !== "custom");
+        }
       }
 
       function pickSplitForSound(entry) {
@@ -1620,160 +1667,88 @@
         return syllables.length ? syllables : [normalizeAlpha(entry.word)];
       }
 
-      function unitLabel() {
-        if (state.mode === "sound") return "sounds";
-        if (state.mode === "syllable") return "syllables";
-        return "letters";
-      }
-
-      function getMatches() {
-        const query = state.query;
-        const all = getActiveWordPool();
-        if (!query) return all.slice(0, SEARCH_LIMIT);
-
-        const starts = [];
-        const contains = [];
-        all.forEach((entry) => {
-          if (entry.word.startsWith(query)) {
-            starts.push(entry);
-          } else if (entry.word.includes(query)) {
-            contains.push(entry);
-          }
-        });
-
-        return starts.concat(contains).slice(0, SEARCH_LIMIT);
-      }
-
-      function previewUnits(units) {
-        const max = 6;
-        const visible = units.slice(0, max);
-        const text = visible.join(" | ");
-        if (units.length > max) return text + " ...";
-        return text;
-      }
-
-      function renderSearchResults() {
-        const matches = getMatches();
-        searchResults.innerHTML = "";
-
-        if (!matches.length) {
-          searchResults.innerHTML = "<div class='small-meta'>No matches for this search.</div>";
-          searchMeta.textContent = "Showing 0 matches.";
-          return;
-        }
-
-        matches.forEach((entry) => {
-          const units = getUnits(entry);
-          const guide = getPatternGuide(entry, units);
-          const guideText = (state.mode === "sound" && guide)
-            ? (" | guide: " + guide.split("").map((_, idx) => guide.slice(0, idx + 1)).join(" / "))
-            : "";
-          const btn = document.createElement("button");
-          btn.className = "result-btn";
-          btn.type = "button";
-          btn.innerHTML =
-            "<div class='result-word'>" + entry.word + "</div>" +
-            "<div class='result-meta'>" + units.length + " " + unitLabel() + " | " + previewUnits(units) + guideText + "</div>";
-          btn.addEventListener("click", () => addWordByKey(entry.key));
-          searchResults.appendChild(btn);
-        });
-
-        const baseSize = getActiveWordPool().length;
-        searchMeta.textContent = "Showing " + matches.length + " of " + baseSize + " words.";
-      }
-
-      function addWordByKey(key) {
-        if (!state.byKey.has(key)) {
-          const active = getActiveWordPool().find((entry) => entry.key === key);
-          if (!active) return;
-          state.byKey.set(key, active);
-        }
-        if (state.selectedKeys.includes(key)) {
-          setStatus("Word already selected.");
-          return;
-        }
-        if (state.selectedKeys.length >= MAX_SELECTED) {
-          setStatus("Maximum selected words reached (" + MAX_SELECTED + ").");
-          return;
-        }
-        state.selectedKeys.push(key);
-        renderSelectedChips();
-        setStatus("Added: " + key);
-      }
-
-      function addTopMatch() {
-        const matches = getMatches();
-        if (!matches.length) {
-          setStatus("No matching word to add.");
-          return;
-        }
-        addWordByKey(matches[0].key);
-      }
-
-      function shuffle(list) {
-        const out = list.slice();
-        for (let i = out.length - 1; i > 0; i -= 1) {
-          const j = Math.floor(Math.random() * (i + 1));
-          const temp = out[i];
-          out[i] = out[j];
-          out[j] = temp;
-        }
-        return out;
-      }
-
-      function addRandomWords(count) {
-        const already = new Set(state.selectedKeys);
-        const pool = getActiveWordPool().filter((entry) => {
-          if (already.has(entry.key)) return false;
-          const units = getUnits(entry);
-          return units.length >= 2;
-        });
-
-        if (!pool.length) {
-          setStatus("No random words available for this mode.");
-          return;
-        }
-
-        const take = Math.min(count, MAX_SELECTED - state.selectedKeys.length, pool.length);
-        if (take <= 0) {
-          setStatus("Selection is full.");
-          return;
-        }
-
-        const picked = shuffle(pool).slice(0, take);
-        picked.forEach((entry) => state.selectedKeys.push(entry.key));
-        renderSelectedChips();
-        setStatus("Added " + picked.length + " random words.");
-      }
-
       function clearSelectedWords() {
+        if (manualWordsInput) manualWordsInput.value = "";
+        state.wordSource = "prefill";
+        renderWordSourceUi();
         state.selectedKeys = [];
-        renderSelectedChips();
-        setStatus("Cleared selected words.");
+        syncSelectedWordsFromSource();
+        renderWordSourceMeta();
+        printArea.innerHTML = "";
+        setStatus("Cleared custom words and restored prefill words.");
       }
 
-      function renderSelectedChips() {
-        selectedChips.innerHTML = "";
-        if (!state.selectedKeys.length) {
-          selectedChips.innerHTML = "<div class='small-meta'>No words selected yet.</div>";
+      function parseCustomWordTokens() {
+        const raw = String((manualWordsInput && manualWordsInput.value) || "");
+        const parts = raw.split(/[\s,]+/g);
+        const tokens = [];
+        const seen = new Set();
+        parts.forEach((part) => {
+          const word = sanitizeWordToken(part);
+          if (!word || seen.has(word)) return;
+          seen.add(word);
+          tokens.push(word);
+        });
+        return tokens.slice(0, MAX_CUSTOM_WORDS);
+      }
+
+      function selectPrefillWords() {
+        if (!state.selectedSkills.size) {
+          state.selectedKeys = [];
           return;
         }
-
-        state.selectedKeys.forEach((key) => {
-          const entry = state.byKey.get(key);
-          if (!entry) return;
-          const units = getUnits(entry);
-          const chip = document.createElement("div");
-          chip.className = "chip";
-          chip.innerHTML =
-            "<span>" + entry.word + " (" + units.length + ")</span>" +
-            "<span class='x' title='Remove' role='button' tabindex='0'>x</span>";
-          chip.querySelector(".x").addEventListener("click", () => {
-            state.selectedKeys = state.selectedKeys.filter((item) => item !== key);
-            renderSelectedChips();
-          });
-          selectedChips.appendChild(chip);
+        const desired = getPerPage();
+        const pool = getActiveWordPool().filter((entry) => getUnits(entry).length >= 2);
+        const picked = pool.slice(0, desired);
+        picked.forEach((entry) => {
+          if (!state.byKey.has(entry.key)) state.byKey.set(entry.key, entry);
         });
+        state.selectedKeys = picked.map((entry) => entry.key);
+      }
+
+      function selectCustomWords() {
+        const tokens = parseCustomWordTokens();
+        const selected = [];
+
+        tokens.forEach((word) => {
+          let match = state.byKey.get(word);
+          if (!match) {
+            match = { key: word, word, splits: [], patterns: [], sources: ["custom:typed"] };
+            state.byKey.set(word, match);
+          }
+          if (!state.byKey.has(match.key)) state.byKey.set(match.key, match);
+          if (!selected.includes(match.key)) selected.push(match.key);
+        });
+
+        state.selectedKeys = selected;
+        return { typed: tokens.length, used: selected.length };
+      }
+
+      function syncSelectedWordsFromSource() {
+        if (state.wordSource === "custom") {
+          return selectCustomWords();
+        }
+        selectPrefillWords();
+        return null;
+      }
+
+      function renderWordSourceMeta() {
+        if (!wordSourceMeta) return;
+        if (state.wordSource === "custom") {
+          const stats = syncSelectedWordsFromSource() || { typed: 0, used: 0 };
+          wordSourceMeta.textContent = "Custom words: " + stats.used + " matched from " + stats.typed + " typed.";
+          if (manualWordsMeta) manualWordsMeta.textContent = "";
+          return;
+        }
+        if (!state.selectedSkills.size) {
+          wordSourceMeta.textContent = "Prefill needs at least one selected skill.";
+          if (manualWordsMeta) manualWordsMeta.textContent = "";
+          return;
+        }
+        const poolSize = getActiveWordPool().length;
+        wordSourceMeta.textContent =
+          "Prefill is on: using " + state.selectedKeys.length + " words from a pool of " + poolSize + ".";
+        if (manualWordsMeta) manualWordsMeta.textContent = "";
       }
 
       function chunk(list, size) {
@@ -2017,9 +1992,18 @@
           state.mode = selectedMode.value;
           modeHelp.textContent = MODE_HELP[state.mode];
         }
+        renderSoundLayoutMeta();
+        syncSelectedWordsFromSource();
+        renderWordSourceMeta();
 
         if (!state.selectedKeys.length) {
-          setStatus("Select at least one word.");
+          if (state.wordSource === "custom") {
+            setStatus("Type at least one valid word.");
+          } else if (!state.selectedSkills.size) {
+            setStatus("Select at least one skill for Prefill, or switch to Pick Words (Type).");
+          } else {
+            setStatus("No prefill words are available for this setup.");
+          }
           return;
         }
 

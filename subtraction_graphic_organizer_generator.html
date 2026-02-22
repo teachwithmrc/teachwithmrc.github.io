@@ -229,7 +229,7 @@
       font-weight: 800;
       font-size: 0.95rem;
       line-height: 1.1;
-      min-height: 46px;
+      min-height: 42px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -254,9 +254,17 @@
       display: inline-flex;
       align-items: center;
       line-height: 1.05;
-      font-size: 1.62rem;
+      font-size: 1.4rem;
       font-weight: 800;
       letter-spacing: 0.2px;
+    }
+
+    .problem-dot {
+      font-size: 1.15rem;
+      font-weight: 800;
+      line-height: 1;
+      margin: 0 2px 0 1px;
+      flex: 0 0 auto;
     }
 
     .problem-head.blank {
@@ -373,7 +381,7 @@
 
       .problem-head {
         font-size: 0.85rem;
-        min-height: 42px;
+        min-height: 38px;
       }
 
       .problem-badge {
@@ -383,7 +391,7 @@
       }
 
       .problem-text {
-        font-size: 1.36rem;
+        font-size: 1.18rem;
       }
 
       .digit-cell {
@@ -701,8 +709,8 @@
     function problemHtml(problem, index, totalCols, showEq, colorOn, scaffoldOn, aDigits, bDigits) {
       const letter = problemLetter(index);
       const headHtml = showEq
-        ? `<div class="problem-head"><span class="problem-badge">${letter}</span><span class="problem-text">${problem.a} - ${problem.b}</span></div>`
-        : `<div class="problem-head blank"><span class="problem-badge">${letter}</span><span class="problem-text">____ - ____</span></div>`;
+        ? `<div class="problem-head"><span class="problem-badge">${letter}</span><span class="problem-dot">.</span><span class="problem-text">${problem.a} - ${problem.b}</span></div>`
+        : `<div class="problem-head blank"><span class="problem-badge">${letter}</span><span class="problem-dot">.</span><span class="problem-text">____ - ____</span></div>`;
 
       const rowTemplate = `grid-template-columns: var(--op-width) repeat(${totalCols}, var(--cell-size));`;
       const lineTemplate = `grid-template-columns: var(--op-width) calc(${totalCols} * var(--cell-size) + ${(totalCols - 1)} * var(--cell-gap));`;
