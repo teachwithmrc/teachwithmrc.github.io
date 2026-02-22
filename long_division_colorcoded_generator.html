@@ -779,12 +779,12 @@
       }
 
       .sheet {
-        width: 10.5in;
-        min-height: 8in;
+        width: 10.42in;
+        min-height: 7.9in;
         margin: 0 auto;
         border: 0;
         box-shadow: none;
-        padding: 0.2in;
+        padding: 0.16in 0.16in 0.28in;
         box-sizing: border-box;
         page-break-inside: avoid;
         break-inside: avoid;
@@ -797,27 +797,159 @@
         break-after: auto;
       }
 
+      .sheet-header {
+        padding-bottom: 5px;
+        margin-bottom: 8px;
+      }
+
+      .sheet-title {
+        font-size: 0.96rem;
+      }
+
+      .name-line {
+        font-size: 0.78rem;
+      }
+
       .organizer {
         min-height: 0;
-        grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.16fr);
-        gap: 6px;
+        grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.12fr);
+        gap: 5px;
       }
 
       .two-up {
+        gap: 4px;
+      }
+
+      .organizer-block {
+        padding: 1px 0 2px;
+      }
+
+      .organizer-block + .organizer-block {
+        padding-top: 5px;
+      }
+
+      .left-column {
         gap: 6px;
+      }
+
+      .problem-equation {
+        font-size: 0.94rem;
+      }
+
+      .workspace {
+        padding: 1px 0 4px;
       }
 
       .workspace-layout {
         display: block;
       }
 
+      .problem-canvas {
+        grid-template-columns: 20px 44px repeat(var(--digits), 44px) 18px 44px;
+        grid-template-rows: repeat(var(--rows), 34px);
+        column-gap: 3px;
+        row-gap: 6px;
+      }
+
+      .problem-canvas.no-remainder {
+        grid-template-columns: 20px 44px repeat(var(--digits), 44px);
+      }
+
+      .remainder-label {
+        font-size: 1.7rem;
+      }
+
+      .canvas-box {
+        width: 44px;
+        height: 34px;
+        font-size: 0.85rem;
+      }
+
+      .canvas-box.minus-cell {
+        font-size: 1.8rem;
+      }
+
+      .down-arrow {
+        width: 14px;
+        height: 20px;
+        transform: translateY(6px);
+      }
+
+      .down-arrow::before {
+        left: 5px;
+        width: 3px;
+        height: 12px;
+      }
+
+      .down-arrow::after {
+        left: 0;
+        top: 10px;
+        border-left-width: 7px;
+        border-right-width: 7px;
+        border-top-width: 10px;
+      }
+
+      .digit-box {
+        min-width: 32px;
+        height: 32px;
+        font-size: 0.96rem;
+      }
+
+      .digit-box.small {
+        min-width: 30px;
+        height: 30px;
+        font-size: 0.86rem;
+      }
+
+      .step-panel {
+        min-height: 104px;
+        padding: 4px 3px;
+      }
+
+      .step-title {
+        font-size: 0.62rem;
+      }
+
+      .strip {
+        padding: 4px 5px;
+        gap: 4px;
+      }
+
+      .strip-head {
+        gap: 6px;
+      }
+
+      .strip-label {
+        font-size: 0.68rem;
+        padding: 1px 6px;
+      }
+
+      .strip-question {
+        font-size: 0.79rem;
+        line-height: 1.2;
+        gap: 2px;
+      }
+
+      .strip-table th,
+      .strip-table td {
+        height: 28px;
+        font-size: 0.72rem;
+      }
+
       .right-column {
-        gap: 5px;
+        gap: 4px;
       }
 
       .footer-note {
-        position: static;
-        margin-top: 8px;
+        position: absolute;
+        left: 0.16in;
+        right: 0.16in;
+        bottom: 0.07in;
+        margin: 0;
+        font-size: 0.58rem;
+        line-height: 1.2;
+        page-break-inside: avoid;
+        break-inside: avoid;
       }
     }
   </style>
