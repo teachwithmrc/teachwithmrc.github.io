@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ultimate Reading Game Modes Preview</title>
+  <style>
+    :root {
+      --ink: #1e2d3c;
+      --bg: #f4f8ff;
+      --card: #ffffff;
+      --line: #c9d7e8;
+      --accent: #0f4c81;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 12% 0%, #ffffff 0%, #f4f8ff 45%, #eaf2ff 100%);
+      color: var(--ink);
+      font-family: "Poppins", "Avenir Next", "Segoe UI", sans-serif;
+      padding: 20px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .app {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      text-align: center;
+      font-size: 1.95rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      margin: 0 0 14px;
+      color: #3f556d;
+      font-weight: 600;
+    }
+
+    .preview-note {
+      text-align: center;
+      margin: 0 auto 14px;
+      max-width: 900px;
+      border: 2px solid #000;
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px 12px;
+      font-weight: 700;
+    }
+
+    .mode-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .mode-tab {
+      border: 2px solid #000;
+      border-radius: 12px;
+      background: #fff;
+      color: var(--ink);
+      padding: 10px 8px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      min-height: 58px;
+    }
+
+    .mode-tab.active {
+      background: #111;
+      color: #fff;
+    }
+
+    .panel {
+      display: none;
+      position: relative;
+      background: var(--card);
+      border: 2px solid #000;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 9px 20px rgba(28, 52, 84, 0.12);
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .panel h2 {
+      margin: 0 0 10px;
+      text-align: center;
+      font-size: 1.35rem;
+    }
+
+    .lock-shell {
+      position: relative;
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      min-height: 380px;
+      background: linear-gradient(180deg, #fdfefe, #f3f8ff);
+      overflow: hidden;
+    }
+
+    .static-preview {
+      pointer-events: none;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.66), rgba(255, 255, 255, 0.66)),
+        repeating-linear-gradient(-35deg, rgba(25, 76, 128, 0.09) 0 12px, rgba(25, 76, 128, 0.03) 12px 24px);
+      z-index: 5;
+    }
+
+    .overlay-card {
+      border: 2px solid #000;
+      border-radius: 12px;
+      background: #111;
+      color: #fff;
+      padding: 14px 16px;
+      text-align: center;
+      max-width: 420px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .meta {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #455e78;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .word-grid {
+      margin: 0 auto;
+      width: min(620px, 100%);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .word-cell {
+      border: 2px solid #1e2f43;
+      border-radius: 10px;
+      min-height: 92px;
+      display: grid;
+      place-items: center;
+      font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+      font-weight: 800;
+      background: #fff;
+    }
+
+    .connect-head {
+      margin: 0 auto 8px;
+      width: min(760px, 100%);
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .drop-btn {
+      border: 2px solid #6f87a0;
+      border-radius: 10px;
+      background: #eef5ff;
+      font-weight: 800;
+      padding: 6px 4px;
+      color: #5f7388;
+    }
+
+    .connect-grid {
+      margin: 0 auto;
+      width: min(760px, 100%);
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 6px;
+      padding: 8px;
+      border: 2px solid #163f69;
+      border-radius: 12px;
+      background: #2f6fa8;
+    }
+
+    .slot {
+      aspect-ratio: 1 / 1;
+      border-radius: 999px;
+      border: 2px solid #15426e;
+      background: #fff;
+    }
+
+    .slot.red { background: #e53935; }
+    .slot.yellow { background: #f2c900; }
+
+    .roll-table {
+      margin: 0 auto;
+      width: min(760px, 100%);
+      border-collapse: collapse;
+      table-layout: fixed;
+      background: #fff;
+      border: 2px solid #000;
+    }
+
+    .roll-table th,
+    .roll-table td {
+      border: 1px solid #000;
+      text-align: center;
+      vertical-align: middle;
+      padding: 8px 6px;
+      font-weight: 800;
+    }
+
+    .roll-table th {
+      background: #eef4ff;
+      font-size: 0.95rem;
+    }
+
+    .roll-table td {
+      height: 72px;
+      font-size: clamp(1rem, 2.6vw, 1.3rem);
+    }
+
+    @media (max-width: 760px) {
+      .mode-tabs {
+        grid-template-columns: 1fr;
+      }
+
+      .lock-shell {
+        min-height: 320px;
+      }
+
+      .overlay-card {
+        max-width: 280px;
+        font-size: 0.9rem;
+      }
+
+      .word-cell {
+        min-height: 72px;
+      }
+
+      .roll-table td {
+        font-size: 0.95rem;
+        height: 58px;
+      }
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+  <main class="app">
+    <h1>Reading Game Modes Preview</h1>
+    <p class="subtitle">Tic Tac Toe, 4 in a Row, and Roll and Read</p>
+    <div class="preview-note">Preview only. Reading samples are CVC Short A words. Gameplay is locked on this page.</div>
+
+    <div class="mode-tabs" id="modeTabs">
+      <button type="button" class="mode-tab active" data-mode="ttt">Tic Tac Toe Preview</button>
+      <button type="button" class="mode-tab" data-mode="connect4">4 in a Row Preview</button>
+      <button type="button" class="mode-tab" data-mode="rollread">Roll and Read Preview</button>
+    </div>
+
+    <section class="panel active" data-panel="ttt">
+      <h2>Reading Tic Tac Toe</h2>
+      <div class="meta">CVC Short A preview board</div>
+      <div class="lock-shell static-preview">
+        <div class="word-grid" aria-hidden="true">
+          <div class="word-cell">cat</div>
+          <div class="word-cell">bat</div>
+          <div class="word-cell">map</div>
+          <div class="word-cell">jam</div>
+          <div class="word-cell">hat</div>
+          <div class="word-cell">cap</div>
+          <div class="word-cell">rag</div>
+          <div class="word-cell">tap</div>
+          <div class="word-cell">sad</div>
+        </div>
+        <div class="overlay">
+          <div class="overlay-card">Preview Mode: this sample is visible only. Interactive play is locked in preview.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="connect4">
+      <h2>Reading 4 in a Row</h2>
+      <div class="meta">CVC Short A prompt style preview</div>
+      <div class="lock-shell static-preview">
+        <div class="connect-head" aria-hidden="true">
+          <button class="drop-btn" type="button">Drop</button>
+          <button class="drop-btn" type="button">Drop</button>
+          <button class="drop-btn" type="button">Drop</button>
+          <button class="drop-btn" type="button">Drop</button>
+          <button class="drop-btn" type="button">Drop</button>
+          <button class="drop-btn" type="button">Drop</button>
+          <button class="drop-btn" type="button">Drop</button>
+        </div>
+        <div class="connect-grid" aria-hidden="true">
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+          <div class="slot"></div><div class="slot red"></div><div class="slot yellow"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+          <div class="slot"></div><div class="slot red"></div><div class="slot yellow"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+          <div class="slot red"></div><div class="slot red"></div><div class="slot yellow"></div><div class="slot yellow"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+        </div>
+        <div class="overlay">
+          <div class="overlay-card">Preview Mode: visual sample only. Click actions are disabled in preview.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="rollread">
+      <h2>Reading Roll and Read</h2>
+      <div class="meta">CVC Short A words in roll-table format</div>
+      <div class="lock-shell static-preview">
+        <table class="roll-table" aria-hidden="true">
+          <thead>
+            <tr>
+              <th>Die 1</th>
+              <th>Die 2</th>
+              <th>Die 3</th>
+              <th>Die 4</th>
+              <th>Die 5</th>
+              <th>Die 6</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>cat</td><td>bag</td><td>lap</td><td>mad</td><td>pan</td><td>rag</td></tr>
+            <tr><td>jam</td><td>hat</td><td>cap</td><td>tag</td><td>can</td><td>bat</td></tr>
+            <tr><td>map</td><td>dad</td><td>van</td><td>sat</td><td>man</td><td>tap</td></tr>
+            <tr><td>sad</td><td>ham</td><td>mat</td><td>cab</td><td>pad</td><td>wax</td></tr>
+          </tbody>
+        </table>
+        <div class="overlay">
+          <div class="overlay-card">Preview Mode: this roll-table is shown for layout only. Interaction is locked.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const tabs = Array.from(document.querySelectorAll(".mode-tab"));
+    const panels = Array.from(document.querySelectorAll(".panel"));
+
+    function selectMode(mode) {
+      tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.mode === mode));
+      panels.forEach((panel) => panel.classList.toggle("active", panel.dataset.panel === mode));
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => selectMode(tab.dataset.mode));
+    });
+
+    window.addEventListener("keydown", (event) => {
+      const blocked = (event.ctrlKey || event.metaKey) && ["s", "p", "u"].includes(event.key.toLowerCase());
+      if (blocked) event.preventDefault();
+    });
+  </script>
+</body>
+</html>

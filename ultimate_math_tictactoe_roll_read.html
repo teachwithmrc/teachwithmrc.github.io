@@ -119,6 +119,69 @@
       flex-wrap: wrap;
     }
 
+    .hidden {
+      display: none !important;
+    }
+
+    .game-picker {
+      background: var(--card);
+      border: 2px solid #000;
+      border-radius: 14px;
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+      box-shadow: 0 8px 18px rgba(22, 48, 74, 0.08);
+      margin-bottom: 12px;
+    }
+
+    .game-picker h2 {
+      margin: 0;
+      text-align: center;
+      font-size: 1.35rem;
+      letter-spacing: 0.04em;
+    }
+
+    .picker-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .picker-btn {
+      min-height: 100px;
+      border: 2px solid #000;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #f9fcff, #ecf4ff);
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 4px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 800;
+      font-size: 1rem;
+      text-align: center;
+      padding: 8px;
+    }
+
+    .picker-desc {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #44576b;
+    }
+
+    .game-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 2px solid #1c538b;
+      background: #ecf5ff;
+      color: #0d3b67;
+      font-weight: 800;
+      line-height: 1;
+    }
+
     button {
       border: 2px solid #000;
       border-radius: 10px;
@@ -183,6 +246,27 @@
       padding: 6px 12px;
       font-size: 0.9rem;
       font-weight: 700;
+    }
+
+    .winner-banner {
+      text-align: center;
+      font-size: 1.08rem;
+      font-weight: 900;
+      color: #0f4e2a;
+      background: #ebfff2;
+      border: 2px solid #2f7f46;
+      border-radius: 10px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+    }
+
+    .prompt-card {
+      border: 2px dashed #9fb5cc;
+      border-radius: 10px;
+      padding: 8px;
+      margin: 0 auto 10px;
+      width: min(560px, 100%);
+      background: #f8fcff;
     }
 
     .x { color: var(--x); }
@@ -585,6 +669,54 @@
       margin-top: 6px;
     }
 
+    .connect4-wrap {
+      margin: 0 auto 8px;
+      width: min(900px, 100%);
+      display: grid;
+      gap: 8px;
+    }
+
+    .connect4-top {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .drop-btn {
+      border-radius: 9px;
+      padding: 8px 4px;
+      font-size: 0.86rem;
+    }
+
+    .connect4-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+      background: #1f5ea3;
+      border: 2px solid #000;
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .c4-cell {
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: #e8eff8;
+      border: 2px solid #0f2c4f;
+    }
+
+    .c4-cell.red {
+      background: #df3f33;
+    }
+
+    .c4-cell.yellow {
+      background: #f2d03c;
+    }
+
+    .c4-cell.win {
+      box-shadow: 0 0 0 4px #2ec65f inset;
+    }
+
     .roll-controls {
       display: flex;
       justify-content: center;
@@ -828,8 +960,17 @@
     }
 
     @media (max-width: 980px) {
+      .picker-grid {
+        grid-template-columns: 1fr;
+      }
+
       .cell {
         min-height: 160px;
+      }
+
+      .connect4-top,
+      .connect4-grid {
+        gap: 6px;
       }
 
       .prompt-math {
@@ -876,10 +1017,10 @@
         padding: 0 !important;
       }
 
+      .game-picker,
       .controls,
       .subtitle,
       #btnGenerate,
-      #btnPrint,
       #btnResetScore,
       .ttt-actions,
       .roll-controls,
@@ -964,13 +1105,32 @@
 <body>
   <div class="app">
     <h1>Ultimate Math Tic Tac Toe / Roll and Read</h1>
-    <p class="subtitle">Choose game type, math skill, and level. Generate, play, and print.</p>
+    <p class="subtitle">Pick the game first. Then set skill and difficulty for class practice.</p>
 
-    <section class="controls">
-      <div class="row" id="gameTypeRow">
-        <span class="label">Game Type:</span>
-        <button type="button" class="pill selected" data-game-type="tictactoe">Tic Tac Toe</button>
-        <button type="button" class="pill" data-game-type="rollread">Roll and Read</button>
+    <section id="gamePicker" class="game-picker">
+      <h2>WHAT DO YOU WANT TO PLAY?</h2>
+      <div class="picker-grid">
+        <button type="button" class="picker-btn" data-pick-game="tictactoe">
+          <span>Tic Tac Toe</span>
+          <span class="picker-desc">Solve to claim X or O</span>
+        </button>
+        <button type="button" class="picker-btn" data-pick-game="connect4">
+          <span>4 in a Row</span>
+          <span class="picker-desc">Solve to drop a checker</span>
+        </button>
+        <button type="button" class="picker-btn" data-pick-game="rollread">
+          <span>Roll and Read</span>
+          <span class="picker-desc">Roll, solve, and fill the board</span>
+        </button>
+      </div>
+    </section>
+
+    <section id="controlsPanel" class="controls hidden">
+      <div class="row">
+        <span class="label">Selected Game:</span>
+        <span id="selectedGameBadge" class="game-badge">None</span>
+        <button id="btnChooseGame" type="button">Choose Different Game</button>
+        <button id="btnSwitchPrintable" class="secondary" type="button">Switch To Printable</button>
       </div>
 
       <div class="row" id="operationRow">
@@ -1061,7 +1221,6 @@
 
       <div class="actions">
         <button id="btnGenerate" class="primary" type="button">Generate</button>
-        <button id="btnPrint" class="secondary" type="button">Print</button>
         <button id="btnResetScore" type="button">Reset Tic Tac Toe Score</button>
       </div>
     </section>
@@ -1191,12 +1350,19 @@
       [0, 4, 8],
       [2, 4, 6]
     ];
+    const GAME_LABELS = {
+      tictactoe: "Tic Tac Toe",
+      connect4: "4 in a Row",
+      rollread: "Roll and Read"
+    };
+    const CONNECT4_ROWS = 6;
+    const CONNECT4_COLS = 7;
 
     let promptIdCounter = 1;
     const ROUNDING_WITHIN_OPTIONS = [100, 1000, 10000, 100000];
 
     const state = {
-      gameType: "tictactoe",
+      gameType: "",
       operation: "addition",
       difficulty: "single",
       regroupMode: "mixed",
@@ -1215,6 +1381,14 @@
         winLine: [],
         score: { X: 0, O: 0, T: 0 }
       },
+      connect4: {
+        board: [],
+        turn: "R",
+        over: false,
+        winCells: [],
+        score: { R: 0, Y: 0, T: 0 },
+        currentPrompt: null
+      },
       roll: null,
       modal: {
         resolver: null,
@@ -1223,6 +1397,11 @@
       }
     };
 
+    const gamePickerEl = document.getElementById("gamePicker");
+    const controlsPanelEl = document.getElementById("controlsPanel");
+    const selectedGameBadgeEl = document.getElementById("selectedGameBadge");
+    const btnChooseGameEl = document.getElementById("btnChooseGame");
+    const btnSwitchPrintableEl = document.getElementById("btnSwitchPrintable");
     const difficultyTextEl = document.getElementById("difficultyText");
     const difficultySelectWrapEl = document.getElementById("difficultySelectWrap");
     const outputEl = document.getElementById("output");
@@ -1237,6 +1416,7 @@
     const countingStyleSelect = document.getElementById("countingStyleSelect");
     const countingRow = document.getElementById("countingRow");
     const answerModeRow = document.getElementById("answerModeRow");
+    const gridSizeRow = gridSizeSelect.closest(".row");
 
     const answerModal = document.getElementById("answerModal");
     const modalTitle = document.getElementById("modalTitle");
@@ -1260,6 +1440,10 @@
       return arr[randInt(0, arr.length - 1)];
     }
 
+    function makeGrid(rows, cols, value = "") {
+      return Array.from({ length: rows }, () => Array.from({ length: cols }, () => value));
+    }
+
     function formatNumber(value) {
       return Number(value).toLocaleString("en-US");
     }
@@ -1269,6 +1453,10 @@
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;");
+    }
+
+    function gameLabel(gameType) {
+      return GAME_LABELS[gameType] || "Unknown";
     }
 
     function nextPromptId() {
@@ -1322,6 +1510,29 @@
 
     function updateAnswerModeVisibility() {
       answerModeRow.style.display = "flex";
+    }
+
+    function updateGameControlVisibility() {
+      document.getElementById("btnResetScore").style.display = state.gameType === "tictactoe" ? "" : "none";
+      if (gridSizeRow) gridSizeRow.style.display = state.gameType === "rollread" ? "flex" : "none";
+      document.getElementById("btnGenerate").textContent = "Start New Board";
+    }
+
+    function showGamePicker() {
+      state.gameType = "";
+      gamePickerEl.classList.remove("hidden");
+      controlsPanelEl.classList.add("hidden");
+      selectedGameBadgeEl.textContent = "None";
+      outputEl.innerHTML = "";
+    }
+
+    function selectGame(gameType) {
+      state.gameType = gameType;
+      selectedGameBadgeEl.textContent = gameLabel(gameType);
+      gamePickerEl.classList.add("hidden");
+      controlsPanelEl.classList.remove("hidden");
+      updateGameControlVisibility();
+      generate();
     }
 
     function operationLabel() {
@@ -2086,6 +2297,154 @@
       });
 
       document.getElementById("btnNewBoard").addEventListener("click", () => generate());
+    }
+
+    function resetConnect4RoundOnly() {
+      state.connect4.board = makeGrid(CONNECT4_ROWS, CONNECT4_COLS, "");
+      state.connect4.turn = "R";
+      state.connect4.over = false;
+      state.connect4.winCells = [];
+      state.connect4.currentPrompt = makePrompt();
+    }
+
+    function connect4WinCells(row, col, mark) {
+      const board = state.connect4.board;
+      const dirs = [
+        [1, 0],
+        [0, 1],
+        [1, 1],
+        [1, -1]
+      ];
+
+      const collect = (dr, dc) => {
+        const out = [];
+        let r = row + dr;
+        let c = col + dc;
+        while (
+          r >= 0 && r < CONNECT4_ROWS &&
+          c >= 0 && c < CONNECT4_COLS &&
+          board[r][c] === mark
+        ) {
+          out.push([r, c]);
+          r += dr;
+          c += dc;
+        }
+        return out;
+      };
+
+      for (const [dr, dc] of dirs) {
+        const neg = collect(-dr, -dc).reverse();
+        const pos = collect(dr, dc);
+        const line = [...neg, [row, col], ...pos];
+        if (line.length >= 4) return line;
+      }
+      return [];
+    }
+
+    function connect4HasWinCell(row, col) {
+      return state.connect4.winCells.some(([r, c]) => r === row && c === col);
+    }
+
+    async function handleConnect4ColumnClick(col) {
+      if (state.connect4.over) return;
+      if (col < 0 || col >= CONNECT4_COLS) return;
+
+      let row = -1;
+      for (let r = CONNECT4_ROWS - 1; r >= 0; r -= 1) {
+        if (!state.connect4.board[r][col]) {
+          row = r;
+          break;
+        }
+      }
+      if (row < 0) return;
+
+      const prompt = state.connect4.currentPrompt || makePrompt();
+      state.connect4.currentPrompt = prompt;
+
+      if (state.requireCorrect) {
+        const ok = await showAnswerModal(prompt, `${state.connect4.turn === "R" ? "Red" : "Yellow"} Turn`);
+        if (!ok) return;
+      }
+
+      const mark = state.connect4.turn;
+      state.connect4.board[row][col] = mark;
+      const win = connect4WinCells(row, col, mark);
+      if (win.length) {
+        state.connect4.over = true;
+        state.connect4.winCells = win;
+        state.connect4.score[mark] += 1;
+      } else if (state.connect4.board.every((line) => line.every(Boolean))) {
+        state.connect4.over = true;
+        state.connect4.score.T += 1;
+      } else {
+        state.connect4.turn = mark === "R" ? "Y" : "R";
+        state.connect4.currentPrompt = makePrompt();
+      }
+
+      renderConnect4();
+    }
+
+    function renderConnect4() {
+      indexPrompts(state.connect4.currentPrompt ? [state.connect4.currentPrompt] : []);
+      const turnName = state.connect4.turn === "R" ? "Red" : "Yellow";
+      const meta = `${operationLabel()} | ${difficultyLabel()} | 4 in a Row | ${state.requireCorrect ? "Answer Check On" : "Answer Check Off"} | Turn: ${turnName}`;
+      const status = state.connect4.over
+        ? (state.connect4.winCells.length ? `${turnName} wins!` : "Tie game.")
+        : "";
+
+      const topButtons = Array.from({ length: CONNECT4_COLS }, (_, col) => `
+        <button type="button" class="drop-btn" data-c4-col="${col}">Drop</button>
+      `).join("");
+
+      let gridHtml = "";
+      for (let r = 0; r < CONNECT4_ROWS; r += 1) {
+        for (let c = 0; c < CONNECT4_COLS; c += 1) {
+          const mark = state.connect4.board[r][c];
+          const classes = [
+            "c4-cell",
+            mark === "R" ? "red" : "",
+            mark === "Y" ? "yellow" : "",
+            connect4HasWinCell(r, c) ? "win" : ""
+          ].filter(Boolean).join(" ");
+          gridHtml += `<div class="${classes}"></div>`;
+        }
+      }
+
+      outputEl.innerHTML = `
+        <article class="sheet">
+          <div class="sheet-title">Math 4 in a Row</div>
+          <div class="sheet-meta">${meta}</div>
+          <div class="score-row">
+            <div class="score-pill">Red Wins: <span class="x">${state.connect4.score.R}</span></div>
+            <div class="score-pill">Yellow Wins: <span class="o">${state.connect4.score.Y}</span></div>
+            <div class="score-pill">Ties: ${state.connect4.score.T}</div>
+          </div>
+          ${state.connect4.currentPrompt ? `<div class="prompt-card">${renderPromptHtml(state.connect4.currentPrompt, "ttt")}</div>` : ""}
+          ${status ? `<div class="winner-banner">${status}</div>` : ""}
+          <div class="connect4-wrap">
+            <div class="connect4-top">${topButtons}</div>
+            <div class="connect4-grid">${gridHtml}</div>
+          </div>
+          <div class="ttt-actions">
+            <button id="btnC4Reset" type="button">Reset Board (Same Prompt Flow)</button>
+            <button id="btnC4New" type="button">New Problems</button>
+          </div>
+        </article>`;
+
+      outputEl.querySelectorAll("[data-c4-col]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          await handleConnect4ColumnClick(Number(button.dataset.c4Col));
+        });
+      });
+
+      document.getElementById("btnC4Reset").addEventListener("click", () => {
+        resetConnect4RoundOnly();
+        renderConnect4();
+      });
+
+      document.getElementById("btnC4New").addEventListener("click", () => {
+        generate();
+      });
     }
 
     function buildRollTable(prompts) {
