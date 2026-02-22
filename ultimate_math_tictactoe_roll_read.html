@@ -280,6 +280,61 @@
       gap: 10px;
     }
 
+    .game-stack {
+      position: relative;
+      width: min(760px, 100%);
+      margin: 0 auto 8px;
+    }
+
+    .game-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 12;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(8, 20, 39, 0.78);
+      animation: overlayFadeIn 180ms ease-out;
+    }
+
+    .game-overlay.show {
+      display: flex;
+    }
+
+    .game-overlay-card {
+      padding: 16px 22px;
+      border-radius: 16px;
+      border: 3px solid #fff;
+      background: linear-gradient(135deg, #ff4c3b, #0a7c63);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+      color: #fff;
+      font-size: clamp(2rem, 6.5vw, 4.2rem);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      animation: popWin 260ms ease-out;
+    }
+
+    @keyframes overlayFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes popWin {
+      from {
+        transform: scale(0.85);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
     .cell {
       min-height: 190px;
       border-radius: 12px;
@@ -304,11 +359,17 @@
     }
 
     .mark {
-      min-height: 46px;
-      line-height: 46px;
-      font-size: 2.8rem;
-      font-weight: 800;
-      text-align: center;
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(5rem, 13vw, 9rem);
+      font-weight: 900;
+      opacity: 0.98;
+      line-height: 1;
+      pointer-events: none;
+      text-shadow: 0 2px 0 #fff;
     }
 
     .prompt-wrap {
@@ -1379,6 +1440,7 @@
         turn: "X",
         over: false,
         winLine: [],
+        celebration: "",
         score: { X: 0, O: 0, T: 0 }
       },
       connect4: {
@@ -1416,7 +1478,6 @@
     const countingStyleSelect = document.getElementById("countingStyleSelect");
     const countingRow = document.getElementById("countingRow");
     const answerModeRow = document.getElementById("answerModeRow");
-    const gridSizeRow = gridSizeSelect.closest(".row");
 
     const answerModal = document.getElementById("answerModal");
     const modalTitle = document.getElementById("modalTitle");
@@ -1514,7 +1575,6 @@
 
     function updateGameControlVisibility() {
       document.getElementById("btnResetScore").style.display = state.gameType === "tictactoe" ? "" : "none";
-      if (gridSizeRow) gridSizeRow.style.display = state.gameType === "rollread" ? "flex" : "none";
       document.getElementById("btnGenerate").textContent = "Start New Board";
     }
 
@@ -2100,6 +2160,7 @@
       state.ttt.turn = "X";
       state.ttt.over = false;
       state.ttt.winLine = [];
+      state.ttt.celebration = "";
     }
 
     function placeTttMark(index) {
@@ -2109,11 +2170,14 @@
         state.ttt.over = true;
         state.ttt.winLine = line;
         state.ttt.score[state.ttt.turn] += 1;
+        state.ttt.celebration = `${state.ttt.turn} WINS!`;
       } else if (state.ttt.marks.every(Boolean)) {
         state.ttt.over = true;
         state.ttt.score.T += 1;
+        state.ttt.celebration = "TIE GAME!";
       } else {
         state.ttt.turn = state.ttt.turn === "X" ? "O" : "X";
+        state.ttt.celebration = "";
       }
       renderTicTacToe();
     }
@@ -2259,7 +2323,12 @@
             <div class="score-pill">O Wins: <span class="o">${state.ttt.score.O}</span></div>
             <div class="score-pill">Ties: ${state.ttt.score.T}</div>
           </div>
-          <div id="tttBoard" class="board"></div>
+          <div class="game-stack">
+            <div id="tttBoard" class="board"></div>
+            <div class="game-overlay${state.ttt.celebration ? " show" : ""}">
+              <div class="game-overlay-card">${htmlEscape(state.ttt.celebration)}</div>
+            </div>
+          </div>
           <div class="ttt-actions">
             <button id="btnSameBoard" type="button">Play Again (Same Board)</button>
             <button id="btnNewBoard" type="button">New Problems</button>
@@ -2703,12 +2772,21 @@
     }
 
     function generate() {
+      if (!state.gameType) return;
+
       if (state.gameType === "tictactoe") {
         state.ttt.prompts = makePrompts(9);
         resetTttBoardOnly();
         renderTicTacToe();
         return;
       }
+
+      if (state.gameType === "connect4") {
+        resetConnect4RoundOnly();
+        renderConnect4();
+        return;
+      }
+
       const prompts = makePrompts(state.gridSize);
       renderRollRead(prompts);
     }
@@ -2746,11 +2824,15 @@
       handleCoinDotClick(dot);
     });
 
-    document.querySelectorAll("#gameTypeRow .pill").forEach((button) => {
+    document.querySelectorAll("[data-pick-game]").forEach((button) => {
       button.addEventListener("click", () => {
-        state.gameType = button.dataset.gameType;
-        setSelectedInRow("gameTypeRow", "data-game-type", state.gameType);
+        selectGame(button.dataset.pickGame);
       });
+    });
+
+    btnChooseGameEl.addEventListener("click", showGamePicker);
+    btnSwitchPrintableEl.addEventListener("click", () => {
+      window.location.href = "ultimate_math_printables_hub.html";
     });
 
     document.querySelectorAll("#operationRow .pill").forEach((button) => {
@@ -2801,7 +2883,6 @@
     });
 
     document.getElementById("btnGenerate").addEventListener("click", generate);
-    document.getElementById("btnPrint").addEventListener("click", () => window.print());
     document.getElementById("btnResetScore").addEventListener("click", () => {
       state.ttt.score = { X: 0, O: 0, T: 0 };
       if (state.gameType === "tictactoe" && state.ttt.prompts.length) {
@@ -2812,7 +2893,8 @@
     updateDifficultyOptions();
     updateRegroupVisibility();
     updateAnswerModeVisibility();
-    generate();
+    updateGameControlVisibility();
+    showGamePicker();
   </script>
 </body>
 </html>
