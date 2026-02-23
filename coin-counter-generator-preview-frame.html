@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coin Counter Generator - PREVIEW MODE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: "Poppins", sans-serif;
+      background: #fff;
+    }
+
+    .frame-wrap {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border: 0;
+      background: #fff;
+    }
+
+    .live-frame {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: #fff;
+    }
+
+    .preview-watermark {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      backdrop-filter: blur(1.6px) saturate(0.9) brightness(0.98);
+      -webkit-backdrop-filter: blur(1.6px) saturate(0.9) brightness(0.98);
+      background: rgba(255, 255, 255, 0.06);
+      background-image: url("data:image/svg+xml,%3Csvg width='250' height='250' viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='20' y='150' fill='%23000' opacity='0.14' transform='rotate(-45 125 125)' font-family='Poppins' font-weight='900' font-size='30'%3EPREVIEW MODE%3C/text%3E%3C/svg%3E");
+    }
+
+    .preview-paywall {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 52%;
+      z-index: 30;
+      pointer-events: auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 14px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(0,0,0,0.74) 30%, rgba(0,0,0,0.9));
+    }
+
+    .preview-paywall-card {
+      width: min(94%, 520px);
+      border: 2px solid #fff;
+      border-radius: 14px;
+      background: rgba(17, 17, 17, 0.95);
+      color: #fff;
+      text-align: center;
+      padding: 14px 14px 12px;
+      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .preview-paywall-card h3 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+      line-height: 1.2;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .preview-paywall-card p {
+      margin: 0 0 10px;
+      font-size: 0.82rem;
+      line-height: 1.35;
+      opacity: 0.95;
+      font-weight: 600;
+    }
+
+    .preview-paywall-card a {
+      display: inline-block;
+      text-decoration: none;
+      background: #fff;
+      color: #111;
+      border-radius: 9px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+
+    @media print {
+      body { display: none !important; }
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+  <div class="frame-wrap">
+    <iframe
+      id="liveFrame"
+      class="live-frame"
+      src="counting_coin_generator.html?v=20260223-coin-live1"
+      title="Coin Counter Generator Preview"
+      loading="eager"
+    ></iframe>
+
+    <div class="preview-watermark" aria-hidden="true"></div>
+
+    <div class="preview-paywall" aria-hidden="false">
+      <div class="preview-paywall-card">
+        <h3>Premium Resource</h3>
+        <p>Generate is enabled in preview mode. Join membership to unlock full worksheet visibility and printing.</p>
+        <a href="https://member.interventionstation.com/join" target="_blank" rel="noopener noreferrer">Join Membership</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const liveFrame = document.getElementById("liveFrame");
+
+      function blockedAction() {
+        alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access.");
+      }
+
+      function blockShortcuts(event) {
+        const blocked = (event.ctrlKey || event.metaKey) && ["p", "s", "u"].includes(String(event.key || "").toLowerCase());
+        if (blocked) {
+          event.preventDefault();
+          blockedAction();
+        }
+      }
+
+      document.addEventListener("keydown", blockShortcuts);
+
+      liveFrame.addEventListener("load", function () {
+        try {
+          const frameWin = liveFrame.contentWindow;
+          const frameDoc = liveFrame.contentDocument || frameWin.document;
+          if (!frameDoc) return;
+
+          frameDoc.addEventListener("contextmenu", function (e) {
+            e.preventDefault();
+          });
+
+          frameDoc.addEventListener("keydown", function (e) {
+            const blocked = (e.ctrlKey || e.metaKey) && ["p", "s", "u"].includes(String(e.key || "").toLowerCase());
+            if (blocked) {
+              e.preventDefault();
+              blockedAction();
+            }
+          });
+
+          if (frameWin) {
+            frameWin.print = blockedAction;
+          }
+
+          const printLikeButtons = frameDoc.querySelectorAll("button");
+          printLikeButtons.forEach(function (btn) {
+            if (/print/i.test(btn.textContent || "")) {
+              btn.addEventListener("click", function (e) {
+                e.preventDefault();
+                blockedAction();
+              }, true);
+            }
+          });
+
+          const sheet = frameDoc.getElementById("sheet");
+          if (sheet) {
+            sheet.style.filter = "blur(1.2px) saturate(0.92)";
+          }
+
+          const subtitle = frameDoc.querySelector(".subtitle");
+          if (subtitle) {
+            subtitle.textContent = "Preview mode: Generate is enabled, lower worksheet area is locked for members.";
+          }
+        } catch (err) {
+          // If browser blocks frame scripting, fallback still shows lock overlays.
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

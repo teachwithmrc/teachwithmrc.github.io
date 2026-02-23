@@ -2962,7 +2962,9 @@
 
     btnChooseGameEl.addEventListener("click", showGamePicker);
     btnSwitchPrintableEl.addEventListener("click", () => {
-      window.location.href = "ultimate_math_printables_hub.html";
+      window.location.href = state.gameType === "rollread"
+        ? "ultimate_math_rollread_printables.html"
+        : "ultimate_math_tictactoe_printables.html";
     });
 
     document.querySelectorAll("#operationRow .pill").forEach((button) => {

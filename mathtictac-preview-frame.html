@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Math Tic Tac Toe Generator - PREVIEW FRAME</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1f365f;
+      --bg: #f3f5f7;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Poppins", sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      overflow: hidden;
+    }
+
+    .preview-host {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 1200px;
+      background: #fff;
+      overflow: hidden;
+      border: 2px solid #111;
+    }
+
+    .generator-frame {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #fff;
+    }
+
+    .preview-watermark {
+      position: absolute;
+      inset: 0;
+      z-index: 118;
+      pointer-events: none;
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(1.1px) saturate(0.88);
+      -webkit-backdrop-filter: blur(1.1px) saturate(0.88);
+      background-image: url("data:image/svg+xml,%3Csvg width='250' height='250' viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='20' y='150' fill='%23000' opacity='0.14' transform='rotate(-45 125 125)' font-family='Poppins' font-weight='900' font-size='30'%3EPREVIEW MODE%3C/text%3E%3C/svg%3E");
+    }
+
+    .preview-paywall {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 56%;
+      z-index: 120;
+      pointer-events: auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 14px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.76) 28%, rgba(0, 0, 0, 0.9));
+    }
+
+    .preview-paywall-card {
+      width: min(94%, 560px);
+      border: 2px solid #fff;
+      border-radius: 14px;
+      background: rgba(17, 17, 17, 0.95);
+      color: #fff;
+      text-align: center;
+      padding: 14px 14px 12px;
+      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .preview-paywall-card h3 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+      line-height: 1.2;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .preview-paywall-card p {
+      margin: 0 0 10px;
+      font-size: 0.82rem;
+      line-height: 1.35;
+      opacity: 0.95;
+      font-weight: 600;
+    }
+
+    .preview-paywall-card a {
+      display: inline-block;
+      text-decoration: none;
+      background: #fff;
+      color: #111;
+      border-radius: 9px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+
+    @media (max-width: 900px) {
+      .preview-host {
+        min-height: 1080px;
+      }
+      .preview-paywall {
+        height: 60%;
+      }
+    }
+
+    @media print {
+      body { display: none !important; }
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+  <section class="preview-host" aria-label="Math Tic Tac Toe Generator Preview Frame">
+    <iframe
+      id="generatorFrame"
+      class="generator-frame"
+      src="ultimate_math_tictactoe_printables.html?v=20260223-preview"
+      title="Math Tic Tac Toe Printable Generator"
+      loading="eager"
+    ></iframe>
+
+    <div class="preview-watermark" aria-hidden="true"></div>
+
+    <div class="preview-paywall" aria-hidden="false">
+      <div class="preview-paywall-card">
+        <h3>Preview Only</h3>
+        <p>Generate is enabled for sampling. Full worksheet visibility and printing are available to members.</p>
+        <a href="https://member.interventionstation.com/join" target="_blank" rel="noopener noreferrer">Unlock Full Access</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      const frame = document.getElementById("generatorFrame");
+
+      function clickIfPresent(doc, selector) {
+        const el = doc.querySelector(selector);
+        if (el) el.click();
+      }
+
+      function configurePrintableTicTacToe(doc) {
+        // Reinforce tic-tac-toe defaults.
+        clickIfPresent(doc, '#gameTypeRow .pill[data-game-type="tictactoe"]');
+        clickIfPresent(doc, '#operationRow .pill[data-operation="addition"]');
+
+        // Refresh worksheet output in selected mode.
+        clickIfPresent(doc, "#btnGenerate");
+      }
+
+      function lockPrint(doc) {
+        const printBtn = doc.getElementById("btnPrint");
+        if (!printBtn) return;
+
+        printBtn.disabled = true;
+        printBtn.textContent = "Print (Members Only)";
+        printBtn.style.opacity = "0.55";
+        printBtn.style.cursor = "not-allowed";
+      }
+
+      function onLoad() {
+        try {
+          const doc = frame.contentDocument;
+          if (!doc) return;
+
+          configurePrintableTicTacToe(doc);
+          lockPrint(doc);
+
+          doc.addEventListener("contextmenu", function (event) {
+            event.preventDefault();
+          });
+        } catch (_) {
+          // Ignore cross-document errors if iframe origin changes.
+        }
+      }
+
+      frame.addEventListener("load", onLoad);
+    })();
+  </script>
+</body>
+</html>

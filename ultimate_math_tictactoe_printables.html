@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ultimate Math Printables Hub</title>
+  <title>Math Tic Tac Toe Printables</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -142,6 +142,7 @@
     }
 
     .primary { background: #e8f3ff; color: #113a62; }
+    #gameTypeRow { display: none; }
 
     #output { display: grid; gap: 12px; }
 
@@ -718,8 +719,8 @@
 </head>
 <body>
   <div class="app">
-    <h1 id="appTitle">Intervention Station Coins Generator</h1>
-    <p class="subtitle">Generate printable Tic Tac Toe and Roll and Read worksheets.</p>
+    <h1 id="appTitle">Intervention Station Math Tic Tac Toe Printables</h1>
+    <p class="subtitle">Generate printable math Tic Tac Toe worksheets.</p>
 
     <section id="builderPanel" class="panel">
       <div class="controls">
@@ -731,8 +732,8 @@
 
         <div class="row" id="operationRow">
           <span class="label">Skill:</span>
-          <button type="button" class="pill selected" data-operation="coins">Coins</button>
-          <button type="button" class="pill" data-operation="addition">Addition</button>
+          <button type="button" class="pill" data-operation="coins">Coins</button>
+          <button type="button" class="pill selected" data-operation="addition">Addition</button>
           <button type="button" class="pill" data-operation="subtraction">Subtraction</button>
           <button type="button" class="pill" data-operation="multiplication">Multiplication</button>
           <button type="button" class="pill" data-operation="division">Division</button>
@@ -757,8 +758,8 @@
             </select>
           </div>
 
-          <span class="label">Roll Grid:</span>
-          <div class="select-wrap">
+          <span class="label" id="rollGridLabel">Roll Grid:</span>
+          <div class="select-wrap" id="rollGridWrap">
             <select id="gridSizeSelect">
               <option value="18">18 cells</option>
               <option value="24" selected>24 cells</option>
@@ -942,7 +943,7 @@
 
     const state = {
       gameType: "tictactoe",
-      operation: "coins",
+      operation: "addition",
       difficulty: "single",
       regroupMode: "mixed",
       roundingStyle: "standard",
@@ -970,6 +971,8 @@
     const coinMarkerSelect = document.getElementById("coinMarkerSelect");
     const coinMarkerRow = document.getElementById("coinMarkerRow");
     const gridSizeSelect = document.getElementById("gridSizeSelect");
+    const rollGridLabel = document.getElementById("rollGridLabel");
+    const rollGridWrap = document.getElementById("rollGridWrap");
     const tttPerPageLabel = document.getElementById("tttPerPageLabel");
     const tttPerPageWrap = document.getElementById("tttPerPageWrap");
     const tttPerPageSelect = document.getElementById("tttPerPageSelect");
@@ -1032,6 +1035,9 @@
       const showTttPerPage = state.gameType === "tictactoe";
       tttPerPageLabel.style.display = showTttPerPage ? "" : "none";
       tttPerPageWrap.style.display = showTttPerPage ? "inline-flex" : "none";
+      const showRollGrid = state.gameType === "rollread";
+      rollGridLabel.style.display = showRollGrid ? "" : "none";
+      rollGridWrap.style.display = showRollGrid ? "inline-flex" : "none";
       const hideDifficulty = state.operation === "rounding";
       difficultyTextEl.style.display = hideDifficulty ? "none" : "";
       difficultySelectWrapEl.style.display = hideDifficulty ? "none" : "inline-flex";
@@ -1050,7 +1056,7 @@
     }
 
     function generatorTitle() {
-      return `Intervention Station ${operationLabel()} Generator`;
+      return `Intervention Station Math Tic Tac Toe ${operationLabel()} Generator`;
     }
 
     function updateGeneratorTitle() {
