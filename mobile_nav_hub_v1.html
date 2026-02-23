@@ -229,10 +229,14 @@
     }
 
     .home-quick-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       border: 2px solid #b8cfe7;
       border-radius: 10px;
       background: #fff;
       color: #13375c;
+      text-decoration: none;
       font: inherit;
       font-size: 0.82rem;
       font-weight: 700;
@@ -262,12 +266,13 @@
 
     .thumb {
       width: 100%;
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
+      aspect-ratio: 4 / 3;
+      object-fit: contain;
       object-position: center;
       display: block;
+      padding: 8px;
       border-bottom: 2px solid #d7e6f3;
-      background: #e9f2fd;
+      background: #f3f8fe;
     }
 
     .card-body {
@@ -418,6 +423,7 @@
             <button class="home-quick-btn" type="button" data-go-section="printable_math_generators">Math Printables</button>
             <button class="home-quick-btn" type="button" data-go-section="printable_sor_generators">SOR Printables</button>
             <button class="home-quick-btn" type="button" data-go-section="interactive_games">Interactive Games</button>
+            <a class="home-quick-btn" href="mobile_generators/index.html">All Mobile Generators</a>
           </div>
         </section>
 
@@ -601,35 +607,35 @@
             sub: "Choose from 30+ phonics skills to create new sheets every time.",
             image: "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/68bd9e307b3d2ffc0a7d20bc.jpeg",
             previewHref: "tictacpreview.html",
-            openHref: "tic_tac_toe_generator.html"
+            openHref: "mobile_generators/tic_tac_toe_generator_mobile.html"
           },
           {
             title: "SOR Fluency Grids",
             sub: "Choose from 30+ phonics skills to create new sheets every time.",
             image: "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/68bd9e316d0aaac628c4c745.jpeg",
             previewHref: "fluencygridpreview.html",
-            openHref: "fluency_grid_generator.html"
+            openHref: "mobile_generators/fluency_grid_generator_mobile.html"
           },
           {
             title: "SOR Roll and Read",
             sub: "Choose from 30+ phonics skills to create new sheets every time.",
             image: "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/68bd9e30f2b0b9f08ce694c4.jpeg",
             previewHref: "rollreadpreview.html",
-            openHref: "roll_read_multisyllabic.html"
+            openHref: "mobile_generators/roll_read_multisyllabic_mobile.html"
           },
           {
             title: "SOR Word Ladder",
             sub: "Choose from 30+ phonics skills to create new sheets every time.",
             image: "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/68bd9e307b3d2f59f87d20bd.jpeg",
             previewHref: "wordladderpreview.html",
-            openHref: "masterwordladderfinal.html"
+            openHref: "mobile_generators/masterwordladderfinal_mobile.html"
           },
           {
             title: "SOR Word Mapping",
             sub: "Choose from 30+ phonics skills to create new sheets every time.",
             image: "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/699b9468590acb848f8908fd.png",
             previewHref: "wordmap2preview.html",
-            openHref: "wordmapmaster.html"
+            openHref: "mobile_generators/wordmapmaster_mobile.html"
           }
         ]
       },
