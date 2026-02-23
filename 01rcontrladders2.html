@@ -94,63 +94,79 @@
     }
     function arraysEqual(a,b){ return a.length===b.length && a.every((v,i)=>v===b[i]); }
 
-    function getChangedChunkIndex(prevWord, word, prevPat, pat){
-      if (!prevWord) return -1;
+    function getStepChange(prevWord, word, prevPat, pat){
+      if (!prevWord) return null;
       const A=splitByPattern(prevWord, prevPat);
       const B=splitByPattern(word, pat);
 
       if (A.length===B.length){
-        let idx=-1;
+        const changed = [];
         for (let i=0;i<A.length;i++){
-          if ((A[i]||'')!==(B[i]||'')){ if (idx!==-1) return -1; idx=i; }
+          if ((A[i]||'')!==(B[i]||'')){ changed.push(i); }
         }
-        return idx;
+        if (changed.length !== 1) return null;
+        const idx = changed[0];
+        const from = A[idx] || "";
+        const to = B[idx] || "";
+
+        if (to.length === from.length + 1 && (to.startsWith(from) || to.endsWith(from))) {
+          const added = to.startsWith(from) ? to.slice(-1) : to.slice(0, to.length - from.length);
+          const atEnd = to.startsWith(from);
+          return { kind: "add_letter", index: idx, from, to, added, atEnd };
+        }
+        if (from.length === to.length + 1 && (from.startsWith(to) || from.endsWith(to))) {
+          const removed = from.startsWith(to) ? from.slice(-1) : from.slice(0, from.length - to.length);
+          const atEnd = from.startsWith(to);
+          return { kind: "remove_letter", index: idx, from, to, removed, atEnd };
+        }
+
+        return { kind: "replace", index: idx, from, to };
       }
       if (B.length===A.length+1){
         for (let i=0;i<B.length;i++){
           const test=B.slice(0,i).concat(B.slice(i+1));
-          if (arraysEqual(A,test)) return i;
+          if (arraysEqual(A,test)) return { kind: "add_chunk", index: i, from: "", to: B[i] || "" };
         }
       }
       if (A.length===B.length+1){
         for (let i=0;i<A.length;i++){
           const test=A.slice(0,i).concat(A.slice(i+1));
-          if (arraysEqual(B,test)) return i;
+          if (arraysEqual(B,test)) return { kind: "remove_chunk", index: i, from: A[i] || "", to: "" };
         }
       }
-      return -1;
+      return null;
     }
 
-    function getMicroHint(prev, word, prevP, patt){
-      const A=splitByPattern(prev, prevP);
-      const B=splitByPattern(word, patt);
-      const eq=(x,y)=>x.length===y.length && x.every((v,i)=>v===y[i]);
+    function getHintFromStep(step, prevWord, word){
+      if (!step) return `${prevWord} → ${word}`;
+      if (step.kind === "add_letter") {
+        const micro = step.atEnd
+          ? `${step.from} → ${step.from}<b>${step.added}</b>`
+          : `${step.from} → <b>${step.added}</b>${step.from}`;
+        return `+ ${step.added} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
+      }
+      if (step.kind === "remove_letter") {
+        const micro = step.atEnd
+          ? `${step.from.slice(0,-1)}<b>${step.removed}</b> → ${step.to}`
+          : `<b>${step.removed}</b>${step.from.slice(1)} → ${step.to}`;
+        return `- ${step.removed} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
+      }
+      if (step.kind === "add_chunk") return `+ ${step.to}`;
+      if (step.kind === "remove_chunk") return `- ${step.from}`;
+      if (step.kind === "replace") return `${step.from} → ${step.to}`;
+      return `${prevWord} → ${word}`;
+    }
 
-      if (A.length===B.length){
-        let idx=-1; for (let i=0;i<A.length;i++){ if (A[i]!==B[i]){ if (idx!==-1) return ''; idx=i; } }
-        if (idx===-1) return '';
-        const a=A[idx], b=B[idx];
-        if (b.length===a.length+1 && (b.startsWith(a)||b.endsWith(a))){
-          const add=b.startsWith(a)?b.slice(-1):b.slice(0,b.length-a.length);
-          const micro=b.startsWith(a)?`${a} → ${a}<b>${add}</b>`:`${a} → <b>${add}</b>${a}`;
-          return `+ ${add} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
-        }
-        if (a.length===b.length+1 && (a.startsWith(b)||a.endsWith(b))){
-          const rem=a.startsWith(b)?a.slice(-1):a.slice(0,a.length-b.length);
-          const micro=a.startsWith(b)?`${a.slice(0,-1)}<b>${rem}</b> → ${b}`:`<b>${rem}</b>${a.slice(1)} → ${b}`;
-          return `- ${rem} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
-        }
-        return `${a} → ${b}`;
+    function isValidLadder(ladder){
+      if (!Array.isArray(ladder) || ladder.length < 2) return false;
+      for (let i = 1; i < ladder.length; i++) {
+        const prev = ladder[i - 1] || "";
+        const word = ladder[i] || "";
+        const prevP = getPattern(prev);
+        const patt = getPattern(word);
+        if (!getStepChange(prev, word, prevP, patt)) return false;
       }
-      if (B.length===A.length+1){
-        for (let k=0;k<B.length;k++){ const test=B.slice(0,k).concat(B.slice(k+1)); if (eq(A,test)) return `+ ${B[k]}`; }
-        return '';
-      }
-      if (A.length===B.length+1){
-        for (let k=0;k<A.length;k++){ const test=A.slice(0,k).concat(A.slice(k+1)); if (eq(B,test)) return `- ${A[k]}`; }
-        return '';
-      }
-      return '';
+      return true;
     }
 
     function generateLadder(){
@@ -160,9 +176,9 @@
         return;
       }
       const mode = document.querySelector('input[name="ladderMode"]:checked').value; // "No Blends" | "Include Blends" | "Only Blends"
-      const ladders = api.getLaddersByMode(mode);
+      const ladders = api.getLaddersByMode(mode).filter(isValidLadder);
       if (!Array.isArray(ladders) || !ladders.length){
-        alert(mode==='Only Blends' ? '❌ No r-controlled ladders that include blends.' : '❌ No r-controlled ladders available.');
+        alert(mode==='Only Blends' ? '❌ No valid one-change r-controlled blend ladders found.' : '❌ No valid one-change r-controlled ladders available.');
         return;
       }
 
@@ -183,7 +199,8 @@
 
         let patternHTML = '';
         if (!first){
-          const changedIdx = boldChanged ? getChangedChunkIndex(prev, word, prevP, patt) : -1;
+          const step = getStepChange(prev, word, prevP, patt);
+          const changedIdx = (boldChanged && step) ? step.index : -1;
           patternHTML = Array.from(patt).map((ch,idx)=> idx===changedIdx ? `<span style="font-weight:700;">${ch}</span>` : ch).join('');
         }
 
@@ -195,14 +212,13 @@
         const borders = !last ? 'border-bottom:4px solid #000;border-left:4px solid #000;border-right:4px solid #000;' : 'border-left:4px solid #000;border-right:4px solid #000;';
         const wordTD = `<td style="padding:5px 7px;${borders}">${display}</td>`;
 
-        const hint = (!first) ? getMicroHint(prev, word, prevP, patt) : '';
-        const hintTD = hint
-          ? `<td style="padding:3px 5px;width:170px;">
+        const hintTD = first
+          ? `<td style="padding:3px 5px;width:170px;"></td>`
+          : `<td style="padding:3px 5px;width:170px;">
                <div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">
-                 ${hint}
+                 ${getHintFromStep(getStepChange(prev, word, prevP, patt), prev, word)}
                </div>
-             </td>`
-          : `<td style="padding:3px 5px;width:170px;"></td>`;
+             </td>`;
 
         return `<tr>${imgTD}${wordTD}${hintTD}</tr>`;
       }).join('');

@@ -250,12 +250,11 @@
 
     .board {
       display: grid;
-      gap: 10px;
+      gap: 8px;
       margin: 0 auto;
-      width: min(1040px, 100%);
+      width: min(960px, 100%);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
-
-    .board.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
     .memory-card {
       border: 0;
@@ -517,7 +516,8 @@
 
     .board-shell:fullscreen #board,
     .board-shell:-webkit-full-screen #board {
-      width: min(1300px, 100%);
+      width: 100%;
+      max-width: 100%;
     }
 
     @media (max-width: 1100px) {
@@ -533,10 +533,6 @@
 
       .skills-grid {
         grid-template-columns: 1fr;
-      }
-
-      .board.cols-4 {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
       .prompt-main {
@@ -1027,9 +1023,41 @@
       scoreboardEl.innerHTML = parts.join("");
     }
 
-    function boardColumnClass(cardTotal) {
-      if (cardTotal <= 0) return "cols-4";
-      return "cols-4";
+    function boardColumnCount(cardTotal) {
+      if (cardTotal >= 24) return 6;
+      if (cardTotal >= 20) return 5;
+      return 4;
+    }
+
+    function applyBoardLayout() {
+      const cardTotal = state.cards.length || (state.pairCount * 2) || 16;
+      let cols = boardColumnCount(cardTotal);
+      if (window.matchMedia("(max-width: 680px)").matches) {
+        cols = Math.min(cols, 3);
+      }
+      const rows = Math.max(1, Math.ceil(cardTotal / cols));
+      const gapPx = 8;
+
+      boardEl.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+      boardEl.style.gap = `${gapPx}px`;
+
+      if (getFullscreenElement() !== boardShell) {
+        boardEl.style.width = "min(960px, 100%)";
+        return;
+      }
+
+      const shellRect = boardShell.getBoundingClientRect();
+      const shellStyles = window.getComputedStyle(boardShell);
+      const padX = (parseFloat(shellStyles.paddingLeft) || 0) + (parseFloat(shellStyles.paddingRight) || 0);
+      const padY = (parseFloat(shellStyles.paddingTop) || 0) + (parseFloat(shellStyles.paddingBottom) || 0);
+      const maxWidth = Math.max(0, shellRect.width - padX);
+      const maxHeight = Math.max(0, shellRect.height - padY);
+      const cardByWidth = (maxWidth - (gapPx * (cols - 1))) / cols;
+      const cardByHeight = (maxHeight - (gapPx * (rows - 1))) / rows;
+      const cardSize = Math.max(52, Math.floor(Math.min(cardByWidth, cardByHeight)));
+      const boardWidth = Math.max(0, (cardSize * cols) + (gapPx * (cols - 1)));
+
+      boardEl.style.width = `${Math.min(maxWidth, boardWidth)}px`;
     }
 
     function fullscreenSupported() {
@@ -1063,10 +1091,12 @@
       if (!fullscreenSupported()) {
         btnFullscreen.disabled = true;
         btnFullscreen.textContent = "Full Screen Unavailable";
+        applyBoardLayout();
         return;
       }
       btnFullscreen.disabled = false;
       btnFullscreen.textContent = getFullscreenElement() === boardShell ? "Exit Full Screen" : "Full Screen";
+      applyBoardLayout();
     }
 
     function pointAtAngle(cx, cy, radius, angleDegrees) {
@@ -1153,7 +1183,8 @@
     }
 
     function renderBoard() {
-      boardEl.className = `board ${boardColumnClass(state.cards.length)}`;
+      boardEl.className = "board";
+      applyBoardLayout();
       boardEl.innerHTML = "";
 
       state.cards.forEach((card, index) => {
@@ -1963,6 +1994,7 @@
 
     document.addEventListener("fullscreenchange", updateFullscreenButton);
     document.addEventListener("webkitfullscreenchange", updateFullscreenButton);
+    window.addEventListener("resize", applyBoardLayout);
 
     renderSkills();
     updateSkillLabel();

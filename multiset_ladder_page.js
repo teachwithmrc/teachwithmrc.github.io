@@ -23,7 +23,7 @@
     if (c === "oa" || c === "oe") return "long_o";
     if (c === "ew" || c === "ue") return "long_u";
     if (c === "oi" || c === "oy") return "diph_oy";
-    if (c === "au" || c === "aw") return "variant_aw";
+    // Keep au/aw distinct so transitions like maul -> bawl count as two changes.
     return c;
   }
 
@@ -35,89 +35,90 @@
     return a.length === b.length && a.every((v, i) => chunkEqual(v, b[i]));
   }
 
-  function getChangedChunkIndex(prevWord, word, prevPat, pat) {
-    if (!prevWord) return -1;
+  function getStepChange(prevWord, word, prevPat, pat) {
+    if (!prevWord) return null;
     const A = splitByPattern(prevWord, prevPat);
     const B = splitByPattern(word, pat);
 
     if (A.length === B.length) {
-      let idx = -1;
+      const changed = [];
       for (let i = 0; i < A.length; i++) {
         if (!chunkEqual(A[i], B[i])) {
-          if (idx !== -1) return -1;
-          idx = i;
+          changed.push(i);
         }
       }
-      return idx;
+      if (changed.length !== 1) return null;
+      const idx = changed[0];
+      const from = String(A[idx] || "");
+      const to = String(B[idx] || "");
+
+      if (to.length === from.length + 1 && (to.startsWith(from) || to.endsWith(from))) {
+        const added = to.startsWith(from) ? to.slice(-1) : to.slice(0, to.length - from.length);
+        const atEnd = to.startsWith(from);
+        return { kind: "add_letter", index: idx, from, to, added, atEnd };
+      }
+      if (from.length === to.length + 1 && (from.startsWith(to) || from.endsWith(to))) {
+        const removed = from.startsWith(to) ? from.slice(-1) : from.slice(0, from.length - to.length);
+        const atEnd = from.startsWith(to);
+        return { kind: "remove_letter", index: idx, from, to, removed, atEnd };
+      }
+
+      return { kind: "replace", index: idx, from, to };
     }
 
     if (B.length === A.length + 1) {
       for (let i = 0; i < B.length; i++) {
         const test = B.slice(0, i).concat(B.slice(i + 1));
-        if (arraysEqual(A, test)) return i;
+        if (arraysEqual(A, test)) {
+          return { kind: "add_chunk", index: i, from: "", to: String(B[i] || "") };
+        }
       }
-      return -1;
+      return null;
     }
 
     if (A.length === B.length + 1) {
       for (let i = 0; i < A.length; i++) {
         const test = A.slice(0, i).concat(A.slice(i + 1));
-        if (arraysEqual(B, test)) return i;
-      }
-      return -1;
-    }
-
-    return -1;
-  }
-
-  function getHint(prevWord, word, prevPat, pat) {
-    if (!prevWord) return "";
-    const A = splitByPattern(prevWord, prevPat);
-    const B = splitByPattern(word, pat);
-    const eq = (x, y) => x.length === y.length && x.every((v, i) => v === y[i]);
-
-    if (A.length === B.length) {
-      let idx = -1;
-      for (let i = 0; i < A.length; i++) {
-        if (!chunkEqual(A[i], B[i])) {
-          if (idx !== -1) return "? → ?";
-          idx = i;
+        if (arraysEqual(B, test)) {
+          return { kind: "remove_chunk", index: i, from: String(A[i] || ""), to: "" };
         }
       }
-      if (idx === -1) return "? → ?";
-      const a = A[idx];
-      const b = B[idx];
-
-      if (b.length === a.length + 1 && (b.startsWith(a) || b.endsWith(a))) {
-        const add = b.startsWith(a) ? b.slice(-1) : b.slice(0, b.length - a.length);
-        const micro = b.startsWith(a) ? `${a} → ${a}<b>${add}</b>` : `${a} → <b>${add}</b>${a}`;
-        return `+ ${add} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
-      }
-      if (a.length === b.length + 1 && (a.startsWith(b) || a.endsWith(b))) {
-        const rem = a.startsWith(b) ? a.slice(-1) : a.slice(0, a.length - b.length);
-        const micro = a.startsWith(b) ? `${a.slice(0, -1)}<b>${rem}</b> → ${b}` : `<b>${rem}</b>${a.slice(1)} → ${b}`;
-        return `- ${rem} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
-      }
-      return `${a} → ${b}`;
+      return null;
     }
 
-    if (B.length === A.length + 1) {
-      for (let k = 0; k < B.length; k++) {
-        const test = B.slice(0, k).concat(B.slice(k + 1));
-        if (eq(A, test)) return `+ ${B[k]}`;
-      }
-      return "? → ?";
-    }
+    return null;
+  }
 
-    if (A.length === B.length + 1) {
-      for (let k = 0; k < A.length; k++) {
-        const test = A.slice(0, k).concat(A.slice(k + 1));
-        if (eq(B, test)) return `- ${A[k]}`;
-      }
-      return "? → ?";
+  function getHintFromStep(step, prevWord, word) {
+    if (!step) return `${prevWord} → ${word}`;
+    if (step.kind === "add_letter") {
+      const micro = step.atEnd
+        ? `${step.from} → ${step.from}<b>${step.added}</b>`
+        : `${step.from} → <b>${step.added}</b>${step.from}`;
+      return `+ ${step.added} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
     }
+    if (step.kind === "remove_letter") {
+      const micro = step.atEnd
+        ? `${step.from.slice(0, -1)}<b>${step.removed}</b> → ${step.to}`
+        : `<b>${step.removed}</b>${step.from.slice(1)} → ${step.to}`;
+      return `- ${step.removed} <span style="font-size:16px;opacity:.8;margin-left:8px;">${micro}</span>`;
+    }
+    if (step.kind === "add_chunk") return `+ ${step.to}`;
+    if (step.kind === "remove_chunk") return `- ${step.from}`;
+    if (step.kind === "replace") return `${step.from} → ${step.to}`;
+    return `${prevWord} → ${word}`;
+  }
 
-    return "? → ?";
+  function isValidLadder(ladder, getPattern) {
+    if (!Array.isArray(ladder) || ladder.length < 2) return false;
+    for (let i = 1; i < ladder.length; i++) {
+      const prev = ladder[i - 1] || "";
+      const word = ladder[i] || "";
+      const prevP = getPattern(prev);
+      const patt = getPattern(word);
+      if (!getStepChange(prev, word, prevP, patt)) return false;
+    }
+    return true;
   }
 
   function fallbackPattern(word) {
@@ -131,7 +132,17 @@
       return;
     }
 
-    const state = { currentSet: data.setOrder[0] };
+    const selectionMode = (options && options.selectionMode === "multi") ? "multi" : "single";
+    const useButtonMenu = Boolean((options && options.setControlStyle === "buttons") || selectionMode === "multi");
+    const enableBlendModes = Boolean(options && options.enableBlendModes);
+    const blendPattern = (options && options.blendPattern instanceof RegExp)
+      ? options.blendPattern
+      : /^(bl|br|cl|cr|dr|fl|fr|gl|gr|pl|pr|sc|sk|sl|sm|sn|sp|st|sw|tr|tw|spr|str|scr|spl|shr|thr)/i;
+    const defaultSet = data.setOrder[0];
+    const state = {
+      currentSet: defaultSet,
+      selectedSets: new Set([defaultSet])
+    };
 
     const pageTitle = document.getElementById("pageTitle");
     const pageSubtitle = document.getElementById("pageSubtitle");
@@ -140,12 +151,55 @@
     const generateBtn = document.getElementById("generateBtn");
     const printBtn = document.getElementById("printBtn");
 
-    if (pageTitle && data.title) pageTitle.textContent = data.title;
-    if (pageSubtitle && data.subtitle) pageSubtitle.textContent = data.subtitle;
+    const resolvedTitle = (options && options.title) || data.title;
+    const resolvedSubtitle = (options && options.subtitle) || data.subtitle;
+    if (pageTitle && resolvedTitle) pageTitle.textContent = resolvedTitle;
+    if (pageSubtitle && resolvedSubtitle) pageSubtitle.textContent = resolvedSubtitle;
+
+    function getSelectedSetIds() {
+      if (selectionMode === "multi") {
+        const ids = Array.from(state.selectedSets).filter((setId) => data.setOrder.includes(setId));
+        return ids.length ? ids : [defaultSet];
+      }
+      return [state.currentSet];
+    }
 
     function renderSetButtons() {
       if (!setButtons) return;
       setButtons.innerHTML = "";
+
+      if (useButtonMenu) {
+        data.setOrder.forEach((setId) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "set-chip";
+
+          const isActive = (selectionMode === "multi")
+            ? state.selectedSets.has(setId)
+            : state.currentSet === setId;
+          if (isActive) btn.classList.add("active");
+
+          btn.textContent = (data.setLabels && data.setLabels[setId]) || setId;
+          btn.setAttribute("aria-pressed", String(isActive));
+          btn.addEventListener("click", function () {
+            if (selectionMode === "multi") {
+              if (state.selectedSets.has(setId)) {
+                if (state.selectedSets.size === 1) return;
+                state.selectedSets.delete(setId);
+              } else {
+                state.selectedSets.add(setId);
+              }
+            } else {
+              state.currentSet = setId;
+            }
+            renderSetButtons();
+          });
+
+          setButtons.appendChild(btn);
+        });
+        return;
+      }
+
       data.setOrder.forEach((setId) => {
         const label = document.createElement("label");
         const input = document.createElement("input");
@@ -173,10 +227,34 @@
       return (data.wordImages && data.wordImages[key]) || `images/${key}.png`;
     }
 
+    function getBlendMode() {
+      if (!enableBlendModes) return "Include Blends";
+      return document.querySelector('input[name="ladderMode"]:checked')?.value || "No Blends";
+    }
+
+    function looksBlendWord(word) {
+      return blendPattern.test(String(word || "").toLowerCase());
+    }
+
+    function filterLaddersByBlendMode(allLadders, mode) {
+      if (!enableBlendModes) return allLadders;
+      if (mode === "Only Blends") {
+        return allLadders.filter((ladder) => Array.isArray(ladder) && ladder.every(looksBlendWord));
+      }
+      if (mode === "Include Blends") {
+        return allLadders.filter((ladder) => Array.isArray(ladder) && ladder.some(looksBlendWord));
+      }
+      return allLadders.filter((ladder) => Array.isArray(ladder) && ladder.every((word) => !looksBlendWord(word)));
+    }
+
     function generateLadder() {
-      const ladders = (data.ladders && data.ladders[state.currentSet]) || [];
+      const selectedSetIds = getSelectedSetIds();
+      const blendMode = getBlendMode();
+      const rawLadders = selectedSetIds.flatMap((setId) => (data.ladders && data.ladders[setId]) || []);
+      const ladders = filterLaddersByBlendMode(rawLadders, blendMode)
+        .filter((ladder) => isValidLadder(ladder, getPattern));
       if (!ladders.length) {
-        alert("No ladders available for this set with current pictured words.");
+        alert("No valid one-change ladders available for this set with current pictured words.");
         return;
       }
 
@@ -200,8 +278,9 @@
 
         let patternHTML = "";
         if (!first) {
-          const changedIdx = boldChanged ? getChangedChunkIndex(prev, word, prevP, patt) : -1;
-          if (changedIdx === -1) {
+          const step = getStepChange(prev, word, prevP, patt);
+          const changedIdx = (boldChanged && step) ? step.index : -1;
+          if (changedIdx < 0) {
             patternHTML = patt;
           } else {
             let out = "";
@@ -231,18 +310,33 @@
           ? `<td style="padding:3px 5px;width:170px;"></td>`
           : `<td style="padding:3px 5px;width:170px;">
                <div style="display:flex;justify-content:center;align-items:center;background:#f0f0f0;border:3px solid #000;border-radius:12px;padding:6px 10px;font-size:22px;text-align:center;">
-                 ${getHint(prev, word, prevP, patt)}
+                 ${getHintFromStep(getStepChange(prev, word, prevP, patt), prev, word)}
                </div>
              </td>`;
 
         return `<tr>${imgTD}${wordTD}${hintTD}</tr>`;
       }).join("");
 
-      const setLabel = ((data.setLabels && data.setLabels[state.currentSet]) || state.currentSet);
+      const selectedSetLabels = selectedSetIds.map((setId) => (data.setLabels && data.setLabels[setId]) || setId);
+      const headingTextBase = selectedSetIds.length === 1
+        ? `${selectedSetLabels[0]} Word Ladder`
+        : "Mixed Word Ladder";
+      const modeSuffix = enableBlendModes
+        ? (blendMode === "Include Blends")
+          ? " — Include Blends"
+          : (blendMode === "Only Blends")
+            ? " — Only Blends"
+            : " — No Blends"
+        : "";
+      const headingText = `${headingTextBase}${modeSuffix}`;
+      const selectedSummary = selectedSetIds.length > 1
+        ? `<p style="font-size:12px;margin:0 0 6px;"><strong>Sets:</strong> ${selectedSetLabels.join(" • ")}</p>`
+        : "";
       const html = `
         <div style="display:flex;flex-direction:column;align-items:center;width:98%;margin:0 auto;">
           <div id="titleBlock" style="text-align:center;">
-            <h2 style="font-size:24px;">${setLabel} Word Ladder</h2>
+            <h2 style="font-size:24px;">${headingText}</h2>
+            ${selectedSummary}
             <p style="font-size:12px;"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>
           </div>
           <table style="border-collapse:collapse;margin:0 auto;width:100%;max-width:600px;">

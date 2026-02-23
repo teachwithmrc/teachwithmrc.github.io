@@ -33,6 +33,34 @@
     .card.alt { background: var(--card2); border-color: var(--border2); }
     .card h2 { margin: 0 0 8px; font-size: 20px; }
     .controls { display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 18px; }
+    #setButtons { gap: 10px; max-width: 900px; margin: 0 auto; }
+    #setButtons .set-chip {
+      margin: 0;
+      padding: 8px 14px;
+      border: 2px solid var(--border);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--ink);
+      font: 600 15px 'Poppins', sans-serif;
+      box-shadow: 0 1px 3px rgba(31,54,95,.08);
+      transition: transform .12s ease, background-color .12s ease, border-color .12s ease, box-shadow .12s ease;
+      cursor: pointer;
+    }
+    #setButtons .set-chip:hover {
+      border-color: var(--ink);
+      background: #eef4ff;
+    }
+    #setButtons .set-chip:focus-visible {
+      outline: 3px solid #9bb2e4;
+      outline-offset: 2px;
+    }
+    #setButtons .set-chip.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+      box-shadow: 0 3px 8px rgba(31,54,95,.28);
+      transform: translateY(-1px);
+    }
 
     .pattern { font-size: 100px; line-height: 1; margin-top: 4px; letter-spacing: 0; }
 
@@ -52,15 +80,24 @@
 </head>
 <body>
   <h1 id="pageTitle">Vowel Teams Word Ladders</h1>
-  <div id="pageSubtitle" class="subtitle">Choose a set and generate a 6-step ladder.</div>
+  <div id="pageSubtitle" class="subtitle">Choose one or more sets and generate a 6-step ladder.</div>
 
   <div class="screenOnly" style="max-width:920px;margin:0 auto 12px;">
-    <strong>Directions:</strong> Pick a category, choose a display style, then click <b>Generate Ladder</b>. Print when ready.
+    <strong>Directions:</strong> Pick one or more vowel-team sets, choose a blend mode and display style, then click <b>Generate Ladder</b>.
   </div>
 
   <div class="card">
     <h2>Vowel Team Sets</h2>
     <div id="setButtons" class="controls"></div>
+  </div>
+
+  <div class="card alt">
+    <h2>Blend Mode</h2>
+    <div class="controls">
+      <label><input type="radio" name="ladderMode" value="No Blends" checked> No Blends</label>
+      <label><input type="radio" name="ladderMode" value="Include Blends"> Include Blends</label>
+      <label><input type="radio" name="ladderMode" value="Only Blends"> Only Blends</label>
+    </div>
   </div>
 
   <div class="card alt">
@@ -81,7 +118,13 @@
 
   <script>
     window.addEventListener('DOMContentLoaded', function () {
-      window.initMultiSetLadderPage({ data: window.vowelTeamsLadderData });
+      window.initMultiSetLadderPage({
+        data: window.vowelTeamsLadderData,
+        subtitle: 'Choose one or more sets and generate a 6-step ladder.',
+        selectionMode: 'multi',
+        setControlStyle: 'buttons',
+        enableBlendModes: true
+      });
     });
   </script>
 </body>
