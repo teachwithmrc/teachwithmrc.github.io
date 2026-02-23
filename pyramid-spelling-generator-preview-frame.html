@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Coin Counter Generator - PREVIEW MODE</title>
+  <title>Pyramid Spelling Generator - PREVIEW FRAME</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     * { box-sizing: border-box; }
@@ -43,8 +43,8 @@
       bottom: 0;
       z-index: 20;
       pointer-events: none;
-      background: rgba(255, 255, 255, 0.06);
-      background-image: url("data:image/svg+xml,%3Csvg width='250' height='250' viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='20' y='150' fill='%23000' opacity='0.14' transform='rotate(-45 125 125)' font-family='Poppins' font-weight='900' font-size='30'%3EPREVIEW MODE%3C/text%3E%3C/svg%3E");
+      background: rgba(255, 255, 255, 0.05);
+      background-image: url("data:image/svg+xml,%3Csvg width='250' height='250' viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='20' y='150' fill='%23000' opacity='0.13' transform='rotate(-45 125 125)' font-family='Poppins' font-weight='900' font-size='30'%3EPREVIEW MODE%3C/text%3E%3C/svg%3E");
     }
 
     .preview-paywall {
@@ -112,8 +112,8 @@
     <iframe
       id="liveFrame"
       class="live-frame"
-      src="counting_coin_generator.html?v=20260223-coin-live1"
-      title="Coin Counter Generator Preview"
+      src="pyramid_spelling_generator.html?v=20260223-pyramid-live"
+      title="Pyramid Spelling Generator Preview"
       loading="eager"
     ></iframe>
 
@@ -122,7 +122,7 @@
     <div class="preview-paywall" aria-hidden="false">
       <div class="preview-paywall-card">
         <h3>Premium Resource</h3>
-        <p>Generate is enabled in preview mode. Join membership to unlock full worksheet visibility and printing.</p>
+        <p>Generator menu is available in preview mode. Join membership to unlock full worksheet visibility and printing.</p>
         <a href="https://member.interventionstation.com/join" target="_blank" rel="noopener noreferrer">Join Membership</a>
       </div>
     </div>
@@ -152,24 +152,11 @@
           const frameDoc = liveFrame.contentDocument || frameWin.document;
           if (!frameDoc) return;
 
-          frameDoc.addEventListener("contextmenu", function (e) {
-            e.preventDefault();
-          });
+          frameDoc.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+          frameDoc.addEventListener("keydown", blockShortcuts);
+          if (frameWin) frameWin.print = blockedAction;
 
-          frameDoc.addEventListener("keydown", function (e) {
-            const blocked = (e.ctrlKey || e.metaKey) && ["p", "s", "u"].includes(String(e.key || "").toLowerCase());
-            if (blocked) {
-              e.preventDefault();
-              blockedAction();
-            }
-          });
-
-          if (frameWin) {
-            frameWin.print = blockedAction;
-          }
-
-          const printLikeButtons = frameDoc.querySelectorAll("button");
-          printLikeButtons.forEach(function (btn) {
+          frameDoc.querySelectorAll("button").forEach(function (btn) {
             if (/print/i.test(btn.textContent || "")) {
               btn.addEventListener("click", function (e) {
                 e.preventDefault();
@@ -177,18 +164,8 @@
               }, true);
             }
           });
-
-          const sheet = frameDoc.getElementById("sheet");
-          if (sheet) {
-            sheet.style.filter = "blur(1.2px) saturate(0.92)";
-          }
-
-          const subtitle = frameDoc.querySelector(".subtitle");
-          if (subtitle) {
-            subtitle.textContent = "Preview mode: Generate is enabled, lower worksheet area is locked for members.";
-          }
-        } catch (err) {
-          // If browser blocks frame scripting, fallback still shows lock overlays.
+        } catch (_) {
+          // Frame protection fallback is the lock overlays above.
         }
       });
     })();

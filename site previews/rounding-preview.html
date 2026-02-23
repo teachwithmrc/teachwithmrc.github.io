@@ -168,9 +168,9 @@
       text-decoration:none;
       color:#102246;
       font-weight:600;
-      font-size:15.5px;
-      line-height:1.35;
-      padding:8px 0;
+      font-size: 14px;
+      line-height: 1.22;
+      padding: 6px 0;
     }
     .is-home-sections .is-nav-link:hover{ text-decoration:underline; }
     .is-home-sections .is-nav-link.is-active{
@@ -179,6 +179,46 @@
       text-decoration-thickness:2px;
     }
 
+    .is-unified-join{
+      border:1px solid #cfd7ef;
+      background:#ffffff;
+      border-radius:16px;
+      padding:14px 16px;
+      box-shadow:0 10px 22px rgba(31,54,95,0.07);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .is-unified-join h2{
+      margin:0 0 4px;
+      font-size:18px;
+      line-height:1.15;
+      font-weight:900;
+      color:#1f365f;
+    }
+    .is-unified-join p{
+      margin:0;
+      font-size:13px;
+      font-weight:600;
+      color:#546a92;
+      line-height:1.35;
+    }
+    .is-unified-join__btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      border-radius:999px;
+      min-height:44px;
+      padding:0 16px;
+      font-weight:900;
+      border:1px solid #5aaee9;
+      background:#6ec1ff;
+      color:#fff;
+      white-space:nowrap;
+    }
     .is-home-sections .is-page{
       background:var(--panel);
       border:2px solid var(--border);
@@ -394,6 +434,8 @@
       }
     }
     @media (max-width:860px){
+      .is-unified-join{ flex-direction:column; align-items:flex-start; }
+      .is-unified-join__btn{ width:100%; justify-content:center; }
       .buy-options{ flex-direction:column; align-items:flex-start; }
       .buy-options__buttons{ width:100%; justify-content:flex-start; }
       .buy-btn{ width:100%; justify-content:center; }
@@ -468,19 +510,19 @@
       />
 
       <div class="top-buttons-row">
-        <a href="https://member.interventionstation.com/join">
+        <a href="./home-preview.html#join">
           <button type="button">
             <div class="main-heading-group"><div class="main-heading-button">Join Membership</div></div>
           </button>
         </a>
 
-        <a href="https://interventionstation.com/membershipchoices">
+        <a href="./home-preview.html#join">
           <button type="button">
             <div class="main-heading-group"><div class="main-heading-button">What's Inside?</div></div>
           </button>
         </a>
 
-        <a href="https://member.interventionstation.com/login">
+        <a href="./home-preview.html#join">
           <button type="button">
             <div class="main-heading-group"><div class="main-heading-button">Log In</div></div>
           </button>
@@ -497,34 +539,48 @@
             <a class="is-nav-link" href="./home-preview.html">&#127968; Home</a>
           </div>
 
-          <div class="is-nav-header">Math Resources</div>
+          <div class="is-nav-header">Math Generators</div>
           <div class="is-nav-group">
-            <a class="is-nav-link" href="./placevalue-preview.html">Place Value</a>
-            <a class="is-nav-link is-active" href="./rounding-preview.html">Rounding</a>
             <a class="is-nav-link" href="./rounding-generator-preview.html">Rounding Generator</a>
-            <a class="is-nav-link" href="./addition-preview.html">Addition (Multi Digit)</a>
-            <a class="is-nav-link" href="./multiplication-preview.html">Multiplication</a>
-            <a class="is-nav-link" href="./division-preview.html">Long Division</a>
-            <a class="is-nav-link" href="./decimals-preview.html">Decimals</a>
-            <a class="is-nav-link" href="./fractions-preview.html">Fractions</a>
-            <a class="is-nav-link" href="./math-song-preview.html">Math Learning Songs</a>
-            <a class="is-nav-link" href="./google-puzzle-preview.html">Self Checking Google Sheets Puzzle</a>
-            <a class="is-nav-link" href="./math-riddle-preview.html">Math Fact Riddles</a>
-            <a class="is-nav-link" href="./ten-frame-preview.html">Ten Frame Test</a>
+            <a class="is-nav-link" href="./addition-generator-preview.html">Addition Generator</a>
+            <a class="is-nav-link" href="./subtraction-generator-preview.html">Subtraction Generator</a>
+            <a class="is-nav-link" href="./multiply-generator-preview.html">Multiplication Generator</a>
+            <a class="is-nav-link" href="./partialproducts-generator-preview.html">Partial Products Generator</a>
+            <a class="is-nav-link" href="./division-generator-preview.html">Long Division</a>
+            <a class="is-nav-link is-active" href="./long-division-scaffolded-generator-preview.html">Long Division Scaffold</a>
+            <a class="is-nav-link" href="./addsubtractmodels-generator-preview.html">Add and Subtract with Manipulatives or Hundreds Chart</a>
+            <a class="is-nav-link" href="./coin-counter-generator-preview.html">Coin Counter Generator</a>
+            <a class="is-nav-link" href="./mathtictac-preview.html">Math Tic Tac Preview</a>
+            <a class="is-nav-link" href="./mathrollread-preview.html">Math Roll &amp; Read Preview</a>
           </div>
 
           <div class="is-nav-header is-mt-12">SOR Generators</div>
           <div class="is-nav-group">
-            <a class="is-nav-link" href="./word-map-preview.html">Word Mapping</a>
-            <a class="is-nav-link" href="./tictacpreview.html">Tic Tac Toe</a>
-            <a class="is-nav-link" href="./fluencygridpreview.html">Fluency Grid</a>
-            <a class="is-nav-link" href="./rollreadpreview.html">Roll and Read</a>
-            <a class="is-nav-link" href="./wordladderpreview.html">Word Ladder</a>
+            <a class="is-nav-link" href="./tictacpreview.html">SOR Tic Tac Toe</a>
+            <a class="is-nav-link" href="./fluencygridpreview.html">SOR Fluency Grid</a>
+            <a class="is-nav-link" href="./rollreadpreview.html">SOR Roll and Read</a>
+            <a class="is-nav-link" href="./wordladderpreview.html">SOR Word Ladder</a>
+            <a class="is-nav-link" href="./word-map-preview.html">SOR Word Mapping</a>
+            <a class="is-nav-link" href="./pyramid-spelling-generator-preview.html">Pyramid Spelling</a>
+            <a class="is-nav-link" href="./spelling-with-pictures-generator-preview.html">Spelling Pics Generator</a>
           </div>
 
-          <div class="is-nav-header is-mt-12">Reading / Phonics</div>
+          <div class="is-nav-header is-mt-12">Math Resources</div>
           <div class="is-nav-group">
-            <a class="is-nav-link" href="./games-preview.html">Learning Games</a>
+            <a class="is-nav-link" href="./placevalue-preview.html">Place Value</a>
+            <a class="is-nav-link" href="./rounding-preview.html">Rounding</a>
+            <a class="is-nav-link" href="./addition-preview.html">Addition (Printable Organizer)</a>
+            <a class="is-nav-link" href="./multiplication-preview.html">Multiplication (Printable Organizer)</a>
+            <a class="is-nav-link" href="./division-preview.html">Division (Printable Organizer)</a>
+            <a class="is-nav-link" href="./decimals-preview.html">Decimals</a>
+            <a class="is-nav-link" href="./fractions-preview.html">Fractions</a>
+            <a class="is-nav-link" href="./ten-frame-preview.html">Ten Frame</a>
+            <a class="is-nav-link" href="./google-puzzle-preview.html">Google Puzzle</a>
+            <a class="is-nav-link" href="./math-riddle-preview.html">Math Fact Riddles</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Reading</div>
+          <div class="is-nav-group">
             <a class="is-nav-link" href="./heart-words-preview.html">Heart Words</a>
             <a class="is-nav-link" href="./phonics-comics-preview.html">Phonics Comics</a>
             <a class="is-nav-link" href="./fix-mixup-preview.html">Fix the Mix Up</a>
@@ -534,6 +590,14 @@
             <a class="is-nav-link" href="./hfw-pyramid-preview.html">High Frequency Word Pyramids</a>
             <a class="is-nav-link" href="./spelling-preview.html">Spelling by Phonics Skill</a>
             <a class="is-nav-link" href="./spelling-google-sheets-preview.html">Spelling Google Sheets</a>
+            <span class="is-nav-link" style="cursor:not-allowed; opacity:.7; text-decoration:none;">Decodable (COMING SOON)</span>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Interactive Games</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./readinggames-preview.html">Reading Games</a>
+            <a class="is-nav-link" href="./math-game-board-preview.html">Math Games</a>
+            <a class="is-nav-link" href="./games-preview.html">Games (Legacy)</a>
           </div>
 
           <div class="is-nav-header is-mt-12">Learning Songs</div>
@@ -545,26 +609,19 @@
 
       <main class="is-main">
         <section class="is-page">
+          <div class="is-unified-join">
+            <div class="is-unified-join__text">
+              <h2>Want Full Access to Every Resource?</h2>
+              <p>Become a member to unlock unlimited generators, printables, and downloads.</p>
+            </div>
+            <a class="is-unified-join__btn" href="./home-preview.html#join">Join Now to Get Access!</a>
+          </div>
           <header class="is-page-hero">
             <h1>Rounding Resources</h1>
             <p>Preview what is included. Member downloads are locked on this page.</p>
           </header>
 
-          <div class="buy-options">
-            <div class="buy-options__text">
-              <div class="buy-options__title">Get this resource your way</div>
-              <div class="buy-options__sub">Most teachers choose membership once they grab 2-3 resources.</div>
-            </div>
 
-            <div class="buy-options__buttons">
-              <a class="buy-btn buy-btn--primary" href="https://member.interventionstation.com/join">
-                Get Everything - <span class="buy-price">$9.99/mo</span>
-              </a>
-              <a class="buy-btn buy-btn--secondary" href="https://member.interventionstation.com/membership">
-                What's Inside? <span class="buy-price">See Resources</span>
-              </a>
-            </div>
-          </div>
 
           <div class="rounding-head">
             <p class="title"><strong>Rounding Resources</strong></p>

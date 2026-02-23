@@ -169,9 +169,9 @@
       text-decoration:none;
       color:#102246;
       font-weight:600;
-      font-size:15.5px;
-      line-height:1.35;
-      padding:8px 0;
+      font-size: 14px;
+      line-height: 1.22;
+      padding: 6px 0;
       word-break:break-word;
     }
     .is-home-sections .is-nav-link:hover{ text-decoration:underline; }
@@ -181,6 +181,46 @@
       text-decoration-thickness:2px;
     }
 
+    .is-unified-join{
+      border:1px solid #cfd7ef;
+      background:#ffffff;
+      border-radius:16px;
+      padding:14px 16px;
+      box-shadow:0 10px 22px rgba(31,54,95,0.07);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .is-unified-join h2{
+      margin:0 0 4px;
+      font-size:18px;
+      line-height:1.15;
+      font-weight:900;
+      color:#1f365f;
+    }
+    .is-unified-join p{
+      margin:0;
+      font-size:13px;
+      font-weight:600;
+      color:#546a92;
+      line-height:1.35;
+    }
+    .is-unified-join__btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      border-radius:999px;
+      min-height:44px;
+      padding:0 16px;
+      font-weight:900;
+      border:1px solid #5aaee9;
+      background:#6ec1ff;
+      color:#fff;
+      white-space:nowrap;
+    }
     .is-home-sections .is-page{
       background:var(--panel);
       border:2px solid var(--border);
@@ -299,6 +339,8 @@
       .preview-iframe{ height:900px; }
     }
     @media (max-width:860px){
+      .is-unified-join{ flex-direction:column; align-items:flex-start; }
+      .is-unified-join__btn{ width:100%; justify-content:center; }
       .buy-options{ flex-direction:column; align-items:flex-start; }
       .buy-options__buttons{ width:100%; justify-content:flex-start; }
       .buy-btn{ width:100%; justify-content:center; }
@@ -331,13 +373,13 @@
       />
 
       <div class="top-buttons-row">
-        <a href="https://member.interventionstation.com/join">
+        <a href="./home-preview.html#join">
           <button type="button"><div class="main-heading-button">Join Membership</div></button>
         </a>
-        <a href="https://interventionstation.com/membershipchoices">
+        <a href="./home-preview.html#join">
           <button type="button"><div class="main-heading-button">What's Inside?</div></button>
         </a>
-        <a href="https://member.interventionstation.com/login">
+        <a href="./home-preview.html#join">
           <button type="button"><div class="main-heading-button">Log In</div></button>
         </a>
       </div>
@@ -352,48 +394,47 @@
             <a class="is-nav-link" href="./home-preview.html">&#127968; Home</a>
           </div>
 
-          <div class="is-nav-header">Math Resources</div>
-          <div class="is-nav-group">
-            <a class="is-nav-link" href="./placevalue-preview.html">Place Value</a>
-            <a class="is-nav-link" href="./rounding-preview.html">Rounding</a>
-            <a class="is-nav-link" href="./rounding-generator-preview.html">Rounding Generator</a>
-            <a class="is-nav-link" href="./addition-preview.html">Addition (Multi Digit)</a>
-            <a class="is-nav-link" href="./multiplication-preview.html">Multiplication</a>
-            <a class="is-nav-link" href="./division-preview.html">Long Division</a>
-            <a class="is-nav-link" href="./decimals-preview.html">Decimals</a>
-            <a class="is-nav-link" href="./fractions-preview.html">Fractions</a>
-            <a class="is-nav-link" href="./math-song-preview.html">Math Learning Songs</a>
-            <a class="is-nav-link" href="./google-puzzle-preview.html">Self Checking Google Sheets Puzzle</a>
-            <a class="is-nav-link" href="./math-riddle-preview.html">Math Fact Riddles</a>
-            <a class="is-nav-link" href="./ten-frame-preview.html">Ten Frame Test</a>
-          </div>
-
           <div class="is-nav-header">Math Generators</div>
           <div class="is-nav-group">
-            <a class="is-nav-link" href="./addition-generator-preview.html">Addition Worksheet Generator</a>
-            <a class="is-nav-link" href="./subtraction-generator-preview.html">Subtraction Worksheet Generator</a>
-            <a class="is-nav-link" href="./rounding-generator-preview.html">Rounding Worksheet Generator</a>
-            <a class="is-nav-link" href="./multiplication-standard-generator-preview.html">Multiplication Standard Generator</a>
-            <a class="is-nav-link" href="./multiplication-partial-products-generator-preview.html">Multiplication Partial Products Generator</a>
-            <a class="is-nav-link" href="./long-division-standard-generator-preview.html">Long Division Standard Generator</a>
-            <a class="is-nav-link" href="./long-division-scaffolded-generator-preview.html">Long Division Scaffolded Generator</a>
-            <a class="is-nav-link" href="./counting-coins-generator-preview.html">Counting Coins Generator</a>
-            <a class="is-nav-link" href="./math-tic-tac-toe-generator-preview.html">Math Tic Tac Toe Generator</a>
-            <a class="is-nav-link" href="./math-roll-and-read-generator-preview.html">Math Roll and Read Generator</a>
+            <a class="is-nav-link" href="./rounding-generator-preview.html">Rounding Generator</a>
+            <a class="is-nav-link" href="./addition-generator-preview.html">Addition Generator</a>
+            <a class="is-nav-link" href="./subtraction-generator-preview.html">Subtraction Generator</a>
+            <a class="is-nav-link" href="./multiply-generator-preview.html">Multiplication Generator</a>
+            <a class="is-nav-link" href="./partialproducts-generator-preview.html">Partial Products Generator</a>
+            <a class="is-nav-link" href="./division-generator-preview.html">Long Division</a>
+            <a class="is-nav-link is-active" href="./long-division-scaffolded-generator-preview.html">Long Division Scaffold</a>
+            <a class="is-nav-link" href="./addsubtractmodels-generator-preview.html">Add and Subtract with Manipulatives or Hundreds Chart</a>
+            <a class="is-nav-link" href="./coin-counter-generator-preview.html">Coin Counter Generator</a>
+            <a class="is-nav-link" href="./mathtictac-preview.html">Math Tic Tac Preview</a>
+            <a class="is-nav-link" href="./mathrollread-preview.html">Math Roll &amp; Read Preview</a>
           </div>
 
           <div class="is-nav-header is-mt-12">SOR Generators</div>
           <div class="is-nav-group">
-            <a class="is-nav-link" href="./word-mapping-generator-preview.html">Word Mapping</a>
-            <a class="is-nav-link" href="./word-ladder-generator-preview.html">Word Ladder</a>
-            <a class="is-nav-link" href="./tic-tac-toe-generator-preview.html">Tic Tac Toe</a>
-            <a class="is-nav-link" href="./fluency-grid-generator-preview.html">Fluency Grid</a>
-            <a class="is-nav-link" href="./roll-and-read-generator-preview.html">Roll and Read</a>
-            <a class="is-nav-link" href="./spelling-with-pictures-generator-preview.html">Spelling with Pictures</a>
+            <a class="is-nav-link" href="./tictacpreview.html">SOR Tic Tac Toe</a>
+            <a class="is-nav-link" href="./fluencygridpreview.html">SOR Fluency Grid</a>
+            <a class="is-nav-link" href="./rollreadpreview.html">SOR Roll and Read</a>
+            <a class="is-nav-link" href="./wordladderpreview.html">SOR Word Ladder</a>
+            <a class="is-nav-link" href="./word-map-preview.html">SOR Word Mapping</a>
             <a class="is-nav-link" href="./pyramid-spelling-generator-preview.html">Pyramid Spelling</a>
+            <a class="is-nav-link" href="./spelling-with-pictures-generator-preview.html">Spelling Pics Generator</a>
           </div>
 
-          <div class="is-nav-header is-mt-12">Reading Resources</div>
+          <div class="is-nav-header is-mt-12">Math Resources</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./placevalue-preview.html">Place Value</a>
+            <a class="is-nav-link" href="./rounding-preview.html">Rounding</a>
+            <a class="is-nav-link" href="./addition-preview.html">Addition (Printable Organizer)</a>
+            <a class="is-nav-link" href="./multiplication-preview.html">Multiplication (Printable Organizer)</a>
+            <a class="is-nav-link" href="./division-preview.html">Division (Printable Organizer)</a>
+            <a class="is-nav-link" href="./decimals-preview.html">Decimals</a>
+            <a class="is-nav-link" href="./fractions-preview.html">Fractions</a>
+            <a class="is-nav-link" href="./ten-frame-preview.html">Ten Frame</a>
+            <a class="is-nav-link" href="./google-puzzle-preview.html">Google Puzzle</a>
+            <a class="is-nav-link" href="./math-riddle-preview.html">Math Fact Riddles</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Reading</div>
           <div class="is-nav-group">
             <a class="is-nav-link" href="./heart-words-preview.html">Heart Words</a>
             <a class="is-nav-link" href="./phonics-comics-preview.html">Phonics Comics</a>
@@ -401,96 +442,287 @@
             <a class="is-nav-link" href="./blending-slides-preview.html">Blending Slides</a>
             <a class="is-nav-link" href="./phonics-maze-preview.html">Phonics Path Maze</a>
             <a class="is-nav-link" href="./pick-the-pic-preview.html">Pick the Pic</a>
-            <a class="is-nav-link is-active" href="./hfw-pyramid-preview.html">High Frequency Word Pyramids</a>
-            <a class="is-nav-link" href="./spelling-preview.html">Spelling by Phonics Skills</a>
+            <a class="is-nav-link" href="./hfw-pyramid-preview.html">High Frequency Word Pyramids</a>
+            <a class="is-nav-link" href="./spelling-preview.html">Spelling by Phonics Skill</a>
             <a class="is-nav-link" href="./spelling-google-sheets-preview.html">Spelling Google Sheets</a>
+            <span class="is-nav-link" style="cursor:not-allowed; opacity:.7; text-decoration:none;">Decodable (COMING SOON)</span>
           </div>
 
           <div class="is-nav-header is-mt-12">Interactive Games</div>
           <div class="is-nav-group">
-            <a class="is-nav-link" href="./games-preview.html">Learning Games</a>
-            <a class="is-nav-link" href="./reading-game-board-preview.html">Interactive Reading Game Board</a>
-            <a class="is-nav-link" href="./math-game-board-preview.html">Interactive Math Game Board</a>
-            <a class="is-nav-link" href="./match-solve-memory-preview.html">Math & Solve Memory Hub</a>
+            <a class="is-nav-link" href="./readinggames-preview.html">Reading Games</a>
+            <a class="is-nav-link" href="./math-game-board-preview.html">Math Games</a>
+            <a class="is-nav-link" href="./games-preview.html">Games (Legacy)</a>
           </div>
 
           <div class="is-nav-header is-mt-12">Learning Songs</div>
           <div class="is-nav-group">
             <a class="is-nav-link" href="./math-song-preview.html">All Learning Songs and Resources</a>
           </div>
-
-          <div class="is-nav-header is-mt-12">All Generator Preview Files</div>
-          <div class="is-nav-group">
-            <a class="is-nav-link" href="./addition-generator-preview-frame.html">Addition Generator Preview Frame</a>
-            <a class="is-nav-link" href="./addsubtractmodels-generator-preview-frame.html">Addsubtractmodels Generator Preview Frame</a>
-            <a class="is-nav-link" href="./addsubtractmodels-generator-preview.html">Addsubtractmodels Generator Preview</a>
-            <a class="is-nav-link" href="./coin-counter-generator-preview-frame.html">Coin Counter Generator Preview Frame</a>
-            <a class="is-nav-link" href="./coin-counter-generator-preview.html">Coin Counter Generator Preview</a>
-            <a class="is-nav-link" href="./division-generator-preview-frame.html">Division Generator Preview Frame</a>
-            <a class="is-nav-link" href="./division-generator-preview.html">Division Generator Preview</a>
-            <a class="is-nav-link" href="./fluencygridpreview.html">Fluencygridpreview</a>
-            <a class="is-nav-link" href="./left_nav_master_preview.html">Left Nav Master Preview</a>
-            <a class="is-nav-link" href="./long-division-generator-preview-frame.html">Long Division Generator Preview Frame</a>
-            <a class="is-nav-link" href="./long-division-generator-preview.html">Long Division Generator Preview</a>
-            <a class="is-nav-link" href="./mathrollread-preview-frame.html">Mathrollread Preview Frame</a>
-            <a class="is-nav-link" href="./mathrollread-preview.html">Mathrollread Preview</a>
-            <a class="is-nav-link" href="./mathtictac-preview-frame.html">Mathtictac Preview Frame</a>
-            <a class="is-nav-link" href="./mathtictac-preview.html">Mathtictac Preview</a>
-            <a class="is-nav-link" href="./multiplication-generator-preview-frame.html">Multiplication Generator Preview Frame</a>
-            <a class="is-nav-link" href="./multiplication-generator-preview.html">Multiplication Generator Preview</a>
-            <a class="is-nav-link" href="./multiply-generator-preview.html">Multiply Generator Preview</a>
-            <a class="is-nav-link" href="./multisyllabic_phase_preview.html">Multisyllabic Phase Preview</a>
-            <a class="is-nav-link" href="./partialproducts-generator-preview-frame.html">Partialproducts Generator Preview Frame</a>
-            <a class="is-nav-link" href="./partialproducts-generator-preview.html">Partialproducts Generator Preview</a>
-            <a class="is-nav-link" href="./phonicspreview.html">Phonicspreview</a>
-            <a class="is-nav-link" href="./readinggames-preview.html">Readinggames Preview</a>
-            <a class="is-nav-link" href="./rollreadpreview-frame.html">Rollreadpreview Frame</a>
-            <a class="is-nav-link" href="./rollreadpreview.html">Rollreadpreview</a>
-            <a class="is-nav-link" href="./rounding-generator-preview-frame.html">Rounding Generator Preview Frame</a>
-            <a class="is-nav-link" href="./rounding-preview.html">Rounding Preview</a>
-            <a class="is-nav-link" href="./subtraction-generator-preview-frame.html">Subtraction Generator Preview Frame</a>
-            <a class="is-nav-link" href="./tictacpreview-frame.html">Tictacpreview Frame</a>
-            <a class="is-nav-link" href="./tictacpreview.html">Tictacpreview</a>
-            <a class="is-nav-link" href="./ultimate_math_game_modes_preview.html">Ultimate Math Game Modes Preview</a>
-            <a class="is-nav-link" href="./ultimate_reading_game_modes_preview.html">Ultimate Reading Game Modes Preview</a>
-            <a class="is-nav-link" href="./wordladderpreview.html">Wordladderpreview</a>
-            <a class="is-nav-link" href="./wordmap2preview.html">Wordmap2preview</a>
-            <a class="is-nav-link" href="./wordmap2preview_multisyllabic.html">Wordmap2preview Multisyllabic</a>
-          </div>
         </nav>
       </aside>
 
       <main class="is-main">
         <section class="is-page">
-          <header class="is-page-hero">
-            <h1>High Frequency Word Pyramids</h1>
-            <p>Preview the generator below. Printing and full access are member-only.</p>
-          </header>
-
-          <div class="buy-options">
-            <div class="buy-options__text">
-              <div class="buy-options__title">Get this resource your way</div>
-              <div class="buy-options__sub">Most teachers choose membership once they grab 2-3 resources.</div>
+          <div class="is-unified-join">
+            <div class="is-unified-join__text">
+              <h2>Want Full Access to Every Resource?</h2>
+              <p>Become a member to unlock unlimited generators, printables, and downloads.</p>
             </div>
-            <div class="buy-options__buttons">
-              <a class="buy-btn buy-btn--primary" href="https://member.interventionstation.com/join">
-                Join Now to Get Access!
-              </a>
-              <a class="buy-btn buy-btn--secondary" href="https://interventionstation.com/membershipchoices">
-                What's Inside? <span class="buy-price">See Resources</span>
-              </a>
-            </div>
+            <a class="is-unified-join__btn" href="./home-preview.html#join">Join Now to Get Access!</a>
           </div>
+          <style>
+            .hfw-section{
+              max-width:1200px;
+              margin:0 auto;
+              font-family:Poppins,Arial,sans-serif;
+              color:#111;
+            }
+            .hfw-hero{
+              background:#6ec1ff;
+              border:2px solid #111;
+              padding:16px 18px;
+            }
+            .hfw-hero h1{
+              margin:0;
+              font-size:28px;
+              font-weight:900;
+              line-height:1.12;
+              color:#fff;
+            }
+            .hfw-hero img{
+              margin:10px 0 0;
+              max-width:100%;
+              height:auto;
+              border-radius:10px;
+              display:block;
+            }
+            .hfw-sub{
+              margin:10px 0 0;
+              font-size:16px;
+              font-weight:700;
+              color:#fff;
+            }
+            .hfw-content{
+              border:2px solid #111;
+              border-top:none;
+              background:#fff;
+            }
+            .hfw-header-bar{
+              background:#f6fbff;
+              border-bottom:2px solid #111;
+              padding:14px 18px;
+              font-size:22px;
+              font-weight:900;
+              line-height:1.2;
+            }
+            .hfw-desc{
+              border-bottom:2px solid #111;
+              padding:14px 18px;
+              font-size:15px;
+              line-height:1.4;
+              font-weight:600;
+              color:#233f66;
+            }
+            .hfw-grid{
+              display:grid;
+              grid-template-columns:repeat(3, minmax(0, 1fr));
+            }
+            .hfw-card{
+              padding:16px;
+              border-right:2px solid #111;
+              border-bottom:2px solid #111;
+              min-height:190px;
+              display:flex;
+              flex-direction:column;
+              gap:10px;
+              justify-content:space-between;
+            }
+            .hfw-card:nth-child(3n){ border-right:none; }
+            .hfw-word{
+              margin:0;
+              font-size:20px;
+              font-weight:900;
+              line-height:1.15;
+            }
+            .hfw-card a{
+              display:block;
+              text-decoration:none;
+            }
+            .hfw-card img{
+              width:100%;
+              height:auto;
+              border:2px solid #111;
+              border-radius:8px;
+              background:#fff;
+            }
+            .hfw-card.locked{
+              background:#fbfdff;
+            }
+            .is-download-btn{
+              appearance:none;
+              border:1px solid #0f335b;
+              background:linear-gradient(180deg, #2f79b8 0%, #1e5688 100%);
+              color:#fff;
+              border-radius:999px;
+              height:46px;
+              padding:0 18px;
+              font-family:"Poppins",system-ui,sans-serif;
+              font-size:14px;
+              font-weight:800;
+              letter-spacing:.01em;
+              display:inline-flex;
+              align-items:center;
+              justify-content:center;
+              gap:8px;
+              box-shadow:0 8px 16px rgba(16,40,70,.2);
+              cursor:not-allowed;
+              opacity:1;
+              width:100%;
+            }
+            .is-download-btn .lock{
+              width:18px;
+              height:18px;
+              border-radius:50%;
+              display:inline-flex;
+              align-items:center;
+              justify-content:center;
+              background:rgba(255,255,255,.16);
+              font-size:12px;
+              line-height:1;
+            }
+            .is-download-btn:disabled{
+              color:#fff;
+              opacity:1;
+              border-color:#0f335b;
+              background:linear-gradient(180deg, #2f79b8 0%, #1e5688 100%);
+            }
+            @media (max-width:980px){
+              .hfw-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+              .hfw-card:nth-child(3n){ border-right:2px solid #111; }
+              .hfw-card:nth-child(2n){ border-right:none; }
+            }
+            @media (max-width:640px){
+              .hfw-grid{ grid-template-columns:1fr; }
+              .hfw-card{ border-right:none; min-height:0; }
+            }
+          </style>
 
-          <div class="preview-frame-wrap">
-            <iframe
-              class="preview-iframe"
-              src="https://interventionstation.com/hfw-pyramid-preview"
-              title="High Frequency Word Pyramids Preview"
-              loading="lazy"
-              allowfullscreen
-            ></iframe>
-          </div>
+          <section class="hfw-section">
+            <div class="hfw-hero">
+              <h1>High Frequency Word Slides (Google Slides)</h1>
+              <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/697a03641d0982d5877d12d1.gif" alt="High Frequency Word Slides Preview" loading="lazy">
+              <p class="hfw-sub">Open a slide deck and click Make a Copy!</p>
+            </div>
+
+            <div class="hfw-content">
+              <div class="hfw-header-bar">High Frequency Words</div>
+              <div class="hfw-desc">
+                Download these high frequency word slides for your class. Only the first few are unlocked. The rest are part of membership.
+              </div>
+
+              <div class="hfw-grid">
+                <div class="hfw-card">
+                  <div class="hfw-word">a</div>
+                  <a target="_blank" rel="noopener noreferrer nofollow" href="https://docs.google.com/presentation/d/1ljcd3yO3Xo8OqE_uYWkT8c6M0JGuyZg2qNMi2l60xgM/copy">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6976b13beb392b6ab46438f8.png" alt="a slides">
+                  </a>
+                </div>
+
+                <div class="hfw-card">
+                  <div class="hfw-word">about</div>
+                  <a target="_blank" rel="noopener noreferrer nofollow" href="https://docs.google.com/presentation/d/14eYXxbuuNSXcZ5NQDMPfiU5oihngjCI8Nb6RnQx7x5E/copy">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6976b13beb392b6ab46438f8.png" alt="about slides">
+                  </a>
+                </div>
+
+                <div class="hfw-card">
+                  <div class="hfw-word">also</div>
+                  <a target="_blank" rel="noopener noreferrer nofollow" href="https://docs.google.com/presentation/d/1Ar1YSmVBPzUCYd8_pTzkunEYSmHDiBpMb7e8w2iHglI/copy">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6976b13beb392b6ab46438f8.png" alt="also slides">
+                  </a>
+                </div>
+
+                <div class="hfw-card locked"><div class="hfw-word">and</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">another</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">any</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">are</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">as</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">be</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">been</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">come</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">could</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">day</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">do</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">does</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">each</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">first</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">for</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">friend</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">from</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">good</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">has</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">have</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">he</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">her</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">here</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">his</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">how</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">I</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">into</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">is</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">little</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">look</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">many</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">may</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">me</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">month</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">Mr.</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">Mrs.</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">my</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">new</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">none</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">nothing</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">now</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">number</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">of</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">one</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">or</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">other</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">our</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">out</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">over</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">own</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">said</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">say</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">says</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">see</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">she</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">should</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">some</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">the</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">their</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">there</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">they</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">to</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">too</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">try</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">two</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">very</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">want</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">was</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">water</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">way</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">we</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">were</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">what</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">when</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">where</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">who</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+                <div class="hfw-card locked"><div class="hfw-word">would</div><button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div>
+              </div>
+            </div>
+          </section>
         </section>
       </main>
     </div>
