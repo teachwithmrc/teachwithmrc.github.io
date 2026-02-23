@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Rounding Generator - PREVIEW MODE</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  *{ box-sizing:border-box; }
+  html,body{
+    margin:0;
+    padding:0;
+    font-family:"Poppins",Arial,sans-serif;
+    color:#111;
+    background:#fff;
+  }
+  .wrap{ max-width:1100px; margin:0 auto; padding:12px; }
+
+  .controls{
+    border:2px solid #111;
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:12px;
+  }
+  .controls-top{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:flex-end;
+    gap:12px;
+  }
+  .field{ display:flex; flex-direction:column; gap:6px; min-width:210px; }
+  .field label{ font-size:12px; font-weight:800; }
+  select{
+    height:42px;
+    min-width:210px;
+    border:2px solid #111;
+    border-radius:10px;
+    padding:8px 12px;
+    font-family:"Poppins",Arial,sans-serif;
+    font-size:14px;
+    background:#fff;
+  }
+
+  .toggleRow{
+    margin-top:10px;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+  }
+  .toggle{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 12px;
+    border:2px solid #111;
+    border-radius:14px;
+    font-weight:900;
+    font-size:15px;
+    user-select:none;
+  }
+  .toggle.disabled{ opacity:.55; pointer-events:none; }
+  .toggle input[type="checkbox"]{
+    appearance:none;
+    width:44px;
+    height:26px;
+    min-width:44px;
+    margin:0;
+    border:2px solid #111;
+    border-radius:999px;
+    background:#fff;
+    cursor:pointer;
+    position:relative;
+  }
+  .toggle input[type="checkbox"]::after{
+    content:"";
+    position:absolute;
+    top:50%;
+    left:3px;
+    width:18px;
+    height:18px;
+    border:2px solid #111;
+    border-radius:999px;
+    background:#fff;
+    transform:translateY(-50%);
+    transition:all .15s ease;
+  }
+  .toggle input[type="checkbox"]:checked{ background:#111; }
+  .toggle input[type="checkbox"]:checked::after{ left:19px; }
+
+  .controls-actions{
+    margin-top:12px;
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .btn{
+    border:2px solid #111;
+    border-radius:14px;
+    height:54px;
+    padding:0 30px;
+    font-family:"Poppins",Arial,sans-serif;
+    font-size:18px;
+    font-weight:900;
+    cursor:pointer;
+  }
+  .btn-primary{ background:#6ec1ff; color:#fff; }
+  .btn-secondary{ background:#fff; color:#111; }
+
+  .hint, .learning-note{ text-align:center; font-size:13px; font-weight:700; margin-top:8px; }
+  .learning-note{ color:#1d3a66; }
+
+  .nameLine{
+    font-family:Arial,sans-serif;
+    font-size:20px;
+    font-weight:800;
+    margin:4px 0 8px;
+  }
+
+  .title{
+    text-align:center;
+    font-size:28px;
+    font-weight:900;
+    margin:6px 0 10px;
+  }
+
+  .grid{ border:2px solid #111; }
+  .row{ display:grid; grid-template-columns:1fr 1fr; }
+  .cell{
+    border-right:2px solid #111;
+    border-bottom:2px solid #111;
+    padding:12px 12px 14px;
+    min-height:245px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .row .cell:last-child{ border-right:none; }
+  .grid .row:last-child .cell{ border-bottom:none; }
+
+  body.scaffold .row{ grid-template-columns:1fr; }
+  body.scaffold .cell{ min-height:265px; }
+  body.scaffold .row .cell{ border-right:none !important; }
+
+  .prompt{ font-size:21px; font-weight:900; line-height:1.2; }
+
+  .rewrite{
+    width:100%;
+    text-align:center;
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:0.5px;
+    margin:0;
+  }
+  .rewrite .u{
+    text-decoration:underline;
+    text-decoration-thickness:4px;
+    text-underline-offset:4px;
+  }
+  .rewrite .c{ opacity:.35; }
+
+  .downUp{
+    width:100%;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    column-gap:26px;
+    padding:0 4px;
+  }
+  .duCol{
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+  .duHead{ font-size:17px; font-weight:900; }
+  .duSpace{ height:44px; }
+  .duWrite{
+    width:100%;
+    min-height:1.35em;
+    text-align:center;
+    font-family:"Poppins",Arial,sans-serif;
+  }
+
+  .writeBlank{
+    display:inline-block;
+    border-bottom:3px solid #111;
+    min-height:1.1em;
+    vertical-align:middle;
+  }
+  .writeBlank--small{ width:100%; max-width:100%; }
+  .writeBlank--mid{ width:170px; max-width:100%; }
+  .writeBlank--full{ display:block; width:100%; min-width:100%; }
+
+  .nlWrap{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    min-height:118px;
+    padding-bottom:2px;
+  }
+  .nlWrap svg{ max-width:610px; }
+
+  .answerLine{
+    width:100%;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:flex-end;
+    gap:6px;
+    font-size:17px;
+    font-weight:800;
+    line-height:1.3;
+  }
+  .answerLineBreak{ width:100%; flex-basis:100%; margin-top:6px; }
+
+  .finalAnswer{
+    width:100%;
+    margin-top:4px;
+    font-size:20px;
+    font-weight:800;
+    line-height:1.3;
+    text-align:center;
+  }
+  .finalAnswerPrompt{ display:block; margin-bottom:12px; }
+  .finalAnswerBlank{
+    display:block;
+    width:100%;
+    min-height:1.6em;
+    border-bottom:3px solid #111;
+  }
+
+  .copyright{
+    margin-top:10px;
+    text-align:center;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.2px;
+  }
+
+  .preview-shell{
+    position:relative;
+    margin-top:4px;
+    min-height:760px;
+    max-height:760px;
+    overflow:hidden;
+    border:2px solid #111;
+    background:#fff;
+  }
+
+  .preview-content{
+    padding:10px;
+    filter: blur(1.1px) saturate(.9);
+  }
+
+  .preview-watermark{
+    position:absolute;
+    inset:0;
+    z-index:118;
+    pointer-events:none;
+    backdrop-filter: blur(2px) saturate(0.82) brightness(0.98);
+    -webkit-backdrop-filter: blur(2px) saturate(0.82) brightness(0.98);
+    background:rgba(255,255,255,.07);
+    background-image:url("data:image/svg+xml,%3Csvg width='250' height='250' viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='20' y='150' fill='%23000' opacity='0.14' transform='rotate(-45 125 125)' font-family='Poppins' font-weight='900' font-size='30'%3EPREVIEW MODE%3C/text%3E%3C/svg%3E");
+  }
+
+  .preview-paywall{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:52%;
+    z-index:120;
+    pointer-events:auto;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    padding:14px;
+    background:linear-gradient(to bottom, rgba(255,255,255,0), rgba(0,0,0,.76) 28%, rgba(0,0,0,.9));
+  }
+
+  .preview-paywall-card{
+    width:min(94%, 520px);
+    border:2px solid #fff;
+    border-radius:14px;
+    background:rgba(17,17,17,.95);
+    color:#fff;
+    text-align:center;
+    padding:14px 14px 12px;
+    box-shadow:0 16px 30px rgba(0,0,0,.35);
+  }
+
+  .preview-paywall-card h3{
+    margin:0 0 6px;
+    font-size:1.05rem;
+    line-height:1.2;
+    font-weight:900;
+    letter-spacing:.02em;
+    text-transform:uppercase;
+  }
+
+  .preview-paywall-card p{
+    margin:0 0 10px;
+    font-size:.82rem;
+    line-height:1.35;
+    opacity:.95;
+    font-weight:600;
+  }
+
+  .preview-paywall-card a{
+    display:inline-block;
+    text-decoration:none;
+    background:#fff;
+    color:#111;
+    border-radius:9px;
+    padding:8px 12px;
+    font-size:.8rem;
+    font-weight:900;
+  }
+
+  @media print{
+    .controls{ display:none; }
+    .wrap{ max-width:none; padding:0; }
+    body{ -webkit-print-color-adjust:exact; print-color-adjust:exact; zoom:.9; }
+    body.scaffold{ zoom:.94; }
+    .nameLine{ font-size:18px; margin:0 0 6px; }
+    .title{ font-size:22px; margin:2px 0 6px; }
+    .cell{ min-height:200px; padding:8px 8px 10px; gap:6px; }
+    body.scaffold .cell{ min-height:220px; }
+    .prompt{ font-size:17px; }
+    .rewrite{ font-size:26px; }
+    .duHead{ font-size:13px; }
+    .downUp{ column-gap:16px; padding:0 2px; }
+    .duSpace{ height:20px; }
+    .nlWrap{ min-height:95px; }
+    .answerLine{ font-size:14px; gap:4px; }
+    .answerLineBreak{ margin-top:2px; }
+    .finalAnswer{ font-size:16px; margin-top:2px; text-align:center; }
+    .finalAnswerPrompt{ margin-bottom:8px; }
+    .finalAnswerBlank{ min-height:1.4em; border-bottom-width:2px; }
+    .writeBlank{ border-bottom-width:2px; }
+    .copyright{
+      margin-top:6px;
+      font-size:11px;
+      font-weight:800;
+    }
+  }
+
+  @media screen and (max-width:980px){
+    .preview-shell{
+      min-height:640px;
+      max-height:640px;
+    }
+  }
+
+  @media print{
+    body{ display:none !important; }
+  }
+</style>
+</head>
+<body oncontextmenu="return false;">
+<div class="wrap">
+  <div class="controls">
+    <div class="controls-top">
+      <div class="field">
+        <label for="nearest">Round to the Nearest</label>
+        <select id="nearest">
+          <option value="10" selected>Tens</option>
+          <option value="100">Hundreds</option>
+          <option value="1000">Thousands</option>
+          <option value="10000">Ten Thousands</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="within">Numbers Up To</label>
+        <select id="within">
+          <option value="100" selected>100</option>
+          <option value="1000">1,000</option>
+          <option value="10000">10,000</option>
+          <option value="100000">100,000</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="toggleRow">
+      <label class="toggle"><input id="scaffold" type="checkbox">Scaffolded (1 per line)</label>
+      <label class="toggle" id="labelAllWrap"><input id="labelAll" type="checkbox">Label All Tick Marks</label>
+      <label class="toggle"><input id="endpointsFilled" type="checkbox" checked>Endpoints Filled In</label>
+      <label class="toggle"><input id="fillDownUp" type="checkbox">Fill Round Down/Up</label>
+      <label class="toggle"><input id="showDot" type="checkbox" checked>Show Dot on Number Line</label>
+      <label class="toggle"><input id="showExplain" type="checkbox" checked>Include Explain-Your-Thinking Line</label>
+    </div>
+
+    <div class="controls-actions">
+      <button type="button" id="btnGen" class="btn btn-primary">Generate</button>
+      <button type="button" id="btnPrint" class="btn btn-secondary">Print</button>
+    </div>
+
+    <div class="hint" id="hint"></div>
+    <div class="learning-note" id="learningNote"></div>
+  </div>
+
+  <div class="preview-shell" aria-label="Rounding Generator Preview">
+    <div class="preview-content">
+      <div class="nameLine">Name: ______________________</div>
+      <div class="title" id="sheetTitle">Round to the Nearest Ten</div>
+      <div class="grid" id="grid"></div>
+      <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+    </div>
+    <div class="preview-watermark" aria-hidden="true"></div>
+    <div class="preview-paywall" aria-hidden="false">
+      <div class="preview-paywall-card">
+        <h3>Premium Resource</h3>
+        <p>Generate is enabled in preview mode. Join membership to unlock full worksheet visibility and printing.</p>
+        <a href="https://member.interventionstation.com/join" target="_blank" rel="noopener">Join Membership</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const PROBLEM_COUNT = 6;
+
+  function fmt(n){ return n.toLocaleString("en-US"); }
+  function placeLabel(place){
+    if(place === 10) return "Ten";
+    if(place === 100) return "Hundred";
+    if(place === 1000) return "Thousand";
+    if(place === 10000) return "Ten Thousand";
+    return String(place);
+  }
+
+  function setTitles(){
+    const place = parseInt($("nearest").value, 10);
+    $("sheetTitle").textContent = `Round to the Nearest ${placeLabel(place)}`;
+  }
+
+  function enforceWithinVsNearest(){
+    const nearest = parseInt($("nearest").value, 10);
+    const within = parseInt($("within").value, 10);
+
+    const minWithin = nearest * 10;
+    if(within < minWithin){
+      const options = [100, 1000, 10000, 100000];
+      const next = options.find(v => v >= minWithin) || 100000;
+      $("within").value = String(next);
+    }
+
+    if(nearest >= 1000){
+      $("labelAll").checked = false;
+      $("labelAllWrap").classList.add("disabled");
+    }else{
+      $("labelAllWrap").classList.remove("disabled");
+    }
+
+    const withinNow = parseInt($("within").value, 10);
+    $("hint").textContent = `Generating numbers from ${fmt(nearest)} to ${fmt(withinNow - 1)} and rounding to the nearest ${fmt(nearest)}.`;
+    $("learningNote").textContent = "Tip: Have students locate the midpoint first, then decide whether the number is below or above it before they round.";
+  }
+
+  function roundDownTo(n, place){ return Math.floor(n / place) * place; }
+
+  function makeWriteBlank(type = "small"){
+    const blank = document.createElement("span");
+    if(type === "full") blank.className = "writeBlank writeBlank--full";
+    else if(type === "mid") blank.className = "writeBlank writeBlank--mid";
+    else blank.className = "writeBlank writeBlank--small";
+    blank.setAttribute("aria-hidden", "true");
+    return blank;
+  }
+
+  function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]]=[arr[j],arr[i]];
+    }
+    return arr;
+  }
+
+  function pickUniqueNumbers(minInclusive, maxInclusive, count, place){
+    const span = maxInclusive - minInclusive + 1;
+    const seen = new Set();
+    const result = [];
+    let tries = 0;
+
+    while(result.length < Math.min(count, span) && tries < 120000){
+      tries++;
+      const n = minInclusive + Math.floor(Math.random() * span);
+      if(n % place === 0 && Math.random() < 0.85) continue;
+      if(seen.has(n)) continue;
+      seen.add(n);
+      result.push(n);
+    }
+    while(result.length < count){
+      result.push(minInclusive + Math.floor(Math.random() * span));
+    }
+    return shuffle(result);
+  }
+
+  function buildRewriteNumber(n, place){
+    const exp = Math.round(Math.log10(place));
+    const raw = String(n);
+    const underlineIndex = raw.length - 1 - exp;
+    const withCommas = n.toLocaleString("en-US");
+    let rawPos = 0;
+
+    const container = document.createElement("div");
+    container.className = "rewrite";
+    for(const ch of withCommas){
+      if(ch === ","){
+        const sp = document.createElement("span");
+        sp.className = "c";
+        sp.textContent = ",";
+        container.appendChild(sp);
+      }else{
+        const sp = document.createElement("span");
+        sp.textContent = ch;
+        if(rawPos === underlineIndex) sp.className = "u";
+        container.appendChild(sp);
+        rawPos++;
+      }
+    }
+    return container;
+  }
+
+  function numberLineSVG(n, down, up, place, opts){
+    const bigPlace = place >= 1000;
+    const labelAll = (!bigPlace && opts.labelAll);
+    const endpointsAndMid = bigPlace;
+
+    const W = 610;
+    const H = labelAll ? 138 : 128;
+    const padL = 44, padR = 44;
+    const lineY = 40;
+
+    const x0 = padL;
+    const x1 = W - padR;
+    const stepX = (x1 - x0) / 10;
+    const stepVal = place / 10;
+
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("width", "100%");
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+
+    const base = document.createElementNS(ns, "line");
+    base.setAttribute("x1", x0); base.setAttribute("y1", lineY);
+    base.setAttribute("x2", x1); base.setAttribute("y2", lineY);
+    base.setAttribute("stroke", "#111"); base.setAttribute("stroke-width", "4");
+    svg.appendChild(base);
+
+    function shouldLabel(i){
+      if(labelAll) return true;
+      if(endpointsAndMid) return (i===0 || i===5 || i===10);
+      return (i===0 || i===10);
+    }
+
+    for(let i=0;i<=10;i++){
+      const x = x0 + stepX*i;
+
+      const tick = document.createElementNS(ns, "line");
+      tick.setAttribute("x1", x); tick.setAttribute("y1", lineY - 10);
+      tick.setAttribute("x2", x); tick.setAttribute("y2", lineY + 10);
+      tick.setAttribute("stroke", "#111");
+      tick.setAttribute("stroke-width", (i===0 || i===10) ? "4" : "3");
+      svg.appendChild(tick);
+
+      if(!shouldLabel(i)) continue;
+      const val = down + (stepVal * i);
+      const isEndpoint = (i===0 || i===10);
+
+      const t = document.createElementNS(ns, "text");
+      t.setAttribute("x", x);
+      t.setAttribute("y", lineY + 56);
+      t.setAttribute("text-anchor", "middle");
+      t.setAttribute("dominant-baseline", "middle");
+      t.setAttribute("font-family", "Poppins, Arial, sans-serif");
+      t.setAttribute("font-weight", isEndpoint ? "900" : "700");
+      t.setAttribute("font-size", isEndpoint ? "22" : (labelAll ? "12" : "14"));
+      t.setAttribute("fill", "#111");
+      t.textContent = (isEndpoint && !opts.endpointsFilled) ? "" : fmt(val);
+      svg.appendChild(t);
+
+      if(isEndpoint && !opts.endpointsFilled){
+        const y = lineY + 84;
+        const halfLen = 40;
+        const blankLine = document.createElementNS(ns, "line");
+        blankLine.setAttribute("x1", x - halfLen);
+        blankLine.setAttribute("y1", y);
+        blankLine.setAttribute("x2", x + halfLen);
+        blankLine.setAttribute("y2", y);
+        blankLine.setAttribute("stroke", "#111");
+        blankLine.setAttribute("stroke-width", "4");
+        blankLine.setAttribute("stroke-linecap", "round");
+        svg.appendChild(blankLine);
+      }
+    }
+
+    if(opts.showDot){
+      const iPos = (n - down) / stepVal;
+      const markerX = x0 + stepX * iPos;
+      const dot = document.createElementNS(ns, "circle");
+      dot.setAttribute("cx", markerX);
+      dot.setAttribute("cy", lineY);
+      dot.setAttribute("r", "7");
+      dot.setAttribute("fill", "#111");
+      svg.appendChild(dot);
+    }
+
+    return svg;
+  }
+
+  function buildProblemCard(index, n, place, opts){
+    const down = roundDownTo(n, place);
+    const up = down + place;
+    const midpoint = down + (place / 2);
+    const roundsUp = n >= midpoint;
+
+    const card = document.createElement("div");
+    card.className = "cell";
+
+    const prompt = document.createElement("div");
+    prompt.className = "prompt";
+    prompt.textContent = `${index}. Round ${fmt(n)} to the nearest ${fmt(place)}.`;
+    card.appendChild(prompt);
+
+    card.appendChild(buildRewriteNumber(n, place));
+
+    const downUp = document.createElement("div");
+    downUp.className = "downUp";
+
+    function makeDUCol(label, value){
+      const col = document.createElement("div");
+      col.className = "duCol";
+
+      const head = document.createElement("div");
+      head.className = "duHead";
+      head.textContent = label;
+
+      const spacer = document.createElement("div");
+      spacer.className = "duSpace";
+
+      const write = document.createElement("div");
+      write.className = "duWrite";
+      if(opts.fillDownUp){
+        write.textContent = fmt(value);
+        write.style.fontWeight = "900";
+        write.style.fontSize = "22px";
+        write.style.lineHeight = "1.1";
+      }else{
+        write.appendChild(makeWriteBlank("small"));
+      }
+
+      col.appendChild(head);
+      col.appendChild(spacer);
+      col.appendChild(write);
+      return col;
+    }
+
+    downUp.appendChild(makeDUCol("Round Down ↓", down));
+    downUp.appendChild(makeDUCol("Round Up ↑", up));
+    card.appendChild(downUp);
+
+    const nl = document.createElement("div");
+    nl.className = "nlWrap";
+    nl.appendChild(numberLineSVG(n, down, up, place, opts));
+    card.appendChild(nl);
+
+    if(opts.showExplain){
+      const answer = document.createElement("div");
+      answer.className = "answerLine";
+      if(opts.fillDownUp){
+        answer.textContent = `I rounded to ${fmt(roundsUp ? up : down)} because ${fmt(n)} is closer to ${fmt(roundsUp ? up : down)}.`;
+      }else{
+        answer.appendChild(document.createTextNode("I rounded to "));
+        answer.appendChild(makeWriteBlank("mid"));
+        answer.appendChild(document.createTextNode(" because"));
+        const secondLine = document.createElement("span");
+        secondLine.className = "answerLineBreak";
+        secondLine.appendChild(makeWriteBlank("full"));
+        answer.appendChild(secondLine);
+      }
+      card.appendChild(answer);
+    }else{
+      const finalAnswer = document.createElement("div");
+      finalAnswer.className = "finalAnswer";
+
+      const finalPrompt = document.createElement("div");
+      finalPrompt.className = "finalAnswerPrompt";
+      finalPrompt.textContent = `${fmt(n)} rounded to the nearest ${fmt(place)} is`;
+
+      const finalBlank = document.createElement("span");
+      finalBlank.className = "finalAnswerBlank";
+      finalBlank.setAttribute("aria-hidden", "true");
+
+      finalAnswer.appendChild(finalPrompt);
+      finalAnswer.appendChild(finalBlank);
+      card.appendChild(finalAnswer);
+    }
+
+    return card;
+  }
+
+  function build(){
+    enforceWithinVsNearest();
+    setTitles();
+
+    const place = parseInt($("nearest").value, 10);
+    const within = parseInt($("within").value, 10);
+
+    const opts = {
+      scaffold: $("scaffold").checked,
+      labelAll: $("labelAll").checked,
+      endpointsFilled: $("endpointsFilled").checked,
+      fillDownUp: $("fillDownUp").checked,
+      showDot: $("showDot").checked,
+      showExplain: $("showExplain").checked
+    };
+
+    document.body.classList.toggle("scaffold", opts.scaffold);
+
+    const minInclusive = Math.min(place, within - 1);
+    const maxInclusive = within - 1;
+    const nums = pickUniqueNumbers(minInclusive, maxInclusive, PROBLEM_COUNT, place);
+
+    const grid = $("grid");
+    grid.innerHTML = "";
+
+    const perRow = opts.scaffold ? 1 : 2;
+    const rows = Math.ceil(PROBLEM_COUNT / perRow);
+
+    let idx = 0;
+    for(let r=0;r<rows;r++){
+      const row = document.createElement("div");
+      row.className = "row";
+      for(let c=0;c<perRow;c++){
+        if(idx >= PROBLEM_COUNT) break;
+        row.appendChild(buildProblemCard(idx + 1, nums[idx], place, opts));
+        idx++;
+      }
+      grid.appendChild(row);
+    }
+  }
+
+  function init(){
+    enforceWithinVsNearest();
+    setTitles();
+    build();
+  }
+
+  function lockedPreviewAction(){
+    alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access.");
+  }
+
+  function blockShortcuts(event){
+    const blocked = (event.ctrlKey || event.metaKey) && ["p","s","u"].includes(event.key.toLowerCase());
+    if(blocked) event.preventDefault();
+  }
+
+  document.addEventListener("keydown", blockShortcuts);
+
+  $("btnGen").addEventListener("click", build);
+  $("btnPrint").addEventListener("click", lockedPreviewAction);
+  ["nearest","within","scaffold","labelAll","endpointsFilled","fillDownUp","showDot","showExplain"]
+    .forEach(id => $(id).addEventListener("change", build));
+
+  init();
+</script>
+</body>
+</html>
