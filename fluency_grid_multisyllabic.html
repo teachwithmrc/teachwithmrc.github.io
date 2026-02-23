@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multisyllabic Fluency Grid Generator</title>
+  <script src="multisyllabic_wordbanks.js"></script>
+  <script src="multisyllabic_content_tools.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 24px;
+      background: #f7fbff;
+      color: #173042;
+      text-align: center;
+    }
+    h1 { margin: 0 0 6px; font-size: 32px; }
+    .subtitle { margin: 0 0 14px; color: #38546b; font-size: 14px; }
+
+    .panel {
+      max-width: 1100px;
+      margin: 0 auto 16px;
+      border: 2px solid #000;
+      border-radius: 12px;
+      background: #fff;
+      padding: 14px;
+      text-align: left;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(250px, 1fr));
+      gap: 10px;
+    }
+    .control {
+      border: 2px solid #000;
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .control strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+    .radio-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 14px;
+    }
+    select {
+      width: 100%;
+      border: 2px solid #000;
+      border-radius: 8px;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    .actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    button {
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      padding: 9px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    button.primary { background: #dff1ff; }
+
+    #sheet {
+      width: 8.5in;
+      max-width: calc(100vw - 48px);
+      margin: 0 auto;
+      border: 2px solid #000;
+      border-radius: 12px;
+      background: #fff;
+      padding: 0.45in;
+      text-align: center;
+    }
+    .sheet-title { margin: 0; font-size: 30px; font-weight: 700; }
+    .sheet-meta { margin: 8px 0 12px; color: #38546b; font-size: 13px; }
+
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    td {
+      border: 1px solid #000;
+      width: 20%;
+      height: 86px;
+      padding: 6px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+    td.sentence {
+      font-size: 16px;
+      font-weight: 600;
+      text-align: left;
+      line-height: 1.25;
+    }
+    td.sentence.long { font-size: 14px; }
+
+    .copyright {
+      margin-top: 10px;
+      text-align: right;
+      font-size: 11px;
+      color: #40596f;
+    }
+
+    @media (max-width: 900px) {
+      .controls { grid-template-columns: 1fr; }
+      td { font-size: 21px; height: 76px; }
+      td.sentence { font-size: 13px; }
+    }
+
+    @media print {
+      body { margin: 0; background: #fff; }
+      .panel { display: none !important; }
+      #sheet {
+        width: auto;
+        max-width: none;
+        border: none;
+        border-radius: 0;
+        padding: 0.2in;
+      }
+      .sheet-title { font-size: 19px; }
+      .sheet-meta { font-size: 10px; margin-bottom: 8px; }
+      td { height: 0.95in; font-size: 19px; }
+      td.sentence { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Multisyllabic Fluency Grid</h1>
+  <p class="subtitle">Create quick fluency grids from multisyllabic words and sentence prompts.</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="control">
+        <strong>Syllable Type</strong>
+        <select id="bankSelect"></select>
+      </div>
+
+      <div class="control">
+        <strong>Syllable Count</strong>
+        <div class="radio-row">
+          <label><input type="radio" name="count" value="2" checked> 2</label>
+          <label><input type="radio" name="count" value="3"> 3</label>
+          <label><input type="radio" name="count" value="4plus"> 4+</label>
+          <label><input type="radio" name="count" value="all"> Any</label>
+        </div>
+      </div>
+
+      <div class="control">
+        <strong>Division Rule</strong>
+        <div class="radio-row">
+          <label><input type="radio" name="rule" value="all" checked> All</label>
+          <label><input type="radio" name="rule" value="rabbit"> Rabbit</label>
+          <label><input type="radio" name="rule" value="tiger"> Tiger</label>
+          <label><input type="radio" name="rule" value="other"> Other</label>
+        </div>
+      </div>
+
+      <div class="control">
+        <strong>Content Type</strong>
+        <div class="radio-row">
+          <label><input type="radio" name="mode" value="words" checked> Words</label>
+          <label><input type="radio" name="mode" value="sentences"> Sentences</label>
+          <label><input type="radio" name="mode" value="both"> Both</label>
+        </div>
+      </div>
+
+      <div class="control">
+        <strong>Grid Size</strong>
+        <div class="radio-row">
+          <label><input type="radio" name="size" value="15"> 15 (3x5)</label>
+          <label><input type="radio" name="size" value="20"> 20 (4x5)</label>
+          <label><input type="radio" name="size" value="25" checked> 25 (5x5)</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" id="generateBtn">Generate Fluency Grid</button>
+      <button id="printBtn">Print</button>
+    </div>
+  </div>
+
+  <div id="sheet">
+    <h2 class="sheet-title">Multisyllabic Fluency Grid</h2>
+    <div class="sheet-meta" id="sheetMeta">Waiting for selection...</div>
+    <div id="gridWrap"></div>
+    <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+  </div>
+
+  <script>
+    function selectedValue(name) {
+      return document.querySelector(`input[name="${name}"]:checked`)?.value;
+    }
+
+    function columnsForSize(size) {
+      if (size === 15) return 3;
+      if (size === 20) return 4;
+      return 5;
+    }
+
+    function populateBanks() {
+      const select = document.getElementById('bankSelect');
+      select.innerHTML = '';
+
+      const options = (window.multisyllabicContentTools && window.multisyllabicContentTools.BANK_OPTIONS) || [];
+      options.forEach((name) => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        if (name === 'Multisyllabic (All 6 Types)') opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    function generateGrid() {
+      if (!window.multisyllabicContentTools) {
+        alert('Multisyllabic content tools are not loaded.');
+        return;
+      }
+
+      const bank = document.getElementById('bankSelect').value;
+      const syllableCount = selectedValue('count') || '2';
+      const divisionRule = selectedValue('rule') || 'all';
+      const mode = selectedValue('mode') || 'words';
+      const size = Number(selectedValue('size') || 25);
+      const cols = columnsForSize(size);
+
+      const result = window.multisyllabicContentTools.buildPromptSet({
+        bankKeys: [bank],
+        syllableCount,
+        divisionRule,
+        mode,
+        size
+      });
+
+      if (!result.prompts.length) {
+        alert('No prompts matched those filters. Try Any syllable count or All division rules.');
+        return;
+      }
+
+      document.getElementById('sheetMeta').textContent =
+        `${bank} | Count: ${syllableCount} | Rule: ${divisionRule} | Mode: ${mode} | Size: ${size}`;
+
+      let index = 0;
+      const rows = Math.ceil(size / cols);
+      const table = document.createElement('table');
+
+      for (let r = 0; r < rows; r += 1) {
+        const tr = document.createElement('tr');
+        for (let c = 0; c < cols; c += 1) {
+          const td = document.createElement('td');
+          const text = String(result.prompts[index] || '').trim();
+          const sentenceMode = mode === 'sentences' || (mode === 'both' && text.includes(' '));
+
+          if (sentenceMode) {
+            td.className = 'sentence';
+            if (text.length > 42) td.className += ' long';
+          }
+
+          td.textContent = text;
+          tr.appendChild(td);
+          index += 1;
+        }
+        table.appendChild(tr);
+      }
+
+      const wrap = document.getElementById('gridWrap');
+      wrap.innerHTML = '';
+      wrap.appendChild(table);
+    }
+
+    populateBanks();
+    document.getElementById('generateBtn').addEventListener('click', generateGrid);
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+    generateGrid();
+  </script>
+</body>
+</html>

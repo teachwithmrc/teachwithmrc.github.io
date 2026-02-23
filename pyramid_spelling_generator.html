@@ -926,6 +926,7 @@
 
       const SOUND_CHUNKS = [
         "eigh", "igh", "air", "are", "ear", "ure", "tch", "dge", "tion", "sion",
+        "qu", "ff", "ll", "ss", "zz", "tt", "pp", "bb", "dd", "gg", "mm", "nn", "rr",
         "ch", "sh", "th", "wh", "ck", "ng", "nk", "ee", "ea", "oa", "ow", "oe",
         "ai", "ay", "oi", "oy", "ou", "aw", "au", "er", "ir", "ur", "ar", "or",
         "oo", "ew", "ue", "ie"
@@ -1572,20 +1573,34 @@
 
       function normalizeSourceSplit(split) {
         if (!Array.isArray(split) || !split.length) return [];
-        const out = [];
-        split.forEach((unit) => {
-          const parts = segmentBySound(String(unit || ""));
-          if (parts.length) out.push(...parts);
-        });
-        return out;
+        const cleaned = split
+          .map((unit) => sanitizeSplitPart(unit))
+          .filter(Boolean);
+        if (!cleaned.length) return [];
+
+        // Trust multi-part source splits from the word banks (ex: bike -> b | i | ke).
+        // Re-segmenting those can incorrectly split silent-e chunks into k | e.
+        if (cleaned.length > 1) return cleaned;
+
+        // If a source only provided one chunk, fall back to segmentation.
+        return segmentBySound(cleaned[0]);
       }
 
       function segmentBySound(word) {
         const clean = normalizeAlpha(word);
         if (!clean) return [];
+        const vowels = new Set(["a", "e", "i", "o", "u"]);
+        const consonants = new Set(["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z"]);
+        const hasLikelySilentETail =
+          clean.length >= 3 &&
+          clean.endsWith("e") &&
+          consonants.has(clean[clean.length - 2]) &&
+          vowels.has(clean[clean.length - 3]);
+
+        const scanLimit = hasLikelySilentETail ? clean.length - 2 : clean.length;
         const parts = [];
         let index = 0;
-        while (index < clean.length) {
+        while (index < scanLimit) {
           let found = "";
           for (const chunk of SOUND_CHUNKS) {
             if (clean.startsWith(chunk, index)) {
@@ -1600,6 +1615,10 @@
             parts.push(clean[index]);
             index += 1;
           }
+        }
+
+        if (hasLikelySilentETail) {
+          parts.push(clean.slice(-2));
         }
         return parts;
       }
@@ -1846,13 +1865,21 @@
         if (!Array.isArray(units) || !units.length) return "";
 
         const derived = units.map((unit) => String(Math.max(1, normalizeAlpha(unit).length))).join("");
-        const candidates = Array.isArray(entry.patterns) ? entry.patterns.filter((p) => p.length === units.length) : [];
-        const numericCandidates = candidates
+        const numericCandidates = (Array.isArray(entry.patterns) ? entry.patterns : [])
           .map((p) => String(p))
           .filter((p) => /^\d+$/.test(p));
         if (!numericCandidates.length) return derived;
+
+        // Prefer an exact match to derived units when available.
         const exact = numericCandidates.find((p) => p === derived);
-        return exact || numericCandidates[0];
+        if (exact) return exact;
+
+        // Next, prefer same-length pattern (best structural match).
+        const sameLength = numericCandidates.find((p) => p.length === units.length);
+        if (sameLength) return sameLength;
+
+        // Finally, trust the explicit JS pattern instead of guessed fallback.
+        return numericCandidates[0];
       }
 
       function makeSoundStackBlock(item, showAnswers, perPage) {
@@ -2024,7 +2051,7 @@
         const perPage = getPerPage();
         const studentChunks = chunk(items, perPage);
         const totalStudentPages = studentChunks.length;
-        const totalPages = totalStudentPages * 2;
+        const totalPages = totalStudentPages;
 
         printArea.innerHTML = "";
 
@@ -2034,15 +2061,9 @@
           fitSoundPageToHeight(page);
         });
 
-        studentChunks.forEach((group, idx) => {
-          const page = buildPage(group, idx + 1, totalStudentPages, true, perPage);
-          printArea.appendChild(page);
-          fitSoundPageToHeight(page);
-        });
-
         setStatus(
           "Generated " + items.length + " pyramids in " + totalPages +
-          " printable pages (" + totalStudentPages + " student + " + totalStudentPages + " answer). " +
+          " printable pages. " +
           "Mode: " + state.mode + " | " + perPage + " per page."
         );
         printArea.scrollIntoView({ behavior: "smooth", block: "start" });

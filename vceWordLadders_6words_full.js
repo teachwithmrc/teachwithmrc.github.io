@@ -620,7 +620,7 @@ const vceWordImages = {
   "bite": "images/bite.png",
   "bone": "images/bone.png",
   "cake": "images/cake.png",
-  "cape": "images/cape.png",
+  "cape": "images/cape3.png",
   "case": "images/case.png",
   "cave": "images/cave.png",
   "chase": "images/chase.png",

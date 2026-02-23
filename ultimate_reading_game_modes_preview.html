@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reading Game Modes Preview - Short A Playable</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1d2d3e;
+      --bg: #eef5ff;
+      --card: #ffffff;
+      --line: #c8d8ea;
+      --x: #d33a3a;
+      --o: #206dbf;
+      --ok: #277a37;
+      --accent: #0f4d84;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      color: var(--ink);
+      font-family: "Poppins", "Avenir Next", "Segoe UI", sans-serif;
+      background: radial-gradient(circle at 15% 0%, #ffffff 0%, #f0f6ff 45%, #e8f1ff 100%);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .app {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      text-align: center;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      margin: 0 0 14px;
+      color: #3c5670;
+      font-weight: 600;
+    }
+
+    .note {
+      border: 2px solid #000;
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px 12px;
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .tab {
+      border: 2px solid #000;
+      border-radius: 12px;
+      background: #fff;
+      font: inherit;
+      font-weight: 800;
+      color: var(--ink);
+      padding: 10px 8px;
+      cursor: pointer;
+      min-height: 58px;
+    }
+
+    .tab.active {
+      background: #111;
+      color: #fff;
+    }
+
+    .panel {
+      display: none;
+      background: var(--card);
+      border: 2px solid #000;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 9px 20px rgba(22, 45, 73, 0.12);
+    }
+
+    .panel.active { display: block; }
+
+    .panel h2 {
+      margin: 0 0 6px;
+      text-align: center;
+      font-size: 1.35rem;
+    }
+
+    .meta {
+      text-align: center;
+      margin: 0 0 10px;
+      color: #415d78;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .score {
+      text-align: center;
+      margin: 0 0 10px;
+      color: #425d78;
+      font-weight: 700;
+      min-height: 1.4rem;
+    }
+
+    .turn-indicator {
+      margin: 0 0 10px;
+      text-align: center;
+      font-weight: 900;
+      font-size: 1.05rem;
+      min-height: 1.5rem;
+      color: #2a4560;
+      letter-spacing: 0.02em;
+    }
+
+    .turn-indicator.x { color: var(--x); }
+    .turn-indicator.o { color: var(--o); }
+    .turn-indicator.r { color: #e53935; }
+    .turn-indicator.y { color: #cc9300; }
+
+    .game-stack {
+      position: relative;
+    }
+
+    .game-overlay {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      pointer-events: none;
+      background: rgba(10, 21, 34, 0.18);
+      border-radius: 12px;
+    }
+
+    .game-overlay.show {
+      display: flex;
+    }
+
+    .game-overlay-card {
+      border: 2px solid #000;
+      border-radius: 14px;
+      background: #111;
+      color: #fff;
+      padding: 14px 18px;
+      font-size: clamp(1.1rem, 4vw, 1.8rem);
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      box-shadow: 0 16px 28px rgba(0, 0, 0, 0.35);
+      animation: slamIn 280ms ease-out both;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    @keyframes slamIn {
+      0% { transform: scale(0.7) translateY(-10px); opacity: 0; }
+      70% { transform: scale(1.08) translateY(0); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .board {
+      margin: 0 auto 10px;
+      width: min(700px, 100%);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .cell {
+      border: 2px solid #1a3046;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #f9fcff, #eef4ff);
+      min-height: 130px;
+      padding: 8px;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .cell.locked {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .prompt {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-size: clamp(1.2rem, 3.8vw, 1.8rem);
+      font-weight: 800;
+    }
+
+    .mark {
+      min-height: 40px;
+      line-height: 40px;
+      text-align: center;
+      font-size: 2.2rem;
+      font-weight: 900;
+    }
+
+    .mark.x { color: var(--x); }
+    .mark.o { color: var(--o); }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      padding: 8px 12px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .connect-top {
+      margin: 0 auto 8px;
+      width: min(780px, 100%);
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .drop-btn {
+      border: 2px solid #315b83;
+      border-radius: 10px;
+      background: #eaf3ff;
+      color: #0f3f6b;
+      font: inherit;
+      font-weight: 800;
+      padding: 7px 4px;
+      cursor: pointer;
+    }
+
+    .drop-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .connect-wrap {
+      margin: 0 auto 10px;
+      width: min(780px, 100%);
+      border: 2px solid #15426f;
+      border-radius: 12px;
+      background: #2f6fa8;
+      padding: 8px;
+    }
+
+    .connect-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .slot {
+      aspect-ratio: 1 / 1;
+      border-radius: 999px;
+      border: 2px solid #184f80;
+      background: #fff;
+    }
+
+    .slot.r { background: #e53935; }
+    .slot.y { background: #f2ca00; }
+
+    .prompt-card {
+      margin: 0 auto 10px;
+      width: min(560px, 100%);
+      border: 2px solid #1d3349;
+      border-radius: 12px;
+      background: #f8fbff;
+      padding: 10px;
+      text-align: center;
+      font-size: clamp(1.2rem, 3.3vw, 1.6rem);
+      font-weight: 800;
+    }
+
+    .roll-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .die {
+      width: 46px;
+      height: 46px;
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      display: grid;
+      place-items: center;
+    }
+
+    .die-img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .status {
+      font-weight: 700;
+      color: #38536d;
+      min-height: 1.2rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    .roll-table {
+      margin: 0 auto 10px;
+      width: min(820px, 100%);
+      border-collapse: collapse;
+      table-layout: fixed;
+      border: 2px solid #000;
+      background: #fff;
+    }
+
+    .roll-table th,
+    .roll-table td {
+      border: 1px solid #000;
+      text-align: center;
+      vertical-align: middle;
+      padding: 8px 6px;
+      font-weight: 800;
+    }
+
+    .roll-table th {
+      background: #edf4ff;
+      font-size: 0.95rem;
+      padding: 6px 4px;
+    }
+
+    .dice-head-img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .roll-table td {
+      height: 72px;
+      font-size: clamp(1.05rem, 2.8vw, 1.3rem);
+      cursor: pointer;
+    }
+
+    .roll-table td.current {
+      outline: 3px solid #1e6fbf;
+      background: #e7f2ff;
+    }
+
+    .roll-table td.done {
+      background: #e7f6eb;
+      color: #2a7441;
+    }
+
+    .skills-available {
+      margin-top: 14px;
+      border: 2px solid #000;
+      border-radius: 14px;
+      background: #fff;
+      padding: 12px;
+      box-shadow: 0 8px 18px rgba(22, 45, 73, 0.08);
+    }
+
+    .skills-title {
+      margin: 0 0 4px;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .skills-subtitle {
+      margin: 0 0 10px;
+      text-align: center;
+      color: #3f5972;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .skills-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .skills-table td {
+      border: 1px solid #c8d7e7;
+      padding: 6px;
+      width: 50%;
+      background: #f9fbff;
+    }
+
+    .skill-lock-btn {
+      width: 100%;
+      border: 2px solid #1b334a;
+      border-radius: 10px;
+      background: #fff;
+      color: #173451;
+      font: inherit;
+      font-weight: 800;
+      padding: 8px 10px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .skill-lock-btn:hover {
+      background: #edf5ff;
+    }
+
+    @media (max-width: 760px) {
+      .tabs { grid-template-columns: 1fr; }
+      .cell { min-height: 100px; }
+      .prompt { font-size: 1rem; }
+      .roll-table td { font-size: 0.92rem; height: 58px; }
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+  <main class="app">
+    <h1>Reading Game Modes Preview</h1>
+    <p class="subtitle">Short A is fully playable here.</p>
+    <div class="note">Playable teaser unlocked: Short A only. To use other reading skills, open the full generator.</div>
+
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-mode="ttt" type="button">Short A Tic Tac Toe</button>
+      <button class="tab" data-mode="connect4" type="button">Short A 4 in a Row</button>
+      <button class="tab" data-mode="rollread" type="button">Short A Roll and Read</button>
+    </div>
+
+    <section class="panel active" data-panel="ttt">
+      <h2>Short A Tic Tac Toe</h2>
+      <p class="meta">Read the word before placing X or O.</p>
+      <p class="score" id="tttScore"></p>
+      <p class="turn-indicator" id="tttTurn"></p>
+      <div class="game-stack">
+        <div class="board" id="tttBoard"></div>
+        <div class="game-overlay" id="tttOverlay">
+          <div class="game-overlay-card" id="tttOverlayText"></div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" id="tttSame" type="button">Play Again (Same Words)</button>
+        <button class="btn" id="tttNew" type="button">New Short A Board</button>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="connect4">
+      <h2>Short A 4 in a Row</h2>
+      <p class="meta">Read the prompt card, then drop your piece.</p>
+      <p class="score" id="c4Score"></p>
+      <p class="turn-indicator" id="c4Turn"></p>
+      <div class="prompt-card" id="c4Prompt"></div>
+      <div class="game-stack">
+        <div class="connect-top" id="c4Top"></div>
+        <div class="connect-wrap">
+          <div class="connect-grid" id="c4Grid"></div>
+        </div>
+        <div class="game-overlay" id="c4Overlay">
+          <div class="game-overlay-card" id="c4OverlayText"></div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" id="c4Same" type="button">Reset Board</button>
+        <button class="btn" id="c4New" type="button">New Prompt Flow</button>
+      </div>
+    </section>
+
+    <section class="panel" data-panel="rollread">
+      <h2>Short A Roll and Read</h2>
+      <p class="meta">Roll, then click the highlighted cell after reading it.</p>
+      <div class="roll-controls">
+        <div class="die"><img id="rrDieImg" class="die-img" src="images/dice1.png" alt="Current die: 1"></div>
+        <button class="btn" id="rrRoll" type="button">Roll</button>
+        <button class="btn" id="rrReset" type="button">Reset Round</button>
+        <div class="status" id="rrStatus"></div>
+      </div>
+      <table class="roll-table" id="rrTable"></table>
+      <div class="actions">
+        <button class="btn" id="rrNew" type="button">New Short A Grid</button>
+      </div>
+    </section>
+
+    <section class="skills-available">
+      <h3 class="skills-title">Skills Available</h3>
+      <p class="skills-subtitle">Tap any skill to unlock in the full members version.</p>
+      <table class="skills-table">
+        <tbody>
+          <tr>
+            <td><button type="button" class="skill-lock-btn" data-skill="Short E">Short E</button></td>
+            <td><button type="button" class="skill-lock-btn" data-skill="Short I">Short I</button></td>
+          </tr>
+          <tr>
+            <td><button type="button" class="skill-lock-btn" data-skill="Short O">Short O</button></td>
+            <td><button type="button" class="skill-lock-btn" data-skill="Short U">Short U</button></td>
+          </tr>
+          <tr>
+            <td><button type="button" class="skill-lock-btn" data-skill="Mixed CVC">Mixed CVC</button></td>
+            <td><button type="button" class="skill-lock-btn" data-skill="Digraphs">Digraphs</button></td>
+          </tr>
+          <tr>
+            <td><button type="button" class="skill-lock-btn" data-skill="Glued Sounds">Glued Sounds</button></td>
+            <td><button type="button" class="skill-lock-btn" data-skill="Silent E (VCe)">Silent E (VCe)</button></td>
+          </tr>
+          <tr>
+            <td><button type="button" class="skill-lock-btn" data-skill="R-Controlled">R-Controlled</button></td>
+            <td><button type="button" class="skill-lock-btn" data-skill="Vowel Teams">Vowel Teams</button></td>
+          </tr>
+          <tr>
+            <td><button type="button" class="skill-lock-btn" data-skill="Diphthongs">Diphthongs</button></td>
+            <td><button type="button" class="skill-lock-btn" data-skill="Variant Vowels">Variant Vowels</button></td>
+          </tr>
+          <tr>
+            <td><button type="button" class="skill-lock-btn" data-skill="Soft C / Soft G">Soft C / Soft G</button></td>
+            <td><button type="button" class="skill-lock-btn" data-skill="Blends">Blends</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const WORDS = [
+      "cat", "bat", "hat", "mat", "sat", "map", "cap", "tap", "lap", "jam", "ham", "ram",
+      "bag", "tag", "rag", "wag", "sad", "mad", "dad", "pad", "cab", "van", "can", "man"
+    ];
+
+    const WIN_LINES = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8],
+      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+      [0, 4, 8], [2, 4, 6]
+    ];
+
+    function shuffle(list) {
+      const out = list.slice();
+      for (let i = out.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const t = out[i];
+        out[i] = out[j];
+        out[j] = t;
+      }
+      return out;
+    }
+
+    function fillToN(list, n) {
+      if (!list.length || n < 1) return [];
+      const out = [];
+      let bag = shuffle(list);
+      while (out.length < n) {
+        if (!bag.length) bag = shuffle(list);
+        out.push(bag.shift());
+      }
+      return out;
+    }
+
+    function choose(list) {
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    function setActiveMode(mode) {
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.classList.toggle("active", tab.dataset.mode === mode);
+      });
+      document.querySelectorAll(".panel").forEach((panel) => {
+        panel.classList.toggle("active", panel.dataset.panel === mode);
+      });
+    }
+
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => setActiveMode(tab.dataset.mode));
+    });
+
+    document.querySelectorAll(".skill-lock-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        const skill = button.dataset.skill || "This skill";
+        window.alert(`${skill}: Members only`);
+      });
+    });
+
+    const ttt = {
+      prompts: [],
+      marks: Array(9).fill(""),
+      turn: "X",
+      over: false,
+      celebration: "",
+      score: { X: 0, O: 0, T: 0 }
+    };
+
+    function tttWinningLine() {
+      return WIN_LINES.find(([a, b, c]) => ttt.marks[a] && ttt.marks[a] === ttt.marks[b] && ttt.marks[b] === ttt.marks[c]) || null;
+    }
+
+    function renderTttScore(extra) {
+      const msg = extra ? ` | ${extra}` : "";
+      document.getElementById("tttScore").textContent = `X Wins: ${ttt.score.X} | O Wins: ${ttt.score.O} | Ties: ${ttt.score.T}${msg}`;
+      const turnEl = document.getElementById("tttTurn");
+      if (ttt.over) {
+        turnEl.textContent = "Round Over";
+        turnEl.className = "turn-indicator";
+      } else {
+        turnEl.textContent = `Turn: ${ttt.turn}`;
+        turnEl.className = "turn-indicator " + (ttt.turn === "X" ? "x" : "o");
+      }
+    }
+
+    function renderTtt() {
+      const board = document.getElementById("tttBoard");
+      board.innerHTML = "";
+      ttt.prompts.forEach((word, idx) => {
+        const mark = ttt.marks[idx];
+        const cell = document.createElement("button");
+        cell.type = "button";
+        cell.className = "cell" + ((ttt.over || mark) ? " locked" : "");
+        cell.dataset.index = String(idx);
+        cell.innerHTML = `<div class=\"prompt\">${word}</div><div class=\"mark ${mark === "X" ? "x" : mark === "O" ? "o" : ""}\">${mark}</div>`;
+        if (ttt.over || mark) cell.disabled = true;
+        board.appendChild(cell);
+      });
+      const overlay = document.getElementById("tttOverlay");
+      const overlayText = document.getElementById("tttOverlayText");
+      overlayText.textContent = ttt.celebration;
+      overlay.classList.toggle("show", Boolean(ttt.celebration));
+      renderTttScore();
+    }
+
+    function newTttWords() {
+      ttt.prompts = fillToN(WORDS, 9);
+      ttt.marks = Array(9).fill("");
+      ttt.turn = "X";
+      ttt.over = false;
+      ttt.celebration = "";
+      renderTtt();
+    }
+
+    document.getElementById("tttBoard").addEventListener("click", (event) => {
+      const cell = event.target.closest(".cell");
+      if (!cell || ttt.over) return;
+      const idx = Number(cell.dataset.index);
+      if (!Number.isFinite(idx) || ttt.marks[idx]) return;
+
+      ttt.marks[idx] = ttt.turn;
+      const line = tttWinningLine();
+      if (line) {
+        ttt.over = true;
+        ttt.score[ttt.turn] += 1;
+        ttt.celebration = `${ttt.turn} wins!`;
+        renderTtt();
+        renderTttScore(`${ttt.turn} wins!`);
+        return;
+      }
+
+      if (ttt.marks.every(Boolean)) {
+        ttt.over = true;
+        ttt.score.T += 1;
+        ttt.celebration = "Tie game!";
+        renderTtt();
+        renderTttScore("Tie game.");
+        return;
+      }
+
+      ttt.turn = ttt.turn === "X" ? "O" : "X";
+      ttt.celebration = "";
+      renderTtt();
+    });
+
+    document.getElementById("tttSame").addEventListener("click", () => {
+      ttt.marks = Array(9).fill("");
+      ttt.turn = "X";
+      ttt.over = false;
+      ttt.celebration = "";
+      renderTtt();
+    });
+
+    document.getElementById("tttNew").addEventListener("click", newTttWords);
+
+    const C4_ROWS = 6;
+    const C4_COLS = 7;
+
+    const c4 = {
+      board: Array.from({ length: C4_ROWS }, () => Array.from({ length: C4_COLS }, () => "")),
+      turn: "R",
+      over: false,
+      celebration: "",
+      score: { R: 0, Y: 0, T: 0 },
+      currentPrompt: choose(WORDS)
+    };
+
+    function c4Label(mark) {
+      return mark === "R" ? "Red" : "Yellow";
+    }
+
+    function c4FindWin(row, col, mark) {
+      const dirs = [[1, 0], [0, 1], [1, 1], [1, -1]];
+      const collect = (dr, dc) => {
+        const out = [];
+        let r = row + dr;
+        let c = col + dc;
+        while (r >= 0 && r < C4_ROWS && c >= 0 && c < C4_COLS && c4.board[r][c] === mark) {
+          out.push([r, c]);
+          r += dr;
+          c += dc;
+        }
+        return out;
+      };
+      for (const [dr, dc] of dirs) {
+        const line = [...collect(-dr, -dc).reverse(), [row, col], ...collect(dr, dc)];
+        if (line.length >= 4) return true;
+      }
+      return false;
+    }
+
+    function renderC4Score(extra) {
+      const msg = extra ? ` | ${extra}` : "";
+      document.getElementById("c4Score").textContent = `Red Wins: ${c4.score.R} | Yellow Wins: ${c4.score.Y} | Ties: ${c4.score.T}${msg}`;
+      const turnEl = document.getElementById("c4Turn");
+      if (c4.over) {
+        turnEl.textContent = "Round Over";
+        turnEl.className = "turn-indicator";
+      } else {
+        turnEl.textContent = `Turn: ${c4Label(c4.turn)}`;
+        turnEl.className = "turn-indicator " + (c4.turn === "R" ? "r" : "y");
+      }
+    }
+
+    function renderC4() {
+      document.getElementById("c4Prompt").textContent = c4.currentPrompt ? c4.currentPrompt : "";
+
+      const top = document.getElementById("c4Top");
+      top.innerHTML = "";
+      for (let col = 0; col < C4_COLS; col += 1) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "drop-btn";
+        btn.dataset.col = String(col);
+        btn.textContent = "Drop";
+        if (c4.over) btn.disabled = true;
+        top.appendChild(btn);
+      }
+
+      const grid = document.getElementById("c4Grid");
+      grid.innerHTML = "";
+      for (let r = 0; r < C4_ROWS; r += 1) {
+        for (let c = 0; c < C4_COLS; c += 1) {
+          const slot = document.createElement("div");
+          const mark = c4.board[r][c];
+          slot.className = "slot" + (mark === "R" ? " r" : mark === "Y" ? " y" : "");
+          grid.appendChild(slot);
+        }
+      }
+
+      const overlay = document.getElementById("c4Overlay");
+      const overlayText = document.getElementById("c4OverlayText");
+      overlayText.textContent = c4.celebration;
+      overlay.classList.toggle("show", Boolean(c4.celebration));
+      renderC4Score();
+    }
+
+    function resetC4Board(keepPromptFlow) {
+      c4.board = Array.from({ length: C4_ROWS }, () => Array.from({ length: C4_COLS }, () => ""));
+      c4.turn = "R";
+      c4.over = false;
+      c4.celebration = "";
+      if (!keepPromptFlow) c4.currentPrompt = choose(WORDS);
+      renderC4();
+    }
+
+    document.getElementById("c4Top").addEventListener("click", (event) => {
+      const btn = event.target.closest(".drop-btn");
+      if (!btn || c4.over) return;
+      const col = Number(btn.dataset.col);
+      if (!Number.isFinite(col)) return;
+
+      let row = -1;
+      for (let r = C4_ROWS - 1; r >= 0; r -= 1) {
+        if (!c4.board[r][col]) {
+          row = r;
+          break;
+        }
+      }
+      if (row < 0) return;
+
+      const mark = c4.turn;
+      c4.board[row][col] = mark;
+
+      if (c4FindWin(row, col, mark)) {
+        c4.over = true;
+        c4.score[mark] += 1;
+        c4.celebration = `${c4Label(mark)} wins!`;
+        renderC4();
+        renderC4Score(`${c4Label(mark)} wins!`);
+        return;
+      }
+
+      if (c4.board.every((line) => line.every(Boolean))) {
+        c4.over = true;
+        c4.score.T += 1;
+        c4.celebration = "Tie game!";
+        renderC4();
+        renderC4Score("Tie game.");
+        return;
+      }
+
+      c4.turn = mark === "R" ? "Y" : "R";
+      c4.celebration = "";
+      c4.currentPrompt = choose(WORDS);
+      renderC4();
+    });
+
+    document.getElementById("c4Same").addEventListener("click", () => resetC4Board(true));
+    document.getElementById("c4New").addEventListener("click", () => resetC4Board(false));
+
+    const rr = {
+      cells: [],
+      tableCells: [],
+      pointers: Array(6).fill(0),
+      pending: null,
+      done: 0,
+      total: 24
+    };
+
+    function setRrDie(value) {
+      const img = document.getElementById("rrDieImg");
+      img.src = `images/dice${value}.png`;
+      img.alt = `Current die: ${value}`;
+    }
+
+    function buildRrGrid() {
+      rr.cells = fillToN(WORDS, rr.total);
+      rr.pointers = Array(6).fill(0);
+      rr.pending = null;
+      rr.done = 0;
+
+      const table = document.getElementById("rrTable");
+      table.innerHTML = "";
+      rr.tableCells = [];
+
+      const thead = document.createElement("thead");
+      const hRow = document.createElement("tr");
+      for (let d = 1; d <= 6; d += 1) {
+        const th = document.createElement("th");
+        const img = document.createElement("img");
+        img.className = "dice-head-img";
+        img.src = `images/dice${d}.png`;
+        img.alt = `Die ${d}`;
+        th.appendChild(img);
+        hRow.appendChild(th);
+      }
+      thead.appendChild(hRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+      let idx = 0;
+      for (let r = 0; r < 4; r += 1) {
+        const row = document.createElement("tr");
+        for (let c = 0; c < 6; c += 1) {
+          const td = document.createElement("td");
+          td.dataset.col = String(c + 1);
+          td.dataset.row = String(r + 1);
+          td.textContent = rr.cells[idx++] || "";
+          row.appendChild(td);
+          rr.tableCells.push(td);
+        }
+        tbody.appendChild(row);
+      }
+      table.appendChild(tbody);
+
+      setRrDie(1);
+      document.getElementById("rrStatus").textContent = "Roll to start.";
+    }
+
+    function openColumns() {
+      const open = [];
+      for (let i = 0; i < 6; i += 1) {
+        if (rr.pointers[i] < 4) open.push(i + 1);
+      }
+      return open;
+    }
+
+    function tableCellAt(col1, row0) {
+      return rr.tableCells.find((td) => Number(td.dataset.col) === col1 && Number(td.dataset.row) === row0 + 1) || null;
+    }
+
+    document.getElementById("rrRoll").addEventListener("click", () => {
+      if (rr.pending) {
+        document.getElementById("rrStatus").textContent = "Click the highlighted cell after reading it.";
+        return;
+      }
+
+      const open = openColumns();
+      if (!open.length) {
+        document.getElementById("rrStatus").textContent = "Board complete.";
+        return;
+      }
+
+      const raw = 1 + Math.floor(Math.random() * 6);
+      const die = open.includes(raw) ? raw : choose(open);
+      setRrDie(die);
+
+      const row = rr.pointers[die - 1];
+      const target = tableCellAt(die, row);
+      if (!target) return;
+
+      target.classList.add("current");
+      rr.pending = { col: die, row, cell: target };
+      document.getElementById("rrStatus").textContent = `Rolled ${die}. Read this word, then click it.`;
+    });
+
+    document.getElementById("rrTable").addEventListener("click", (event) => {
+      const td = event.target.closest("td");
+      if (!td || !rr.pending) return;
+      if (td !== rr.pending.cell) return;
+
+      td.classList.remove("current");
+      td.classList.add("done");
+      rr.pointers[rr.pending.col - 1] += 1;
+      rr.done += 1;
+      rr.pending = null;
+
+      if (rr.done >= rr.total) {
+        document.getElementById("rrStatus").textContent = "Board complete.";
+      } else {
+        document.getElementById("rrStatus").textContent = `${rr.done} of ${rr.total} complete.`;
+      }
+    });
+
+    document.getElementById("rrReset").addEventListener("click", () => {
+      buildRrGrid();
+    });
+
+    document.getElementById("rrNew").addEventListener("click", () => {
+      buildRrGrid();
+    });
+
+    window.addEventListener("keydown", (event) => {
+      const blocked = (event.ctrlKey || event.metaKey) && ["s", "p", "u"].includes(event.key.toLowerCase());
+      if (blocked) event.preventDefault();
+    });
+
+    newTttWords();
+    resetC4Board(false);
+    buildRrGrid();
+  </script>
+</body>
+</html>

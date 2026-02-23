@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Soft C/G Word Ladders</title>
+
+  <script src="soft_cg_ladders_full.js" defer></script>
+  <script src="ladder_image_fallback.js" defer></script>
+  <script src="multiset_ladder_page.js" defer></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    @font-face { font-family: 'BoxesFont'; src: url('fonts/boxes2.otf') format('opentype'); }
+    @font-face { font-family: 'UnderlineFont'; src: url('fonts/underlines.otf') format('opentype'); }
+
+    :root{
+      --ink:#1f365f; --bg:#ffffff;
+      --card:#f6f9ff; --card2:#fff7f0;
+      --border:#cfd7ef; --border2:#f2d8bd;
+    }
+
+    body { font-family: 'Poppins', sans-serif; margin: 10px; text-align: center; color: var(--ink); background: var(--bg); }
+    h1 { font-size: 32px; margin-bottom: 6px; }
+    .subtitle { font-size: 16px; margin-bottom: 8px; }
+
+    button { font-size: 16px; padding: 6px 10px; margin: 6px; cursor: pointer; }
+    label { margin: 0 6px; font-size: 18px; }
+
+    .card {
+      display: inline-block; text-align: center; background: var(--card);
+      border: 2px solid var(--border); border-radius: 14px; padding: 14px 18px; margin: 10px auto; font-size: 18px;
+    }
+    .card.alt { background: var(--card2); border-color: var(--border2); }
+    .card h2 { margin: 0 0 8px; font-size: 20px; }
+    .controls { display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 18px; }
+
+    .pattern { font-size: 100px; line-height: 1; margin-top: 4px; letter-spacing: 0; }
+
+    .screenOnly { display: block; font-size: 18px; }
+    #ladderOutput { margin-top:8px; margin-bottom:60px; }
+    #copyright { font-size: 12px; text-align: right; width: 100%; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #ladderOutput, #ladderOutput * { visibility: visible; }
+      #ladderOutput { position: absolute; top: 0; left: 0; width: 100%; margin: 0; padding: 10px; box-sizing: border-box; }
+      .screenOnly { display: none !important; }
+      #ladderOutput br { display: none !important; }
+      @page { margin: 0.5in; }
+    }
+  </style>
+</head>
+<body>
+  <h1 id="pageTitle">Soft C/G Word Ladders</h1>
+  <div id="pageSubtitle" class="subtitle">Generate ladders for -ce, -ge, and -dge.</div>
+
+  <div class="screenOnly" style="max-width:920px;margin:0 auto 12px;">
+    <strong>Directions:</strong> Pick a soft ending set, choose a display style, then click <b>Generate Ladder</b>.
+  </div>
+
+  <div class="card">
+    <h2>Soft Ending Sets</h2>
+    <div id="setButtons" class="controls"></div>
+  </div>
+
+  <div class="card alt">
+    <h2>Display</h2>
+    <div class="controls">
+      <label><input type="radio" name="cellStyle" value="elkonin" checked> Elkonin Boxes</label>
+      <label><input type="radio" name="cellStyle" value="underlines"> Underlines</label>
+      <label><input type="checkbox" id="boldChanged" checked> Bold Changed Part</label>
+    </div>
+  </div>
+
+  <div style="margin: 8px 0 10px;">
+    <center><img src="images/chrome.png"></center>
+    <button id="generateBtn">Generate Ladder</button>
+    <button id="printBtn">Print Page</button>
+  </div>
+  <div id="ladderOutput"></div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      window.initMultiSetLadderPage({ data: window.softCGLadderData });
+    });
+  </script>
+</body>
+</html>
