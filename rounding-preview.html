@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intervention Station | Rounding Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --brand-dark:#2f3e4e;
+      --brand-blue:#66c9f4;
+      --ink:#102246;
+      --border:rgba(0,0,0,.55);
+      --offwhite:#f3f5f7;
+      --panel:#ffffff;
+      --is-blue:#2f79b8;
+    }
+
+    html,body{
+      margin:0;
+      padding:0;
+      font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--ink);
+      background:var(--offwhite);
+    }
+    *,*::before,*::after{ box-sizing:border-box; }
+    img{ display:block; max-width:100%; height:auto; }
+    body{ overflow-x:hidden; }
+
+    .top-cta-wrap{ background:var(--brand-dark); }
+    .top-cta-bar{
+      position:sticky;
+      top:0;
+      z-index:9999;
+      background:var(--brand-dark);
+      width:min(1200px, calc(100% - 32px));
+      margin:0 auto;
+      padding:12px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:nowrap;
+    }
+    .top-logo{
+      width:auto;
+      height:auto;
+      max-width:min(480px, 40vw);
+    }
+    .top-buttons-row{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:10px;
+      flex-wrap:nowrap;
+    }
+    .top-buttons-row a{
+      display:inline-flex;
+      text-decoration:none;
+    }
+    .top-buttons-row button{
+      appearance:none;
+      width:168px;
+      min-width:168px;
+      height:46px;
+      padding:0 14px;
+      background:var(--brand-blue);
+      border:2px solid var(--brand-blue);
+      border-radius:12px;
+      color:#fff;
+      font-family:"Poppins",system-ui,sans-serif;
+      font-size:16px;
+      font-weight:600;
+      line-height:1;
+      white-space:nowrap;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      transition:filter .15s ease, box-shadow .15s ease;
+    }
+    .top-buttons-row button:hover{
+      filter:brightness(.96);
+      box-shadow:0 2px 6px rgba(0,0,0,.18);
+    }
+
+    .is-ticker{
+      background:var(--brand-dark);
+      border-top:1px solid rgba(255,255,255,.18);
+      border-bottom:1px solid rgba(255,255,255,.18);
+      overflow:hidden;
+      width:100%;
+    }
+    .is-ticker-track{
+      display:flex;
+      align-items:center;
+      gap:28px;
+      padding:10px 0;
+      width:max-content;
+      white-space:nowrap;
+      animation:isTickerScroll 34s linear infinite;
+      will-change:transform;
+    }
+    .is-ticker:hover .is-ticker-track{ animation-play-state:paused; }
+    .is-ticker-item{
+      display:inline-flex;
+      align-items:center;
+      flex:0 0 auto;
+      color:#fff;
+      font-size:12px;
+      font-weight:650;
+      line-height:1.1;
+    }
+    .is-ticker-star{
+      color:#ffe08a;
+      margin-right:6px;
+      font-weight:900;
+    }
+    @keyframes isTickerScroll{
+      from{ transform:translate3d(0,0,0); }
+      to{ transform:translate3d(-50%,0,0); }
+    }
+
+    .is-home-sections{
+      background:var(--offwhite);
+      padding:18px 0 34px;
+    }
+    .is-home-sections .is-wrap{
+      width:min(1200px, calc(100% - 32px));
+      margin:0 auto;
+    }
+    .is-home-sections .is-layout{
+      display:grid;
+      grid-template-columns:320px minmax(0,1fr);
+      gap:12px;
+      align-items:start;
+    }
+    .is-home-sections .is-main{ min-width:0; }
+    .is-home-sections .is-nav{
+      position:sticky;
+      top:16px;
+    }
+    .is-home-sections .is-nav-card{
+      background:var(--panel);
+      border:2px solid var(--border);
+      padding:0;
+      overflow:hidden;
+    }
+    .is-home-sections .is-nav-group.is-nav-home{
+      padding:10px 12px 8px;
+      border-bottom:2px solid rgba(0,0,0,.18);
+    }
+    .is-home-sections .is-mt-12{ margin-top:8px; }
+    .is-home-sections .is-nav-header{
+      background:var(--brand-blue);
+      color:#fff;
+      font-weight:700;
+      font-size:22px;
+      line-height:1.1;
+      padding:12px 14px;
+      margin:0;
+    }
+    .is-home-sections .is-nav-group{ padding:6px 12px 10px; }
+    .is-home-sections .is-nav-link{
+      display:block;
+      text-decoration:none;
+      color:#102246;
+      font-weight:600;
+      font-size:15.5px;
+      line-height:1.35;
+      padding:8px 0;
+    }
+    .is-home-sections .is-nav-link:hover{ text-decoration:underline; }
+    .is-home-sections .is-nav-link.is-active{
+      color:#0f2e52;
+      text-decoration:underline;
+      text-decoration-thickness:2px;
+    }
+
+    .is-home-sections .is-page{
+      background:var(--panel);
+      border:2px solid var(--border);
+      overflow:hidden;
+      padding:16px;
+    }
+    .is-page-hero{
+      background:#f6fbff;
+      border:1px solid #d5e6f5;
+      border-radius:14px;
+      padding:14px 16px;
+      margin-bottom:16px;
+    }
+    .is-page-hero h1{
+      margin:0 0 6px;
+      font-size:30px;
+      line-height:1.1;
+      font-weight:900;
+      color:#0e2b4f;
+    }
+    .is-page-hero p{
+      margin:0;
+      font-size:14px;
+      font-weight:600;
+      color:#4f6689;
+    }
+
+    .buy-options{
+      color:#1f365f;
+      border:1px solid #cfd7ef;
+      background:#ffffff;
+      border-radius:18px;
+      padding:16px;
+      box-shadow:0 10px 22px rgba(31,54,95,0.07);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:18px;
+    }
+    .buy-options__title{
+      font-weight:900;
+      font-size:18px;
+      line-height:1.15;
+      margin-bottom:4px;
+    }
+    .buy-options__sub{
+      font-size:13px;
+      font-weight:600;
+      color:#546a92;
+    }
+    .buy-options__buttons{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .buy-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      text-decoration:none;
+      border-radius:999px;
+      padding:12px 16px;
+      font-weight:900;
+      line-height:1;
+      border:1px solid transparent;
+      transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .buy-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 10px 18px rgba(31,54,95,0.12);
+    }
+    .buy-btn--primary{ background:#6ec1ff; color:#fff; }
+    .buy-btn--secondary{
+      background:#fff;
+      color:#1f365f;
+      border-color:#cfd7ef;
+    }
+    .buy-btn--secondary:hover{ background:#f6f9ff; }
+
+    .rounding-wrap{
+      max-width:1200px;
+      margin:0 auto;
+      color:#111;
+      border-top:2px solid #111;
+      border-bottom:2px solid #111;
+    }
+    .rounding-head{
+      background:#6ec1ff;
+      padding:16px 18px;
+    }
+    .rounding-head p{
+      margin:0;
+      color:#fff;
+    }
+    .rounding-head .title{
+      font-size:28px;
+      font-weight:900;
+    }
+    .rounding-head .sub{
+      margin-top:6px;
+      font-size:16px;
+      font-weight:600;
+    }
+
+    .rounding-rows{
+      border-top:2px solid #111;
+      border-bottom:2px solid #111;
+    }
+    .rounding-row{
+      display:flex;
+      border-bottom:2px solid #111;
+    }
+    .rounding-row:last-child{ border-bottom:none; }
+    .rounding-card{
+      flex:1;
+      padding:18px;
+      min-width:0;
+    }
+    .rounding-row .rounding-card:first-child{ border-right:2px solid #111; }
+    .rounding-card h3{
+      font-size:20px;
+      font-weight:900;
+      margin:0;
+      line-height:1.2;
+    }
+    .rounding-card .thumb{
+      margin:12px 0;
+      text-align:center;
+    }
+    .rounding-card .thumb img{
+      max-width:100%;
+      max-height:220px;
+      border:2px solid #111;
+      width:auto;
+      height:auto;
+      margin:0 auto;
+      background:#fff;
+    }
+    .rounding-card p{
+      margin:0 0 12px;
+      font-size:14px;
+      line-height:1.4;
+    }
+
+    .lock-wrap{
+      text-align:center;
+      margin-top:2px;
+    }
+    .is-download-btn{
+      appearance:none;
+      border:1px solid #0f335b;
+      background:linear-gradient(180deg, #2f79b8 0%, #1e5688 100%);
+      color:#fff;
+      border-radius:999px;
+      height:46px;
+      padding:0 18px;
+      font-family:"Poppins",system-ui,sans-serif;
+      font-size:14px;
+      font-weight:800;
+      letter-spacing:.01em;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      box-shadow:0 8px 16px rgba(16,40,70,.2);
+      cursor:not-allowed;
+      opacity:1;
+    }
+    .is-download-btn .lock{
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(255,255,255,.16);
+      font-size:12px;
+      line-height:1;
+    }
+    .is-download-btn:disabled{
+      color:#fff;
+      opacity:1;
+      border-color:#0f335b;
+      background:linear-gradient(180deg, #2f79b8 0%, #1e5688 100%);
+    }
+
+    @media (max-width:1100px){
+      .is-home-sections .is-layout{ grid-template-columns:1fr; }
+      .is-home-sections .is-nav{ position:relative; top:auto; }
+    }
+    @media (max-width:900px){
+      .top-cta-bar{
+        flex-wrap:wrap;
+        justify-content:center;
+        text-align:center;
+      }
+      .top-logo{ max-width:92vw; }
+      .top-buttons-row{
+        flex-wrap:wrap;
+        justify-content:center;
+      }
+      .rounding-row{
+        flex-direction:column;
+      }
+      .rounding-row .rounding-card:first-child{
+        border-right:none;
+        border-bottom:2px solid #111;
+      }
+    }
+    @media (max-width:860px){
+      .buy-options{ flex-direction:column; align-items:flex-start; }
+      .buy-options__buttons{ width:100%; justify-content:flex-start; }
+      .buy-btn{ width:100%; justify-content:center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="is-ticker" aria-label="Reviews ticker">
+    <div class="is-ticker-track">
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"Best intervention resources ever - my kids LOVE it."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"Saved me hours every week. Worth every penny."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"The generators are unreal. Print and go."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"My small groups finally feel organized."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"Best intervention resources ever - my kids LOVE it."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"Saved me hours every week. Worth every penny."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"The generators are unreal. Print and go."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"My small groups finally feel organized."</div>
+    </div>
+  </div>
+
+  <div class="top-cta-wrap">
+    <div class="top-cta-bar">
+      <img
+        src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png"
+        height="95"
+        width="500"
+        alt="Intervention Station"
+        class="top-logo"
+      />
+
+      <div class="top-buttons-row">
+        <a href="https://member.interventionstation.com/join">
+          <button type="button">
+            <div class="main-heading-group"><div class="main-heading-button">Join Membership</div></div>
+          </button>
+        </a>
+
+        <a href="https://interventionstation.com/membershipchoices">
+          <button type="button">
+            <div class="main-heading-group"><div class="main-heading-button">What's Inside?</div></div>
+          </button>
+        </a>
+
+        <a href="https://member.interventionstation.com/login">
+          <button type="button">
+            <div class="main-heading-group"><div class="main-heading-button">Log In</div></div>
+          </button>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <section class="is-home-sections">
+    <div class="is-wrap is-layout">
+      <aside class="is-nav" aria-label="Navigation">
+        <nav class="is-nav-card">
+          <div class="is-nav-group is-nav-home">
+            <a class="is-nav-link" href="https://interventionstation.com/home-preview">&#127968; Home</a>
+          </div>
+
+          <div class="is-nav-header">Math Resources</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="https://interventionstation.com/placevalue-preview">Place Value</a>
+            <a class="is-nav-link is-active" href="https://interventionstation.com/rounding-preview">Rounding</a>
+            <a class="is-nav-link" href="https://interventionstation.com/rounding-generator-preview">Rounding Generator</a>
+            <a class="is-nav-link" href="https://interventionstation.com/addition-preview">Addition (Multi Digit)</a>
+            <a class="is-nav-link" href="https://interventionstation.com/multiplication-preview">Multiplication</a>
+            <a class="is-nav-link" href="https://interventionstation.com/division-preview">Long Division</a>
+            <a class="is-nav-link" href="https://interventionstation.com/decimals-preview">Decimals</a>
+            <a class="is-nav-link" href="https://interventionstation.com/fractions-preview">Fractions</a>
+            <a class="is-nav-link" href="https://interventionstation.com/math-song-preview">Math Learning Songs</a>
+            <a class="is-nav-link" href="https://interventionstation.com/google-puzzle-preview">Self Checking Google Sheets Puzzle</a>
+            <a class="is-nav-link" href="https://interventionstation.com/math-riddle-preview">Math Fact Riddles</a>
+            <a class="is-nav-link" href="https://interventionstation.com/ten-frame-preview">Ten Frame Test</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">SOR Generators</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="https://interventionstation.com/word-map-preview">Word Mapping</a>
+            <a class="is-nav-link" href="https://interventionstation.com/tictacpreview">Tic Tac Toe</a>
+            <a class="is-nav-link" href="https://interventionstation.com/fluencygridpreview">Fluency Grid</a>
+            <a class="is-nav-link" href="https://interventionstation.com/rollreadpreview">Roll and Read</a>
+            <a class="is-nav-link" href="https://interventionstation.com/wordladderpreview">Word Ladder</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Reading / Phonics</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="https://interventionstation.com/games-preview">Learning Games</a>
+            <a class="is-nav-link" href="https://interventionstation.com/heart-words-preview">Heart Words</a>
+            <a class="is-nav-link" href="https://interventionstation.com/phonics-comics-preview">Phonics Comics</a>
+            <a class="is-nav-link" href="https://interventionstation.com/fix-mixup-preview">Fix the Mix Up</a>
+            <a class="is-nav-link" href="https://interventionstation.com/blending-slides-preview">Blending Slides</a>
+            <a class="is-nav-link" href="https://interventionstation.com/phonics-maze-preview">Phonics Path Maze</a>
+            <a class="is-nav-link" href="https://interventionstation.com/pick-the-pic-preview">Pick the Pic</a>
+            <a class="is-nav-link" href="https://interventionstation.com/hfw-pyramid-preview">High Frequency Word Pyramids</a>
+            <a class="is-nav-link" href="https://interventionstation.com/spelling-preview">Spelling by Phonics Skill</a>
+            <a class="is-nav-link" href="https://interventionstation.com/spelling-google-sheets-preview">Spelling Google Sheets</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Learning Songs</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="https://interventionstation.com/math-song-preview">All Learning Songs and Resources</a>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="is-main">
+        <section class="is-page">
+          <header class="is-page-hero">
+            <h1>Rounding Resources</h1>
+            <p>Preview what is included. Member downloads are locked on this page.</p>
+          </header>
+
+          <div class="buy-options">
+            <div class="buy-options__text">
+              <div class="buy-options__title">Get this resource your way</div>
+              <div class="buy-options__sub">Most teachers choose membership once they grab 2-3 resources.</div>
+            </div>
+
+            <div class="buy-options__buttons">
+              <a class="buy-btn buy-btn--primary" href="https://member.interventionstation.com/join">
+                Get Everything - <span class="buy-price">$9.99/mo</span>
+              </a>
+              <a class="buy-btn buy-btn--secondary" href="https://interventionstation.com/membershipchoices">
+                What's Inside? <span class="buy-price">See Resources</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="rounding-head">
+            <p class="title"><strong>Rounding Resources</strong></p>
+            <p class="sub">Preview samples below. Downloads are locked for members only.</p>
+          </div>
+
+          <div class="rounding-wrap">
+            <div class="rounding-rows">
+              <div class="rounding-row">
+                <div class="rounding-card">
+                  <h3><strong>Rounding to the Nearest Ten</strong></h3>
+                  <div class="thumb">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/69631633e18638255cb5fc98.png" alt="Rounding to the nearest ten preview" />
+                  </div>
+                  <p>Round 2-digit and 3-digit numbers to the nearest ten using number lines and place value.</p>
+                  <div class="lock-wrap">
+                    <button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button>
+                  </div>
+                </div>
+
+                <div class="rounding-card">
+                  <h3><strong>Rounding to the Nearest Ten (in 100)</strong></h3>
+                  <div class="thumb">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/69631633f8a93b0f0aabbdb4.png" alt="Rounding to the nearest ten in 100 preview" />
+                  </div>
+                  <p>Round numbers within 0-100 to the nearest ten with visual supports and quick checks.</p>
+                  <div class="lock-wrap">
+                    <button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounding-row">
+                <div class="rounding-card">
+                  <h3><strong>Rounding to the Nearest Hundred</strong></h3>
+                  <div class="thumb">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/69631633c7683b5e8889d40f.png" alt="Rounding to the nearest hundred preview" />
+                  </div>
+                  <p>Round 3-digit and 4-digit numbers to the nearest hundred using place value and number lines.</p>
+                  <div class="lock-wrap">
+                    <button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button>
+                  </div>
+                </div>
+
+                <div class="rounding-card">
+                  <h3><strong>Rounding to the Nearest Thousand</strong></h3>
+                  <div class="thumb">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/69631633e186382631b5fc99.png" alt="Rounding to the nearest thousand preview" />
+                  </div>
+                  <p>Round 4-digit and 5-digit numbers to the nearest thousand with strong place-value support.</p>
+                  <div class="lock-wrap">
+                    <button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounding-row">
+                <div class="rounding-card">
+                  <h3><strong>Rounding to the Nearest Thousand (in 10,000)</strong></h3>
+                  <div class="thumb">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/69631633e186382631b5fc99.png" alt="Rounding to the nearest thousand in ten thousand preview" />
+                  </div>
+                  <p>Practice rounding within 0-10,000 to the nearest thousand with benchmark-friendly problems.</p>
+                  <div class="lock-wrap">
+                    <button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button>
+                  </div>
+                </div>
+
+                <div class="rounding-card">
+                  <h3><strong>Rounding to the Nearest Tenth</strong></h3>
+                  <div class="thumb">
+                    <img src="https://storage.googleapis.com/revex-membership-production/memberships/F9vnmU5R8sOuTGoxp5by/courses/Slide21-4zu9.png" alt="Rounding to the nearest tenth preview" />
+                  </div>
+                  <p>Round decimals to the nearest tenth with place-value models and guided practice.</p>
+                  <div class="lock-wrap">
+                    <button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounding-row">
+                <div class="rounding-card">
+                  <h3><strong>Rounding to the Nearest Hundredth</strong></h3>
+                  <div class="thumb">
+                    <img src="https://storage.googleapis.com/revex-membership-production/memberships/F9vnmU5R8sOuTGoxp5by/courses/Slide20-oe36.png" alt="Rounding to the nearest hundredth preview" />
+                  </div>
+                  <p>Round decimals to the nearest hundredth using place value and careful digit checks.</p>
+                  <div class="lock-wrap">
+                    <button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button>
+                  </div>
+                </div>
+
+                <div class="rounding-card">
+                  <h3><strong>Rounding to the Nearest Whole Number</strong></h3>
+                  <div class="thumb">
+                    <img src="https://storage.googleapis.com/revex-membership-production/memberships/F9vnmU5R8sOuTGoxp5by/courses/Slide19-gt0p.png" alt="Rounding to the nearest whole number preview" />
+                  </div>
+                  <p>Round decimals to the nearest whole number with visual supports and quick practice.</p>
+                  <div class="lock-wrap">
+                    <button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </section>
+</body>
+</html>
