@@ -148,8 +148,6 @@
       border:2px solid var(--border);
       padding:0;
       overflow:hidden;
-      max-height:85vh;
-      overflow-y:auto;
     }
     .is-home-sections .is-nav-group.is-nav-home{
       padding:10px 12px 8px;
@@ -267,6 +265,24 @@
     }
     .buy-btn--secondary:hover{ background:#f6f9ff; }
 
+    .is-download-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background:#111;
+      color:#fff;
+      border:2px solid #111;
+      border-radius:10px;
+      padding:10px 14px;
+      font-weight:900;
+      font-family:"Poppins",system-ui,sans-serif;
+      font-size:14px;
+      line-height:1;
+      opacity:.72;
+      cursor:not-allowed;
+      pointer-events:none;
+    }
+
     .preview-frame-wrap{
       border:2px solid #111;
       border-radius:12px;
@@ -285,7 +301,6 @@
     @media (max-width:1100px){
       .is-home-sections .is-layout{ grid-template-columns:1fr; }
       .is-home-sections .is-nav{ position:relative; top:auto; }
-      .is-home-sections .is-nav-card{ max-height:none; }
     }
     @media (max-width:900px){
       .top-cta-bar{
@@ -306,7 +321,50 @@
       .buy-btn{ width:100%; justify-content:center; }
     }
 
-  </style>
+  
+    /* rounding-lock-standard */
+    body .lock-wrap{
+      text-align:center !important;
+      margin-top:2px !important;
+    }
+    body .is-download-btn{
+      appearance:none !important;
+      border:1px solid #0f335b !important;
+      background:linear-gradient(180deg, #2f79b8 0%, #1e5688 100%) !important;
+      color:#fff !important;
+      border-radius:999px !important;
+      height:46px !important;
+      padding:0 18px !important;
+      font-family:"Poppins",system-ui,sans-serif !important;
+      font-size:14px !important;
+      font-weight:800 !important;
+      letter-spacing:.01em !important;
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      gap:8px !important;
+      box-shadow:0 8px 16px rgba(16,40,70,.2) !important;
+      cursor:not-allowed !important;
+      opacity:1 !important;
+      pointer-events:none !important;
+    }
+    body .is-download-btn .lock{
+      width:18px !important;
+      height:18px !important;
+      border-radius:50% !important;
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      font-size:12px !important;
+      line-height:1 !important;
+      background:rgba(255,255,255,.18) !important;
+      border:1px solid rgba(255,255,255,.35) !important;
+    }
+    body .is-download-btn:disabled{
+      filter:none !important;
+      opacity:1 !important;
+    }
+</style>
 </head>
 <body>
   <div class="is-ticker" aria-label="Reviews ticker">
@@ -352,6 +410,22 @@
         <nav class="is-nav-card">
           <div class="is-nav-group is-nav-home">
             <a class="is-nav-link" href="./home-preview.html">&#127968; Home</a>
+          </div>
+
+          <div class="is-nav-header">Math Resources</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./placevalue-preview.html">Place Value</a>
+            <a class="is-nav-link" href="./rounding-preview.html">Rounding</a>
+            <a class="is-nav-link" href="./rounding-generator-preview.html">Rounding Generator</a>
+            <a class="is-nav-link" href="./addition-preview.html">Addition (Multi Digit)</a>
+            <a class="is-nav-link" href="./multiplication-preview.html">Multiplication</a>
+            <a class="is-nav-link" href="./division-preview.html">Long Division</a>
+            <a class="is-nav-link" href="./decimals-preview.html">Decimals</a>
+            <a class="is-nav-link" href="./fractions-preview.html">Fractions</a>
+            <a class="is-nav-link" href="./math-song-preview.html">Math Learning Songs</a>
+            <a class="is-nav-link" href="./google-puzzle-preview.html">Self Checking Google Sheets Puzzle</a>
+            <a class="is-nav-link" href="./math-riddle-preview.html">Math Fact Riddles</a>
+            <a class="is-nav-link" href="./ten-frame-preview.html">Ten Frame Test</a>
           </div>
 
           <div class="is-nav-header">Math Generators</div>
@@ -448,35 +522,116 @@
 
       <main class="is-main">
         <section class="is-page">
-          <header class="is-page-hero">
-            <h1>All Learning Songs and Resources</h1>
-            <p>Preview the generator below. Printing and full access are member-only.</p>
-          </header>
+<div style="max-width: 1200px; margin: 0px auto; font-family: Poppins, Arial, sans-serif; color: rgb(17, 17, 17);">
 
-          <div class="buy-options">
-            <div class="buy-options__text">
-              <div class="buy-options__title">Get this resource your way</div>
-              <div class="buy-options__sub">Most teachers choose membership once they grab 2-3 resources.</div>
-            </div>
-            <div class="buy-options__buttons">
-              <a class="buy-btn buy-btn--primary" href="https://member.interventionstation.com/join">
-                Get Everything - <span class="buy-price">$9.99/mo</span>
-              </a>
-              <a class="buy-btn buy-btn--secondary" href="https://interventionstation.com/membershipchoices">
-                What's Inside? <span class="buy-price">See Resources</span>
-              </a>
-            </div>
-          </div>
+  <div style="background: rgb(110, 193, 255); padding: 16px 18px;">
+    <p style="font-size: 28px; font-weight: 900; color: rgb(255, 255, 255); margin: 0px;"><strong>Skip Counting Songs</strong></p>
+    <p style="font-size: 16px; color: rgb(255, 255, 255); margin: 6px 0px 0px;">Preview the songs below. <strong>Downloads are members-only.</strong></p>
+  </div>
 
-          <div class="preview-frame-wrap">
-            <iframe
-              class="preview-iframe"
-              src="https://interventionstation.com/math-song-preview"
-              title="All Learning Songs and Resources Preview"
-              loading="lazy"
-              allowfullscreen
-            ></iframe>
-          </div>
+  <div style="border-bottom: 2px solid rgb(17, 17, 17);">
+
+    <div style="background: rgb(255, 224, 102); padding: 16px 18px;">
+      <p style="margin: 0px; font-size: 26px; font-weight: 900;"><strong>🎉 What’s New?</strong></p>
+      <p style="margin: 6px 0px 0px; font-size: 18px; font-weight: 700;"><strong>K-Pop Skip Count Songs!</strong></p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); border-top: 2px solid rgb(17, 17, 17);">
+
+      <div style="padding: 18px; border-right: 2px solid rgb(17, 17, 17);">
+        <p style="font-size: 20px; font-weight: 900; margin: 0px;"><strong>Skip Count by 6, 7, &amp; 8 to Soda Pop</strong></p>
+        <p style="margin: 10px 0px 14px;">High-energy K-Pop skip counting that kids LOVE.</p>
+        <div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div>
+      </div>
+
+      <div style="padding: 18px; border-right: 2px solid rgb(17, 17, 17);">
+        <p style="font-size: 20px; font-weight: 900; margin: 0px;"><strong>Skip Count by 9, 8, &amp; 7 to Golden</strong></p>
+        <p style="margin: 10px 0px 14px;">Smooth skip counting with a K-Pop vibe.</p>
+        <div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div>
+      </div>
+
+      <div style="padding: 18px;">
+        <p style="font-size: 20px; font-weight: 900; margin: 0px;"><strong>Adding to 10 with Golden</strong></p>
+        <p style="margin: 10px 0px 14px;">Perfect for early number sense and fluency.</p>
+        <div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="border-top: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);">
+
+    <div style="border-bottom: 2px solid rgb(17, 17, 17); padding: 16px 18px;"><p style="margin: 0px; font-size: 22px; font-weight: 900;"><strong>Count by 2</strong></p></div>
+    <div style="display: flex; flex-wrap: wrap; gap: 0px; border-bottom: 2px solid rgb(17, 17, 17);">
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>22</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Never Getting Back Together</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+    </div>
+
+    <div style="border-bottom: 2px solid rgb(17, 17, 17); padding: 16px 18px;"><p style="margin: 0px; font-size: 22px; font-weight: 900;"><strong>Count by 3</strong></p></div>
+    <div style="display: flex; flex-wrap: wrap; gap: 0px; border-bottom: 2px solid rgb(17, 17, 17);">
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Anti Hero</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Espresso</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+    </div>
+
+    <div style="border-bottom: 2px solid rgb(17, 17, 17); padding: 16px 18px;"><p style="margin: 0px; font-size: 22px; font-weight: 900;"><strong>Count by 4</strong></p></div>
+    <div style="display: flex; flex-wrap: wrap; gap: 0px; border-bottom: 2px solid rgb(17, 17, 17);">
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Bad Blood</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Beat It</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Dance the Night</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+    </div>
+
+    <div style="border-bottom: 2px solid rgb(17, 17, 17); padding: 16px 18px;"><p style="margin: 0px; font-size: 22px; font-weight: 900;"><strong>Count by 5</strong></p></div>
+    <div style="display: flex; flex-wrap: wrap; gap: 0px; border-bottom: 2px solid rgb(17, 17, 17);">
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Bye Bye Bye</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Mine</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+    </div>
+
+    <div style="border-bottom: 2px solid rgb(17, 17, 17); padding: 16px 18px;"><p style="margin: 0px; font-size: 22px; font-weight: 900;"><strong>Count by 6</strong></p></div>
+    <div style="display: flex; flex-wrap: wrap; gap: 0px; border-bottom: 2px solid rgb(17, 17, 17);">
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Style</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>APT</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Believer</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+    </div>
+
+    <div style="border-bottom: 2px solid rgb(17, 17, 17); padding: 16px 18px;"><p style="margin: 0px; font-size: 22px; font-weight: 900;"><strong>Count by 7</strong></p></div>
+    <div style="display: flex; flex-wrap: wrap; gap: 0px; border-bottom: 2px solid rgb(17, 17, 17);">
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>I Knew You Were Trouble</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Everybody</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Texas Hold Em'</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+    </div>
+
+    <div style="border-bottom: 2px solid rgb(17, 17, 17); padding: 16px 18px;"><p style="margin: 0px; font-size: 22px; font-weight: 900;"><strong>Count by 8</strong></p></div>
+    <div style="display: flex; flex-wrap: wrap; gap: 0px; border-bottom: 2px solid rgb(17, 17, 17);">
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Shake It Off</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Better Place</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>I Want It That Way</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Shaboozey</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>We Found Love</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+    </div>
+
+    <div style="border-bottom: 2px solid rgb(17, 17, 17); padding: 16px 18px;"><p style="margin: 0px; font-size: 22px; font-weight: 900;"><strong>Count by 9</strong></p></div>
+    <div style="display: flex; flex-wrap: wrap; gap: 0px; border-bottom: 2px solid rgb(17, 17, 17);">
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>I Want It That Way</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Last Night</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Look What You Made Me Do</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Blinding Lights</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+    </div>
+
+    <div style="border-bottom: 2px solid rgb(17, 17, 17); padding: 16px 18px;"><p style="margin: 0px; font-size: 22px; font-weight: 900;"><strong>Count by 10</strong></p></div>
+    <div style="display: flex; flex-wrap: wrap; gap: 0px; border-bottom: 2px solid rgb(17, 17, 17);">
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Little Boo Thang</strong></p><div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+    </div>
+
+    <div style="border-top: 0px; padding: 16px 18px; border-bottom: 2px solid rgb(17, 17, 17);"><p style="margin: 0px; font-size: 22px; font-weight: 900;"><strong>Skip Counting (Mixed)</strong></p></div>
+    <div style="display: flex; flex-wrap: wrap; gap: 0px;">
+      <div style="flex: 0 0 33.333%; box-sizing: border-box; padding: 14px 12px; border-right: 2px solid rgb(17, 17, 17);">
+        <p style="margin: 0px 0px 10px; font-size: 18px; font-weight: 900;"><strong>Blank Space (Count by 10, 9, 8, and 7)</strong></p>
+        <div style="text-align:center;"><button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button></div>
+      </div>
+    </div>
+
+  </div>
+</div>
         </section>
       </main>
     </div>

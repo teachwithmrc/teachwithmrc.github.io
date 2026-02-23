@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
-
     :root{
       --brand-dark:#2f3e4e;
       --brand-blue:#66c9f4;
@@ -16,6 +15,7 @@
       --border:rgba(0,0,0,.55);
       --offwhite:#f3f5f7;
       --panel:#ffffff;
+      --is-blue:#2f79b8;
     }
 
     html,body{
@@ -138,7 +138,6 @@
       align-items:start;
     }
     .is-home-sections .is-main{ min-width:0; }
-
     .is-home-sections .is-nav{
       position:sticky;
       top:16px;
@@ -148,8 +147,6 @@
       border:2px solid var(--border);
       padding:0;
       overflow:hidden;
-      max-height:85vh;
-      overflow-y:auto;
     }
     .is-home-sections .is-nav-group.is-nav-home{
       padding:10px 12px 8px;
@@ -174,7 +171,6 @@
       font-size:15.5px;
       line-height:1.35;
       padding:8px 0;
-      word-break:break-word;
     }
     .is-home-sections .is-nav-link:hover{ text-decoration:underline; }
     .is-home-sections .is-nav-link.is-active{
@@ -267,25 +263,116 @@
     }
     .buy-btn--secondary:hover{ background:#f6f9ff; }
 
-    .preview-frame-wrap{
-      border:2px solid #111;
-      border-radius:12px;
-      overflow:hidden;
-      background:#fff;
-      box-shadow:0 10px 22px rgba(31,54,95,0.07);
+    .rounding-wrap{
+      max-width:1200px;
+      margin:0 auto;
+      color:#111;
+      border-top:2px solid #111;
+      border-bottom:2px solid #111;
     }
-    .preview-iframe{
-      display:block;
-      width:100%;
-      height:1100px;
-      border:0;
+    .rounding-head{
+      background:#6ec1ff;
+      padding:16px 18px;
+    }
+    .rounding-head p{
+      margin:0;
+      color:#fff;
+    }
+    .rounding-head .title{
+      font-size:28px;
+      font-weight:900;
+    }
+    .rounding-head .sub{
+      margin-top:6px;
+      font-size:16px;
+      font-weight:600;
+    }
+
+    .rounding-rows{
+      border-top:2px solid #111;
+      border-bottom:2px solid #111;
+    }
+    .rounding-row{
+      display:flex;
+      border-bottom:2px solid #111;
+    }
+    .rounding-row:last-child{ border-bottom:none; }
+    .rounding-card{
+      flex:1;
+      padding:18px;
+      min-width:0;
+    }
+    .rounding-row .rounding-card:first-child{ border-right:2px solid #111; }
+    .rounding-card h3{
+      font-size:20px;
+      font-weight:900;
+      margin:0;
+      line-height:1.2;
+    }
+    .rounding-card .thumb{
+      margin:12px 0;
+      text-align:center;
+    }
+    .rounding-card .thumb img{
+      max-width:100%;
+      max-height:220px;
+      border:2px solid #111;
+      width:auto;
+      height:auto;
+      margin:0 auto;
       background:#fff;
+    }
+    .rounding-card p{
+      margin:0 0 12px;
+      font-size:14px;
+      line-height:1.4;
+    }
+
+    .lock-wrap{
+      text-align:center;
+      margin-top:2px;
+    }
+    .is-download-btn{
+      appearance:none;
+      border:1px solid #0f335b;
+      background:linear-gradient(180deg, #2f79b8 0%, #1e5688 100%);
+      color:#fff;
+      border-radius:999px;
+      height:46px;
+      padding:0 18px;
+      font-family:"Poppins",system-ui,sans-serif;
+      font-size:14px;
+      font-weight:800;
+      letter-spacing:.01em;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      box-shadow:0 8px 16px rgba(16,40,70,.2);
+      cursor:not-allowed;
+      opacity:1;
+    }
+    .is-download-btn .lock{
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(255,255,255,.16);
+      font-size:12px;
+      line-height:1;
+    }
+    .is-download-btn:disabled{
+      color:#fff;
+      opacity:1;
+      border-color:#0f335b;
+      background:linear-gradient(180deg, #2f79b8 0%, #1e5688 100%);
     }
 
     @media (max-width:1100px){
       .is-home-sections .is-layout{ grid-template-columns:1fr; }
       .is-home-sections .is-nav{ position:relative; top:auto; }
-      .is-home-sections .is-nav-card{ max-height:none; }
     }
     @media (max-width:900px){
       .top-cta-bar{
@@ -298,15 +385,63 @@
         flex-wrap:wrap;
         justify-content:center;
       }
-      .preview-iframe{ height:900px; }
+      .rounding-row{
+        flex-direction:column;
+      }
+      .rounding-row .rounding-card:first-child{
+        border-right:none;
+        border-bottom:2px solid #111;
+      }
     }
     @media (max-width:860px){
       .buy-options{ flex-direction:column; align-items:flex-start; }
       .buy-options__buttons{ width:100%; justify-content:flex-start; }
       .buy-btn{ width:100%; justify-content:center; }
     }
-
-  </style>
+  
+    /* rounding-lock-standard */
+    body .lock-wrap{
+      text-align:center !important;
+      margin-top:2px !important;
+    }
+    body .is-download-btn{
+      appearance:none !important;
+      border:1px solid #0f335b !important;
+      background:linear-gradient(180deg, #2f79b8 0%, #1e5688 100%) !important;
+      color:#fff !important;
+      border-radius:999px !important;
+      height:46px !important;
+      padding:0 18px !important;
+      font-family:"Poppins",system-ui,sans-serif !important;
+      font-size:14px !important;
+      font-weight:800 !important;
+      letter-spacing:.01em !important;
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      gap:8px !important;
+      box-shadow:0 8px 16px rgba(16,40,70,.2) !important;
+      cursor:not-allowed !important;
+      opacity:1 !important;
+      pointer-events:none !important;
+    }
+    body .is-download-btn .lock{
+      width:18px !important;
+      height:18px !important;
+      border-radius:50% !important;
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      font-size:12px !important;
+      line-height:1 !important;
+      background:rgba(255,255,255,.18) !important;
+      border:1px solid rgba(255,255,255,.35) !important;
+    }
+    body .is-download-btn:disabled{
+      filter:none !important;
+      opacity:1 !important;
+    }
+</style>
 </head>
 <body>
   <div class="is-ticker" aria-label="Reviews ticker">
@@ -334,13 +469,21 @@
 
       <div class="top-buttons-row">
         <a href="https://member.interventionstation.com/join">
-          <button type="button"><div class="main-heading-button">Join Membership</div></button>
+          <button type="button">
+            <div class="main-heading-group"><div class="main-heading-button">Join Membership</div></div>
+          </button>
         </a>
+
         <a href="https://interventionstation.com/membershipchoices">
-          <button type="button"><div class="main-heading-button">What's Inside?</div></button>
+          <button type="button">
+            <div class="main-heading-group"><div class="main-heading-button">What's Inside?</div></div>
+          </button>
         </a>
+
         <a href="https://member.interventionstation.com/login">
-          <button type="button"><div class="main-heading-button">Log In</div></button>
+          <button type="button">
+            <div class="main-heading-group"><div class="main-heading-button">Log In</div></div>
+          </button>
         </a>
       </div>
     </div>
@@ -354,33 +497,34 @@
             <a class="is-nav-link" href="./home-preview.html">&#127968; Home</a>
           </div>
 
-          <div class="is-nav-header">Math Generators</div>
+          <div class="is-nav-header">Math Resources</div>
           <div class="is-nav-group">
-            <a class="is-nav-link" href="./addition-generator-preview.html">Addition Worksheet Generator</a>
-            <a class="is-nav-link" href="./subtraction-generator-preview.html">Subtraction Worksheet Generator</a>
-            <a class="is-nav-link" href="./rounding-generator-preview.html">Rounding Worksheet Generator</a>
-            <a class="is-nav-link" href="./multiplication-standard-generator-preview.html">Multiplication Standard Generator</a>
-            <a class="is-nav-link" href="./multiplication-partial-products-generator-preview.html">Multiplication Partial Products Generator</a>
-            <a class="is-nav-link" href="./long-division-standard-generator-preview.html">Long Division Standard Generator</a>
-            <a class="is-nav-link" href="./long-division-scaffolded-generator-preview.html">Long Division Scaffolded Generator</a>
-            <a class="is-nav-link" href="./counting-coins-generator-preview.html">Counting Coins Generator</a>
-            <a class="is-nav-link" href="./math-tic-tac-toe-generator-preview.html">Math Tic Tac Toe Generator</a>
-            <a class="is-nav-link" href="./math-roll-and-read-generator-preview.html">Math Roll and Read Generator</a>
+            <a class="is-nav-link" href="./placevalue-preview.html">Place Value</a>
+            <a class="is-nav-link is-active" href="./rounding-preview.html">Rounding</a>
+            <a class="is-nav-link" href="./rounding-generator-preview.html">Rounding Generator</a>
+            <a class="is-nav-link" href="./addition-preview.html">Addition (Multi Digit)</a>
+            <a class="is-nav-link" href="./multiplication-preview.html">Multiplication</a>
+            <a class="is-nav-link" href="./division-preview.html">Long Division</a>
+            <a class="is-nav-link" href="./decimals-preview.html">Decimals</a>
+            <a class="is-nav-link" href="./fractions-preview.html">Fractions</a>
+            <a class="is-nav-link" href="./math-song-preview.html">Math Learning Songs</a>
+            <a class="is-nav-link" href="./google-puzzle-preview.html">Self Checking Google Sheets Puzzle</a>
+            <a class="is-nav-link" href="./math-riddle-preview.html">Math Fact Riddles</a>
+            <a class="is-nav-link" href="./ten-frame-preview.html">Ten Frame Test</a>
           </div>
 
           <div class="is-nav-header is-mt-12">SOR Generators</div>
           <div class="is-nav-group">
-            <a class="is-nav-link" href="./word-mapping-generator-preview.html">Word Mapping</a>
-            <a class="is-nav-link" href="./word-ladder-generator-preview.html">Word Ladder</a>
-            <a class="is-nav-link" href="./tic-tac-toe-generator-preview.html">Tic Tac Toe</a>
-            <a class="is-nav-link" href="./fluency-grid-generator-preview.html">Fluency Grid</a>
-            <a class="is-nav-link" href="./roll-and-read-generator-preview.html">Roll and Read</a>
-            <a class="is-nav-link" href="./spelling-with-pictures-generator-preview.html">Spelling with Pictures</a>
-            <a class="is-nav-link" href="./pyramid-spelling-generator-preview.html">Pyramid Spelling</a>
+            <a class="is-nav-link" href="./word-map-preview.html">Word Mapping</a>
+            <a class="is-nav-link" href="./tictacpreview.html">Tic Tac Toe</a>
+            <a class="is-nav-link" href="./fluencygridpreview.html">Fluency Grid</a>
+            <a class="is-nav-link" href="./rollreadpreview.html">Roll and Read</a>
+            <a class="is-nav-link" href="./wordladderpreview.html">Word Ladder</a>
           </div>
 
-          <div class="is-nav-header is-mt-12">Reading Resources</div>
+          <div class="is-nav-header is-mt-12">Reading / Phonics</div>
           <div class="is-nav-group">
+            <a class="is-nav-link" href="./games-preview.html">Learning Games</a>
             <a class="is-nav-link" href="./heart-words-preview.html">Heart Words</a>
             <a class="is-nav-link" href="./phonics-comics-preview.html">Phonics Comics</a>
             <a class="is-nav-link" href="./fix-mixup-preview.html">Fix the Mix Up</a>
@@ -388,60 +532,13 @@
             <a class="is-nav-link" href="./phonics-maze-preview.html">Phonics Path Maze</a>
             <a class="is-nav-link" href="./pick-the-pic-preview.html">Pick the Pic</a>
             <a class="is-nav-link" href="./hfw-pyramid-preview.html">High Frequency Word Pyramids</a>
-            <a class="is-nav-link" href="./spelling-preview.html">Spelling by Phonics Skills</a>
+            <a class="is-nav-link" href="./spelling-preview.html">Spelling by Phonics Skill</a>
             <a class="is-nav-link" href="./spelling-google-sheets-preview.html">Spelling Google Sheets</a>
-          </div>
-
-          <div class="is-nav-header is-mt-12">Interactive Games</div>
-          <div class="is-nav-group">
-            <a class="is-nav-link" href="./games-preview.html">Learning Games</a>
-            <a class="is-nav-link" href="./reading-game-board-preview.html">Interactive Reading Game Board</a>
-            <a class="is-nav-link" href="./math-game-board-preview.html">Interactive Math Game Board</a>
-            <a class="is-nav-link" href="./match-solve-memory-preview.html">Math & Solve Memory Hub</a>
           </div>
 
           <div class="is-nav-header is-mt-12">Learning Songs</div>
           <div class="is-nav-group">
             <a class="is-nav-link" href="./math-song-preview.html">All Learning Songs and Resources</a>
-          </div>
-
-          <div class="is-nav-header is-mt-12">All Generator Preview Files</div>
-          <div class="is-nav-group">
-            <a class="is-nav-link" href="./addition-generator-preview-frame.html">Addition Generator Preview Frame</a>
-            <a class="is-nav-link" href="./addsubtractmodels-generator-preview-frame.html">Addsubtractmodels Generator Preview Frame</a>
-            <a class="is-nav-link" href="./addsubtractmodels-generator-preview.html">Addsubtractmodels Generator Preview</a>
-            <a class="is-nav-link" href="./coin-counter-generator-preview-frame.html">Coin Counter Generator Preview Frame</a>
-            <a class="is-nav-link" href="./coin-counter-generator-preview.html">Coin Counter Generator Preview</a>
-            <a class="is-nav-link" href="./division-generator-preview-frame.html">Division Generator Preview Frame</a>
-            <a class="is-nav-link" href="./division-generator-preview.html">Division Generator Preview</a>
-            <a class="is-nav-link" href="./fluencygridpreview.html">Fluencygridpreview</a>
-            <a class="is-nav-link" href="./left_nav_master_preview.html">Left Nav Master Preview</a>
-            <a class="is-nav-link" href="./long-division-generator-preview-frame.html">Long Division Generator Preview Frame</a>
-            <a class="is-nav-link" href="./long-division-generator-preview.html">Long Division Generator Preview</a>
-            <a class="is-nav-link" href="./mathrollread-preview-frame.html">Mathrollread Preview Frame</a>
-            <a class="is-nav-link" href="./mathrollread-preview.html">Mathrollread Preview</a>
-            <a class="is-nav-link" href="./mathtictac-preview-frame.html">Mathtictac Preview Frame</a>
-            <a class="is-nav-link" href="./mathtictac-preview.html">Mathtictac Preview</a>
-            <a class="is-nav-link" href="./multiplication-generator-preview-frame.html">Multiplication Generator Preview Frame</a>
-            <a class="is-nav-link" href="./multiplication-generator-preview.html">Multiplication Generator Preview</a>
-            <a class="is-nav-link" href="./multiply-generator-preview.html">Multiply Generator Preview</a>
-            <a class="is-nav-link" href="./multisyllabic_phase_preview.html">Multisyllabic Phase Preview</a>
-            <a class="is-nav-link" href="./partialproducts-generator-preview-frame.html">Partialproducts Generator Preview Frame</a>
-            <a class="is-nav-link" href="./partialproducts-generator-preview.html">Partialproducts Generator Preview</a>
-            <a class="is-nav-link" href="./phonicspreview.html">Phonicspreview</a>
-            <a class="is-nav-link" href="./readinggames-preview.html">Readinggames Preview</a>
-            <a class="is-nav-link" href="./rollreadpreview-frame.html">Rollreadpreview Frame</a>
-            <a class="is-nav-link" href="./rollreadpreview.html">Rollreadpreview</a>
-            <a class="is-nav-link" href="./rounding-generator-preview-frame.html">Rounding Generator Preview Frame</a>
-            <a class="is-nav-link is-active" href="./rounding-preview.html">Rounding Preview</a>
-            <a class="is-nav-link" href="./subtraction-generator-preview-frame.html">Subtraction Generator Preview Frame</a>
-            <a class="is-nav-link" href="./tictacpreview-frame.html">Tictacpreview Frame</a>
-            <a class="is-nav-link" href="./tictacpreview.html">Tictacpreview</a>
-            <a class="is-nav-link" href="./ultimate_math_game_modes_preview.html">Ultimate Math Game Modes Preview</a>
-            <a class="is-nav-link" href="./ultimate_reading_game_modes_preview.html">Ultimate Reading Game Modes Preview</a>
-            <a class="is-nav-link" href="./wordladderpreview.html">Wordladderpreview</a>
-            <a class="is-nav-link" href="./wordmap2preview.html">Wordmap2preview</a>
-            <a class="is-nav-link" href="./wordmap2preview_multisyllabic.html">Wordmap2preview Multisyllabic</a>
           </div>
         </nav>
       </aside>
@@ -449,8 +546,8 @@
       <main class="is-main">
         <section class="is-page">
           <header class="is-page-hero">
-            <h1>Rounding Preview</h1>
-            <p>Preview the generator below. Printing and full access are member-only.</p>
+            <h1>Rounding Resources</h1>
+            <p>Preview what is included. Member downloads are locked on this page.</p>
           </header>
 
           <div class="buy-options">
@@ -458,24 +555,120 @@
               <div class="buy-options__title">Get this resource your way</div>
               <div class="buy-options__sub">Most teachers choose membership once they grab 2-3 resources.</div>
             </div>
+
             <div class="buy-options__buttons">
               <a class="buy-btn buy-btn--primary" href="https://member.interventionstation.com/join">
                 Get Everything - <span class="buy-price">$9.99/mo</span>
               </a>
-              <a class="buy-btn buy-btn--secondary" href="https://interventionstation.com/membershipchoices">
+              <a class="buy-btn buy-btn--secondary" href="https://member.interventionstation.com/membership">
                 What's Inside? <span class="buy-price">See Resources</span>
               </a>
             </div>
           </div>
 
-          <div class="preview-frame-wrap">
-            <iframe
-              class="preview-iframe"
-              src="../rounding-preview.html"
-              title="Rounding Preview Preview"
-              loading="lazy"
-              allowfullscreen
-            ></iframe>
+          <div class="rounding-head">
+            <p class="title"><strong>Rounding Resources</strong></p>
+            <p class="sub">Preview samples below. Downloads are locked for members only.</p>
+          </div>
+
+          <div class="rounding-wrap">
+            <div class="rounding-rows">
+              <div class="rounding-row">
+                <div class="rounding-card">
+                  <h3><strong>Rounding to the Nearest Ten</strong></h3>
+                  <div class="thumb">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/69631633e18638255cb5fc98.png" alt="Rounding to the nearest ten preview">
+                  </div>
+                  <p>Round 2-digit and 3-digit numbers to the nearest ten using number lines and place value.</p>
+                  <div class="lock-wrap">
+                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button>
+                  </div>
+                </div>
+
+                <div class="rounding-card">
+                  <h3><strong>Rounding to the Nearest Ten (in 100)</strong></h3>
+                  <div class="thumb">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/69631633f8a93b0f0aabbdb4.png" alt="Rounding to the nearest ten in 100 preview">
+                  </div>
+                  <p>Round numbers within 0-100 to the nearest ten with visual supports and quick checks.</p>
+                  <div class="lock-wrap">
+                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounding-row">
+                <div class="rounding-card">
+                  <h3><strong>Rounding to the Nearest Hundred</strong></h3>
+                  <div class="thumb">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/69631633c7683b5e8889d40f.png" alt="Rounding to the nearest hundred preview">
+                  </div>
+                  <p>Round 3-digit and 4-digit numbers to the nearest hundred using place value and number lines.</p>
+                  <div class="lock-wrap">
+                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button>
+                  </div>
+                </div>
+
+                <div class="rounding-card">
+                  <h3><strong>Rounding to the Nearest Thousand</strong></h3>
+                  <div class="thumb">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/69631633e186382631b5fc99.png" alt="Rounding to the nearest thousand preview">
+                  </div>
+                  <p>Round 4-digit and 5-digit numbers to the nearest thousand with strong place-value support.</p>
+                  <div class="lock-wrap">
+                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounding-row">
+                <div class="rounding-card">
+                  <h3><strong>Rounding to the Nearest Thousand (in 10,000)</strong></h3>
+                  <div class="thumb">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/69631633e186382631b5fc99.png" alt="Rounding to the nearest thousand in ten thousand preview">
+                  </div>
+                  <p>Practice rounding within 0-10,000 to the nearest thousand with benchmark-friendly problems.</p>
+                  <div class="lock-wrap">
+                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button>
+                  </div>
+                </div>
+
+                <div class="rounding-card">
+                  <h3><strong>Rounding to the Nearest Tenth</strong></h3>
+                  <div class="thumb">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/696316afc7683b282789e859.png" alt="Rounding to the nearest tenth preview">
+                  </div>
+                  <p>Round decimals to the nearest tenth with place-value models and guided practice.</p>
+                  <div class="lock-wrap">
+                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounding-row">
+                <div class="rounding-card">
+                  <h3><strong>Rounding to the Nearest Hundredth</strong></h3>
+                  <div class="thumb">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/696316afc7683b181c89e85a.png" alt="Rounding to the nearest hundredth preview">
+                  </div>
+                  <p>Round decimals to the nearest hundredth using place value and careful digit checks.</p>
+                  <div class="lock-wrap">
+                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button>
+                  </div>
+                </div>
+
+                <div class="rounding-card">
+                  <h3><strong>Rounding to the Nearest Whole Number</strong></h3>
+                  <div class="thumb">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/696316af98efbd82c1d10b14.png" alt="Rounding to the nearest whole number preview">
+                  </div>
+                  <p>Round decimals to the nearest whole number with visual supports and quick practice.</p>
+                  <div class="lock-wrap">
+                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </main>

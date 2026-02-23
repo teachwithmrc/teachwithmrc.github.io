@@ -148,8 +148,6 @@
       border:2px solid var(--border);
       padding:0;
       overflow:hidden;
-      max-height:85vh;
-      overflow-y:auto;
     }
     .is-home-sections .is-nav-group.is-nav-home{
       padding:10px 12px 8px;
@@ -306,7 +304,50 @@
       .buy-btn{ width:100%; justify-content:center; }
     }
 
-  </style>
+  
+    /* rounding-lock-standard */
+    body .lock-wrap{
+      text-align:center !important;
+      margin-top:2px !important;
+    }
+    body .is-download-btn{
+      appearance:none !important;
+      border:1px solid #0f335b !important;
+      background:linear-gradient(180deg, #2f79b8 0%, #1e5688 100%) !important;
+      color:#fff !important;
+      border-radius:999px !important;
+      height:46px !important;
+      padding:0 18px !important;
+      font-family:"Poppins",system-ui,sans-serif !important;
+      font-size:14px !important;
+      font-weight:800 !important;
+      letter-spacing:.01em !important;
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      gap:8px !important;
+      box-shadow:0 8px 16px rgba(16,40,70,.2) !important;
+      cursor:not-allowed !important;
+      opacity:1 !important;
+      pointer-events:none !important;
+    }
+    body .is-download-btn .lock{
+      width:18px !important;
+      height:18px !important;
+      border-radius:50% !important;
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      font-size:12px !important;
+      line-height:1 !important;
+      background:rgba(255,255,255,.18) !important;
+      border:1px solid rgba(255,255,255,.35) !important;
+    }
+    body .is-download-btn:disabled{
+      filter:none !important;
+      opacity:1 !important;
+    }
+</style>
 </head>
 <body>
   <div class="is-ticker" aria-label="Reviews ticker">
@@ -352,6 +393,22 @@
         <nav class="is-nav-card">
           <div class="is-nav-group is-nav-home">
             <a class="is-nav-link" href="./home-preview.html">&#127968; Home</a>
+          </div>
+
+          <div class="is-nav-header">Math Resources</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./placevalue-preview.html">Place Value</a>
+            <a class="is-nav-link" href="./rounding-preview.html">Rounding</a>
+            <a class="is-nav-link" href="./rounding-generator-preview.html">Rounding Generator</a>
+            <a class="is-nav-link" href="./addition-preview.html">Addition (Multi Digit)</a>
+            <a class="is-nav-link" href="./multiplication-preview.html">Multiplication</a>
+            <a class="is-nav-link" href="./division-preview.html">Long Division</a>
+            <a class="is-nav-link" href="./decimals-preview.html">Decimals</a>
+            <a class="is-nav-link" href="./fractions-preview.html">Fractions</a>
+            <a class="is-nav-link" href="./math-song-preview.html">Math Learning Songs</a>
+            <a class="is-nav-link" href="./google-puzzle-preview.html">Self Checking Google Sheets Puzzle</a>
+            <a class="is-nav-link" href="./math-riddle-preview.html">Math Fact Riddles</a>
+            <a class="is-nav-link" href="./ten-frame-preview.html">Ten Frame Test</a>
           </div>
 
           <div class="is-nav-header">Math Generators</div>
@@ -448,37 +505,68 @@
 
       <main class="is-main">
         <section class="is-page">
-          <header class="is-page-hero">
-            <h1>Learning Games</h1>
-            <p>Preview the generator below. Printing and full access are member-only.</p>
-          </header>
+          <style>
+            .is-download-btn{
+              display:inline-flex;
+              align-items:center;
+              justify-content:center;
+              background:#111;
+              color:#fff;
+              border:2px solid #111;
+              border-radius:10px;
+              padding:10px 14px;
+              font-weight:900;
+              font-family:"Poppins",system-ui,sans-serif;
+              font-size:14px;
+              line-height:1;
+              opacity:.72;
+              cursor:not-allowed;
+              pointer-events:none;
+            }
+            .is-pill{
+              display:inline-block;
+              margin-left:8px;
+              padding:5px 10px;
+              border-radius:999px;
+              font-size:12px;
+              font-weight:900;
+              background:#e9f5ff;
+              color:#17395d;
+              border:1px solid #9ac7e6;
+              vertical-align:middle;
+            }
+          </style>
 
-          <div class="buy-options">
-            <div class="buy-options__text">
-              <div class="buy-options__title">Get this resource your way</div>
-              <div class="buy-options__sub">Most teachers choose membership once they grab 2-3 resources.</div>
+          <div style="max-width:1200px;margin:0 auto;font-family:Poppins,Arial,sans-serif;color:#111;">
+            <div style="background:#6ec1ff;padding:16px 18px;border:2px solid #111;">
+              <p style="font-size:28px;font-weight:900;color:#fff;margin:0;"><strong>Phonics Skill Games</strong></p>
+              <div style="margin-top:12px;">
+                <img src="https://storage.googleapis.com/revex-membership-production/memberships/F9vnmU5R8sOuTGoxp5by/courses/A-Brand-Colour-Palette-Guide--600-x-360-px--8-gha2.png" alt="Phonics Games Preview" style="width:100%;height:auto;display:block;border-radius:10px;">
+              </div>
+              <p style="font-size:16px;color:#fff;margin:10px 0 0;">Click a skill to unlock <strong>10 interactive games</strong> with the correct word set.</p>
             </div>
-            <div class="buy-options__buttons">
-              <a class="buy-btn buy-btn--primary" href="https://member.interventionstation.com/join">
-                Get Everything - <span class="buy-price">$9.99/mo</span>
-              </a>
-              <a class="buy-btn buy-btn--secondary" href="https://interventionstation.com/membershipchoices">
-                What's Inside? <span class="buy-price">See Resources</span>
-              </a>
-            </div>
-          </div>
 
-          <div class="preview-frame-wrap">
-            <iframe
-              class="preview-iframe"
-              src="../readinggames-preview.html"
-              title="Learning Games Preview"
-              loading="lazy"
-              allowfullscreen
-            ></iframe>
+            <div style="border-left:2px solid #111;border-right:2px solid #111;border-bottom:2px solid #111;">
+              <div style="padding:14px 18px;border-bottom:2px solid #111;">
+                <p style="margin:0;font-size:18px;font-weight:900;"><strong>Choose a Skill</strong></p>
+                <p style="margin:6px 0 0;line-height:1.35;">Every skill includes <strong>10 game templates</strong> (Wheel, Crane, Wall, Magic Box, etc.) pre-loaded with the right word list.</p>
+              </div>
+
+              <div style="padding:16px 18px;border-bottom:2px solid #111;"><p style="margin:0;font-size:20px;font-weight:900;">CVC Words <span class="is-pill">10 GAMES</span></p><p style="margin:8px 0 0;line-height:1.35;">Instant practice + engagement: spin, pick, reveal, and read - all with CVC word sets ready to go.</p><div style="margin-top:12px;"><button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+              <div style="padding:16px 18px;border-bottom:2px solid #111;"><p style="margin:0;font-size:20px;font-weight:900;">Endings S &amp; ES <span class="is-pill">10 GAMES</span></p><p style="margin:8px 0 0;line-height:1.35;">Reinforce endings with fast, repeatable drills that don't feel like drills.</p><div style="margin-top:12px;"><button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+              <div style="padding:16px 18px;border-bottom:2px solid #111;"><p style="margin:0;font-size:20px;font-weight:900;">Inflectional Endings (-ed &amp; -ing) <span class="is-pill">10 GAMES</span></p><p style="margin:8px 0 0;line-height:1.35;">Target -ed/-ing rules with quick rounds that build accuracy and fluency.</p><div style="margin-top:12px;"><button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+              <div style="padding:16px 18px;border-bottom:2px solid #111;"><p style="margin:0;font-size:20px;font-weight:900;">Consonant Blends <span class="is-pill">10 GAMES</span></p><p style="margin:8px 0 0;line-height:1.35;">Perfect for small group warm-ups: quick pulls that force clean blending.</p><div style="margin-top:12px;"><button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+              <div style="padding:16px 18px;border-bottom:2px solid #111;"><p style="margin:0;font-size:20px;font-weight:900;">Silent E (CVCe) <span class="is-pill">10 GAMES</span></p><p style="margin:8px 0 0;line-height:1.35;">Keep magic e consistent with engaging rounds students beg to repeat.</p><div style="margin-top:12px;"><button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+              <div style="padding:16px 18px;border-bottom:2px solid #111;"><p style="margin:0;font-size:20px;font-weight:900;">3-Letter Blends <span class="is-pill">10 GAMES</span></p><p style="margin:8px 0 0;line-height:1.35;">Make tougher blends feel doable with fast reps and instant engagement.</p><div style="margin-top:12px;"><button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+              <div style="padding:16px 18px;border-bottom:2px solid #111;"><p style="margin:0;font-size:20px;font-weight:900;">Advanced Digraphs (wh, ph, ng) <span class="is-pill">10 GAMES</span></p><p style="margin:8px 0 0;line-height:1.35;">A next step set that keeps older kids bought-in without babyish materials.</p><div style="margin-top:12px;"><button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+              <div style="padding:16px 18px;border-bottom:2px solid #111;"><p style="margin:0;font-size:20px;font-weight:900;">Trigraphs (dge &amp; tch) <span class="is-pill">10 GAMES</span></p><p style="margin:8px 0 0;line-height:1.35;">High-leverage patterns that kids need repeated exposure to, made fun.</p><div style="margin-top:12px;"><button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+              <div style="padding:16px 18px;border-bottom:2px solid #111;"><p style="margin:0;font-size:20px;font-weight:900;">R-Controlled (1 Syllable) <span class="is-pill">10 GAMES</span></p><p style="margin:8px 0 0;line-height:1.35;">Build automaticity with ar/er/ir/or/ur through quick randomized rounds.</p><div style="margin-top:12px;"><button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+              <div style="padding:16px 18px;"><p style="margin:0;font-size:20px;font-weight:900;">Consonant LE <span class="is-pill">10 GAMES</span></p><p style="margin:8px 0 0;line-height:1.35;">Nail the syllable type with repeated exposure that does not feel repetitive.</p><div style="margin-top:12px;"><button class="is-download-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Locked - Members Only</button></div></div>
+            </div>
           </div>
         </section>
       </main>
+
     </div>
   </section>
 </body>
