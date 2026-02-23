@@ -28,10 +28,10 @@
   <div class="wrap">
     <section class="head">
       <h1>Mobile Generator Pages</h1>
-      <p>Each link opens an individual mobile-friendly version for a generator page.</p>
+      <p>Preview-only locked pages. Live generator functionality is not exposed here.</p>
       <div class="actions">
         <a class="btn" href="../mobile_nav_hub_v1.html">Back to Mobile Hub</a>
-        <a class="btn primary" href="mobile_generator_wrapper.html?src=../rounding.html">Open Wrapper</a>
+        <a class="btn primary" href="mobile_generator_wrapper.html?g=rounding">Open Wrapper</a>
       </div>
     </section>
     <section id="list" class="grid"></section>
@@ -82,7 +82,7 @@
       const open = document.createElement('a');
       open.className = 'btn primary';
       open.href = item.href;
-      open.textContent = 'Open Mobile';
+      open.textContent = 'Open Locked Preview';
       card.appendChild(name);
       card.appendChild(open);
       list.appendChild(card);
