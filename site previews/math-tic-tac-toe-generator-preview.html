@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intervention Station | Math Tic Tac Toe Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+
+    :root{
+      --brand-dark:#2f3e4e;
+      --brand-blue:#66c9f4;
+      --ink:#102246;
+      --border:rgba(0,0,0,.55);
+      --offwhite:#f3f5f7;
+      --panel:#ffffff;
+    }
+
+    html,body{
+      margin:0;
+      padding:0;
+      font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--ink);
+      background:var(--offwhite);
+    }
+    *,*::before,*::after{ box-sizing:border-box; }
+    img{ display:block; max-width:100%; height:auto; }
+    body{ overflow-x:hidden; }
+
+    .top-cta-wrap{ background:var(--brand-dark); }
+    .top-cta-bar{
+      position:sticky;
+      top:0;
+      z-index:9999;
+      background:var(--brand-dark);
+      width:min(1200px, calc(100% - 32px));
+      margin:0 auto;
+      padding:12px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:nowrap;
+    }
+    .top-logo{
+      width:auto;
+      height:auto;
+      max-width:min(480px, 40vw);
+    }
+    .top-buttons-row{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:10px;
+      flex-wrap:nowrap;
+    }
+    .top-buttons-row a{
+      display:inline-flex;
+      text-decoration:none;
+    }
+    .top-buttons-row button{
+      appearance:none;
+      width:168px;
+      min-width:168px;
+      height:46px;
+      padding:0 14px;
+      background:var(--brand-blue);
+      border:2px solid var(--brand-blue);
+      border-radius:12px;
+      color:#fff;
+      font-family:"Poppins",system-ui,sans-serif;
+      font-size:16px;
+      font-weight:600;
+      line-height:1;
+      white-space:nowrap;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      transition:filter .15s ease, box-shadow .15s ease;
+    }
+    .top-buttons-row button:hover{
+      filter:brightness(.96);
+      box-shadow:0 2px 6px rgba(0,0,0,.18);
+    }
+
+    .is-ticker{
+      background:var(--brand-dark);
+      border-top:1px solid rgba(255,255,255,.18);
+      border-bottom:1px solid rgba(255,255,255,.18);
+      overflow:hidden;
+      width:100%;
+    }
+    .is-ticker-track{
+      display:flex;
+      align-items:center;
+      gap:28px;
+      padding:10px 0;
+      width:max-content;
+      white-space:nowrap;
+      animation:isTickerScroll 34s linear infinite;
+      will-change:transform;
+    }
+    .is-ticker:hover .is-ticker-track{ animation-play-state:paused; }
+    .is-ticker-item{
+      display:inline-flex;
+      align-items:center;
+      flex:0 0 auto;
+      color:#fff;
+      font-size:12px;
+      font-weight:650;
+      line-height:1.1;
+    }
+    .is-ticker-star{
+      color:#ffe08a;
+      margin-right:6px;
+      font-weight:900;
+    }
+    @keyframes isTickerScroll{
+      from{ transform:translate3d(0,0,0); }
+      to{ transform:translate3d(-50%,0,0); }
+    }
+
+    .is-home-sections{
+      background:var(--offwhite);
+      padding:18px 0 34px;
+    }
+    .is-home-sections .is-wrap{
+      width:min(1200px, calc(100% - 32px));
+      margin:0 auto;
+    }
+    .is-home-sections .is-layout{
+      display:grid;
+      grid-template-columns:320px minmax(0,1fr);
+      gap:12px;
+      align-items:start;
+    }
+    .is-home-sections .is-main{ min-width:0; }
+
+    .is-home-sections .is-nav{
+      position:sticky;
+      top:16px;
+    }
+    .is-home-sections .is-nav-card{
+      background:var(--panel);
+      border:2px solid var(--border);
+      padding:0;
+      overflow:hidden;
+      max-height:85vh;
+      overflow-y:auto;
+    }
+    .is-home-sections .is-nav-group.is-nav-home{
+      padding:10px 12px 8px;
+      border-bottom:2px solid rgba(0,0,0,.18);
+    }
+    .is-home-sections .is-mt-12{ margin-top:8px; }
+    .is-home-sections .is-nav-header{
+      background:var(--brand-blue);
+      color:#fff;
+      font-weight:700;
+      font-size:22px;
+      line-height:1.1;
+      padding:12px 14px;
+      margin:0;
+    }
+    .is-home-sections .is-nav-group{ padding:6px 12px 10px; }
+    .is-home-sections .is-nav-link{
+      display:block;
+      text-decoration:none;
+      color:#102246;
+      font-weight:600;
+      font-size:15.5px;
+      line-height:1.35;
+      padding:8px 0;
+      word-break:break-word;
+    }
+    .is-home-sections .is-nav-link:hover{ text-decoration:underline; }
+    .is-home-sections .is-nav-link.is-active{
+      color:#0f2e52;
+      text-decoration:underline;
+      text-decoration-thickness:2px;
+    }
+
+    .is-home-sections .is-page{
+      background:var(--panel);
+      border:2px solid var(--border);
+      overflow:hidden;
+      padding:16px;
+    }
+    .is-page-hero{
+      background:#f6fbff;
+      border:1px solid #d5e6f5;
+      border-radius:14px;
+      padding:14px 16px;
+      margin-bottom:16px;
+    }
+    .is-page-hero h1{
+      margin:0 0 6px;
+      font-size:30px;
+      line-height:1.1;
+      font-weight:900;
+      color:#0e2b4f;
+    }
+    .is-page-hero p{
+      margin:0;
+      font-size:14px;
+      font-weight:600;
+      color:#4f6689;
+    }
+
+    .buy-options{
+      color:#1f365f;
+      border:1px solid #cfd7ef;
+      background:#ffffff;
+      border-radius:18px;
+      padding:16px;
+      box-shadow:0 10px 22px rgba(31,54,95,0.07);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:18px;
+    }
+    .buy-options__title{
+      font-weight:900;
+      font-size:18px;
+      line-height:1.15;
+      margin-bottom:4px;
+    }
+    .buy-options__sub{
+      font-size:13px;
+      font-weight:600;
+      color:#546a92;
+    }
+    .buy-options__buttons{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .buy-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      text-decoration:none;
+      border-radius:999px;
+      padding:12px 16px;
+      font-weight:900;
+      line-height:1;
+      border:1px solid transparent;
+      transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .buy-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 10px 18px rgba(31,54,95,0.12);
+    }
+    .buy-btn--primary{ background:#6ec1ff; color:#fff; }
+    .buy-btn--secondary{
+      background:#fff;
+      color:#1f365f;
+      border-color:#cfd7ef;
+    }
+    .buy-btn--secondary:hover{ background:#f6f9ff; }
+
+    .preview-frame-wrap{
+      border:2px solid #111;
+      border-radius:12px;
+      overflow:hidden;
+      background:#fff;
+      box-shadow:0 10px 22px rgba(31,54,95,0.07);
+    }
+    .preview-iframe{
+      display:block;
+      width:100%;
+      height:1100px;
+      border:0;
+      background:#fff;
+    }
+
+    @media (max-width:1100px){
+      .is-home-sections .is-layout{ grid-template-columns:1fr; }
+      .is-home-sections .is-nav{ position:relative; top:auto; }
+      .is-home-sections .is-nav-card{ max-height:none; }
+    }
+    @media (max-width:900px){
+      .top-cta-bar{
+        flex-wrap:wrap;
+        justify-content:center;
+        text-align:center;
+      }
+      .top-logo{ max-width:92vw; }
+      .top-buttons-row{
+        flex-wrap:wrap;
+        justify-content:center;
+      }
+      .preview-iframe{ height:900px; }
+    }
+    @media (max-width:860px){
+      .buy-options{ flex-direction:column; align-items:flex-start; }
+      .buy-options__buttons{ width:100%; justify-content:flex-start; }
+      .buy-btn{ width:100%; justify-content:center; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="is-ticker" aria-label="Reviews ticker">
+    <div class="is-ticker-track">
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"Best intervention resources ever - my kids LOVE it."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"Saved me hours every week. Worth every penny."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"The generators are unreal. Print and go."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"My small groups finally feel organized."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"Best intervention resources ever - my kids LOVE it."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"Saved me hours every week. Worth every penny."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"The generators are unreal. Print and go."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"My small groups finally feel organized."</div>
+    </div>
+  </div>
+
+  <div class="top-cta-wrap">
+    <div class="top-cta-bar">
+      <img
+        src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png"
+        height="95"
+        width="500"
+        alt="Intervention Station"
+        class="top-logo"
+      />
+
+      <div class="top-buttons-row">
+        <a href="https://member.interventionstation.com/join">
+          <button type="button"><div class="main-heading-button">Join Membership</div></button>
+        </a>
+        <a href="https://interventionstation.com/membershipchoices">
+          <button type="button"><div class="main-heading-button">What's Inside?</div></button>
+        </a>
+        <a href="https://member.interventionstation.com/login">
+          <button type="button"><div class="main-heading-button">Log In</div></button>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <section class="is-home-sections">
+    <div class="is-wrap is-layout">
+      <aside class="is-nav" aria-label="Navigation">
+        <nav class="is-nav-card">
+          <div class="is-nav-group is-nav-home">
+            <a class="is-nav-link" href="./home-preview.html">&#127968; Home</a>
+          </div>
+
+          <div class="is-nav-header">Math Generators</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./addition-generator-preview.html">Addition Worksheet Generator</a>
+            <a class="is-nav-link" href="./subtraction-generator-preview.html">Subtraction Worksheet Generator</a>
+            <a class="is-nav-link" href="./rounding-generator-preview.html">Rounding Worksheet Generator</a>
+            <a class="is-nav-link" href="./multiplication-standard-generator-preview.html">Multiplication Standard Generator</a>
+            <a class="is-nav-link" href="./multiplication-partial-products-generator-preview.html">Multiplication Partial Products Generator</a>
+            <a class="is-nav-link" href="./long-division-standard-generator-preview.html">Long Division Standard Generator</a>
+            <a class="is-nav-link" href="./long-division-scaffolded-generator-preview.html">Long Division Scaffolded Generator</a>
+            <a class="is-nav-link" href="./counting-coins-generator-preview.html">Counting Coins Generator</a>
+            <a class="is-nav-link is-active" href="./math-tic-tac-toe-generator-preview.html">Math Tic Tac Toe Generator</a>
+            <a class="is-nav-link" href="./math-roll-and-read-generator-preview.html">Math Roll and Read Generator</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">SOR Generators</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./word-mapping-generator-preview.html">Word Mapping</a>
+            <a class="is-nav-link" href="./word-ladder-generator-preview.html">Word Ladder</a>
+            <a class="is-nav-link" href="./tic-tac-toe-generator-preview.html">Tic Tac Toe</a>
+            <a class="is-nav-link" href="./fluency-grid-generator-preview.html">Fluency Grid</a>
+            <a class="is-nav-link" href="./roll-and-read-generator-preview.html">Roll and Read</a>
+            <a class="is-nav-link" href="./spelling-with-pictures-generator-preview.html">Spelling with Pictures</a>
+            <a class="is-nav-link" href="./pyramid-spelling-generator-preview.html">Pyramid Spelling</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Reading Resources</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./heart-words-preview.html">Heart Words</a>
+            <a class="is-nav-link" href="./phonics-comics-preview.html">Phonics Comics</a>
+            <a class="is-nav-link" href="./fix-mixup-preview.html">Fix the Mix Up</a>
+            <a class="is-nav-link" href="./blending-slides-preview.html">Blending Slides</a>
+            <a class="is-nav-link" href="./phonics-maze-preview.html">Phonics Path Maze</a>
+            <a class="is-nav-link" href="./pick-the-pic-preview.html">Pick the Pic</a>
+            <a class="is-nav-link" href="./hfw-pyramid-preview.html">High Frequency Word Pyramids</a>
+            <a class="is-nav-link" href="./spelling-preview.html">Spelling by Phonics Skills</a>
+            <a class="is-nav-link" href="./spelling-google-sheets-preview.html">Spelling Google Sheets</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Interactive Games</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./games-preview.html">Learning Games</a>
+            <a class="is-nav-link" href="./reading-game-board-preview.html">Interactive Reading Game Board</a>
+            <a class="is-nav-link" href="./math-game-board-preview.html">Interactive Math Game Board</a>
+            <a class="is-nav-link" href="./match-solve-memory-preview.html">Math & Solve Memory Hub</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Learning Songs</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./math-song-preview.html">All Learning Songs and Resources</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">All Generator Preview Files</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./addition-generator-preview-frame.html">Addition Generator Preview Frame</a>
+            <a class="is-nav-link" href="./addsubtractmodels-generator-preview-frame.html">Addsubtractmodels Generator Preview Frame</a>
+            <a class="is-nav-link" href="./addsubtractmodels-generator-preview.html">Addsubtractmodels Generator Preview</a>
+            <a class="is-nav-link" href="./coin-counter-generator-preview-frame.html">Coin Counter Generator Preview Frame</a>
+            <a class="is-nav-link" href="./coin-counter-generator-preview.html">Coin Counter Generator Preview</a>
+            <a class="is-nav-link" href="./division-generator-preview-frame.html">Division Generator Preview Frame</a>
+            <a class="is-nav-link" href="./division-generator-preview.html">Division Generator Preview</a>
+            <a class="is-nav-link" href="./fluencygridpreview.html">Fluencygridpreview</a>
+            <a class="is-nav-link" href="./left_nav_master_preview.html">Left Nav Master Preview</a>
+            <a class="is-nav-link" href="./long-division-generator-preview-frame.html">Long Division Generator Preview Frame</a>
+            <a class="is-nav-link" href="./long-division-generator-preview.html">Long Division Generator Preview</a>
+            <a class="is-nav-link" href="./mathrollread-preview-frame.html">Mathrollread Preview Frame</a>
+            <a class="is-nav-link" href="./mathrollread-preview.html">Mathrollread Preview</a>
+            <a class="is-nav-link" href="./mathtictac-preview-frame.html">Mathtictac Preview Frame</a>
+            <a class="is-nav-link" href="./mathtictac-preview.html">Mathtictac Preview</a>
+            <a class="is-nav-link" href="./multiplication-generator-preview-frame.html">Multiplication Generator Preview Frame</a>
+            <a class="is-nav-link" href="./multiplication-generator-preview.html">Multiplication Generator Preview</a>
+            <a class="is-nav-link" href="./multiply-generator-preview.html">Multiply Generator Preview</a>
+            <a class="is-nav-link" href="./multisyllabic_phase_preview.html">Multisyllabic Phase Preview</a>
+            <a class="is-nav-link" href="./partialproducts-generator-preview-frame.html">Partialproducts Generator Preview Frame</a>
+            <a class="is-nav-link" href="./partialproducts-generator-preview.html">Partialproducts Generator Preview</a>
+            <a class="is-nav-link" href="./phonicspreview.html">Phonicspreview</a>
+            <a class="is-nav-link" href="./readinggames-preview.html">Readinggames Preview</a>
+            <a class="is-nav-link" href="./rollreadpreview-frame.html">Rollreadpreview Frame</a>
+            <a class="is-nav-link" href="./rollreadpreview.html">Rollreadpreview</a>
+            <a class="is-nav-link" href="./rounding-generator-preview-frame.html">Rounding Generator Preview Frame</a>
+            <a class="is-nav-link" href="./rounding-preview.html">Rounding Preview</a>
+            <a class="is-nav-link" href="./subtraction-generator-preview-frame.html">Subtraction Generator Preview Frame</a>
+            <a class="is-nav-link" href="./tictacpreview-frame.html">Tictacpreview Frame</a>
+            <a class="is-nav-link" href="./tictacpreview.html">Tictacpreview</a>
+            <a class="is-nav-link" href="./ultimate_math_game_modes_preview.html">Ultimate Math Game Modes Preview</a>
+            <a class="is-nav-link" href="./ultimate_reading_game_modes_preview.html">Ultimate Reading Game Modes Preview</a>
+            <a class="is-nav-link" href="./wordladderpreview.html">Wordladderpreview</a>
+            <a class="is-nav-link" href="./wordmap2preview.html">Wordmap2preview</a>
+            <a class="is-nav-link" href="./wordmap2preview_multisyllabic.html">Wordmap2preview Multisyllabic</a>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="is-main">
+        <section class="is-page">
+          <header class="is-page-hero">
+            <h1>Math Tic Tac Toe Generator</h1>
+            <p>Preview the generator below. Printing and full access are member-only.</p>
+          </header>
+
+          <div class="buy-options">
+            <div class="buy-options__text">
+              <div class="buy-options__title">Get this resource your way</div>
+              <div class="buy-options__sub">Most teachers choose membership once they grab 2-3 resources.</div>
+            </div>
+            <div class="buy-options__buttons">
+              <a class="buy-btn buy-btn--primary" href="https://member.interventionstation.com/join">
+                Get Everything - <span class="buy-price">$9.99/mo</span>
+              </a>
+              <a class="buy-btn buy-btn--secondary" href="https://interventionstation.com/membershipchoices">
+                What's Inside? <span class="buy-price">See Resources</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="preview-frame-wrap">
+            <iframe
+              class="preview-iframe"
+              src="../mathtictac-preview.html"
+              title="Math Tic Tac Toe Generator Preview"
+              loading="lazy"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </section>
+      </main>
+    </div>
+  </section>
+</body>
+</html>

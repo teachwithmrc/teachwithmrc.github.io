@@ -3,11 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Intervention Station | Long Division Generator</title>
+  <title>Intervention Station | Long Division Generator Preview</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
+
     :root{
       --brand-dark:#2f3e4e;
       --brand-blue:#66c9f4;
@@ -147,6 +148,8 @@
       border:2px solid var(--border);
       padding:0;
       overflow:hidden;
+      max-height:85vh;
+      overflow-y:auto;
     }
     .is-home-sections .is-nav-group.is-nav-home{
       padding:10px 12px 8px;
@@ -171,6 +174,7 @@
       font-size:15.5px;
       line-height:1.35;
       padding:8px 0;
+      word-break:break-word;
     }
     .is-home-sections .is-nav-link:hover{ text-decoration:underline; }
     .is-home-sections .is-nav-link.is-active{
@@ -281,6 +285,7 @@
     @media (max-width:1100px){
       .is-home-sections .is-layout{ grid-template-columns:1fr; }
       .is-home-sections .is-nav{ position:relative; top:auto; }
+      .is-home-sections .is-nav-card{ max-height:none; }
     }
     @media (max-width:900px){
       .top-cta-bar{
@@ -346,7 +351,7 @@
       <aside class="is-nav" aria-label="Navigation">
         <nav class="is-nav-card">
           <div class="is-nav-group is-nav-home">
-            <a class="is-nav-link" href="./index.html">&#127968; Site Preview Home</a>
+            <a class="is-nav-link" href="./home-preview.html">&#127968; Home</a>
           </div>
 
           <div class="is-nav-header">Math Generators</div>
@@ -354,52 +359,89 @@
             <a class="is-nav-link" href="./addition-generator-preview.html">Addition Worksheet Generator</a>
             <a class="is-nav-link" href="./subtraction-generator-preview.html">Subtraction Worksheet Generator</a>
             <a class="is-nav-link" href="./rounding-generator-preview.html">Rounding Worksheet Generator</a>
-            <a class="is-nav-link" href="./rounding-preview.html">Rounding Preview</a>
-            <a class="is-nav-link" href="./multiplication-generator-preview.html">Multiplication Generator</a>
-            <a class="is-nav-link" href="./multiply-generator-preview.html">Multiplication Partial Products Generator</a>
-            <a class="is-nav-link" href="./partialproducts-generator-preview.html">Partial Products Generator</a>
-            <a class="is-nav-link is-active" href="./long-division-generator-preview.html">Long Division Generator</a>
-            <a class="is-nav-link" href="./division-generator-preview.html">Division Generator</a>
-            <a class="is-nav-link" href="./coin-counter-generator-preview.html">Counting Coins Generator</a>
-            <a class="is-nav-link" href="./mathtictac-preview.html">Math Tic Tac Toe Generator</a>
-            <a class="is-nav-link" href="./mathrollread-preview.html">Math Roll and Read Generator</a>
-            <a class="is-nav-link" href="./addsubtractmodels-generator-preview.html">Add/Sub Models Generator</a>
-            <a class="is-nav-link" href="./ultimate_math_game_modes_preview.html">Ultimate Math Game Modes Preview</a>
+            <a class="is-nav-link" href="./multiplication-standard-generator-preview.html">Multiplication Standard Generator</a>
+            <a class="is-nav-link" href="./multiplication-partial-products-generator-preview.html">Multiplication Partial Products Generator</a>
+            <a class="is-nav-link" href="./long-division-standard-generator-preview.html">Long Division Standard Generator</a>
+            <a class="is-nav-link" href="./long-division-scaffolded-generator-preview.html">Long Division Scaffolded Generator</a>
+            <a class="is-nav-link" href="./counting-coins-generator-preview.html">Counting Coins Generator</a>
+            <a class="is-nav-link" href="./math-tic-tac-toe-generator-preview.html">Math Tic Tac Toe Generator</a>
+            <a class="is-nav-link" href="./math-roll-and-read-generator-preview.html">Math Roll and Read Generator</a>
           </div>
 
           <div class="is-nav-header is-mt-12">SOR Generators</div>
           <div class="is-nav-group">
-            <a class="is-nav-link" href="./wordmap2preview.html">Word Mapping Preview</a>
-            <a class="is-nav-link" href="./wordmap2preview_multisyllabic.html">Word Mapping Preview (Multisyllabic)</a>
-            <a class="is-nav-link" href="./wordladderpreview.html">Word Ladder Preview</a>
-            <a class="is-nav-link" href="./tictacpreview.html">Tic Tac Toe Preview</a>
-            <a class="is-nav-link" href="./fluencygridpreview.html">Fluency Grid Preview</a>
-            <a class="is-nav-link" href="./rollreadpreview.html">Roll and Read Preview</a>
-            <a class="is-nav-link" href="./multisyllabic_phase_preview.html">Multisyllabic Phase Preview</a>
+            <a class="is-nav-link" href="./word-mapping-generator-preview.html">Word Mapping</a>
+            <a class="is-nav-link" href="./word-ladder-generator-preview.html">Word Ladder</a>
+            <a class="is-nav-link" href="./tic-tac-toe-generator-preview.html">Tic Tac Toe</a>
+            <a class="is-nav-link" href="./fluency-grid-generator-preview.html">Fluency Grid</a>
+            <a class="is-nav-link" href="./roll-and-read-generator-preview.html">Roll and Read</a>
+            <a class="is-nav-link" href="./spelling-with-pictures-generator-preview.html">Spelling with Pictures</a>
+            <a class="is-nav-link" href="./pyramid-spelling-generator-preview.html">Pyramid Spelling</a>
           </div>
 
           <div class="is-nav-header is-mt-12">Reading Resources</div>
           <div class="is-nav-group">
-            <a class="is-nav-link" href="./phonicspreview.html">Phonics Preview</a>
-            <a class="is-nav-link" href="./readinggames-preview.html">Reading Games Preview</a>
-            <a class="is-nav-link" href="./ultimate_reading_game_modes_preview.html">Ultimate Reading Game Modes Preview</a>
+            <a class="is-nav-link" href="./heart-words-preview.html">Heart Words</a>
+            <a class="is-nav-link" href="./phonics-comics-preview.html">Phonics Comics</a>
+            <a class="is-nav-link" href="./fix-mixup-preview.html">Fix the Mix Up</a>
+            <a class="is-nav-link" href="./blending-slides-preview.html">Blending Slides</a>
+            <a class="is-nav-link" href="./phonics-maze-preview.html">Phonics Path Maze</a>
+            <a class="is-nav-link" href="./pick-the-pic-preview.html">Pick the Pic</a>
+            <a class="is-nav-link" href="./hfw-pyramid-preview.html">High Frequency Word Pyramids</a>
+            <a class="is-nav-link" href="./spelling-preview.html">Spelling by Phonics Skills</a>
+            <a class="is-nav-link" href="./spelling-google-sheets-preview.html">Spelling Google Sheets</a>
           </div>
 
-          <div class="is-nav-header is-mt-12">Frame Variants</div>
+          <div class="is-nav-header is-mt-12">Interactive Games</div>
           <div class="is-nav-group">
-            <a class="is-nav-link" href="./addition-generator-preview-frame.html">Addition Worksheet Generator (Frame)</a>
-            <a class="is-nav-link" href="./subtraction-generator-preview-frame.html">Subtraction Worksheet Generator (Frame)</a>
-            <a class="is-nav-link" href="./rounding-generator-preview-frame.html">Rounding Generator (Frame)</a>
-            <a class="is-nav-link" href="./multiplication-generator-preview-frame.html">Multiplication Generator (Frame)</a>
-            <a class="is-nav-link" href="./partialproducts-generator-preview-frame.html">Partial Products Generator (Frame)</a>
-            <a class="is-nav-link" href="./long-division-generator-preview-frame.html">Long Division Generator (Frame)</a>
-            <a class="is-nav-link" href="./division-generator-preview-frame.html">Division Generator (Frame)</a>
-            <a class="is-nav-link" href="./coin-counter-generator-preview-frame.html">Counting Coins Generator (Frame)</a>
-            <a class="is-nav-link" href="./mathtictac-preview-frame.html">Math Tic Tac Toe Generator (Frame)</a>
-            <a class="is-nav-link" href="./mathrollread-preview-frame.html">Math Roll and Read Generator (Frame)</a>
-            <a class="is-nav-link" href="./rollreadpreview-frame.html">Roll and Read Preview (Frame)</a>
-            <a class="is-nav-link" href="./tictacpreview-frame.html">Tic Tac Toe Preview (Frame)</a>
-            <a class="is-nav-link" href="./addsubtractmodels-generator-preview-frame.html">Add/Sub Models Generator (Frame)</a>
+            <a class="is-nav-link" href="./games-preview.html">Learning Games</a>
+            <a class="is-nav-link" href="./reading-game-board-preview.html">Interactive Reading Game Board</a>
+            <a class="is-nav-link" href="./math-game-board-preview.html">Interactive Math Game Board</a>
+            <a class="is-nav-link" href="./match-solve-memory-preview.html">Math & Solve Memory Hub</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Learning Songs</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./math-song-preview.html">All Learning Songs and Resources</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">All Generator Preview Files</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./addition-generator-preview-frame.html">Addition Generator Preview Frame</a>
+            <a class="is-nav-link" href="./addsubtractmodels-generator-preview-frame.html">Addsubtractmodels Generator Preview Frame</a>
+            <a class="is-nav-link" href="./addsubtractmodels-generator-preview.html">Addsubtractmodels Generator Preview</a>
+            <a class="is-nav-link" href="./coin-counter-generator-preview-frame.html">Coin Counter Generator Preview Frame</a>
+            <a class="is-nav-link" href="./coin-counter-generator-preview.html">Coin Counter Generator Preview</a>
+            <a class="is-nav-link" href="./division-generator-preview-frame.html">Division Generator Preview Frame</a>
+            <a class="is-nav-link" href="./division-generator-preview.html">Division Generator Preview</a>
+            <a class="is-nav-link" href="./fluencygridpreview.html">Fluencygridpreview</a>
+            <a class="is-nav-link" href="./left_nav_master_preview.html">Left Nav Master Preview</a>
+            <a class="is-nav-link" href="./long-division-generator-preview-frame.html">Long Division Generator Preview Frame</a>
+            <a class="is-nav-link is-active" href="./long-division-generator-preview.html">Long Division Generator Preview</a>
+            <a class="is-nav-link" href="./mathrollread-preview-frame.html">Mathrollread Preview Frame</a>
+            <a class="is-nav-link" href="./mathrollread-preview.html">Mathrollread Preview</a>
+            <a class="is-nav-link" href="./mathtictac-preview-frame.html">Mathtictac Preview Frame</a>
+            <a class="is-nav-link" href="./mathtictac-preview.html">Mathtictac Preview</a>
+            <a class="is-nav-link" href="./multiplication-generator-preview-frame.html">Multiplication Generator Preview Frame</a>
+            <a class="is-nav-link" href="./multiplication-generator-preview.html">Multiplication Generator Preview</a>
+            <a class="is-nav-link" href="./multiply-generator-preview.html">Multiply Generator Preview</a>
+            <a class="is-nav-link" href="./multisyllabic_phase_preview.html">Multisyllabic Phase Preview</a>
+            <a class="is-nav-link" href="./partialproducts-generator-preview-frame.html">Partialproducts Generator Preview Frame</a>
+            <a class="is-nav-link" href="./partialproducts-generator-preview.html">Partialproducts Generator Preview</a>
+            <a class="is-nav-link" href="./phonicspreview.html">Phonicspreview</a>
+            <a class="is-nav-link" href="./readinggames-preview.html">Readinggames Preview</a>
+            <a class="is-nav-link" href="./rollreadpreview-frame.html">Rollreadpreview Frame</a>
+            <a class="is-nav-link" href="./rollreadpreview.html">Rollreadpreview</a>
+            <a class="is-nav-link" href="./rounding-generator-preview-frame.html">Rounding Generator Preview Frame</a>
+            <a class="is-nav-link" href="./rounding-preview.html">Rounding Preview</a>
+            <a class="is-nav-link" href="./subtraction-generator-preview-frame.html">Subtraction Generator Preview Frame</a>
+            <a class="is-nav-link" href="./tictacpreview-frame.html">Tictacpreview Frame</a>
+            <a class="is-nav-link" href="./tictacpreview.html">Tictacpreview</a>
+            <a class="is-nav-link" href="./ultimate_math_game_modes_preview.html">Ultimate Math Game Modes Preview</a>
+            <a class="is-nav-link" href="./ultimate_reading_game_modes_preview.html">Ultimate Reading Game Modes Preview</a>
+            <a class="is-nav-link" href="./wordladderpreview.html">Wordladderpreview</a>
+            <a class="is-nav-link" href="./wordmap2preview.html">Wordmap2preview</a>
+            <a class="is-nav-link" href="./wordmap2preview_multisyllabic.html">Wordmap2preview Multisyllabic</a>
           </div>
         </nav>
       </aside>
@@ -407,7 +449,7 @@
       <main class="is-main">
         <section class="is-page">
           <header class="is-page-hero">
-            <h1>Long Division Generator</h1>
+            <h1>Long Division Generator Preview</h1>
             <p>Preview the generator below. Printing and full access are member-only.</p>
           </header>
 
@@ -430,7 +472,7 @@
             <iframe
               class="preview-iframe"
               src="../long-division-generator-preview.html"
-              title="Long Division Generator Preview"
+              title="Long Division Generator Preview Preview"
               loading="lazy"
               allowfullscreen
             ></iframe>
