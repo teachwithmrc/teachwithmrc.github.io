@@ -366,256 +366,256 @@
         "ail",
         "fail",
         "hail",
-        "jail",
-        "mail"
-      ],
-      [
-        "aid",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "nail"
-      ],
-      [
-        "aid",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "pail"
-      ],
-      [
-        "aid",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "rail"
-      ],
-      [
-        "aid",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "sail"
-      ],
-      [
-        "aid",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "tail"
-      ],
-      [
-        "aid",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "wail"
-      ],
-      [
-        "aid",
-        "ail",
-        "fail",
-        "hail",
-        "mail",
-        "jail"
-      ],
-      [
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "mail",
-        "nail"
-      ],
-      [
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "mail",
-        "pail"
-      ],
-      [
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "mail",
-        "rail"
-      ],
-      [
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "mail",
-        "sail"
-      ],
-      [
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "mail",
-        "tail"
-      ],
-      [
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "mail",
-        "wail"
-      ],
-      [
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "nail",
-        "mail"
-      ],
-      [
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "nail",
-        "pail"
-      ],
-      [
-        "aim",
-        "aid",
-        "ail",
-        "fail",
-        "hail",
-        "jail"
-      ],
-      [
-        "aim",
-        "aid",
-        "ail",
-        "fail",
-        "hail",
-        "mail"
-      ],
-      [
-        "aim",
-        "aid",
-        "ail",
-        "fail",
-        "hail",
-        "nail"
-      ],
-      [
-        "aim",
-        "aid",
-        "ail",
-        "fail",
-        "hail",
-        "pail"
-      ],
-      [
-        "aim",
-        "aid",
-        "ail",
-        "fail",
-        "hail",
-        "rail"
-      ],
-      [
-        "aim",
-        "aid",
-        "ail",
-        "fail",
-        "hail",
-        "sail"
-      ],
-      [
-        "aim",
-        "aid",
-        "ail",
-        "fail",
-        "hail",
-        "tail"
-      ],
-      [
-        "aim",
-        "aid",
-        "ail",
-        "fail",
-        "hail",
-        "wail"
-      ],
-      [
-        "bay",
-        "day",
         "hay",
-        "lay",
-        "pay",
-        "say"
+        "bay"
       ],
       [
-        "bay",
-        "day",
+        "aid",
+        "ail",
+        "fail",
+        "hail",
         "hay",
-        "lay",
-        "say",
-        "pay"
+        "day"
       ],
       [
-        "bay",
-        "day",
+        "aid",
+        "ail",
+        "fail",
+        "hail",
         "hay",
-        "pay",
-        "lay",
-        "say"
-      ],
-      [
-        "bay",
-        "day",
-        "hay",
-        "pay",
-        "say",
         "lay"
       ],
       [
-        "bay",
-        "day",
+        "aid",
+        "ail",
+        "fail",
+        "hail",
         "hay",
-        "say",
-        "lay",
         "pay"
       ],
       [
-        "bay",
-        "day",
+        "aid",
+        "ail",
+        "fail",
+        "hail",
         "hay",
-        "say",
-        "pay",
-        "lay"
-      ],
-      [
-        "bay",
-        "day",
-        "lay",
-        "hay",
-        "pay",
         "say"
       ],
       [
+        "aid",
+        "ail",
+        "fail",
+        "hail",
+        "jail",
+        "mail"
+      ],
+      [
+        "aid",
+        "ail",
+        "fail",
+        "hail",
+        "jail",
+        "nail"
+      ],
+      [
+        "aid",
+        "ail",
+        "fail",
+        "hail",
+        "jail",
+        "pail"
+      ],
+      [
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "bay",
+        "day"
+      ],
+      [
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "bay",
+        "lay"
+      ],
+      [
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "bay",
+        "pay"
+      ],
+      [
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "bay",
+        "say"
+      ],
+      [
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "day",
+        "bay"
+      ],
+      [
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "day",
+        "lay"
+      ],
+      [
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "day",
+        "pay"
+      ],
+      [
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "day",
+        "say"
+      ],
+      [
+        "aim",
+        "aid",
+        "ail",
+        "fail",
+        "hail",
+        "hay"
+      ],
+      [
+        "aim",
+        "aid",
+        "ail",
+        "fail",
+        "hail",
+        "jail"
+      ],
+      [
+        "aim",
+        "aid",
+        "ail",
+        "fail",
+        "hail",
+        "mail"
+      ],
+      [
+        "aim",
+        "aid",
+        "ail",
+        "fail",
+        "hail",
+        "nail"
+      ],
+      [
+        "aim",
+        "aid",
+        "ail",
+        "fail",
+        "hail",
+        "pail"
+      ],
+      [
+        "aim",
+        "aid",
+        "ail",
+        "fail",
+        "hail",
+        "rail"
+      ],
+      [
+        "aim",
+        "aid",
+        "ail",
+        "fail",
+        "hail",
+        "sail"
+      ],
+      [
+        "aim",
+        "aid",
+        "ail",
+        "fail",
+        "hail",
+        "tail"
+      ],
+      [
         "bay",
         "day",
-        "lay",
         "hay",
-        "say",
-        "pay"
+        "hail",
+        "ail",
+        "aid"
+      ],
+      [
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "ail",
+        "aim"
+      ],
+      [
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "ail",
+        "fail"
+      ],
+      [
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "ail",
+        "jail"
+      ],
+      [
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "ail",
+        "mail"
+      ],
+      [
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "ail",
+        "nail"
+      ],
+      [
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "ail",
+        "pail"
+      ],
+      [
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "ail",
+        "rail"
       ],
       [
         "chain",
@@ -685,449 +685,489 @@
         "day",
         "bay",
         "hay",
-        "lay",
-        "pay",
-        "say"
+        "hail",
+        "ail",
+        "aid"
       ],
       [
         "day",
         "bay",
         "hay",
-        "lay",
-        "say",
-        "pay"
+        "hail",
+        "ail",
+        "aim"
       ],
       [
         "day",
         "bay",
         "hay",
-        "pay",
-        "lay",
-        "say"
+        "hail",
+        "ail",
+        "fail"
       ],
       [
         "day",
         "bay",
         "hay",
-        "pay",
-        "say",
-        "lay"
-      ],
-      [
-        "day",
-        "bay",
-        "hay",
-        "say",
-        "lay",
-        "pay"
-      ],
-      [
-        "day",
-        "bay",
-        "hay",
-        "say",
-        "pay",
-        "lay"
-      ],
-      [
-        "day",
-        "bay",
-        "lay",
-        "hay",
-        "pay",
-        "say"
-      ],
-      [
-        "day",
-        "bay",
-        "lay",
-        "hay",
-        "say",
-        "pay"
-      ],
-      [
-        "fail",
-        "ail",
-        "hail",
-        "jail",
-        "mail",
-        "nail"
-      ],
-      [
-        "fail",
-        "ail",
-        "hail",
-        "jail",
-        "mail",
-        "pail"
-      ],
-      [
-        "fail",
-        "ail",
-        "hail",
-        "jail",
-        "mail",
-        "rail"
-      ],
-      [
-        "fail",
-        "ail",
-        "hail",
-        "jail",
-        "mail",
-        "sail"
-      ],
-      [
-        "fail",
-        "ail",
-        "hail",
-        "jail",
-        "mail",
-        "tail"
-      ],
-      [
-        "fail",
-        "ail",
-        "hail",
-        "jail",
-        "mail",
-        "wail"
-      ],
-      [
-        "fail",
-        "ail",
-        "hail",
-        "jail",
-        "nail",
-        "mail"
-      ],
-      [
-        "fail",
-        "ail",
-        "hail",
-        "jail",
-        "nail",
-        "pail"
-      ],
-      [
         "hail",
         "ail",
-        "fail",
-        "jail",
-        "mail",
-        "nail"
-      ],
-      [
-        "hail",
-        "ail",
-        "fail",
-        "jail",
-        "mail",
-        "pail"
-      ],
-      [
-        "hail",
-        "ail",
-        "fail",
-        "jail",
-        "mail",
-        "rail"
-      ],
-      [
-        "hail",
-        "ail",
-        "fail",
-        "jail",
-        "mail",
-        "sail"
-      ],
-      [
-        "hail",
-        "ail",
-        "fail",
-        "jail",
-        "mail",
-        "tail"
-      ],
-      [
-        "hail",
-        "ail",
-        "fail",
-        "jail",
-        "mail",
-        "wail"
-      ],
-      [
-        "hail",
-        "ail",
-        "fail",
-        "jail",
-        "nail",
-        "mail"
-      ],
-      [
-        "hail",
-        "ail",
-        "fail",
-        "jail",
-        "nail",
-        "pail"
-      ],
-      [
-        "hay",
-        "bay",
-        "day",
-        "lay",
-        "pay",
-        "say"
-      ],
-      [
-        "hay",
-        "bay",
-        "day",
-        "lay",
-        "say",
-        "pay"
-      ],
-      [
-        "hay",
-        "bay",
-        "day",
-        "pay",
-        "lay",
-        "say"
-      ],
-      [
-        "hay",
-        "bay",
-        "day",
-        "pay",
-        "say",
-        "lay"
-      ],
-      [
-        "hay",
-        "bay",
-        "day",
-        "say",
-        "lay",
-        "pay"
-      ],
-      [
-        "hay",
-        "bay",
-        "day",
-        "say",
-        "pay",
-        "lay"
-      ],
-      [
-        "hay",
-        "bay",
-        "lay",
-        "day",
-        "pay",
-        "say"
-      ],
-      [
-        "hay",
-        "bay",
-        "lay",
-        "day",
-        "say",
-        "pay"
-      ],
-      [
-        "jail",
-        "ail",
-        "fail",
-        "hail",
-        "mail",
-        "nail"
-      ],
-      [
-        "jail",
-        "ail",
-        "fail",
-        "hail",
-        "mail",
-        "pail"
-      ],
-      [
-        "jail",
-        "ail",
-        "fail",
-        "hail",
-        "mail",
-        "rail"
-      ],
-      [
-        "jail",
-        "ail",
-        "fail",
-        "hail",
-        "mail",
-        "sail"
-      ],
-      [
-        "jail",
-        "ail",
-        "fail",
-        "hail",
-        "mail",
-        "tail"
-      ],
-      [
-        "jail",
-        "ail",
-        "fail",
-        "hail",
-        "mail",
-        "wail"
-      ],
-      [
-        "jail",
-        "ail",
-        "fail",
-        "hail",
-        "nail",
-        "mail"
-      ],
-      [
-        "jail",
-        "ail",
-        "fail",
-        "hail",
-        "nail",
-        "pail"
-      ],
-      [
-        "lay",
-        "bay",
-        "day",
-        "hay",
-        "pay",
-        "say"
-      ],
-      [
-        "lay",
-        "bay",
-        "day",
-        "hay",
-        "say",
-        "pay"
-      ],
-      [
-        "lay",
-        "bay",
-        "day",
-        "pay",
-        "hay",
-        "say"
-      ],
-      [
-        "lay",
-        "bay",
-        "day",
-        "pay",
-        "say",
-        "hay"
-      ],
-      [
-        "lay",
-        "bay",
-        "day",
-        "say",
-        "hay",
-        "pay"
-      ],
-      [
-        "lay",
-        "bay",
-        "day",
-        "say",
-        "pay",
-        "hay"
-      ],
-      [
-        "lay",
-        "bay",
-        "hay",
-        "day",
-        "pay",
-        "say"
-      ],
-      [
-        "lay",
-        "bay",
-        "hay",
-        "day",
-        "say",
-        "pay"
-      ],
-      [
-        "mail",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "nail"
-      ],
-      [
-        "mail",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "pail"
-      ],
-      [
-        "mail",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "rail"
-      ],
-      [
-        "mail",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "sail"
-      ],
-      [
-        "mail",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "tail"
-      ],
-      [
-        "mail",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "wail"
-      ],
-      [
-        "mail",
-        "ail",
-        "fail",
-        "hail",
-        "nail",
         "jail"
       ],
       [
+        "day",
+        "bay",
+        "hay",
+        "hail",
+        "ail",
+        "mail"
+      ],
+      [
+        "day",
+        "bay",
+        "hay",
+        "hail",
+        "ail",
+        "nail"
+      ],
+      [
+        "day",
+        "bay",
+        "hay",
+        "hail",
+        "ail",
+        "pail"
+      ],
+      [
+        "day",
+        "bay",
+        "hay",
+        "hail",
+        "ail",
+        "rail"
+      ],
+      [
+        "fail",
+        "ail",
+        "hail",
+        "hay",
+        "bay",
+        "day"
+      ],
+      [
+        "fail",
+        "ail",
+        "hail",
+        "hay",
+        "bay",
+        "lay"
+      ],
+      [
+        "fail",
+        "ail",
+        "hail",
+        "hay",
+        "bay",
+        "pay"
+      ],
+      [
+        "fail",
+        "ail",
+        "hail",
+        "hay",
+        "bay",
+        "say"
+      ],
+      [
+        "fail",
+        "ail",
+        "hail",
+        "hay",
+        "day",
+        "bay"
+      ],
+      [
+        "fail",
+        "ail",
+        "hail",
+        "hay",
+        "day",
+        "lay"
+      ],
+      [
+        "fail",
+        "ail",
+        "hail",
+        "hay",
+        "day",
+        "pay"
+      ],
+      [
+        "fail",
+        "ail",
+        "hail",
+        "hay",
+        "day",
+        "say"
+      ],
+      [
+        "hail",
+        "ail",
+        "fail",
+        "jail",
+        "mail",
+        "nail"
+      ],
+      [
+        "hail",
+        "ail",
+        "fail",
+        "jail",
+        "mail",
+        "pail"
+      ],
+      [
+        "hail",
+        "ail",
+        "fail",
+        "jail",
+        "mail",
+        "rail"
+      ],
+      [
+        "hail",
+        "ail",
+        "fail",
+        "jail",
+        "mail",
+        "sail"
+      ],
+      [
+        "hail",
+        "ail",
+        "fail",
+        "jail",
+        "mail",
+        "tail"
+      ],
+      [
+        "hail",
+        "ail",
+        "fail",
+        "jail",
+        "mail",
+        "wail"
+      ],
+      [
+        "hail",
+        "ail",
+        "fail",
+        "jail",
+        "nail",
+        "mail"
+      ],
+      [
+        "hail",
+        "ail",
+        "fail",
+        "jail",
+        "nail",
+        "pail"
+      ],
+      [
+        "hay",
+        "bay",
+        "day",
+        "lay",
+        "pay",
+        "pail"
+      ],
+      [
+        "hay",
+        "bay",
+        "day",
+        "lay",
+        "pay",
+        "pain"
+      ],
+      [
+        "hay",
+        "bay",
+        "day",
+        "lay",
+        "pay",
+        "say"
+      ],
+      [
+        "hay",
+        "bay",
+        "day",
+        "lay",
+        "say",
+        "pay"
+      ],
+      [
+        "hay",
+        "bay",
+        "day",
+        "lay",
+        "say",
+        "sail"
+      ],
+      [
+        "hay",
+        "bay",
+        "day",
+        "pay",
+        "lay",
+        "say"
+      ],
+      [
+        "hay",
+        "bay",
+        "day",
+        "pay",
+        "pail",
+        "ail"
+      ],
+      [
+        "hay",
+        "bay",
+        "day",
+        "pay",
+        "pail",
+        "fail"
+      ],
+      [
+        "jail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "bay"
+      ],
+      [
+        "jail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "day"
+      ],
+      [
+        "jail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "lay"
+      ],
+      [
+        "jail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "pay"
+      ],
+      [
+        "jail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "say"
+      ],
+      [
+        "jail",
+        "ail",
+        "fail",
+        "hail",
+        "mail",
+        "nail"
+      ],
+      [
+        "jail",
+        "ail",
+        "fail",
+        "hail",
+        "mail",
+        "pail"
+      ],
+      [
+        "jail",
+        "ail",
+        "fail",
+        "hail",
+        "mail",
+        "rail"
+      ],
+      [
+        "lay",
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "ail"
+      ],
+      [
+        "lay",
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "fail"
+      ],
+      [
+        "lay",
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "jail"
+      ],
+      [
+        "lay",
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "mail"
+      ],
+      [
+        "lay",
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "nail"
+      ],
+      [
+        "lay",
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "pail"
+      ],
+      [
+        "lay",
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "rail"
+      ],
+      [
+        "lay",
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "sail"
+      ],
+      [
         "mail",
         "ail",
         "fail",
         "hail",
-        "nail",
+        "hay",
+        "bay"
+      ],
+      [
+        "mail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "day"
+      ],
+      [
+        "mail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "lay"
+      ],
+      [
+        "mail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "pay"
+      ],
+      [
+        "mail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "say"
+      ],
+      [
+        "mail",
+        "ail",
+        "fail",
+        "hail",
+        "jail",
+        "nail"
+      ],
+      [
+        "mail",
+        "ail",
+        "fail",
+        "hail",
+        "jail",
         "pail"
+      ],
+      [
+        "mail",
+        "ail",
+        "fail",
+        "hail",
+        "jail",
+        "rail"
+      ],
+      [
+        "nail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "bay"
+      ],
+      [
+        "nail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "day"
+      ],
+      [
+        "nail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "lay"
+      ],
+      [
+        "nail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "pay"
+      ],
+      [
+        "nail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "say"
       ],
       [
         "nail",
@@ -1154,44 +1194,44 @@
         "rail"
       ],
       [
-        "nail",
+        "pail",
         "ail",
         "fail",
         "hail",
-        "jail",
-        "sail"
+        "hay",
+        "bay"
       ],
       [
-        "nail",
+        "pail",
         "ail",
         "fail",
         "hail",
-        "jail",
-        "tail"
+        "hay",
+        "day"
       ],
       [
-        "nail",
+        "pail",
         "ail",
         "fail",
         "hail",
-        "jail",
-        "wail"
+        "hay",
+        "lay"
       ],
       [
-        "nail",
+        "pail",
         "ail",
         "fail",
         "hail",
-        "mail",
-        "jail"
+        "hay",
+        "pay"
       ],
       [
-        "nail",
+        "pail",
         "ail",
         "fail",
         "hail",
-        "mail",
-        "pail"
+        "hay",
+        "say"
       ],
       [
         "pail",
@@ -1216,46 +1256,6 @@
         "hail",
         "jail",
         "rail"
-      ],
-      [
-        "pail",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "sail"
-      ],
-      [
-        "pail",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "tail"
-      ],
-      [
-        "pail",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "wail"
-      ],
-      [
-        "pail",
-        "ail",
-        "fail",
-        "hail",
-        "mail",
-        "jail"
-      ],
-      [
-        "pail",
-        "ail",
-        "fail",
-        "hail",
-        "mail",
-        "nail"
       ],
       [
         "pain",
@@ -1326,64 +1326,104 @@
         "bay",
         "day",
         "hay",
-        "lay",
-        "say"
+        "hail",
+        "ail"
       ],
       [
         "pay",
         "bay",
         "day",
         "hay",
-        "say",
+        "hail",
+        "fail"
+      ],
+      [
+        "pay",
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "jail"
+      ],
+      [
+        "pay",
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "mail"
+      ],
+      [
+        "pay",
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "nail"
+      ],
+      [
+        "pay",
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "pail"
+      ],
+      [
+        "pay",
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "rail"
+      ],
+      [
+        "pay",
+        "bay",
+        "day",
+        "hay",
+        "hail",
+        "sail"
+      ],
+      [
+        "rail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "bay"
+      ],
+      [
+        "rail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "day"
+      ],
+      [
+        "rail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
         "lay"
       ],
       [
-        "pay",
-        "bay",
-        "day",
-        "lay",
+        "rail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "pay"
+      ],
+      [
+        "rail",
+        "ail",
+        "fail",
+        "hail",
         "hay",
         "say"
-      ],
-      [
-        "pay",
-        "bay",
-        "day",
-        "lay",
-        "say",
-        "hay"
-      ],
-      [
-        "pay",
-        "bay",
-        "day",
-        "say",
-        "hay",
-        "lay"
-      ],
-      [
-        "pay",
-        "bay",
-        "day",
-        "say",
-        "lay",
-        "hay"
-      ],
-      [
-        "pay",
-        "bay",
-        "hay",
-        "day",
-        "lay",
-        "say"
-      ],
-      [
-        "pay",
-        "bay",
-        "hay",
-        "day",
-        "say",
-        "lay"
       ],
       [
         "rail",
@@ -1408,46 +1448,6 @@
         "hail",
         "jail",
         "pail"
-      ],
-      [
-        "rail",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "sail"
-      ],
-      [
-        "rail",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "tail"
-      ],
-      [
-        "rail",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "wail"
-      ],
-      [
-        "rail",
-        "ail",
-        "fail",
-        "hail",
-        "mail",
-        "jail"
-      ],
-      [
-        "rail",
-        "ail",
-        "fail",
-        "hail",
-        "mail",
-        "nail"
       ],
       [
         "rain",
@@ -1518,6 +1518,46 @@
         "ail",
         "fail",
         "hail",
+        "hay",
+        "bay"
+      ],
+      [
+        "sail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "day"
+      ],
+      [
+        "sail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "lay"
+      ],
+      [
+        "sail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "pay"
+      ],
+      [
+        "sail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "say"
+      ],
+      [
+        "sail",
+        "ail",
+        "fail",
+        "hail",
         "jail",
         "mail"
       ],
@@ -1538,147 +1578,67 @@
         "pail"
       ],
       [
-        "sail",
-        "ail",
-        "fail",
+        "say",
+        "bay",
+        "day",
+        "hay",
         "hail",
-        "jail",
-        "rail"
+        "ail"
       ],
       [
-        "sail",
-        "ail",
-        "fail",
+        "say",
+        "bay",
+        "day",
+        "hay",
         "hail",
-        "jail",
-        "tail"
+        "fail"
       ],
       [
-        "sail",
-        "ail",
-        "fail",
+        "say",
+        "bay",
+        "day",
+        "hay",
         "hail",
-        "jail",
-        "wail"
-      ],
-      [
-        "sail",
-        "ail",
-        "fail",
-        "hail",
-        "mail",
         "jail"
       ],
       [
-        "sail",
-        "ail",
-        "fail",
+        "say",
+        "bay",
+        "day",
+        "hay",
         "hail",
-        "mail",
-        "nail"
-      ],
-      [
-        "say",
-        "bay",
-        "day",
-        "hay",
-        "lay",
-        "pay"
-      ],
-      [
-        "say",
-        "bay",
-        "day",
-        "hay",
-        "pay",
-        "lay"
-      ],
-      [
-        "say",
-        "bay",
-        "day",
-        "lay",
-        "hay",
-        "pay"
-      ],
-      [
-        "say",
-        "bay",
-        "day",
-        "lay",
-        "pay",
-        "hay"
-      ],
-      [
-        "say",
-        "bay",
-        "day",
-        "pay",
-        "hay",
-        "lay"
-      ],
-      [
-        "say",
-        "bay",
-        "day",
-        "pay",
-        "lay",
-        "hay"
-      ],
-      [
-        "say",
-        "bay",
-        "hay",
-        "day",
-        "lay",
-        "pay"
-      ],
-      [
-        "say",
-        "bay",
-        "hay",
-        "day",
-        "pay",
-        "lay"
-      ],
-      [
-        "tail",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
         "mail"
       ],
       [
-        "tail",
-        "ail",
-        "fail",
+        "say",
+        "bay",
+        "day",
+        "hay",
         "hail",
-        "jail",
         "nail"
       ],
       [
-        "tail",
-        "ail",
-        "fail",
+        "say",
+        "bay",
+        "day",
+        "hay",
         "hail",
-        "jail",
         "pail"
       ],
       [
-        "tail",
-        "ail",
-        "fail",
+        "say",
+        "bay",
+        "day",
+        "hay",
         "hail",
-        "jail",
         "rail"
       ],
       [
-        "tail",
-        "ail",
-        "fail",
+        "say",
+        "bay",
+        "day",
+        "hay",
         "hail",
-        "jail",
         "sail"
       ],
       [
@@ -1686,24 +1646,104 @@
         "ail",
         "fail",
         "hail",
+        "hay",
+        "bay"
+      ],
+      [
+        "tail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "day"
+      ],
+      [
+        "tail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "lay"
+      ],
+      [
+        "tail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "pay"
+      ],
+      [
+        "tail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "say"
+      ],
+      [
+        "tail",
+        "ail",
+        "fail",
+        "hail",
         "jail",
-        "wail"
+        "mail"
       ],
       [
         "tail",
         "ail",
         "fail",
         "hail",
-        "mail",
-        "jail"
-      ],
-      [
-        "tail",
-        "ail",
-        "fail",
-        "hail",
-        "mail",
+        "jail",
         "nail"
+      ],
+      [
+        "tail",
+        "ail",
+        "fail",
+        "hail",
+        "jail",
+        "pail"
+      ],
+      [
+        "wail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "bay"
+      ],
+      [
+        "wail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "day"
+      ],
+      [
+        "wail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "lay"
+      ],
+      [
+        "wail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "pay"
+      ],
+      [
+        "wail",
+        "ail",
+        "fail",
+        "hail",
+        "hay",
+        "say"
       ],
       [
         "wail",
@@ -1728,46 +1768,6 @@
         "hail",
         "jail",
         "pail"
-      ],
-      [
-        "wail",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "rail"
-      ],
-      [
-        "wail",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "sail"
-      ],
-      [
-        "wail",
-        "ail",
-        "fail",
-        "hail",
-        "jail",
-        "tail"
-      ],
-      [
-        "wail",
-        "ail",
-        "fail",
-        "hail",
-        "mail",
-        "jail"
-      ],
-      [
-        "wail",
-        "ail",
-        "fail",
-        "hail",
-        "mail",
-        "nail"
       ]
     ],
     "longE": [
@@ -1785,1655 +1785,1719 @@
         "beak",
         "beam",
         "bean",
-        "lean"
-      ],
-      [
-        "beach",
-        "bead",
-        "beak",
-        "beam",
-        "beat",
-        "bean"
-      ],
-      [
-        "beach",
-        "bead",
-        "beak",
-        "beam",
-        "beat",
-        "beet"
-      ],
-      [
-        "beach",
-        "bead",
-        "beak",
-        "beam",
-        "beat",
-        "heat"
-      ],
-      [
-        "beach",
-        "bead",
-        "beak",
-        "beam",
-        "beat",
-        "meat"
-      ],
-      [
-        "beach",
-        "bead",
-        "beak",
-        "beam",
-        "beat",
-        "seat"
-      ],
-      [
-        "beach",
-        "bead",
-        "beak",
-        "bean",
-        "beam",
-        "beat"
-      ],
-      [
-        "bead",
-        "beach",
-        "beak",
-        "beam",
-        "bean",
-        "beat"
-      ],
-      [
-        "bead",
-        "beach",
-        "beak",
-        "beam",
-        "bean",
-        "lean"
-      ],
-      [
-        "bead",
-        "beach",
-        "beak",
-        "beam",
-        "beat",
-        "bean"
-      ],
-      [
-        "bead",
-        "beach",
-        "beak",
-        "beam",
-        "beat",
-        "beet"
-      ],
-      [
-        "bead",
-        "beach",
-        "beak",
-        "beam",
-        "beat",
-        "heat"
-      ],
-      [
-        "bead",
-        "beach",
-        "beak",
-        "beam",
-        "beat",
-        "meat"
-      ],
-      [
-        "bead",
-        "beach",
-        "beak",
-        "beam",
-        "beat",
-        "seat"
-      ],
-      [
-        "bead",
-        "beach",
-        "beak",
-        "bean",
-        "beam",
-        "beat"
-      ],
-      [
-        "beak",
-        "beach",
-        "bead",
-        "beam",
-        "bean",
-        "beat"
-      ],
-      [
-        "beak",
-        "beach",
-        "bead",
-        "beam",
-        "bean",
-        "lean"
-      ],
-      [
-        "beak",
-        "beach",
-        "bead",
-        "beam",
-        "beat",
-        "bean"
-      ],
-      [
-        "beak",
-        "beach",
-        "bead",
-        "beam",
-        "beat",
-        "beet"
-      ],
-      [
-        "beak",
-        "beach",
-        "bead",
-        "beam",
-        "beat",
-        "heat"
-      ],
-      [
-        "beak",
-        "beach",
-        "bead",
-        "beam",
-        "beat",
-        "meat"
-      ],
-      [
-        "beak",
-        "beach",
-        "bead",
-        "beam",
-        "beat",
-        "seat"
-      ],
-      [
-        "beak",
-        "beach",
-        "bead",
-        "bean",
-        "beam",
-        "beat"
-      ],
-      [
-        "beam",
-        "beach",
-        "bead",
-        "beak",
-        "bean",
-        "beat"
-      ],
-      [
-        "beam",
-        "beach",
-        "bead",
-        "beak",
-        "bean",
-        "lean"
-      ],
-      [
-        "beam",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "bean"
-      ],
-      [
-        "beam",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "beet"
-      ],
-      [
-        "beam",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "heat"
-      ],
-      [
-        "beam",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "meat"
-      ],
-      [
-        "beam",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "seat"
-      ],
-      [
-        "beam",
-        "beach",
-        "bead",
-        "bean",
-        "beak",
-        "beat"
-      ],
-      [
-        "bean",
-        "beach",
-        "bead",
-        "beak",
-        "beam",
-        "beat"
-      ],
-      [
-        "bean",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "beam"
-      ],
-      [
-        "bean",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "beet"
-      ],
-      [
-        "bean",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "heat"
-      ],
-      [
-        "bean",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "meat"
-      ],
-      [
-        "bean",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "seat"
-      ],
-      [
-        "bean",
-        "beach",
-        "bead",
-        "beam",
-        "beak",
-        "beat"
-      ],
-      [
-        "bean",
-        "beach",
-        "bead",
-        "beam",
-        "beat",
-        "beak"
-      ],
-      [
-        "beat",
-        "beach",
-        "bead",
-        "beak",
-        "beam",
-        "bean"
-      ],
-      [
-        "beat",
-        "beach",
-        "bead",
-        "beak",
-        "bean",
-        "beam"
-      ],
-      [
-        "beat",
-        "beach",
-        "bead",
-        "beak",
-        "bean",
-        "lean"
-      ],
-      [
-        "beat",
-        "beach",
-        "bead",
-        "beam",
-        "beak",
-        "bean"
-      ],
-      [
-        "beat",
-        "beach",
-        "bead",
-        "beam",
-        "bean",
-        "beak"
-      ],
-      [
-        "beat",
-        "beach",
-        "bead",
-        "beam",
-        "bean",
-        "lean"
-      ],
-      [
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beak",
-        "beam"
-      ],
-      [
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beam",
-        "beak"
-      ],
-      [
-        "bee",
-        "beep",
-        "beet",
-        "beat",
-        "beach",
-        "bead"
-      ],
-      [
-        "bee",
-        "beep",
-        "beet",
-        "beat",
-        "beach",
-        "beak"
-      ],
-      [
-        "bee",
-        "beep",
-        "beet",
-        "beat",
-        "beach",
-        "beam"
-      ],
-      [
-        "bee",
-        "beep",
-        "beet",
-        "beat",
-        "beach",
-        "bean"
-      ],
-      [
-        "bee",
-        "beep",
-        "beet",
-        "beat",
-        "beach",
-        "peach"
-      ],
-      [
-        "bee",
-        "beep",
-        "beet",
-        "beat",
-        "beach",
-        "reach"
-      ],
-      [
-        "bee",
-        "beep",
-        "beet",
-        "beat",
-        "bead",
-        "beach"
-      ],
-      [
-        "bee",
-        "beep",
-        "beet",
-        "beat",
-        "bead",
-        "beak"
-      ],
-      [
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "beach",
-        "bead"
-      ],
-      [
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "beach",
-        "beak"
-      ],
-      [
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "beach",
-        "beam"
-      ],
-      [
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "beach",
-        "bean"
-      ],
-      [
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "beach",
-        "peach"
-      ],
-      [
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "beach",
-        "reach"
-      ],
-      [
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "bead",
-        "beach"
-      ],
-      [
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "bead",
-        "beak"
-      ],
-      [
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "beak",
-        "beam"
-      ],
-      [
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "beak",
-        "bean"
-      ],
-      [
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "beam",
-        "beak"
-      ],
-      [
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "beam",
-        "bean"
-      ],
-      [
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beak"
-      ],
-      [
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beam"
-      ],
-      [
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "lean"
-      ],
-      [
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "read",
-        "reach"
-      ],
-      [
-        "cheap",
-        "leap",
-        "lean",
-        "bean",
-        "beach",
-        "bead"
-      ],
-      [
-        "cheap",
-        "leap",
-        "lean",
-        "bean",
-        "beach",
-        "beak"
-      ],
-      [
-        "cheap",
-        "leap",
-        "lean",
-        "bean",
-        "beach",
-        "beam"
-      ],
-      [
-        "cheap",
-        "leap",
-        "lean",
-        "bean",
-        "beach",
-        "beat"
-      ],
-      [
-        "cheap",
-        "leap",
-        "lean",
-        "bean",
-        "beach",
-        "peach"
-      ],
-      [
-        "cheap",
-        "leap",
-        "lean",
-        "bean",
-        "beach",
-        "reach"
-      ],
-      [
-        "cheap",
-        "leap",
-        "lean",
-        "bean",
-        "bead",
-        "beach"
-      ],
-      [
-        "cheap",
-        "leap",
-        "lean",
-        "bean",
-        "bead",
-        "beak"
-      ],
-      [
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "feel",
-        "fee"
-      ],
-      [
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "feel",
-        "feed"
-      ],
-      [
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "feel",
-        "wheel"
-      ],
-      [
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "wheel",
-        "feel"
-      ],
-      [
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
-        "eel",
-        "wheel"
-      ],
-      [
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
-        "fee",
         "bee"
       ],
       [
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
-        "fee",
-        "feed"
-      ],
-      [
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
-        "fee",
-        "flee"
-      ],
-      [
-        "deep",
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "beach"
-      ],
-      [
-        "deep",
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "bead"
-      ],
-      [
-        "deep",
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "beak"
-      ],
-      [
-        "deep",
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "beam"
-      ],
-      [
-        "deep",
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "bean"
-      ],
-      [
-        "deep",
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "heat"
-      ],
-      [
-        "deep",
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "meat"
-      ],
-      [
-        "deep",
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "seat"
-      ],
-      [
-        "eel",
-        "feel",
-        "fee",
-        "bee",
-        "beep",
-        "beet"
-      ],
-      [
-        "eel",
-        "feel",
-        "fee",
-        "bee",
-        "beep",
-        "deep"
-      ],
-      [
-        "eel",
-        "feel",
-        "fee",
-        "bee",
-        "beep",
-        "sheep"
-      ],
-      [
-        "eel",
-        "feel",
-        "fee",
-        "bee",
-        "beep",
-        "weep"
-      ],
-      [
-        "eel",
-        "feel",
-        "fee",
-        "bee",
-        "beet",
-        "beat"
-      ],
-      [
-        "eel",
-        "feel",
-        "fee",
-        "bee",
-        "beet",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bean",
         "beep"
       ],
       [
-        "eel",
-        "feel",
-        "fee",
-        "bee",
-        "beet",
-        "meet"
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bean",
+        "beet"
       ],
       [
-        "eel",
-        "feel",
-        "fee",
-        "bee",
-        "beet",
-        "sheet"
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bean",
+        "lean"
       ],
       [
-        "fee",
-        "bee",
-        "beep",
-        "beet",
-        "beat",
-        "beach"
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bean",
+        "queen"
       ],
       [
-        "fee",
-        "bee",
-        "beep",
-        "beet",
-        "beat",
-        "bead"
-      ],
-      [
-        "fee",
-        "bee",
-        "beep",
-        "beet",
-        "beat",
-        "beak"
-      ],
-      [
-        "fee",
-        "bee",
-        "beep",
-        "beet",
-        "beat",
-        "beam"
-      ],
-      [
-        "fee",
-        "bee",
-        "beep",
-        "beet",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
         "beat",
         "bean"
       ],
       [
-        "fee",
-        "bee",
-        "beep",
-        "beet",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beat",
+        "bee"
+      ],
+      [
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "bean",
+        "beat"
+      ],
+      [
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "bean",
+        "bee"
+      ],
+      [
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "bean",
+        "beep"
+      ],
+      [
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "bean",
+        "beet"
+      ],
+      [
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "bean",
+        "lean"
+      ],
+      [
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "bean",
+        "queen"
+      ],
+      [
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "beat",
+        "bean"
+      ],
+      [
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "beat",
+        "bee"
+      ],
+      [
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bean",
+        "beat"
+      ],
+      [
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bean",
+        "bee"
+      ],
+      [
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bean",
+        "beep"
+      ],
+      [
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bean",
+        "beet"
+      ],
+      [
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bean",
+        "lean"
+      ],
+      [
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bean",
+        "queen"
+      ],
+      [
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beat",
+        "bean"
+      ],
+      [
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beat",
+        "bee"
+      ],
+      [
+        "beam",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beat"
+      ],
+      [
+        "beam",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "bee"
+      ],
+      [
+        "beam",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beep"
+      ],
+      [
+        "beam",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beet"
+      ],
+      [
+        "beam",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "lean"
+      ],
+      [
+        "beam",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "queen"
+      ],
+      [
+        "beam",
+        "beach",
+        "bead",
+        "beak",
+        "beat",
+        "bean"
+      ],
+      [
+        "beam",
+        "beach",
+        "bead",
+        "beak",
+        "beat",
+        "bee"
+      ],
+      [
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beat"
+      ],
+      [
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bee"
+      ],
+      [
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beep"
+      ],
+      [
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beet"
+      ],
+      [
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beat",
+        "beam"
+      ],
+      [
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beat",
+        "bee"
+      ],
+      [
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beat",
+        "beep"
+      ],
+      [
+        "bean",
+        "beach",
+        "bead",
+        "beak",
         "beat",
         "heat"
       ],
       [
-        "fee",
-        "bee",
-        "beep",
-        "beet",
         "beat",
-        "meat"
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bean"
       ],
       [
-        "fee",
-        "bee",
-        "beep",
-        "beet",
         "beat",
-        "seat"
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bee"
       ],
       [
-        "feed",
-        "fee",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beep"
+      ],
+      [
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beet"
+      ],
+      [
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beam"
+      ],
+      [
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "bee"
+      ],
+      [
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beep"
+      ],
+      [
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beet"
+      ],
+      [
         "bee",
-        "beep",
-        "beet",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bean"
+      ],
+      [
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
         "beat"
       ],
       [
-        "feed",
-        "fee",
         "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beep"
+      ],
+      [
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beet"
+      ],
+      [
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beam"
+      ],
+      [
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beat"
+      ],
+      [
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beep"
+      ],
+      [
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beet"
+      ],
+      [
         "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bean"
+      ],
+      [
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beat"
+      ],
+      [
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bee"
+      ],
+      [
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beet"
+      ],
+      [
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beam"
+      ],
+      [
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beat"
+      ],
+      [
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "bee"
+      ],
+      [
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beet"
+      ],
+      [
         "beet",
-        "meet"
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bean"
       ],
       [
-        "feed",
-        "fee",
-        "bee",
-        "beep",
         "beet",
-        "sheet"
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beat"
       ],
       [
-        "feed",
-        "fee",
-        "bee",
+        "beet",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bee"
+      ],
+      [
+        "beet",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beep"
+      ],
+      [
+        "beet",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beam"
+      ],
+      [
+        "beet",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beat"
+      ],
+      [
+        "beet",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "bee"
+      ],
+      [
+        "beet",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beep"
+      ],
+      [
+        "cheap",
         "beep",
-        "deep",
-        "sheep"
+        "beach",
+        "bead",
+        "beak",
+        "beam"
       ],
       [
-        "feed",
-        "fee",
-        "bee",
+        "cheap",
         "beep",
-        "deep",
-        "weep"
+        "beach",
+        "bead",
+        "beak",
+        "bean"
       ],
       [
-        "feed",
-        "fee",
-        "bee",
+        "cheap",
         "beep",
-        "sheep",
-        "deep"
+        "beach",
+        "bead",
+        "beak",
+        "beat"
       ],
       [
-        "feed",
-        "fee",
-        "bee",
+        "cheap",
         "beep",
-        "sheep",
-        "sheet"
+        "beach",
+        "bead",
+        "beak",
+        "bee"
       ],
       [
-        "feed",
-        "fee",
-        "bee",
+        "cheap",
         "beep",
-        "sheep",
-        "weep"
+        "beach",
+        "bead",
+        "beak",
+        "beet"
       ],
       [
-        "feel",
-        "eel",
-        "peel",
-        "peek",
-        "cheek",
-        "seek"
-      ],
-      [
-        "feel",
-        "eel",
-        "peel",
-        "peek",
-        "cheek",
-        "week"
-      ],
-      [
-        "feel",
-        "eel",
-        "peel",
-        "peek",
-        "seek",
+        "cheap",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
         "cheek"
       ],
       [
-        "feel",
-        "eel",
-        "peel",
-        "peek",
-        "seek",
-        "see"
+        "cheap",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
       ],
       [
-        "feel",
-        "eel",
-        "peel",
-        "peek",
-        "seek",
-        "week"
+        "cheap",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "seek"
       ],
       [
-        "feel",
-        "eel",
-        "peel",
-        "peek",
-        "week",
+        "cheek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bean"
+      ],
+      [
+        "cheek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beat"
+      ],
+      [
+        "cheek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bee"
+      ],
+      [
+        "cheek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beep"
+      ],
+      [
+        "cheek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beet"
+      ],
+      [
+        "cheek",
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "beam"
+      ],
+      [
+        "cheek",
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "beat"
+      ],
+      [
+        "cheek",
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "bee"
+      ],
+      [
+        "deep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "deep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "deep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beat"
+      ],
+      [
+        "deep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "deep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "deep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
         "cheek"
       ],
       [
-        "feel",
-        "eel",
-        "peel",
-        "peek",
-        "week",
-        "seek"
-      ],
-      [
-        "feel",
-        "eel",
-        "peel",
-        "peek",
-        "week",
-        "weep"
-      ],
-      [
-        "flee",
-        "fee",
-        "bee",
-        "beep",
-        "beet",
-        "beat"
-      ],
-      [
-        "flee",
-        "fee",
-        "bee",
-        "beep",
-        "beet",
-        "meet"
-      ],
-      [
-        "flee",
-        "fee",
-        "bee",
-        "beep",
-        "beet",
-        "sheet"
-      ],
-      [
-        "flee",
-        "fee",
-        "bee",
-        "beep",
         "deep",
-        "sheep"
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
       ],
       [
-        "flee",
-        "fee",
-        "bee",
-        "beep",
         "deep",
-        "weep"
-      ],
-      [
-        "flee",
-        "fee",
-        "bee",
         "beep",
-        "sheep",
-        "deep"
-      ],
-      [
-        "flee",
-        "fee",
-        "bee",
-        "beep",
-        "sheep",
-        "sheet"
-      ],
-      [
-        "flee",
-        "fee",
-        "bee",
-        "beep",
-        "sheep",
-        "weep"
-      ],
-      [
-        "heat",
-        "beat",
         "beach",
         "bead",
         "beak",
-        "beam"
-      ],
-      [
-        "heat",
-        "beat",
-        "beach",
-        "bead",
-        "beak",
-        "bean"
-      ],
-      [
-        "heat",
-        "beat",
-        "beach",
-        "bead",
-        "beam",
-        "beak"
-      ],
-      [
-        "heat",
-        "beat",
-        "beach",
-        "bead",
-        "beam",
-        "bean"
-      ],
-      [
-        "heat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beak"
-      ],
-      [
-        "heat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beam"
-      ],
-      [
-        "heat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "lean"
-      ],
-      [
-        "heat",
-        "beat",
-        "beach",
-        "bead",
-        "read",
-        "reach"
-      ],
-      [
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beak",
-        "beam"
-      ],
-      [
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beak",
-        "beat"
-      ],
-      [
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beam",
-        "beak"
-      ],
-      [
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beam",
-        "beat"
-      ],
-      [
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beat",
-        "beak"
-      ],
-      [
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beat",
-        "beam"
-      ],
-      [
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beat",
-        "beet"
-      ],
-      [
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beat",
-        "heat"
-      ],
-      [
-        "leap",
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beak"
-      ],
-      [
-        "leap",
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beam"
-      ],
-      [
-        "leap",
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beat"
-      ],
-      [
-        "leap",
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "read"
-      ],
-      [
-        "leap",
-        "lean",
-        "bean",
-        "beach",
-        "beak",
-        "bead"
-      ],
-      [
-        "leap",
-        "lean",
-        "bean",
-        "beach",
-        "beak",
-        "beam"
-      ],
-      [
-        "leap",
-        "lean",
-        "bean",
-        "beach",
-        "beak",
-        "beat"
-      ],
-      [
-        "leap",
-        "lean",
-        "bean",
-        "beach",
-        "beam",
-        "bead"
-      ],
-      [
-        "meat",
-        "beat",
-        "beach",
-        "bead",
-        "beak",
-        "beam"
-      ],
-      [
-        "meat",
-        "beat",
-        "beach",
-        "bead",
-        "beak",
-        "bean"
-      ],
-      [
-        "meat",
-        "beat",
-        "beach",
-        "bead",
-        "beam",
-        "beak"
-      ],
-      [
-        "meat",
-        "beat",
-        "beach",
-        "bead",
-        "beam",
-        "bean"
-      ],
-      [
-        "meat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beak"
-      ],
-      [
-        "meat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beam"
-      ],
-      [
-        "meat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "lean"
-      ],
-      [
-        "meat",
-        "beat",
-        "beach",
-        "bead",
-        "read",
-        "reach"
-      ],
-      [
-        "meet",
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "beak"
-      ],
-      [
-        "meet",
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "beam"
-      ],
-      [
-        "meet",
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "bean"
-      ],
-      [
-        "meet",
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "read"
-      ],
-      [
-        "meet",
-        "beet",
-        "beat",
-        "beach",
-        "beak",
-        "bead"
-      ],
-      [
-        "meet",
-        "beet",
-        "beat",
-        "beach",
-        "beak",
-        "beam"
-      ],
-      [
-        "meet",
-        "beet",
-        "beat",
-        "beach",
-        "beak",
-        "bean"
-      ],
-      [
-        "meet",
-        "beet",
-        "beat",
-        "beach",
-        "beam",
-        "bead"
-      ],
-      [
-        "pea",
-        "peach",
-        "beach",
-        "bead",
-        "beak",
-        "beam"
-      ],
-      [
-        "pea",
-        "peach",
-        "beach",
-        "bead",
-        "beak",
-        "bean"
-      ],
-      [
-        "pea",
-        "peach",
-        "beach",
-        "bead",
-        "beak",
-        "beat"
-      ],
-      [
-        "pea",
-        "peach",
-        "beach",
-        "bead",
-        "beam",
-        "beak"
-      ],
-      [
-        "pea",
-        "peach",
-        "beach",
-        "bead",
-        "beam",
-        "bean"
-      ],
-      [
-        "pea",
-        "peach",
-        "beach",
-        "bead",
-        "beam",
-        "beat"
-      ],
-      [
-        "pea",
-        "peach",
-        "beach",
-        "bead",
-        "bean",
-        "beak"
-      ],
-      [
-        "pea",
-        "peach",
-        "beach",
-        "bead",
-        "bean",
-        "beam"
-      ],
-      [
-        "peach",
-        "beach",
-        "bead",
-        "beak",
-        "beam",
-        "bean"
-      ],
-      [
-        "peach",
-        "beach",
-        "bead",
-        "beak",
-        "beam",
-        "beat"
-      ],
-      [
-        "peach",
-        "beach",
-        "bead",
-        "beak",
-        "bean",
-        "beam"
-      ],
-      [
-        "peach",
-        "beach",
-        "bead",
-        "beak",
-        "bean",
-        "beat"
-      ],
-      [
-        "peach",
-        "beach",
-        "bead",
-        "beak",
-        "bean",
-        "lean"
-      ],
-      [
-        "peach",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "beam"
-      ],
-      [
-        "peach",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "bean"
-      ],
-      [
-        "peach",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "beet"
-      ],
-      [
-        "peek",
-        "cheek",
-        "seek",
-        "see",
-        "bee",
-        "beep"
-      ],
-      [
-        "peek",
-        "cheek",
-        "seek",
-        "see",
-        "bee",
-        "beet"
-      ],
-      [
-        "peek",
-        "cheek",
-        "seek",
-        "see",
-        "bee",
-        "fee"
-      ],
-      [
-        "peek",
-        "cheek",
-        "seek",
-        "see",
-        "fee",
-        "bee"
-      ],
-      [
-        "peek",
-        "cheek",
-        "seek",
-        "see",
-        "fee",
-        "feed"
-      ],
-      [
-        "peek",
-        "cheek",
-        "seek",
-        "see",
-        "fee",
-        "feel"
-      ],
-      [
-        "peek",
-        "cheek",
-        "seek",
-        "see",
-        "fee",
-        "flee"
-      ],
-      [
-        "peek",
-        "cheek",
-        "seek",
-        "see",
-        "sea",
-        "pea"
-      ],
-      [
-        "peel",
-        "eel",
-        "feel",
-        "fee",
-        "bee",
-        "beep"
-      ],
-      [
-        "peel",
-        "eel",
-        "feel",
-        "fee",
-        "bee",
-        "beet"
-      ],
-      [
-        "peel",
-        "eel",
-        "feel",
-        "fee",
-        "bee",
-        "see"
-      ],
-      [
-        "peel",
-        "eel",
-        "feel",
-        "fee",
-        "see",
-        "bee"
-      ],
-      [
-        "peel",
-        "eel",
-        "feel",
-        "fee",
-        "see",
-        "sea"
-      ],
-      [
-        "peel",
-        "eel",
-        "feel",
-        "fee",
-        "see",
         "seek"
       ],
       [
-        "peel",
         "eel",
         "feel",
-        "feed",
         "fee",
+        "bee",
+        "beach",
+        "bead"
+      ],
+      [
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beach",
+        "beak"
+      ],
+      [
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beach",
+        "beam"
+      ],
+      [
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beach",
+        "bean"
+      ],
+      [
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beach",
+        "beat"
+      ],
+      [
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beach",
+        "beep"
+      ],
+      [
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beach",
+        "beet"
+      ],
+      [
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beach",
+        "peach"
+      ],
+      [
+        "fee",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "fee",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "fee",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beat"
+      ],
+      [
+        "fee",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "fee",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "fee",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "fee",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "fee",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "seek"
+      ],
+      [
+        "feed",
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "bean"
+      ],
+      [
+        "feed",
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "beat"
+      ],
+      [
+        "feed",
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "bee"
+      ],
+      [
+        "feed",
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "beep"
+      ],
+      [
+        "feed",
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "beet"
+      ],
+      [
+        "feed",
+        "bead",
+        "beach",
+        "beak",
+        "bean",
+        "beam"
+      ],
+      [
+        "feed",
+        "bead",
+        "beach",
+        "beak",
+        "bean",
+        "beat"
+      ],
+      [
+        "feed",
+        "bead",
+        "beach",
+        "beak",
+        "bean",
+        "bee"
+      ],
+      [
+        "feel",
+        "eel",
+        "peel",
+        "pea",
+        "bee",
+        "beach"
+      ],
+      [
+        "feel",
+        "eel",
+        "peel",
+        "pea",
+        "bee",
+        "bead"
+      ],
+      [
+        "feel",
+        "eel",
+        "peel",
+        "pea",
+        "bee",
+        "beak"
+      ],
+      [
+        "feel",
+        "eel",
+        "peel",
+        "pea",
+        "bee",
+        "beam"
+      ],
+      [
+        "feel",
+        "eel",
+        "peel",
+        "pea",
+        "bee",
+        "bean"
+      ],
+      [
+        "feel",
+        "eel",
+        "peel",
+        "pea",
+        "bee",
+        "beat"
+      ],
+      [
+        "feel",
+        "eel",
+        "peel",
+        "pea",
+        "bee",
+        "beep"
+      ],
+      [
+        "feel",
+        "eel",
+        "peel",
+        "pea",
+        "bee",
+        "beet"
+      ],
+      [
+        "flee",
+        "fee",
+        "bee",
+        "beach",
+        "bead",
+        "beak"
+      ],
+      [
+        "flee",
+        "fee",
+        "bee",
+        "beach",
+        "bead",
+        "beam"
+      ],
+      [
+        "flee",
+        "fee",
+        "bee",
+        "beach",
+        "bead",
+        "bean"
+      ],
+      [
+        "flee",
+        "fee",
+        "bee",
+        "beach",
+        "bead",
+        "beat"
+      ],
+      [
+        "flee",
+        "fee",
+        "bee",
+        "beach",
+        "bead",
+        "beep"
+      ],
+      [
+        "flee",
+        "fee",
+        "bee",
+        "beach",
+        "bead",
+        "beet"
+      ],
+      [
+        "flee",
+        "fee",
+        "bee",
+        "beach",
+        "bead",
+        "feed"
+      ],
+      [
+        "flee",
+        "fee",
+        "bee",
+        "beach",
+        "bead",
+        "read"
+      ],
+      [
+        "heat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "heat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "heat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "heat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "heat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "heat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "heat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "heat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "seek"
+      ],
+      [
+        "lean",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "lean",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beat"
+      ],
+      [
+        "lean",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "lean",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "lean",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "lean",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "lean",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "lean",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "seek"
+      ],
+      [
+        "leap",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "leap",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "leap",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beat"
+      ],
+      [
+        "leap",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "leap",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "leap",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "leap",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "leap",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "seek"
+      ],
+      [
+        "meat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "meat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "meat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "meat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "meat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "meat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "meat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "meat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "seek"
+      ],
+      [
+        "meet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "meet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "meet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "meet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "meet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "meet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "meet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "meet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "seek"
+      ],
+      [
+        "pea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "pea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "pea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beat"
+      ],
+      [
+        "pea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "pea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "pea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "pea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "pea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "seek"
+      ],
+      [
+        "peach",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bean"
+      ],
+      [
+        "peach",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beat"
+      ],
+      [
+        "peach",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bee"
+      ],
+      [
+        "peach",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beep"
+      ],
+      [
+        "peach",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beet"
+      ],
+      [
+        "peach",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beam"
+      ],
+      [
+        "peach",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beat"
+      ],
+      [
+        "peach",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "bee"
+      ],
+      [
+        "peek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bean"
+      ],
+      [
+        "peek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beat"
+      ],
+      [
+        "peek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bee"
+      ],
+      [
+        "peek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beep"
+      ],
+      [
+        "peek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beet"
+      ],
+      [
+        "peek",
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "beam"
+      ],
+      [
+        "peek",
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "beat"
+      ],
+      [
+        "peek",
+        "beak",
+        "beach",
+        "bead",
+        "bean",
         "bee"
       ],
       [
         "peel",
         "eel",
         "feel",
-        "feed",
         "fee",
-        "flee"
+        "bee",
+        "beach"
+      ],
+      [
+        "peel",
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "bead"
+      ],
+      [
+        "peel",
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beak"
+      ],
+      [
+        "peel",
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beam"
+      ],
+      [
+        "peel",
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "bean"
+      ],
+      [
+        "peel",
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beat"
+      ],
+      [
+        "peel",
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beep"
+      ],
+      [
+        "peel",
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beet"
+      ],
+      [
+        "queen",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "queen",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beat"
+      ],
+      [
+        "queen",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "queen",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "queen",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "queen",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "queen",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "queen",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "seek"
       ],
       [
         "reach",
@@ -3450,6 +3514,30 @@
         "beak",
         "beam",
         "beat"
+      ],
+      [
+        "reach",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bee"
+      ],
+      [
+        "reach",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beep"
+      ],
+      [
+        "reach",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beet"
       ],
       [
         "reach",
@@ -3473,30 +3561,46 @@
         "bead",
         "beak",
         "bean",
-        "lean"
+        "bee"
       ],
       [
-        "reach",
-        "beach",
+        "read",
         "bead",
-        "beak",
-        "beat",
-        "beam"
-      ],
-      [
-        "reach",
         "beach",
-        "bead",
         "beak",
-        "beat",
+        "beam",
         "bean"
       ],
       [
-        "reach",
-        "beach",
+        "read",
         "bead",
+        "beach",
         "beak",
-        "beat",
+        "beam",
+        "beat"
+      ],
+      [
+        "read",
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "bee"
+      ],
+      [
+        "read",
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "beep"
+      ],
+      [
+        "read",
+        "bead",
+        "beach",
+        "beak",
+        "beam",
         "beet"
       ],
       [
@@ -3504,22 +3608,6 @@
         "bead",
         "beach",
         "beak",
-        "beam",
-        "bean"
-      ],
-      [
-        "read",
-        "bead",
-        "beach",
-        "beak",
-        "beam",
-        "beat"
-      ],
-      [
-        "read",
-        "bead",
-        "beach",
-        "beak",
         "bean",
         "beam"
       ],
@@ -3537,671 +3625,759 @@
         "beach",
         "beak",
         "bean",
-        "lean"
+        "bee"
       ],
       [
-        "read",
-        "bead",
+        "sea",
+        "bee",
         "beach",
+        "bead",
         "beak",
-        "beat",
         "beam"
       ],
       [
-        "read",
-        "bead",
+        "sea",
+        "bee",
         "beach",
+        "bead",
         "beak",
-        "beat",
         "bean"
       ],
       [
-        "read",
-        "bead",
+        "sea",
+        "bee",
         "beach",
+        "bead",
         "beak",
-        "beat",
+        "beat"
+      ],
+      [
+        "sea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "sea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
         "beet"
       ],
       [
         "sea",
-        "pea",
-        "peach",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "sea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "sea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "seek"
+      ],
+      [
+        "seal",
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beach"
+      ],
+      [
+        "seal",
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "bead"
+      ],
+      [
+        "seal",
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beak"
+      ],
+      [
+        "seal",
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beam"
+      ],
+      [
+        "seal",
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "bean"
+      ],
+      [
+        "seal",
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beat"
+      ],
+      [
+        "seal",
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beep"
+      ],
+      [
+        "seal",
+        "eel",
+        "feel",
+        "fee",
+        "bee",
+        "beet"
+      ],
+      [
+        "seat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "seat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "seat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "seat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "seat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "seat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "seat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "seat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "seek"
+      ],
+      [
+        "see",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "see",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "see",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beat"
+      ],
+      [
+        "see",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "see",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "see",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "see",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "see",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "seek"
+      ],
+      [
+        "seek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bean"
+      ],
+      [
+        "seek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beat"
+      ],
+      [
+        "seek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bee"
+      ],
+      [
+        "seek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beep"
+      ],
+      [
+        "seek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beet"
+      ],
+      [
+        "seek",
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "beam"
+      ],
+      [
+        "seek",
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "beat"
+      ],
+      [
+        "seek",
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "bee"
+      ],
+      [
+        "sheep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "sheep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "sheep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beat"
+      ],
+      [
+        "sheep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "sheep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "sheep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "sheep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "sheep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "seek"
+      ],
+      [
+        "sheet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "sheet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "sheet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "sheet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "sheet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "sheet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "sheet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "sheet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "seek"
+      ],
+      [
+        "tea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "tea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "tea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beat"
+      ],
+      [
+        "tea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "tea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "tea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "tea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "tea",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "seek"
+      ],
+      [
+        "teeth",
+        "tea",
+        "bee",
         "beach",
         "bead",
         "beak"
       ],
       [
-        "sea",
-        "pea",
-        "peach",
+        "teeth",
+        "tea",
+        "bee",
         "beach",
         "bead",
         "beam"
       ],
       [
-        "sea",
-        "pea",
-        "peach",
+        "teeth",
+        "tea",
+        "bee",
         "beach",
         "bead",
         "bean"
       ],
       [
-        "sea",
-        "pea",
-        "peach",
+        "teeth",
+        "tea",
+        "bee",
         "beach",
         "bead",
         "beat"
       ],
       [
-        "sea",
-        "pea",
-        "peach",
-        "beach",
-        "bead",
-        "read"
-      ],
-      [
-        "sea",
-        "pea",
-        "peach",
-        "beach",
-        "beak",
-        "bead"
-      ],
-      [
-        "sea",
-        "pea",
-        "peach",
-        "beach",
-        "beak",
-        "beam"
-      ],
-      [
-        "sea",
-        "pea",
-        "peach",
-        "beach",
-        "beak",
-        "bean"
-      ],
-      [
-        "seal",
-        "sea",
-        "pea",
-        "peach",
-        "beach",
-        "bead"
-      ],
-      [
-        "seal",
-        "sea",
-        "pea",
-        "peach",
-        "beach",
-        "beak"
-      ],
-      [
-        "seal",
-        "sea",
-        "pea",
-        "peach",
-        "beach",
-        "beam"
-      ],
-      [
-        "seal",
-        "sea",
-        "pea",
-        "peach",
-        "beach",
-        "bean"
-      ],
-      [
-        "seal",
-        "sea",
-        "pea",
-        "peach",
-        "beach",
-        "beat"
-      ],
-      [
-        "seal",
-        "sea",
-        "pea",
-        "peach",
-        "beach",
-        "reach"
-      ],
-      [
-        "seal",
-        "sea",
-        "pea",
-        "peach",
-        "reach",
-        "beach"
-      ],
-      [
-        "seal",
-        "sea",
-        "pea",
-        "peach",
-        "reach",
-        "read"
-      ],
-      [
-        "seat",
-        "beat",
-        "beach",
-        "bead",
-        "beak",
-        "beam"
-      ],
-      [
-        "seat",
-        "beat",
-        "beach",
-        "bead",
-        "beak",
-        "bean"
-      ],
-      [
-        "seat",
-        "beat",
-        "beach",
-        "bead",
-        "beam",
-        "beak"
-      ],
-      [
-        "seat",
-        "beat",
-        "beach",
-        "bead",
-        "beam",
-        "bean"
-      ],
-      [
-        "seat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beak"
-      ],
-      [
-        "seat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beam"
-      ],
-      [
-        "seat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "lean"
-      ],
-      [
-        "seat",
-        "beat",
-        "beach",
-        "bead",
-        "read",
-        "reach"
-      ],
-      [
-        "see",
+        "teeth",
+        "tea",
         "bee",
-        "beep",
-        "beet",
-        "beat",
-        "beach"
+        "beach",
+        "bead",
+        "beep"
       ],
       [
-        "see",
+        "teeth",
+        "tea",
         "bee",
-        "beep",
-        "beet",
-        "beat",
-        "bead"
+        "beach",
+        "bead",
+        "beet"
       ],
       [
-        "see",
+        "teeth",
+        "tea",
         "bee",
-        "beep",
-        "beet",
-        "beat",
-        "beak"
-      ],
-      [
-        "see",
-        "bee",
-        "beep",
-        "beet",
-        "beat",
-        "beam"
-      ],
-      [
-        "see",
-        "bee",
-        "beep",
-        "beet",
-        "beat",
-        "bean"
-      ],
-      [
-        "see",
-        "bee",
-        "beep",
-        "beet",
-        "beat",
-        "heat"
-      ],
-      [
-        "see",
-        "bee",
-        "beep",
-        "beet",
-        "beat",
-        "meat"
-      ],
-      [
-        "see",
-        "bee",
-        "beep",
-        "beet",
-        "beat",
-        "seat"
-      ],
-      [
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "feel"
-      ],
-      [
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "wheel"
-      ],
-      [
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
-        "eel"
-      ],
-      [
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
-        "fee"
-      ],
-      [
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
+        "beach",
+        "bead",
         "feed"
       ],
       [
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
-        "wheel"
-      ],
-      [
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "wheel",
-        "eel"
-      ],
-      [
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "wheel",
-        "feel"
-      ],
-      [
-        "sheep",
-        "beep",
+        "teeth",
+        "tea",
         "bee",
-        "beet",
-        "beat",
-        "beach"
-      ],
-      [
-        "sheep",
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "bead"
-      ],
-      [
-        "sheep",
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "beak"
-      ],
-      [
-        "sheep",
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "beam"
-      ],
-      [
-        "sheep",
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "bean"
-      ],
-      [
-        "sheep",
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "heat"
-      ],
-      [
-        "sheep",
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "meat"
-      ],
-      [
-        "sheep",
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "seat"
-      ],
-      [
-        "sheet",
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "beak"
-      ],
-      [
-        "sheet",
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "beam"
-      ],
-      [
-        "sheet",
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "bean"
-      ],
-      [
-        "sheet",
-        "beet",
-        "beat",
         "beach",
         "bead",
         "read"
       ],
       [
-        "sheet",
-        "beet",
-        "beat",
-        "beach",
+        "week",
         "beak",
-        "bead"
-      ],
-      [
-        "sheet",
-        "beet",
-        "beat",
         "beach",
-        "beak",
-        "beam"
-      ],
-      [
-        "sheet",
-        "beet",
-        "beat",
-        "beach",
-        "beak",
-        "bean"
-      ],
-      [
-        "sheet",
-        "beet",
-        "beat",
-        "beach",
+        "bead",
         "beam",
-        "bead"
-      ],
-      [
-        "tea",
-        "pea",
-        "peach",
-        "beach",
-        "bead",
-        "beak"
-      ],
-      [
-        "tea",
-        "pea",
-        "peach",
-        "beach",
-        "bead",
-        "beam"
-      ],
-      [
-        "tea",
-        "pea",
-        "peach",
-        "beach",
-        "bead",
         "bean"
       ],
       [
-        "tea",
-        "pea",
-        "peach",
+        "week",
+        "beak",
         "beach",
         "bead",
+        "beam",
         "beat"
       ],
       [
-        "tea",
-        "pea",
-        "peach",
+        "week",
+        "beak",
         "beach",
         "bead",
-        "read"
+        "beam",
+        "bee"
       ],
       [
-        "tea",
-        "pea",
-        "peach",
-        "beach",
+        "week",
         "beak",
-        "bead"
+        "beach",
+        "bead",
+        "beam",
+        "beep"
       ],
       [
-        "tea",
-        "pea",
-        "peach",
-        "beach",
+        "week",
         "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beet"
+      ],
+      [
+        "week",
+        "beak",
+        "beach",
+        "bead",
+        "bean",
         "beam"
       ],
       [
-        "tea",
-        "pea",
-        "peach",
-        "beach",
+        "week",
         "beak",
-        "bean"
+        "beach",
+        "bead",
+        "bean",
+        "beat"
       ],
       [
         "week",
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "feel"
-      ],
-      [
-        "week",
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "wheel"
-      ],
-      [
-        "week",
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
-        "eel"
-      ],
-      [
-        "week",
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
-        "fee"
-      ],
-      [
-        "week",
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
-        "feed"
-      ],
-      [
-        "week",
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
-        "wheel"
-      ],
-      [
-        "week",
-        "cheek",
-        "peek",
-        "peel",
-        "wheel",
-        "eel"
-      ],
-      [
-        "week",
-        "cheek",
-        "peek",
-        "peel",
-        "wheel",
-        "feel"
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "bee"
       ],
       [
         "weep",
         "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "weep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "weep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beat"
+      ],
+      [
+        "weep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "weep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "weep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "weep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "weep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "seek"
+      ],
+      [
+        "wheel",
+        "eel",
+        "feel",
+        "fee",
         "bee",
-        "beet",
-        "beat",
         "beach"
       ],
       [
-        "weep",
-        "beep",
+        "wheel",
+        "eel",
+        "feel",
+        "fee",
         "bee",
-        "beet",
-        "beat",
         "bead"
       ],
       [
-        "weep",
-        "beep",
+        "wheel",
+        "eel",
+        "feel",
+        "fee",
         "bee",
-        "beet",
-        "beat",
         "beak"
       ],
       [
-        "weep",
-        "beep",
+        "wheel",
+        "eel",
+        "feel",
+        "fee",
         "bee",
-        "beet",
-        "beat",
         "beam"
       ],
       [
-        "weep",
-        "beep",
+        "wheel",
+        "eel",
+        "feel",
+        "fee",
         "bee",
-        "beet",
-        "beat",
         "bean"
       ],
       [
-        "weep",
-        "beep",
+        "wheel",
+        "eel",
+        "feel",
+        "fee",
         "bee",
-        "beet",
-        "beat",
-        "heat"
-      ],
-      [
-        "weep",
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "meat"
-      ],
-      [
-        "weep",
-        "beep",
-        "bee",
-        "beet",
-        "beat",
-        "seat"
+        "beat"
       ],
       [
         "wheel",
@@ -4218,54 +4394,6 @@
         "fee",
         "bee",
         "beet"
-      ],
-      [
-        "wheel",
-        "eel",
-        "feel",
-        "fee",
-        "bee",
-        "see"
-      ],
-      [
-        "wheel",
-        "eel",
-        "feel",
-        "fee",
-        "see",
-        "bee"
-      ],
-      [
-        "wheel",
-        "eel",
-        "feel",
-        "fee",
-        "see",
-        "sea"
-      ],
-      [
-        "wheel",
-        "eel",
-        "feel",
-        "fee",
-        "see",
-        "seek"
-      ],
-      [
-        "wheel",
-        "eel",
-        "feel",
-        "feed",
-        "fee",
-        "bee"
-      ],
-      [
-        "wheel",
-        "eel",
-        "feel",
-        "feed",
-        "fee",
-        "flee"
       ]
     ],
     "longI": [
@@ -4978,66 +5106,66 @@
       [
         "doe",
         "foe",
-        "doe",
-        "foe",
-        "doe",
-        "foe"
+        "toe",
+        "toad",
+        "load",
+        "loaf"
       ],
       [
-        "doe",
-        "foe",
-        "doe",
-        "foe",
-        "doe",
-        "toe"
-      ],
-      [
-        "doe",
-        "foe",
-        "doe",
-        "foe",
-        "doe",
-        "woe"
-      ],
-      [
-        "doe",
-        "foe",
         "doe",
         "foe",
         "toe",
-        "doe"
+        "toad",
+        "load",
+        "road"
       ],
       [
-        "doe",
-        "foe",
         "doe",
         "foe",
         "toe",
-        "foe"
+        "toad",
+        "road",
+        "load"
       ],
       [
-        "doe",
-        "foe",
         "doe",
         "foe",
         "toe",
-        "woe"
+        "toad",
+        "road",
+        "roam"
       ],
       [
-        "doe",
-        "foe",
         "doe",
         "foe",
         "woe",
-        "doe"
+        "toe",
+        "toad",
+        "load"
       ],
       [
         "doe",
         "foe",
-        "doe",
-        "foe",
         "woe",
-        "foe"
+        "toe",
+        "toad",
+        "road"
+      ],
+      [
+        "doe",
+        "toe",
+        "toad",
+        "load",
+        "road",
+        "roam"
+      ],
+      [
+        "doe",
+        "toe",
+        "toad",
+        "road",
+        "load",
+        "loaf"
       ],
       [
         "down",
@@ -5106,66 +5234,66 @@
       [
         "foe",
         "doe",
-        "foe",
-        "doe",
-        "foe",
-        "doe"
+        "toe",
+        "toad",
+        "load",
+        "loaf"
       ],
       [
-        "foe",
-        "doe",
-        "foe",
-        "doe",
-        "foe",
-        "toe"
-      ],
-      [
-        "foe",
-        "doe",
-        "foe",
-        "doe",
-        "foe",
-        "woe"
-      ],
-      [
-        "foe",
-        "doe",
         "foe",
         "doe",
         "toe",
-        "doe"
+        "toad",
+        "load",
+        "road"
       ],
       [
-        "foe",
-        "doe",
         "foe",
         "doe",
         "toe",
-        "foe"
+        "toad",
+        "road",
+        "load"
       ],
       [
-        "foe",
-        "doe",
         "foe",
         "doe",
         "toe",
-        "woe"
+        "toad",
+        "road",
+        "roam"
       ],
       [
-        "foe",
-        "doe",
         "foe",
         "doe",
         "woe",
-        "doe"
+        "toe",
+        "toad",
+        "load"
       ],
       [
         "foe",
         "doe",
-        "foe",
-        "doe",
         "woe",
-        "foe"
+        "toe",
+        "toad",
+        "road"
+      ],
+      [
+        "foe",
+        "toe",
+        "toad",
+        "load",
+        "road",
+        "roam"
+      ],
+      [
+        "foe",
+        "toe",
+        "toad",
+        "road",
+        "load",
+        "loaf"
       ],
       [
         "fowl",
@@ -5241,131 +5369,131 @@
       ],
       [
         "load",
-        "loaf",
-        "load",
-        "loaf",
-        "load",
-        "loaf"
+        "road",
+        "toad",
+        "toe",
+        "doe",
+        "foe"
       ],
       [
-        "load",
-        "loaf",
-        "load",
-        "loaf",
-        "load",
-        "road"
-      ],
-      [
-        "load",
-        "loaf",
-        "load",
-        "loaf",
-        "load",
-        "toad"
-      ],
-      [
-        "load",
-        "loaf",
         "load",
         "road",
-        "load",
-        "loaf"
+        "toad",
+        "toe",
+        "doe",
+        "woe"
       ],
       [
-        "load",
-        "loaf",
         "load",
         "road",
-        "load",
-        "road"
+        "toad",
+        "toe",
+        "foe",
+        "doe"
       ],
       [
-        "load",
-        "loaf",
         "load",
         "road",
-        "load",
-        "toad"
+        "toad",
+        "toe",
+        "foe",
+        "woe"
       ],
       [
-        "load",
-        "loaf",
         "load",
         "road",
-        "roam",
-        "road"
+        "toad",
+        "toe",
+        "woe",
+        "doe"
       ],
       [
         "load",
+        "road",
+        "toad",
+        "toe",
+        "woe",
+        "foe"
+      ],
+      [
+        "load",
+        "toad",
+        "toe",
+        "doe",
+        "foe",
+        "woe"
+      ],
+      [
+        "load",
+        "toad",
+        "toe",
+        "doe",
+        "woe",
+        "foe"
+      ],
+      [
         "loaf",
         "load",
         "road",
         "toad",
-        "load"
+        "toe",
+        "doe"
       ],
       [
-        "loaf",
-        "load",
-        "loaf",
-        "load",
-        "loaf",
-        "load"
-      ],
-      [
-        "loaf",
-        "load",
         "loaf",
         "load",
         "road",
-        "load"
+        "toad",
+        "toe",
+        "foe"
       ],
       [
-        "loaf",
-        "load",
         "loaf",
         "load",
         "road",
-        "roam"
+        "toad",
+        "toe",
+        "woe"
       ],
       [
-        "loaf",
-        "load",
-        "loaf",
-        "load",
-        "road",
-        "toad"
-      ],
-      [
-        "loaf",
-        "load",
         "loaf",
         "load",
         "toad",
-        "load"
+        "toe",
+        "doe",
+        "foe"
       ],
       [
-        "loaf",
-        "load",
         "loaf",
         "load",
         "toad",
-        "road"
+        "toe",
+        "doe",
+        "woe"
       ],
       [
         "loaf",
         "load",
-        "road",
-        "load",
-        "loaf",
-        "load"
+        "toad",
+        "toe",
+        "foe",
+        "doe"
       ],
       [
         "loaf",
         "load",
-        "road",
+        "toad",
+        "toe",
+        "foe",
+        "woe"
+      ],
+      [
+        "loaf",
         "load",
-        "road",
-        "load"
+        "toad",
+        "toe",
+        "woe",
+        "doe"
       ],
       [
         "low",
@@ -5538,130 +5666,130 @@
       [
         "road",
         "load",
-        "loaf",
-        "load",
-        "loaf",
-        "load"
+        "toad",
+        "toe",
+        "doe",
+        "foe"
       ],
       [
         "road",
-        "load",
-        "loaf",
-        "load",
-        "road",
-        "load"
-      ],
-      [
-        "road",
-        "load",
-        "loaf",
-        "load",
-        "road",
-        "roam"
-      ],
-      [
-        "road",
-        "load",
-        "loaf",
-        "load",
-        "road",
-        "toad"
-      ],
-      [
-        "road",
-        "load",
-        "loaf",
         "load",
         "toad",
-        "load"
+        "toe",
+        "doe",
+        "woe"
       ],
       [
         "road",
-        "load",
-        "loaf",
         "load",
         "toad",
-        "road"
+        "toe",
+        "foe",
+        "doe"
       ],
       [
         "road",
         "load",
-        "road",
-        "load",
-        "loaf",
-        "load"
+        "toad",
+        "toe",
+        "foe",
+        "woe"
       ],
       [
         "road",
         "load",
-        "road",
-        "load",
-        "road",
-        "load"
+        "toad",
+        "toe",
+        "woe",
+        "doe"
       ],
       [
-        "roam",
         "road",
         "load",
-        "loaf",
-        "load",
-        "loaf"
+        "toad",
+        "toe",
+        "woe",
+        "foe"
       ],
       [
-        "roam",
-        "road",
-        "load",
-        "loaf",
-        "load",
-        "road"
-      ],
-      [
-        "roam",
-        "road",
-        "load",
-        "loaf",
-        "load",
-        "toad"
-      ],
-      [
-        "roam",
-        "road",
-        "load",
-        "road",
-        "load",
-        "loaf"
-      ],
-      [
-        "roam",
-        "road",
-        "load",
-        "road",
-        "load",
-        "road"
-      ],
-      [
-        "roam",
-        "road",
-        "load",
-        "road",
-        "load",
-        "toad"
-      ],
-      [
-        "roam",
-        "road",
-        "load",
-        "road",
-        "roam",
-        "road"
-      ],
-      [
-        "roam",
-        "road",
-        "load",
         "road",
         "toad",
-        "load"
+        "toe",
+        "doe",
+        "foe",
+        "woe"
+      ],
+      [
+        "road",
+        "toad",
+        "toe",
+        "doe",
+        "woe",
+        "foe"
+      ],
+      [
+        "roam",
+        "road",
+        "load",
+        "toad",
+        "toe",
+        "doe"
+      ],
+      [
+        "roam",
+        "road",
+        "load",
+        "toad",
+        "toe",
+        "foe"
+      ],
+      [
+        "roam",
+        "road",
+        "load",
+        "toad",
+        "toe",
+        "woe"
+      ],
+      [
+        "roam",
+        "road",
+        "toad",
+        "toe",
+        "doe",
+        "foe"
+      ],
+      [
+        "roam",
+        "road",
+        "toad",
+        "toe",
+        "doe",
+        "woe"
+      ],
+      [
+        "roam",
+        "road",
+        "toad",
+        "toe",
+        "foe",
+        "doe"
+      ],
+      [
+        "roam",
+        "road",
+        "toad",
+        "toe",
+        "foe",
+        "woe"
+      ],
+      [
+        "roam",
+        "road",
+        "toad",
+        "toe",
+        "woe",
+        "doe"
       ],
       [
         "row",
@@ -5938,17 +6066,17 @@
       [
         "toad",
         "load",
-        "road",
-        "load",
         "loaf",
-        "load"
+        "load",
+        "toad",
+        "toe"
       ],
       [
         "toad",
         "load",
         "road",
         "load",
-        "road",
+        "loaf",
         "load"
       ],
       [
@@ -5997,6 +6125,14 @@
         "foe",
         "doe",
         "toe",
+        "toad"
+      ],
+      [
+        "toe",
+        "doe",
+        "foe",
+        "doe",
+        "toe",
         "woe"
       ],
       [
@@ -6006,14 +6142,6 @@
         "doe",
         "woe",
         "doe"
-      ],
-      [
-        "toe",
-        "doe",
-        "foe",
-        "doe",
-        "woe",
-        "foe"
       ],
       [
         "town",
@@ -6083,65 +6211,65 @@
         "woe",
         "doe",
         "foe",
-        "doe",
-        "foe",
-        "doe"
+        "toe",
+        "toad",
+        "load"
       ],
       [
         "woe",
         "doe",
         "foe",
-        "doe",
-        "foe",
-        "toe"
+        "toe",
+        "toad",
+        "road"
       ],
       [
         "woe",
         "doe",
-        "foe",
-        "doe",
-        "foe",
-        "woe"
+        "toe",
+        "toad",
+        "load",
+        "loaf"
       ],
       [
         "woe",
         "doe",
+        "toe",
+        "toad",
+        "load",
+        "road"
+      ],
+      [
+        "woe",
+        "doe",
+        "toe",
+        "toad",
+        "road",
+        "load"
+      ],
+      [
+        "woe",
+        "doe",
+        "toe",
+        "toad",
+        "road",
+        "roam"
+      ],
+      [
+        "woe",
         "foe",
         "doe",
         "toe",
-        "doe"
+        "toad",
+        "load"
       ],
       [
         "woe",
-        "doe",
         "foe",
         "doe",
         "toe",
-        "foe"
-      ],
-      [
-        "woe",
-        "doe",
-        "foe",
-        "doe",
-        "toe",
-        "woe"
-      ],
-      [
-        "woe",
-        "doe",
-        "foe",
-        "doe",
-        "woe",
-        "doe"
-      ],
-      [
-        "woe",
-        "doe",
-        "foe",
-        "doe",
-        "woe",
-        "foe"
+        "toad",
+        "road"
       ]
     ],
     "longU": [
@@ -8279,323 +8407,339 @@
     "diphthongOyOi": [
       [
         "boil",
-        "coil",
-        "foil",
-        "oil",
-        "soil",
-        "toil"
+        "boy",
+        "joy",
+        "join",
+        "coin",
+        "coil"
       ],
       [
         "boil",
-        "coil",
-        "foil",
-        "oil",
+        "boy",
+        "joy",
+        "toy",
         "toil",
-        "soil"
+        "coil"
       ],
       [
         "boil",
-        "coil",
-        "foil",
-        "soil",
-        "oil",
-        "toil"
+        "boy",
+        "joy",
+        "toy",
+        "toil",
+        "foil"
       ],
       [
         "boil",
-        "coil",
-        "foil",
-        "soil",
+        "boy",
+        "joy",
+        "toy",
         "toil",
         "oil"
       ],
       [
         "boil",
-        "coil",
-        "foil",
+        "boy",
+        "joy",
+        "toy",
         "toil",
-        "oil",
         "soil"
       ],
       [
         "boil",
-        "coil",
-        "foil",
-        "toil",
-        "soil",
-        "oil"
+        "boy",
+        "toy",
+        "joy",
+        "join",
+        "coin"
       ],
       [
         "boil",
+        "boy",
+        "toy",
+        "toil",
         "coil",
-        "oil",
-        "foil",
-        "soil",
-        "toil"
+        "coin"
       ],
       [
         "boil",
-        "coil",
-        "oil",
-        "foil",
+        "boy",
+        "toy",
         "toil",
-        "soil"
+        "coil",
+        "foil"
       ],
       [
         "boy",
-        "joy",
-        "boy",
-        "joy",
-        "boy",
+        "boil",
+        "coil",
+        "coin",
+        "join",
         "joy"
       ],
       [
         "boy",
-        "joy",
+        "boil",
+        "coil",
+        "foil",
+        "oil",
+        "soil"
+      ],
+      [
         "boy",
-        "joy",
+        "boil",
+        "coil",
+        "foil",
+        "oil",
+        "toil"
+      ],
+      [
         "boy",
+        "boil",
+        "coil",
+        "foil",
+        "soil",
+        "oil"
+      ],
+      [
+        "boy",
+        "boil",
+        "coil",
+        "foil",
+        "soil",
+        "toil"
+      ],
+      [
+        "boy",
+        "boil",
+        "coil",
+        "foil",
+        "toil",
+        "oil"
+      ],
+      [
+        "boy",
+        "boil",
+        "coil",
+        "foil",
+        "toil",
+        "soil"
+      ],
+      [
+        "boy",
+        "boil",
+        "coil",
+        "foil",
+        "toil",
         "toy"
       ],
       [
+        "coil",
+        "boil",
         "boy",
         "joy",
+        "join",
+        "coin"
+      ],
+      [
+        "coil",
+        "boil",
         "boy",
         "joy",
         "toy",
-        "boy"
+        "toil"
       ],
       [
+        "coil",
+        "boil",
+        "boy",
+        "toy",
+        "joy",
+        "join"
+      ],
+      [
+        "coil",
+        "boil",
+        "boy",
+        "toy",
+        "toil",
+        "foil"
+      ],
+      [
+        "coil",
+        "boil",
+        "boy",
+        "toy",
+        "toil",
+        "oil"
+      ],
+      [
+        "coil",
+        "boil",
+        "boy",
+        "toy",
+        "toil",
+        "soil"
+      ],
+      [
+        "coil",
+        "boil",
+        "foil",
+        "oil",
+        "soil",
+        "toil"
+      ],
+      [
+        "coil",
+        "boil",
+        "foil",
+        "oil",
+        "toil",
+        "soil"
+      ],
+      [
+        "coin",
+        "coil",
+        "boil",
         "boy",
         "joy",
+        "join"
+      ],
+      [
+        "coin",
+        "coil",
+        "boil",
         "boy",
         "joy",
+        "toy"
+      ],
+      [
+        "coin",
+        "coil",
+        "boil",
+        "boy",
         "toy",
         "joy"
       ],
       [
-        "boy",
-        "joy",
+        "coin",
+        "coil",
+        "boil",
         "boy",
         "toy",
-        "boy",
-        "joy"
+        "toil"
       ],
       [
+        "coin",
+        "coil",
+        "boil",
+        "foil",
+        "oil",
+        "soil"
+      ],
+      [
+        "coin",
+        "coil",
+        "boil",
+        "foil",
+        "oil",
+        "toil"
+      ],
+      [
+        "coin",
+        "coil",
+        "boil",
+        "foil",
+        "soil",
+        "oil"
+      ],
+      [
+        "coin",
+        "coil",
+        "boil",
+        "foil",
+        "soil",
+        "toil"
+      ],
+      [
+        "foil",
+        "boil",
         "boy",
         "joy",
+        "join",
+        "coin"
+      ],
+      [
+        "foil",
+        "boil",
+        "boy",
+        "joy",
+        "toy",
+        "toil"
+      ],
+      [
+        "foil",
+        "boil",
         "boy",
         "toy",
-        "boy",
-        "toy"
-      ],
-      [
-        "boy",
         "joy",
-        "boy",
-        "toy",
-        "joy",
-        "boy"
-      ],
-      [
-        "boy",
-        "joy",
-        "boy",
-        "toy",
-        "joy",
-        "toy"
-      ],
-      [
-        "coil",
-        "boil",
-        "foil",
-        "oil",
-        "soil",
-        "toil"
-      ],
-      [
-        "coil",
-        "boil",
-        "foil",
-        "oil",
-        "toil",
-        "soil"
-      ],
-      [
-        "coil",
-        "boil",
-        "foil",
-        "soil",
-        "oil",
-        "toil"
-      ],
-      [
-        "coil",
-        "boil",
-        "foil",
-        "soil",
-        "toil",
-        "oil"
-      ],
-      [
-        "coil",
-        "boil",
-        "foil",
-        "toil",
-        "oil",
-        "soil"
-      ],
-      [
-        "coil",
-        "boil",
-        "foil",
-        "toil",
-        "soil",
-        "oil"
-      ],
-      [
-        "coil",
-        "boil",
-        "oil",
-        "foil",
-        "soil",
-        "toil"
-      ],
-      [
-        "coil",
-        "boil",
-        "oil",
-        "foil",
-        "toil",
-        "soil"
-      ],
-      [
-        "coin",
-        "coil",
-        "boil",
-        "foil",
-        "oil",
-        "soil"
-      ],
-      [
-        "coin",
-        "coil",
-        "boil",
-        "foil",
-        "oil",
-        "toil"
-      ],
-      [
-        "coin",
-        "coil",
-        "boil",
-        "foil",
-        "soil",
-        "oil"
-      ],
-      [
-        "coin",
-        "coil",
-        "boil",
-        "foil",
-        "soil",
-        "toil"
-      ],
-      [
-        "coin",
-        "coil",
-        "boil",
-        "foil",
-        "toil",
-        "oil"
-      ],
-      [
-        "coin",
-        "coil",
-        "boil",
-        "foil",
-        "toil",
-        "soil"
-      ],
-      [
-        "coin",
-        "coil",
-        "boil",
-        "oil",
-        "foil",
-        "soil"
-      ],
-      [
-        "coin",
-        "coil",
-        "boil",
-        "oil",
-        "foil",
-        "toil"
-      ],
-      [
-        "foil",
-        "boil",
-        "coil",
-        "oil",
-        "soil",
-        "toil"
-      ],
-      [
-        "foil",
-        "boil",
-        "coil",
-        "oil",
-        "toil",
-        "soil"
-      ],
-      [
-        "foil",
-        "boil",
-        "coil",
-        "soil",
-        "oil",
-        "toil"
-      ],
-      [
-        "foil",
-        "boil",
-        "coil",
-        "soil",
-        "toil",
-        "oil"
-      ],
-      [
-        "foil",
-        "boil",
-        "coil",
-        "toil",
-        "oil",
-        "soil"
-      ],
-      [
-        "foil",
-        "boil",
-        "coil",
-        "toil",
-        "soil",
-        "oil"
-      ],
-      [
-        "foil",
-        "boil",
-        "oil",
-        "coil",
-        "coin",
         "join"
       ],
       [
         "foil",
         "boil",
-        "oil",
+        "boy",
+        "toy",
+        "toil",
+        "coil"
+      ],
+      [
+        "foil",
+        "boil",
+        "boy",
+        "toy",
+        "toil",
+        "oil"
+      ],
+      [
+        "foil",
+        "boil",
+        "boy",
+        "toy",
+        "toil",
+        "soil"
+      ],
+      [
+        "foil",
+        "boil",
         "coil",
+        "coin",
+        "join",
+        "joy"
+      ],
+      [
+        "foil",
+        "boil",
+        "coil",
+        "oil",
         "soil",
         "toil"
+      ],
+      [
+        "join",
+        "coin",
+        "coil",
+        "boil",
+        "boy",
+        "joy"
+      ],
+      [
+        "join",
+        "coin",
+        "coil",
+        "boil",
+        "boy",
+        "toy"
       ],
       [
         "join",
@@ -8646,273 +8790,305 @@
         "toil"
       ],
       [
-        "join",
-        "coin",
-        "coil",
+        "joy",
+        "boy",
         "boil",
-        "soil",
-        "foil"
-      ],
-      [
-        "join",
-        "coin",
-        "coil",
-        "boil",
-        "soil",
-        "oil"
-      ],
-      [
-        "joy",
-        "boy",
-        "joy",
-        "boy",
-        "joy",
-        "boy"
-      ],
-      [
-        "joy",
-        "boy",
-        "joy",
-        "boy",
-        "joy",
-        "toy"
-      ],
-      [
-        "joy",
-        "boy",
-        "joy",
-        "boy",
-        "toy",
-        "boy"
-      ],
-      [
-        "joy",
-        "boy",
-        "joy",
-        "boy",
-        "toy",
-        "joy"
-      ],
-      [
-        "joy",
-        "boy",
-        "joy",
-        "toy",
-        "boy",
-        "joy"
-      ],
-      [
-        "joy",
-        "boy",
-        "joy",
-        "toy",
-        "boy",
-        "toy"
-      ],
-      [
-        "joy",
-        "boy",
-        "joy",
-        "toy",
-        "joy",
-        "boy"
-      ],
-      [
-        "joy",
-        "boy",
-        "joy",
-        "toy",
-        "joy",
-        "toy"
-      ],
-      [
-        "oil",
-        "boil",
-        "coil",
-        "foil",
-        "soil",
-        "toil"
-      ],
-      [
-        "oil",
-        "boil",
-        "coil",
-        "foil",
-        "toil",
-        "soil"
-      ],
-      [
-        "oil",
-        "boil",
-        "coil",
-        "soil",
-        "foil",
-        "toil"
-      ],
-      [
-        "oil",
-        "boil",
-        "coil",
-        "soil",
-        "toil",
-        "foil"
-      ],
-      [
-        "oil",
-        "boil",
-        "coil",
-        "toil",
-        "foil",
-        "soil"
-      ],
-      [
-        "oil",
-        "boil",
-        "coil",
-        "toil",
-        "soil",
-        "foil"
-      ],
-      [
-        "oil",
-        "boil",
-        "foil",
         "coil",
         "coin",
         "join"
       ],
       [
-        "oil",
-        "boil",
-        "foil",
-        "coil",
-        "soil",
-        "toil"
-      ],
-      [
-        "soil",
+        "joy",
+        "boy",
         "boil",
         "coil",
-        "foil",
-        "oil",
-        "toil"
-      ],
-      [
-        "soil",
-        "boil",
-        "coil",
-        "foil",
-        "toil",
-        "oil"
-      ],
-      [
-        "soil",
-        "boil",
-        "coil",
-        "oil",
-        "foil",
-        "toil"
-      ],
-      [
-        "soil",
-        "boil",
-        "coil",
-        "oil",
-        "toil",
-        "foil"
-      ],
-      [
-        "soil",
-        "boil",
-        "coil",
-        "toil",
         "foil",
         "oil"
       ],
       [
-        "soil",
+        "joy",
+        "boy",
         "boil",
         "coil",
-        "toil",
+        "foil",
+        "soil"
+      ],
+      [
+        "joy",
+        "boy",
+        "boil",
+        "coil",
+        "foil",
+        "toil"
+      ],
+      [
+        "joy",
+        "boy",
+        "boil",
+        "coil",
         "oil",
         "foil"
       ],
       [
-        "soil",
+        "joy",
+        "boy",
         "boil",
-        "foil",
+        "coil",
+        "oil",
+        "soil"
+      ],
+      [
+        "joy",
+        "boy",
+        "boil",
+        "coil",
+        "oil",
+        "toil"
+      ],
+      [
+        "joy",
+        "boy",
+        "boil",
+        "coil",
+        "soil",
+        "foil"
+      ],
+      [
+        "oil",
+        "boil",
+        "boy",
+        "joy",
+        "join",
+        "coin"
+      ],
+      [
+        "oil",
+        "boil",
+        "boy",
+        "joy",
+        "toy",
+        "toil"
+      ],
+      [
+        "oil",
+        "boil",
+        "boy",
+        "toy",
+        "joy",
+        "join"
+      ],
+      [
+        "oil",
+        "boil",
+        "boy",
+        "toy",
+        "toil",
+        "coil"
+      ],
+      [
+        "oil",
+        "boil",
+        "boy",
+        "toy",
+        "toil",
+        "foil"
+      ],
+      [
+        "oil",
+        "boil",
+        "boy",
+        "toy",
+        "toil",
+        "soil"
+      ],
+      [
+        "oil",
+        "boil",
         "coil",
         "coin",
+        "join",
+        "joy"
+      ],
+      [
+        "oil",
+        "boil",
+        "coil",
+        "foil",
+        "soil",
+        "toil"
+      ],
+      [
+        "soil",
+        "boil",
+        "boy",
+        "joy",
+        "join",
+        "coin"
+      ],
+      [
+        "soil",
+        "boil",
+        "boy",
+        "joy",
+        "toy",
+        "toil"
+      ],
+      [
+        "soil",
+        "boil",
+        "boy",
+        "toy",
+        "joy",
         "join"
       ],
       [
         "soil",
         "boil",
-        "foil",
+        "boy",
+        "toy",
+        "toil",
+        "coil"
+      ],
+      [
+        "soil",
+        "boil",
+        "boy",
+        "toy",
+        "toil",
+        "foil"
+      ],
+      [
+        "soil",
+        "boil",
+        "boy",
+        "toy",
+        "toil",
+        "oil"
+      ],
+      [
+        "soil",
+        "boil",
         "coil",
+        "coin",
+        "join",
+        "joy"
+      ],
+      [
+        "soil",
+        "boil",
+        "coil",
+        "foil",
         "oil",
         "toil"
       ],
       [
         "toil",
         "boil",
-        "coil",
-        "foil",
-        "oil",
-        "soil"
+        "boy",
+        "joy",
+        "join",
+        "coin"
       ],
       [
         "toil",
         "boil",
-        "coil",
-        "foil",
-        "soil",
-        "oil"
-      ],
-      [
-        "toil",
-        "boil",
-        "coil",
-        "oil",
-        "foil",
-        "soil"
-      ],
-      [
-        "toil",
-        "boil",
-        "coil",
-        "oil",
-        "soil",
-        "foil"
-      ],
-      [
-        "toil",
-        "boil",
-        "coil",
-        "soil",
-        "foil",
-        "oil"
-      ],
-      [
-        "toil",
-        "boil",
-        "coil",
-        "soil",
-        "oil",
-        "foil"
-      ],
-      [
-        "toil",
-        "boil",
-        "foil",
-        "coil",
-        "coin",
+        "boy",
+        "toy",
+        "joy",
         "join"
       ],
       [
         "toil",
         "boil",
+        "coil",
+        "coin",
+        "join",
+        "joy"
+      ],
+      [
+        "toil",
+        "boil",
+        "coil",
         "foil",
+        "oil",
+        "soil"
+      ],
+      [
+        "toil",
+        "boil",
+        "coil",
+        "foil",
+        "soil",
+        "oil"
+      ],
+      [
+        "toil",
+        "boil",
+        "coil",
+        "oil",
+        "foil",
+        "soil"
+      ],
+      [
+        "toil",
+        "boil",
+        "coil",
+        "oil",
+        "soil",
+        "foil"
+      ],
+      [
+        "toil",
+        "boil",
+        "coil",
+        "soil",
+        "foil",
+        "oil"
+      ],
+      [
+        "toy",
+        "boy",
+        "boil",
+        "coil",
+        "coin",
+        "join"
+      ],
+      [
+        "toy",
+        "boy",
+        "boil",
+        "coil",
+        "foil",
+        "oil"
+      ],
+      [
+        "toy",
+        "boy",
+        "boil",
+        "coil",
+        "foil",
+        "soil"
+      ],
+      [
+        "toy",
+        "boy",
+        "boil",
+        "coil",
+        "foil",
+        "toil"
+      ],
+      [
+        "toy",
+        "boy",
+        "boil",
+        "coil",
+        "oil",
+        "foil"
+      ],
+      [
+        "toy",
+        "boy",
+        "boil",
         "coil",
         "oil",
         "soil"
@@ -8920,70 +9096,30 @@
       [
         "toy",
         "boy",
-        "joy",
-        "boy",
-        "joy",
-        "boy"
+        "boil",
+        "coil",
+        "oil",
+        "toil"
       ],
       [
         "toy",
         "boy",
-        "joy",
-        "boy",
-        "joy",
-        "toy"
-      ],
-      [
-        "toy",
-        "boy",
-        "joy",
-        "boy",
-        "toy",
-        "boy"
-      ],
-      [
-        "toy",
-        "boy",
-        "joy",
-        "boy",
-        "toy",
-        "joy"
-      ],
-      [
-        "toy",
-        "boy",
-        "joy",
-        "toy",
-        "boy",
-        "joy"
-      ],
-      [
-        "toy",
-        "boy",
-        "joy",
-        "toy",
-        "boy",
-        "toy"
-      ],
-      [
-        "toy",
-        "boy",
-        "joy",
-        "toy",
-        "joy",
-        "boy"
-      ],
-      [
-        "toy",
-        "boy",
-        "joy",
-        "toy",
-        "joy",
-        "toy"
+        "boil",
+        "coil",
+        "soil",
+        "foil"
       ]
     ],
     "variantAuAw": [
       [
+        "bawl",
+        "maul",
+        "haul",
+        "hawk",
+        "gawk",
+        "gauze"
+      ],
+      [
         "dawn",
         "fawn",
         "lawn",
@@ -9021,6 +9157,14 @@
         "lawn",
         "law",
         "paw",
+        "pause"
+      ],
+      [
+        "dawn",
+        "fawn",
+        "lawn",
+        "law",
+        "paw",
         "pawn"
       ],
       [
@@ -9038,14 +9182,6 @@
         "law",
         "paw",
         "thaw"
-      ],
-      [
-        "dawn",
-        "fawn",
-        "lawn",
-        "law",
-        "raw",
-        "jaw"
       ],
       [
         "fawn",
@@ -9085,6 +9221,14 @@
         "lawn",
         "law",
         "paw",
+        "pause"
+      ],
+      [
+        "fawn",
+        "dawn",
+        "lawn",
+        "law",
+        "paw",
         "pawn"
       ],
       [
@@ -9104,28 +9248,180 @@
         "thaw"
       ],
       [
-        "fawn",
-        "dawn",
-        "lawn",
-        "law",
-        "raw",
-        "jaw"
+        "gauze",
+        "gawk",
+        "hawk",
+        "haul",
+        "bawl",
+        "maul"
+      ],
+      [
+        "gauze",
+        "gawk",
+        "hawk",
+        "haul",
+        "maul",
+        "bawl"
       ],
       [
         "gawk",
+        "gauze",
+        "gawk",
+        "gauze",
+        "gawk",
+        "gauze"
+      ],
+      [
+        "gawk",
+        "gauze",
+        "gawk",
+        "gauze",
+        "gawk",
+        "hawk"
+      ],
+      [
+        "gawk",
+        "gauze",
+        "gawk",
         "hawk",
+        "gawk",
+        "gauze"
+      ],
+      [
+        "gawk",
+        "gauze",
         "gawk",
         "hawk",
         "gawk",
         "hawk"
       ],
       [
+        "gawk",
+        "gauze",
+        "gawk",
+        "hawk",
         "haul",
-        "maul",
+        "bawl"
+      ],
+      [
+        "gawk",
+        "gauze",
+        "gawk",
+        "hawk",
         "haul",
-        "maul",
+        "hawk"
+      ],
+      [
+        "gawk",
+        "gauze",
+        "gawk",
+        "hawk",
         "haul",
         "maul"
+      ],
+      [
+        "gawk",
+        "hawk",
+        "gawk",
+        "gauze",
+        "gawk",
+        "gauze"
+      ],
+      [
+        "haul",
+        "bawl",
+        "haul",
+        "bawl",
+        "haul",
+        "bawl"
+      ],
+      [
+        "haul",
+        "bawl",
+        "haul",
+        "bawl",
+        "haul",
+        "hawk"
+      ],
+      [
+        "haul",
+        "bawl",
+        "haul",
+        "bawl",
+        "haul",
+        "maul"
+      ],
+      [
+        "haul",
+        "bawl",
+        "haul",
+        "bawl",
+        "maul",
+        "bawl"
+      ],
+      [
+        "haul",
+        "bawl",
+        "haul",
+        "bawl",
+        "maul",
+        "haul"
+      ],
+      [
+        "haul",
+        "bawl",
+        "haul",
+        "hawk",
+        "gawk",
+        "gauze"
+      ],
+      [
+        "haul",
+        "bawl",
+        "haul",
+        "hawk",
+        "gawk",
+        "hawk"
+      ],
+      [
+        "haul",
+        "bawl",
+        "haul",
+        "hawk",
+        "haul",
+        "bawl"
+      ],
+      [
+        "hawk",
+        "gawk",
+        "gauze",
+        "gawk",
+        "gauze",
+        "gawk"
+      ],
+      [
+        "hawk",
+        "gawk",
+        "gauze",
+        "gawk",
+        "hawk",
+        "gawk"
+      ],
+      [
+        "hawk",
+        "gawk",
+        "gauze",
+        "gawk",
+        "hawk",
+        "haul"
+      ],
+      [
+        "hawk",
+        "gawk",
+        "hawk",
+        "gawk",
+        "gauze",
+        "gawk"
       ],
       [
         "hawk",
@@ -9136,206 +9432,294 @@
         "gawk"
       ],
       [
-        "jaw",
-        "law",
-        "lawn",
-        "dawn",
-        "fawn",
-        "pawn"
-      ],
-      [
-        "jaw",
-        "law",
-        "lawn",
-        "dawn",
-        "fawn",
-        "yawn"
-      ],
-      [
-        "jaw",
-        "law",
-        "lawn",
-        "dawn",
-        "pawn",
-        "fawn"
-      ],
-      [
-        "jaw",
-        "law",
-        "lawn",
-        "dawn",
-        "pawn",
-        "paw"
-      ],
-      [
-        "jaw",
-        "law",
-        "lawn",
-        "dawn",
-        "pawn",
-        "yawn"
-      ],
-      [
-        "jaw",
-        "law",
-        "lawn",
-        "dawn",
-        "yawn",
-        "fawn"
-      ],
-      [
-        "jaw",
-        "law",
-        "lawn",
-        "dawn",
-        "yawn",
-        "pawn"
-      ],
-      [
-        "jaw",
-        "law",
-        "lawn",
-        "fawn",
-        "dawn",
-        "pawn"
-      ],
-      [
-        "law",
-        "jaw",
-        "paw",
-        "pawn",
-        "dawn",
-        "fawn"
-      ],
-      [
-        "law",
-        "jaw",
-        "paw",
-        "pawn",
-        "dawn",
-        "lawn"
-      ],
-      [
-        "law",
-        "jaw",
-        "paw",
-        "pawn",
-        "dawn",
-        "yawn"
-      ],
-      [
-        "law",
-        "jaw",
-        "paw",
-        "pawn",
-        "fawn",
-        "dawn"
-      ],
-      [
-        "law",
-        "jaw",
-        "paw",
-        "pawn",
-        "fawn",
-        "lawn"
-      ],
-      [
-        "law",
-        "jaw",
-        "paw",
-        "pawn",
-        "fawn",
-        "yawn"
-      ],
-      [
-        "law",
-        "jaw",
-        "paw",
-        "pawn",
-        "lawn",
-        "dawn"
-      ],
-      [
-        "law",
-        "jaw",
-        "paw",
-        "pawn",
-        "lawn",
-        "fawn"
-      ],
-      [
-        "lawn",
-        "dawn",
-        "fawn",
-        "pawn",
-        "paw",
-        "jaw"
-      ],
-      [
-        "lawn",
-        "dawn",
-        "fawn",
-        "pawn",
-        "paw",
-        "law"
-      ],
-      [
-        "lawn",
-        "dawn",
-        "fawn",
-        "pawn",
-        "paw",
-        "raw"
-      ],
-      [
-        "lawn",
-        "dawn",
-        "fawn",
-        "pawn",
-        "paw",
-        "thaw"
-      ],
-      [
-        "lawn",
-        "dawn",
-        "fawn",
-        "yawn",
-        "pawn",
-        "paw"
-      ],
-      [
-        "lawn",
-        "dawn",
-        "pawn",
-        "paw",
-        "jaw",
-        "law"
-      ],
-      [
-        "lawn",
-        "dawn",
-        "pawn",
-        "paw",
-        "jaw",
-        "raw"
-      ],
-      [
-        "lawn",
-        "dawn",
-        "pawn",
-        "paw",
-        "jaw",
-        "thaw"
-      ],
-      [
-        "maul",
-        "haul",
-        "maul",
-        "haul",
-        "maul",
+        "hawk",
+        "gawk",
+        "hawk",
+        "gawk",
+        "hawk",
         "haul"
       ],
       [
+        "hawk",
+        "gawk",
+        "hawk",
+        "haul",
+        "bawl",
+        "haul"
+      ],
+      [
+        "hawk",
+        "gawk",
+        "hawk",
+        "haul",
+        "bawl",
+        "maul"
+      ],
+      [
+        "jaw",
+        "law",
+        "lawn",
+        "dawn",
+        "fawn",
+        "pawn"
+      ],
+      [
+        "jaw",
+        "law",
+        "lawn",
+        "dawn",
+        "fawn",
+        "yawn"
+      ],
+      [
+        "jaw",
+        "law",
+        "lawn",
+        "dawn",
+        "pawn",
+        "fawn"
+      ],
+      [
+        "jaw",
+        "law",
+        "lawn",
+        "dawn",
+        "pawn",
+        "pause"
+      ],
+      [
+        "jaw",
+        "law",
+        "lawn",
+        "dawn",
+        "pawn",
+        "paw"
+      ],
+      [
+        "jaw",
+        "law",
+        "lawn",
+        "dawn",
+        "pawn",
+        "yawn"
+      ],
+      [
+        "jaw",
+        "law",
+        "lawn",
+        "dawn",
+        "yawn",
+        "fawn"
+      ],
+      [
+        "jaw",
+        "law",
+        "lawn",
+        "dawn",
+        "yawn",
+        "pawn"
+      ],
+      [
+        "law",
+        "jaw",
+        "paw",
+        "pause",
+        "pawn",
+        "dawn"
+      ],
+      [
+        "law",
+        "jaw",
+        "paw",
+        "pause",
+        "pawn",
+        "fawn"
+      ],
+      [
+        "law",
+        "jaw",
+        "paw",
+        "pause",
+        "pawn",
+        "lawn"
+      ],
+      [
+        "law",
+        "jaw",
+        "paw",
+        "pause",
+        "pawn",
+        "yawn"
+      ],
+      [
+        "law",
+        "jaw",
+        "paw",
+        "pawn",
+        "dawn",
+        "fawn"
+      ],
+      [
+        "law",
+        "jaw",
+        "paw",
+        "pawn",
+        "dawn",
+        "lawn"
+      ],
+      [
+        "law",
+        "jaw",
+        "paw",
+        "pawn",
+        "dawn",
+        "yawn"
+      ],
+      [
+        "law",
+        "jaw",
+        "paw",
+        "pawn",
+        "fawn",
+        "dawn"
+      ],
+      [
+        "lawn",
+        "dawn",
+        "fawn",
+        "pawn",
+        "pause",
+        "paw"
+      ],
+      [
+        "lawn",
+        "dawn",
+        "fawn",
+        "pawn",
+        "paw",
+        "jaw"
+      ],
+      [
+        "lawn",
+        "dawn",
+        "fawn",
+        "pawn",
+        "paw",
+        "law"
+      ],
+      [
+        "lawn",
+        "dawn",
+        "fawn",
+        "pawn",
+        "paw",
+        "pause"
+      ],
+      [
+        "lawn",
+        "dawn",
+        "fawn",
+        "pawn",
+        "paw",
+        "raw"
+      ],
+      [
+        "lawn",
+        "dawn",
+        "fawn",
+        "pawn",
+        "paw",
+        "thaw"
+      ],
+      [
+        "lawn",
+        "dawn",
+        "fawn",
+        "yawn",
+        "pawn",
+        "pause"
+      ],
+      [
+        "lawn",
+        "dawn",
+        "fawn",
+        "yawn",
+        "pawn",
+        "paw"
+      ],
+      [
+        "maul",
+        "bawl",
+        "haul",
+        "hawk",
+        "gawk",
+        "gauze"
+      ],
+      [
+        "pause",
+        "paw",
+        "jaw",
+        "law",
+        "lawn",
+        "dawn"
+      ],
+      [
+        "pause",
+        "paw",
+        "jaw",
+        "law",
+        "lawn",
+        "fawn"
+      ],
+      [
+        "pause",
+        "paw",
+        "jaw",
+        "law",
+        "lawn",
+        "pawn"
+      ],
+      [
+        "pause",
+        "paw",
+        "jaw",
+        "law",
+        "lawn",
+        "yawn"
+      ],
+      [
+        "pause",
+        "paw",
+        "jaw",
+        "law",
+        "raw",
+        "thaw"
+      ],
+      [
+        "pause",
+        "paw",
+        "jaw",
+        "law",
+        "thaw",
+        "raw"
+      ],
+      [
+        "pause",
+        "paw",
+        "jaw",
+        "raw",
+        "law",
+        "lawn"
+      ],
+      [
+        "pause",
+        "paw",
+        "jaw",
+        "raw",
+        "law",
+        "thaw"
+      ],
+      [
         "paw",
         "jaw",
         "law",
@@ -9629,6 +10013,14 @@
         "fawn",
         "lawn",
         "pawn",
+        "pause"
+      ],
+      [
+        "yawn",
+        "dawn",
+        "fawn",
+        "lawn",
+        "pawn",
         "paw"
       ],
       [
@@ -9644,16 +10036,8 @@
         "dawn",
         "fawn",
         "pawn",
-        "paw",
-        "jaw"
-      ],
-      [
-        "yawn",
-        "dawn",
-        "fawn",
-        "pawn",
-        "paw",
-        "law"
+        "pause",
+        "paw"
       ]
     ],
     "variantOo": [
@@ -10361,135 +10745,135 @@
         "ail",
         "eel",
         "feel",
-        "wheel"
+        "seal"
       ],
       [
         "bawl",
         "boil",
-        "coil",
-        "foil",
-        "fail",
-        "ail"
-      ],
-      [
-        "bawl",
-        "boil",
-        "coil",
-        "foil",
-        "fail",
-        "feel"
-      ],
-      [
-        "bawl",
-        "boil",
-        "coil",
-        "foil",
-        "fail",
-        "foul"
-      ],
-      [
-        "bawl",
-        "boil",
-        "coil",
-        "foil",
-        "fail",
-        "fowl"
-      ],
-      [
-        "bawl",
-        "boil",
-        "coil",
-        "foil",
-        "fail",
-        "hail"
-      ],
-      [
-        "bawl",
-        "boil",
-        "coil",
-        "foil",
-        "fail",
-        "jail"
-      ],
-      [
-        "bawl",
-        "boil",
-        "coil",
-        "foil",
-        "fail",
-        "mail"
-      ],
-      [
-        "bawl",
-        "boil",
-        "coil",
-        "foil",
-        "fail",
-        "nail"
-      ],
-      [
+        "boy",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "beat",
         "beach"
       ],
       [
+        "bawl",
+        "boil",
+        "boy",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "beat",
         "bead"
       ],
       [
+        "bawl",
+        "boil",
+        "boy",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "beat",
         "beak"
       ],
       [
+        "bawl",
+        "boil",
+        "boy",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "beat",
+        "beam"
+      ],
+      [
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "bee",
+        "bean"
+      ],
+      [
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "bee",
+        "beat"
+      ],
+      [
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "bee",
+        "beep"
+      ],
+      [
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "bee",
+        "beet"
+      ],
+      [
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
         "beam"
       ],
       [
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "beat",
+        "beach",
+        "bead",
+        "beak",
         "bean"
       ],
       [
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "beat",
-        "boat"
+        "beach",
+        "bead",
+        "beak",
+        "beat"
       ],
       [
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "beat",
-        "boot"
+        "beach",
+        "bead",
+        "beak",
+        "beep"
       ],
       [
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "beat",
-        "bout"
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "book"
+      ],
+      [
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
       ],
       [
         "beach",
@@ -10505,7 +10889,39 @@
         "beak",
         "beam",
         "bean",
+        "bee"
+      ],
+      [
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bean",
+        "beep"
+      ],
+      [
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bean",
+        "beet"
+      ],
+      [
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bean",
         "lean"
+      ],
+      [
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bean",
+        "queen"
       ],
       [
         "beach",
@@ -10521,39 +10937,7 @@
         "beak",
         "beam",
         "beat",
-        "beet"
-      ],
-      [
-        "beach",
-        "bead",
-        "beak",
-        "beam",
-        "beat",
-        "boat"
-      ],
-      [
-        "beach",
-        "bead",
-        "beak",
-        "beam",
-        "beat",
-        "boot"
-      ],
-      [
-        "beach",
-        "bead",
-        "beak",
-        "beam",
-        "beat",
-        "bout"
-      ],
-      [
-        "beach",
-        "bead",
-        "beak",
-        "beam",
-        "beat",
-        "heat"
+        "bee"
       ],
       [
         "bead",
@@ -10569,7 +10953,39 @@
         "beak",
         "beam",
         "bean",
+        "bee"
+      ],
+      [
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "bean",
+        "beep"
+      ],
+      [
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "bean",
+        "beet"
+      ],
+      [
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "bean",
         "lean"
+      ],
+      [
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "bean",
+        "queen"
       ],
       [
         "bead",
@@ -10585,39 +11001,7 @@
         "beak",
         "beam",
         "beat",
-        "beet"
-      ],
-      [
-        "bead",
-        "beach",
-        "beak",
-        "beam",
-        "beat",
-        "boat"
-      ],
-      [
-        "bead",
-        "beach",
-        "beak",
-        "beam",
-        "beat",
-        "boot"
-      ],
-      [
-        "bead",
-        "beach",
-        "beak",
-        "beam",
-        "beat",
-        "bout"
-      ],
-      [
-        "bead",
-        "beach",
-        "beak",
-        "beam",
-        "beat",
-        "heat"
+        "bee"
       ],
       [
         "beak",
@@ -10633,7 +11017,39 @@
         "bead",
         "beam",
         "bean",
+        "bee"
+      ],
+      [
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bean",
+        "beep"
+      ],
+      [
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bean",
+        "beet"
+      ],
+      [
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bean",
         "lean"
+      ],
+      [
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bean",
+        "queen"
       ],
       [
         "beak",
@@ -10649,39 +11065,7 @@
         "bead",
         "beam",
         "beat",
-        "beet"
-      ],
-      [
-        "beak",
-        "beach",
-        "bead",
-        "beam",
-        "beat",
-        "boat"
-      ],
-      [
-        "beak",
-        "beach",
-        "bead",
-        "beam",
-        "beat",
-        "boot"
-      ],
-      [
-        "beak",
-        "beach",
-        "bead",
-        "beam",
-        "beat",
-        "bout"
-      ],
-      [
-        "beak",
-        "beach",
-        "bead",
-        "beam",
-        "beat",
-        "heat"
+        "bee"
       ],
       [
         "beam",
@@ -10697,7 +11081,39 @@
         "bead",
         "beak",
         "bean",
+        "bee"
+      ],
+      [
+        "beam",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beep"
+      ],
+      [
+        "beam",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beet"
+      ],
+      [
+        "beam",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
         "lean"
+      ],
+      [
+        "beam",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "queen"
       ],
       [
         "beam",
@@ -10713,39 +11129,7 @@
         "bead",
         "beak",
         "beat",
-        "beet"
-      ],
-      [
-        "beam",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "boat"
-      ],
-      [
-        "beam",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "boot"
-      ],
-      [
-        "beam",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "bout"
-      ],
-      [
-        "beam",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "heat"
+        "bee"
       ],
       [
         "bean",
@@ -10754,6 +11138,30 @@
         "beak",
         "beam",
         "beat"
+      ],
+      [
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bee"
+      ],
+      [
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beep"
+      ],
+      [
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beet"
       ],
       [
         "bean",
@@ -10769,7 +11177,15 @@
         "bead",
         "beak",
         "beat",
-        "beet"
+        "bee"
+      ],
+      [
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beat",
+        "beep"
       ],
       [
         "bean",
@@ -10780,36 +11196,12 @@
         "boat"
       ],
       [
-        "bean",
+        "beat",
         "beach",
         "bead",
         "beak",
-        "beat",
-        "boot"
-      ],
-      [
-        "bean",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "bout"
-      ],
-      [
-        "bean",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "heat"
-      ],
-      [
-        "bean",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "meat"
+        "beam",
+        "bean"
       ],
       [
         "beat",
@@ -10817,7 +11209,23 @@
         "bead",
         "beak",
         "beam",
-        "bean"
+        "bee"
+      ],
+      [
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beep"
+      ],
+      [
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beet"
       ],
       [
         "beat",
@@ -10833,47 +11241,23 @@
         "bead",
         "beak",
         "bean",
-        "lean"
+        "bee"
       ],
       [
         "beat",
         "beach",
         "bead",
         "beak",
-        "book",
-        "boo"
+        "bean",
+        "beep"
       ],
       [
         "beat",
         "beach",
         "bead",
         "beak",
-        "book",
-        "boot"
-      ],
-      [
-        "beat",
-        "beach",
-        "bead",
-        "beak",
-        "book",
-        "booth"
-      ],
-      [
-        "beat",
-        "beach",
-        "bead",
-        "beak",
-        "book",
-        "cook"
-      ],
-      [
-        "beat",
-        "beach",
-        "bead",
-        "beak",
-        "book",
-        "hook"
+        "bean",
+        "beet"
       ],
       [
         "bee",
@@ -10920,15 +11304,15 @@
         "bay",
         "boo",
         "book",
-        "boot",
-        "beat"
+        "beak",
+        "beep"
       ],
       [
         "bee",
         "bay",
         "boo",
         "book",
-        "boot",
+        "beak",
         "beet"
       ],
       [
@@ -10936,75 +11320,139 @@
         "bay",
         "boo",
         "book",
-        "boot",
-        "boat"
+        "beak",
+        "cheek"
       ],
       [
         "beep",
-        "bee",
-        "bay",
-        "boo",
-        "book",
-        "beak"
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bean"
       ],
       [
         "beep",
-        "bee",
-        "bay",
-        "boo",
-        "book",
-        "boot"
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beat"
       ],
       [
         "beep",
-        "bee",
-        "bay",
-        "boo",
-        "book",
-        "booth"
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bee"
       ],
       [
         "beep",
-        "bee",
-        "bay",
-        "boo",
-        "book",
-        "cook"
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beet"
       ],
       [
         "beep",
-        "bee",
-        "bay",
-        "boo",
-        "book",
-        "hook"
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beam"
       ],
       [
         "beep",
-        "bee",
-        "bay",
-        "boo",
-        "book",
-        "look"
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beat"
       ],
       [
         "beep",
-        "bee",
-        "bay",
-        "boo",
-        "book",
-        "took"
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "bee"
       ],
       [
         "beep",
-        "bee",
-        "bay",
-        "boo",
-        "boot",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beet"
+      ],
+      [
+        "beet",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bean"
+      ],
+      [
+        "beet",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
         "beat"
       ],
       [
         "beet",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bee"
+      ],
+      [
+        "beet",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beep"
+      ],
+      [
+        "beet",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beam"
+      ],
+      [
+        "beet",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beat"
+      ],
+      [
+        "beet",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "bee"
+      ],
+      [
+        "beet",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beep"
+      ],
+      [
+        "boat",
         "beat",
         "beach",
         "bead",
@@ -11012,7 +11460,7 @@
         "beam"
       ],
       [
-        "beet",
+        "boat",
         "beat",
         "beach",
         "bead",
@@ -11020,7 +11468,31 @@
         "bean"
       ],
       [
-        "beet",
+        "boat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "boat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "boat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "boat",
         "beat",
         "beach",
         "bead",
@@ -11028,44 +11500,12 @@
         "book"
       ],
       [
-        "beet",
+        "boat",
         "beat",
         "beach",
         "bead",
-        "beam",
-        "beak"
-      ],
-      [
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "beam",
-        "bean"
-      ],
-      [
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beak"
-      ],
-      [
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beam"
-      ],
-      [
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "lean"
+        "beak",
+        "cheek"
       ],
       [
         "boat",
@@ -11073,125 +11513,69 @@
         "beach",
         "bead",
         "beak",
-        "beam"
-      ],
-      [
-        "boat",
-        "beat",
-        "beach",
-        "bead",
-        "beak",
-        "bean"
-      ],
-      [
-        "boat",
-        "beat",
-        "beach",
-        "bead",
-        "beak",
-        "book"
-      ],
-      [
-        "boat",
-        "beat",
-        "beach",
-        "bead",
-        "beam",
-        "beak"
-      ],
-      [
-        "boat",
-        "beat",
-        "beach",
-        "bead",
-        "beam",
-        "bean"
-      ],
-      [
-        "boat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beak"
-      ],
-      [
-        "boat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beam"
-      ],
-      [
-        "boat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "lean"
+        "peek"
       ],
       [
         "boil",
-        "coil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "hail",
         "ail",
         "aid"
       ],
       [
         "boil",
-        "coil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "hail",
         "ail",
         "aim"
       ],
       [
         "boil",
-        "coil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "hail",
         "ail",
         "eel"
       ],
       [
         "boil",
-        "coil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "hail",
         "ail",
-        "hail"
+        "fail"
       ],
       [
         "boil",
-        "coil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "hail",
         "ail",
         "jail"
       ],
       [
         "boil",
-        "coil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "hail",
         "ail",
         "mail"
       ],
       [
         "boil",
-        "coil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "hail",
         "ail",
         "nail"
       ],
       [
         "boil",
-        "coil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "hail",
         "ail",
         "oil"
       ],
@@ -11199,131 +11583,131 @@
         "boo",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "beat"
-      ],
-      [
-        "boo",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "boat"
-      ],
-      [
-        "boo",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "boot"
-      ],
-      [
-        "boo",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "bout"
-      ],
-      [
-        "boo",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "meet"
-      ],
-      [
-        "boo",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "sheet"
-      ],
-      [
-        "boo",
-        "bay",
-        "bee",
-        "beep",
-        "deep",
-        "sheep"
-      ],
-      [
-        "boo",
-        "bay",
-        "bee",
-        "beep",
-        "deep",
-        "weep"
-      ],
-      [
-        "book",
-        "beak",
         "beach",
         "bead",
-        "beam",
-        "bean"
+        "beak"
       ],
       [
-        "book",
-        "beak",
+        "boo",
+        "bay",
+        "bee",
         "beach",
         "bead",
-        "beam",
-        "beat"
-      ],
-      [
-        "book",
-        "beak",
-        "beach",
-        "bead",
-        "bean",
         "beam"
       ],
       [
-        "book",
-        "beak",
+        "boo",
+        "bay",
+        "bee",
         "beach",
         "bead",
-        "bean",
-        "beat"
-      ],
-      [
-        "book",
-        "beak",
-        "beach",
-        "bead",
-        "bean",
-        "lean"
-      ],
-      [
-        "book",
-        "beak",
-        "beach",
-        "bead",
-        "beat",
-        "beam"
-      ],
-      [
-        "book",
-        "beak",
-        "beach",
-        "bead",
-        "beat",
         "bean"
       ],
       [
-        "book",
-        "beak",
+        "boo",
+        "bay",
+        "bee",
         "beach",
         "bead",
-        "beat",
+        "beat"
+      ],
+      [
+        "boo",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "beep"
+      ],
+      [
+        "boo",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
         "beet"
       ],
       [
+        "boo",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "feed"
+      ],
+      [
+        "boo",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "read"
+      ],
+      [
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bean"
+      ],
+      [
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beat"
+      ],
+      [
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bee"
+      ],
+      [
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beep"
+      ],
+      [
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beet"
+      ],
+      [
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "beam"
+      ],
+      [
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "beat"
+      ],
+      [
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "bee"
+      ],
+      [
         "boot",
         "beat",
         "beach",
@@ -11338,6 +11722,30 @@
         "bead",
         "beak",
         "bean"
+      ],
+      [
+        "boot",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "boot",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "boot",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
       ],
       [
         "boot",
@@ -11352,79 +11760,55 @@
         "beat",
         "beach",
         "bead",
-        "beam",
+        "beak",
+        "cheek"
+      ],
+      [
+        "boot",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "booth",
+        "boo",
+        "bay",
+        "bee",
+        "beach",
+        "bead"
+      ],
+      [
+        "booth",
+        "boo",
+        "bay",
+        "bee",
+        "beach",
         "beak"
       ],
       [
-        "boot",
-        "beat",
+        "booth",
+        "boo",
+        "bay",
+        "bee",
         "beach",
-        "bead",
-        "beam",
-        "bean"
-      ],
-      [
-        "boot",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beak"
-      ],
-      [
-        "boot",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
         "beam"
       ],
       [
-        "boot",
-        "beat",
+        "booth",
+        "boo",
+        "bay",
+        "bee",
         "beach",
-        "bead",
-        "bean",
-        "lean"
+        "bean"
       ],
       [
         "booth",
         "boo",
         "bay",
         "bee",
-        "beep",
-        "beet"
-      ],
-      [
-        "booth",
-        "boo",
-        "bay",
-        "bee",
-        "beep",
-        "deep"
-      ],
-      [
-        "booth",
-        "boo",
-        "bay",
-        "bee",
-        "beep",
-        "sheep"
-      ],
-      [
-        "booth",
-        "boo",
-        "bay",
-        "bee",
-        "beep",
-        "weep"
-      ],
-      [
-        "booth",
-        "boo",
-        "bay",
-        "bee",
-        "beet",
+        "beach",
         "beat"
       ],
       [
@@ -11432,7 +11816,7 @@
         "boo",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beep"
       ],
       [
@@ -11440,16 +11824,16 @@
         "boo",
         "bay",
         "bee",
-        "beet",
-        "boat"
+        "beach",
+        "beet"
       ],
       [
         "booth",
         "boo",
         "bay",
         "bee",
-        "beet",
-        "boot"
+        "beach",
+        "peach"
       ],
       [
         "bout",
@@ -11466,6 +11850,30 @@
         "bead",
         "beak",
         "bean"
+      ],
+      [
+        "bout",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "bout",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "bout",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
       ],
       [
         "bout",
@@ -11480,168 +11888,144 @@
         "beat",
         "beach",
         "bead",
-        "beam",
+        "beak",
+        "cheek"
+      ],
+      [
+        "bout",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "bow",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
         "beak"
       ],
       [
-        "bout",
-        "beat",
+        "bow",
+        "bay",
+        "bee",
         "beach",
         "bead",
-        "beam",
-        "bean"
-      ],
-      [
-        "bout",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beak"
-      ],
-      [
-        "bout",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
         "beam"
       ],
       [
-        "bout",
-        "beat",
+        "bow",
+        "bay",
+        "bee",
         "beach",
         "bead",
-        "bean",
-        "lean"
+        "bean"
       ],
       [
         "bow",
         "bay",
         "bee",
-        "beep",
-        "beet",
+        "beach",
+        "bead",
         "beat"
       ],
       [
         "bow",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "boat"
+        "beach",
+        "bead",
+        "beep"
       ],
       [
         "bow",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "boot"
+        "beach",
+        "bead",
+        "beet"
       ],
       [
         "bow",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "bout"
+        "beach",
+        "bead",
+        "feed"
       ],
       [
         "bow",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "meet"
-      ],
-      [
-        "bow",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "sheet"
-      ],
-      [
-        "bow",
-        "bay",
-        "bee",
-        "beep",
-        "deep",
-        "sheep"
-      ],
-      [
-        "bow",
-        "bay",
-        "bee",
-        "beep",
-        "deep",
-        "weep"
+        "beach",
+        "bead",
+        "read"
       ],
       [
         "boy",
         "bay",
         "bee",
-        "beep",
-        "beet",
+        "beach",
+        "bead",
+        "beak"
+      ],
+      [
+        "boy",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "beam"
+      ],
+      [
+        "boy",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "bean"
+      ],
+      [
+        "boy",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
         "beat"
       ],
       [
         "boy",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "boat"
+        "beach",
+        "bead",
+        "beep"
       ],
       [
         "boy",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "boot"
+        "beach",
+        "bead",
+        "beet"
       ],
       [
         "boy",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "bout"
+        "beach",
+        "bead",
+        "feed"
       ],
       [
         "boy",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "meet"
-      ],
-      [
-        "boy",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "sheet"
-      ],
-      [
-        "boy",
-        "bay",
-        "bee",
-        "beep",
-        "deep",
-        "sheep"
-      ],
-      [
-        "boy",
-        "bay",
-        "bee",
-        "beep",
-        "deep",
-        "weep"
+        "beach",
+        "bead",
+        "read"
       ],
       [
         "chain",
@@ -11697,143 +12081,143 @@
         "pail",
         "ail",
         "eel",
-        "wheel"
+        "seal"
       ],
       [
         "chain",
         "pain",
         "pail",
         "ail",
-        "fail",
-        "feel"
+        "eel",
+        "wheel"
       ],
       [
         "cheap",
-        "leap",
-        "lean",
-        "bean",
+        "beep",
         "beach",
-        "bead"
-      ],
-      [
-        "cheap",
-        "leap",
-        "lean",
-        "bean",
-        "beach",
-        "beak"
-      ],
-      [
-        "cheap",
-        "leap",
-        "lean",
-        "bean",
-        "beach",
+        "bead",
+        "beak",
         "beam"
       ],
       [
         "cheap",
-        "leap",
-        "lean",
-        "bean",
+        "beep",
         "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "cheap",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
         "beat"
       ],
       [
         "cheap",
-        "leap",
-        "lean",
-        "bean",
+        "beep",
         "beach",
-        "peach"
+        "bead",
+        "beak",
+        "bee"
       ],
       [
         "cheap",
-        "leap",
-        "lean",
-        "bean",
+        "beep",
         "beach",
-        "reach"
+        "bead",
+        "beak",
+        "beet"
       ],
       [
         "cheap",
-        "leap",
-        "lean",
-        "bean",
+        "beep",
+        "beach",
         "bead",
-        "beach"
+        "beak",
+        "book"
       ],
       [
         "cheap",
-        "leap",
-        "lean",
-        "bean",
+        "beep",
+        "beach",
         "bead",
-        "beak"
+        "beak",
+        "cheek"
+      ],
+      [
+        "cheap",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
       ],
       [
         "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "ail",
-        "aid"
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bean"
       ],
       [
         "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "ail",
-        "aim"
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beat"
       ],
       [
         "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "ail",
-        "fail"
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bee"
       ],
       [
         "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "ail",
-        "hail"
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beep"
       ],
       [
         "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "ail",
-        "jail"
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beet"
       ],
       [
         "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "ail",
-        "mail"
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "beam"
       ],
       [
         "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "ail",
-        "nail"
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "beat"
       ],
       [
         "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "ail",
-        "oil"
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "bee"
       ],
       [
         "chew",
@@ -11902,169 +12286,169 @@
       [
         "coil",
         "boil",
-        "foil",
-        "fail",
-        "ail",
-        "aid"
-      ],
-      [
-        "coil",
-        "boil",
-        "foil",
-        "fail",
-        "ail",
-        "aim"
-      ],
-      [
-        "coil",
-        "boil",
-        "foil",
-        "fail",
-        "ail",
-        "eel"
-      ],
-      [
-        "coil",
-        "boil",
-        "foil",
-        "fail",
-        "ail",
-        "hail"
-      ],
-      [
-        "coil",
-        "boil",
-        "foil",
-        "fail",
-        "ail",
-        "jail"
-      ],
-      [
-        "coil",
-        "boil",
-        "foil",
-        "fail",
-        "ail",
-        "mail"
-      ],
-      [
-        "coil",
-        "boil",
-        "foil",
-        "fail",
-        "ail",
-        "nail"
-      ],
-      [
-        "coil",
-        "boil",
-        "foil",
-        "fail",
-        "ail",
-        "oil"
-      ],
-      [
-        "coin",
-        "coil",
-        "boil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "hail",
         "ail"
       ],
       [
-        "coin",
         "coil",
         "boil",
-        "foil",
-        "fail",
-        "feel"
+        "bawl",
+        "haul",
+        "hail",
+        "fail"
+      ],
+      [
+        "coil",
+        "boil",
+        "bawl",
+        "haul",
+        "hail",
+        "hay"
+      ],
+      [
+        "coil",
+        "boil",
+        "bawl",
+        "haul",
+        "hail",
+        "jail"
+      ],
+      [
+        "coil",
+        "boil",
+        "bawl",
+        "haul",
+        "hail",
+        "mail"
+      ],
+      [
+        "coil",
+        "boil",
+        "bawl",
+        "haul",
+        "hail",
+        "nail"
+      ],
+      [
+        "coil",
+        "boil",
+        "bawl",
+        "haul",
+        "hail",
+        "pail"
+      ],
+      [
+        "coil",
+        "boil",
+        "bawl",
+        "haul",
+        "hail",
+        "rail"
       ],
       [
         "coin",
         "coil",
         "boil",
-        "foil",
-        "fail",
-        "foul"
-      ],
-      [
-        "coin",
-        "coil",
-        "boil",
-        "foil",
-        "fail",
-        "fowl"
-      ],
-      [
-        "coin",
-        "coil",
-        "boil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
         "hail"
       ],
       [
         "coin",
         "coil",
         "boil",
-        "foil",
-        "fail",
-        "jail"
+        "bawl",
+        "haul",
+        "hawk"
       ],
       [
         "coin",
         "coil",
         "boil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "maul"
+      ],
+      [
+        "coin",
+        "coil",
+        "boil",
+        "bawl",
+        "maul",
+        "haul"
+      ],
+      [
+        "coin",
+        "coil",
+        "boil",
+        "bawl",
+        "maul",
         "mail"
       ],
       [
         "coin",
         "coil",
         "boil",
-        "foil",
-        "fail",
-        "nail"
+        "boy",
+        "bay",
+        "bee"
+      ],
+      [
+        "coin",
+        "coil",
+        "boil",
+        "boy",
+        "bay",
+        "boo"
+      ],
+      [
+        "coin",
+        "coil",
+        "boil",
+        "boy",
+        "bay",
+        "bow"
       ],
       [
         "coo",
         "boo",
         "bay",
         "bee",
-        "beep",
-        "beet"
+        "beach",
+        "bead"
       ],
       [
         "coo",
         "boo",
         "bay",
         "bee",
-        "beep",
-        "deep"
+        "beach",
+        "beak"
       ],
       [
         "coo",
         "boo",
         "bay",
         "bee",
-        "beep",
-        "sheep"
+        "beach",
+        "beam"
       ],
       [
         "coo",
         "boo",
         "bay",
         "bee",
-        "beep",
-        "weep"
+        "beach",
+        "bean"
       ],
       [
         "coo",
         "boo",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beat"
       ],
       [
@@ -12072,7 +12456,7 @@
         "boo",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beep"
       ],
       [
@@ -12080,16 +12464,16 @@
         "boo",
         "bay",
         "bee",
-        "beet",
-        "boat"
+        "beach",
+        "beet"
       ],
       [
         "coo",
         "boo",
         "bay",
         "bee",
-        "beet",
-        "boot"
+        "beach",
+        "peach"
       ],
       [
         "cook",
@@ -12121,39 +12505,39 @@
         "beak",
         "beach",
         "bead",
+        "bee"
+      ],
+      [
+        "cook",
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "beep"
+      ],
+      [
+        "cook",
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "beet"
+      ],
+      [
+        "cook",
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "feed"
+      ],
+      [
+        "cook",
+        "book",
+        "beak",
+        "beach",
+        "bead",
         "read"
-      ],
-      [
-        "cook",
-        "book",
-        "beak",
-        "beach",
-        "beam",
-        "bead"
-      ],
-      [
-        "cook",
-        "book",
-        "beak",
-        "beach",
-        "beam",
-        "bean"
-      ],
-      [
-        "cook",
-        "book",
-        "beak",
-        "beach",
-        "beam",
-        "beat"
-      ],
-      [
-        "cook",
-        "book",
-        "beak",
-        "beach",
-        "bean",
-        "bead"
       ],
       [
         "couch",
@@ -12224,39 +12608,39 @@
         "bow",
         "bay",
         "bee",
-        "beep",
-        "beet"
+        "beach",
+        "bead"
       ],
       [
         "cow",
         "bow",
         "bay",
         "bee",
-        "beep",
-        "deep"
+        "beach",
+        "beak"
       ],
       [
         "cow",
         "bow",
         "bay",
         "bee",
-        "beep",
-        "sheep"
+        "beach",
+        "beam"
       ],
       [
         "cow",
         "bow",
         "bay",
         "bee",
-        "beep",
-        "weep"
+        "beach",
+        "bean"
       ],
       [
         "cow",
         "bow",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beat"
       ],
       [
@@ -12264,7 +12648,7 @@
         "bow",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beep"
       ],
       [
@@ -12272,16 +12656,16 @@
         "bow",
         "bay",
         "bee",
-        "beet",
-        "boat"
+        "beach",
+        "beet"
       ],
       [
         "cow",
         "bow",
         "bay",
         "bee",
-        "beet",
-        "boot"
+        "beach",
+        "peach"
       ],
       [
         "crew",
@@ -12415,168 +12799,168 @@
         "day",
         "bay",
         "bee",
-        "beep",
-        "beet",
+        "beach",
+        "bead",
+        "beak"
+      ],
+      [
+        "day",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "beam"
+      ],
+      [
+        "day",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "bean"
+      ],
+      [
+        "day",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
         "beat"
       ],
       [
         "day",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "boat"
+        "beach",
+        "bead",
+        "beep"
       ],
       [
         "day",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "boot"
+        "beach",
+        "bead",
+        "beet"
       ],
       [
         "day",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "bout"
+        "beach",
+        "bead",
+        "feed"
       ],
       [
         "day",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "meet"
-      ],
-      [
-        "day",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "sheet"
-      ],
-      [
-        "day",
-        "bay",
-        "bee",
-        "beep",
-        "deep",
-        "sheep"
-      ],
-      [
-        "day",
-        "bay",
-        "bee",
-        "beep",
-        "deep",
-        "weep"
+        "beach",
+        "bead",
+        "read"
       ],
       [
         "deep",
         "beep",
-        "bee",
-        "bay",
-        "boo",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "deep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "deep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beat"
+      ],
+      [
+        "deep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "deep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "deep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
         "book"
       ],
       [
         "deep",
         "beep",
-        "bee",
-        "bay",
-        "boo",
-        "boot"
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
       ],
       [
         "deep",
         "beep",
-        "bee",
-        "bay",
-        "boo",
-        "booth"
-      ],
-      [
-        "deep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "bow"
-      ],
-      [
-        "deep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "boy"
-      ],
-      [
-        "deep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "coo"
-      ],
-      [
-        "deep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "goo"
-      ],
-      [
-        "deep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "moo"
+        "beach",
+        "bead",
+        "beak",
+        "peek"
       ],
       [
         "die",
         "day",
         "bay",
         "bee",
-        "beep",
-        "beet"
+        "beach",
+        "bead"
       ],
       [
         "die",
         "day",
         "bay",
         "bee",
-        "beep",
-        "deep"
+        "beach",
+        "beak"
       ],
       [
         "die",
         "day",
         "bay",
         "bee",
-        "beep",
-        "sheep"
+        "beach",
+        "beam"
       ],
       [
         "die",
         "day",
         "bay",
         "bee",
-        "beep",
-        "weep"
+        "beach",
+        "bean"
       ],
       [
         "die",
         "day",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beat"
       ],
       [
@@ -12584,7 +12968,7 @@
         "day",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beep"
       ],
       [
@@ -12592,55 +12976,55 @@
         "day",
         "bay",
         "bee",
-        "beet",
-        "boat"
+        "beach",
+        "beet"
       ],
       [
         "die",
         "day",
         "bay",
         "bee",
-        "beet",
-        "boot"
+        "beach",
+        "peach"
       ],
       [
         "doe",
         "day",
         "bay",
         "bee",
-        "beep",
-        "beet"
+        "beach",
+        "bead"
       ],
       [
         "doe",
         "day",
         "bay",
         "bee",
-        "beep",
-        "deep"
+        "beach",
+        "beak"
       ],
       [
         "doe",
         "day",
         "bay",
         "bee",
-        "beep",
-        "sheep"
+        "beach",
+        "beam"
       ],
       [
         "doe",
         "day",
         "bay",
         "bee",
-        "beep",
-        "weep"
+        "beach",
+        "bean"
       ],
       [
         "doe",
         "day",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beat"
       ],
       [
@@ -12648,7 +13032,7 @@
         "day",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beep"
       ],
       [
@@ -12656,16 +13040,16 @@
         "day",
         "bay",
         "bee",
-        "beet",
-        "boat"
+        "beach",
+        "beet"
       ],
       [
         "doe",
         "day",
         "bay",
         "bee",
-        "beet",
-        "boot"
+        "beach",
+        "peach"
       ],
       [
         "down",
@@ -12777,23 +13161,23 @@
         "fail",
         "feel",
         "fee",
+        "pea"
+      ],
+      [
+        "eel",
+        "ail",
+        "fail",
+        "feel",
+        "fee",
+        "sea"
+      ],
+      [
+        "eel",
+        "ail",
+        "fail",
+        "feel",
+        "fee",
         "see"
-      ],
-      [
-        "eel",
-        "ail",
-        "fail",
-        "feel",
-        "feed",
-        "fee"
-      ],
-      [
-        "eel",
-        "ail",
-        "fail",
-        "feel",
-        "foil",
-        "boil"
       ],
       [
         "fail",
@@ -12841,23 +13225,23 @@
         "eel",
         "feel",
         "fee",
+        "pea"
+      ],
+      [
+        "fail",
+        "ail",
+        "eel",
+        "feel",
+        "fee",
+        "sea"
+      ],
+      [
+        "fail",
+        "ail",
+        "eel",
+        "feel",
+        "fee",
         "see"
-      ],
-      [
-        "fail",
-        "ail",
-        "eel",
-        "feel",
-        "feed",
-        "fee"
-      ],
-      [
-        "fail",
-        "ail",
-        "eel",
-        "feel",
-        "foil",
-        "boil"
       ],
       [
         "fawn",
@@ -12989,67 +13373,67 @@
       ],
       [
         "feed",
-        "fee",
-        "bee",
-        "bay",
-        "boo",
-        "book"
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "bean"
       ],
       [
         "feed",
-        "fee",
-        "bee",
-        "bay",
-        "boo",
-        "boot"
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "beat"
       ],
       [
         "feed",
-        "fee",
-        "bee",
-        "bay",
-        "boo",
-        "booth"
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "bee"
       ],
       [
         "feed",
-        "fee",
-        "bee",
-        "bay",
-        "boo",
-        "bow"
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "beep"
       ],
       [
         "feed",
-        "fee",
-        "bee",
-        "bay",
-        "boo",
-        "boy"
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "beet"
       ],
       [
         "feed",
-        "fee",
-        "bee",
-        "bay",
-        "boo",
-        "coo"
+        "bead",
+        "beach",
+        "beak",
+        "bean",
+        "beam"
       ],
       [
         "feed",
-        "fee",
-        "bee",
-        "bay",
-        "boo",
-        "goo"
+        "bead",
+        "beach",
+        "beak",
+        "bean",
+        "beat"
       ],
       [
         "feed",
-        "fee",
-        "bee",
-        "bay",
-        "boo",
-        "moo"
+        "bead",
+        "beach",
+        "beak",
+        "bean",
+        "bee"
       ],
       [
         "feel",
@@ -13217,7 +13601,7 @@
         "boot",
         "beat",
         "beach",
-        "peach"
+        "bee"
       ],
       [
         "fight",
@@ -13225,23 +13609,23 @@
         "boot",
         "beat",
         "beach",
-        "reach"
+        "beep"
       ],
       [
         "fight",
         "foot",
         "boot",
         "beat",
-        "bead",
-        "beach"
+        "beach",
+        "beet"
       ],
       [
         "fight",
         "foot",
         "boot",
         "beat",
-        "bead",
-        "beak"
+        "beach",
+        "peach"
       ],
       [
         "flee",
@@ -13377,6 +13761,54 @@
         "day",
         "bay",
         "bee",
+        "beach"
+      ],
+      [
+        "foe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
+        "bead"
+      ],
+      [
+        "foe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
+        "beak"
+      ],
+      [
+        "foe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
+        "beam"
+      ],
+      [
+        "foe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
+        "bean"
+      ],
+      [
+        "foe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
+        "beat"
+      ],
+      [
+        "foe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
         "beep"
       ],
       [
@@ -13388,116 +13820,68 @@
         "beet"
       ],
       [
-        "foe",
-        "doe",
-        "day",
-        "bay",
-        "bee",
-        "boo"
-      ],
-      [
-        "foe",
-        "doe",
-        "day",
-        "bay",
-        "bee",
-        "bow"
-      ],
-      [
-        "foe",
-        "doe",
-        "day",
-        "bay",
-        "bee",
-        "boy"
-      ],
-      [
-        "foe",
-        "doe",
-        "day",
-        "bay",
-        "bee",
-        "fee"
-      ],
-      [
-        "foe",
-        "doe",
-        "day",
-        "bay",
-        "bee",
-        "see"
-      ],
-      [
-        "foe",
-        "doe",
-        "day",
-        "bay",
-        "boo",
-        "bee"
+        "foil",
+        "boil",
+        "bawl",
+        "haul",
+        "hail",
+        "ail"
       ],
       [
         "foil",
         "boil",
-        "coil",
-        "oil",
-        "ail",
-        "aid"
-      ],
-      [
-        "foil",
-        "boil",
-        "coil",
-        "oil",
-        "ail",
-        "aim"
-      ],
-      [
-        "foil",
-        "boil",
-        "coil",
-        "oil",
-        "ail",
-        "eel"
-      ],
-      [
-        "foil",
-        "boil",
-        "coil",
-        "oil",
-        "ail",
+        "bawl",
+        "haul",
+        "hail",
         "fail"
       ],
       [
         "foil",
         "boil",
-        "coil",
-        "oil",
-        "ail",
-        "hail"
+        "bawl",
+        "haul",
+        "hail",
+        "hay"
       ],
       [
         "foil",
         "boil",
-        "coil",
-        "oil",
-        "ail",
+        "bawl",
+        "haul",
+        "hail",
         "jail"
       ],
       [
         "foil",
         "boil",
-        "coil",
-        "oil",
-        "ail",
+        "bawl",
+        "haul",
+        "hail",
         "mail"
       ],
       [
         "foil",
         "boil",
-        "coil",
-        "oil",
-        "ail",
+        "bawl",
+        "haul",
+        "hail",
         "nail"
+      ],
+      [
+        "foil",
+        "boil",
+        "bawl",
+        "haul",
+        "hail",
+        "pail"
+      ],
+      [
+        "foil",
+        "boil",
+        "bawl",
+        "haul",
+        "hail",
+        "rail"
       ],
       [
         "foot",
@@ -13529,39 +13913,39 @@
         "beat",
         "beach",
         "bead",
+        "bee"
+      ],
+      [
+        "foot",
+        "boot",
+        "beat",
+        "beach",
+        "bead",
+        "beep"
+      ],
+      [
+        "foot",
+        "boot",
+        "beat",
+        "beach",
+        "bead",
+        "beet"
+      ],
+      [
+        "foot",
+        "boot",
+        "beat",
+        "beach",
+        "bead",
+        "feed"
+      ],
+      [
+        "foot",
+        "boot",
+        "beat",
+        "beach",
+        "bead",
         "read"
-      ],
-      [
-        "foot",
-        "boot",
-        "beat",
-        "beach",
-        "beak",
-        "bead"
-      ],
-      [
-        "foot",
-        "boot",
-        "beat",
-        "beach",
-        "beak",
-        "beam"
-      ],
-      [
-        "foot",
-        "boot",
-        "beat",
-        "beach",
-        "beak",
-        "bean"
-      ],
-      [
-        "foot",
-        "boot",
-        "beat",
-        "beach",
-        "beak",
-        "book"
       ],
       [
         "foul",
@@ -13609,6 +13993,14 @@
         "ail",
         "eel",
         "feel",
+        "seal"
+      ],
+      [
+        "foul",
+        "fail",
+        "ail",
+        "eel",
+        "feel",
         "wheel"
       ],
       [
@@ -13618,14 +14010,6 @@
         "eel",
         "oil",
         "boil"
-      ],
-      [
-        "foul",
-        "fail",
-        "ail",
-        "eel",
-        "oil",
-        "coil"
       ],
       [
         "fowl",
@@ -13673,6 +14057,14 @@
         "ail",
         "eel",
         "feel",
+        "seal"
+      ],
+      [
+        "fowl",
+        "fail",
+        "ail",
+        "eel",
+        "feel",
         "wheel"
       ],
       [
@@ -13684,115 +14076,171 @@
         "boil"
       ],
       [
-        "fowl",
-        "fail",
-        "ail",
-        "eel",
-        "oil",
+        "gauze",
+        "gawk",
+        "hawk",
+        "haul",
+        "bawl",
+        "boil"
+      ],
+      [
+        "gauze",
+        "gawk",
+        "hawk",
+        "haul",
+        "bawl",
+        "maul"
+      ],
+      [
+        "gauze",
+        "gawk",
+        "hawk",
+        "haul",
+        "hail",
+        "ail"
+      ],
+      [
+        "gauze",
+        "gawk",
+        "hawk",
+        "haul",
+        "hail",
+        "fail"
+      ],
+      [
+        "gauze",
+        "gawk",
+        "hawk",
+        "haul",
+        "hail",
+        "hay"
+      ],
+      [
+        "gauze",
+        "gawk",
+        "hawk",
+        "haul",
+        "hail",
+        "jail"
+      ],
+      [
+        "gauze",
+        "gawk",
+        "hawk",
+        "haul",
+        "hail",
+        "mail"
+      ],
+      [
+        "gauze",
+        "gawk",
+        "hawk",
+        "haul",
+        "hail",
+        "nail"
+      ],
+      [
+        "gawk",
+        "hawk",
+        "haul",
+        "bawl",
+        "boil",
+        "boy"
+      ],
+      [
+        "gawk",
+        "hawk",
+        "haul",
+        "bawl",
+        "boil",
         "coil"
       ],
       [
         "gawk",
         "hawk",
-        "hook",
-        "book",
-        "beak",
-        "beach"
+        "haul",
+        "bawl",
+        "boil",
+        "foil"
       ],
       [
         "gawk",
         "hawk",
-        "hook",
-        "book",
-        "beak",
+        "haul",
+        "bawl",
+        "boil",
+        "oil"
+      ],
+      [
+        "gawk",
+        "hawk",
+        "haul",
+        "bawl",
+        "boil",
+        "soil"
+      ],
+      [
+        "gawk",
+        "hawk",
+        "haul",
+        "bawl",
+        "boil",
+        "toil"
+      ],
+      [
+        "gawk",
+        "hawk",
+        "haul",
+        "bawl",
+        "maul",
+        "mail"
+      ],
+      [
+        "gawk",
+        "hawk",
+        "haul",
+        "hail",
+        "ail",
+        "aid"
+      ],
+      [
+        "goo",
+        "boo",
+        "bay",
+        "bee",
+        "beach",
         "bead"
       ],
       [
-        "gawk",
-        "hawk",
-        "hook",
-        "book",
-        "beak",
+        "goo",
+        "boo",
+        "bay",
+        "bee",
+        "beach",
+        "beak"
+      ],
+      [
+        "goo",
+        "boo",
+        "bay",
+        "bee",
+        "beach",
         "beam"
       ],
       [
-        "gawk",
-        "hawk",
-        "hook",
-        "book",
-        "beak",
+        "goo",
+        "boo",
+        "bay",
+        "bee",
+        "beach",
         "bean"
       ],
       [
-        "gawk",
-        "hawk",
-        "hook",
-        "book",
-        "beak",
-        "beat"
-      ],
-      [
-        "gawk",
-        "hawk",
-        "hook",
-        "book",
-        "boo",
-        "bay"
-      ],
-      [
-        "gawk",
-        "hawk",
-        "hook",
-        "book",
-        "boo",
-        "bee"
-      ],
-      [
-        "gawk",
-        "hawk",
-        "hook",
-        "book",
-        "boo",
-        "boot"
-      ],
-      [
         "goo",
         "boo",
         "bay",
         "bee",
-        "beep",
-        "beet"
-      ],
-      [
-        "goo",
-        "boo",
-        "bay",
-        "bee",
-        "beep",
-        "deep"
-      ],
-      [
-        "goo",
-        "boo",
-        "bay",
-        "bee",
-        "beep",
-        "sheep"
-      ],
-      [
-        "goo",
-        "boo",
-        "bay",
-        "bee",
-        "beep",
-        "weep"
-      ],
-      [
-        "goo",
-        "boo",
-        "bay",
-        "bee",
-        "beet",
+        "beach",
         "beat"
       ],
       [
@@ -13800,7 +14248,7 @@
         "boo",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beep"
       ],
       [
@@ -13808,16 +14256,64 @@
         "boo",
         "bay",
         "bee",
-        "beet",
-        "boat"
+        "beach",
+        "beet"
       ],
       [
         "goo",
         "boo",
         "bay",
         "bee",
-        "beet",
-        "boot"
+        "beach",
+        "peach"
+      ],
+      [
+        "good",
+        "goo",
+        "boo",
+        "bay",
+        "bee",
+        "beach"
+      ],
+      [
+        "good",
+        "goo",
+        "boo",
+        "bay",
+        "bee",
+        "bead"
+      ],
+      [
+        "good",
+        "goo",
+        "boo",
+        "bay",
+        "bee",
+        "beak"
+      ],
+      [
+        "good",
+        "goo",
+        "boo",
+        "bay",
+        "bee",
+        "beam"
+      ],
+      [
+        "good",
+        "goo",
+        "boo",
+        "bay",
+        "bee",
+        "bean"
+      ],
+      [
+        "good",
+        "goo",
+        "boo",
+        "bay",
+        "bee",
+        "beat"
       ],
       [
         "good",
@@ -13834,54 +14330,6 @@
         "bay",
         "bee",
         "beet"
-      ],
-      [
-        "good",
-        "goo",
-        "boo",
-        "bay",
-        "bee",
-        "bow"
-      ],
-      [
-        "good",
-        "goo",
-        "boo",
-        "bay",
-        "bee",
-        "boy"
-      ],
-      [
-        "good",
-        "goo",
-        "boo",
-        "bay",
-        "bee",
-        "fee"
-      ],
-      [
-        "good",
-        "goo",
-        "boo",
-        "bay",
-        "bee",
-        "see"
-      ],
-      [
-        "good",
-        "goo",
-        "boo",
-        "bay",
-        "bow",
-        "bee"
-      ],
-      [
-        "good",
-        "goo",
-        "boo",
-        "bay",
-        "bow",
-        "boy"
       ],
       [
         "gown",
@@ -13937,7 +14385,7 @@
         "dawn",
         "fawn",
         "pawn",
-        "paw"
+        "pause"
       ],
       [
         "gown",
@@ -13945,7 +14393,7 @@
         "dawn",
         "fawn",
         "pawn",
-        "yawn"
+        "paw"
       ],
       [
         "hail",
@@ -14013,195 +14461,195 @@
       ],
       [
         "haul",
-        "hail",
-        "ail",
-        "eel",
-        "feel",
-        "fail"
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "bee"
       ],
       [
         "haul",
-        "hail",
-        "ail",
-        "eel",
-        "feel",
-        "fee"
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "boo"
       ],
       [
         "haul",
-        "hail",
-        "ail",
-        "eel",
-        "feel",
-        "feed"
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "bow"
       ],
       [
         "haul",
-        "hail",
-        "ail",
-        "eel",
-        "feel",
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "day"
+      ],
+      [
+        "haul",
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "hay"
+      ],
+      [
+        "haul",
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "lay"
+      ],
+      [
+        "haul",
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "pay"
+      ],
+      [
+        "haul",
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "say"
+      ],
+      [
+        "hawk",
+        "haul",
+        "bawl",
+        "boil",
+        "boy",
+        "bay"
+      ],
+      [
+        "hawk",
+        "haul",
+        "bawl",
+        "boil",
+        "boy",
+        "bee"
+      ],
+      [
+        "hawk",
+        "haul",
+        "bawl",
+        "boil",
+        "boy",
+        "boo"
+      ],
+      [
+        "hawk",
+        "haul",
+        "bawl",
+        "boil",
+        "boy",
+        "bow"
+      ],
+      [
+        "hawk",
+        "haul",
+        "bawl",
+        "boil",
+        "boy",
+        "joy"
+      ],
+      [
+        "hawk",
+        "haul",
+        "bawl",
+        "boil",
+        "boy",
+        "toy"
+      ],
+      [
+        "hawk",
+        "haul",
+        "bawl",
+        "boil",
+        "coil",
+        "coin"
+      ],
+      [
+        "hawk",
+        "haul",
+        "bawl",
+        "boil",
+        "coil",
         "foil"
       ],
       [
-        "haul",
-        "hail",
-        "ail",
-        "eel",
-        "feel",
-        "foul"
-      ],
-      [
-        "haul",
-        "hail",
-        "ail",
-        "eel",
-        "feel",
-        "fowl"
-      ],
-      [
-        "haul",
-        "hail",
-        "ail",
-        "eel",
-        "feel",
-        "peel"
-      ],
-      [
-        "haul",
-        "hail",
-        "ail",
-        "eel",
-        "feel",
-        "wheel"
-      ],
-      [
-        "hawk",
-        "hook",
-        "book",
-        "beak",
+        "hay",
+        "bay",
+        "bee",
         "beach",
-        "bead"
+        "bead",
+        "beak"
       ],
       [
-        "hawk",
-        "hook",
-        "book",
-        "beak",
+        "hay",
+        "bay",
+        "bee",
         "beach",
+        "bead",
         "beam"
       ],
       [
-        "hawk",
-        "hook",
-        "book",
-        "beak",
+        "hay",
+        "bay",
+        "bee",
         "beach",
+        "bead",
         "bean"
       ],
       [
-        "hawk",
-        "hook",
-        "book",
-        "beak",
-        "beach",
-        "beat"
-      ],
-      [
-        "hawk",
-        "hook",
-        "book",
-        "beak",
-        "beach",
-        "peach"
-      ],
-      [
-        "hawk",
-        "hook",
-        "book",
-        "beak",
-        "beach",
-        "reach"
-      ],
-      [
-        "hawk",
-        "hook",
-        "book",
-        "beak",
-        "bead",
-        "beach"
-      ],
-      [
-        "hawk",
-        "hook",
-        "book",
-        "beak",
-        "bead",
-        "beam"
-      ],
-      [
         "hay",
         "bay",
         "bee",
-        "beep",
-        "beet",
+        "beach",
+        "bead",
         "beat"
       ],
       [
         "hay",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "boat"
+        "beach",
+        "bead",
+        "beep"
       ],
       [
         "hay",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "boot"
+        "beach",
+        "bead",
+        "beet"
       ],
       [
         "hay",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "bout"
+        "beach",
+        "bead",
+        "feed"
       ],
       [
         "hay",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "meet"
-      ],
-      [
-        "hay",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "sheet"
-      ],
-      [
-        "hay",
-        "bay",
-        "bee",
-        "beep",
-        "deep",
-        "sheep"
-      ],
-      [
-        "hay",
-        "bay",
-        "bee",
-        "beep",
-        "deep",
-        "weep"
+        "beach",
+        "bead",
+        "read"
       ],
       [
         "heat",
@@ -14218,6 +14666,30 @@
         "bead",
         "beak",
         "bean"
+      ],
+      [
+        "heat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "heat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "heat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
       ],
       [
         "heat",
@@ -14232,40 +14704,64 @@
         "beat",
         "beach",
         "bead",
-        "beam",
+        "beak",
+        "cheek"
+      ],
+      [
+        "heat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "high",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "beach"
+      ],
+      [
+        "high",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "bead"
+      ],
+      [
+        "high",
+        "die",
+        "day",
+        "bay",
+        "bee",
         "beak"
       ],
       [
-        "heat",
-        "beat",
-        "beach",
-        "bead",
-        "beam",
-        "bean"
-      ],
-      [
-        "heat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beak"
-      ],
-      [
-        "heat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
+        "high",
+        "die",
+        "day",
+        "bay",
+        "bee",
         "beam"
       ],
       [
-        "heat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "lean"
+        "high",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "bean"
+      ],
+      [
+        "high",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "beat"
       ],
       [
         "high",
@@ -14282,54 +14778,6 @@
         "bay",
         "bee",
         "beet"
-      ],
-      [
-        "high",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "boo"
-      ],
-      [
-        "high",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "bow"
-      ],
-      [
-        "high",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "boy"
-      ],
-      [
-        "high",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "fee"
-      ],
-      [
-        "high",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "see"
-      ],
-      [
-        "high",
-        "die",
-        "day",
-        "bay",
-        "boo",
-        "bee"
       ],
       [
         "hood",
@@ -14425,39 +14873,39 @@
         "beak",
         "beach",
         "bead",
+        "bee"
+      ],
+      [
+        "hook",
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "beep"
+      ],
+      [
+        "hook",
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "beet"
+      ],
+      [
+        "hook",
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "feed"
+      ],
+      [
+        "hook",
+        "book",
+        "beak",
+        "beach",
+        "bead",
         "read"
-      ],
-      [
-        "hook",
-        "book",
-        "beak",
-        "beach",
-        "beam",
-        "bead"
-      ],
-      [
-        "hook",
-        "book",
-        "beak",
-        "beach",
-        "beam",
-        "bean"
-      ],
-      [
-        "hook",
-        "book",
-        "beak",
-        "beach",
-        "beam",
-        "beat"
-      ],
-      [
-        "hook",
-        "book",
-        "beak",
-        "beach",
-        "bean",
-        "bead"
       ],
       [
         "hound",
@@ -14593,6 +15041,54 @@
         "boy",
         "bay",
         "bee",
+        "beach"
+      ],
+      [
+        "jaw",
+        "joy",
+        "boy",
+        "bay",
+        "bee",
+        "bead"
+      ],
+      [
+        "jaw",
+        "joy",
+        "boy",
+        "bay",
+        "bee",
+        "beak"
+      ],
+      [
+        "jaw",
+        "joy",
+        "boy",
+        "bay",
+        "bee",
+        "beam"
+      ],
+      [
+        "jaw",
+        "joy",
+        "boy",
+        "bay",
+        "bee",
+        "bean"
+      ],
+      [
+        "jaw",
+        "joy",
+        "boy",
+        "bay",
+        "bee",
+        "beat"
+      ],
+      [
+        "jaw",
+        "joy",
+        "boy",
+        "bay",
+        "bee",
         "beep"
       ],
       [
@@ -14604,155 +15100,107 @@
         "beet"
       ],
       [
-        "jaw",
-        "joy",
-        "boy",
-        "bay",
-        "bee",
-        "boo"
+        "join",
+        "coin",
+        "coil",
+        "boil",
+        "bawl",
+        "haul"
       ],
       [
-        "jaw",
-        "joy",
-        "boy",
-        "bay",
-        "bee",
-        "bow"
+        "join",
+        "coin",
+        "coil",
+        "boil",
+        "bawl",
+        "maul"
       ],
       [
-        "jaw",
-        "joy",
+        "join",
+        "coin",
+        "coil",
+        "boil",
         "boy",
-        "bay",
-        "bee",
-        "fee"
+        "bay"
       ],
       [
-        "jaw",
-        "joy",
+        "join",
+        "coin",
+        "coil",
+        "boil",
         "boy",
-        "bay",
-        "bee",
-        "see"
-      ],
-      [
-        "jaw",
-        "joy",
-        "boy",
-        "bay",
-        "boo",
         "bee"
       ],
       [
-        "jaw",
-        "joy",
+        "join",
+        "coin",
+        "coil",
+        "boil",
         "boy",
-        "bay",
-        "boo",
-        "book"
+        "boo"
       ],
       [
         "join",
         "coin",
         "coil",
         "boil",
-        "foil",
-        "fail"
+        "boy",
+        "bow"
       ],
       [
         "join",
         "coin",
         "coil",
         "boil",
-        "foil",
-        "feel"
+        "boy",
+        "joy"
       ],
       [
         "join",
         "coin",
         "coil",
         "boil",
-        "foil",
-        "foul"
-      ],
-      [
-        "join",
-        "coin",
-        "coil",
-        "boil",
-        "foil",
-        "fowl"
-      ],
-      [
-        "join",
-        "coin",
-        "coil",
-        "boil",
-        "foil",
-        "oil"
-      ],
-      [
-        "join",
-        "coin",
-        "coil",
-        "boil",
-        "foil",
-        "soil"
-      ],
-      [
-        "join",
-        "coin",
-        "coil",
-        "boil",
-        "foil",
-        "toil"
-      ],
-      [
-        "join",
-        "coin",
-        "coil",
-        "boil",
-        "oil",
-        "ail"
+        "boy",
+        "toy"
       ],
       [
         "joy",
         "boy",
         "bay",
         "bee",
-        "beep",
-        "beet"
+        "beach",
+        "bead"
       ],
       [
         "joy",
         "boy",
         "bay",
         "bee",
-        "beep",
-        "deep"
+        "beach",
+        "beak"
       ],
       [
         "joy",
         "boy",
         "bay",
         "bee",
-        "beep",
-        "sheep"
+        "beach",
+        "beam"
       ],
       [
         "joy",
         "boy",
         "bay",
         "bee",
-        "beep",
-        "weep"
+        "beach",
+        "bean"
       ],
       [
         "joy",
         "boy",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beat"
       ],
       [
@@ -14760,7 +15208,7 @@
         "boy",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beep"
       ],
       [
@@ -14768,16 +15216,16 @@
         "boy",
         "bay",
         "bee",
-        "beet",
-        "boat"
+        "beach",
+        "beet"
       ],
       [
         "joy",
         "boy",
         "bay",
         "bee",
-        "beet",
-        "boot"
+        "beach",
+        "peach"
       ],
       [
         "law",
@@ -14865,7 +15313,23 @@
         "fawn",
         "pawn",
         "pain",
+        "pay"
+      ],
+      [
+        "lawn",
+        "dawn",
+        "fawn",
+        "pawn",
+        "pain",
         "rain"
+      ],
+      [
+        "lawn",
+        "dawn",
+        "fawn",
+        "pawn",
+        "pause",
+        "paw"
       ],
       [
         "lawn",
@@ -14889,215 +15353,247 @@
         "fawn",
         "pawn",
         "paw",
-        "pay"
-      ],
-      [
-        "lawn",
-        "dawn",
-        "fawn",
-        "pawn",
-        "paw",
-        "pea"
-      ],
-      [
-        "lawn",
-        "dawn",
-        "fawn",
-        "pawn",
-        "paw",
-        "raw"
+        "pause"
       ],
       [
         "lay",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "beat"
-      ],
-      [
-        "lay",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "boat"
-      ],
-      [
-        "lay",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "boot"
-      ],
-      [
-        "lay",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "bout"
-      ],
-      [
-        "lay",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "meet"
-      ],
-      [
-        "lay",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "sheet"
-      ],
-      [
-        "lay",
-        "bay",
-        "bee",
-        "beep",
-        "deep",
-        "sheep"
-      ],
-      [
-        "lay",
-        "bay",
-        "bee",
-        "beep",
-        "deep",
-        "weep"
-      ],
-      [
-        "lean",
-        "bean",
         "beach",
         "bead",
-        "beak",
-        "beam"
-      ],
-      [
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beak",
-        "beat"
-      ],
-      [
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beak",
-        "book"
-      ],
-      [
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beam",
         "beak"
       ],
       [
-        "lean",
-        "bean",
+        "lay",
+        "bay",
+        "bee",
         "beach",
         "bead",
-        "beam",
-        "beat"
-      ],
-      [
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beat",
-        "beak"
-      ],
-      [
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beat",
         "beam"
       ],
       [
-        "lean",
-        "bean",
+        "lay",
+        "bay",
+        "bee",
         "beach",
         "bead",
-        "beat",
+        "bean"
+      ],
+      [
+        "lay",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "beat"
+      ],
+      [
+        "lay",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "beep"
+      ],
+      [
+        "lay",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
         "beet"
       ],
       [
-        "leap",
-        "lean",
-        "bean",
+        "lay",
+        "bay",
+        "bee",
         "beach",
         "bead",
-        "beak"
+        "feed"
       ],
       [
-        "leap",
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beam"
-      ],
-      [
-        "leap",
-        "lean",
-        "bean",
-        "beach",
-        "bead",
-        "beat"
-      ],
-      [
-        "leap",
-        "lean",
-        "bean",
+        "lay",
+        "bay",
+        "bee",
         "beach",
         "bead",
         "read"
       ],
       [
-        "leap",
         "lean",
         "bean",
         "beach",
+        "bead",
         "beak",
-        "bead"
+        "beam"
+      ],
+      [
+        "lean",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beat"
+      ],
+      [
+        "lean",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "lean",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "lean",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "lean",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "book"
+      ],
+      [
+        "lean",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "lean",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
       ],
       [
         "leap",
-        "lean",
-        "bean",
+        "beep",
         "beach",
+        "bead",
         "beak",
         "beam"
       ],
       [
         "leap",
-        "lean",
-        "bean",
+        "beep",
         "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "leap",
+        "beep",
+        "beach",
+        "bead",
         "beak",
         "beat"
       ],
       [
         "leap",
-        "lean",
-        "bean",
+        "beep",
         "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "leap",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "leap",
+        "beep",
+        "beach",
+        "bead",
         "beak",
         "book"
+      ],
+      [
+        "leap",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "leap",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "lie",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "beach"
+      ],
+      [
+        "lie",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "bead"
+      ],
+      [
+        "lie",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "beak"
+      ],
+      [
+        "lie",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "beam"
+      ],
+      [
+        "lie",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "bean"
+      ],
+      [
+        "lie",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "beat"
       ],
       [
         "lie",
@@ -15116,51 +15612,51 @@
         "beet"
       ],
       [
-        "lie",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "boo"
+        "light",
+        "fight",
+        "foot",
+        "boot",
+        "beat",
+        "beach"
       ],
       [
-        "lie",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "bow"
+        "light",
+        "fight",
+        "foot",
+        "boot",
+        "beat",
+        "bead"
       ],
       [
-        "lie",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "boy"
+        "light",
+        "fight",
+        "foot",
+        "boot",
+        "beat",
+        "beak"
       ],
       [
-        "lie",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "fee"
+        "light",
+        "fight",
+        "foot",
+        "boot",
+        "beat",
+        "beam"
       ],
       [
-        "lie",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "see"
+        "light",
+        "fight",
+        "foot",
+        "boot",
+        "beat",
+        "bean"
       ],
       [
-        "lie",
-        "die",
-        "day",
-        "bay",
-        "boo",
+        "light",
+        "fight",
+        "foot",
+        "boot",
+        "beat",
         "bee"
       ],
       [
@@ -15169,47 +15665,7 @@
         "foot",
         "boot",
         "beat",
-        "beach"
-      ],
-      [
-        "light",
-        "fight",
-        "foot",
-        "boot",
-        "beat",
-        "bead"
-      ],
-      [
-        "light",
-        "fight",
-        "foot",
-        "boot",
-        "beat",
-        "beak"
-      ],
-      [
-        "light",
-        "fight",
-        "foot",
-        "boot",
-        "beat",
-        "beam"
-      ],
-      [
-        "light",
-        "fight",
-        "foot",
-        "boot",
-        "beat",
-        "bean"
-      ],
-      [
-        "light",
-        "fight",
-        "foot",
-        "boot",
-        "beat",
-        "beet"
+        "beep"
       ],
       [
         "light",
@@ -15220,14 +15676,6 @@
         "boat"
       ],
       [
-        "light",
-        "fight",
-        "foot",
-        "boot",
-        "beat",
-        "bout"
-      ],
-      [
         "load",
         "road",
         "read",
@@ -15265,7 +15713,7 @@
         "read",
         "bead",
         "beach",
-        "peach"
+        "bee"
       ],
       [
         "load",
@@ -15273,23 +15721,23 @@
         "read",
         "bead",
         "beach",
-        "reach"
+        "beep"
       ],
       [
         "load",
         "road",
         "read",
         "bead",
-        "beak",
-        "beach"
+        "beach",
+        "beet"
       ],
       [
         "load",
         "road",
         "read",
         "bead",
-        "beak",
-        "beam"
+        "beach",
+        "peach"
       ],
       [
         "loaf",
@@ -15336,24 +15784,24 @@
         "load",
         "road",
         "read",
-        "reach",
-        "beach"
+        "bead",
+        "bee"
       ],
       [
         "loaf",
         "load",
         "road",
         "read",
-        "reach",
-        "peach"
+        "bead",
+        "beep"
       ],
       [
         "loaf",
         "load",
-        "toad",
         "road",
         "read",
-        "bead"
+        "bead",
+        "beet"
       ],
       [
         "look",
@@ -15378,6 +15826,38 @@
         "beach",
         "bead",
         "beat"
+      ],
+      [
+        "look",
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "bee"
+      ],
+      [
+        "look",
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "beep"
+      ],
+      [
+        "look",
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "beet"
+      ],
+      [
+        "look",
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "feed"
       ],
       [
         "look",
@@ -15388,75 +15868,43 @@
         "read"
       ],
       [
-        "look",
-        "book",
-        "beak",
+        "low",
+        "bow",
+        "bay",
+        "bee",
         "beach",
-        "beam",
         "bead"
       ],
       [
-        "look",
-        "book",
-        "beak",
+        "low",
+        "bow",
+        "bay",
+        "bee",
         "beach",
-        "beam",
+        "beak"
+      ],
+      [
+        "low",
+        "bow",
+        "bay",
+        "bee",
+        "beach",
+        "beam"
+      ],
+      [
+        "low",
+        "bow",
+        "bay",
+        "bee",
+        "beach",
         "bean"
       ],
       [
-        "look",
-        "book",
-        "beak",
+        "low",
+        "bow",
+        "bay",
+        "bee",
         "beach",
-        "beam",
-        "beat"
-      ],
-      [
-        "look",
-        "book",
-        "beak",
-        "beach",
-        "bean",
-        "bead"
-      ],
-      [
-        "low",
-        "bow",
-        "bay",
-        "bee",
-        "beep",
-        "beet"
-      ],
-      [
-        "low",
-        "bow",
-        "bay",
-        "bee",
-        "beep",
-        "deep"
-      ],
-      [
-        "low",
-        "bow",
-        "bay",
-        "bee",
-        "beep",
-        "sheep"
-      ],
-      [
-        "low",
-        "bow",
-        "bay",
-        "bee",
-        "beep",
-        "weep"
-      ],
-      [
-        "low",
-        "bow",
-        "bay",
-        "bee",
-        "beet",
         "beat"
       ],
       [
@@ -15464,7 +15912,7 @@
         "bow",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beep"
       ],
       [
@@ -15472,16 +15920,16 @@
         "bow",
         "bay",
         "bee",
-        "beet",
-        "boat"
+        "beach",
+        "beet"
       ],
       [
         "low",
         "bow",
         "bay",
         "bee",
-        "beet",
-        "boot"
+        "beach",
+        "peach"
       ],
       [
         "mail",
@@ -15549,67 +15997,67 @@
       ],
       [
         "maul",
-        "haul",
-        "hail",
-        "ail",
-        "aid",
-        "aim"
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "bee"
       ],
       [
         "maul",
-        "haul",
-        "hail",
-        "ail",
-        "aim",
-        "aid"
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "boo"
       ],
       [
         "maul",
-        "haul",
-        "hail",
-        "ail",
-        "eel",
-        "feel"
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "bow"
       ],
       [
         "maul",
-        "haul",
-        "hail",
-        "ail",
-        "eel",
-        "oil"
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "day"
       ],
       [
         "maul",
-        "haul",
-        "hail",
-        "ail",
-        "eel",
-        "owl"
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "hay"
       ],
       [
         "maul",
-        "haul",
-        "hail",
-        "ail",
-        "eel",
-        "peel"
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "lay"
       ],
       [
         "maul",
-        "haul",
-        "hail",
-        "ail",
-        "eel",
-        "wheel"
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "pay"
       ],
       [
         "maul",
-        "haul",
-        "hail",
-        "ail",
-        "fail",
-        "feel"
+        "bawl",
+        "boil",
+        "boy",
+        "bay",
+        "say"
       ],
       [
         "meat",
@@ -15626,6 +16074,30 @@
         "bead",
         "beak",
         "bean"
+      ],
+      [
+        "meat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "meat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "meat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
       ],
       [
         "meat",
@@ -15640,104 +16112,80 @@
         "beat",
         "beach",
         "bead",
-        "beam",
-        "beak"
-      ],
-      [
-        "meat",
-        "beat",
-        "beach",
-        "bead",
-        "beam",
-        "bean"
-      ],
-      [
-        "meat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beak"
-      ],
-      [
-        "meat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beam"
-      ],
-      [
-        "meat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "lean"
-      ],
-      [
-        "meet",
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "beak"
-      ],
-      [
-        "meet",
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "beam"
-      ],
-      [
-        "meet",
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "bean"
-      ],
-      [
-        "meet",
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "read"
-      ],
-      [
-        "meet",
-        "beet",
-        "beat",
-        "beach",
         "beak",
-        "bead"
+        "cheek"
+      ],
+      [
+        "meat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
       ],
       [
         "meet",
-        "beet",
         "beat",
         "beach",
+        "bead",
         "beak",
         "beam"
       ],
       [
         "meet",
-        "beet",
         "beat",
         "beach",
+        "bead",
         "beak",
         "bean"
       ],
       [
         "meet",
-        "beet",
         "beat",
         "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "meet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "meet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "meet",
+        "beat",
+        "beach",
+        "bead",
         "beak",
         "book"
+      ],
+      [
+        "meet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "meet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
       ],
       [
         "might",
@@ -15785,158 +16233,150 @@
         "foot",
         "boot",
         "beat",
-        "beet"
-      ],
-      [
-        "might",
-        "fight",
-        "foot",
-        "boot",
-        "beat",
-        "boat"
-      ],
-      [
-        "might",
-        "fight",
-        "foot",
-        "boot",
-        "beat",
-        "bout"
-      ],
-      [
-        "moo",
-        "boo",
-        "bay",
-        "bee",
-        "beep",
-        "beet"
-      ],
-      [
-        "moo",
-        "boo",
-        "bay",
-        "bee",
-        "beep",
-        "deep"
-      ],
-      [
-        "moo",
-        "boo",
-        "bay",
-        "bee",
-        "beep",
-        "sheep"
-      ],
-      [
-        "moo",
-        "boo",
-        "bay",
-        "bee",
-        "beep",
-        "weep"
-      ],
-      [
-        "moo",
-        "boo",
-        "bay",
-        "bee",
-        "beet",
-        "beat"
-      ],
-      [
-        "moo",
-        "boo",
-        "bay",
-        "bee",
-        "beet",
-        "beep"
-      ],
-      [
-        "moo",
-        "boo",
-        "bay",
-        "bee",
-        "beet",
-        "boat"
-      ],
-      [
-        "moo",
-        "boo",
-        "bay",
-        "bee",
-        "beet",
-        "boot"
-      ],
-      [
-        "moon",
-        "moo",
-        "boo",
-        "bay",
-        "bee",
-        "beep"
-      ],
-      [
-        "moon",
-        "moo",
-        "boo",
-        "bay",
-        "bee",
-        "beet"
-      ],
-      [
-        "moon",
-        "moo",
-        "boo",
-        "bay",
-        "bee",
-        "bow"
-      ],
-      [
-        "moon",
-        "moo",
-        "boo",
-        "bay",
-        "bee",
-        "boy"
-      ],
-      [
-        "moon",
-        "moo",
-        "boo",
-        "bay",
-        "bee",
-        "fee"
-      ],
-      [
-        "moon",
-        "moo",
-        "boo",
-        "bay",
-        "bee",
-        "see"
-      ],
-      [
-        "moon",
-        "moo",
-        "boo",
-        "bay",
-        "bow",
         "bee"
       ],
       [
+        "might",
+        "fight",
+        "foot",
+        "boot",
+        "beat",
+        "beep"
+      ],
+      [
+        "might",
+        "fight",
+        "foot",
+        "boot",
+        "beat",
+        "boat"
+      ],
+      [
+        "moo",
+        "boo",
+        "bay",
+        "bee",
+        "beach",
+        "bead"
+      ],
+      [
+        "moo",
+        "boo",
+        "bay",
+        "bee",
+        "beach",
+        "beak"
+      ],
+      [
+        "moo",
+        "boo",
+        "bay",
+        "bee",
+        "beach",
+        "beam"
+      ],
+      [
+        "moo",
+        "boo",
+        "bay",
+        "bee",
+        "beach",
+        "bean"
+      ],
+      [
+        "moo",
+        "boo",
+        "bay",
+        "bee",
+        "beach",
+        "beat"
+      ],
+      [
+        "moo",
+        "boo",
+        "bay",
+        "bee",
+        "beach",
+        "beep"
+      ],
+      [
+        "moo",
+        "boo",
+        "bay",
+        "bee",
+        "beach",
+        "beet"
+      ],
+      [
+        "moo",
+        "boo",
+        "bay",
+        "bee",
+        "beach",
+        "peach"
+      ],
+      [
         "moon",
         "moo",
         "boo",
         "bay",
-        "bow",
-        "boy"
+        "bee",
+        "beach"
       ],
       [
-        "mow",
-        "bow",
+        "moon",
+        "moo",
+        "boo",
         "bay",
         "bee",
-        "beep",
+        "bead"
+      ],
+      [
+        "moon",
+        "moo",
+        "boo",
+        "bay",
+        "bee",
+        "beak"
+      ],
+      [
+        "moon",
+        "moo",
+        "boo",
+        "bay",
+        "bee",
+        "beam"
+      ],
+      [
+        "moon",
+        "moo",
+        "boo",
+        "bay",
+        "bee",
+        "bean"
+      ],
+      [
+        "moon",
+        "moo",
+        "boo",
+        "bay",
+        "bee",
+        "beat"
+      ],
+      [
+        "moon",
+        "moo",
+        "boo",
+        "bay",
+        "bee",
+        "beep"
+      ],
+      [
+        "moon",
+        "moo",
+        "boo",
+        "bay",
+        "bee",
         "beet"
       ],
       [
@@ -15944,31 +16384,39 @@
         "bow",
         "bay",
         "bee",
-        "beep",
-        "deep"
+        "beach",
+        "bead"
       ],
       [
         "mow",
         "bow",
         "bay",
         "bee",
-        "beep",
-        "sheep"
+        "beach",
+        "beak"
       ],
       [
         "mow",
         "bow",
         "bay",
         "bee",
-        "beep",
-        "weep"
+        "beach",
+        "beam"
       ],
       [
         "mow",
         "bow",
         "bay",
         "bee",
-        "beet",
+        "beach",
+        "bean"
+      ],
+      [
+        "mow",
+        "bow",
+        "bay",
+        "bee",
+        "beach",
         "beat"
       ],
       [
@@ -15976,7 +16424,7 @@
         "bow",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beep"
       ],
       [
@@ -15984,16 +16432,16 @@
         "bow",
         "bay",
         "bee",
-        "beet",
-        "boat"
+        "beach",
+        "beet"
       ],
       [
         "mow",
         "bow",
         "bay",
         "bee",
-        "beet",
-        "boot"
+        "beach",
+        "peach"
       ],
       [
         "nail",
@@ -16073,119 +16521,119 @@
         "few",
         "fee",
         "bee",
+        "beach"
+      ],
+      [
+        "new",
+        "chew",
+        "few",
+        "fee",
+        "bee",
+        "bead"
+      ],
+      [
+        "new",
+        "chew",
+        "few",
+        "fee",
+        "bee",
+        "beak"
+      ],
+      [
+        "new",
+        "chew",
+        "few",
+        "fee",
+        "bee",
+        "beam"
+      ],
+      [
+        "new",
+        "chew",
+        "few",
+        "fee",
+        "bee",
+        "bean"
+      ],
+      [
+        "new",
+        "chew",
+        "few",
+        "fee",
+        "bee",
+        "beat"
+      ],
+      [
+        "new",
+        "chew",
+        "few",
+        "fee",
+        "bee",
         "beep"
       ],
       [
-        "new",
-        "chew",
-        "few",
-        "fee",
-        "bee",
+        "oak",
+        "soak",
+        "seek",
+        "beak",
+        "beach",
+        "bead"
+      ],
+      [
+        "oak",
+        "soak",
+        "seek",
+        "beak",
+        "beach",
+        "beam"
+      ],
+      [
+        "oak",
+        "soak",
+        "seek",
+        "beak",
+        "beach",
+        "bean"
+      ],
+      [
+        "oak",
+        "soak",
+        "seek",
+        "beak",
+        "beach",
+        "beat"
+      ],
+      [
+        "oak",
+        "soak",
+        "seek",
+        "beak",
+        "beach",
+        "bee"
+      ],
+      [
+        "oak",
+        "soak",
+        "seek",
+        "beak",
+        "beach",
+        "beep"
+      ],
+      [
+        "oak",
+        "soak",
+        "seek",
+        "beak",
+        "beach",
         "beet"
       ],
       [
-        "new",
-        "chew",
-        "few",
-        "fee",
-        "bee",
-        "boo"
-      ],
-      [
-        "new",
-        "chew",
-        "few",
-        "fee",
-        "bee",
-        "bow"
-      ],
-      [
-        "new",
-        "chew",
-        "few",
-        "fee",
-        "bee",
-        "boy"
-      ],
-      [
-        "new",
-        "chew",
-        "few",
-        "fee",
-        "bee",
-        "see"
-      ],
-      [
-        "new",
-        "chew",
-        "few",
-        "fee",
-        "feed",
-        "feel"
-      ],
-      [
         "oak",
         "soak",
         "seek",
-        "cheek",
-        "peek",
-        "peel"
-      ],
-      [
-        "oak",
-        "soak",
-        "seek",
-        "cheek",
-        "peek",
-        "week"
-      ],
-      [
-        "oak",
-        "soak",
-        "seek",
-        "cheek",
-        "week",
-        "peek"
-      ],
-      [
-        "oak",
-        "soak",
-        "seek",
-        "cheek",
-        "week",
-        "weep"
-      ],
-      [
-        "oak",
-        "soak",
-        "seek",
-        "peek",
-        "cheek",
-        "week"
-      ],
-      [
-        "oak",
-        "soak",
-        "seek",
-        "peek",
-        "peel",
-        "eel"
-      ],
-      [
-        "oak",
-        "soak",
-        "seek",
-        "peek",
-        "peel",
-        "feel"
-      ],
-      [
-        "oak",
-        "soak",
-        "seek",
-        "peek",
-        "peel",
-        "pail"
+        "beak",
+        "beach",
+        "peach"
       ],
       [
         "oil",
@@ -16297,7 +16745,15 @@
         "out",
         "bout",
         "beat",
-        "beet"
+        "bee"
+      ],
+      [
+        "ouch",
+        "our",
+        "out",
+        "bout",
+        "beat",
+        "beep"
       ],
       [
         "ouch",
@@ -16306,14 +16762,6 @@
         "bout",
         "beat",
         "boat"
-      ],
-      [
-        "ouch",
-        "our",
-        "out",
-        "bout",
-        "beat",
-        "boot"
       ],
       [
         "our",
@@ -16361,7 +16809,15 @@
         "out",
         "bout",
         "beat",
-        "beet"
+        "bee"
+      ],
+      [
+        "our",
+        "ouch",
+        "out",
+        "bout",
+        "beat",
+        "beep"
       ],
       [
         "our",
@@ -16370,14 +16826,6 @@
         "bout",
         "beat",
         "boat"
-      ],
-      [
-        "our",
-        "ouch",
-        "out",
-        "bout",
-        "beat",
-        "boot"
       ],
       [
         "out",
@@ -16409,39 +16857,39 @@
         "beat",
         "beach",
         "bead",
+        "bee"
+      ],
+      [
+        "out",
+        "bout",
+        "beat",
+        "beach",
+        "bead",
+        "beep"
+      ],
+      [
+        "out",
+        "bout",
+        "beat",
+        "beach",
+        "bead",
+        "beet"
+      ],
+      [
+        "out",
+        "bout",
+        "beat",
+        "beach",
+        "bead",
+        "feed"
+      ],
+      [
+        "out",
+        "bout",
+        "beat",
+        "beach",
+        "bead",
         "read"
-      ],
-      [
-        "out",
-        "bout",
-        "beat",
-        "beach",
-        "beak",
-        "bead"
-      ],
-      [
-        "out",
-        "bout",
-        "beat",
-        "beach",
-        "beak",
-        "beam"
-      ],
-      [
-        "out",
-        "bout",
-        "beat",
-        "beach",
-        "beak",
-        "bean"
-      ],
-      [
-        "out",
-        "bout",
-        "beat",
-        "beach",
-        "beak",
-        "book"
       ],
       [
         "owl",
@@ -16634,6 +17082,70 @@
         "rail",
         "ail",
         "nail"
+      ],
+      [
+        "pause",
+        "paw",
+        "jaw",
+        "joy",
+        "boy",
+        "bay"
+      ],
+      [
+        "pause",
+        "paw",
+        "jaw",
+        "joy",
+        "boy",
+        "bee"
+      ],
+      [
+        "pause",
+        "paw",
+        "jaw",
+        "joy",
+        "boy",
+        "boil"
+      ],
+      [
+        "pause",
+        "paw",
+        "jaw",
+        "joy",
+        "boy",
+        "boo"
+      ],
+      [
+        "pause",
+        "paw",
+        "jaw",
+        "joy",
+        "boy",
+        "bow"
+      ],
+      [
+        "pause",
+        "paw",
+        "jaw",
+        "joy",
+        "boy",
+        "toy"
+      ],
+      [
+        "pause",
+        "paw",
+        "jaw",
+        "joy",
+        "join",
+        "coin"
+      ],
+      [
+        "pause",
+        "paw",
+        "jaw",
+        "joy",
+        "toy",
+        "boy"
       ],
       [
         "paw",
@@ -16767,256 +17279,256 @@
         "pay",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "beat"
-      ],
-      [
-        "pay",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "boat"
-      ],
-      [
-        "pay",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "boot"
-      ],
-      [
-        "pay",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "bout"
-      ],
-      [
-        "pay",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "meet"
-      ],
-      [
-        "pay",
-        "bay",
-        "bee",
-        "beep",
-        "beet",
-        "sheet"
-      ],
-      [
-        "pay",
-        "bay",
-        "bee",
-        "beep",
-        "deep",
-        "sheep"
-      ],
-      [
-        "pay",
-        "bay",
-        "bee",
-        "beep",
-        "deep",
-        "weep"
-      ],
-      [
-        "pea",
-        "paw",
-        "jaw",
-        "joy",
-        "boy",
-        "bay"
-      ],
-      [
-        "pea",
-        "paw",
-        "jaw",
-        "joy",
-        "boy",
-        "bee"
-      ],
-      [
-        "pea",
-        "paw",
-        "jaw",
-        "joy",
-        "boy",
-        "boo"
-      ],
-      [
-        "pea",
-        "paw",
-        "jaw",
-        "joy",
-        "boy",
-        "bow"
-      ],
-      [
-        "pea",
-        "paw",
-        "jaw",
-        "joy",
-        "boy",
-        "toy"
-      ],
-      [
-        "pea",
-        "paw",
-        "jaw",
-        "joy",
-        "toy",
-        "boy"
-      ],
-      [
-        "pea",
-        "paw",
-        "jaw",
-        "joy",
-        "toy",
-        "tea"
-      ],
-      [
-        "pea",
-        "paw",
-        "jaw",
-        "joy",
-        "toy",
-        "tie"
-      ],
-      [
-        "peach",
         "beach",
         "bead",
-        "beak",
-        "beam",
-        "bean"
+        "beak"
       ],
       [
-        "peach",
+        "pay",
+        "bay",
+        "bee",
         "beach",
         "bead",
-        "beak",
-        "beam",
-        "beat"
-      ],
-      [
-        "peach",
-        "beach",
-        "bead",
-        "beak",
-        "bean",
         "beam"
       ],
       [
-        "peach",
+        "pay",
+        "bay",
+        "bee",
         "beach",
         "bead",
-        "beak",
-        "bean",
-        "beat"
-      ],
-      [
-        "peach",
-        "beach",
-        "bead",
-        "beak",
-        "bean",
-        "lean"
-      ],
-      [
-        "peach",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
-        "beam"
-      ],
-      [
-        "peach",
-        "beach",
-        "bead",
-        "beak",
-        "beat",
         "bean"
       ],
       [
-        "peach",
+        "pay",
+        "bay",
+        "bee",
         "beach",
         "bead",
-        "beak",
-        "beat",
+        "beat"
+      ],
+      [
+        "pay",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "beep"
+      ],
+      [
+        "pay",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
         "beet"
       ],
       [
-        "peek",
-        "cheek",
-        "seek",
-        "see",
+        "pay",
+        "bay",
         "bee",
-        "bay"
+        "beach",
+        "bead",
+        "feed"
+      ],
+      [
+        "pay",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "read"
+      ],
+      [
+        "pea",
+        "bee",
+        "bay",
+        "boo",
+        "book",
+        "beak"
+      ],
+      [
+        "pea",
+        "bee",
+        "bay",
+        "boo",
+        "book",
+        "boot"
+      ],
+      [
+        "pea",
+        "bee",
+        "bay",
+        "boo",
+        "book",
+        "booth"
+      ],
+      [
+        "pea",
+        "bee",
+        "bay",
+        "boo",
+        "book",
+        "cook"
+      ],
+      [
+        "pea",
+        "bee",
+        "bay",
+        "boo",
+        "book",
+        "hook"
+      ],
+      [
+        "pea",
+        "bee",
+        "bay",
+        "boo",
+        "book",
+        "look"
+      ],
+      [
+        "pea",
+        "bee",
+        "bay",
+        "boo",
+        "book",
+        "took"
+      ],
+      [
+        "pea",
+        "bee",
+        "bay",
+        "boo",
+        "boot",
+        "beat"
+      ],
+      [
+        "peach",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bean"
+      ],
+      [
+        "peach",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beat"
+      ],
+      [
+        "peach",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "bee"
+      ],
+      [
+        "peach",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beep"
+      ],
+      [
+        "peach",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beet"
+      ],
+      [
+        "peach",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beam"
+      ],
+      [
+        "peach",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "beat"
+      ],
+      [
+        "peach",
+        "beach",
+        "bead",
+        "beak",
+        "bean",
+        "bee"
       ],
       [
         "peek",
-        "cheek",
-        "seek",
-        "see",
-        "bee",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bean"
+      ],
+      [
+        "peek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beat"
+      ],
+      [
+        "peek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bee"
+      ],
+      [
+        "peek",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
         "beep"
       ],
       [
         "peek",
-        "cheek",
-        "seek",
-        "see",
-        "bee",
+        "beak",
+        "beach",
+        "bead",
+        "beam",
         "beet"
       ],
       [
         "peek",
-        "cheek",
-        "seek",
-        "see",
-        "bee",
-        "boo"
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "beam"
       ],
       [
         "peek",
-        "cheek",
-        "seek",
-        "see",
-        "bee",
-        "bow"
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "beat"
       ],
       [
         "peek",
-        "cheek",
-        "seek",
-        "see",
-        "bee",
-        "boy"
-      ],
-      [
-        "peek",
-        "cheek",
-        "seek",
-        "see",
-        "bee",
-        "fee"
-      ],
-      [
-        "peek",
-        "cheek",
-        "seek",
-        "see",
-        "fee",
+        "beak",
+        "beach",
+        "bead",
+        "bean",
         "bee"
       ],
       [
@@ -17065,6 +17577,14 @@
         "ail",
         "fail",
         "feel",
+        "seal"
+      ],
+      [
+        "peel",
+        "eel",
+        "ail",
+        "fail",
+        "feel",
         "wheel"
       ],
       [
@@ -17074,14 +17594,6 @@
         "fail",
         "foil",
         "boil"
-      ],
-      [
-        "peel",
-        "eel",
-        "ail",
-        "fail",
-        "foil",
-        "coil"
       ],
       [
         "pout",
@@ -17113,39 +17625,103 @@
         "beat",
         "beach",
         "bead",
+        "bee"
+      ],
+      [
+        "pout",
+        "bout",
+        "beat",
+        "beach",
+        "bead",
+        "beep"
+      ],
+      [
+        "pout",
+        "bout",
+        "beat",
+        "beach",
+        "bead",
+        "beet"
+      ],
+      [
+        "pout",
+        "bout",
+        "beat",
+        "beach",
+        "bead",
+        "feed"
+      ],
+      [
+        "pout",
+        "bout",
+        "beat",
+        "beach",
+        "bead",
         "read"
       ],
       [
-        "pout",
-        "bout",
-        "beat",
+        "queen",
+        "bean",
         "beach",
-        "beak",
-        "bead"
-      ],
-      [
-        "pout",
-        "bout",
-        "beat",
-        "beach",
+        "bead",
         "beak",
         "beam"
       ],
       [
-        "pout",
-        "bout",
-        "beat",
+        "queen",
+        "bean",
         "beach",
+        "bead",
         "beak",
-        "bean"
+        "beat"
       ],
       [
-        "pout",
-        "bout",
-        "beat",
+        "queen",
+        "bean",
         "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "queen",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "queen",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "queen",
+        "bean",
+        "beach",
+        "bead",
         "beak",
         "book"
+      ],
+      [
+        "queen",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "queen",
+        "bean",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
       ],
       [
         "rail",
@@ -17360,6 +17936,30 @@
         "beach",
         "bead",
         "beak",
+        "beam",
+        "bee"
+      ],
+      [
+        "reach",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beep"
+      ],
+      [
+        "reach",
+        "beach",
+        "bead",
+        "beak",
+        "beam",
+        "beet"
+      ],
+      [
+        "reach",
+        "beach",
+        "bead",
+        "beak",
         "bean",
         "beam"
       ],
@@ -17377,30 +17977,46 @@
         "bead",
         "beak",
         "bean",
-        "lean"
+        "bee"
       ],
       [
-        "reach",
-        "beach",
+        "read",
         "bead",
-        "beak",
-        "beat",
-        "beam"
-      ],
-      [
-        "reach",
         "beach",
-        "bead",
         "beak",
-        "beat",
+        "beam",
         "bean"
       ],
       [
-        "reach",
-        "beach",
+        "read",
         "bead",
+        "beach",
         "beak",
-        "beat",
+        "beam",
+        "beat"
+      ],
+      [
+        "read",
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "bee"
+      ],
+      [
+        "read",
+        "bead",
+        "beach",
+        "beak",
+        "beam",
+        "beep"
+      ],
+      [
+        "read",
+        "bead",
+        "beach",
+        "beak",
+        "beam",
         "beet"
       ],
       [
@@ -17408,22 +18024,6 @@
         "bead",
         "beach",
         "beak",
-        "beam",
-        "bean"
-      ],
-      [
-        "read",
-        "bead",
-        "beach",
-        "beak",
-        "beam",
-        "beat"
-      ],
-      [
-        "read",
-        "bead",
-        "beach",
-        "beak",
         "bean",
         "beam"
       ],
@@ -17441,223 +18041,199 @@
         "beach",
         "beak",
         "bean",
-        "lean"
-      ],
-      [
-        "read",
-        "bead",
-        "beach",
-        "beak",
-        "beat",
-        "beam"
-      ],
-      [
-        "read",
-        "bead",
-        "beach",
-        "beak",
-        "beat",
-        "bean"
-      ],
-      [
-        "read",
-        "bead",
-        "beach",
-        "beak",
-        "beat",
-        "beet"
+        "bee"
       ],
       [
         "road",
-        "read",
-        "bead",
-        "beach",
-        "beak",
-        "beam"
-      ],
-      [
-        "road",
-        "read",
-        "bead",
-        "beach",
-        "beak",
-        "bean"
-      ],
-      [
-        "road",
-        "read",
-        "bead",
-        "beach",
-        "beak",
-        "beat"
-      ],
-      [
-        "road",
-        "read",
-        "bead",
-        "beach",
-        "beak",
-        "book"
-      ],
-      [
-        "road",
-        "read",
-        "bead",
-        "beach",
-        "beam",
-        "beak"
-      ],
-      [
-        "road",
-        "read",
-        "bead",
-        "beach",
-        "beam",
-        "bean"
-      ],
-      [
-        "road",
-        "read",
-        "bead",
-        "beach",
-        "beam",
-        "beat"
-      ],
-      [
-        "road",
-        "read",
-        "bead",
-        "beach",
-        "bean",
-        "beak"
-      ],
-      [
-        "roam",
-        "road",
-        "read",
-        "bead",
-        "beach",
-        "beak"
-      ],
-      [
-        "roam",
-        "road",
-        "read",
-        "bead",
-        "beach",
-        "beam"
-      ],
-      [
-        "roam",
-        "road",
-        "read",
-        "bead",
-        "beach",
-        "bean"
-      ],
-      [
-        "roam",
-        "road",
-        "read",
-        "bead",
-        "beach",
-        "beat"
-      ],
-      [
-        "roam",
-        "road",
-        "read",
-        "bead",
-        "beach",
-        "peach"
-      ],
-      [
-        "roam",
-        "road",
-        "read",
-        "bead",
-        "beach",
-        "reach"
-      ],
-      [
-        "roam",
-        "road",
-        "read",
-        "bead",
-        "beak",
-        "beach"
-      ],
-      [
-        "roam",
-        "road",
-        "read",
-        "bead",
-        "beak",
-        "beam"
-      ],
-      [
-        "room",
-        "roam",
-        "road",
-        "read",
-        "bead",
-        "beach"
-      ],
-      [
-        "room",
-        "roam",
-        "road",
-        "read",
-        "bead",
-        "beak"
-      ],
-      [
-        "room",
-        "roam",
-        "road",
-        "read",
-        "bead",
-        "beam"
-      ],
-      [
-        "room",
-        "roam",
-        "road",
-        "read",
-        "bead",
-        "bean"
-      ],
-      [
-        "room",
-        "roam",
-        "road",
-        "read",
-        "bead",
-        "beat"
-      ],
-      [
-        "room",
-        "roam",
-        "road",
-        "read",
-        "reach",
-        "beach"
-      ],
-      [
-        "room",
-        "roam",
-        "road",
-        "read",
-        "reach",
-        "peach"
-      ],
-      [
-        "room",
-        "roam",
-        "road",
-        "toad",
         "load",
-        "loaf"
+        "toad",
+        "toe",
+        "doe",
+        "day"
+      ],
+      [
+        "road",
+        "load",
+        "toad",
+        "toe",
+        "doe",
+        "die"
+      ],
+      [
+        "road",
+        "load",
+        "toad",
+        "toe",
+        "doe",
+        "foe"
+      ],
+      [
+        "road",
+        "load",
+        "toad",
+        "toe",
+        "doe",
+        "woe"
+      ],
+      [
+        "road",
+        "load",
+        "toad",
+        "toe",
+        "foe",
+        "doe"
+      ],
+      [
+        "road",
+        "load",
+        "toad",
+        "toe",
+        "foe",
+        "fee"
+      ],
+      [
+        "road",
+        "load",
+        "toad",
+        "toe",
+        "foe",
+        "few"
+      ],
+      [
+        "road",
+        "load",
+        "toad",
+        "toe",
+        "foe",
+        "woe"
+      ],
+      [
+        "roam",
+        "road",
+        "load",
+        "toad",
+        "toe",
+        "doe"
+      ],
+      [
+        "roam",
+        "road",
+        "load",
+        "toad",
+        "toe",
+        "foe"
+      ],
+      [
+        "roam",
+        "road",
+        "load",
+        "toad",
+        "toe",
+        "tea"
+      ],
+      [
+        "roam",
+        "road",
+        "load",
+        "toad",
+        "toe",
+        "tie"
+      ],
+      [
+        "roam",
+        "road",
+        "load",
+        "toad",
+        "toe",
+        "toy"
+      ],
+      [
+        "roam",
+        "road",
+        "load",
+        "toad",
+        "toe",
+        "woe"
+      ],
+      [
+        "roam",
+        "road",
+        "read",
+        "bead",
+        "beach",
+        "beak"
+      ],
+      [
+        "roam",
+        "road",
+        "read",
+        "bead",
+        "beach",
+        "beam"
+      ],
+      [
+        "room",
+        "roam",
+        "road",
+        "load",
+        "toad",
+        "toe"
+      ],
+      [
+        "room",
+        "roam",
+        "road",
+        "read",
+        "bead",
+        "beach"
+      ],
+      [
+        "room",
+        "roam",
+        "road",
+        "read",
+        "bead",
+        "beak"
+      ],
+      [
+        "room",
+        "roam",
+        "road",
+        "read",
+        "bead",
+        "beam"
+      ],
+      [
+        "room",
+        "roam",
+        "road",
+        "read",
+        "bead",
+        "bean"
+      ],
+      [
+        "room",
+        "roam",
+        "road",
+        "read",
+        "bead",
+        "beat"
+      ],
+      [
+        "room",
+        "roam",
+        "road",
+        "read",
+        "bead",
+        "bee"
+      ],
+      [
+        "room",
+        "roam",
+        "road",
+        "read",
+        "bead",
+        "beep"
       ],
       [
         "round",
@@ -17728,39 +18304,39 @@
         "bow",
         "bay",
         "bee",
-        "beep",
-        "beet"
+        "beach",
+        "bead"
       ],
       [
         "row",
         "bow",
         "bay",
         "bee",
-        "beep",
-        "deep"
+        "beach",
+        "beak"
       ],
       [
         "row",
         "bow",
         "bay",
         "bee",
-        "beep",
-        "sheep"
+        "beach",
+        "beam"
       ],
       [
         "row",
         "bow",
         "bay",
         "bee",
-        "beep",
-        "weep"
+        "beach",
+        "bean"
       ],
       [
         "row",
         "bow",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beat"
       ],
       [
@@ -17768,7 +18344,7 @@
         "bow",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beep"
       ],
       [
@@ -17776,16 +18352,16 @@
         "bow",
         "bay",
         "bee",
-        "beet",
-        "boat"
+        "beach",
+        "beet"
       ],
       [
         "row",
         "bow",
         "bay",
         "bee",
-        "beet",
-        "boot"
+        "beach",
+        "peach"
       ],
       [
         "sail",
@@ -17855,225 +18431,225 @@
         "say",
         "bay",
         "bee",
-        "beep",
-        "beet",
+        "beach",
+        "bead",
+        "beak"
+      ],
+      [
+        "say",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "beam"
+      ],
+      [
+        "say",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "bean"
+      ],
+      [
+        "say",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
         "beat"
       ],
       [
         "say",
         "bay",
         "bee",
-        "beep",
-        "beet",
-        "boat"
+        "beach",
+        "bead",
+        "beep"
       ],
       [
         "say",
         "bay",
         "bee",
-        "beep",
-        "beet",
+        "beach",
+        "bead",
+        "beet"
+      ],
+      [
+        "say",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "feed"
+      ],
+      [
+        "say",
+        "bay",
+        "bee",
+        "beach",
+        "bead",
+        "read"
+      ],
+      [
+        "screw",
+        "crew",
+        "screw",
+        "crew",
+        "screw",
+        "crew"
+      ],
+      [
+        "screw",
+        "crew",
+        "screw",
+        "crew",
+        "threw",
+        "crew"
+      ],
+      [
+        "screw",
+        "crew",
+        "threw",
+        "crew",
+        "screw",
+        "crew"
+      ],
+      [
+        "screw",
+        "crew",
+        "threw",
+        "crew",
+        "threw",
+        "crew"
+      ],
+      [
+        "sea",
+        "bee",
+        "bay",
+        "boo",
+        "book",
+        "beak"
+      ],
+      [
+        "sea",
+        "bee",
+        "bay",
+        "boo",
+        "book",
         "boot"
       ],
       [
-        "say",
-        "bay",
+        "sea",
         "bee",
-        "beep",
-        "beet",
-        "bout"
-      ],
-      [
-        "say",
         "bay",
-        "bee",
-        "beep",
-        "beet",
-        "meet"
+        "boo",
+        "book",
+        "booth"
       ],
       [
-        "say",
+        "sea",
+        "bee",
         "bay",
-        "bee",
-        "beep",
-        "beet",
-        "sheet"
+        "boo",
+        "book",
+        "cook"
       ],
       [
-        "say",
+        "sea",
+        "bee",
         "bay",
-        "bee",
-        "beep",
-        "deep",
-        "sheep"
+        "boo",
+        "book",
+        "hook"
       ],
       [
-        "say",
+        "sea",
+        "bee",
         "bay",
+        "boo",
+        "book",
+        "look"
+      ],
+      [
+        "sea",
         "bee",
-        "beep",
-        "deep",
-        "weep"
-      ],
-      [
-        "screw",
-        "crew",
-        "screw",
-        "crew",
-        "screw",
-        "crew"
-      ],
-      [
-        "screw",
-        "crew",
-        "screw",
-        "crew",
-        "threw",
-        "crew"
-      ],
-      [
-        "screw",
-        "crew",
-        "threw",
-        "crew",
-        "screw",
-        "crew"
-      ],
-      [
-        "screw",
-        "crew",
-        "threw",
-        "crew",
-        "threw",
-        "crew"
+        "bay",
+        "boo",
+        "book",
+        "took"
       ],
       [
         "sea",
-        "pea",
-        "paw",
-        "jaw",
-        "joy",
-        "boy"
-      ],
-      [
-        "sea",
-        "pea",
-        "paw",
-        "jaw",
-        "joy",
-        "toy"
-      ],
-      [
-        "sea",
-        "pea",
-        "paw",
-        "jaw",
-        "law",
-        "lawn"
-      ],
-      [
-        "sea",
-        "pea",
-        "paw",
-        "jaw",
-        "law",
-        "lay"
-      ],
-      [
-        "sea",
-        "pea",
-        "paw",
-        "jaw",
-        "law",
-        "lie"
-      ],
-      [
-        "sea",
-        "pea",
-        "paw",
-        "jaw",
-        "law",
-        "low"
-      ],
-      [
-        "sea",
-        "pea",
-        "paw",
-        "jaw",
-        "law",
-        "raw"
-      ],
-      [
-        "sea",
-        "pea",
-        "paw",
-        "jaw",
-        "law",
-        "thaw"
+        "bee",
+        "bay",
+        "boo",
+        "boot",
+        "beat"
       ],
       [
         "seal",
-        "sail",
-        "ail",
         "eel",
-        "feel",
-        "fail"
-      ],
-      [
-        "seal",
-        "sail",
         "ail",
-        "eel",
+        "fail",
         "feel",
         "fee"
       ],
       [
         "seal",
-        "sail",
-        "ail",
         "eel",
+        "ail",
+        "fail",
         "feel",
         "feed"
       ],
       [
         "seal",
-        "sail",
-        "ail",
         "eel",
+        "ail",
+        "fail",
         "feel",
         "foil"
       ],
       [
         "seal",
-        "sail",
-        "ail",
         "eel",
+        "ail",
+        "fail",
         "feel",
         "foul"
       ],
       [
         "seal",
-        "sail",
-        "ail",
         "eel",
+        "ail",
+        "fail",
         "feel",
         "fowl"
       ],
       [
         "seal",
-        "sail",
-        "ail",
         "eel",
+        "ail",
+        "fail",
         "feel",
         "peel"
       ],
       [
         "seal",
-        "sail",
-        "ail",
         "eel",
+        "ail",
+        "fail",
         "feel",
         "wheel"
+      ],
+      [
+        "seal",
+        "eel",
+        "ail",
+        "fail",
+        "foil",
+        "boil"
       ],
       [
         "seat",
@@ -18090,6 +18666,30 @@
         "bead",
         "beak",
         "bean"
+      ],
+      [
+        "seat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "seat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "seat",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
       ],
       [
         "seat",
@@ -18104,40 +18704,16 @@
         "beat",
         "beach",
         "bead",
-        "beam",
-        "beak"
+        "beak",
+        "cheek"
       ],
       [
         "seat",
         "beat",
         "beach",
         "bead",
-        "beam",
-        "bean"
-      ],
-      [
-        "seat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beak"
-      ],
-      [
-        "seat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "beam"
-      ],
-      [
-        "seat",
-        "beat",
-        "beach",
-        "bead",
-        "bean",
-        "lean"
+        "beak",
+        "peek"
       ],
       [
         "see",
@@ -18205,234 +18781,234 @@
       ],
       [
         "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "ail"
-      ],
-      [
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "feel"
-      ],
-      [
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "oil"
-      ],
-      [
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "owl"
-      ],
-      [
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "wheel"
-      ],
-      [
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
-        "eel"
-      ],
-      [
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
-        "fail"
-      ],
-      [
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
-        "fee"
-      ],
-      [
-        "sheep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "book"
-      ],
-      [
-        "sheep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "boot"
-      ],
-      [
-        "sheep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "booth"
-      ],
-      [
-        "sheep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "bow"
-      ],
-      [
-        "sheep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "boy"
-      ],
-      [
-        "sheep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "coo"
-      ],
-      [
-        "sheep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "goo"
-      ],
-      [
-        "sheep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "moo"
-      ],
-      [
-        "sheet",
-        "beet",
-        "beat",
+        "beak",
         "beach",
         "bead",
-        "beak"
-      ],
-      [
-        "sheet",
-        "beet",
-        "beat",
-        "beach",
-        "bead",
-        "beam"
-      ],
-      [
-        "sheet",
-        "beet",
-        "beat",
-        "beach",
-        "bead",
+        "beam",
         "bean"
       ],
       [
-        "sheet",
-        "beet",
-        "beat",
+        "seek",
+        "beak",
         "beach",
         "bead",
-        "read"
+        "beam",
+        "beat"
       ],
       [
-        "sheet",
-        "beet",
-        "beat",
-        "beach",
+        "seek",
         "beak",
-        "bead"
-      ],
-      [
-        "sheet",
-        "beet",
-        "beat",
         "beach",
-        "beak",
-        "beam"
+        "bead",
+        "beam",
+        "bee"
       ],
       [
-        "sheet",
-        "beet",
-        "beat",
+        "seek",
+        "beak",
         "beach",
-        "beak",
-        "bean"
+        "bead",
+        "beam",
+        "beep"
       ],
       [
-        "sheet",
-        "beet",
-        "beat",
+        "seek",
+        "beak",
         "beach",
-        "beak",
-        "book"
-      ],
-      [
-        "show",
-        "bow",
-        "bay",
-        "bee",
-        "beep",
+        "bead",
+        "beam",
         "beet"
       ],
       [
-        "show",
-        "bow",
-        "bay",
-        "bee",
+        "seek",
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "beam"
+      ],
+      [
+        "seek",
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "beat"
+      ],
+      [
+        "seek",
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "bee"
+      ],
+      [
+        "sheep",
         "beep",
-        "deep"
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "sheep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "sheep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beat"
+      ],
+      [
+        "sheep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "sheep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "sheep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "book"
+      ],
+      [
+        "sheep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "sheep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
+      ],
+      [
+        "sheet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "sheet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "sheet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "sheet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beep"
+      ],
+      [
+        "sheet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "sheet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "book"
+      ],
+      [
+        "sheet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
+      ],
+      [
+        "sheet",
+        "beat",
+        "beach",
+        "bead",
+        "beak",
+        "peek"
       ],
       [
         "show",
         "bow",
         "bay",
         "bee",
-        "beep",
-        "sheep"
+        "beach",
+        "bead"
       ],
       [
         "show",
         "bow",
         "bay",
         "bee",
-        "beep",
-        "weep"
+        "beach",
+        "beak"
       ],
       [
         "show",
         "bow",
         "bay",
         "bee",
-        "beet",
+        "beach",
+        "beam"
+      ],
+      [
+        "show",
+        "bow",
+        "bay",
+        "bee",
+        "beach",
+        "bean"
+      ],
+      [
+        "show",
+        "bow",
+        "bay",
+        "bee",
+        "beach",
         "beat"
       ],
       [
@@ -18440,7 +19016,7 @@
         "bow",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beep"
       ],
       [
@@ -18448,16 +19024,64 @@
         "bow",
         "bay",
         "bee",
-        "beet",
-        "boat"
+        "beach",
+        "beet"
       ],
       [
         "show",
         "bow",
         "bay",
         "bee",
-        "beet",
-        "boot"
+        "beach",
+        "peach"
+      ],
+      [
+        "sigh",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "beach"
+      ],
+      [
+        "sigh",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "bead"
+      ],
+      [
+        "sigh",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "beak"
+      ],
+      [
+        "sigh",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "beam"
+      ],
+      [
+        "sigh",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "bean"
+      ],
+      [
+        "sigh",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "beat"
       ],
       [
         "sigh",
@@ -18476,244 +19100,196 @@
         "beet"
       ],
       [
-        "sigh",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "boo"
+        "soak",
+        "seek",
+        "beak",
+        "beach",
+        "bead",
+        "beam"
       ],
       [
-        "sigh",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "bow"
+        "soak",
+        "seek",
+        "beak",
+        "beach",
+        "bead",
+        "bean"
       ],
       [
-        "sigh",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "boy"
+        "soak",
+        "seek",
+        "beak",
+        "beach",
+        "bead",
+        "beat"
       ],
       [
-        "sigh",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "fee"
-      ],
-      [
-        "sigh",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "see"
-      ],
-      [
-        "sigh",
-        "die",
-        "day",
-        "bay",
-        "boo",
+        "soak",
+        "seek",
+        "beak",
+        "beach",
+        "bead",
         "bee"
       ],
       [
         "soak",
         "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "eel"
-      ],
-      [
-        "soak",
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "feel"
-      ],
-      [
-        "soak",
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "pail"
-      ],
-      [
-        "soak",
-        "seek",
-        "cheek",
-        "peek",
-        "peel",
-        "wheel"
-      ],
-      [
-        "soak",
-        "seek",
-        "cheek",
-        "peek",
-        "week",
-        "weep"
-      ],
-      [
-        "soak",
-        "seek",
-        "cheek",
-        "week",
-        "peek",
-        "peel"
-      ],
-      [
-        "soak",
-        "seek",
-        "cheek",
-        "week",
-        "weep",
+        "beak",
+        "beach",
+        "bead",
         "beep"
       ],
       [
         "soak",
         "seek",
-        "cheek",
-        "week",
-        "weep",
-        "deep"
+        "beak",
+        "beach",
+        "bead",
+        "beet"
+      ],
+      [
+        "soak",
+        "seek",
+        "beak",
+        "beach",
+        "bead",
+        "feed"
+      ],
+      [
+        "soak",
+        "seek",
+        "beak",
+        "beach",
+        "bead",
+        "read"
       ],
       [
         "soap",
         "soak",
         "seek",
-        "cheek",
-        "peek",
-        "peel"
+        "beak",
+        "beach",
+        "bead"
       ],
       [
         "soap",
         "soak",
         "seek",
-        "cheek",
-        "peek",
-        "week"
+        "beak",
+        "beach",
+        "beam"
       ],
       [
         "soap",
         "soak",
         "seek",
-        "cheek",
-        "week",
-        "peek"
+        "beak",
+        "beach",
+        "bean"
       ],
       [
         "soap",
         "soak",
         "seek",
-        "cheek",
-        "week",
-        "weep"
+        "beak",
+        "beach",
+        "beat"
       ],
       [
         "soap",
         "soak",
         "seek",
-        "peek",
-        "cheek",
-        "week"
+        "beak",
+        "beach",
+        "bee"
       ],
       [
         "soap",
         "soak",
         "seek",
-        "peek",
-        "peel",
-        "eel"
+        "beak",
+        "beach",
+        "beep"
       ],
       [
         "soap",
         "soak",
         "seek",
-        "peek",
-        "peel",
-        "feel"
+        "beak",
+        "beach",
+        "beet"
       ],
       [
         "soap",
         "soak",
         "seek",
-        "peek",
-        "peel",
-        "pail"
+        "beak",
+        "beach",
+        "peach"
       ],
       [
         "soil",
         "boil",
-        "coil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "hail",
         "ail"
       ],
       [
         "soil",
         "boil",
-        "coil",
-        "foil",
-        "fail",
-        "feel"
+        "bawl",
+        "haul",
+        "hail",
+        "fail"
       ],
       [
         "soil",
         "boil",
-        "coil",
-        "foil",
-        "fail",
-        "foul"
+        "bawl",
+        "haul",
+        "hail",
+        "hay"
       ],
       [
         "soil",
         "boil",
-        "coil",
-        "foil",
-        "fail",
-        "fowl"
-      ],
-      [
-        "soil",
-        "boil",
-        "coil",
-        "foil",
-        "fail",
-        "hail"
-      ],
-      [
-        "soil",
-        "boil",
-        "coil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "hail",
         "jail"
       ],
       [
         "soil",
         "boil",
-        "coil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "hail",
         "mail"
       ],
       [
         "soil",
         "boil",
-        "coil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "hail",
         "nail"
+      ],
+      [
+        "soil",
+        "boil",
+        "bawl",
+        "haul",
+        "hail",
+        "pail"
+      ],
+      [
+        "soil",
+        "boil",
+        "bawl",
+        "haul",
+        "hail",
+        "rail"
       ],
       [
         "sound",
@@ -18845,131 +19421,131 @@
       ],
       [
         "tea",
-        "pea",
-        "paw",
-        "jaw",
-        "joy",
-        "boy"
+        "bee",
+        "bay",
+        "boo",
+        "book",
+        "beak"
       ],
       [
         "tea",
-        "pea",
-        "paw",
-        "jaw",
-        "joy",
-        "toy"
+        "bee",
+        "bay",
+        "boo",
+        "book",
+        "boot"
       ],
       [
         "tea",
-        "pea",
-        "paw",
-        "jaw",
-        "law",
-        "lawn"
+        "bee",
+        "bay",
+        "boo",
+        "book",
+        "booth"
       ],
       [
         "tea",
-        "pea",
-        "paw",
-        "jaw",
-        "law",
-        "lay"
+        "bee",
+        "bay",
+        "boo",
+        "book",
+        "cook"
       ],
       [
         "tea",
-        "pea",
-        "paw",
-        "jaw",
-        "law",
-        "lie"
+        "bee",
+        "bay",
+        "boo",
+        "book",
+        "hook"
       ],
       [
         "tea",
-        "pea",
-        "paw",
-        "jaw",
-        "law",
-        "low"
+        "bee",
+        "bay",
+        "boo",
+        "book",
+        "look"
       ],
       [
         "tea",
-        "pea",
-        "paw",
-        "jaw",
-        "law",
-        "raw"
+        "bee",
+        "bay",
+        "boo",
+        "book",
+        "took"
       ],
       [
         "tea",
-        "pea",
-        "paw",
-        "jaw",
-        "law",
-        "thaw"
+        "bee",
+        "bay",
+        "boo",
+        "boot",
+        "beat"
       ],
       [
         "teeth",
-        "tooth",
-        "booth",
-        "boo",
+        "tea",
+        "bee",
         "bay",
-        "bee"
+        "boo",
+        "book"
       ],
       [
         "teeth",
-        "tooth",
-        "booth",
-        "boo",
+        "tea",
+        "bee",
         "bay",
+        "boo",
+        "boot"
+      ],
+      [
+        "teeth",
+        "tea",
+        "bee",
+        "bay",
+        "boo",
+        "booth"
+      ],
+      [
+        "teeth",
+        "tea",
+        "bee",
+        "bay",
+        "boo",
         "bow"
       ],
       [
         "teeth",
-        "tooth",
-        "booth",
-        "boo",
+        "tea",
+        "bee",
         "bay",
+        "boo",
         "boy"
       ],
       [
         "teeth",
-        "tooth",
-        "booth",
-        "boo",
+        "tea",
+        "bee",
         "bay",
-        "day"
+        "boo",
+        "coo"
       ],
       [
         "teeth",
-        "tooth",
-        "booth",
-        "boo",
+        "tea",
+        "bee",
         "bay",
-        "hay"
+        "boo",
+        "goo"
       ],
       [
         "teeth",
-        "tooth",
-        "booth",
-        "boo",
+        "tea",
+        "bee",
         "bay",
-        "lay"
-      ],
-      [
-        "teeth",
-        "tooth",
-        "booth",
         "boo",
-        "bay",
-        "pay"
-      ],
-      [
-        "teeth",
-        "tooth",
-        "booth",
-        "boo",
-        "bay",
-        "say"
+        "moo"
       ],
       [
         "thaw",
@@ -19041,6 +19617,54 @@
         "day",
         "bay",
         "bee",
+        "beach"
+      ],
+      [
+        "thigh",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "bead"
+      ],
+      [
+        "thigh",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "beak"
+      ],
+      [
+        "thigh",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "beam"
+      ],
+      [
+        "thigh",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "bean"
+      ],
+      [
+        "thigh",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "beat"
+      ],
+      [
+        "thigh",
+        "die",
+        "day",
+        "bay",
+        "bee",
         "beep"
       ],
       [
@@ -19052,54 +19676,6 @@
         "beet"
       ],
       [
-        "thigh",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "boo"
-      ],
-      [
-        "thigh",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "bow"
-      ],
-      [
-        "thigh",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "boy"
-      ],
-      [
-        "thigh",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "fee"
-      ],
-      [
-        "thigh",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "see"
-      ],
-      [
-        "thigh",
-        "die",
-        "day",
-        "bay",
-        "boo",
-        "bee"
-      ],
-      [
         "threw",
         "crew",
         "screw",
@@ -19130,6 +19706,54 @@
         "crew",
         "threw",
         "crew"
+      ],
+      [
+        "tie",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "beach"
+      ],
+      [
+        "tie",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "bead"
+      ],
+      [
+        "tie",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "beak"
+      ],
+      [
+        "tie",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "beam"
+      ],
+      [
+        "tie",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "bean"
+      ],
+      [
+        "tie",
+        "die",
+        "day",
+        "bay",
+        "bee",
+        "beat"
       ],
       [
         "tie",
@@ -19146,54 +19770,6 @@
         "bay",
         "bee",
         "beet"
-      ],
-      [
-        "tie",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "boo"
-      ],
-      [
-        "tie",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "bow"
-      ],
-      [
-        "tie",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "boy"
-      ],
-      [
-        "tie",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "fee"
-      ],
-      [
-        "tie",
-        "die",
-        "day",
-        "bay",
-        "bee",
-        "see"
-      ],
-      [
-        "tie",
-        "die",
-        "day",
-        "bay",
-        "boo",
-        "bee"
       ],
       [
         "toad",
@@ -19240,24 +19816,72 @@
         "load",
         "road",
         "read",
-        "reach",
-        "beach"
+        "bead",
+        "bee"
       ],
       [
         "toad",
         "load",
         "road",
         "read",
-        "reach",
-        "peach"
+        "bead",
+        "beep"
       ],
       [
         "toad",
+        "load",
         "road",
         "read",
         "bead",
-        "beach",
+        "beet"
+      ],
+      [
+        "toe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
+        "beach"
+      ],
+      [
+        "toe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
+        "bead"
+      ],
+      [
+        "toe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
         "beak"
+      ],
+      [
+        "toe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
+        "beam"
+      ],
+      [
+        "toe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
+        "bean"
+      ],
+      [
+        "toe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
+        "beat"
       ],
       [
         "toe",
@@ -19276,116 +19900,68 @@
         "beet"
       ],
       [
-        "toe",
-        "doe",
-        "day",
-        "bay",
-        "bee",
-        "boo"
-      ],
-      [
-        "toe",
-        "doe",
-        "day",
-        "bay",
-        "bee",
-        "bow"
-      ],
-      [
-        "toe",
-        "doe",
-        "day",
-        "bay",
-        "bee",
-        "boy"
-      ],
-      [
-        "toe",
-        "doe",
-        "day",
-        "bay",
-        "bee",
-        "fee"
-      ],
-      [
-        "toe",
-        "doe",
-        "day",
-        "bay",
-        "bee",
-        "see"
-      ],
-      [
-        "toe",
-        "doe",
-        "day",
-        "bay",
-        "boo",
-        "bee"
-      ],
-      [
         "toil",
         "boil",
-        "coil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "hail",
         "ail"
       ],
       [
         "toil",
         "boil",
-        "coil",
-        "foil",
-        "fail",
-        "feel"
+        "bawl",
+        "haul",
+        "hail",
+        "fail"
       ],
       [
         "toil",
         "boil",
-        "coil",
-        "foil",
-        "fail",
-        "foul"
+        "bawl",
+        "haul",
+        "hail",
+        "hay"
       ],
       [
         "toil",
         "boil",
-        "coil",
-        "foil",
-        "fail",
-        "fowl"
-      ],
-      [
-        "toil",
-        "boil",
-        "coil",
-        "foil",
-        "fail",
-        "hail"
-      ],
-      [
-        "toil",
-        "boil",
-        "coil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "hail",
         "jail"
       ],
       [
         "toil",
         "boil",
-        "coil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "hail",
         "mail"
       ],
       [
         "toil",
         "boil",
-        "coil",
-        "foil",
-        "fail",
+        "bawl",
+        "haul",
+        "hail",
         "nail"
+      ],
+      [
+        "toil",
+        "boil",
+        "bawl",
+        "haul",
+        "hail",
+        "pail"
+      ],
+      [
+        "toil",
+        "boil",
+        "bawl",
+        "haul",
+        "hail",
+        "rail"
       ],
       [
         "took",
@@ -19410,6 +19986,38 @@
         "beach",
         "bead",
         "beat"
+      ],
+      [
+        "took",
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "bee"
+      ],
+      [
+        "took",
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "beep"
+      ],
+      [
+        "took",
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "beet"
+      ],
+      [
+        "took",
+        "book",
+        "beak",
+        "beach",
+        "bead",
+        "feed"
       ],
       [
         "took",
@@ -19418,38 +20026,6 @@
         "beach",
         "bead",
         "read"
-      ],
-      [
-        "took",
-        "book",
-        "beak",
-        "beach",
-        "beam",
-        "bead"
-      ],
-      [
-        "took",
-        "book",
-        "beak",
-        "beach",
-        "beam",
-        "bean"
-      ],
-      [
-        "took",
-        "book",
-        "beak",
-        "beach",
-        "beam",
-        "beat"
-      ],
-      [
-        "took",
-        "book",
-        "beak",
-        "beach",
-        "bean",
-        "bead"
       ],
       [
         "tool",
@@ -19513,7 +20089,55 @@
         "ail",
         "eel",
         "feel",
-        "wheel"
+        "seal"
+      ],
+      [
+        "tooth",
+        "booth",
+        "boo",
+        "bay",
+        "bee",
+        "beach"
+      ],
+      [
+        "tooth",
+        "booth",
+        "boo",
+        "bay",
+        "bee",
+        "bead"
+      ],
+      [
+        "tooth",
+        "booth",
+        "boo",
+        "bay",
+        "bee",
+        "beak"
+      ],
+      [
+        "tooth",
+        "booth",
+        "boo",
+        "bay",
+        "bee",
+        "beam"
+      ],
+      [
+        "tooth",
+        "booth",
+        "boo",
+        "bay",
+        "bee",
+        "bean"
+      ],
+      [
+        "tooth",
+        "booth",
+        "boo",
+        "bay",
+        "bee",
+        "beat"
       ],
       [
         "tooth",
@@ -19530,54 +20154,6 @@
         "bay",
         "bee",
         "beet"
-      ],
-      [
-        "tooth",
-        "booth",
-        "boo",
-        "bay",
-        "bee",
-        "bow"
-      ],
-      [
-        "tooth",
-        "booth",
-        "boo",
-        "bay",
-        "bee",
-        "boy"
-      ],
-      [
-        "tooth",
-        "booth",
-        "boo",
-        "bay",
-        "bee",
-        "fee"
-      ],
-      [
-        "tooth",
-        "booth",
-        "boo",
-        "bay",
-        "bee",
-        "see"
-      ],
-      [
-        "tooth",
-        "booth",
-        "boo",
-        "bay",
-        "bow",
-        "bee"
-      ],
-      [
-        "tooth",
-        "booth",
-        "boo",
-        "bay",
-        "bow",
-        "boy"
       ],
       [
         "town",
@@ -19633,7 +20209,7 @@
         "dawn",
         "fawn",
         "pawn",
-        "paw"
+        "pause"
       ],
       [
         "town",
@@ -19641,46 +20217,46 @@
         "dawn",
         "fawn",
         "pawn",
-        "yawn"
+        "paw"
       ],
       [
         "toy",
         "boy",
         "bay",
         "bee",
-        "beep",
-        "beet"
+        "beach",
+        "bead"
       ],
       [
         "toy",
         "boy",
         "bay",
         "bee",
-        "beep",
-        "deep"
+        "beach",
+        "beak"
       ],
       [
         "toy",
         "boy",
         "bay",
         "bee",
-        "beep",
-        "sheep"
+        "beach",
+        "beam"
       ],
       [
         "toy",
         "boy",
         "bay",
         "bee",
-        "beep",
-        "weep"
+        "beach",
+        "bean"
       ],
       [
         "toy",
         "boy",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beat"
       ],
       [
@@ -19688,7 +20264,7 @@
         "boy",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beep"
       ],
       [
@@ -19696,16 +20272,16 @@
         "boy",
         "bay",
         "bee",
-        "beet",
-        "boat"
+        "beach",
+        "beet"
       ],
       [
         "toy",
         "boy",
         "bay",
         "bee",
-        "beet",
-        "boot"
+        "beach",
+        "peach"
       ],
       [
         "wail",
@@ -19773,131 +20349,131 @@
       ],
       [
         "week",
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "ail"
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bean"
       ],
       [
         "week",
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "feel"
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beat"
       ],
       [
         "week",
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "oil"
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "bee"
       ],
       [
         "week",
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "owl"
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beep"
       ],
       [
         "week",
-        "cheek",
-        "peek",
-        "peel",
-        "eel",
-        "wheel"
+        "beak",
+        "beach",
+        "bead",
+        "beam",
+        "beet"
       ],
       [
         "week",
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
-        "eel"
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "beam"
       ],
       [
         "week",
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
-        "fail"
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "beat"
       ],
       [
         "week",
-        "cheek",
-        "peek",
-        "peel",
-        "feel",
-        "fee"
+        "beak",
+        "beach",
+        "bead",
+        "bean",
+        "bee"
       ],
       [
         "weep",
         "beep",
-        "bee",
-        "bay",
-        "boo",
+        "beach",
+        "bead",
+        "beak",
+        "beam"
+      ],
+      [
+        "weep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bean"
+      ],
+      [
+        "weep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beat"
+      ],
+      [
+        "weep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "bee"
+      ],
+      [
+        "weep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
+        "beet"
+      ],
+      [
+        "weep",
+        "beep",
+        "beach",
+        "bead",
+        "beak",
         "book"
       ],
       [
         "weep",
         "beep",
-        "bee",
-        "bay",
-        "boo",
-        "boot"
+        "beach",
+        "bead",
+        "beak",
+        "cheek"
       ],
       [
         "weep",
         "beep",
-        "bee",
-        "bay",
-        "boo",
-        "booth"
-      ],
-      [
-        "weep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "bow"
-      ],
-      [
-        "weep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "boy"
-      ],
-      [
-        "weep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "coo"
-      ],
-      [
-        "weep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "goo"
-      ],
-      [
-        "weep",
-        "beep",
-        "bee",
-        "bay",
-        "boo",
-        "moo"
+        "beach",
+        "bead",
+        "beak",
+        "peek"
       ],
       [
         "wheel",
@@ -19952,8 +20528,8 @@
         "eel",
         "ail",
         "fail",
-        "foil",
-        "boil"
+        "feel",
+        "seal"
       ],
       [
         "wheel",
@@ -19961,7 +20537,55 @@
         "ail",
         "fail",
         "foil",
-        "coil"
+        "boil"
+      ],
+      [
+        "woe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
+        "beach"
+      ],
+      [
+        "woe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
+        "bead"
+      ],
+      [
+        "woe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
+        "beak"
+      ],
+      [
+        "woe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
+        "beam"
+      ],
+      [
+        "woe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
+        "bean"
+      ],
+      [
+        "woe",
+        "doe",
+        "day",
+        "bay",
+        "bee",
+        "beat"
       ],
       [
         "woe",
@@ -19978,54 +20602,6 @@
         "bay",
         "bee",
         "beet"
-      ],
-      [
-        "woe",
-        "doe",
-        "day",
-        "bay",
-        "bee",
-        "boo"
-      ],
-      [
-        "woe",
-        "doe",
-        "day",
-        "bay",
-        "bee",
-        "bow"
-      ],
-      [
-        "woe",
-        "doe",
-        "day",
-        "bay",
-        "bee",
-        "boy"
-      ],
-      [
-        "woe",
-        "doe",
-        "day",
-        "bay",
-        "bee",
-        "fee"
-      ],
-      [
-        "woe",
-        "doe",
-        "day",
-        "bay",
-        "bee",
-        "see"
-      ],
-      [
-        "woe",
-        "doe",
-        "day",
-        "bay",
-        "boo",
-        "bee"
       ],
       [
         "wood",
@@ -20160,39 +20736,39 @@
         "boo",
         "bay",
         "bee",
-        "beep",
-        "beet"
+        "beach",
+        "bead"
       ],
       [
         "zoo",
         "boo",
         "bay",
         "bee",
-        "beep",
-        "deep"
+        "beach",
+        "beak"
       ],
       [
         "zoo",
         "boo",
         "bay",
         "bee",
-        "beep",
-        "sheep"
+        "beach",
+        "beam"
       ],
       [
         "zoo",
         "boo",
         "bay",
         "bee",
-        "beep",
-        "weep"
+        "beach",
+        "bean"
       ],
       [
         "zoo",
         "boo",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beat"
       ],
       [
@@ -20200,7 +20776,7 @@
         "boo",
         "bay",
         "bee",
-        "beet",
+        "beach",
         "beep"
       ],
       [
@@ -20208,16 +20784,16 @@
         "boo",
         "bay",
         "bee",
-        "beet",
-        "boat"
+        "beach",
+        "beet"
       ],
       [
         "zoo",
         "boo",
         "bay",
         "bee",
-        "beet",
-        "boot"
+        "beach",
+        "peach"
       ]
     ]
   },
@@ -20228,7 +20804,7 @@
     },
     "longE": {
       "words": 41,
-      "ladders": 312
+      "ladders": 328
     },
     "longI": {
       "words": 9,
@@ -20252,7 +20828,7 @@
     },
     "variantAuAw": {
       "words": 18,
-      "ladders": 84
+      "ladders": 116
     },
     "variantOo": {
       "words": 9,
@@ -20260,7 +20836,7 @@
     },
     "mixed": {
       "words": 164,
-      "ladders": 1256
+      "ladders": 1280
     }
   }
 };

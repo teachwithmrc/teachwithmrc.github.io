@@ -18,6 +18,12 @@
   function normalizeChunk(chunk) {
     const c = String(chunk || "").toLowerCase();
     if (c === "igh" || c === "ie" || c === "y") return "long_i";
+    if (c === "ai" || c === "ay" || c === "eigh") return "long_a";
+    if (c === "ee" || c === "ea") return "long_e";
+    if (c === "oa" || c === "oe") return "long_o";
+    if (c === "ew" || c === "ue") return "long_u";
+    if (c === "oi" || c === "oy") return "diph_oy";
+    if (c === "au" || c === "aw") return "variant_aw";
     return c;
   }
 
