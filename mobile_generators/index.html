@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mobile Generators Index</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&amp;display=swap" rel="stylesheet" />
+  <style>
+    :root { --bg:#eef5fc; --panel:#fff; --line:#c2d5e8; --ink:#12395f; --accent:#2f79b8; }
+    * { box-sizing:border-box; }
+    body { margin:0; padding:12px; font-family:"Poppins",sans-serif; background:var(--bg); color:var(--ink); }
+    .wrap { max-width:1080px; margin:0 auto; }
+    .head { background:var(--panel); border:2px solid var(--line); border-radius:12px; padding:12px; margin-bottom:10px; }
+    h1 { margin:0; font-size:1.2rem; }
+    p { margin:6px 0 0; font-size:.86rem; color:#4a6480; }
+    .actions { margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; text-decoration:none; height:36px; padding:0 12px; border:2px solid #a9c6e4; border-radius:10px; background:#f7fbff; color:#134069; font-size:.8rem; font-weight:700; }
+    .btn.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .grid { display:grid; gap:8px; grid-template-columns:1fr; }
+    .card { background:var(--panel); border:2px solid var(--line); border-radius:10px; padding:10px; display:flex; gap:8px; align-items:center; justify-content:space-between; }
+    .name { font-size:.86rem; font-weight:700; word-break:break-word; }
+    @media (min-width:760px) { .grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="head">
+      <h1>Mobile Generator Pages</h1>
+      <p>Preview-only locked pages. Live generator functionality is not exposed here.</p>
+      <div class="actions">
+        <a class="btn" href="../mobile_nav_hub_v1.html">Back to Mobile Hub</a>
+        <a class="btn primary" href="mobile_generator_wrapper.html?g=rounding">Open Wrapper</a>
+      </div>
+    </section>
+    <section id="list" class="grid"></section>
+  </div>
+  <script>
+    const files = [
+      { label: '01tictactoegenerator.html', href: '01tictactoegenerator_mobile.html' },
+      { label: 'addition_graphic_organizer_generator.html', href: 'addition_graphic_organizer_generator_mobile.html' },
+      { label: 'counting_coin_generator.html', href: 'counting_coin_generator_mobile.html' },
+      { label: 'counting_generator.html', href: 'counting_generator_mobile.html' },
+      { label: 'fluency_grid_generator.html', href: 'fluency_grid_generator_mobile.html' },
+      { label: 'fluency_grid_generator_embeddedJS.html', href: 'fluency_grid_generator_embeddedJS_mobile.html' },
+      { label: 'fluency_grid_generator_final.html', href: 'fluency_grid_generator_final_mobile.html' },
+      { label: 'fluency_grid_generator_final_visual_fixed.html', href: 'fluency_grid_generator_final_visual_fixed_mobile.html' },
+      { label: 'fluency_grid_generator_standalone_fixed.html', href: 'fluency_grid_generator_standalone_fixed_mobile.html' },
+      { label: 'fluency_grid_generator_visual_bordered_fixed.html', href: 'fluency_grid_generator_visual_bordered_fixed_mobile.html' },
+      { label: 'fluency_grid_generator_visual_update_v2.html', href: 'fluency_grid_generator_visual_update_v2_mobile.html' },
+      { label: 'fluency_grid_multisyllabic.html', href: 'fluency_grid_multisyllabic_mobile.html' },
+      { label: 'lock_escape_generator.html', href: 'lock_escape_generator_mobile.html' },
+      { label: 'long_division_colorcoded_generator.html', href: 'long_division_colorcoded_generator_mobile.html' },
+      { label: 'long_division_mainstream_generator.html', href: 'long_division_mainstream_generator_mobile.html' },
+      { label: 'long_division_mainstream_generator_v2.html', href: 'long_division_mainstream_generator_v2_mobile.html' },
+      { label: 'long_division_mainstream_generator_v2_blank.html', href: 'long_division_mainstream_generator_v2_blank_mobile.html' },
+      { label: 'manipulatives_add_sub_generator.html', href: 'manipulatives_add_sub_generator_mobile.html' },
+      { label: 'masterwordladderfinal.html', href: 'masterwordladderfinal_mobile.html' },
+      { label: 'partial_products_2x1_generator.html', href: 'partial_products_2x1_generator_mobile.html' },
+      { label: 'pyramid_spelling_generator.html', href: 'pyramid_spelling_generator_mobile.html' },
+      { label: 'roll_read_multisyllabic.html', href: 'roll_read_multisyllabic_mobile.html' },
+      { label: 'rounding.html', href: 'rounding_mobile.html' },
+      { label: 'sentence_generator.html', href: 'sentence_generator_mobile.html' },
+      { label: 'sentence_generator1.html', href: 'sentence_generator1_mobile.html' },
+      { label: 'spelling.html', href: 'spelling_mobile.html' },
+      { label: 'subtraction_graphic_organizer_generator.html', href: 'subtraction_graphic_organizer_generator_mobile.html' },
+      { label: 'tic_tac_toe_generator.html', href: 'tic_tac_toe_generator_mobile.html' },
+      { label: 'tic_tac_toe_generator1.html', href: 'tic_tac_toe_generator1_mobile.html' },
+      { label: 'tic_tac_toe_generator3.html', href: 'tic_tac_toe_generator3_mobile.html' },
+      { label: 'tic_tac_toe_multisyllabic.html', href: 'tic_tac_toe_multisyllabic_mobile.html' },
+      { label: 'vce_word_generator.html', href: 'vce_word_generator_mobile.html' },
+      { label: 'wordmapmaster.html', href: 'wordmapmaster_mobile.html' },
+    ];
+    const list = document.getElementById('list');
+    files.forEach((item) => {
+      const card = document.createElement('article');
+      card.className = 'card';
+      const name = document.createElement('div');
+      name.className = 'name';
+      name.textContent = item.label;
+      const open = document.createElement('a');
+      open.className = 'btn primary';
+      open.href = item.href;
+      open.textContent = 'Open Locked Preview';
+      card.appendChild(name);
+      card.appendChild(open);
+      list.appendChild(card);
+    });
+  </script>
+</body>
+</html>

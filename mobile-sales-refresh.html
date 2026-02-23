@@ -368,7 +368,7 @@
     .is-join-btn:hover{filter:brightness(.96);box-shadow:0 2px 6px rgba(0,0,0,.18)}
     .is-join-btn:active{filter:brightness(.94);box-shadow:0 1px 3px rgba(0,0,0,.18)}
 
-    .is-intervention-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:12px;background:#fff}
+    .is-intervention-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:12px;background:#fff}
     .is-intervention-card{
       display:block;
       background:#fff;
@@ -377,6 +377,20 @@
       box-shadow:0 1px 0 rgba(0,0,0,.04);
     }
     .is-intervention-head{background:var(--is-blue);color:#fff;font-weight:900;padding:10px 12px;font-size:15px}
+    .is-new-tag{
+      display:inline-block;
+      margin-left:6px;
+      padding:2px 7px;
+      border-radius:999px;
+      border:1px solid #f3cf61;
+      background:#ffeaa0;
+      color:#6e4f00;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.03em;
+      line-height:1;
+      vertical-align:middle;
+    }
     .is-intervention-img{
       width:100%;
       height:220px;
@@ -400,6 +414,7 @@
       .top-logo{max-width:92vw}
       .top-buttons-row{flex-wrap:wrap;justify-content:center}
       .is-slider-viewport{height:var(--slider-h-md)}
+      .is-intervention-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:740px){
@@ -474,51 +489,59 @@
       <aside class="is-nav" id="leftNav" aria-label="Navigation">
         <nav class="is-nav-card">
           <div class="is-nav-group is-nav-home">
-            <a class="is-nav-link is-active" data-view="home" href="https://interventionstation.com/home-preview">&#127968; Home</a>
+            <a class="is-nav-link is-active" data-view="home" href="index.html">&#127968; Home</a>
           </div>
 
-          <div class="is-nav-header">Math Resources</div>
+          <div class="is-nav-header">New + Featured</div>
           <div class="is-nav-group">
-            <a class="is-nav-link" href="https://interventionstation.com/placevalue-preview">Place Value</a>
-            <a class="is-nav-link" href="https://interventionstation.com/rounding-preview">Rounding</a>
-            <a class="is-nav-link" href="https://interventionstation.com/rounding-generator-preview">Rounding Generator</a>
-            <a class="is-nav-link" href="https://interventionstation.com/addition-preview">Addition (Multi Digit)</a>
-            <a class="is-nav-link" href="https://interventionstation.com/multiplication-preview">Multiplication</a>
-            <a class="is-nav-link" href="https://interventionstation.com/division-preview">Long Division</a>
-            <a class="is-nav-link" href="https://interventionstation.com/decimals-preview">Decimals</a>
-            <a class="is-nav-link" href="https://interventionstation.com/fractions-preview">Fractions</a>
-            <a class="is-nav-link" href="https://interventionstation.com/math-song-preview">Math Learning Songs</a>
-            <a class="is-nav-link" href="https://interventionstation.com/google-puzzle-preview">Self Checking Google Sheets Puzzle</a>
-            <a class="is-nav-link" href="https://interventionstation.com/math-riddle-preview">Math Fact Riddles</a>
-            <a class="is-nav-link" href="https://interventionstation.com/ten-frame-preview">Ten Frame Test</a>
+            <a class="is-nav-link" href="ultimate_reading_game_modes_preview.html">Ultimate Reading Game Modes</a>
+            <a class="is-nav-link" href="ultimate_math_game_modes_preview.html">Ultimate Math Game Modes</a>
+            <a class="is-nav-link" href="ultimate_reading_tictactoe_roll_read.html">Interactive Reading Game Board</a>
+            <a class="is-nav-link" href="ultimate_math_tictactoe_roll_read.html">Interactive Math Game Board</a>
+            <a class="is-nav-link" href="match_and_solve_memory_hub.html">Match &amp; Solve Memory Hub</a>
+            <a class="is-nav-link" href="spelling_multisyllabic.html">Multisyllabic Spelling Generator</a>
+            <a class="is-nav-link" href="mobile_generators/index.html">All Mobile Generators</a>
           </div>
 
-          <div class="is-nav-header is-mt-12">SOR Generators</div>
+          <div class="is-nav-header is-mt-12">Math Generators</div>
           <div class="is-nav-group">
-            <a class="is-nav-link" href="https://interventionstation.com/word-map-preview">Word Mapping</a>
-            <a class="is-nav-link" href="https://interventionstation.com/tictacpreview">Tic Tac Toe</a>
-            <a class="is-nav-link" href="https://interventionstation.com/fluencygridpreview">Fluency Grid</a>
-            <a class="is-nav-link" href="https://interventionstation.com/rollreadpreview">Roll and Read</a>
-            <a class="is-nav-link" href="https://interventionstation.com/wordladderpreview">Word Ladder</a>
+            <a class="is-nav-link" href="rounding-preview.html">Rounding</a>
+            <a class="is-nav-link" href="addition-generator-preview.html">Addition Graphic Organizer</a>
+            <a class="is-nav-link" href="subtraction_graphic_organizer_generator.html">Subtraction Graphic Organizer</a>
+            <a class="is-nav-link" href="manipulatives_add_sub_generator.html?v=compact-ui-20260221">Manipulatives Add/Sub</a>
+            <a class="is-nav-link" href="partial_products_2x1_generator.html">Partial Products 2x1</a>
+            <a class="is-nav-link" href="long_division_mainstream_generator_v2.html">Long Division Mainstream v2</a>
+            <a class="is-nav-link" href="long_division_mainstream_generator_v2_blank.html">Long Division Blank v2</a>
+            <a class="is-nav-link" href="long_division_colorcoded_generator.html">Long Division Color-Coded</a>
+            <a class="is-nav-link" href="counting_generator.html">Counting Generator</a>
+            <a class="is-nav-link" href="counting_coin_generator.html">Counting Coin Generator</a>
+            <a class="is-nav-link" href="coin_counting_dot_game.html">Coin Counting Dot Game</a>
+            <a class="is-nav-link" href="ultimate_math_printables_hub.html">Ultimate Math Printables Hub</a>
           </div>
 
-          <div class="is-nav-header is-mt-12">Reading / Phonics</div>
+          <div class="is-nav-header is-mt-12">SOR / Reading Generators</div>
           <div class="is-nav-group">
-            <a class="is-nav-link" href="https://interventionstation.com/games-preview">Learning Games</a>
-            <a class="is-nav-link" href="https://interventionstation.com/heart-words-preview">Heart Words</a>
-            <a class="is-nav-link" href="https://interventionstation.com/phonics-comics-preview">Phonics Comics</a>
-            <a class="is-nav-link" href="https://interventionstation.com/fix-mixup-preview">Fix the Mix Up</a>
-            <a class="is-nav-link" href="https://interventionstation.com/blending-slides-preview">Blending Slides</a>
-            <a class="is-nav-link" href="https://interventionstation.com/phonics-maze-preview">Phonics Path Maze</a>
-            <a class="is-nav-link" href="https://interventionstation.com/pick-the-pic-preview">Pick the Pic</a>
-            <a class="is-nav-link" href="https://interventionstation.com/hfw-pyramid-preview">High Frequency Word Pyramids</a>
-            <a class="is-nav-link" href="https://interventionstation.com/spelling-preview">Spelling by Phonics Skill</a>
-            <a class="is-nav-link" href="https://interventionstation.com/spelling-google-sheets-preview">Spelling Google Sheets</a>
+            <a class="is-nav-link" href="tic_tac_toe_generator.html">Tic Tac Toe Generator</a>
+            <a class="is-nav-link" href="fluency_grid_generator_final_visual_fixed.html">Fluency Grid Generator</a>
+            <a class="is-nav-link" href="roll_read_multisyllabic.html">Roll and Read Generator</a>
+            <a class="is-nav-link" href="masterwordladderfinal.html">Word Ladder Generator</a>
+            <a class="is-nav-link" href="wordmapmaster.html">Word Mapping Generator</a>
+            <a class="is-nav-link" href="wordmapmaster_multisyllabic.html">Word Mapping (Multisyllabic)</a>
+            <a class="is-nav-link" href="spelling.html">Spelling by Skill Generator</a>
+            <a class="is-nav-link" href="pyramid_spelling_generator.html">Pyramid Spelling Generator</a>
+            <a class="is-nav-link" href="spelling_multisyllabic.html">Multisyllabic Spelling Generator</a>
           </div>
 
-          <div class="is-nav-header is-mt-12">Learning Songs</div>
+          <div class="is-nav-header is-mt-12">Games / Engagement</div>
           <div class="is-nav-group">
-            <a class="is-nav-link" href="https://interventionstation.com/math-song-preview">All Learning Songs and Resources</a>
+            <a class="is-nav-link" href="ultimate_reading_tictactoe_roll_read.html">Reading Tic Tac Toe / 4-in-a-Row / Roll &amp; Read</a>
+            <a class="is-nav-link" href="ultimate_math_tictactoe_roll_read.html">Math Tic Tac Toe / 4-in-a-Row / Roll &amp; Read</a>
+            <a class="is-nav-link" href="match_and_solve_memory_hub.html">Match &amp; Solve Memory Hub</a>
+            <a class="is-nav-link" href="picture_tictactoe.html">Picture Tic Tac Toe</a>
+            <a class="is-nav-link" href="lock_escape_generator.html">Lock Escape Generator</a>
+            <a class="is-nav-link" href="snake.html">Snake Game</a>
+            <a class="is-nav-link" href="snowball.html">Snowball</a>
+            <a class="is-nav-link" href="maze.html">Maze</a>
           </div>
         </nav>
       </aside>
@@ -535,35 +558,51 @@
 
               <div class="is-slider-viewport">
                 <div class="is-slider-track" id="isSliderTrack">
-                  <a class="is-slide" href="https://interventionstation.com/phonics-comics-preview">
-                    <img class="is-slide-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530f8a93b0572969e8c.png" alt="Phonics Comics" />
+                  <a class="is-slide" href="ultimate_reading_game_modes_preview.html">
+                    <img class="is-slide-img" src="images/game.png" alt="Ultimate Reading Game Modes" />
                     <div class="is-slide-overlay">
-                      <p class="is-slide-title">Phonics Comics</p>
-                      <p class="is-slide-sub">Decodable stories kids actually want to read</p>
+                      <p class="is-slide-title">Ultimate Reading Game Modes</p>
+                      <p class="is-slide-sub">Tic Tac Toe, 4 in a Row, and Roll &amp; Read</p>
                     </div>
                   </a>
 
-                  <a class="is-slide" href="https://interventionstation.com/fluencygridpreview">
-                    <img class="is-slide-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530e18638d0cfa07bbe.png" alt="Fluency Grid Generator" />
+                  <a class="is-slide" href="ultimate_math_game_modes_preview.html">
+                    <img class="is-slide-img" src="images/math.png" alt="Ultimate Math Game Modes" />
                     <div class="is-slide-overlay">
-                      <p class="is-slide-title">Fluency Grid Generator</p>
-                      <p class="is-slide-sub">Instant skill-based fluency practice</p>
+                      <p class="is-slide-title">Ultimate Math Game Modes</p>
+                      <p class="is-slide-sub">Interactive math game boards across skills</p>
                     </div>
                   </a>
 
-                  <a class="is-slide" href="https://interventionstation.com/math-song-preview">
-                    <img class="is-slide-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c53098efbd78ecbbad10.png" alt="Math Learning Songs" />
+                  <a class="is-slide" href="match_and_solve_memory_hub.html">
+                    <img class="is-slide-img" src="images/check.png" alt="Match and Solve Memory Hub" />
                     <div class="is-slide-overlay">
-                      <p class="is-slide-title">Math Learning Songs</p>
-                      <p class="is-slide-sub">Songs + resources that make routines stick</p>
+                      <p class="is-slide-title">Match &amp; Solve Memory Hub</p>
+                      <p class="is-slide-sub">New memory game modes for review and fluency</p>
                     </div>
                   </a>
 
-                  <a class="is-slide" href="https://interventionstation.com/multiplication-preview">
-                    <img class="is-slide-img" src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/674515a001f2194ec471bb64.png" alt="Multiplication" />
+                  <a class="is-slide" href="spelling_multisyllabic.html">
+                    <img class="is-slide-img" src="nav_assets/phonics3.png" alt="Multisyllabic Spelling Generator" />
                     <div class="is-slide-overlay">
-                      <p class="is-slide-title">Multiplication Intervention</p>
-                      <p class="is-slide-sub">Scaffolds that make hard math doable</p>
+                      <p class="is-slide-title">Multisyllabic Spelling Generator</p>
+                      <p class="is-slide-sub">Build print-ready multisyllabic spelling practice fast</p>
+                    </div>
+                  </a>
+
+                  <a class="is-slide" href="ultimate_math_printables_hub.html">
+                    <img class="is-slide-img" src="nav_assets/multiplication.png" alt="Ultimate Math Printables Hub" />
+                    <div class="is-slide-overlay">
+                      <p class="is-slide-title">Ultimate Math Printables Hub</p>
+                      <p class="is-slide-sub">Central hub for printable math generators</p>
+                    </div>
+                  </a>
+
+                  <a class="is-slide" href="mobile_generators/index.html">
+                    <img class="is-slide-img" src="images/tictac.png" alt="Mobile Generators Hub" />
+                    <div class="is-slide-overlay">
+                      <p class="is-slide-title">Mobile Generators Hub</p>
+                      <p class="is-slide-sub">Quick mobile access to your newest generators</p>
                     </div>
                   </a>
                 </div>
@@ -578,8 +617,8 @@
 
             <section class="is-top-cta" aria-label="Primary call to action">
               <div class="is-top-cta-text">
-                <h1>Printable Resources + Generators for Busy Teachers</h1>
-                <p>Scaffolded math &amp; reading support, a growing library of learning songs, and print-in-seconds generators that save you hours every week.</p>
+                <h1>New Game Modes + Generator Hubs Are Live</h1>
+                <p>Your newest reading/math game boards and multisyllabic generators are now front and center. Use the left menu to jump by section and open any tool instantly.</p>
               </div>
               <div class="is-top-cta-action">
                 <a class="is-join-btn" href="https://member.interventionstation.com/join" target="_blank" rel="noopener noreferrer nofollow">Join Membership</a>
@@ -587,38 +626,56 @@
             </section>
 
             <section class="is-intervention-grid">
-              <a class="is-intervention-card" href="https://interventionstation.com/multiplication-preview">
-                <div class="is-intervention-head">Math Resources</div>
-                <img class="is-intervention-img" src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/674515a001f2194ec471bb64.png" alt="Math resources preview" />
+              <a class="is-intervention-card" href="ultimate_reading_tictactoe_roll_read.html">
+                <div class="is-intervention-head">Reading Game Board <span class="is-new-tag">NEW</span></div>
+                <img class="is-intervention-img" src="images/game.png" alt="Reading game board preview" />
                 <div class="is-intervention-body">
-                  <p>Place value, rounding, multiplication, division, fractions, and more</p>
+                  <p>Printable-friendly reading Tic Tac Toe, 4 in a Row, and Roll &amp; Read modes.</p>
                   <span class="is-intervention-link">Explore &rarr;</span>
                 </div>
               </a>
 
-              <a class="is-intervention-card" href="https://interventionstation.com/phonics-comics-preview">
-                <div class="is-intervention-head">Reading &amp; Phonics</div>
-                <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b07d871dd47.png" alt="Reading and phonics preview" />
+              <a class="is-intervention-card" href="ultimate_math_tictactoe_roll_read.html">
+                <div class="is-intervention-head">Math Game Board <span class="is-new-tag">NEW</span></div>
+                <img class="is-intervention-img" src="images/math.png" alt="Math game board preview" />
                 <div class="is-intervention-body">
-                  <p>Phonics comics, heart words, Fix the Mix Up, and learning games</p>
+                  <p>Interactive math game modes that cover counting through long division.</p>
                   <span class="is-intervention-link">Explore &rarr;</span>
                 </div>
               </a>
 
-              <a class="is-intervention-card" href="https://interventionstation.com/fluencygridpreview">
-                <div class="is-intervention-head">SOR Generators</div>
-                <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b5d5571dd46.png" alt="SOR generators preview" />
+              <a class="is-intervention-card" href="match_and_solve_memory_hub.html">
+                <div class="is-intervention-head">Memory Hub <span class="is-new-tag">NEW</span></div>
+                <img class="is-intervention-img" src="images/check.png" alt="Match and solve memory hub preview" />
                 <div class="is-intervention-body">
-                  <p>Tic Tac Toe, Fluency Grid, Roll and Read, Word Mapping, and Word Ladder</p>
+                  <p>Fast setup memory-style review games for math and reading small groups.</p>
                   <span class="is-intervention-link">Explore &rarr;</span>
                 </div>
               </a>
 
-              <a class="is-intervention-card" href="https://interventionstation.com/math-song-preview">
-                <div class="is-intervention-head">Learning Songs</div>
-                <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049e186383c509dc54f.png" alt="Learning songs preview" />
+              <a class="is-intervention-card" href="spelling_multisyllabic.html">
+                <div class="is-intervention-head">Multisyllabic Spelling <span class="is-new-tag">NEW</span></div>
+                <img class="is-intervention-img" src="nav_assets/phonics3.png" alt="Multisyllabic spelling generator preview" />
                 <div class="is-intervention-body">
-                  <p>Math learning songs with printables, posters, and classroom routines</p>
+                  <p>Create fresh multisyllabic spelling pages in seconds with printable output.</p>
+                  <span class="is-intervention-link">Explore &rarr;</span>
+                </div>
+              </a>
+
+              <a class="is-intervention-card" href="ultimate_math_printables_hub.html">
+                <div class="is-intervention-head">Math Printables Hub <span class="is-new-tag">NEW</span></div>
+                <img class="is-intervention-img" src="nav_assets/multiplication.png" alt="Ultimate math printables hub preview" />
+                <div class="is-intervention-body">
+                  <p>One place for your newest printable math generators and skill pathways.</p>
+                  <span class="is-intervention-link">Explore &rarr;</span>
+                </div>
+              </a>
+
+              <a class="is-intervention-card" href="mobile_generators/index.html">
+                <div class="is-intervention-head">Mobile Generators</div>
+                <img class="is-intervention-img" src="images/tictac.png" alt="Mobile generators hub preview" />
+                <div class="is-intervention-body">
+                  <p>Open mobile-first versions of your generators for quick classroom access.</p>
                   <span class="is-intervention-link">Explore &rarr;</span>
                 </div>
               </a>
