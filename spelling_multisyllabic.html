@@ -36,14 +36,13 @@
       max-width: 1150px;
       margin: 0 auto 16px;
       display: grid;
-      grid-template-columns: minmax(260px, 1fr) max-content;
-      grid-template-rows: 1fr 1fr;
+      grid-template-columns: minmax(360px, 1.15fr) minmax(280px, 0.85fr);
+      grid-template-rows: auto;
       gap: 12px;
       align-items: stretch;
     }
-    .layout .left { grid-column: 1; grid-row: 1 / span 2; }
-    .layout .right-top { grid-column: 2; grid-row: 1; }
-    .layout .right-bottom { grid-column: 2; grid-row: 2; }
+    .layout .left { grid-column: 1; grid-row: 1; }
+    .layout .right { grid-column: 2; grid-row: 1; }
 
     .table-section {
       border: 2px solid #000;
@@ -56,23 +55,40 @@
     .section-label { text-align: center; font-weight: 700; font-size: 18px; margin-bottom: 10px; }
 
     .skill-menu-compact { display: grid; gap: 10px; }
+    .step1-split {
+      grid-template-columns: minmax(165px, 0.42fr) minmax(230px, 0.58fr);
+      align-items: start;
+    }
+    .category-panel {
+      border: 2px solid #000;
+      border-radius: 12px;
+      background: #fbfdff;
+      padding: 8px;
+    }
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 8px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
     }
     .category-tile {
       border: 2px solid #000;
-      border-radius: 10px;
-      padding: 10px 8px;
-      min-height: 48px;
+      border-radius: 8px;
+      padding: 6px 6px;
+      min-height: 36px;
       background: #fff;
       font: inherit;
-      font-size: 14px;
-      font-weight: 800;
+      font-size: 12px;
+      font-weight: 700;
       cursor: pointer;
       line-height: 1.05;
       transition: transform .08s ease, box-shadow .18s ease, background-color .18s ease, color .18s ease;
+    }
+    .category-tile.locked {
+      background: #111 !important;
+      border-color: #111;
+      color: #fff !important;
+      opacity: 0.9;
+      cursor: not-allowed;
     }
     .category-tile:active { transform: translateY(1px); }
     .category-tile.active { color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22); }
@@ -110,18 +126,19 @@
       margin-bottom: 8px;
     }
     .subskills-wrap {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 8px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
     }
 
     .skill-button {
       border: 2px solid #000;
-      border-radius: 10px;
-      padding: 6px 10px;
-      min-height: 34px;
-      font-size: 14px;
+      border-radius: 8px;
+      padding: 6px 8px;
+      min-height: 30px;
+      width: 100%;
+      text-align: left;
+      font-size: 13px;
       font-weight: 700;
       background: #fff;
       cursor: pointer;
@@ -138,8 +155,18 @@
     .skill-button.variant.selected { background: var(--variant-selected); color: #fff; }
     .skill-button.soft.selected { background: var(--soft-selected); color: #fff; }
     .skill-button.multi.selected { background: var(--multi-selected); color: #fff; }
+    .skill-button.locked {
+      background: #111;
+      border-color: #111;
+      color: #fff;
+      opacity: 0.88;
+      cursor: not-allowed;
+    }
+    .skill-button.locked.selected {
+      box-shadow: none;
+    }
 
-    .option-grid { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .option-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
     .option-box {
       border: 2px solid #000;
       border-radius: 10px;
@@ -147,6 +174,7 @@
       font-weight: 600;
       background: #fff;
       cursor: pointer;
+      text-align: center;
     }
     .option-box.selected { background: #d9c9ff; }
     .option-box.disabled { opacity: 0.45; pointer-events: none; }
@@ -196,6 +224,59 @@
     }
     button.action.primary { background: #111; color: #fff; }
     .status { margin-top: 8px; text-align: center; font-size: 12px; color: #666; min-height: 18px; }
+    .preview-note {
+      border: 2px solid #000;
+      border-radius: 10px;
+      background: #f5f7fb;
+      padding: 7px 9px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .worksheet-page { position: relative; }
+
+    body.preview-mode #printArea {
+      position: relative;
+      max-height: 76vh;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+    body.preview-mode #printArea::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 160px;
+      background: linear-gradient(180deg, rgba(250, 250, 250, 0), rgba(250, 250, 250, 0.98) 70%);
+      pointer-events: none;
+      z-index: 8;
+    }
+    body.preview-mode #printArea .page {
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body.preview-mode #printArea .page:not(.worksheet-page) {
+      display: none;
+    }
+    body.preview-mode #printArea .worksheet-page::before {
+      content: "PREVIEW ONLY  •  MEMBERS VERSION UNLOCKS FULL PAGES  •  PREVIEW ONLY";
+      position: absolute;
+      inset: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: clamp(18px, 3vw, 30px);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: rgba(0, 0, 0, 0.18);
+      transform: rotate(-16deg);
+      pointer-events: none;
+      z-index: 6;
+    }
 
     #printArea { max-width: 1200px; margin: 0 auto; }
     .page {
@@ -415,6 +496,7 @@
       .table-section { margin-bottom: 12px; }
       .actions-sticky { position: static; }
       .page h2 { font-size: 24px; }
+      .step1-split { grid-template-columns: 1fr; }
       .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .worksheet-grid { grid-template-columns: repeat(2, 1fr); }
     }
@@ -480,8 +562,11 @@
     <div class="left">
       <div class="table-section">
         <div class="section-label">Step 1: Select Category + Skills</div>
-        <div class="skill-menu-compact">
-          <div id="categoryGrid" class="category-grid" aria-label="Skill Categories"></div>
+        <div class="skill-menu-compact step1-split">
+          <div class="category-panel">
+            <div class="subskill-title">Categories</div>
+            <div id="categoryGrid" class="category-grid" aria-label="Skill Categories"></div>
+          </div>
           <div id="subSkillPanel" class="subskill-panel">
             <div class="subskill-title">Choose a category above.</div>
             <div class="subskills-wrap"></div>
@@ -490,19 +575,16 @@
       </div>
     </div>
 
-    <div class="right-top">
-      <div class="table-section">
-        <div class="section-label">Step 2: Include Blends?</div>
-        <div class="option-grid">
+    <div class="right">
+      <div class="table-section actions-sticky">
+        <div class="section-label">Step 2: Options + Auto-Generate</div>
+        <div class="preview-note">Preview mode: Short A is playable. Most other skills are locked.</div>
+
+        <div class="small-label" style="text-align:center; margin-top:2px;">Include Blends:</div>
+        <div class="option-grid" style="margin-top:6px;">
           <div class="option-box" id="includeBlendsYes">Yes (4+ sounds)</div>
           <div class="option-box selected" id="includeBlendsNo">No (3 sounds)</div>
         </div>
-      </div>
-    </div>
-
-    <div class="right-bottom">
-      <div class="table-section actions-sticky">
-        <div class="section-label">Step 3: Auto-Generate & Print</div>
 
         <div class="chips-title">Skills Selected:</div>
         <div id="chips" class="chips-wrap"></div>
@@ -595,6 +677,9 @@
       let generating = false;
       let rerunRequested = false;
       let seededInlineMaps = false;
+      const PREVIEW_MODE = true;
+      const PREVIEW_CARD_LIMIT = 3;
+      const PREVIEW_UNLOCKED_SKILLS = new Set(["Short A"]);
       const CATEGORY_CONFIG = [
         {
           id: "cvc",
@@ -728,7 +813,8 @@
       }
 
       function getTargetWordCount() {
-        return isWordBankMode() ? 6 : 9;
+        const baseCount = isWordBankMode() ? 6 : 9;
+        return PREVIEW_MODE ? Math.min(baseCount, PREVIEW_CARD_LIMIT) : baseCount;
       }
 
       function updateFormatNote() {
@@ -783,15 +869,46 @@
         return CATEGORY_CONFIG.find((group) => group.id === id) || CATEGORY_CONFIG[0];
       }
 
+      function isSkillLocked(skill) {
+        return PREVIEW_MODE && !PREVIEW_UNLOCKED_SKILLS.has(skill);
+      }
+
+      function isCategoryLocked(group) {
+        return PREVIEW_MODE && group.skills.every((entry) => isSkillLocked(entry.skill));
+      }
+
+      function enforcePreviewSelection() {
+        if (!PREVIEW_MODE) return;
+        Array.from(selectedSkills).forEach((skill) => {
+          if (isSkillLocked(skill)) selectedSkills.delete(skill);
+        });
+        if (selectedSkills.size > 0) return;
+        const fallbackSkill = Array.from(PREVIEW_UNLOCKED_SKILLS).find((skill) =>
+          CATEGORY_CONFIG.some((group) => group.skills.some((entry) => entry.skill === skill))
+        );
+        if (!fallbackSkill) return;
+        selectedSkills.add(fallbackSkill);
+        const fallbackGroup = CATEGORY_CONFIG.find((group) =>
+          group.skills.some((entry) => entry.skill === fallbackSkill)
+        );
+        if (fallbackGroup) activeCategoryId = fallbackGroup.id;
+      }
+
       function renderCategoryTiles() {
         if (!categoryGridEl) return;
         categoryGridEl.innerHTML = "";
         CATEGORY_CONFIG.forEach((group) => {
+          const categoryLocked = isCategoryLocked(group);
           const button = document.createElement("button");
           button.type = "button";
-          button.className = "category-tile " + group.buttonClass + (group.id === activeCategoryId ? " active" : "");
+          button.className = "category-tile " + group.buttonClass + (group.id === activeCategoryId ? " active" : "") + (categoryLocked ? " locked" : "");
           button.textContent = group.label;
+          if (categoryLocked) {
+            button.disabled = true;
+            button.title = "Locked in preview";
+          }
           button.addEventListener("click", () => {
+            if (categoryLocked) return;
             activeCategoryId = group.id;
             renderCategoryTiles();
             renderSubSkillPanel();
@@ -814,12 +931,18 @@
         wrap.className = "subskills-wrap";
 
         group.skills.forEach((entry) => {
+          const locked = isSkillLocked(entry.skill);
           const button = document.createElement("button");
           button.type = "button";
-          button.className = "skill-button " + group.buttonClass + (selectedSkills.has(entry.skill) ? " selected" : "");
+          button.className = "skill-button " + group.buttonClass + (selectedSkills.has(entry.skill) ? " selected" : "") + (locked ? " locked" : "");
           button.dataset.skill = entry.skill;
           button.textContent = entry.label;
+          if (locked) {
+            button.disabled = true;
+            button.title = "Locked in preview";
+          }
           button.addEventListener("click", () => {
+            if (locked) return;
             if (selectedSkills.has(entry.skill)) {
               selectedSkills.delete(entry.skill);
               button.classList.remove("selected");
@@ -836,6 +959,7 @@
       }
 
       function renderChips() {
+        enforcePreviewSelection();
         const wrap = document.getElementById("chips");
         wrap.innerHTML = "";
         Array.from(selectedSkills).forEach((skill) => {
@@ -844,6 +968,7 @@
           chip.innerHTML = "<span>" + skill + "</span><span class='x' title='Remove'>×</span>";
           chip.querySelector(".x").addEventListener("click", () => {
             selectedSkills.delete(skill);
+            enforcePreviewSelection();
             renderSubSkillPanel();
             renderChips();
             scheduleAutoGenerate();
@@ -917,7 +1042,9 @@
           });
         });
 
+      document.body.classList.toggle("preview-mode", PREVIEW_MODE);
       updateFormatNote();
+      enforcePreviewSelection();
       renderCategoryTiles();
       renderSubSkillPanel();
       renderChips();
@@ -927,6 +1054,10 @@
       }, 0);
 
       document.getElementById("btnPrint").addEventListener("click", () => {
+        if (PREVIEW_MODE) {
+          statusEl.textContent = "Printing is disabled in preview mode.";
+          return;
+        }
         if (lastGenerated.length === 0) {
           statusEl.textContent = "Generate a worksheet first.";
           return;
@@ -1386,6 +1517,7 @@
       }
 
       async function generateWorksheet() {
+        enforcePreviewSelection();
         if (selectedSkills.size === 0) {
           statusEl.textContent = "Select at least one skill.";
           return;
@@ -1424,7 +1556,9 @@
 
         lastGenerated = selected.slice();
         renderPages(selected);
-        if (selected.length < count) {
+        if (PREVIEW_MODE) {
+          statusEl.textContent = "Preview generated: " + selected.length + " sample cards.";
+        } else if (selected.length < count) {
           statusEl.textContent = "Generated " + selected.length + " cards (requested " + count + "). Only image-matched words were used.";
         } else {
           statusEl.textContent = "Generated " + selected.length + " image-matched cards.";
@@ -1436,6 +1570,7 @@
         const useSyllableMode = (document.querySelector("input[name='patternMode']:checked")?.value === "syllables");
         const useUnderlines = !useSyllableMode && (document.querySelector("input[name='cellStyle']:checked")?.value === "underlines");
         const useWordBank = isWordBankMode();
+        const renderWords = PREVIEW_MODE ? words.slice(0, PREVIEW_CARD_LIMIT) : words.slice();
 
         const worksheet = document.createElement("div");
         worksheet.className = "page worksheet-page " + (useWordBank ? "with-word-bank" : "no-word-bank");
@@ -1468,7 +1603,7 @@
 
         const meta = document.createElement("div");
         meta.className = "page-meta";
-        meta.textContent = skillsText + " | Blends: " + (includeBlends ? "Yes" : "No");
+        meta.textContent = skillsText + " | Blends: " + (includeBlends ? "Yes" : "No") + (PREVIEW_MODE ? " | Preview Sample" : "");
         worksheet.appendChild(meta);
 
         if (useWordBank) {
@@ -1480,7 +1615,7 @@
           bank.appendChild(bankTitle);
           const bankList = document.createElement("div");
           bankList.className = "word-bank-list";
-          const randomizedBank = shuffle(words.slice());
+          const randomizedBank = shuffle(renderWords.slice());
           randomizedBank.forEach((item) => {
             const pill = document.createElement("span");
             pill.className = "word-pill";
@@ -1495,7 +1630,7 @@
         const grid = document.createElement("div");
         grid.className = "worksheet-grid";
 
-        words.forEach((item, index) => {
+        renderWords.forEach((item, index) => {
           const card = document.createElement("div");
           card.className = "card";
 
@@ -1535,6 +1670,11 @@
         worksheet.appendChild(footer);
         printArea.appendChild(worksheet);
 
+        if (PREVIEW_MODE) {
+          printArea.scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+
         const answer = document.createElement("div");
         answer.className = "page";
         answer.innerHTML =
@@ -1544,16 +1684,16 @@
         const table = document.createElement("table");
         table.className = "answer-table";
         const cols = 3;
-        const rows = Math.ceil(words.length / cols);
+        const rows = Math.ceil(renderWords.length / cols);
 
         for (let r = 0; r < rows; r += 1) {
           const tr = document.createElement("tr");
           for (let c = 0; c < cols; c += 1) {
             const td = document.createElement("td");
             const i = r * cols + c;
-            if (i < words.length) {
-              td.textContent = String(i + 1) + ". " + words[i].word;
-              td.style.fontSize = getAnswerFontSize(words[i].word);
+            if (i < renderWords.length) {
+              td.textContent = String(i + 1) + ". " + renderWords[i].word;
+              td.style.fontSize = getAnswerFontSize(renderWords[i].word);
             } else {
               td.innerHTML = "&nbsp;";
             }
