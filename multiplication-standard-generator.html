@@ -51,6 +51,8 @@
           const doc = frame.contentDocument;
           if (!doc) return;
 
+          // Force non-Tic-Tac-Toe worksheet mode for multiplication preview.
+          clickIfPresent(doc, '#gameTypeRow .pill[data-game-type="rollread"]');
           // Configure the math hub to multiplication so this is distinct from partial products.
           clickIfPresent(doc, '#operationRow .pill[data-operation="multiplication"]');
           setDifficulty(doc);
