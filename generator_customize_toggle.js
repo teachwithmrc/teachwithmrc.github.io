@@ -118,7 +118,7 @@
 
     toggleBtn.addEventListener("click", function () {
       const collapsed = container.classList.toggle("is-customize-collapsed");
-      toggleBtn.textContent = collapsed ? "Customize" : "Hide Customize";
+      toggleBtn.textContent = "Customize";
       toggleBtn.setAttribute("aria-expanded", String(!collapsed));
     });
 

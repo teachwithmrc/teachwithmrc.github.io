@@ -75,20 +75,71 @@
       padding: 10px 8px;
       cursor: pointer;
       min-height: 58px;
+      transition: transform 120ms ease, filter 120ms ease;
+    }
+
+    .tab:hover {
+      filter: brightness(0.98);
+      transform: translateY(-1px);
+    }
+
+    .tab[data-mode="ttt"] {
+      background: #eaf4ff;
+      border-color: #2e6ca4;
+    }
+
+    .tab[data-mode="connect4"] {
+      background: #fff4ea;
+      border-color: #b26427;
+    }
+
+    .tab[data-mode="rollread"] {
+      background: #ecfaf2;
+      border-color: #2c7f59;
     }
 
     .tab.active {
-      background: #111;
       color: #fff;
+      transform: translateY(0);
+    }
+
+    .tab[data-mode="ttt"].active {
+      background: #1f629f;
+      border-color: #1f629f;
+    }
+
+    .tab[data-mode="connect4"].active {
+      background: #a95d23;
+      border-color: #a95d23;
+    }
+
+    .tab[data-mode="rollread"].active {
+      background: #1f734f;
+      border-color: #1f734f;
     }
 
     .panel {
       display: none;
       background: var(--card);
-      border: 2px solid #000;
+      border: 3px solid #000;
       border-radius: 14px;
       padding: 14px;
       box-shadow: 0 9px 20px rgba(28, 52, 84, 0.12);
+    }
+
+    .panel[data-panel="ttt"] {
+      background: linear-gradient(180deg, #f7fbff 0%, #edf6ff 100%);
+      border-color: #2e6ca4;
+    }
+
+    .panel[data-panel="connect4"] {
+      background: linear-gradient(180deg, #fff9f3 0%, #fff2e5 100%);
+      border-color: #b26427;
+    }
+
+    .panel[data-panel="rollread"] {
+      background: linear-gradient(180deg, #f4fcf7 0%, #ebf8f0 100%);
+      border-color: #2c7f59;
     }
 
     .panel.active { display: block; }
@@ -98,6 +149,27 @@
       text-align: center;
       font-size: 1.35rem;
     }
+
+    .panel-preview {
+      width: min(720px, 100%);
+      margin: 0 auto 10px;
+      border: 2px solid #000;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 8px 16px rgba(22, 45, 73, 0.1);
+    }
+
+    .panel-preview img {
+      display: block;
+      width: 100%;
+      height: clamp(140px, 26vw, 220px);
+      object-fit: cover;
+    }
+
+    .panel[data-panel="ttt"] .panel-preview { border-color: #2e6ca4; }
+    .panel[data-panel="connect4"] .panel-preview { border-color: #b26427; }
+    .panel[data-panel="rollread"] .panel-preview { border-color: #2c7f59; }
 
     .meta {
       text-align: center;
@@ -498,6 +570,7 @@
       .cell { min-height: 108px; }
       .prompt { font-size: 0.92rem; }
       .roll-table td { font-size: 0.84rem; height: 64px; }
+      .panel-preview img { height: 140px; }
     }
   </style>
 </head>
@@ -515,6 +588,9 @@
 
     <section class="panel active" data-panel="ttt">
       <h2>Subtraction Tic Tac Toe</h2>
+      <figure class="panel-preview">
+        <img src="images/tictac.png" alt="Math Tic Tac Toe preview board">
+      </figure>
       <p class="meta">Solve the subtraction problem to claim your square.</p>
       <p class="score" id="tttScore"></p>
       <p class="turn-indicator" id="tttTurn"></p>
@@ -532,6 +608,9 @@
 
     <section class="panel" data-panel="connect4">
       <h2>Subtraction 4 in a Row</h2>
+      <figure class="panel-preview">
+        <img src="images/row.png" alt="Math 4 in a Row preview board">
+      </figure>
       <p class="meta">Answer the prompt card correctly, then drop your checker.</p>
       <p class="score" id="c4Score"></p>
       <p class="turn-indicator" id="c4Turn"></p>
@@ -553,6 +632,9 @@
 
     <section class="panel" data-panel="rollread">
       <h2>Subtraction Roll and Read</h2>
+      <figure class="panel-preview">
+        <img src="images/game.png" alt="Math Roll and Read preview board">
+      </figure>
       <p class="meta">Roll, answer the highlighted subtraction problem, and keep going.</p>
       <div class="roll-controls">
         <div class="die"><img id="rrDieImg" class="die-img" src="images/dice1.png" alt="Current die: 1"></div>

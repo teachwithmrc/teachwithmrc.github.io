@@ -305,6 +305,66 @@
     }
     .buy-btn--secondary:hover{ background:#f6f9ff; }
 
+    .is-download-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background:#111;
+      color:#fff;
+      border:2px solid #111;
+      border-radius:10px;
+      padding:10px 14px;
+      font-weight:900;
+      font-family:"Poppins",system-ui,sans-serif;
+      font-size:14px;
+      line-height:1;
+      opacity:.72;
+      cursor:not-allowed;
+      pointer-events:none;
+    }
+
+    body .lock-wrap{
+      text-align:center !important;
+      margin-top:2px !important;
+    }
+    body .is-download-btn{
+      appearance:none !important;
+      border:1px solid #0f335b !important;
+      background:linear-gradient(180deg, #2f79b8 0%, #1e5688 100%) !important;
+      color:#fff !important;
+      border-radius:999px !important;
+      height:46px !important;
+      padding:0 18px !important;
+      font-family:"Poppins",system-ui,sans-serif !important;
+      font-size:14px !important;
+      font-weight:800 !important;
+      letter-spacing:.01em !important;
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      gap:8px !important;
+      box-shadow:0 8px 16px rgba(16,40,70,.2) !important;
+      cursor:not-allowed !important;
+      opacity:1 !important;
+      pointer-events:none !important;
+    }
+    body .is-download-btn .lock{
+      width:18px !important;
+      height:18px !important;
+      border-radius:50% !important;
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      font-size:12px !important;
+      line-height:1 !important;
+      background:rgba(255,255,255,.18) !important;
+      border:1px solid rgba(255,255,255,.35) !important;
+    }
+    body .is-download-btn:disabled{
+      filter:none !important;
+      opacity:1 !important;
+    }
+
     .preview-frame-wrap{
       border:2px solid #111;
       border-radius:12px;
@@ -486,7 +546,7 @@
                   </div>
                   <p style="margin:0 0 12px;">Quick divisibility checks to support multiplication facts, factors, and number sense.</p>
                   <div style="text-align:center;">
-                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true">🔒 Locked (Members Only)</button>
+                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button>
                   </div>
                 </div>
 
@@ -497,7 +557,7 @@
                   </div>
                   <p style="margin:0 0 12px;">A clean multiplication chart for fact practice, patterns, and strategy work.</p>
                   <div style="text-align:center;">
-                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true">🔒 Locked (Members Only)</button>
+                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button>
                   </div>
                 </div>
               </div>
@@ -510,7 +570,7 @@
                   </div>
                   <p style="margin:0 0 12px;">Break multiplication into tens and ones for strong place-value understanding.</p>
                   <div style="text-align:center;">
-                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true">🔒 Locked (Members Only)</button>
+                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button>
                   </div>
                 </div>
 
@@ -521,7 +581,7 @@
                   </div>
                   <p style="margin:0 0 12px;">Extend partial products to hundreds for bigger-number multiplication success.</p>
                   <div style="text-align:center;">
-                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true">🔒 Locked (Members Only)</button>
+                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button>
                   </div>
                 </div>
               </div>
@@ -534,7 +594,7 @@
                   </div>
                   <p style="margin:0 0 12px;">Multiply by place value parts to reduce errors and build conceptual clarity.</p>
                   <div style="text-align:center;">
-                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true">🔒 Locked (Members Only)</button>
+                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button>
                   </div>
                 </div>
 
@@ -545,7 +605,7 @@
                   </div>
                   <p style="margin:0 0 12px;">Step-by-step standard algorithm practice to reinforce accuracy and alignment.</p>
                   <div style="text-align:center;">
-                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true">🔒 Locked (Members Only)</button>
+                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button>
                   </div>
                 </div>
               </div>
@@ -558,7 +618,7 @@
                   </div>
                   <p style="margin:0 0 12px;">Multiply 4-digit numbers by 1-digit factors with structured place-value steps.</p>
                   <div style="text-align:center;">
-                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true">🔒 Locked (Members Only)</button>
+                    <button class="is-download-btn" type="button" disabled="" aria-disabled="true" title="Members only"><span class="lock">🔒</span>Locked - Members Only</button>
                   </div>
                 </div>
 

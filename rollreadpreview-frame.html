@@ -134,11 +134,11 @@
         clickIfPresent(doc, '[data-pick-game="rollread"]');
 
         doc
-          .querySelectorAll('.skill-button.selected:not([data-skill="Short A"])')
+          .querySelectorAll('.skill-button.selected:not([data-skill="FLSZ"])')
           .forEach((button) => button.click());
 
-        const shortA = doc.querySelector('.skill-button[data-skill="Short A"]');
-        if (shortA && !shortA.classList.contains("selected")) shortA.click();
+        const flsz = doc.querySelector('.skill-button[data-skill="FLSZ"]');
+        if (flsz && !flsz.classList.contains("selected")) flsz.click();
 
         ensureOptionSelected(doc, '#blendOptions .option-box[data-blends="no"]');
         ensureOptionSelected(doc, '#contentOptions .option-box[data-mode="words"]');

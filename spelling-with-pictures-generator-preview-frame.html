@@ -113,7 +113,7 @@
     <iframe
       id="liveFrame"
       class="live-frame"
-      src="spelling_multisyllabic.html?v=20260223-spellingpics-live"
+      src="spelling_multisyllabic.html?v=20260224-spellingpics-vce-example"
       title="Spelling with Pictures Generator Preview"
       loading="eager"
     ></iframe>
@@ -137,6 +137,93 @@
         alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access.");
       }
 
+      function applyCompactPreviewStyle(frameDoc) {
+        if (!frameDoc || frameDoc.getElementById("isSpellingPicsPreviewStyle")) return;
+        const style = frameDoc.createElement("style");
+        style.id = "isSpellingPicsPreviewStyle";
+        style.textContent = `
+          .layout.is-customize-collapsed .left {
+            display: none !important;
+          }
+
+          .layout.is-customize-collapsed .right {
+            width: 100% !important;
+          }
+
+          .layout.is-customize-collapsed .actions-sticky {
+            max-width: 560px !important;
+            margin: 0 auto !important;
+          }
+
+          #isPreviewExampleLabel {
+            display: none;
+            margin: 6px 0 8px;
+            text-align: center;
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #1f365f;
+          }
+
+          .layout.is-customize-collapsed #isPreviewExampleLabel {
+            display: block !important;
+          }
+
+          .layout:not(.is-customize-collapsed) #isPreviewExampleLabel {
+            display: none !important;
+          }
+        `;
+        frameDoc.head.appendChild(style);
+      }
+
+      function applyPreviewDefaults(frameDoc) {
+        if (!frameDoc || frameDoc.body.dataset.isPreviewDefaultsApplied === "1") return;
+
+        const layout = frameDoc.querySelector(".layout");
+        if (layout) {
+          layout.classList.add("is-customize-collapsed");
+        }
+
+        const chips = frameDoc.getElementById("chips");
+        if (chips && chips.children.length > 0) {
+          const first = chips.querySelector("span");
+          if (first) {
+            first.textContent = "VCe Example";
+          }
+        }
+
+        const actionsPanel = frameDoc.querySelector(".actions-sticky");
+        const generateRow = frameDoc.querySelector(".btn-row");
+        if (actionsPanel && generateRow && !frameDoc.getElementById("isPreviewExampleLabel")) {
+          const label = frameDoc.createElement("div");
+          label.id = "isPreviewExampleLabel";
+          label.textContent = "VCe Example";
+          label.className = "is-customize-node is-customize-keep";
+          generateRow.insertAdjacentElement("beforebegin", label);
+        }
+
+        frameDoc.body.dataset.isPreviewDefaultsApplied = "1";
+      }
+
+      function queuePreviewAutogen(frameDoc) {
+        if (!frameDoc || frameDoc.body.dataset.isPreviewAutogen === "1") return;
+        const generateBtn = frameDoc.getElementById("btnGenerate");
+        if (!generateBtn) return;
+        frameDoc.body.dataset.isPreviewAutogen = "1";
+
+        let attempts = 0;
+        const run = function () {
+          attempts += 1;
+          const hasOutput = !!frameDoc.querySelector("#printArea .worksheet-page");
+          if (hasOutput) return;
+          generateBtn.click();
+          if (attempts < 6) {
+            window.setTimeout(run, 260);
+          }
+        };
+
+        window.setTimeout(run, 150);
+      }
+
       function blockShortcuts(event) {
         const blocked = (event.ctrlKey || event.metaKey) && ["p", "s", "u"].includes(String(event.key || "").toLowerCase());
         if (blocked) {
@@ -152,6 +239,13 @@
           const frameWin = liveFrame.contentWindow;
           const frameDoc = liveFrame.contentDocument || frameWin.document;
           if (!frameDoc) return;
+
+          applyCompactPreviewStyle(frameDoc);
+          applyPreviewDefaults(frameDoc);
+          window.setTimeout(function () {
+            applyPreviewDefaults(frameDoc);
+          }, 180);
+          queuePreviewAutogen(frameDoc);
 
           frameDoc.addEventListener("contextmenu", function (e) { e.preventDefault(); });
           frameDoc.addEventListener("keydown", blockShortcuts);
