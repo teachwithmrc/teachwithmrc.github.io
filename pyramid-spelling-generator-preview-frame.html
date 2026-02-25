@@ -312,6 +312,118 @@
         frameDoc.body.dataset.isPreviewControlsLocked = "1";
       }
 
+      function condensePreviewUI(frameDoc) {
+        if (!frameDoc || frameDoc.body.dataset.isPreviewCondensed === "1") return;
+
+        const style = frameDoc.createElement("style");
+        style.id = "isPreviewCondensedStyle";
+        style.textContent = `
+          h1 {
+            font-size: 1.3rem !important;
+            margin: 0 0 4px !important;
+          }
+
+          .subtitle {
+            display: none !important;
+          }
+
+          .layout {
+            gap: 6px !important;
+          }
+
+          .panel {
+            padding: 8px !important;
+          }
+
+          .section-title {
+            margin: 0 0 6px !important;
+            font-size: 0.9rem !important;
+          }
+
+          .skill-block {
+            margin-bottom: 6px !important;
+          }
+
+          .skill-header {
+            padding: 6px !important;
+            font-size: 0.9rem !important;
+          }
+
+          .skill-header .arrow {
+            display: none !important;
+          }
+
+          .skills-inner {
+            display: grid !important;
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            gap: 6px !important;
+            padding: 6px !important;
+          }
+
+          .skills-inner .break {
+            display: none !important;
+          }
+
+          .skill-button {
+            width: 100% !important;
+            padding: 6px 4px !important;
+            font-size: 0.78rem !important;
+            min-height: 30px !important;
+          }
+
+          .skill-block:not(.bg-dig) {
+            display: none !important;
+          }
+
+          #skillMeta {
+            display: none !important;
+          }
+
+          .panel:nth-of-type(2) .section-title,
+          .panel:nth-of-type(2) .layout-title,
+          #modeRow,
+          #modeHelp,
+          #blendModeRow,
+          #wordSourceRow,
+          #wordSourceMeta,
+          #manualWordsWrap,
+          .divider,
+          #soundLayoutRow,
+          #soundLayoutMeta,
+          #wordBankMeta,
+          #btnPrint,
+          #btnClearWords,
+          #status,
+          #stickyPrintWrap {
+            display: none !important;
+          }
+
+          .button-row {
+            margin-top: 0 !important;
+          }
+
+          .button-row #btnGenerate {
+            width: 100% !important;
+          }
+        `;
+
+        frameDoc.head.appendChild(style);
+
+        const title = frameDoc.querySelector("h1");
+        if (title) title.textContent = "Digraph Example";
+
+        const firstSectionTitle = frameDoc.querySelector(".panel .section-title");
+        if (firstSectionTitle) firstSectionTitle.textContent = "Digraph Example";
+
+        const digraphHeader = frameDoc.querySelector('.skill-header[data-target="dig"]');
+        if (digraphHeader) {
+          const label = digraphHeader.querySelector("span:not(.arrow)");
+          if (label) label.textContent = "Digraph Example";
+        }
+
+        frameDoc.body.dataset.isPreviewCondensed = "1";
+      }
+
       function applyPreviewDefaults(frameDoc) {
         if (!frameDoc || frameDoc.body.dataset.isPreviewDefaultsApplied === "1") return;
 
@@ -386,61 +498,6 @@
         }
       }
 
-      function applyPreviewDefaults(frameDoc) {
-        if (!frameDoc || frameDoc.body.dataset.isPreviewDefaultsApplied === "1") return;
-
-        const soundMode = frameDoc.querySelector('#modeRow .mode-pill[data-mode="sound"]');
-        if (soundMode && !soundMode.classList.contains("selected")) {
-          soundMode.click();
-        }
-
-        const leftLayout = frameDoc.querySelector('#soundLayoutRow [data-sound-layout="left"]');
-        if (leftLayout && !leftLayout.classList.contains("selected")) {
-          leftLayout.click();
-        }
-
-        const digraphHeader = frameDoc.querySelector('.skill-header[data-target="dig"]');
-        const digraphSection = frameDoc.getElementById("section-dig");
-        if (digraphSection && digraphSection.classList.contains("collapsed") && digraphHeader) {
-          digraphHeader.click();
-        }
-
-        const digraphSkill =
-          frameDoc.querySelector('.skill-button[data-skill="Digraphs Mixed"]') ||
-          frameDoc.querySelector('#section-dig .skill-button[data-skill^="Digraph("]');
-        if (digraphSkill && !digraphSkill.classList.contains("selected")) {
-          digraphSkill.click();
-        }
-
-        frameDoc.body.dataset.isPreviewDefaultsApplied = "1";
-      }
-
-      function queuePreviewAutogen(frameDoc, generateBtn) {
-        if (!frameDoc || !generateBtn || frameDoc.body.dataset.isPreviewAutogen === "1") return;
-        frameDoc.body.dataset.isPreviewAutogen = "1";
-
-        let attempts = 0;
-        const run = function () {
-          attempts += 1;
-          const statusText = String((frameDoc.getElementById("status") || {}).textContent || "").toLowerCase();
-          const hasOutput = !!frameDoc.querySelector("#printArea .page, #printArea .worksheet-page");
-
-          if (hasOutput) return;
-          if (statusText.includes("loading") && attempts < 10) {
-            window.setTimeout(run, 150);
-            return;
-          }
-
-          generateBtn.click();
-          const generated = !!frameDoc.querySelector("#printArea .page, #printArea .worksheet-page");
-          if (!generated && attempts < 6) {
-            window.setTimeout(run, 220);
-          }
-        };
-
-        window.setTimeout(run, 120);
-      }
-
       document.addEventListener("keydown", blockShortcuts);
 
       liveFrame.addEventListener("load", function () {
@@ -451,6 +508,7 @@
 
           forceStepPanelsSameRow(frameDoc);
           lockCompactPreviewControls(frameDoc);
+          condensePreviewUI(frameDoc);
           applyPreviewDefaults(frameDoc);
           frameDoc.addEventListener("contextmenu", function (e) { e.preventDefault(); });
           frameDoc.addEventListener("keydown", blockShortcuts);

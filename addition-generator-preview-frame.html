@@ -120,7 +120,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 10px;
+      margin-top: 0;
     }
 
     .button-row button {
@@ -428,13 +428,29 @@
       }
 
       .problems {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .footer-note {
         position: static;
         margin-top: 8px;
       }
+    }
+
+    .field.is-hidden {
+      display: none;
+    }
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .controls-row .button-row {
+      margin-left: auto;
     }
 
     .preview-wrapper {
@@ -569,8 +585,8 @@
           <div class="field">
             <label for="digitsB">Addend B Digits</label>
             <select id="digitsB">
-              <option value="1" selected>1 digit</option>
-              <option value="2">2 digits</option>
+              <option value="1">1 digit</option>
+              <option value="2" selected>2 digits</option>
               <option value="3">3 digits</option>
               <option value="4">4 digits</option>
               <option value="5">5 digits</option>
@@ -578,7 +594,7 @@
             </select>
           </div>
 
-          <div class="field">
+          <div class="field is-hidden">
             <label for="problemMode">Problem Source</label>
             <select id="problemMode">
               <option value="random" selected>Random problems</option>
@@ -586,43 +602,45 @@
             </select>
           </div>
 
-          <div class="field">
+          <div class="field is-hidden">
             <label for="customProblem">Custom Problems (up to 6)</label>
             <input id="customProblem" type="text" placeholder="Example: 76+4, 58+9, 43+7, 91+8, 67+5, 84+6" />
           </div>
 
-          <div class="field">
+          <div class="field is-hidden">
             <label for="sheetTitle">Worksheet Title</label>
             <input id="sheetTitle" type="text" value="Addition Graphic Organizer" />
           </div>
 
-          <div class="field">
+          <div class="field is-hidden">
             <label>Color Coding</label>
             <label class="checkbox-wrap"><input id="colorToggle" type="checkbox" checked />Use faint place-value colors</label>
           </div>
 
-          <div class="field">
+          <div class="field is-hidden">
             <label>Equation Label</label>
             <label class="checkbox-wrap"><input id="showProblemEq" type="checkbox" checked />Show boxed problem equation</label>
           </div>
 
-          <div class="field">
+          <div class="field is-hidden">
             <label>Scaffold Version</label>
-            <label class="checkbox-wrap"><input id="scaffoldToggle" type="checkbox" />Fill addend numbers in table boxes</label>
+            <label class="checkbox-wrap"><input id="scaffoldToggle" type="checkbox" checked />Fill addend numbers in table boxes</label>
           </div>
+        </div>
 
+        <div class="controls-row">
           <div class="field">
             <label>Regrouping</label>
             <label class="checkbox-wrap"><input id="requireRegrouping" type="checkbox" />Use regrouping problems</label>
           </div>
+
+          <div class="button-row">
+            <button id="generateBtn" class="primary" type="button">Generate</button>
+            <button id="printBtn" type="button">Print</button>
+          </div>
         </div>
 
-        <div class="button-row">
-          <button id="generateBtn" class="primary" type="button">Generate</button>
-          <button id="printBtn" type="button">Print</button>
-        </div>
-
-        <div class="note" id="statusText">Tip: custom mode accepts up to 6 comma-separated equations like <strong>537268+37917, 86421+5678</strong>.</div>
+        <div class="note" id="statusText">Tip: choose the digit sizes and regrouping option, then click Generate.</div>
       </section>
     </div>
 
