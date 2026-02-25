@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Intervention Station | Site Preview Home</title>
+  <title>Intervention Station | Site Preview Home V4</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
@@ -543,6 +543,144 @@
     }
     /* END HOME RIGHT SIDE STYLES */
 
+  
+/* HOME VARIANT STYLES */
+    .is-variant-head{
+      border:1px solid #cfd7ef;
+      background:#fff;
+      border-radius:16px;
+      padding:16px;
+      box-shadow:0 10px 22px rgba(31,54,95,.07);
+      margin-bottom:14px;
+    }
+    .is-variant-head h1{
+      margin:0 0 8px;
+      font-size:30px;
+      line-height:1.07;
+      font-weight:900;
+      color:#0e2b4f;
+    }
+    .is-variant-head p{
+      margin:0;
+      font-size:14px;
+      line-height:1.45;
+      font-weight:600;
+      color:#4f6689;
+    }
+    .is-variant-head .is-variant-pill{
+      display:inline-flex;
+      margin-top:10px;
+      padding:7px 12px;
+      border-radius:999px;
+      background:#e9f5ff;
+      color:#1a4f85;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.01em;
+    }
+
+    .is-v2-grid,
+    .is-v3-grid,
+    .is-v4-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:12px;
+    }
+    .is-v2-card,
+    .is-v3-card,
+    .is-v4-card{
+      border:1px solid #cfd7ef;
+      background:#fff;
+      border-radius:14px;
+      padding:12px;
+      box-shadow:0 8px 20px rgba(31,54,95,.07);
+    }
+    .is-v2-link,
+    .is-v3-link,
+    .is-v4-link{
+      text-decoration:none;
+      color:#0f2e52;
+      font-size:14px;
+      font-weight:800;
+      line-height:1.35;
+      display:block;
+    }
+    .is-v2-link:hover,
+    .is-v3-link:hover,
+    .is-v4-link:hover{ text-decoration:underline; }
+
+    .is-v2-meta,
+    .is-v3-meta,
+    .is-v4-meta{
+      margin:0 0 8px;
+      color:#4f6689;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.01em;
+      text-transform:uppercase;
+    }
+
+    .is-v3-section,
+    .is-v4-section{
+      border:1px solid #cfd7ef;
+      background:#fff;
+      border-radius:16px;
+      padding:14px;
+      box-shadow:0 8px 20px rgba(31,54,95,.07);
+      margin-bottom:12px;
+    }
+    .is-v3-section h2,
+    .is-v4-section h2{
+      margin:0 0 10px;
+      font-size:22px;
+      line-height:1.1;
+      color:#0f2e52;
+      font-weight:900;
+    }
+
+    .is-v4-chip-wrap{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .is-v4-chip{
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      min-height:34px;
+      padding:0 12px;
+      border-radius:999px;
+      border:1px solid #cfd7ef;
+      background:#f7fbff;
+      color:#12385f;
+      font-size:13px;
+      font-weight:800;
+    }
+    .is-v4-chip:hover{ background:#edf6ff; }
+
+    .is-coming-badge{
+      display:inline-flex;
+      align-items:center;
+      border:1px dashed #b7c7de;
+      color:#6b7f9f;
+      background:#f8fbff;
+      border-radius:999px;
+      min-height:30px;
+      padding:0 10px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.01em;
+      margin:4px 6px 0 0;
+    }
+
+    @media (max-width:980px){
+      .is-v2-grid,
+      .is-v3-grid,
+      .is-v4-grid{ grid-template-columns:1fr; }
+      .is-variant-head h1{ font-size:24px; }
+    }
+    /* END HOME VARIANT STYLES */
+
   </style>
 </head>
 <body>
@@ -660,153 +798,59 @@
       </aside>
 
       <main class="is-main">
-        <section class="is-page is-home">
-          <section class="is-slider is-slider-top" aria-label="Highlights">
-            <div class="is-slider-viewport">
-              <button class="is-slider-arrow is-slider-prev" type="button" aria-label="Previous slide">
-                <svg viewBox="0 0 20 20" aria-hidden="true">
-                  <path d="M12.8 3.6 6.4 10l6.4 6.4-1.4 1.4L3.6 10l7.8-7.8 1.4 1.4z"></path>
-                </svg>
-              </button>
-              <button class="is-slider-arrow is-slider-next" type="button" aria-label="Next slide">
-                <svg viewBox="0 0 20 20" aria-hidden="true">
-                  <path d="M7.2 16.4 13.6 10 7.2 3.6 8.6 2.2 16.4 10l-7.8 7.8-1.4-1.4z"></path>
-                </svg>
-              </button>
-
-              <div class="is-slider-track" id="isSliderTrack">
-                <a class="is-slide" href="./phonics-comics-preview.html" aria-label="Phonics Comics">
-                  <img class="is-slide-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530f8a93b0572969e8c.png" alt="Phonics Comics">
-                  <div class="is-slide-overlay">
-                    <div class="is-slide-title">Phonics Comics</div>
-                    <div class="is-slide-sub">Decodable stories kids actually want to read</div>
-                  </div>
-                </a>
-
-                <a class="is-slide" href="./fluencygridpreview.html" aria-label="Fluency Grid">
-                  <img class="is-slide-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530e18638d0cfa07bbe.png" alt="Fluency Grid">
-                  <div class="is-slide-overlay">
-                    <div class="is-slide-title">Fluency Grid Generator</div>
-                    <div class="is-slide-sub">Instant skill-based fluency practice</div>
-                  </div>
-                </a>
-
-                <a class="is-slide" href="./math-song-preview.html" aria-label="Math Learning Songs">
-                  <img class="is-slide-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c53098efbd78ecbbad10.png" alt="Math Learning Songs">
-                  <div class="is-slide-overlay">
-                    <div class="is-slide-title">Math Learning Songs</div>
-                    <div class="is-slide-sub">Songs + resources that make routines stick</div>
-                  </div>
-                </a>
-
-                <a class="is-slide" href="./multiplication-preview.html" aria-label="Multiplication">
-                  <img class="is-slide-img" src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/674515a001f2194ec471bb64.png" alt="Multiplication">
-                  <div class="is-slide-overlay">
-                    <div class="is-slide-title">Multiplication Intervention</div>
-                    <div class="is-slide-sub">Scaffolds that make hard math doable</div>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </section>
-
-          <section class="is-top-cta" aria-label="Primary call to action">
-            <div class="is-top-cta-text">
-              <h1>Printable Resources + Generators for Busy Teachers</h1>
-              <p>Scaffolded math and reading support, a growing library of learning songs, and print-in-seconds generators that save you hours every week.</p>
-            </div>
-            <div class="is-top-cta-action">
-              <a href="./home-preview.html#join" class="is-join-btn">Join Membership</a>
-            </div>
-          </section>
-
-          <section class="is-intervention-grid" aria-label="Intervention categories">
-            <a class="is-intervention-card" href="./multiplication-preview.html">
-              <div class="is-intervention-head">Math Resources</div>
-              <img class="is-intervention-img" src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/674515a001f2194ec471bb64.png" alt="Math resources preview">
-              <div class="is-intervention-body">
-                <p>Place value, rounding, multiplication, division, fractions, and more.</p>
-                <span class="is-intervention-link">Explore →</span>
-              </div>
-            </a>
-
-            <a class="is-intervention-card" href="./phonics-comics-preview.html">
-              <div class="is-intervention-head">Reading and Phonics</div>
-              <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b07d871dd47.png" alt="Reading and phonics preview">
-              <div class="is-intervention-body">
-                <p>Phonics comics, heart words, Fix the Mix Up, and learning games.</p>
-                <span class="is-intervention-link">Explore →</span>
-              </div>
-            </a>
-
-            <a class="is-intervention-card" href="./fluencygridpreview.html">
-              <div class="is-intervention-head">SOR Generators</div>
-              <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b5d5571dd46.png" alt="SOR generators preview">
-              <div class="is-intervention-body">
-                <p>Tic Tac Toe, Fluency Grid, Roll and Read, Word Mapping, and Word Ladder.</p>
-                <span class="is-intervention-link">Explore →</span>
-              </div>
-            </a>
-
-            <a class="is-intervention-card" href="./math-song-preview.html">
-              <div class="is-intervention-head">Learning Songs</div>
-              <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049e186383c509dc54f.png" alt="Learning songs preview">
-              <div class="is-intervention-body">
-                <p>Math learning songs with printables, posters, and classroom routines.</p>
-                <span class="is-intervention-link">Explore →</span>
-              </div>
-            </a>
-          </section>
+        <section class="is-page">
+          <div class="is-variant-head">
+            <h1>Compact Resource Index</h1>
+            <p>A compact, high-density browse view with category blocks and quick-access chips for every page.</p>
+            <span class="is-variant-pill">Version 4: Compact Index</span>
+          </div>
+          <div id="isVariantV4Sections" aria-live="polite"></div>
         </section>
       </main>
     </div>
   </section>
-<script id="isHomeSliderScript">
+<script id="isHomeVariantV4Script">
   (function(){
-    const track = document.getElementById('isSliderTrack');
-    if (!track) return;
 
-    const slider = track.closest('.is-slider-top');
-    if (!slider) return;
+    function collectNavSections() {
+      const nav = document.querySelector('.is-nav-card');
+      if (!nav) return [];
+      const children = Array.from(nav.children);
+      const sections = [];
 
-    const prevBtn = slider.querySelector('.is-slider-prev');
-    const nextBtn = slider.querySelector('.is-slider-next');
+      children.forEach((node, idx) => {
+        if (!node.classList || !node.classList.contains('is-nav-header')) return;
+        const title = node.textContent.trim();
+        const group = children[idx + 1];
+        if (!group || !group.classList || !group.classList.contains('is-nav-group')) return;
 
-    const slideWidth = () => track.clientWidth;
+        const links = Array.from(group.querySelectorAll('a.is-nav-link')).map((a) => ({
+          title: a.textContent.trim(),
+          href: a.getAttribute('href') || ''
+        })).filter((item) => item.href);
 
-    const go = (dir) => {
-      track.scrollBy({ left: dir * slideWidth(), behavior: 'smooth' });
-    };
+        const notes = Array.from(group.querySelectorAll('span.is-nav-link')).map((span) => span.textContent.trim()).filter(Boolean);
 
-    if (prevBtn) prevBtn.addEventListener('click', () => go(-1));
-    if (nextBtn) nextBtn.addEventListener('click', () => go(1));
+        sections.push({ title, links, notes });
+      });
 
-    let timer = null;
-    const stop = () => {
-      if (timer) clearInterval(timer);
-      timer = null;
-    };
+      return sections;
+    }
 
-    const start = () => {
-      stop();
-      timer = setInterval(() => {
-        const w = slideWidth();
-        const max = track.scrollWidth - w;
-        const atEnd = track.scrollLeft >= (max - 2);
-        if (atEnd) {
-          track.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          track.scrollBy({ left: w, behavior: 'smooth' });
-        }
-      }, 3000);
-    };
+    const mount = document.getElementById('isVariantV4Sections');
+    if (!mount) return;
 
-    slider.addEventListener('mouseenter', stop);
-    slider.addEventListener('mouseleave', start);
-    slider.addEventListener('touchstart', stop, { passive: true });
-    slider.addEventListener('touchend', start, { passive: true });
+    const sections = collectNavSections();
+    if (!sections.length) {
+      mount.innerHTML = '<p>Navigation links were not found.</p>';
+      return;
+    }
 
-    start();
+    mount.innerHTML = sections.map((section) => {
+      const chips = section.links.map((link) => '<a class="is-v4-chip" href="' + link.href + '">' + link.title + '</a>').join('');
+      const notes = section.notes.map((note) => '<span class="is-coming-badge">' + note + '</span>').join('');
+      return '<section class="is-v4-section"><h2>' + section.title + '</h2><div class="is-v4-chip-wrap">' + chips + '</div><div>' + notes + '</div></section>';
+    }).join('');
   })();
 </script>
 </body>

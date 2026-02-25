@@ -544,6 +544,127 @@
     /* END HOME RIGHT SIDE STYLES */
 
   </style>
+<style id="is-mobile-preview-overrides">
+    html, body {
+      max-width:100%;
+      overflow-x:hidden !important;
+    }
+    body {
+      background:#f3f5f7;
+    }
+    .top-cta-bar {
+      width:calc(100% - 16px) !important;
+      padding:10px !important;
+      gap:8px !important;
+      flex-wrap:wrap !important;
+      justify-content:center !important;
+      text-align:center !important;
+    }
+    .top-logo {
+      max-width:92vw !important;
+      height:auto !important;
+    }
+    .top-buttons-row {
+      width:100%;
+      justify-content:center !important;
+      flex-wrap:wrap !important;
+      gap:8px !important;
+    }
+    .top-buttons-row a {
+      width:100%;
+      display:flex !important;
+      justify-content:center;
+    }
+    .top-buttons-row button {
+      width:min(100%, 360px) !important;
+      min-width:0 !important;
+      height:44px !important;
+    }
+
+    .is-home-sections {
+      padding:10px 0 20px !important;
+    }
+    .is-home-sections .is-wrap {
+      width:calc(100% - 16px) !important;
+    }
+    .is-home-sections .is-layout {
+      grid-template-columns:1fr !important;
+      gap:10px !important;
+    }
+    .is-home-sections .is-nav {
+      position:static !important;
+      top:auto !important;
+      width:100%;
+    }
+    .is-mobile-nav-toggle {
+      width:100%;
+      min-height:46px;
+      border:1px solid #cfd7ef;
+      border-radius:12px;
+      background:#ffffff;
+      color:#0f2e52;
+      font-family:"Poppins",system-ui,sans-serif;
+      font-size:14px;
+      font-weight:800;
+      margin:0 0 8px;
+    }
+    .is-home-sections .is-nav-card {
+      max-height:none !important;
+    }
+    .is-home-sections:not(.is-mobile-nav-open) .is-nav-card {
+      display:none !important;
+    }
+    .is-home-sections.is-mobile-nav-open .is-nav-card {
+      display:block !important;
+    }
+
+    .is-home-sections .is-main,
+    .is-home-sections .is-page {
+      min-width:0 !important;
+    }
+    .is-home-sections .is-page {
+      padding:12px !important;
+      border-width:1px !important;
+    }
+
+    .is-unified-join,
+    .buy-options,
+    .is-top-cta {
+      flex-direction:column !important;
+      align-items:flex-start !important;
+    }
+
+    .preview-frame-wrap {
+      border-width:1px !important;
+      border-radius:10px !important;
+    }
+    .preview-iframe {
+      height:72vh !important;
+      min-height:520px !important;
+      width:100% !important;
+      max-width:100% !important;
+    }
+
+    .is-page div[style*="display:flex"] {
+      flex-direction:column !important;
+      align-items:stretch !important;
+      gap:0 !important;
+    }
+    .is-page div[style*="display:flex"] > div {
+      flex:1 1 100% !important;
+      width:100% !important;
+      max-width:100% !important;
+      border-right:0 !important;
+      min-width:0 !important;
+    }
+
+    .is-page img,
+    .is-page video,
+    .is-page canvas {
+      max-width:100% !important;
+      height:auto !important;
+    }
+  </style>
 </head>
 <body>
   <div class="is-ticker" aria-label="Reviews ticker">
@@ -807,6 +928,57 @@
     slider.addEventListener('touchend', start, { passive: true });
 
     start();
+  })();
+</script>
+<script id="is-mobile-preview-script">
+  (function(){
+    const section = document.querySelector('.is-home-sections');
+    const nav = section ? section.querySelector('.is-nav') : null;
+    const navCard = nav ? nav.querySelector('.is-nav-card') : null;
+
+    if (section && nav && navCard) {
+      let toggle = nav.querySelector('.is-mobile-nav-toggle');
+      if (!toggle) {
+        toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'is-mobile-nav-toggle';
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.textContent = 'Open Navigation';
+        nav.insertBefore(toggle, navCard);
+      }
+
+      const closeNav = () => {
+        section.classList.remove('is-mobile-nav-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.textContent = 'Open Navigation';
+      };
+
+      const openNav = () => {
+        section.classList.add('is-mobile-nav-open');
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.textContent = 'Close Navigation';
+      };
+
+      closeNav();
+
+      toggle.addEventListener('click', () => {
+        if (section.classList.contains('is-mobile-nav-open')) {
+          closeNav();
+        } else {
+          openNav();
+        }
+      });
+
+      navCard.addEventListener('click', (event) => {
+        if (event.target.closest('a.is-nav-link')) {
+          closeNav();
+        }
+      });
+    }
+
+    document.querySelectorAll('iframe.preview-iframe').forEach((frame) => {
+      frame.setAttribute('loading', 'lazy');
+    });
   })();
 </script>
 </body>

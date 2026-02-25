@@ -346,203 +346,127 @@
       .buy-btn{ width:100%; justify-content:center; }
     }
 
-  
-/* HOME RIGHT SIDE STYLES */
-    .is-home .is-slider{ margin-bottom:16px; }
-    .is-home .is-slider-viewport{
-      position:relative;
-      border:2px solid #111;
-      border-radius:12px;
-      overflow:hidden;
-      background:#000;
-      box-shadow:0 10px 22px rgba(31,54,95,.07);
+  </style>
+<style id="is-mobile-preview-overrides">
+    html, body {
+      max-width:100%;
+      overflow-x:hidden !important;
     }
-    .is-home .is-slider-track{
-      display:flex;
-      overflow-x:auto;
-      scroll-snap-type:x mandatory;
-      scrollbar-width:none;
-      -ms-overflow-style:none;
+    body {
+      background:#f3f5f7;
     }
-    .is-home .is-slider-track::-webkit-scrollbar{ display:none; }
-    .is-home .is-slide{
-      position:relative;
-      flex:0 0 100%;
-      min-height:290px;
-      display:block;
-      color:#fff;
-      text-decoration:none;
-      scroll-snap-align:start;
-      background:#0e2037;
+    .top-cta-bar {
+      width:calc(100% - 16px) !important;
+      padding:10px !important;
+      gap:8px !important;
+      flex-wrap:wrap !important;
+      justify-content:center !important;
+      text-align:center !important;
     }
-    .is-home .is-slide-img{
+    .top-logo {
+      max-width:92vw !important;
+      height:auto !important;
+    }
+    .top-buttons-row {
       width:100%;
-      height:100%;
-      min-height:290px;
-      object-fit:cover;
-      filter:saturate(.96);
+      justify-content:center !important;
+      flex-wrap:wrap !important;
+      gap:8px !important;
     }
-    .is-home .is-slide-overlay{
-      position:absolute;
-      inset:auto 0 0;
-      padding:18px;
-      background:linear-gradient(to top, rgba(6,13,24,.88), rgba(6,13,24,.15));
-    }
-    .is-home .is-slide-title{
-      margin:0 0 4px;
-      font-size:30px;
-      line-height:1.04;
-      font-weight:900;
-      color:#fff;
-      text-shadow:0 1px 2px rgba(0,0,0,.25);
-    }
-    .is-home .is-slide-sub{
-      margin:0;
-      font-size:14px;
-      line-height:1.35;
-      font-weight:600;
-      color:rgba(255,255,255,.95);
-    }
-    .is-home .is-slider-arrow{
-      position:absolute;
-      top:50%;
-      transform:translateY(-50%);
-      z-index:2;
-      width:42px;
-      height:42px;
-      border:0;
-      border-radius:999px;
-      background:rgba(6,13,24,.58);
-      color:#fff;
-      display:inline-flex;
-      align-items:center;
+    .top-buttons-row a {
+      width:100%;
+      display:flex !important;
       justify-content:center;
-      cursor:pointer;
-      transition:background .15s ease;
     }
-    .is-home .is-slider-arrow:hover{ background:rgba(6,13,24,.78); }
-    .is-home .is-slider-arrow svg{ width:20px; height:20px; fill:currentColor; }
-    .is-home .is-slider-prev{ left:10px; }
-    .is-home .is-slider-next{ right:10px; }
+    .top-buttons-row button {
+      width:min(100%, 360px) !important;
+      min-width:0 !important;
+      height:44px !important;
+    }
 
-    .is-home .is-top-cta{
-      border:1px solid #cfd7ef;
-      background:#fff;
-      border-radius:16px;
-      padding:16px;
-      box-shadow:0 10px 22px rgba(31,54,95,.07);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      margin-bottom:16px;
+    .is-home-sections {
+      padding:10px 0 20px !important;
     }
-    .is-home .is-top-cta h1{
-      margin:0 0 8px;
-      font-size:30px;
-      line-height:1.06;
-      font-weight:900;
-      color:#0e2b4f;
+    .is-home-sections .is-wrap {
+      width:calc(100% - 16px) !important;
     }
-    .is-home .is-top-cta p{
-      margin:0;
-      font-size:14px;
-      line-height:1.45;
-      font-weight:600;
-      color:#4f6689;
+    .is-home-sections .is-layout {
+      grid-template-columns:1fr !important;
+      gap:10px !important;
     }
-    .is-home .is-join-btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      text-decoration:none;
+    .is-home-sections .is-nav {
+      position:static !important;
+      top:auto !important;
+      width:100%;
+    }
+    .is-mobile-nav-toggle {
+      width:100%;
       min-height:46px;
-      padding:0 18px;
-      border-radius:999px;
-      background:#6ec1ff;
-      border:1px solid #5aaee9;
-      color:#fff;
-      font-size:15px;
-      font-weight:900;
-      white-space:nowrap;
-      box-shadow:0 8px 18px rgba(16,40,70,.14);
-    }
-
-    .is-home .is-intervention-grid{
-      display:grid;
-      grid-template-columns:repeat(2, minmax(0,1fr));
-      gap:14px;
-    }
-    .is-home .is-intervention-card{
-      text-decoration:none;
-      color:inherit;
       border:1px solid #cfd7ef;
-      background:#fff;
-      border-radius:16px;
-      overflow:hidden;
-      box-shadow:0 8px 20px rgba(31,54,95,.07);
-      transition:transform .15s ease, box-shadow .15s ease;
-      display:flex;
-      flex-direction:column;
-      min-height:100%;
-    }
-    .is-home .is-intervention-card:hover{
-      transform:translateY(-2px);
-      box-shadow:0 12px 24px rgba(31,54,95,.12);
-    }
-    .is-home .is-intervention-head{
-      padding:12px 14px;
-      background:#66c9f4;
-      color:#fff;
-      font-size:18px;
-      line-height:1.1;
-      font-weight:900;
-    }
-    .is-home .is-intervention-img{
-      width:100%;
-      height:170px;
-      object-fit:cover;
-      background:#dce9f9;
-    }
-    .is-home .is-intervention-body{
-      padding:12px 14px 14px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      flex:1;
-    }
-    .is-home .is-intervention-body p{
-      margin:0;
-      font-size:14px;
-      line-height:1.45;
-      font-weight:600;
-      color:#4f6689;
-      flex:1;
-    }
-    .is-home .is-intervention-link{
-      display:inline-flex;
-      align-items:center;
-      font-size:14px;
-      line-height:1.2;
-      font-weight:900;
+      border-radius:12px;
+      background:#ffffff;
       color:#0f2e52;
+      font-family:"Poppins",system-ui,sans-serif;
+      font-size:14px;
+      font-weight:800;
+      margin:0 0 8px;
+    }
+    .is-home-sections .is-nav-card {
+      max-height:none !important;
+    }
+    .is-home-sections:not(.is-mobile-nav-open) .is-nav-card {
+      display:none !important;
+    }
+    .is-home-sections.is-mobile-nav-open .is-nav-card {
+      display:block !important;
     }
 
-    @media (max-width:980px){
-      .is-home .is-top-cta{ flex-direction:column; align-items:flex-start; }
-      .is-home .is-top-cta-action{ width:100%; }
-      .is-home .is-join-btn{ width:100%; }
-      .is-home .is-intervention-grid{ grid-template-columns:1fr; }
+    .is-home-sections .is-main,
+    .is-home-sections .is-page {
+      min-width:0 !important;
     }
-    @media (max-width:700px){
-      .is-home .is-slide,
-      .is-home .is-slide-img{ min-height:220px; }
-      .is-home .is-slide-title{ font-size:24px; }
-      .is-home .is-top-cta h1{ font-size:24px; }
-      .is-home .is-slider-arrow{ width:36px; height:36px; }
+    .is-home-sections .is-page {
+      padding:12px !important;
+      border-width:1px !important;
     }
-    /* END HOME RIGHT SIDE STYLES */
 
+    .is-unified-join,
+    .buy-options,
+    .is-top-cta {
+      flex-direction:column !important;
+      align-items:flex-start !important;
+    }
+
+    .preview-frame-wrap {
+      border-width:1px !important;
+      border-radius:10px !important;
+    }
+    .preview-iframe {
+      height:72vh !important;
+      min-height:520px !important;
+      width:100% !important;
+      max-width:100% !important;
+    }
+
+    .is-page div[style*="display:flex"] {
+      flex-direction:column !important;
+      align-items:stretch !important;
+      gap:0 !important;
+    }
+    .is-page div[style*="display:flex"] > div {
+      flex:1 1 100% !important;
+      width:100% !important;
+      max-width:100% !important;
+      border-right:0 !important;
+      min-width:0 !important;
+    }
+
+    .is-page img,
+    .is-page video,
+    .is-page canvas {
+      max-width:100% !important;
+      height:auto !important;
+    }
   </style>
 </head>
 <body>
@@ -660,153 +584,82 @@
       </aside>
 
       <main class="is-main">
-        <section class="is-page is-home">
-          <section class="is-slider is-slider-top" aria-label="Highlights">
-            <div class="is-slider-viewport">
-              <button class="is-slider-arrow is-slider-prev" type="button" aria-label="Previous slide">
-                <svg viewBox="0 0 20 20" aria-hidden="true">
-                  <path d="M12.8 3.6 6.4 10l6.4 6.4-1.4 1.4L3.6 10l7.8-7.8 1.4 1.4z"></path>
-                </svg>
-              </button>
-              <button class="is-slider-arrow is-slider-next" type="button" aria-label="Next slide">
-                <svg viewBox="0 0 20 20" aria-hidden="true">
-                  <path d="M7.2 16.4 13.6 10 7.2 3.6 8.6 2.2 16.4 10l-7.8 7.8-1.4-1.4z"></path>
-                </svg>
-              </button>
-
-              <div class="is-slider-track" id="isSliderTrack">
-                <a class="is-slide" href="./phonics-comics-preview.html" aria-label="Phonics Comics">
-                  <img class="is-slide-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530f8a93b0572969e8c.png" alt="Phonics Comics">
-                  <div class="is-slide-overlay">
-                    <div class="is-slide-title">Phonics Comics</div>
-                    <div class="is-slide-sub">Decodable stories kids actually want to read</div>
-                  </div>
-                </a>
-
-                <a class="is-slide" href="./fluencygridpreview.html" aria-label="Fluency Grid">
-                  <img class="is-slide-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530e18638d0cfa07bbe.png" alt="Fluency Grid">
-                  <div class="is-slide-overlay">
-                    <div class="is-slide-title">Fluency Grid Generator</div>
-                    <div class="is-slide-sub">Instant skill-based fluency practice</div>
-                  </div>
-                </a>
-
-                <a class="is-slide" href="./math-song-preview.html" aria-label="Math Learning Songs">
-                  <img class="is-slide-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c53098efbd78ecbbad10.png" alt="Math Learning Songs">
-                  <div class="is-slide-overlay">
-                    <div class="is-slide-title">Math Learning Songs</div>
-                    <div class="is-slide-sub">Songs + resources that make routines stick</div>
-                  </div>
-                </a>
-
-                <a class="is-slide" href="./multiplication-preview.html" aria-label="Multiplication">
-                  <img class="is-slide-img" src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/674515a001f2194ec471bb64.png" alt="Multiplication">
-                  <div class="is-slide-overlay">
-                    <div class="is-slide-title">Multiplication Intervention</div>
-                    <div class="is-slide-sub">Scaffolds that make hard math doable</div>
-                  </div>
-                </a>
-              </div>
+        <section class="is-page">
+          <div class="is-unified-join">
+            <div class="is-unified-join__text">
+              <h2>Want Full Access to Every Resource?</h2>
+              <p>Become a member to unlock unlimited generators, printables, and downloads.</p>
             </div>
-          </section>
+            <a class="is-unified-join__btn" href="./home-preview.html#join">Join Now to Get Access!</a>
+          </div>
+          <header class="is-page-hero">
+            <h1>Site Preview Home</h1>
+            <p>Preview the generator below. Printing and full access are member-only.</p>
+          </header>
 
-          <section class="is-top-cta" aria-label="Primary call to action">
-            <div class="is-top-cta-text">
-              <h1>Printable Resources + Generators for Busy Teachers</h1>
-              <p>Scaffolded math and reading support, a growing library of learning songs, and print-in-seconds generators that save you hours every week.</p>
-            </div>
-            <div class="is-top-cta-action">
-              <a href="./home-preview.html#join" class="is-join-btn">Join Membership</a>
-            </div>
-          </section>
 
-          <section class="is-intervention-grid" aria-label="Intervention categories">
-            <a class="is-intervention-card" href="./multiplication-preview.html">
-              <div class="is-intervention-head">Math Resources</div>
-              <img class="is-intervention-img" src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/674515a001f2194ec471bb64.png" alt="Math resources preview">
-              <div class="is-intervention-body">
-                <p>Place value, rounding, multiplication, division, fractions, and more.</p>
-                <span class="is-intervention-link">Explore →</span>
-              </div>
-            </a>
-
-            <a class="is-intervention-card" href="./phonics-comics-preview.html">
-              <div class="is-intervention-head">Reading and Phonics</div>
-              <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b07d871dd47.png" alt="Reading and phonics preview">
-              <div class="is-intervention-body">
-                <p>Phonics comics, heart words, Fix the Mix Up, and learning games.</p>
-                <span class="is-intervention-link">Explore →</span>
-              </div>
-            </a>
-
-            <a class="is-intervention-card" href="./fluencygridpreview.html">
-              <div class="is-intervention-head">SOR Generators</div>
-              <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b5d5571dd46.png" alt="SOR generators preview">
-              <div class="is-intervention-body">
-                <p>Tic Tac Toe, Fluency Grid, Roll and Read, Word Mapping, and Word Ladder.</p>
-                <span class="is-intervention-link">Explore →</span>
-              </div>
-            </a>
-
-            <a class="is-intervention-card" href="./math-song-preview.html">
-              <div class="is-intervention-head">Learning Songs</div>
-              <img class="is-intervention-img" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049e186383c509dc54f.png" alt="Learning songs preview">
-              <div class="is-intervention-body">
-                <p>Math learning songs with printables, posters, and classroom routines.</p>
-                <span class="is-intervention-link">Explore →</span>
-              </div>
-            </a>
-          </section>
+          <div class="preview-frame-wrap">
+            <iframe
+              class="preview-iframe"
+              src="./left_nav_master_preview.html"
+              title="Site Preview Home Preview"
+              loading="lazy"
+              allowfullscreen
+            ></iframe>
+          </div>
         </section>
       </main>
     </div>
   </section>
-<script id="isHomeSliderScript">
+<script id="is-mobile-preview-script">
   (function(){
-    const track = document.getElementById('isSliderTrack');
-    if (!track) return;
+    const section = document.querySelector('.is-home-sections');
+    const nav = section ? section.querySelector('.is-nav') : null;
+    const navCard = nav ? nav.querySelector('.is-nav-card') : null;
 
-    const slider = track.closest('.is-slider-top');
-    if (!slider) return;
+    if (section && nav && navCard) {
+      let toggle = nav.querySelector('.is-mobile-nav-toggle');
+      if (!toggle) {
+        toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'is-mobile-nav-toggle';
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.textContent = 'Open Navigation';
+        nav.insertBefore(toggle, navCard);
+      }
 
-    const prevBtn = slider.querySelector('.is-slider-prev');
-    const nextBtn = slider.querySelector('.is-slider-next');
+      const closeNav = () => {
+        section.classList.remove('is-mobile-nav-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.textContent = 'Open Navigation';
+      };
 
-    const slideWidth = () => track.clientWidth;
+      const openNav = () => {
+        section.classList.add('is-mobile-nav-open');
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.textContent = 'Close Navigation';
+      };
 
-    const go = (dir) => {
-      track.scrollBy({ left: dir * slideWidth(), behavior: 'smooth' });
-    };
+      closeNav();
 
-    if (prevBtn) prevBtn.addEventListener('click', () => go(-1));
-    if (nextBtn) nextBtn.addEventListener('click', () => go(1));
-
-    let timer = null;
-    const stop = () => {
-      if (timer) clearInterval(timer);
-      timer = null;
-    };
-
-    const start = () => {
-      stop();
-      timer = setInterval(() => {
-        const w = slideWidth();
-        const max = track.scrollWidth - w;
-        const atEnd = track.scrollLeft >= (max - 2);
-        if (atEnd) {
-          track.scrollTo({ left: 0, behavior: 'smooth' });
+      toggle.addEventListener('click', () => {
+        if (section.classList.contains('is-mobile-nav-open')) {
+          closeNav();
         } else {
-          track.scrollBy({ left: w, behavior: 'smooth' });
+          openNav();
         }
-      }, 3000);
-    };
+      });
 
-    slider.addEventListener('mouseenter', stop);
-    slider.addEventListener('mouseleave', start);
-    slider.addEventListener('touchstart', stop, { passive: true });
-    slider.addEventListener('touchend', start, { passive: true });
+      navCard.addEventListener('click', (event) => {
+        if (event.target.closest('a.is-nav-link')) {
+          closeNav();
+        }
+      });
+    }
 
-    start();
+    document.querySelectorAll('iframe.preview-iframe').forEach((frame) => {
+      frame.setAttribute('loading', 'lazy');
+    });
   })();
 </script>
 </body>
