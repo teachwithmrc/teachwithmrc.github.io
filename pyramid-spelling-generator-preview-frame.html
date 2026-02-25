@@ -6,6 +6,11 @@
   <title>Pyramid Spelling Generator - PREVIEW FRAME</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --preview-overlay-top: 420px;
+      --preview-paywall-top: 520px;
+    }
+
     * { box-sizing: border-box; }
 
     html, body {
@@ -39,7 +44,7 @@
       position: absolute;
       left: 0;
       right: 0;
-      top: 420px;
+      top: var(--preview-overlay-top);
       bottom: 0;
       z-index: 20;
       pointer-events: none;
@@ -51,7 +56,7 @@
       position: absolute;
       left: 0;
       right: 0;
-      top: 520px;
+      top: var(--preview-paywall-top);
       bottom: 0;
       z-index: 30;
       pointer-events: none;
@@ -106,6 +111,7 @@
       body { display: none !important; }
     }
   </style>
+  <script src="preview_customize_toggle_injector.js" defer></script>
 </head>
 <body oncontextmenu="return false;">
   <div class="frame-wrap">
@@ -131,9 +137,245 @@
   <script>
     (function () {
       const liveFrame = document.getElementById("liveFrame");
+      const rootStyle = document.documentElement.style;
 
       function blockedAction() {
         alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access.");
+      }
+
+      function forceStepPanelsSameRow(frameDoc) {
+        if (!frameDoc || frameDoc.getElementById("isPreviewStepRowStyle")) return;
+
+        const style = frameDoc.createElement("style");
+        style.id = "isPreviewStepRowStyle";
+        style.textContent = `
+          .layout {
+            grid-template-columns: minmax(290px, 1fr) minmax(0, 1.7fr) !important;
+            gap: 8px !important;
+            align-items: start !important;
+          }
+
+          .layout > .panel {
+            padding: 9px !important;
+          }
+
+          .layout > .panel:nth-of-type(2) .section-title {
+            margin-bottom: 6px !important;
+            font-size: 0.95rem !important;
+          }
+
+          .layout > .panel:nth-of-type(2) .layout-title {
+            margin: 5px 0 4px !important;
+            font-size: 0.76rem !important;
+          }
+
+          #modeRow {
+            width: 100% !important;
+            gap: 6px !important;
+          }
+
+          #modeRow .mode-pill {
+            padding: 6px 9px !important;
+            font-size: 0.82rem !important;
+          }
+
+          #modeHelp {
+            margin-top: 4px !important;
+            min-height: 0 !important;
+            font-size: 0.74rem !important;
+            line-height: 1.2 !important;
+          }
+
+          #blendModeRow {
+            display: grid !important;
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            gap: 6px !important;
+            margin-bottom: 5px !important;
+          }
+
+          #blendModeRow .option-box {
+            text-align: center !important;
+            padding: 6px 4px !important;
+            font-size: 0.76rem !important;
+            line-height: 1.1 !important;
+          }
+
+          #wordSourceRow {
+            grid-template-columns: 1fr !important;
+            gap: 0 !important;
+            margin-bottom: 4px !important;
+          }
+
+          #wordSourceRow .option-box {
+            padding: 6px 7px !important;
+            font-size: 0.77rem !important;
+            cursor: default !important;
+          }
+
+          #soundLayoutRow {
+            gap: 6px !important;
+            margin-bottom: 4px !important;
+          }
+
+          #soundLayoutRow .layout-choice {
+            min-height: 72px !important;
+            padding: 6px 6px 5px !important;
+          }
+
+          #soundLayoutRow .layout-preview {
+            max-width: 90px !important;
+            gap: 3px !important;
+          }
+
+          #soundLayoutRow .mini-row {
+            height: 8px !important;
+            border-width: 1.5px !important;
+          }
+
+          #soundLayoutRow .layout-label {
+            font-size: 0.76rem !important;
+          }
+
+          #wordSourceMeta,
+          #soundLayoutMeta,
+          #wordBankMeta {
+            margin-top: 4px !important;
+            min-height: 0 !important;
+            font-size: 0.72rem !important;
+          }
+
+          .button-row {
+            gap: 6px !important;
+            margin-top: 7px !important;
+          }
+
+          .button-row button {
+            padding: 6px 9px !important;
+            font-size: 0.8rem !important;
+          }
+
+          #manualWordsWrap {
+            display: none !important;
+          }
+
+          @media (max-width: 1080px) {
+            .layout {
+              grid-template-columns: minmax(300px, 1fr) minmax(0, 1.75fr) !important;
+              align-items: start !important;
+            }
+          }
+
+          @media (max-width: 760px) {
+            .layout {
+              grid-template-columns: 1fr !important;
+            }
+          }
+        `;
+
+        frameDoc.head.appendChild(style);
+      }
+
+      function lockCompactPreviewControls(frameDoc) {
+        if (!frameDoc || frameDoc.body.dataset.isPreviewControlsLocked === "1") return;
+
+        const blendLabels = {
+          three: "3",
+          mix: "Mix",
+          blends: "4+"
+        };
+
+        frameDoc.querySelectorAll("#blendModeRow .option-box").forEach(function (option) {
+          const mode = option.getAttribute("data-blend-mode");
+          if (!mode || !blendLabels[mode]) return;
+          option.textContent = blendLabels[mode];
+        });
+
+        const prefillChoice = frameDoc.querySelector('#wordSourceRow [data-word-source="prefill"]');
+        const customChoice = frameDoc.querySelector('#wordSourceRow [data-word-source="custom"]');
+        const manualWrap = frameDoc.getElementById("manualWordsWrap");
+        const wordSourceMeta = frameDoc.getElementById("wordSourceMeta");
+
+        if (customChoice && customChoice.parentNode) customChoice.parentNode.removeChild(customChoice);
+        if (manualWrap) manualWrap.classList.add("collapsed");
+
+        if (prefillChoice) {
+          prefillChoice.classList.add("selected");
+          const input = prefillChoice.querySelector('input[name="wordSource"]');
+          if (input) input.checked = true;
+          prefillChoice.addEventListener("click", function (e) { e.preventDefault(); }, true);
+        }
+
+        if (wordSourceMeta) {
+          wordSourceMeta.textContent = "Preview Mode: Prefill only.";
+        }
+
+        frameDoc.body.dataset.isPreviewControlsLocked = "1";
+      }
+
+      function applyPreviewDefaults(frameDoc) {
+        if (!frameDoc || frameDoc.body.dataset.isPreviewDefaultsApplied === "1") return;
+
+        const soundMode = frameDoc.querySelector('#modeRow .mode-pill[data-mode="sound"]');
+        if (soundMode && !soundMode.classList.contains("selected")) {
+          soundMode.click();
+        }
+
+        const leftLayout = frameDoc.querySelector('#soundLayoutRow [data-sound-layout="left"]');
+        if (leftLayout && !leftLayout.classList.contains("selected")) {
+          leftLayout.click();
+        }
+
+        const digraphHeader = frameDoc.querySelector('.skill-header[data-target="dig"]');
+        const digraphSection = frameDoc.getElementById("section-dig");
+        if (digraphSection && digraphSection.classList.contains("collapsed") && digraphHeader) {
+          digraphHeader.click();
+        }
+
+        const digraphSkill =
+          frameDoc.querySelector('.skill-button[data-skill="Digraphs Mixed"]') ||
+          frameDoc.querySelector('#section-dig .skill-button[data-skill^="Digraph("]');
+        if (digraphSkill && !digraphSkill.classList.contains("selected")) {
+          digraphSkill.click();
+        }
+
+        frameDoc.body.dataset.isPreviewDefaultsApplied = "1";
+      }
+
+      function queuePreviewAutogen(frameDoc, generateBtn) {
+        if (!frameDoc || !generateBtn || frameDoc.body.dataset.isPreviewAutogen === "1") return;
+        frameDoc.body.dataset.isPreviewAutogen = "1";
+
+        let attempts = 0;
+        const run = function () {
+          attempts += 1;
+          const statusText = String((frameDoc.getElementById("status") || {}).textContent || "").toLowerCase();
+          const hasOutput = !!frameDoc.querySelector("#printArea .page, #printArea .worksheet-page");
+
+          if (hasOutput) return;
+          if (statusText.includes("loading") && attempts < 10) {
+            window.setTimeout(run, 150);
+            return;
+          }
+
+          generateBtn.click();
+          const generated = !!frameDoc.querySelector("#printArea .page, #printArea .worksheet-page");
+          if (!generated && attempts < 6) {
+            window.setTimeout(run, 220);
+          }
+        };
+
+        window.setTimeout(run, 120);
+      }
+
+      function syncOverlayTop(frameDoc) {
+        if (!frameDoc) return;
+        const printArea = frameDoc.getElementById("printArea");
+        if (!printArea) return;
+
+        const overlayTop = Math.max(350, printArea.offsetTop - 6);
+        const paywallTop = Math.max(460, overlayTop + 110);
+        rootStyle.setProperty("--preview-overlay-top", `${overlayTop}px`);
+        rootStyle.setProperty("--preview-paywall-top", `${paywallTop}px`);
       }
 
       function blockShortcuts(event) {
@@ -152,18 +394,38 @@
           const frameDoc = liveFrame.contentDocument || frameWin.document;
           if (!frameDoc) return;
 
+          forceStepPanelsSameRow(frameDoc);
+          lockCompactPreviewControls(frameDoc);
+          applyPreviewDefaults(frameDoc);
           frameDoc.addEventListener("contextmenu", function (e) { e.preventDefault(); });
           frameDoc.addEventListener("keydown", blockShortcuts);
           if (frameWin) frameWin.print = blockedAction;
 
           frameDoc.querySelectorAll("button").forEach(function (btn) {
             if (/print/i.test(btn.textContent || "")) {
+              btn.disabled = true;
+              btn.style.opacity = "0.55";
+              btn.style.cursor = "not-allowed";
               btn.addEventListener("click", function (e) {
                 e.preventDefault();
                 blockedAction();
               }, true);
             }
           });
+
+          const generateBtn = frameDoc.getElementById("btnGenerate");
+          queuePreviewAutogen(frameDoc, generateBtn);
+
+          const delayedSync = function () {
+            window.setTimeout(function () { syncOverlayTop(frameDoc); }, 80);
+          };
+
+          delayedSync();
+          frameDoc.addEventListener("click", delayedSync);
+          frameDoc.addEventListener("change", delayedSync);
+
+          const observer = new MutationObserver(delayedSync);
+          observer.observe(frameDoc.body, { childList: true, subtree: true, attributes: true });
         } catch (_) {
           // Frame protection fallback is the lock overlays above.
         }

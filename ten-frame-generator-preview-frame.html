@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reading Tic Tac Toe Generator - PREVIEW FRAME</title>
+  <title>Ten Frame Generator - PREVIEW FRAME</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -70,9 +70,7 @@
     }
 
     @media (max-width: 900px) {
-      .preview-host {
-        min-height: 1080px;
-      }
+      .preview-host { min-height: 1080px; }
     }
 
     @media print {
@@ -82,12 +80,12 @@
   <script src="preview_customize_toggle_injector.js" defer></script>
 </head>
 <body oncontextmenu="return false;">
-  <section class="preview-host" aria-label="Reading Tic Tac Toe Generator Preview Frame">
+  <section class="preview-host" aria-label="Ten Frame Generator Preview Frame">
     <iframe
       id="generatorFrame"
       class="generator-frame"
-      src="01tictactoegenerator.html?v=20260223-preview"
-      title="Reading Tic Tac Toe Printable Generator"
+      src="tenframes.html?v=20260223-preview"
+      title="Ten Frame Generator"
       loading="eager"
     ></iframe>
 
@@ -105,14 +103,8 @@
         if (el) el.click();
       }
 
-      function ensureOptionSelected(doc, selector) {
-        const option = doc.querySelector(selector);
-        if (!option) return;
-        if (!option.classList.contains("selected")) option.click();
-      }
-
       function syncOverlayTop(doc) {
-        const output = doc.getElementById("output");
+        const output = doc.getElementById("table");
         if (!output) return;
         const overlayTop = Math.max(320, output.offsetTop - 6);
         rootStyle.setProperty("--preview-overlay-top", `${overlayTop}px`);
@@ -131,25 +123,12 @@
       }
 
       function configurePreview(doc) {
-        // Keep exactly one starter skill selected for easy "Generate again" flow.
-        doc
-          .querySelectorAll('.skill-button.selected:not([data-skill="Short A"])')
-          .forEach((button) => button.click());
-
-        const shortA = doc.querySelector('.skill-button[data-skill="Short A"]');
-        if (shortA && !shortA.classList.contains("selected")) shortA.click();
-
-        ensureOptionSelected(doc, '#blendOptions .option-box[data-blends="no"]');
-        ensureOptionSelected(doc, '#contentOptions .option-box[data-mode="words"]');
-
-        clickIfPresent(doc, '#btnGenerate');
+        clickIfPresent(doc, '#menu .tab[data-skill="within10_add"]');
+        clickIfPresent(doc, "#btnGen");
       }
 
       function lockPrint(doc) {
-        const printButtons = [
-          ...doc.querySelectorAll('button[onclick*="window.print"]'),
-          ...doc.querySelectorAll("#fabPrint")
-        ];
+        const printButtons = [...doc.querySelectorAll("#btnPrint")];
 
         printButtons.forEach((printBtn) => {
           printBtn.disabled = true;

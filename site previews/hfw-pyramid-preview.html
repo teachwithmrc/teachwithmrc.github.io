@@ -404,8 +404,9 @@
             <a class="is-nav-link" href="./division-generator-preview.html">Long Division</a>
             <a class="is-nav-link is-active" href="./long-division-scaffolded-generator-preview.html">Long Division Scaffold</a>
             <a class="is-nav-link" href="./addsubtractmodels-generator-preview.html">Add and Subtract with Manipulatives or Hundreds Chart</a>
+            <a class="is-nav-link" href="./ten-frame-preview.html">Ten Frame Generator</a>
             <a class="is-nav-link" href="./coin-counter-generator-preview.html">Coin Counter Generator</a>
-            <a class="is-nav-link" href="./mathtictac-preview.html">Math Tic Tac Preview</a>
+            <a class="is-nav-link" href="./mathtictac-preview.html">Tic Tac Toe Generator</a>
             <a class="is-nav-link" href="./mathrollread-preview.html">Math Roll &amp; Read Preview</a>
           </div>
 
@@ -429,7 +430,6 @@
             <a class="is-nav-link" href="./division-preview.html">Division (Printable Organizer)</a>
             <a class="is-nav-link" href="./decimals-preview.html">Decimals</a>
             <a class="is-nav-link" href="./fractions-preview.html">Fractions</a>
-            <a class="is-nav-link" href="./ten-frame-preview.html">Ten Frame</a>
             <a class="is-nav-link" href="./google-puzzle-preview.html">Google Puzzle</a>
             <a class="is-nav-link" href="./math-riddle-preview.html">Math Fact Riddles</a>
           </div>
@@ -536,14 +536,16 @@
               display:flex;
               flex-direction:column;
               gap:10px;
-              justify-content:space-between;
+              justify-content:flex-start;
             }
             .hfw-card:nth-child(3n){ border-right:none; }
             .hfw-word{
               margin:0;
-              font-size:20px;
+              font-family:"Poppins",system-ui,sans-serif;
+              font-size:30px;
               font-weight:900;
-              line-height:1.15;
+              line-height:1.1;
+              text-align:center;
             }
             .hfw-card a{
               display:block;
@@ -558,6 +560,13 @@
             }
             .hfw-card.locked{
               background:#fbfdff;
+              min-height:132px;
+              gap:6px;
+            }
+            .hfw-card.locked .is-download-btn{
+              height:40px;
+              font-size:12px;
+              padding:0 14px;
             }
             .is-download-btn{
               appearance:none;

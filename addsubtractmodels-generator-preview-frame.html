@@ -69,6 +69,7 @@
       body { display: none !important; }
     }
   </style>
+  <script src="preview_customize_toggle_injector.js" defer></script>
 </head>
 <body oncontextmenu="return false;">
   <div class="frame-wrap">
@@ -106,6 +107,12 @@
         try {
           const frameDoc = liveFrame.contentDocument || liveFrame.contentWindow.document;
           if (!frameDoc) return;
+          const frameWin = liveFrame.contentWindow;
+
+          function hideNode(node) {
+            if (!node) return;
+            node.style.display = "none";
+          }
 
           frameDoc.addEventListener("contextmenu", function (e) {
             e.preventDefault();
@@ -125,16 +132,69 @@
               e.preventDefault();
               blockedAction();
             }, true);
+            hideNode(printBtn);
+          }
+
+          // Preview UI simplification:
+          // Keep only Generate + visual mode (Base-10 / Hundreds Chart) + 2-digit + 2-digit setup.
+          hideNode(frameDoc.querySelector(".op-switch"));
+          hideNode(frameDoc.getElementById("chartOrderField"));
+          hideNode(frameDoc.querySelector(".source-options"));
+          hideNode(frameDoc.getElementById("customProblemPanel"));
+          hideNode(frameDoc.querySelector(".options-box"));
+
+          const pageLayoutField = frameDoc.getElementById("pageLayout")?.closest(".field");
+          hideNode(pageLayoutField);
+
+          const digitsA = frameDoc.getElementById("digitsA");
+          const digitsB = frameDoc.getElementById("digitsB");
+          const opAddBtn = frameDoc.getElementById("opAddBtn");
+          const sourceRandom = frameDoc.getElementById("sourceRandom");
+          const sourceCustom = frameDoc.getElementById("sourceCustom");
+          const generateBtn = frameDoc.getElementById("generateBtn");
+
+          if (opAddBtn) {
+            opAddBtn.click();
+          }
+
+          if (sourceRandom && sourceCustom) {
+            sourceRandom.checked = true;
+            sourceCustom.checked = false;
+            sourceRandom.dispatchEvent(new frameWin.Event("change", { bubbles: true }));
+          }
+
+          function forceTwoDigitOnly(selectEl) {
+            if (!selectEl) return;
+            Array.from(selectEl.options).forEach((opt) => {
+              if (opt.value !== "2") {
+                opt.remove();
+              }
+            });
+            if (!selectEl.querySelector('option[value="2"]')) {
+              const onlyOption = frameDoc.createElement("option");
+              onlyOption.value = "2";
+              onlyOption.textContent = "2 digits";
+              selectEl.appendChild(onlyOption);
+            }
+            selectEl.value = "2";
+            selectEl.dispatchEvent(new frameWin.Event("change", { bubbles: true }));
+          }
+
+          forceTwoDigitOnly(digitsA);
+          forceTwoDigitOnly(digitsB);
+
+          if (generateBtn) {
+            setTimeout(function () { generateBtn.click(); }, 30);
           }
 
           const host = frameDoc.getElementById("worksheetHost");
           if (host) {
-            host.style.filter = "blur(1.15px) saturate(0.9)";
+            host.style.filter = "blur(1.35px) saturate(0.9)";
           }
 
           const subtitle = frameDoc.querySelector(".screen-only .subtitle");
           if (subtitle) {
-            subtitle.textContent = "Preview mode: Generate is enabled, lower worksheet area is locked for members.";
+            subtitle.textContent = "Preview mode: Generate is enabled for 2-digit + 2-digit with Base-10 Blocks or Hundreds Chart.";
           }
         } catch (err) {
           // If browser blocks frame scripting, fallback still shows lock overlays.

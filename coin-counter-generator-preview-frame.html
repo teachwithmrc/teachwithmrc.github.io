@@ -47,7 +47,7 @@
       background-image: url("data:image/svg+xml,%3Csvg width='250' height='250' viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='20' y='150' fill='%23000' opacity='0.14' transform='rotate(-45 125 125)' font-family='Poppins' font-weight='900' font-size='30'%3EPREVIEW MODE%3C/text%3E%3C/svg%3E");
     }
 
-    .preview-paywall {
+    .preview-shade {
       position: absolute;
       left: 0;
       right: 0;
@@ -55,57 +55,21 @@
       bottom: 0;
       z-index: 30;
       pointer-events: none;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding: 14px;
-      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(0,0,0,0.74) 30%, rgba(0,0,0,0.9));
-    }
-
-    .preview-paywall-card {
-      width: min(94%, 520px);
-      border: 2px solid #fff;
-      border-radius: 14px;
-      background: rgba(17, 17, 17, 0.95);
-      color: #fff;
-      text-align: center;
-      padding: 14px 14px 12px;
-      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
-      pointer-events: auto;
-    }
-
-    .preview-paywall-card h3 {
-      margin: 0 0 6px;
-      font-size: 1.05rem;
-      line-height: 1.2;
-      font-weight: 900;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-    }
-
-    .preview-paywall-card p {
-      margin: 0 0 10px;
-      font-size: 0.82rem;
-      line-height: 1.35;
-      opacity: 0.95;
-      font-weight: 600;
-    }
-
-    .preview-paywall-card a {
-      display: inline-block;
-      text-decoration: none;
-      background: #fff;
-      color: #111;
-      border-radius: 9px;
-      padding: 8px 12px;
-      font-size: 0.8rem;
-      font-weight: 900;
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.14) 40%,
+        rgba(255,255,255,0.24) 100%
+      );
+      backdrop-filter: blur(0.9px);
+      -webkit-backdrop-filter: blur(0.9px);
     }
 
     @media print {
       body { display: none !important; }
     }
   </style>
+  <script src="preview_customize_toggle_injector.js" defer></script>
 </head>
 <body oncontextmenu="return false;">
   <div class="frame-wrap">
@@ -118,14 +82,7 @@
     ></iframe>
 
     <div class="preview-watermark" aria-hidden="true"></div>
-
-    <div class="preview-paywall" aria-hidden="false">
-      <div class="preview-paywall-card">
-        <h3>Premium Resource</h3>
-        <p>Generate is enabled in preview mode. Join membership to unlock full worksheet visibility and printing.</p>
-        <a href="https://member.interventionstation.com/join" target="_blank" rel="noopener noreferrer">Join Membership</a>
-      </div>
-    </div>
+    <div class="preview-shade" aria-hidden="true"></div>
   </div>
 
   <script>
@@ -151,6 +108,8 @@
           const frameWin = liveFrame.contentWindow;
           const frameDoc = liveFrame.contentDocument || frameWin.document;
           if (!frameDoc) return;
+          const watermark = document.querySelector(".preview-watermark");
+          const shade = document.querySelector(".preview-shade");
 
           frameDoc.addEventListener("contextmenu", function (e) {
             e.preventDefault();
@@ -181,6 +140,13 @@
           const sheet = frameDoc.getElementById("sheet");
           if (sheet) {
             sheet.style.filter = "blur(1.2px) saturate(0.92)";
+            const start = Math.max(300, Math.round(sheet.getBoundingClientRect().top + 6));
+            if (watermark) {
+              watermark.style.top = start + "px";
+            }
+            if (shade) {
+              shade.style.top = (start + 100) + "px";
+            }
           }
 
           const subtitle = frameDoc.querySelector(".subtitle");

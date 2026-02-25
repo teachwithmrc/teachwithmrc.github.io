@@ -754,7 +754,6 @@
           <div class="select-wrap" id="tttPerPageWrap">
             <select id="tttPerPageSelect">
               <option value="4" selected>4 games</option>
-              <option value="2">2 games</option>
             </select>
           </div>
 
@@ -1761,7 +1760,7 @@
       const copies = Math.max(1, Math.min(12, Number(copiesInput.value) || 1));
       state.copies = copies;
       copiesInput.value = String(copies);
-      const tttGamesPerPage = state.tttPerPage === 2 ? 2 : 4;
+      const tttGamesPerPage = 4;
 
       outputEl.innerHTML = "";
       for (let i = 1; i <= copies; i += 1) {
@@ -1771,16 +1770,11 @@
           outputEl.appendChild(buildRollSheet(makePrompts(state.gridSize), i));
         }
       }
-      outputEl.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     document.querySelectorAll("#gameTypeRow .pill").forEach((button) => {
       button.addEventListener("click", () => {
         state.gameType = button.dataset.gameType;
-        if (state.gameType === "tictactoe" && state.operation === "coins" && state.tttPerPage !== 2) {
-          state.tttPerPage = 2;
-          tttPerPageSelect.value = "2";
-        }
         setSelectedInRow("gameTypeRow", "data-game-type", state.gameType);
         updateRegroupVisibility();
       });
@@ -1789,10 +1783,6 @@
     document.querySelectorAll("#operationRow .pill").forEach((button) => {
       button.addEventListener("click", () => {
         state.operation = button.dataset.operation;
-        if (state.operation === "coins" && state.gameType === "tictactoe") {
-          state.tttPerPage = 2;
-          tttPerPageSelect.value = "2";
-        }
         setSelectedInRow("operationRow", "data-operation", state.operation);
         updateDifficultyOptions();
         updateRegroupVisibility();
@@ -1831,7 +1821,8 @@
     });
 
     tttPerPageSelect.addEventListener("change", () => {
-      state.tttPerPage = Number(tttPerPageSelect.value) === 2 ? 2 : 4;
+      state.tttPerPage = 4;
+      tttPerPageSelect.value = "4";
     });
 
     gridSizeSelect.addEventListener("change", () => {

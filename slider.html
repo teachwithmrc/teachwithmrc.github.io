@@ -25,10 +25,13 @@
       outline: none;
     }
     .twmc-slider .track {
-      display: flex; transition: transform .35s ease; touch-action: pan-y;
+      display: flex; transition: transform .35s ease; touch-action: pan-y; will-change: transform;
     }
-    .twmc-slider .slide { min-width: 100%; margin: 0; position: relative; }
-    .twmc-slider img { display: block; width: 100%; height: auto; }
+    .twmc-slider .slide { min-width: 100%; margin: 0; position: relative; aspect-ratio: 16 / 9; overflow: hidden; }
+    .twmc-slider img {
+      display: block; width: 100%; height: 100%; object-fit: cover;
+      user-select: none; -webkit-user-drag: none; pointer-events: none;
+    }
     .twmc-slider figcaption {
       position: absolute; left: 0; right: 0; bottom: 0;
       padding: 10px 14px; color: #fff;
@@ -115,6 +118,7 @@
       const prev = slider.querySelector('.prev');
       const next = slider.querySelector('.next');
       const dotsWrap = slider.querySelector('.dots');
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       let i = 0;
       let startX = null;
@@ -137,8 +141,13 @@
         });
       }
 
-      function go(n) {
+      function setTrackTransition(enabled) {
+        track.style.transition = enabled && !prefersReducedMotion ? 'transform .35s ease' : 'none';
+      }
+
+      function go(n, animate = true) {
         i = (n + slides.length) % slides.length;
+        setTrackTransition(animate);
         track.style.transform = 'translate3d(' + (-i * W()) + 'px,0,0)';
         setDots();
         // update aria-label on slides for screen readers
@@ -148,20 +157,29 @@
       prev.addEventListener('click', () => go(i - 1));
       next.addEventListener('click', () => go(i + 1));
 
-      // resize: keep slide aligned
-      new ResizeObserver(() => go(i)).observe(slider);
+      // resize: keep slide aligned without animation jump
+      new ResizeObserver(() => go(i, false)).observe(slider);
 
       // keyboard arrow support already works because slider has tabindex=0
       slider.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') go(i - 1);
-        else if (e.key === 'ArrowRight') go(i + 1);
+        if (e.key === 'ArrowLeft') { e.preventDefault(); go(i - 1); }
+        else if (e.key === 'ArrowRight') { e.preventDefault(); go(i + 1); }
       });
 
       // swipe / drag
+      function finishDrag(endX) {
+        if (!dragging) return;
+        dragging = false;
+        const dx = endX - startX;
+        if (Math.abs(dx) > W() * 0.2) go(i - Math.sign(dx));
+        else go(i);
+      }
+
       track.addEventListener('pointerdown', (e) => {
         dragging = true;
         startX = e.clientX;
         track.setPointerCapture(e.pointerId);
+        setTrackTransition(false);
       });
       track.addEventListener('pointermove', (e) => {
         if (!dragging) return;
@@ -169,11 +187,10 @@
         track.style.transform = 'translate3d(' + (dx - i * W()) + 'px,0,0)';
       });
       track.addEventListener('pointerup', (e) => {
-        if (!dragging) return;
-        dragging = false;
-        const dx = e.clientX - startX;
-        if (Math.abs(dx) > W() * 0.2) go(i - Math.sign(dx));
-        else go(i);
+        finishDrag(e.clientX);
+      });
+      track.addEventListener('pointercancel', () => {
+        go(i);
       });
 
       // Optional autoplay (uncomment to enable)

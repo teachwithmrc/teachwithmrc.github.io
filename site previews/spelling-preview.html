@@ -305,19 +305,141 @@
     }
     .buy-btn--secondary:hover{ background:#f6f9ff; }
 
-    .preview-frame-wrap{
-      border:2px solid #111;
-      border-radius:12px;
-      overflow:hidden;
-      background:#fff;
-      box-shadow:0 10px 22px rgba(31,54,95,0.07);
+    .spelling-preview-wrap{
+      max-width:1200px;
+      margin:0 auto;
+      font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      color:#111;
     }
-    .preview-iframe{
+    .spelling-preview-head{
+      background:#6ec1ff;
+      padding:16px 18px;
+      border:2px solid #111;
+      border-bottom:0;
+    }
+    .spelling-preview-head p{
+      font-size:28px;
+      font-weight:900;
+      color:#fff;
+      margin:0;
+    }
+    .spelling-preview-head img{
+      max-width:100%;
+      margin-top:10px;
       display:block;
-      width:100%;
-      height:1100px;
-      border:0;
+    }
+    .spelling-preview-body{
+      border-left:2px solid #111;
+      border-right:2px solid #111;
+      border-bottom:2px solid #111;
       background:#fff;
+    }
+    .spelling-section-title{
+      border-bottom:2px solid #111;
+      padding:16px 18px;
+      margin:0;
+      font-size:22px;
+      font-weight:900;
+    }
+    .spelling-grid{
+      display:flex;
+      flex-wrap:wrap;
+    }
+    .spelling-col-33{
+      flex:0 0 33.333%;
+      padding:18px;
+      border-right:2px solid #111;
+      border-bottom:2px solid #111;
+      box-sizing:border-box;
+    }
+    .spelling-col-33:nth-child(3n){
+      border-right:0;
+    }
+    .spelling-col-100{
+      flex:0 0 100%;
+      padding:18px;
+      border-bottom:2px solid #111;
+      box-sizing:border-box;
+    }
+    .spelling-col-100:last-child{
+      border-bottom:0;
+    }
+    .spelling-card-title{
+      margin:0 0 12px;
+      font-size:20px;
+      font-weight:900;
+      color:#111;
+    }
+    .spelling-lock-btn{
+      appearance:none;
+      border:1px solid #0f335b;
+      background:linear-gradient(180deg, #2f79b8 0%, #1e5688 100%);
+      color:#fff;
+      border-radius:999px;
+      height:46px;
+      padding:0 18px;
+      font-family:"Poppins",system-ui,sans-serif;
+      font-size:14px;
+      font-weight:800;
+      letter-spacing:.01em;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      box-shadow:0 8px 16px rgba(16,40,70,.2);
+      cursor:not-allowed;
+      opacity:1;
+      pointer-events:none;
+    }
+    .spelling-lock-btn .lock{
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:12px;
+      line-height:1;
+      background:rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.35);
+    }
+    .spelling-lock-btn:disabled{
+      color:#fff;
+      opacity:1;
+      border-color:#0f335b;
+      background:linear-gradient(180deg, #2f79b8 0%, #1e5688 100%);
+      filter:none;
+    }
+    .spelling-preview-cta{
+      padding:16px 18px;
+      background:#f3f5f7;
+      border-top:2px solid #111;
+    }
+    .spelling-preview-cta p{
+      margin:0;
+      font-size:17px;
+      font-weight:900;
+      color:#1f365f;
+    }
+    .spelling-preview-cta .sub{
+      margin-top:6px;
+      font-size:14px;
+      font-weight:600;
+      color:#4f6689;
+    }
+    .spelling-preview-cta a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      margin-top:12px;
+      height:46px;
+      padding:0 18px;
+      border-radius:999px;
+      border:2px solid #111;
+      background:#6ec1ff;
+      color:#fff;
+      font-weight:900;
+      text-decoration:none;
     }
 
     @media (max-width:1100px){
@@ -336,7 +458,15 @@
         flex-wrap:wrap;
         justify-content:center;
       }
-      .preview-iframe{ height:900px; }
+      .spelling-col-33{
+        flex:0 0 50%;
+      }
+      .spelling-col-33:nth-child(3n){
+        border-right:2px solid #111;
+      }
+      .spelling-col-33:nth-child(2n){
+        border-right:0;
+      }
     }
     @media (max-width:860px){
       .is-unified-join{ flex-direction:column; align-items:flex-start; }
@@ -344,6 +474,15 @@
       .buy-options{ flex-direction:column; align-items:flex-start; }
       .buy-options__buttons{ width:100%; justify-content:flex-start; }
       .buy-btn{ width:100%; justify-content:center; }
+    }
+    @media (max-width:700px){
+      .spelling-col-33{
+        flex:0 0 100%;
+        border-right:0;
+      }
+      .spelling-preview-head p{
+        font-size:24px;
+      }
     }
 
   </style>
@@ -402,10 +541,11 @@
             <a class="is-nav-link" href="./multiply-generator-preview.html">Multiplication Generator</a>
             <a class="is-nav-link" href="./partialproducts-generator-preview.html">Partial Products Generator</a>
             <a class="is-nav-link" href="./division-generator-preview.html">Long Division</a>
-            <a class="is-nav-link is-active" href="./long-division-scaffolded-generator-preview.html">Long Division Scaffold</a>
+            <a class="is-nav-link" href="./long-division-scaffolded-generator-preview.html">Long Division Scaffold</a>
             <a class="is-nav-link" href="./addsubtractmodels-generator-preview.html">Add and Subtract with Manipulatives or Hundreds Chart</a>
+            <a class="is-nav-link" href="./ten-frame-preview.html">Ten Frame Generator</a>
             <a class="is-nav-link" href="./coin-counter-generator-preview.html">Coin Counter Generator</a>
-            <a class="is-nav-link" href="./mathtictac-preview.html">Math Tic Tac Preview</a>
+            <a class="is-nav-link" href="./mathtictac-preview.html">Tic Tac Toe Generator</a>
             <a class="is-nav-link" href="./mathrollread-preview.html">Math Roll &amp; Read Preview</a>
           </div>
 
@@ -429,7 +569,6 @@
             <a class="is-nav-link" href="./division-preview.html">Division (Printable Organizer)</a>
             <a class="is-nav-link" href="./decimals-preview.html">Decimals</a>
             <a class="is-nav-link" href="./fractions-preview.html">Fractions</a>
-            <a class="is-nav-link" href="./ten-frame-preview.html">Ten Frame</a>
             <a class="is-nav-link" href="./google-puzzle-preview.html">Google Puzzle</a>
             <a class="is-nav-link" href="./math-riddle-preview.html">Math Fact Riddles</a>
           </div>
@@ -443,7 +582,7 @@
             <a class="is-nav-link" href="./phonics-maze-preview.html">Phonics Path Maze</a>
             <a class="is-nav-link" href="./pick-the-pic-preview.html">Pick the Pic</a>
             <a class="is-nav-link" href="./hfw-pyramid-preview.html">High Frequency Word Pyramids</a>
-            <a class="is-nav-link" href="./spelling-preview.html">Spelling by Phonics Skill</a>
+            <a class="is-nav-link is-active" href="./spelling-preview.html">Spelling by Phonics Skill</a>
             <a class="is-nav-link" href="./spelling-google-sheets-preview.html">Spelling Google Sheets</a>
             <span class="is-nav-link" style="cursor:not-allowed; opacity:.7; text-decoration:none;">Decodable (COMING SOON)</span>
           </div>
@@ -473,18 +612,51 @@
           </div>
           <header class="is-page-hero">
             <h1>Spelling by Phonics Skills</h1>
-            <p>Preview the generator below. Printing and full access are member-only.</p>
+            <p>Browse the library preview below. Downloads are member-only.</p>
           </header>
 
 
-          <div class="preview-frame-wrap">
-            <iframe
-              class="preview-iframe"
-              src="https://teachwithmrc.github.io/spelling.html"
-              title="Spelling by Phonics Skills Preview"
-              loading="lazy"
-              allowfullscreen
-            ></iframe>
+          <div class="spelling-preview-wrap">
+            <div class="spelling-preview-head">
+              <p><strong>Spelling by Phonics Skill</strong></p>
+              <img src="https://storage.googleapis.com/revex-membership-production/memberships/F9vnmU5R8sOuTGoxp5by/courses/A-Brand-Colour-Palette-Guide--600-x-360-px--11-7fvu.png" alt="Spelling by Phonics Skill" />
+            </div>
+
+            <div class="spelling-preview-body">
+              <p class="spelling-section-title"><strong>CVC</strong></p>
+              <div class="spelling-grid">
+                <div class="spelling-col-33"><p class="spelling-card-title"><strong>0.1 - Short A</strong></p><button class="spelling-lock-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Preview Locked</button></div>
+                <div class="spelling-col-33"><p class="spelling-card-title"><strong>0.5 - Short E</strong></p><button class="spelling-lock-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Preview Locked</button></div>
+                <div class="spelling-col-33"><p class="spelling-card-title"><strong>0.2 - Short I</strong></p><button class="spelling-lock-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Preview Locked</button></div>
+                <div class="spelling-col-33"><p class="spelling-card-title"><strong>0.3 - Short O</strong></p><button class="spelling-lock-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Preview Locked</button></div>
+                <div class="spelling-col-33"><p class="spelling-card-title"><strong>0.4 - Short U</strong></p><button class="spelling-lock-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Preview Locked</button></div>
+                <div class="spelling-col-33"><p class="spelling-card-title"><strong>CVC Mixed All</strong></p><button class="spelling-lock-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Preview Locked</button></div>
+              </div>
+
+              <p class="spelling-section-title"><strong>Digraphs</strong></p>
+              <div class="spelling-grid">
+                <div class="spelling-col-33"><p class="spelling-card-title"><strong>1.1 - Digraph CK</strong></p><button class="spelling-lock-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Preview Locked</button></div>
+                <div class="spelling-col-33"><p class="spelling-card-title"><strong>1.2 - Digraph SH</strong></p><button class="spelling-lock-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Preview Locked</button></div>
+                <div class="spelling-col-33"><p class="spelling-card-title"><strong>1.3 - Digraph TH</strong></p><button class="spelling-lock-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Preview Locked</button></div>
+                <div class="spelling-col-33"><p class="spelling-card-title"><strong>1.4 - Digraph CH</strong></p><button class="spelling-lock-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Preview Locked</button></div>
+                <div class="spelling-col-33"><p class="spelling-card-title"><strong>1.5 - Digraph WH</strong></p><button class="spelling-lock-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Preview Locked</button></div>
+                <div class="spelling-col-33"><p class="spelling-card-title"><strong>Digraphs Mixed</strong></p><button class="spelling-lock-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Preview Locked</button></div>
+              </div>
+
+              <p class="spelling-section-title"><strong>VCe - Silent E</strong></p>
+              <div class="spelling-grid">
+                <div class="spelling-col-33"><p class="spelling-card-title"><strong>2.1 - VCe Long A</strong></p><button class="spelling-lock-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Preview Locked</button></div>
+                <div class="spelling-col-33"><p class="spelling-card-title"><strong>2.2 - VCe Long I</strong></p><button class="spelling-lock-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Preview Locked</button></div>
+                <div class="spelling-col-33"><p class="spelling-card-title"><strong>2.4 - VCe Long U</strong></p><button class="spelling-lock-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Preview Locked</button></div>
+                <div class="spelling-col-100"><p class="spelling-card-title"><strong>VCe Mixed (Long A, I, O, U)</strong></p><button class="spelling-lock-btn" type="button" disabled aria-disabled="true"><span class="lock">🔒</span>Preview Locked</button></div>
+              </div>
+
+              <div class="spelling-preview-cta">
+                <p>Want every spelling skill unlocked?</p>
+                <p class="sub">Members get instant access to the full Spelling by Phonics library.</p>
+                <a href="./home-preview.html#join">Unlock the Full Library</a>
+              </div>
+            </div>
           </div>
         </section>
       </main>

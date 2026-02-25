@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Subtraction Graphic Organizer Generator - PREVIEW MODE</title>
+  <title>Multiplication Graphic Organizer Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -145,87 +145,8 @@
       color: #5a677f;
     }
 
-    .preview-shell {
-      position: relative;
-      margin-top: 12px;
-      min-height: 760px;
-      max-height: 760px;
-      overflow: hidden;
-      border: 2px solid #111;
-      background: #fff;
-    }
-
     #worksheetHost {
-      margin: 0;
-      padding: 8px;
-      filter: blur(1.1px) saturate(0.9);
-    }
-
-    .preview-watermark {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 420px;
-      bottom: 0;
-      z-index: 118;
-      pointer-events: none;
-      background: rgba(255, 255, 255, 0.07);
-      background-image: url("data:image/svg+xml,%3Csvg width='250' height='250' viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='20' y='150' fill='%23000' opacity='0.14' transform='rotate(-45 125 125)' font-family='Poppins' font-weight='900' font-size='30'%3EPREVIEW MODE%3C/text%3E%3C/svg%3E");
-    }
-
-    .preview-paywall {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 520px;
-      bottom: 0;
-      z-index: 120;
-      pointer-events: none;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding: 14px;
-      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.76) 28%, rgba(0, 0, 0, 0.9));
-    }
-
-    .preview-paywall-card {
-      width: min(94%, 520px);
-      border: 2px solid #fff;
-      border-radius: 14px;
-      background: rgba(17, 17, 17, 0.95);
-      color: #fff;
-      text-align: center;
-      padding: 14px 14px 12px;
-      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
-      pointer-events: auto;
-    }
-
-    .preview-paywall-card h3 {
-      margin: 0 0 6px;
-      font-size: 1.05rem;
-      line-height: 1.2;
-      font-weight: 900;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-    }
-
-    .preview-paywall-card p {
-      margin: 0 0 10px;
-      font-size: 0.82rem;
-      line-height: 1.35;
-      opacity: 0.95;
-      font-weight: 600;
-    }
-
-    .preview-paywall-card a {
-      display: inline-block;
-      text-decoration: none;
-      background: #fff;
-      color: #111;
-      border-radius: 9px;
-      padding: 8px 12px;
-      font-size: 0.8rem;
-      font-weight: 900;
+      margin-top: 12px;
     }
 
     .sheet {
@@ -280,9 +201,9 @@
     }
 
     .problem-wrap {
-      --cell-size: 46px;
-      --cell-gap: 5px;
-      --op-width: 30px;
+      --cell-size: 36px;
+      --cell-gap: 4px;
+      --op-width: 28px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -290,6 +211,43 @@
       padding: 8px 10px 10px;
       border-right: 2px solid #cfd6e3;
       border-bottom: 2px solid #cfd6e3;
+    }
+
+    .sheet.layout-8 .problem-wrap {
+      --cell-size: 31px;
+      --cell-gap: 3px;
+      --op-width: 24px;
+      padding: 6px 7px 8px;
+      gap: 4px;
+    }
+
+    .sheet.layout-8 .problem-head {
+      min-height: 34px;
+      padding: 4px 8px;
+      font-size: 0.8rem;
+      gap: 4px;
+    }
+
+    .sheet.layout-8 .problem-badge {
+      width: 19px;
+      height: 19px;
+      font-size: 0.65rem;
+    }
+
+    .sheet.layout-8 .problem-text {
+      font-size: 1.02rem;
+    }
+
+    .sheet.layout-8 .digit-cell {
+      font-size: 1.48rem;
+    }
+
+    .sheet.layout-8 .carry-row .digit-cell {
+      font-size: 1.05rem;
+    }
+
+    .sheet.layout-8 .op-cell {
+      font-size: 1.65rem;
     }
 
     .problem-top {
@@ -338,14 +296,6 @@
       letter-spacing: 0.2px;
     }
 
-    .problem-dot {
-      font-size: 1.15rem;
-      font-weight: 800;
-      line-height: 1;
-      margin: 0 2px 0 1px;
-      flex: 0 0 auto;
-    }
-
     .problem-head.blank {
       border-style: dashed;
       color: #8c96a8;
@@ -357,6 +307,37 @@
       flex-direction: column;
       gap: 0;
       align-items: center;
+    }
+
+    .simple-mult-stack {
+      width: max-content;
+      min-width: calc(3 * var(--cell-size) + 2 * var(--cell-gap));
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-end;
+    }
+
+    .simple-mult-line {
+      font-size: 1.7rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: 0.2px;
+      color: #111;
+      min-height: calc(var(--cell-size) * 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      width: 100%;
+    }
+
+    .simple-mult-answer {
+      display: grid;
+      gap: var(--cell-gap);
+      justify-items: stretch;
+      width: max-content;
+      border-top: 5px solid #000;
+      padding-top: 5px;
     }
 
     .table-row {
@@ -449,9 +430,9 @@
       }
 
       .problem-wrap {
-        --cell-size: 38px;
-        --cell-gap: 4px;
-        --op-width: 26px;
+        --cell-size: 32px;
+        --cell-gap: 3px;
+        --op-width: 24px;
       }
 
       .problem-top {
@@ -473,6 +454,10 @@
         font-size: 1.18rem;
       }
 
+      .simple-mult-line {
+        font-size: 1.35rem;
+      }
+
       .digit-cell {
         font-size: 1.55rem;
       }
@@ -488,11 +473,6 @@
       .footer-note {
         position: static;
         margin-top: 8px;
-      }
-
-      .preview-shell {
-        min-height: 640px;
-        max-height: 640px;
       }
     }
 
@@ -517,11 +497,51 @@
       }
 
       .problem-wrap {
-        --cell-size: 46px;
-        --cell-gap: 5px;
-        --op-width: 30px;
+        --cell-size: 34px;
+        --cell-gap: 4px;
+        --op-width: 26px;
         break-inside: avoid;
         page-break-inside: avoid;
+      }
+
+      .sheet.layout-8 .problem-wrap {
+        --cell-size: 29px;
+        --cell-gap: 3px;
+        --op-width: 22px;
+        padding: 5px 6px 7px;
+        gap: 3px;
+      }
+
+      .sheet.layout-8 .problem-head {
+        min-height: 30px;
+        padding: 3px 7px;
+        font-size: 0.76rem;
+      }
+
+      .sheet.layout-8 .problem-badge {
+        width: 17px;
+        height: 17px;
+        font-size: 0.62rem;
+      }
+
+      .sheet.layout-8 .problem-text {
+        font-size: 0.95rem;
+      }
+
+      .sheet.layout-8 .digit-cell {
+        font-size: 1.25rem;
+      }
+
+      .sheet.layout-8 .carry-row .digit-cell {
+        font-size: 0.98rem;
+      }
+
+      .sheet.layout-8 .op-cell {
+        font-size: 1.4rem;
+      }
+
+      .sheet.layout-8 .simple-mult-line {
+        font-size: 1.15rem;
       }
 
       .problem-head {
@@ -539,41 +559,24 @@
         bottom: 0.1in;
       }
     }
-
-    @media print {
-      body { display: none !important; }
-    }
   </style>
-  <script src="preview_customize_toggle_injector.js" defer></script>
 </head>
-<body oncontextmenu="return false;">
+<body>
   <div class="app">
     <div class="screen-only">
-      <h1>Subtraction Graphic Organizer Generator</h1>
-      <p class="subtitle">Preview mode: Generate is enabled, lower worksheet area is locked for members.</p>
+      <h1>Multiplication Graphic Organizer Generator</h1>
+      <p class="subtitle">Standard algorithm organizer with 2x1, 2x2, 3x1, 4x1, and 3x2 problem types</p>
 
       <section class="controls-card">
         <div class="controls-grid">
           <div class="field">
-            <label for="digitsA">Minuend Digits</label>
-            <select id="digitsA">
-              <option value="2" selected>2 digits</option>
-              <option value="3">3 digits</option>
-              <option value="4">4 digits</option>
-              <option value="5">5 digits</option>
-              <option value="6">6 digits</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="digitsB">Subtrahend Digits</label>
-            <select id="digitsB">
-              <option value="1" selected>1 digit</option>
-              <option value="2">2 digits</option>
-              <option value="3">3 digits</option>
-              <option value="4">4 digits</option>
-              <option value="5">5 digits</option>
-              <option value="6">6 digits</option>
+            <label for="problemType">Problem Type</label>
+            <select id="problemType">
+              <option value="2x1" selected>2 x 1</option>
+              <option value="2x2">2 x 2</option>
+              <option value="3x1">3 x 1</option>
+              <option value="4x1">4 x 1</option>
+              <option value="3x2">3 x 2</option>
             </select>
           </div>
 
@@ -586,13 +589,13 @@
           </div>
 
           <div class="field">
-            <label for="customProblem">Custom Problems (up to 6)</label>
-            <input id="customProblem" type="text" placeholder="Example: 76-4, 58-9, 43-7, 91-8, 67-5, 84-6" />
+            <label for="customProblem">Custom Problems (up to 8 for 2x1, otherwise 6)</label>
+            <input id="customProblem" type="text" placeholder="Example: 76x4, 58x9, 43x7, 91x8, 67x5, 84x6" />
           </div>
 
           <div class="field">
             <label for="sheetTitle">Worksheet Title</label>
-            <input id="sheetTitle" type="text" value="Subtraction Graphic Organizer" />
+            <input id="sheetTitle" type="text" value="Multiplication Graphic Organizer" />
           </div>
 
           <div class="field">
@@ -601,19 +604,10 @@
           </div>
 
           <div class="field">
-            <label>Equation Label</label>
-            <label class="checkbox-wrap"><input id="showProblemEq" type="checkbox" checked />Show boxed problem equation</label>
-          </div>
-
-          <div class="field">
             <label>Scaffold Version</label>
-            <label class="checkbox-wrap"><input id="scaffoldToggle" type="checkbox" />Fill minuend/subtrahend numbers in table boxes</label>
+            <label class="checkbox-wrap"><input id="scaffoldToggle" type="checkbox" />Fill multiplicand/multiplier numbers in table boxes</label>
           </div>
 
-          <div class="field">
-            <label>Borrowing</label>
-            <label class="checkbox-wrap"><input id="requireBorrowing" type="checkbox" />Use borrowing problems</label>
-          </div>
         </div>
 
         <div class="button-row">
@@ -621,37 +615,30 @@
           <button id="printBtn" type="button">Print</button>
         </div>
 
-        <div class="note" id="statusText">Tip: custom mode accepts up to 6 comma-separated equations like <strong>537268-37917, 86421-5678</strong>.</div>
+        <div class="note" id="statusText">Tip: custom mode accepts comma-separated equations like <strong>84x7, 56x23, 248x36</strong>.</div>
       </section>
     </div>
 
-    <div class="preview-shell" aria-label="Subtraction Generator Preview">
-      <div id="worksheetHost"></div>
-      <div class="preview-watermark" aria-hidden="true"></div>
-      <div class="preview-paywall" aria-hidden="false">
-        <div class="preview-paywall-card">
-          <h3>Premium Resource</h3>
-          <p>Generate is enabled in preview mode. Join membership to unlock full worksheet visibility and printing.</p>
-          <a href="https://member.interventionstation.com/join" target="_blank" rel="noopener">Join Membership</a>
-        </div>
-      </div>
-    </div>
+    <div id="worksheetHost"></div>
   </div>
 
   <script>
-    const PROBLEMS_PER_PAGE = 6;
+    const TYPE_CONFIG = {
+      "2x1": { aDigits: 2, bDigits: 1, label: "2-digit × 1-digit", problemsPerPage: 8 },
+      "2x2": { aDigits: 2, bDigits: 2, label: "2-digit × 2-digit", problemsPerPage: 6 },
+      "3x1": { aDigits: 3, bDigits: 1, label: "3-digit × 1-digit", problemsPerPage: 6 },
+      "4x1": { aDigits: 4, bDigits: 1, label: "4-digit × 1-digit", problemsPerPage: 6 },
+      "3x2": { aDigits: 3, bDigits: 2, label: "3-digit × 2-digit", problemsPerPage: 6 }
+    };
 
     const els = {
       host: document.getElementById("worksheetHost"),
-      digitsA: document.getElementById("digitsA"),
-      digitsB: document.getElementById("digitsB"),
+      problemType: document.getElementById("problemType"),
       problemMode: document.getElementById("problemMode"),
       customProblem: document.getElementById("customProblem"),
       sheetTitle: document.getElementById("sheetTitle"),
       colorToggle: document.getElementById("colorToggle"),
-      showProblemEq: document.getElementById("showProblemEq"),
       scaffoldToggle: document.getElementById("scaffoldToggle"),
-      requireBorrowing: document.getElementById("requireBorrowing"),
       statusText: document.getElementById("statusText"),
       generateBtn: document.getElementById("generateBtn"),
       printBtn: document.getElementById("printBtn")
@@ -677,26 +664,49 @@
       return randInt(min, max);
     }
 
-    function hasBorrowing(a, b) {
+    function hasMultiplicationRegrouping(a, b) {
       const aLow = String(a).split("").reverse().map(Number);
       const bLow = String(b).split("").reverse().map(Number);
-      const places = Math.max(aLow.length, bLow.length);
-      let borrowed = 0;
 
-      for (let i = 0; i < places; i += 1) {
-        const topRaw = aLow[i] ?? 0;
-        const bot = bLow[i] ?? 0;
-        const top = topRaw - borrowed;
-        if (top < bot) return true;
-        borrowed = 0;
+      for (let r = 0; r < bLow.length; r += 1) {
+        const bd = bLow[r];
+        let carry = 0;
+        for (let c = 0; c < aLow.length; c += 1) {
+          const ad = aLow[c];
+          const product = ad * bd + carry;
+          if (product >= 10) return true;
+          carry = Math.floor(product / 10);
+        }
+        if (carry > 0) return true;
       }
 
+      if (bLow.length <= 1) return false;
+
+      const partialRows = bLow.map((bd, shift) => ({
+        shift,
+        digits: String(a * bd).split("").reverse().map(Number)
+      }));
+
+      let addCarry = 0;
+      const maxPlaces = aLow.length + bLow.length + 1;
+      for (let place = 0; place < maxPlaces; place += 1) {
+        let sum = addCarry;
+        for (let r = 0; r < partialRows.length; r += 1) {
+          const row = partialRows[r];
+          const idx = place - row.shift;
+          if (idx >= 0 && idx < row.digits.length) sum += row.digits[idx];
+        }
+        if (sum >= 10) return true;
+        addCarry = Math.floor(sum / 10);
+      }
+
+      if (addCarry > 0) return true;
       return false;
     }
 
-    function parseOneProblem(raw, aDigits, bDigits, requireBorrowing) {
+    function parseOneProblem(raw, aDigits, bDigits) {
       const clean = String(raw || "").replace(/\s+/g, "");
-      const match = clean.match(/^(\d+)[-](\d+)$/);
+      const match = clean.match(/^(\d+)(?:x|X|×|\*)(\d+)$/);
       if (!match) return null;
       const aTxt = match[1];
       const bTxt = match[2];
@@ -704,12 +714,11 @@
       const a = Number(aTxt);
       const b = Number(bTxt);
       if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
-      if (a <= b) return null;
-      if (hasBorrowing(a, b) !== requireBorrowing) return null;
+      if (!hasMultiplicationRegrouping(a, b)) return null;
       return { a, b };
     }
 
-    function parseCustomList(raw, aDigits, bDigits, requireBorrowing) {
+    function parseCustomList(raw, aDigits, bDigits) {
       const chunks = String(raw || "")
         .split(/[\n,;]+/)
         .map(s => s.trim())
@@ -717,50 +726,53 @@
 
       const valid = [];
       for (let i = 0; i < chunks.length; i += 1) {
-        const parsed = parseOneProblem(chunks[i], aDigits, bDigits, requireBorrowing);
+        const parsed = parseOneProblem(chunks[i], aDigits, bDigits);
         if (parsed) valid.push(parsed);
       }
       return valid;
     }
 
-    function randomSubtractionProblem(aDigits, bDigits, requireBorrowing) {
-      while (true) {
+    function randomRegroupProblem(aDigits, bDigits) {
+      for (let tries = 0; tries < 4000; tries += 1) {
         const a = randomWithDigits(aDigits);
         const b = randomWithDigits(bDigits);
-        if (a > b && hasBorrowing(a, b) === requireBorrowing) {
-          return { a, b };
-        }
+        if (hasMultiplicationRegrouping(a, b)) return { a, b };
       }
+
+      return {
+        a: Number(`9${"1".repeat(Math.max(0, aDigits - 1))}`),
+        b: Number(`9${"1".repeat(Math.max(0, bDigits - 1))}`)
+      };
     }
 
-    function buildProblems(aDigits, bDigits, mode, customRaw, requireBorrowing) {
+    function buildProblems(aDigits, bDigits, mode, customRaw, problemsPerPage) {
       const problems = [];
       let warning = false;
       let message = "Generated random problems.";
 
       if (mode === "custom") {
-        const custom = parseCustomList(customRaw, aDigits, bDigits, requireBorrowing);
+        const custom = parseCustomList(customRaw, aDigits, bDigits);
 
-        for (let i = 0; i < PROBLEMS_PER_PAGE; i += 1) {
+        for (let i = 0; i < problemsPerPage; i += 1) {
           if (custom[i]) {
             problems.push(custom[i]);
           } else {
-            problems.push(randomSubtractionProblem(aDigits, bDigits, requireBorrowing));
+            problems.push(randomRegroupProblem(aDigits, bDigits));
           }
         }
 
         if (custom.length === 0) {
           warning = true;
-          message = `No valid custom problems for ${aDigits}-${bDigits} digits ${requireBorrowing ? "with borrowing" : "without borrowing"} (minuend must be greater). Used random problems.`;
-        } else if (custom.length < PROBLEMS_PER_PAGE) {
+          message = `No valid custom problems for ${aDigits}x${bDigits} digits with regrouping. Used random regrouping problems.`;
+        } else if (custom.length < problemsPerPage) {
           warning = true;
-          message = `Used ${custom.length} custom problem(s), filled the rest with random.`;
+          message = `Used ${custom.length} custom regrouping problem(s), filled the rest with random regrouping problems.`;
         } else {
-          message = "Generated custom problems.";
+          message = "Generated custom regrouping problems.";
         }
       } else {
-        for (let i = 0; i < PROBLEMS_PER_PAGE; i += 1) {
-          problems.push(randomSubtractionProblem(aDigits, bDigits, requireBorrowing));
+        for (let i = 0; i < problemsPerPage; i += 1) {
+          problems.push(randomRegroupProblem(aDigits, bDigits));
         }
       }
 
@@ -805,11 +817,32 @@
       return `A${index - letters.length + 1}`;
     }
 
-    function problemHtml(problem, index, totalCols, showEq, colorOn, scaffoldOn, aDigits, bDigits) {
+    function problemHtml(problem, index, totalCols, colorOn, scaffoldOn, aDigits, bDigits) {
       const letter = problemLetter(index);
-      const headHtml = showEq
-        ? `<div class="problem-head"><span class="problem-badge">${letter}</span><span class="problem-dot">.</span><span class="problem-text">${problem.a} - ${problem.b}</span></div>`
-        : `<div class="problem-head blank"><span class="problem-badge">${letter}</span><span class="problem-dot">.</span><span class="problem-text">____ - ____</span></div>`;
+      const headHtml = `<div class="problem-head"><span class="problem-badge">${letter}</span><span class="problem-text">${problem.a} × ${problem.b}</span></div>`;
+
+      if (aDigits === 2 && bDigits === 1) {
+        const answerCells = [];
+        for (let i = 0; i < totalCols; i += 1) {
+          answerCells.push(`<div class="digit-cell" style="${cellStyleByColumn(i, totalCols, colorOn)}">&nbsp;</div>`);
+        }
+
+        return `
+          <section class="problem-wrap">
+            <div class="problem-top">
+              ${headHtml}
+            </div>
+
+            <div class="simple-mult-stack">
+              <div class="simple-mult-line">${problem.a}</div>
+              <div class="simple-mult-line">× ${problem.b}</div>
+              <div class="simple-mult-answer" style="grid-template-columns: repeat(${totalCols}, var(--cell-size));">
+                ${answerCells.join("")}
+              </div>
+            </div>
+          </section>
+        `;
+      }
 
       const rowTemplate = `grid-template-columns: var(--op-width) repeat(${totalCols}, var(--cell-size));`;
       const lineTemplate = `grid-template-columns: var(--op-width) calc(${totalCols} * var(--cell-size) + ${(totalCols - 1)} * var(--cell-gap));`;
@@ -817,6 +850,13 @@
       const aRow = alignedDigitRow(totalCols, problem.a, aDigits, scaffoldOn);
       const bRow = alignedDigitRow(totalCols, problem.b, bDigits, scaffoldOn);
       const sRow = new Array(totalCols).fill("");
+      const partialRows = bDigits > 1 ? Array.from({ length: bDigits }, () => new Array(totalCols).fill("")) : [];
+      const partialRowsHtml = partialRows.map(() => `
+            <div class="table-row" style="${rowTemplate}">
+              <div class="op-cell">&nbsp;</div>
+              ${rowCellsWithValues(totalCols, colorOn, new Array(totalCols).fill(""))}
+            </div>
+      `).join("");
 
       return `
         <section class="problem-wrap">
@@ -836,7 +876,7 @@
             </div>
 
             <div class="table-row" style="${rowTemplate}">
-              <div class="op-cell">-</div>
+              <div class="op-cell">×</div>
               ${rowCellsWithValues(totalCols, colorOn, bRow)}
             </div>
 
@@ -844,6 +884,14 @@
               <div class="line-spacer"></div>
               <div class="sum-line"></div>
             </div>
+
+            ${bDigits > 1 ? partialRowsHtml : ""}
+
+            ${bDigits > 1 ? `
+            <div class="line-row" style="${lineTemplate}">
+              <div class="line-spacer"></div>
+              <div class="sum-line"></div>
+            </div>` : ""}
 
             <div class="table-row" style="${rowTemplate}">
               <div class="op-cell">&nbsp;</div>
@@ -855,55 +903,43 @@
     }
 
     function renderWorksheet() {
-      const aDigits = Number(els.digitsA.value);
-      const rawBDigits = Number(els.digitsB.value);
+      const cfg = TYPE_CONFIG[els.problemType.value] || TYPE_CONFIG["2x1"];
+      const aDigits = cfg.aDigits;
+      const bDigits = cfg.bDigits;
+      const problemsPerPage = cfg.problemsPerPage;
       const mode = els.problemMode.value;
       const colorOn = els.colorToggle.checked;
-      const showEq = els.showProblemEq.checked;
       const scaffoldOn = els.scaffoldToggle.checked;
-      const requireBorrowing = els.requireBorrowing.checked;
-      const title = (els.sheetTitle.value || "").trim() || "Subtraction Graphic Organizer";
-      const safeBDigits = Math.min(rawBDigits, aDigits);
-      const adjustedDigits = safeBDigits !== rawBDigits;
-      if (adjustedDigits) els.digitsB.value = String(safeBDigits);
+      const title = (els.sheetTitle.value || "").trim() || "Multiplication Graphic Organizer";
 
-      const built = buildProblems(aDigits, safeBDigits, mode, els.customProblem.value, requireBorrowing);
-      const totalCols = Math.max(aDigits, safeBDigits);
-      const cfgLabel = `${aDigits}-digit - ${safeBDigits}-digit`;
+      const built = buildProblems(aDigits, bDigits, mode, els.customProblem.value, problemsPerPage);
+      const totalCols = aDigits + bDigits;
+      const cfgLabel = cfg.label;
 
-      els.statusText.textContent = `${built.message} ${requireBorrowing ? "Borrowing problems only." : "No borrowing problems."}${adjustedDigits ? ` Subtrahend digits adjusted to ${safeBDigits} so top number stays larger.` : ""} Layout: 6 problems per page (3 rows x 2, ${cfgLabel}).`;
+      const layoutLabel = problemsPerPage === 8 ? "8 problems per page (4 rows x 2)" : "6 problems per page (3 rows x 2)";
+      els.statusText.textContent = `${built.message} Regrouping problems only. Layout: ${layoutLabel} (${cfgLabel}).`;
       els.statusText.style.color = built.warning ? "#a33a3a" : "#5a677f";
-      els.customProblem.placeholder = `Example: ${"8".repeat(aDigits)}-${"7".repeat(safeBDigits)}, ${"6".repeat(aDigits)}-${"5".repeat(safeBDigits)}, ${"4".repeat(aDigits)}-${"3".repeat(safeBDigits)}`;
+      els.customProblem.placeholder = `Example: ${"8".repeat(aDigits)}x${"7".repeat(bDigits)}, ${"6".repeat(aDigits)}x${"5".repeat(bDigits)}, ${"4".repeat(aDigits)}x${"3".repeat(bDigits)}`;
 
       els.host.innerHTML = `
-        <section class="sheet ${colorOn ? "" : "no-color"}">
+        <section class="sheet layout-${problemsPerPage} type-${els.problemType.value} ${colorOn ? "" : "no-color"}">
           <header class="sheet-header">
             <h2 class="sheet-title">${title}</h2>
             <div class="name-line">Name:<span class="line"></span></div>
           </header>
 
           <div class="problems">
-            ${built.problems.map((p, i) => problemHtml(p, i, totalCols, showEq, colorOn, scaffoldOn, aDigits, safeBDigits)).join("")}
+            ${built.problems.map((p, i) => problemHtml(p, i, totalCols, colorOn, scaffoldOn, aDigits, bDigits)).join("")}
           </div>
 
-          <div class="footer-note">${scaffoldOn ? "Scaffold organizer: minuend and subtrahend digits are prefilled in the table boxes." : "Advanced organizer: students place digits, borrow, and solve in the blank table."} ${requireBorrowing ? "Borrowing-problem set." : "No-borrowing problem set."}</div>
+          <div class="footer-note">${scaffoldOn ? "Scaffold organizer: multiplicand and multiplier digits are prefilled in the table boxes." : "Advanced organizer: students place digits, carry when needed, and solve in the blank table."} ${bDigits > 1 ? "Includes partial-product rows and final sum row." : "Single-row product format."} Regrouping-problem set.</div>
         </section>
       `;
     }
 
-    function lockedPreviewAction() {
-      alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access.");
-    }
-
-    function blockShortcuts(event) {
-      const blocked = (event.ctrlKey || event.metaKey) && ["p", "s", "u"].includes(event.key.toLowerCase());
-      if (blocked) event.preventDefault();
-    }
-
-    document.addEventListener("keydown", blockShortcuts);
-
+    els.problemType.addEventListener("change", renderWorksheet);
     els.generateBtn.addEventListener("click", renderWorksheet);
-    els.printBtn.addEventListener("click", lockedPreviewAction);
+    els.printBtn.addEventListener("click", () => window.print());
     renderWorksheet();
   </script>
 </body>
