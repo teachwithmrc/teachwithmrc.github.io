@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Intervention Station | Mobile Hub</title>
+  <title>Intervention Station | Mobile Songs and Games</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet" />
@@ -240,35 +240,22 @@
       <h1>Intervention Station</h1>
       <p>Mobile quick access hub. Choose a section and jump straight to the real preview page.</p>
     </header>
-    <nav class="top-tabs" aria-label="Mobile sections"><a class="top-tab is-active" href="./home-preview.html">Home</a><a class="top-tab" href="./generators.html">Generators</a><a class="top-tab" href="./math-resources.html">Math</a><a class="top-tab" href="./reading-phonics.html">Reading</a><a class="top-tab" href="./more.html">More</a></nav>
+    <nav class="top-tabs" aria-label="Mobile sections"><a class="top-tab" href="./home-preview.html">Home</a><a class="top-tab" href="./generators.html">Generators</a><a class="top-tab" href="./math-resources.html">Math</a><a class="top-tab" href="./reading-phonics.html">Reading</a><a class="top-tab is-active" href="./more.html">More</a></nav>
     <section class="page-panel">
-  <div class="home-grid">
-    <a class="home-card" href="./generators.html">
-      <h2>Generators</h2>
-      <p>All math + SOR generators in one mobile page, then open the real preview.</p>
-    </a>
-    <a class="home-card" href="./math-resources.html">
-      <h2>Math</h2>
-      <p>Place value, rounding, printable organizers, fractions, decimals, and more.</p>
-    </a>
-    <a class="home-card" href="./reading-phonics.html">
-      <h2>Reading</h2>
-      <p>Phonics comics, heart words, blending, mazes, spelling, and reading supports.</p>
-    </a>
-    <a class="home-card" href="./more.html">
-      <h2>More</h2>
-      <p>Learning songs, games, and links to desktop home variants.</p>
-    </a>
-  </div>
-  <div class="quick-row">
-    <a class="quick-link" href="../home-preview.html">Desktop Home</a>
-    <a class="quick-link" href="../home-preview-v2.html">Desktop V2</a>
-    <a class="quick-link" href="../home-preview-v3.html">Desktop V3</a>
-    <a class="quick-link" href="../home-preview-v4.html">Desktop V4</a>
-  </div>
+  <div class="search-row"><input id="searchLinks" class="search-input" type="search" placeholder="Search links on this page" aria-label="Search links" /></div>
+  <section class="section">
+  <button class="section-header" type="button" aria-expanded="true">Learning Songs <span class="toggle-icon">−</span></button>
+  <div class="section-body"><div class="link-list"><a class="link-card" data-link-title="all learning songs and resources" href="../math-song-preview.html">All Learning Songs and Resources</a></div></div>
+</section><section class="section">
+  <button class="section-header" type="button" aria-expanded="true">Interactive Games <span class="toggle-icon">−</span></button>
+  <div class="section-body"><div class="link-list"><a class="link-card" data-link-title="reading games" href="../readinggames-preview.html">Reading Games</a><a class="link-card" data-link-title="math games" href="../math-game-board-preview.html">Math Games</a><a class="link-card" data-link-title="games (legacy)" href="../games-preview.html">Games (Legacy)</a></div></div>
+</section><section class="section">
+  <button class="section-header" type="button" aria-expanded="true">Desktop Home Variants <span class="toggle-icon">−</span></button>
+  <div class="section-body"><div class="link-list"><a class="link-card" data-link-title="desktop home (primary)" href="../home-preview.html">Desktop Home (Primary)</a><a class="link-card" data-link-title="desktop home v2" href="../home-preview-v2.html">Desktop Home V2</a><a class="link-card" data-link-title="desktop home v3" href="../home-preview-v3.html">Desktop Home V3</a><a class="link-card" data-link-title="desktop home v4" href="../home-preview-v4.html">Desktop Home V4</a></div></div>
+</section>
 </section>
   </main>
-  <nav class="bottom-nav" aria-label="Bottom navigation"><a class="bottom-link is-active" href="./home-preview.html">Home</a><a class="bottom-link" href="./generators.html">Generators</a><a class="bottom-link" href="./math-resources.html">Math</a><a class="bottom-link" href="./reading-phonics.html">Reading</a><a class="bottom-link" href="./more.html">More</a></nav>
+  <nav class="bottom-nav" aria-label="Bottom navigation"><a class="bottom-link" href="./home-preview.html">Home</a><a class="bottom-link" href="./generators.html">Generators</a><a class="bottom-link" href="./math-resources.html">Math</a><a class="bottom-link" href="./reading-phonics.html">Reading</a><a class="bottom-link is-active" href="./more.html">More</a></nav>
   <script>
     (function() {
       const search = document.getElementById('searchLinks');
