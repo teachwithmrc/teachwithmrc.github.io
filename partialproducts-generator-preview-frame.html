@@ -154,6 +154,29 @@
     (function () {
       const frame = document.getElementById("generatorFrame");
 
+      function simplifyControls(doc) {
+        if (!doc) return;
+        const fields = doc.querySelectorAll(".controls-grid .field");
+        fields.forEach((field) => {
+          field.style.display = "none";
+        });
+
+        const problemTypeField = doc.getElementById("problemType")?.closest(".field");
+        if (problemTypeField) {
+          problemTypeField.style.display = "flex";
+        }
+
+        const printBtn = doc.getElementById("printBtn");
+        if (printBtn) {
+          printBtn.style.display = "none";
+        }
+
+        const note = doc.getElementById("statusText");
+        if (note) {
+          note.style.display = "none";
+        }
+      }
+
       function lockPrint() {
         try {
           const doc = frame.contentDocument;
@@ -170,6 +193,8 @@
           doc.addEventListener("contextmenu", function (event) {
             event.preventDefault();
           });
+
+          simplifyControls(doc);
         } catch (_) {
           // Ignore cross-document errors if iframe origin changes.
         }

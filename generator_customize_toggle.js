@@ -3,6 +3,7 @@
   const APPLIED_ATTR = "data-is-customize-applied";
   const NODE_CLASS = "is-customize-node";
   const KEEP_CLASS = "is-customize-keep";
+  const SHOW_TOGGLE = false;
 
   function injectStyle() {
     if (document.getElementById(STYLE_ID)) return;
@@ -120,6 +121,10 @@
     markKeepChain(container, generateBtn);
     markKeep(container, title);
     markKeep(container, status);
+
+    if (!SHOW_TOGGLE) {
+      return true;
+    }
 
     const toggleRow = document.createElement("div");
     toggleRow.className = `is-customize-toggle-row ${NODE_CLASS} ${KEEP_CLASS}`;

@@ -163,25 +163,12 @@
             sourceRandom.dispatchEvent(new frameWin.Event("change", { bubbles: true }));
           }
 
-          function forceTwoDigitOnly(selectEl) {
-            if (!selectEl) return;
-            Array.from(selectEl.options).forEach((opt) => {
-              if (opt.value !== "2") {
-                opt.remove();
-              }
-            });
-            if (!selectEl.querySelector('option[value="2"]')) {
-              const onlyOption = frameDoc.createElement("option");
-              onlyOption.value = "2";
-              onlyOption.textContent = "2 digits";
-              selectEl.appendChild(onlyOption);
-            }
-            selectEl.value = "2";
-            selectEl.dispatchEvent(new frameWin.Event("change", { bubbles: true }));
+          if (digitsA) {
+            digitsA.dispatchEvent(new frameWin.Event("change", { bubbles: true }));
           }
-
-          forceTwoDigitOnly(digitsA);
-          forceTwoDigitOnly(digitsB);
+          if (digitsB) {
+            digitsB.dispatchEvent(new frameWin.Event("change", { bubbles: true }));
+          }
 
           if (generateBtn) {
             setTimeout(function () { generateBtn.click(); }, 30);
@@ -194,7 +181,7 @@
 
           const subtitle = frameDoc.querySelector(".screen-only .subtitle");
           if (subtitle) {
-            subtitle.textContent = "Preview mode: Generate is enabled for 2-digit + 2-digit with Base-10 Blocks or Hundreds Chart.";
+            subtitle.textContent = "Preview mode: Choose digits and Base-10 Blocks or Hundreds Chart, then Generate.";
           }
         } catch (err) {
           // If browser blocks frame scripting, fallback still shows lock overlays.
