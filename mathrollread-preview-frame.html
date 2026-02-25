@@ -242,7 +242,6 @@
         const observer = new MutationObserver(delayedSync);
         observer.observe(panel, { childList: true, subtree: true, attributes: true });
       }
-
       function configurePrintableRollRead(doc) {
         injectPreviewStyles(doc);
         hideCoinsOption(doc);
@@ -271,6 +270,7 @@
           const doc = frame.contentDocument;
           if (!doc) return;
 
+          injectPreviewStyles(doc);
           configurePrintableRollRead(doc);
           lockPrint(doc);
           bindOverlaySync(doc);
