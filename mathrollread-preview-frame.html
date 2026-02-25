@@ -49,7 +49,9 @@
       bottom: 0;
       z-index: 118;
       pointer-events: none;
-      background: rgba(255, 255, 255, 0.07);
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(1.8px);
+      -webkit-backdrop-filter: blur(1.8px);
       background-image: url("data:image/svg+xml,%3Csvg width='250' height='250' viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='20' y='150' fill='%23000' opacity='0.14' transform='rotate(-45 125 125)' font-family='Poppins' font-weight='900' font-size='30'%3EPREVIEW MODE%3C/text%3E%3C/svg%3E");
     }
 
@@ -65,7 +67,7 @@
       align-items: flex-end;
       justify-content: center;
       padding: 14px;
-      background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.76) 28%, rgba(0, 0, 0, 0.9));
+      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(0,0,0,0.58) 32%, rgba(0,0,0,0.74));
     }
 
     .preview-paywall-card {
@@ -140,9 +142,9 @@
 
     <div class="preview-paywall" aria-hidden="false">
       <div class="preview-paywall-card">
-        <h3>Preview Only</h3>
-        <p>Generate is enabled for sampling. Full worksheet visibility and printing are available to members.</p>
-        <a href="https://member.interventionstation.com/join" target="_blank" rel="noopener noreferrer">Unlock Full Access</a>
+        <h3>Premium Resource</h3>
+        <p>Generate is enabled in preview mode. Join membership to unlock full worksheet visibility and printing.</p>
+        <a href="https://member.interventionstation.com/join" target="_blank" rel="noopener noreferrer">Join Membership</a>
       </div>
     </div>
   </section>
@@ -154,6 +156,44 @@
       function clickIfPresent(doc, selector) {
         const el = doc.querySelector(selector);
         if (el) el.click();
+      }
+
+      function injectPreviewStyles(doc) {
+        if (doc.getElementById("preview-rollread-style")) return;
+        const style = doc.createElement("style");
+        style.id = "preview-rollread-style";
+        style.textContent = `
+          #output,
+          #output * {
+            user-select: none !important;
+            -webkit-user-select: none !important;
+          }
+          #output .sheet {
+            position: relative;
+            overflow: hidden;
+            filter: blur(1.2px) saturate(0.86) contrast(0.97);
+          }
+          #output .sheet::after {
+            content: "PREVIEW MODE";
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            color: rgba(20, 20, 20, 0.3);
+            font-size: 0.98rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background:
+              repeating-linear-gradient(
+                -25deg,
+                rgba(255, 255, 255, 0.22) 0 18px,
+                rgba(255, 255, 255, 0.06) 18px 36px
+              );
+            pointer-events: none;
+          }
+        `;
+        doc.head.appendChild(style);
       }
 
       function configurePrintableRollRead(doc) {
@@ -180,6 +220,7 @@
           const doc = frame.contentDocument;
           if (!doc) return;
 
+          injectPreviewStyles(doc);
           configurePrintableRollRead(doc);
           lockPrint(doc);
 
