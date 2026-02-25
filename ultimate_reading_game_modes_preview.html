@@ -73,8 +73,29 @@
       color: var(--ink);
       padding: 10px 8px;
       cursor: pointer;
-      min-height: 58px;
+      min-height: 128px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-align: center;
       transition: transform 120ms ease, filter 120ms ease;
+    }
+
+    .tab-icon {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+      display: block;
+      background: #fff;
+      border-radius: 10px;
+      padding: 4px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    }
+
+    .tab-label {
+      display: block;
     }
 
     .tab:hover {
@@ -502,6 +523,8 @@
 
     @media (max-width: 760px) {
       .tabs { grid-template-columns: 1fr; }
+      .tab { min-height: 108px; }
+      .tab-icon { width: 50px; height: 50px; }
       .cell { min-height: 100px; }
       .prompt { font-size: 1rem; }
       .roll-table td { font-size: 0.92rem; height: 58px; }
@@ -516,9 +539,18 @@
     <div class="note">Playable teaser unlocked: Short A only. To use other reading skills, open the full generator.</div>
 
     <div class="tabs" id="tabs">
-      <button class="tab active" data-mode="ttt" type="button">Short A Tic Tac Toe</button>
-      <button class="tab" data-mode="connect4" type="button">Short A 4 in a Row</button>
-      <button class="tab" data-mode="rollread" type="button">Short A Roll and Read</button>
+      <button class="tab active" data-mode="ttt" type="button">
+        <img class="tab-icon" src="images/tictac.png" alt="">
+        <span class="tab-label">Short A Tic Tac Toe</span>
+      </button>
+      <button class="tab" data-mode="connect4" type="button">
+        <img class="tab-icon" src="images/row.png" alt="">
+        <span class="tab-label">Short A 4 in a Row</span>
+      </button>
+      <button class="tab" data-mode="rollread" type="button">
+        <img class="tab-icon" src="images/game.png" alt="">
+        <span class="tab-label">Short A Roll and Read</span>
+      </button>
     </div>
 
     <section class="panel active" data-panel="ttt">
