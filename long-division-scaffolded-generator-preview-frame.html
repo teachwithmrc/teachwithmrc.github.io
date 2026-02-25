@@ -49,7 +49,9 @@
       bottom: 0;
       z-index: 118;
       pointer-events: none;
-      background: rgba(255, 255, 255, 0.07);
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
       background-image: url("data:image/svg+xml,%3Csvg width='250' height='250' viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='20' y='150' fill='%23000' opacity='0.14' transform='rotate(-45 125 125)' font-family='Poppins' font-weight='900' font-size='30'%3EPREVIEW MODE%3C/text%3E%3C/svg%3E");
     }
 
@@ -65,7 +67,7 @@
       align-items: flex-end;
       justify-content: center;
       padding: 14px;
-      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(0,0,0,0.76) 28%, rgba(0,0,0,0.9));
+      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(0,0,0,0.42) 32%, rgba(0,0,0,0.58));
     }
 
     .preview-paywall-card {
@@ -124,14 +126,14 @@
       body { display: none !important; }
     }
   </style>
-  <script src="preview_customize_toggle_injector.js" defer></script>
+  
 </head>
 <body oncontextmenu="return false;">
   <section class="preview-host" aria-label="Long Division Scaffolded Generator Preview Frame">
     <iframe
       id="generatorFrame"
       class="generator-frame"
-      src="long_division_colorcoded_generator.html?v=20260224-scaffolded-color"
+      src="long_division_colorcoded_generator.html?v=20260224-scaffolded-color&preview=scaffolded"
       title="Long Division Scaffolded Generator"
       loading="eager"
     ></iframe>

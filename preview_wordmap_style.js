@@ -1,4 +1,6 @@
 (function () {
+  const ENABLE_PREVIEW_CHROME = false;
+
   function cleanTitle(rawTitle) {
     if (!rawTitle) return "Generator Preview";
     return rawTitle
@@ -113,6 +115,7 @@
   }
 
   function init() {
+    if (!ENABLE_PREVIEW_CHROME) return;
     if (!document.querySelector("main.page .preview-shell")) return;
     ensureStyle();
     addWordMapChrome();
