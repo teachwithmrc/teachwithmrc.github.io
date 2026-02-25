@@ -1,0 +1,857 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intervention Station | Site Preview Home V3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+
+    :root{
+      --brand-dark:#2f3e4e;
+      --brand-blue:#66c9f4;
+      --ink:#102246;
+      --border:rgba(0,0,0,.55);
+      --offwhite:#f3f5f7;
+      --panel:#ffffff;
+    }
+
+    html,body{
+      margin:0;
+      padding:0;
+      font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--ink);
+      background:var(--offwhite);
+    }
+    *,*::before,*::after{ box-sizing:border-box; }
+    img{ display:block; max-width:100%; height:auto; }
+    body{ overflow-x:hidden; }
+
+    .top-cta-wrap{ background:var(--brand-dark); }
+    .top-cta-bar{
+      position:sticky;
+      top:0;
+      z-index:9999;
+      background:var(--brand-dark);
+      width:min(1200px, calc(100% - 32px));
+      margin:0 auto;
+      padding:12px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:nowrap;
+    }
+    .top-logo{
+      width:auto;
+      height:auto;
+      max-width:min(480px, 40vw);
+    }
+    .top-buttons-row{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:10px;
+      flex-wrap:nowrap;
+    }
+    .top-buttons-row a{
+      display:inline-flex;
+      text-decoration:none;
+    }
+    .top-buttons-row button{
+      appearance:none;
+      width:168px;
+      min-width:168px;
+      height:46px;
+      padding:0 14px;
+      background:var(--brand-blue);
+      border:2px solid var(--brand-blue);
+      border-radius:12px;
+      color:#fff;
+      font-family:"Poppins",system-ui,sans-serif;
+      font-size:16px;
+      font-weight:600;
+      line-height:1;
+      white-space:nowrap;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      transition:filter .15s ease, box-shadow .15s ease;
+    }
+    .top-buttons-row button:hover{
+      filter:brightness(.96);
+      box-shadow:0 2px 6px rgba(0,0,0,.18);
+    }
+
+    .is-ticker{
+      background:var(--brand-dark);
+      border-top:1px solid rgba(255,255,255,.18);
+      border-bottom:1px solid rgba(255,255,255,.18);
+      overflow:hidden;
+      width:100%;
+    }
+    .is-ticker-track{
+      display:flex;
+      align-items:center;
+      gap:28px;
+      padding:10px 0;
+      width:max-content;
+      white-space:nowrap;
+      animation:isTickerScroll 34s linear infinite;
+      will-change:transform;
+    }
+    .is-ticker:hover .is-ticker-track{ animation-play-state:paused; }
+    .is-ticker-item{
+      display:inline-flex;
+      align-items:center;
+      flex:0 0 auto;
+      color:#fff;
+      font-size:12px;
+      font-weight:650;
+      line-height:1.1;
+    }
+    .is-ticker-star{
+      color:#ffe08a;
+      margin-right:6px;
+      font-weight:900;
+    }
+    @keyframes isTickerScroll{
+      from{ transform:translate3d(0,0,0); }
+      to{ transform:translate3d(-50%,0,0); }
+    }
+
+    .is-home-sections{
+      background:var(--offwhite);
+      padding:18px 0 34px;
+    }
+    .is-home-sections .is-wrap{
+      width:min(1200px, calc(100% - 32px));
+      margin:0 auto;
+    }
+    .is-home-sections .is-layout{
+      display:grid;
+      grid-template-columns:320px minmax(0,1fr);
+      gap:12px;
+      align-items:start;
+    }
+    .is-home-sections .is-main{ min-width:0; }
+
+    .is-home-sections .is-nav{
+      position:sticky;
+      top:16px;
+    }
+    .is-home-sections .is-nav-card{
+      background:var(--panel);
+      border:2px solid var(--border);
+      padding:0;
+      overflow:hidden;
+    }
+    .is-home-sections .is-nav-group.is-nav-home{
+      padding:10px 12px 8px;
+      border-bottom:2px solid rgba(0,0,0,.18);
+    }
+    .is-home-sections .is-mt-12{ margin-top:8px; }
+    .is-home-sections .is-nav-header{
+      background:var(--brand-blue);
+      color:#fff;
+      font-weight:700;
+      font-size:22px;
+      line-height:1.1;
+      padding:12px 14px;
+      margin:0;
+    }
+    .is-home-sections .is-nav-group{ padding:6px 12px 10px; }
+    .is-home-sections .is-nav-link{
+      display:block;
+      text-decoration:none;
+      color:#102246;
+      font-weight:600;
+      font-size: 14px;
+      line-height: 1.22;
+      padding: 6px 0;
+      word-break:break-word;
+    }
+    .is-home-sections .is-nav-link:hover{ text-decoration:underline; }
+    .is-home-sections .is-nav-link.is-active{
+      color:#0f2e52;
+      text-decoration:underline;
+      text-decoration-thickness:2px;
+    }
+
+    .is-unified-join{
+      border:1px solid #cfd7ef;
+      background:#ffffff;
+      border-radius:16px;
+      padding:14px 16px;
+      box-shadow:0 10px 22px rgba(31,54,95,0.07);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .is-unified-join h2{
+      margin:0 0 4px;
+      font-size:18px;
+      line-height:1.15;
+      font-weight:900;
+      color:#1f365f;
+    }
+    .is-unified-join p{
+      margin:0;
+      font-size:13px;
+      font-weight:600;
+      color:#546a92;
+      line-height:1.35;
+    }
+    .is-unified-join__btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      border-radius:999px;
+      min-height:44px;
+      padding:0 16px;
+      font-weight:900;
+      border:1px solid #5aaee9;
+      background:#6ec1ff;
+      color:#fff;
+      white-space:nowrap;
+    }
+    .is-home-sections .is-page{
+      background:var(--panel);
+      border:2px solid var(--border);
+      overflow:hidden;
+      padding:16px;
+    }
+    .is-page-hero{
+      background:#f6fbff;
+      border:1px solid #d5e6f5;
+      border-radius:14px;
+      padding:14px 16px;
+      margin-bottom:16px;
+    }
+    .is-page-hero h1{
+      margin:0 0 6px;
+      font-size:30px;
+      line-height:1.1;
+      font-weight:900;
+      color:#0e2b4f;
+    }
+    .is-page-hero p{
+      margin:0;
+      font-size:14px;
+      font-weight:600;
+      color:#4f6689;
+    }
+
+    .buy-options{
+      color:#1f365f;
+      border:1px solid #cfd7ef;
+      background:#ffffff;
+      border-radius:18px;
+      padding:16px;
+      box-shadow:0 10px 22px rgba(31,54,95,0.07);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:18px;
+    }
+    .buy-options__title{
+      font-weight:900;
+      font-size:18px;
+      line-height:1.15;
+      margin-bottom:4px;
+    }
+    .buy-options__sub{
+      font-size:13px;
+      font-weight:600;
+      color:#546a92;
+    }
+    .buy-options__buttons{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .buy-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      text-decoration:none;
+      border-radius:999px;
+      padding:12px 16px;
+      font-weight:900;
+      line-height:1;
+      border:1px solid transparent;
+      transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .buy-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 10px 18px rgba(31,54,95,0.12);
+    }
+    .buy-btn--primary{ background:#6ec1ff; color:#fff; }
+    .buy-btn--secondary{
+      background:#fff;
+      color:#1f365f;
+      border-color:#cfd7ef;
+    }
+    .buy-btn--secondary:hover{ background:#f6f9ff; }
+
+    .preview-frame-wrap{
+      border:2px solid #111;
+      border-radius:12px;
+      overflow:hidden;
+      background:#fff;
+      box-shadow:0 10px 22px rgba(31,54,95,0.07);
+    }
+    .preview-iframe{
+      display:block;
+      width:100%;
+      height:1100px;
+      border:0;
+      background:#fff;
+    }
+
+    @media (max-width:1100px){
+      .is-home-sections .is-layout{ grid-template-columns:1fr; }
+      .is-home-sections .is-nav{ position:relative; top:auto; }
+      .is-home-sections .is-nav-card{ max-height:none; }
+    }
+    @media (max-width:900px){
+      .top-cta-bar{
+        flex-wrap:wrap;
+        justify-content:center;
+        text-align:center;
+      }
+      .top-logo{ max-width:92vw; }
+      .top-buttons-row{
+        flex-wrap:wrap;
+        justify-content:center;
+      }
+      .preview-iframe{ height:900px; }
+    }
+    @media (max-width:860px){
+      .is-unified-join{ flex-direction:column; align-items:flex-start; }
+      .is-unified-join__btn{ width:100%; justify-content:center; }
+      .buy-options{ flex-direction:column; align-items:flex-start; }
+      .buy-options__buttons{ width:100%; justify-content:flex-start; }
+      .buy-btn{ width:100%; justify-content:center; }
+    }
+
+  
+/* HOME RIGHT SIDE STYLES */
+    .is-home .is-slider{ margin-bottom:16px; }
+    .is-home .is-slider-viewport{
+      position:relative;
+      border:2px solid #111;
+      border-radius:12px;
+      overflow:hidden;
+      background:#000;
+      box-shadow:0 10px 22px rgba(31,54,95,.07);
+    }
+    .is-home .is-slider-track{
+      display:flex;
+      overflow-x:auto;
+      scroll-snap-type:x mandatory;
+      scrollbar-width:none;
+      -ms-overflow-style:none;
+    }
+    .is-home .is-slider-track::-webkit-scrollbar{ display:none; }
+    .is-home .is-slide{
+      position:relative;
+      flex:0 0 100%;
+      min-height:290px;
+      display:block;
+      color:#fff;
+      text-decoration:none;
+      scroll-snap-align:start;
+      background:#0e2037;
+    }
+    .is-home .is-slide-img{
+      width:100%;
+      height:100%;
+      min-height:290px;
+      object-fit:cover;
+      filter:saturate(.96);
+    }
+    .is-home .is-slide-overlay{
+      position:absolute;
+      inset:auto 0 0;
+      padding:18px;
+      background:linear-gradient(to top, rgba(6,13,24,.88), rgba(6,13,24,.15));
+    }
+    .is-home .is-slide-title{
+      margin:0 0 4px;
+      font-size:30px;
+      line-height:1.04;
+      font-weight:900;
+      color:#fff;
+      text-shadow:0 1px 2px rgba(0,0,0,.25);
+    }
+    .is-home .is-slide-sub{
+      margin:0;
+      font-size:14px;
+      line-height:1.35;
+      font-weight:600;
+      color:rgba(255,255,255,.95);
+    }
+    .is-home .is-slider-arrow{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      z-index:2;
+      width:42px;
+      height:42px;
+      border:0;
+      border-radius:999px;
+      background:rgba(6,13,24,.58);
+      color:#fff;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      transition:background .15s ease;
+    }
+    .is-home .is-slider-arrow:hover{ background:rgba(6,13,24,.78); }
+    .is-home .is-slider-arrow svg{ width:20px; height:20px; fill:currentColor; }
+    .is-home .is-slider-prev{ left:10px; }
+    .is-home .is-slider-next{ right:10px; }
+
+    .is-home .is-top-cta{
+      border:1px solid #cfd7ef;
+      background:#fff;
+      border-radius:16px;
+      padding:16px;
+      box-shadow:0 10px 22px rgba(31,54,95,.07);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:16px;
+    }
+    .is-home .is-top-cta h1{
+      margin:0 0 8px;
+      font-size:30px;
+      line-height:1.06;
+      font-weight:900;
+      color:#0e2b4f;
+    }
+    .is-home .is-top-cta p{
+      margin:0;
+      font-size:14px;
+      line-height:1.45;
+      font-weight:600;
+      color:#4f6689;
+    }
+    .is-home .is-join-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      min-height:46px;
+      padding:0 18px;
+      border-radius:999px;
+      background:#6ec1ff;
+      border:1px solid #5aaee9;
+      color:#fff;
+      font-size:15px;
+      font-weight:900;
+      white-space:nowrap;
+      box-shadow:0 8px 18px rgba(16,40,70,.14);
+    }
+
+    .is-home .is-intervention-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:14px;
+    }
+    .is-home .is-intervention-card{
+      text-decoration:none;
+      color:inherit;
+      border:1px solid #cfd7ef;
+      background:#fff;
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:0 8px 20px rgba(31,54,95,.07);
+      transition:transform .15s ease, box-shadow .15s ease;
+      display:flex;
+      flex-direction:column;
+      min-height:100%;
+    }
+    .is-home .is-intervention-card:hover{
+      transform:translateY(-2px);
+      box-shadow:0 12px 24px rgba(31,54,95,.12);
+    }
+    .is-home .is-intervention-head{
+      padding:12px 14px;
+      background:#66c9f4;
+      color:#fff;
+      font-size:18px;
+      line-height:1.1;
+      font-weight:900;
+    }
+    .is-home .is-intervention-img{
+      width:100%;
+      height:170px;
+      object-fit:cover;
+      background:#dce9f9;
+    }
+    .is-home .is-intervention-body{
+      padding:12px 14px 14px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      flex:1;
+    }
+    .is-home .is-intervention-body p{
+      margin:0;
+      font-size:14px;
+      line-height:1.45;
+      font-weight:600;
+      color:#4f6689;
+      flex:1;
+    }
+    .is-home .is-intervention-link{
+      display:inline-flex;
+      align-items:center;
+      font-size:14px;
+      line-height:1.2;
+      font-weight:900;
+      color:#0f2e52;
+    }
+
+    @media (max-width:980px){
+      .is-home .is-top-cta{ flex-direction:column; align-items:flex-start; }
+      .is-home .is-top-cta-action{ width:100%; }
+      .is-home .is-join-btn{ width:100%; }
+      .is-home .is-intervention-grid{ grid-template-columns:1fr; }
+    }
+    @media (max-width:700px){
+      .is-home .is-slide,
+      .is-home .is-slide-img{ min-height:220px; }
+      .is-home .is-slide-title{ font-size:24px; }
+      .is-home .is-top-cta h1{ font-size:24px; }
+      .is-home .is-slider-arrow{ width:36px; height:36px; }
+    }
+    /* END HOME RIGHT SIDE STYLES */
+
+  
+/* HOME VARIANT STYLES */
+    .is-variant-head{
+      border:1px solid #cfd7ef;
+      background:#fff;
+      border-radius:16px;
+      padding:16px;
+      box-shadow:0 10px 22px rgba(31,54,95,.07);
+      margin-bottom:14px;
+    }
+    .is-variant-head h1{
+      margin:0 0 8px;
+      font-size:30px;
+      line-height:1.07;
+      font-weight:900;
+      color:#0e2b4f;
+    }
+    .is-variant-head p{
+      margin:0;
+      font-size:14px;
+      line-height:1.45;
+      font-weight:600;
+      color:#4f6689;
+    }
+    .is-variant-head .is-variant-pill{
+      display:inline-flex;
+      margin-top:10px;
+      padding:7px 12px;
+      border-radius:999px;
+      background:#e9f5ff;
+      color:#1a4f85;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.01em;
+    }
+
+    .is-v2-grid,
+    .is-v3-grid,
+    .is-v4-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:12px;
+    }
+    .is-v2-card,
+    .is-v3-card,
+    .is-v4-card{
+      border:1px solid #cfd7ef;
+      background:#fff;
+      border-radius:14px;
+      padding:12px;
+      box-shadow:0 8px 20px rgba(31,54,95,.07);
+    }
+    .is-v2-link,
+    .is-v3-link,
+    .is-v4-link{
+      text-decoration:none;
+      color:#0f2e52;
+      font-size:14px;
+      font-weight:800;
+      line-height:1.35;
+      display:block;
+    }
+    .is-v2-link:hover,
+    .is-v3-link:hover,
+    .is-v4-link:hover{ text-decoration:underline; }
+
+    .is-v2-meta,
+    .is-v3-meta,
+    .is-v4-meta{
+      margin:0 0 8px;
+      color:#4f6689;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.01em;
+      text-transform:uppercase;
+    }
+
+    .is-v3-section,
+    .is-v4-section{
+      border:1px solid #cfd7ef;
+      background:#fff;
+      border-radius:16px;
+      padding:14px;
+      box-shadow:0 8px 20px rgba(31,54,95,.07);
+      margin-bottom:12px;
+    }
+    .is-v3-section h2,
+    .is-v4-section h2{
+      margin:0 0 10px;
+      font-size:22px;
+      line-height:1.1;
+      color:#0f2e52;
+      font-weight:900;
+    }
+
+    .is-v4-chip-wrap{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .is-v4-chip{
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      min-height:34px;
+      padding:0 12px;
+      border-radius:999px;
+      border:1px solid #cfd7ef;
+      background:#f7fbff;
+      color:#12385f;
+      font-size:13px;
+      font-weight:800;
+    }
+    .is-v4-chip:hover{ background:#edf6ff; }
+
+    .is-coming-badge{
+      display:inline-flex;
+      align-items:center;
+      border:1px dashed #b7c7de;
+      color:#6b7f9f;
+      background:#f8fbff;
+      border-radius:999px;
+      min-height:30px;
+      padding:0 10px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.01em;
+      margin:4px 6px 0 0;
+    }
+
+    @media (max-width:980px){
+      .is-v2-grid,
+      .is-v3-grid,
+      .is-v4-grid{ grid-template-columns:1fr; }
+      .is-variant-head h1{ font-size:24px; }
+    }
+    /* END HOME VARIANT STYLES */
+
+  </style>
+</head>
+<body>
+  <div class="is-ticker" aria-label="Reviews ticker">
+    <div class="is-ticker-track">
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"Best intervention resources ever - my kids LOVE it."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"Saved me hours every week. Worth every penny."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"The generators are unreal. Print and go."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"My small groups finally feel organized."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"Best intervention resources ever - my kids LOVE it."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"Saved me hours every week. Worth every penny."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"The generators are unreal. Print and go."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"My small groups finally feel organized."</div>
+    </div>
+  </div>
+
+  <div class="top-cta-wrap">
+    <div class="top-cta-bar">
+      <img
+        src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png"
+        height="95"
+        width="500"
+        alt="Intervention Station"
+        class="top-logo"
+      />
+
+      <div class="top-buttons-row">
+        <a href="./home-preview.html#join">
+          <button type="button"><div class="main-heading-button">Join Membership</div></button>
+        </a>
+        <a href="./home-preview.html#join">
+          <button type="button"><div class="main-heading-button">What's Inside?</div></button>
+        </a>
+        <a href="./home-preview.html#join">
+          <button type="button"><div class="main-heading-button">Log In</div></button>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <section class="is-home-sections">
+    <div class="is-wrap is-layout">
+      <aside class="is-nav" aria-label="Navigation">
+        <nav class="is-nav-card">
+          <div class="is-nav-group is-nav-home">
+            <a class="is-nav-link is-active" href="./home-preview.html">&#127968; Home</a>
+          </div>
+
+          <div class="is-nav-header">Math Generators</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./rounding-generator-preview.html">Rounding Generator</a>
+            <a class="is-nav-link" href="./addition-generator-preview.html">Addition Generator</a>
+            <a class="is-nav-link" href="./subtraction-generator-preview.html">Subtraction Generator</a>
+            <a class="is-nav-link" href="./multiply-generator-preview.html">Multiplication Generator</a>
+            <a class="is-nav-link" href="./partialproducts-generator-preview.html">Partial Products Generator</a>
+            <a class="is-nav-link" href="./division-generator-preview.html">Long Division</a>
+            <a class="is-nav-link" href="./long-division-scaffolded-generator-preview.html">Long Division Scaffold</a>
+            <a class="is-nav-link" href="./addsubtractmodels-generator-preview.html">Add and Subtract with Manipulatives or Hundreds Chart</a>
+            <a class="is-nav-link" href="./ten-frame-preview.html">Ten Frame Generator</a>
+            <a class="is-nav-link" href="./coin-counter-generator-preview.html">Coin Counter Generator</a>
+            <a class="is-nav-link" href="./mathtictac-preview.html">Tic Tac Toe Generator</a>
+            <a class="is-nav-link" href="./mathrollread-preview.html">Math Roll &amp; Read Preview</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">SOR Generators</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./tictacpreview.html">SOR Tic Tac Toe</a>
+            <a class="is-nav-link" href="./fluencygridpreview.html">SOR Fluency Grid</a>
+            <a class="is-nav-link" href="./rollreadpreview.html">SOR Roll and Read</a>
+            <a class="is-nav-link" href="./wordladderpreview.html">SOR Word Ladder</a>
+            <a class="is-nav-link" href="./word-map-preview.html">SOR Word Mapping</a>
+            <a class="is-nav-link" href="./pyramid-spelling-generator-preview.html">Pyramid Spelling</a>
+            <a class="is-nav-link" href="./spelling-with-pictures-generator-preview.html">Spelling Pics Generator</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Math Resources</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./placevalue-preview.html">Place Value</a>
+            <a class="is-nav-link" href="./rounding-preview.html">Rounding</a>
+            <a class="is-nav-link" href="./addition-preview.html">Addition (Printable Organizer)</a>
+            <a class="is-nav-link" href="./multiplication-preview.html">Multiplication (Printable Organizer)</a>
+            <a class="is-nav-link" href="./division-preview.html">Division (Printable Organizer)</a>
+            <a class="is-nav-link" href="./decimals-preview.html">Decimals</a>
+            <a class="is-nav-link" href="./fractions-preview.html">Fractions</a>
+            <a class="is-nav-link" href="./google-puzzle-preview.html">Google Puzzle</a>
+            <a class="is-nav-link" href="./math-riddle-preview.html">Math Fact Riddles</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Reading</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./heart-words-preview.html">Heart Words</a>
+            <a class="is-nav-link" href="./phonics-comics-preview.html">Phonics Comics</a>
+            <a class="is-nav-link" href="./fix-mixup-preview.html">Fix the Mix Up</a>
+            <a class="is-nav-link" href="./blending-slides-preview.html">Blending Slides</a>
+            <a class="is-nav-link" href="./phonics-maze-preview.html">Phonics Path Maze</a>
+            <a class="is-nav-link" href="./pick-the-pic-preview.html">Pick the Pic</a>
+            <a class="is-nav-link" href="./hfw-pyramid-preview.html">High Frequency Word Pyramids</a>
+            <a class="is-nav-link" href="./spelling-preview.html">Spelling by Phonics Skill</a>
+            <a class="is-nav-link" href="./spelling-google-sheets-preview.html">Spelling Google Sheets</a>
+            <span class="is-nav-link" style="cursor:not-allowed; opacity:.7; text-decoration:none;">Decodable (COMING SOON)</span>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Interactive Games</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./readinggames-preview.html">Reading Games</a>
+            <a class="is-nav-link" href="./math-game-board-preview.html">Math Games</a>
+            <a class="is-nav-link" href="./games-preview.html">Games (Legacy)</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Learning Songs</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./math-song-preview.html">All Learning Songs and Resources</a>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="is-main">
+        <section class="is-page">
+          <div class="is-variant-head">
+            <h1>Explore By Category</h1>
+            <p>Each section mirrors left-nav categories and lists every page as a grouped card set.</p>
+            <span class="is-variant-pill">Version 3: Sectioned Explorer</span>
+          </div>
+          <div id="isVariantV3Sections" aria-live="polite"></div>
+        </section>
+      </main>
+    </div>
+  </section>
+<script id="isHomeVariantV3Script">
+  (function(){
+
+    function collectNavSections() {
+      const nav = document.querySelector('.is-nav-card');
+      if (!nav) return [];
+      const children = Array.from(nav.children);
+      const sections = [];
+
+      children.forEach((node, idx) => {
+        if (!node.classList || !node.classList.contains('is-nav-header')) return;
+        const title = node.textContent.trim();
+        const group = children[idx + 1];
+        if (!group || !group.classList || !group.classList.contains('is-nav-group')) return;
+
+        const links = Array.from(group.querySelectorAll('a.is-nav-link')).map((a) => ({
+          title: a.textContent.trim(),
+          href: a.getAttribute('href') || ''
+        })).filter((item) => item.href);
+
+        const notes = Array.from(group.querySelectorAll('span.is-nav-link')).map((span) => span.textContent.trim()).filter(Boolean);
+
+        sections.push({ title, links, notes });
+      });
+
+      return sections;
+    }
+
+    const mount = document.getElementById('isVariantV3Sections');
+    if (!mount) return;
+
+    const sections = collectNavSections();
+    if (!sections.length) {
+      mount.innerHTML = '<p>Navigation links were not found.</p>';
+      return;
+    }
+
+    mount.innerHTML = sections.map((section) => {
+      const cards = section.links.map((link) => '<article class="is-v3-card"><a class="is-v3-link" href="' + link.href + '">' + link.title + '</a></article>').join('');
+      const notes = section.notes.map((note) => '<span class="is-coming-badge">' + note + '</span>').join('');
+      return '<section class="is-v3-section"><h2>' + section.title + '</h2><div class="is-v3-grid">' + cards + '</div><div>' + notes + '</div></section>';
+    }).join('');
+  })();
+</script>
+</body>
+</html>

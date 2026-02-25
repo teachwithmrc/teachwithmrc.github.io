@@ -75,7 +75,23 @@
       padding: 10px 8px;
       cursor: pointer;
       min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-align: center;
       transition: transform 120ms ease, filter 120ms ease;
+    }
+
+    .tab-icon {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .tab-label {
+      display: inline-block;
     }
 
     .tab:hover {
@@ -567,6 +583,8 @@
 
     @media (max-width: 760px) {
       .tabs { grid-template-columns: 1fr; }
+      .tab { min-height: 56px; }
+      .tab-icon { width: 24px; height: 24px; }
       .cell { min-height: 108px; }
       .prompt { font-size: 0.92rem; }
       .roll-table td { font-size: 0.84rem; height: 64px; }
@@ -581,9 +599,18 @@
     <div class="note">Playable teaser unlocked: Basic subtraction only. To use other math skills, open the full generator.</div>
 
     <div class="tabs" id="tabs">
-      <button class="tab active" data-mode="ttt" type="button">Subtraction Tic Tac Toe</button>
-      <button class="tab" data-mode="connect4" type="button">Subtraction 4 in a Row</button>
-      <button class="tab" data-mode="rollread" type="button">Subtraction Roll and Read</button>
+      <button class="tab active" data-mode="ttt" type="button">
+        <img class="tab-icon" src="images/tictac.png" alt="">
+        <span class="tab-label">Subtraction Tic Tac Toe</span>
+      </button>
+      <button class="tab" data-mode="connect4" type="button">
+        <img class="tab-icon" src="images/row.png" alt="">
+        <span class="tab-label">Subtraction 4 in a Row</span>
+      </button>
+      <button class="tab" data-mode="rollread" type="button">
+        <img class="tab-icon" src="images/game.png" alt="">
+        <span class="tab-label">Subtraction Roll and Read</span>
+      </button>
     </div>
 
     <section class="panel active" data-panel="ttt">
