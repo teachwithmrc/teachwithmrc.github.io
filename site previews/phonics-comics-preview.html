@@ -515,6 +515,34 @@
             <a class="is-unified-join__btn" href="./home-preview.html#join">Join Now to Get Access!</a>
           </div>
           <style>
+            .is-comics-hero{
+              background:#6ec1ff;
+              padding:16px 18px;
+              border:2px solid #111;
+              border-bottom:0;
+              display:flex;
+              align-items:center;
+              justify-content:space-between;
+              gap:16px;
+            }
+            .is-comics-hero__title{
+              font-size:28px;
+              font-weight:900;
+              color:#fff;
+              margin:0;
+            }
+            .is-comics-hero__sub{
+              font-size:16px;
+              color:#fff;
+              margin:8px 0 0;
+            }
+            .is-comics-hero__img{
+              display:block;
+              width:100%;
+              max-width:280px;
+              height:auto;
+              background:transparent;
+            }
             .is-download-btn{
               display:inline-flex;
               align-items:center;
@@ -536,16 +564,27 @@
               .is-comics-card{flex:0 0 50% !important;border-right:2px solid #111 !important;}
               .is-comics-card:nth-child(2n){border-right:0 !important;}
             }
+            @media (max-width:820px){
+              .is-comics-hero{
+                flex-direction:column;
+                align-items:flex-start;
+              }
+              .is-comics-hero__img{
+                max-width:100%;
+              }
+            }
             @media (max-width:620px){
               .is-comics-card{flex:0 0 100% !important;border-right:0 !important;}
             }
           </style>
 
           <div style="max-width:1200px;margin:0 auto;font-family:Poppins,Arial,sans-serif;color:#111;">
-            <div style="background:#6ec1ff;padding:16px 18px;border:2px solid #111;border-bottom:0;">
-              <p style="font-size:28px;font-weight:900;color:#fff;margin:0;"><strong>Phonics Comics</strong></p>
-              <p style="margin:8px 0 0;"><img src="https://storage.googleapis.com/revex-membership-production/memberships/F9vnmU5R8sOuTGoxp5by/courses/A-Brand-Colour-Palette-Guide--600-x-360-px--10-eyxo.png" alt="Phonics Comics Preview" style="max-width:100%;display:block;border-radius:10px;"></p>
-              <p style="font-size:16px;color:#fff;margin-top:10px;">Preview page: these Phonics Comics are <strong>members only</strong>.</p>
+            <div class="is-comics-hero">
+              <div>
+                <p class="is-comics-hero__title"><strong>Phonics Comics</strong></p>
+                <p class="is-comics-hero__sub">Preview page: these Phonics Comics are <strong>members only</strong>.</p>
+              </div>
+              <img class="is-comics-hero__img" src="https://storage.googleapis.com/revex-membership-production/memberships/F9vnmU5R8sOuTGoxp5by/courses/A-Brand-Colour-Palette-Guide--600-x-360-px--10-eyxo.png" alt="Phonics Comics Preview">
             </div>
 
             <div style="border:2px solid #111;border-top:0;">

@@ -171,9 +171,40 @@
         style.textContent = `
           h1,
           .subtitle,
-          .layout,
           #floatingActions {
             display: none !important;
+          }
+
+          .layout {
+            grid-template-columns: 1fr !important;
+            margin-bottom: 8px !important;
+          }
+
+          .layout .left {
+            display: none !important;
+          }
+
+          .layout .right {
+            grid-column: 1 !important;
+            padding-bottom: 0 !important;
+          }
+
+          .layout .right .table-section:not(.actions-sticky) {
+            display: none !important;
+          }
+
+          .layout .right .actions-sticky {
+            position: static !important;
+          }
+
+          .layout .right .actions-sticky .chips-title,
+          .layout .right .actions-sticky #chips,
+          .layout .right .actions-sticky button[onclick*="print"] {
+            display: none !important;
+          }
+
+          #btnGenerate {
+            display: inline-flex !important;
           }
 
           #output {

@@ -73,9 +73,8 @@
       color: var(--ink);
       padding: 10px 8px;
       cursor: pointer;
-      min-height: 128px;
+      min-height: 58px;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 6px;
@@ -84,18 +83,14 @@
     }
 
     .tab-icon {
-      width: 58px;
-      height: 58px;
+      width: 26px;
+      height: 26px;
       object-fit: contain;
       display: block;
-      background: #fff;
-      border-radius: 10px;
-      padding: 4px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
     }
 
     .tab-label {
-      display: block;
+      display: inline-block;
     }
 
     .tab:hover {
@@ -523,8 +518,8 @@
 
     @media (max-width: 760px) {
       .tabs { grid-template-columns: 1fr; }
-      .tab { min-height: 108px; }
-      .tab-icon { width: 50px; height: 50px; }
+      .tab { min-height: 56px; }
+      .tab-icon { width: 24px; height: 24px; }
       .cell { min-height: 100px; }
       .prompt { font-size: 1rem; }
       .roll-table td { font-size: 0.92rem; height: 58px; }
