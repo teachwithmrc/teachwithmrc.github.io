@@ -1833,6 +1833,7 @@
     }
 
     function wireRollState(page) {
+      if (PREVIEW_MODE) return;
       const rollBtn = page.querySelector("#rollBtn");
       const resetBtn = page.querySelector("#resetRollBtn");
       const status = page.querySelector("#rollStatus");
@@ -1872,13 +1873,9 @@
 
     function renderRollRead(prompts) {
       const table = buildRollTable(prompts);
-      outputEl.innerHTML = `
-        <article class="sheet">
-          <div class="view-actions">
-            <button type="button" data-action="fullscreen">Full Screen</button>
-          </div>
-          <div class="sheet-title">Reading Roll and Read</div>
-          <div class="sheet-meta">${htmlEscape(selectedSkillLabel())} | ${modeLabel()}</div>
+      const rollControls = PREVIEW_MODE
+        ? ""
+        : `
           <div class="roll-controls">
             <div class="die-wrap">
               <img id="liveDie" class="live-die" src="images/dice1.png" alt="Current die: 1">
@@ -1887,12 +1884,25 @@
             <button id="rollBtn" type="button">Roll</button>
             <button id="resetRollBtn" type="button">Reset Round</button>
             <div id="rollStatus" class="status">Roll to start.</div>
-          </div>
-          <div class="game-stack roll-shell">
-            <div id="rollTableMount"></div>
+          </div>`;
+      const rollOverlay = PREVIEW_MODE
+        ? ""
+        : `
             <div id="rollOverlay" class="game-overlay">
               <div id="rollOverlayText" class="game-overlay-card"></div>
-            </div>
+            </div>`;
+
+      outputEl.innerHTML = `
+        <article class="sheet">
+          <div class="view-actions">
+            <button type="button" data-action="fullscreen">Full Screen</button>
+          </div>
+          <div class="sheet-title">Reading Roll and Read</div>
+          <div class="sheet-meta">${htmlEscape(selectedSkillLabel())} | ${modeLabel()}</div>
+          ${rollControls}
+          <div class="game-stack roll-shell">
+            <div id="rollTableMount"></div>
+            ${rollOverlay}
           </div>
         </article>`;
       document.getElementById("rollTableMount").appendChild(table);
