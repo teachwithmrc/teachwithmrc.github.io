@@ -389,7 +389,35 @@
       filter:none !important;
       opacity:1 !important;
     }
-</style>
+
+/* MOBILE NAV DROPDOWN OVERRIDES */
+    @media (max-width:1100px){
+      .is-home-sections .is-nav-header{
+        margin-top:0 !important;
+        padding:12px 14px !important;
+        font-size:20px !important;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        cursor:pointer;
+        user-select:none;
+      }
+      .is-home-sections .is-nav-header + .is-nav-group{
+        border-top:1px solid rgba(0,0,0,.08);
+      }
+      .is-home-sections .is-nav-header::after{
+        content:'+';
+        font-size:22px;
+        font-weight:900;
+        line-height:1;
+      }
+      .is-home-sections .is-nav-header.is-open::after{ content:'−'; }
+      .is-home-sections .is-nav-group.is-collapsible.is-collapsed{ display:none; }
+      .is-home-sections .is-nav-group.is-collapsible{ padding:6px 12px 10px !important; }
+    }
+    /* END MOBILE NAV DROPDOWN OVERRIDES */
+
+  </style>
 </head>
 <body>
   <div class="is-ticker" aria-label="Reviews ticker">
@@ -578,5 +606,85 @@
 
     </div>
   </section>
+<script id="isMobileNavDropdownScript">
+  (function(){
+    const mq = window.matchMedia('(max-width:1100px)');
+
+    function setLabel(header){
+      const txt = header.textContent.trim();
+      if (txt === 'Math Resources') {
+        header.textContent = 'Math';
+      }
+    }
+
+    function applyDropdown(navCard){
+      const headers = Array.from(navCard.querySelectorAll('.is-nav-header'));
+      if (!headers.length) return;
+
+      headers.forEach((header) => {
+        const group = header.nextElementSibling;
+        if (!group || !group.classList.contains('is-nav-group')) return;
+
+        if (header.dataset.mobileDropdownReady === '1') return;
+        header.dataset.mobileDropdownReady = '1';
+        setLabel(header);
+
+        header.setAttribute('role', 'button');
+        header.setAttribute('tabindex', '0');
+        group.classList.add('is-collapsible');
+
+        const setOpen = (open) => {
+          header.classList.toggle('is-open', open);
+          header.setAttribute('aria-expanded', open ? 'true' : 'false');
+          group.classList.toggle('is-collapsed', !open);
+        };
+
+        const sync = () => {
+          if (mq.matches) {
+            const stored = header.dataset.mobileState || 'closed';
+            setOpen(stored === 'open');
+          } else {
+            setOpen(true);
+          }
+        };
+
+        const toggle = () => {
+          if (!mq.matches) return;
+          const isOpen = header.classList.contains('is-open');
+          header.dataset.mobileState = isOpen ? 'closed' : 'open';
+          setOpen(!isOpen);
+        };
+
+        header.addEventListener('click', toggle);
+        header.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            toggle();
+          }
+        });
+
+        header._mobileSync = sync;
+        sync();
+      });
+
+      const resync = () => {
+        headers.forEach((h) => {
+          if (typeof h._mobileSync === 'function') h._mobileSync();
+        });
+      };
+
+      if (!navCard.dataset.mobileDropdownBound) {
+        navCard.dataset.mobileDropdownBound = '1';
+        if (typeof mq.addEventListener === 'function') {
+          mq.addEventListener('change', resync);
+        } else {
+          window.addEventListener('resize', resync);
+        }
+      }
+    }
+
+    document.querySelectorAll('.is-nav-card').forEach(applyDropdown);
+  })();
+</script>
 </body>
 </html>

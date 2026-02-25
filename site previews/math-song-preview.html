@@ -406,7 +406,74 @@
       filter:none !important;
       opacity:1 !important;
     }
-</style>
+
+    .is-song-title-row{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .is-song-preview-btn{
+      appearance:none;
+      width:20px;
+      min-width:20px;
+      height:20px;
+      border-radius:999px;
+      border:1px solid #0f335b;
+      background:#fff;
+      color:#0f335b;
+      font-size:10px;
+      font-weight:900;
+      line-height:1;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:0;
+      transition:all .12s ease;
+    }
+    .is-song-preview-btn:hover:not(:disabled){
+      transform:translateY(-1px);
+      box-shadow:0 3px 8px rgba(15, 51, 91, .2);
+    }
+    .is-song-preview-btn.is-playing{
+      background:#0f335b;
+      color:#fff;
+    }
+    .is-song-preview-btn:disabled{
+      opacity:.35;
+      cursor:not-allowed;
+      transform:none;
+      box-shadow:none;
+    }
+
+/* MOBILE NAV DROPDOWN OVERRIDES */
+    @media (max-width:1100px){
+      .is-home-sections .is-nav-header{
+        margin-top:0 !important;
+        padding:12px 14px !important;
+        font-size:20px !important;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        cursor:pointer;
+        user-select:none;
+      }
+      .is-home-sections .is-nav-header + .is-nav-group{
+        border-top:1px solid rgba(0,0,0,.08);
+      }
+      .is-home-sections .is-nav-header::after{
+        content:'+';
+        font-size:22px;
+        font-weight:900;
+        line-height:1;
+      }
+      .is-home-sections .is-nav-header.is-open::after{ content:'−'; }
+      .is-home-sections .is-nav-group.is-collapsible.is-collapsed{ display:none; }
+      .is-home-sections .is-nav-group.is-collapsible{ padding:6px 12px 10px !important; }
+    }
+    /* END MOBILE NAV DROPDOWN OVERRIDES */
+
+  </style>
 </head>
 <body>
   <div class="is-ticker" aria-label="Reviews ticker">
@@ -531,7 +598,7 @@
             </div>
             <a class="is-unified-join__btn" href="./home-preview.html#join">Join Now to Get Access!</a>
           </div>
-<div style="max-width: 1200px; margin: 0px auto; font-family: Poppins, Arial, sans-serif; color: rgb(17, 17, 17);">
+<div id="is-song-library" style="max-width: 1200px; margin: 0px auto; font-family: Poppins, Arial, sans-serif; color: rgb(17, 17, 17);">
 
   <div style="background: rgb(110, 193, 255); padding: 16px 18px;">
     <p style="font-size: 28px; font-weight: 900; color: rgb(255, 255, 255); margin: 0px;"><strong>Skip Counting Songs</strong></p>
@@ -645,5 +712,172 @@
       </main>
     </div>
   </section>
+<script id="isSongPreviewScript">
+  (function(){
+    const songLibrary = document.getElementById('is-song-library');
+    if (!songLibrary) return;
+
+    /*
+      Add snippet URLs after upload. Example:
+      window.LEARN_WITH_MUSIC_SNIPPETS = {
+        "22": "https://your-cdn.example/22-snippet.mp3"
+      };
+    */
+    const snippetSources = window.LEARN_WITH_MUSIC_SNIPPETS || {};
+    let activeAudio = null;
+    let activeButton = null;
+
+    function setButtonState(button, isPlaying){
+      button.classList.toggle('is-playing', isPlaying);
+      button.textContent = isPlaying ? '||' : '>';
+    }
+
+    const songCards = songLibrary.querySelectorAll('div[style*="box-sizing: border-box"]');
+    songCards.forEach((card) => {
+      const titleParagraph = card.querySelector(':scope > p');
+      const titleStrong = card.querySelector(':scope > p > strong');
+      if (!titleParagraph || !titleStrong) return;
+
+      const songTitle = titleStrong.textContent.trim();
+      const snippetSrc = snippetSources[songTitle];
+      titleParagraph.classList.add('is-song-title-row');
+
+      const previewButton = document.createElement('button');
+      previewButton.type = 'button';
+      previewButton.className = 'is-song-preview-btn';
+      previewButton.setAttribute('aria-label', `Play preview for ${songTitle}`);
+      previewButton.title = snippetSrc
+        ? `Play preview: ${songTitle}`
+        : 'Add this song to window.LEARN_WITH_MUSIC_SNIPPETS to enable preview.';
+      setButtonState(previewButton, false);
+      titleParagraph.appendChild(previewButton);
+
+      if (!snippetSrc) {
+        previewButton.disabled = true;
+        return;
+      }
+
+      const audio = new Audio(snippetSrc);
+      audio.preload = 'none';
+
+      function resetThis(){
+        if (activeAudio === audio) activeAudio = null;
+        if (activeButton === previewButton) activeButton = null;
+        setButtonState(previewButton, false);
+      }
+
+      previewButton.addEventListener('click', async () => {
+        if (activeAudio && activeAudio !== audio) {
+          activeAudio.pause();
+          activeAudio.currentTime = 0;
+          if (activeButton) setButtonState(activeButton, false);
+        }
+
+        if (audio.paused) {
+          try {
+            await audio.play();
+            activeAudio = audio;
+            activeButton = previewButton;
+            setButtonState(previewButton, true);
+          } catch (error) {
+            console.warn(`Could not play preview for "${songTitle}".`, error);
+          }
+          return;
+        }
+
+        audio.pause();
+        audio.currentTime = 0;
+        setButtonState(previewButton, false);
+      });
+
+      audio.addEventListener('ended', resetThis);
+      audio.addEventListener('error', () => {
+        previewButton.disabled = true;
+        previewButton.title = 'Unable to load snippet for this song.';
+        resetThis();
+      });
+    });
+  })();
+</script>
+<script id="isMobileNavDropdownScript">
+  (function(){
+    const mq = window.matchMedia('(max-width:1100px)');
+
+    function setLabel(header){
+      const txt = header.textContent.trim();
+      if (txt === 'Math Resources') {
+        header.textContent = 'Math';
+      }
+    }
+
+    function applyDropdown(navCard){
+      const headers = Array.from(navCard.querySelectorAll('.is-nav-header'));
+      if (!headers.length) return;
+
+      headers.forEach((header) => {
+        const group = header.nextElementSibling;
+        if (!group || !group.classList.contains('is-nav-group')) return;
+
+        if (header.dataset.mobileDropdownReady === '1') return;
+        header.dataset.mobileDropdownReady = '1';
+        setLabel(header);
+
+        header.setAttribute('role', 'button');
+        header.setAttribute('tabindex', '0');
+        group.classList.add('is-collapsible');
+
+        const setOpen = (open) => {
+          header.classList.toggle('is-open', open);
+          header.setAttribute('aria-expanded', open ? 'true' : 'false');
+          group.classList.toggle('is-collapsed', !open);
+        };
+
+        const sync = () => {
+          if (mq.matches) {
+            const stored = header.dataset.mobileState || 'closed';
+            setOpen(stored === 'open');
+          } else {
+            setOpen(true);
+          }
+        };
+
+        const toggle = () => {
+          if (!mq.matches) return;
+          const isOpen = header.classList.contains('is-open');
+          header.dataset.mobileState = isOpen ? 'closed' : 'open';
+          setOpen(!isOpen);
+        };
+
+        header.addEventListener('click', toggle);
+        header.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            toggle();
+          }
+        });
+
+        header._mobileSync = sync;
+        sync();
+      });
+
+      const resync = () => {
+        headers.forEach((h) => {
+          if (typeof h._mobileSync === 'function') h._mobileSync();
+        });
+      };
+
+      if (!navCard.dataset.mobileDropdownBound) {
+        navCard.dataset.mobileDropdownBound = '1';
+        if (typeof mq.addEventListener === 'function') {
+          mq.addEventListener('change', resync);
+        } else {
+          window.addEventListener('resize', resync);
+        }
+      }
+    }
+
+    document.querySelectorAll('.is-nav-card').forEach(applyDropdown);
+  })();
+</script>
 </body>
 </html>
