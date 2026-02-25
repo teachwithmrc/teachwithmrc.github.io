@@ -1,7 +1,7 @@
 (function () {
   const FRAME_BOUND_ATTR = "data-is-customize-frame-bound";
   const DOC_WIRED_ATTR = "data-is-customize-doc-wired";
-  const TOGGLE_SCRIPT = "generator_customize_toggle.js?v=20260224-customize-collapse-v3";
+  const TOGGLE_SCRIPT = "generator_customize_toggle.js?v=20260225-customize-collapse-v4";
 
   function wireFrameDocument(frame) {
     try {
