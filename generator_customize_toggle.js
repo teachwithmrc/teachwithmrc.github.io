@@ -38,6 +38,18 @@
     document.head.appendChild(style);
   }
 
+  function getDirectTitle(container) {
+    return Array.from(container.children).find((el) =>
+      el.matches(".section-label, .section-title, .layout-title, h2, h3")
+    ) || null;
+  }
+
+  function getDirectStatus(container) {
+    return Array.from(container.children).find((el) =>
+      el.id === "status" || el.classList.contains("status") || el.classList.contains("small-meta")
+    ) || null;
+  }
+
   function findGenerateRow(generateBtn, container) {
     const preferred = [".actions", ".btn-row", ".toolbar", ".button-row", ".row", "div"];
     for (const selector of preferred) {
@@ -97,12 +109,17 @@
     const generateRow = findGenerateRow(generateBtn, container);
     if (!generateRow) return false;
 
+    const title = getDirectTitle(container);
+    const status = getDirectStatus(container);
+
     container.classList.add("is-customize-collapsible", "is-customize-collapsed");
     container.setAttribute(APPLIED_ATTR, "1");
     container.querySelectorAll("*").forEach((element) => element.classList.add(NODE_CLASS));
 
     generateRow.classList.add("is-generate-row");
     markKeepChain(container, generateBtn);
+    markKeep(container, title);
+    markKeep(container, status);
 
     const toggleRow = document.createElement("div");
     toggleRow.className = `is-customize-toggle-row ${NODE_CLASS} ${KEEP_CLASS}`;
@@ -120,11 +137,16 @@
     });
 
     toggleRow.appendChild(toggleBtn);
-    const toggleHost = generateBtn.parentElement;
-    if (toggleHost && container.contains(toggleHost)) {
-      toggleHost.insertBefore(toggleRow, generateBtn);
+
+    if (title && title.parentElement === container) {
+      title.insertAdjacentElement("afterend", toggleRow);
     } else {
-      container.insertBefore(toggleRow, generateRow);
+      const toggleHost = generateBtn.parentElement;
+      if (toggleHost && container.contains(toggleHost)) {
+        toggleHost.insertBefore(toggleRow, generateBtn);
+      } else {
+        container.insertBefore(toggleRow, generateRow);
+      }
     }
     markKeep(container, toggleRow);
     markKeep(container, toggleBtn);
