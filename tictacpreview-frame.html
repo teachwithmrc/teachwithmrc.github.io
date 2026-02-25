@@ -79,7 +79,6 @@
       body { display: none !important; }
     }
   </style>
-  <script src="preview_customize_toggle_injector.js" defer></script>
 </head>
 <body oncontextmenu="return false;">
   <section class="preview-host" aria-label="Reading Tic Tac Toe Generator Preview Frame">
@@ -163,6 +162,37 @@
         } catch (_) {}
       }
 
+      function lockCustomization(doc) {
+        if (doc.body.dataset.previewLockApplied === "1") return;
+        doc.body.dataset.previewLockApplied = "1";
+
+        const style = doc.createElement("style");
+        style.id = "previewLockStyles";
+        style.textContent = `
+          h1,
+          .subtitle,
+          .layout,
+          #floatingActions {
+            display: none !important;
+          }
+
+          #output {
+            filter: blur(1.4px) saturate(0.9);
+          }
+
+          #output * {
+            user-select: none !important;
+            -webkit-user-select: none !important;
+          }
+        `;
+        doc.head.appendChild(style);
+
+        const output = doc.getElementById("output");
+        if (output) {
+          output.style.pointerEvents = "none";
+        }
+      }
+
       function onLoad() {
         try {
           const doc = frame.contentDocument;
@@ -170,6 +200,7 @@
 
           configurePreview(doc);
           lockPrint(doc);
+          lockCustomization(doc);
           bindOverlaySync(doc);
           syncOverlayTop(doc);
 

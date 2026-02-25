@@ -464,27 +464,95 @@
 
       <main class="is-main">
         <section class="is-page">
-          <div class="is-unified-join">
-            <div class="is-unified-join__text">
-              <h2>Want Full Access to Every Resource?</h2>
-              <p>Become a member to unlock unlimited generators, printables, and downloads.</p>
+          <style>
+            .is-button--locked{
+              display:inline-flex;
+              align-items:center;
+              justify-content:center;
+              gap:6px;
+              padding:10px 16px;
+              border:2px solid var(--brand-blue);
+              background:var(--brand-blue);
+              color:#ffffff;
+              font-weight:900;
+              text-decoration:none;
+              border-radius:10px;
+              opacity:.7;
+              cursor:not-allowed;
+              pointer-events:none;
+            }
+          </style>
+
+          <div style="max-width: 100%; margin: 0 auto; font-family: Poppins, Arial, sans-serif; color: rgb(17, 17, 17);">
+
+            <div style="background: rgb(110, 193, 255); padding: 16px 18px;">
+              <div style="font-size: 28px; font-weight: 900; color: rgb(255, 255, 255);">
+                <p style="margin:0;"><strong>Math Fact Self-Check Puzzles</strong></p>
+              </div>
+              <div style="margin-top: 6px; font-size: 16px; color: rgb(255, 255, 255); line-height: 1.35;">
+                <p style="margin:0;">Kids solve the facts and <strong>reveal a piece of the picture</strong> each time they get one correct. Choose a skill below to start.</p>
+              </div>
             </div>
-            <a class="is-unified-join__btn" href="./home-preview.html#join">Join Now to Get Access!</a>
-          </div>
-          <header class="is-page-hero">
-            <h1>Math Fact Riddles</h1>
-            <p>Preview the generator below. Printing and full access are member-only.</p>
-          </header>
 
+            <div style="border-top: 2px solid rgb(17, 17, 17); border-bottom: 2px solid rgb(17, 17, 17);">
 
-          <div class="preview-frame-wrap">
-            <iframe
-              class="preview-iframe"
-              src="./math-riddle-preview.html"
-              title="Math Fact Riddles Preview"
-              loading="lazy"
-              allowfullscreen
-            ></iframe>
+              <div style="display: flex; border-bottom: 2px solid rgb(17, 17, 17);">
+
+                <!-- ADDITION -->
+                <div style="flex: 1 1 0%; padding: 18px; border-right: 2px solid rgb(17, 17, 17);">
+                  <p style="font-size:20px; font-weight:900; margin:0;">Addition</p>
+                  <div style="border: 2px solid rgb(17, 17, 17); margin: 10px 0;">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/69641544c7683bd4faafd823.png" style="width:100%; display:block;" alt="Addition puzzle preview">
+                  </div>
+                  <p style="margin:0;">Generate addition puzzles and reveal the picture as students solve.</p>
+                  <div style="margin-top:12px;">
+                    <a class="is-button--locked">🔒 Members Only</a>
+                  </div>
+                </div>
+
+                <!-- SUBTRACTION -->
+                <div style="flex: 1 1 0%; padding: 18px;">
+                  <p style="font-size:20px; font-weight:900; margin:0;">Subtraction</p>
+                  <div style="border: 2px solid rgb(17, 17, 17); margin: 10px 0;">
+                    <img src="https://storage.googleapis.com/revex-membership-production/memberships/F9vnmU5R8sOuTGoxp5by/courses/subtraction-akb3.png" style="width:100%; display:block;" alt="Subtraction puzzle preview">
+                  </div>
+                  <p style="margin:0;">Generate subtraction puzzles and reveal the picture as students solve.</p>
+                  <div style="margin-top:12px;">
+                    <a class="is-button--locked">🔒 Members Only</a>
+                  </div>
+                </div>
+
+              </div>
+
+              <div style="display: flex;">
+
+                <!-- MULTIPLICATION -->
+                <div style="flex: 1 1 0%; padding: 18px; border-right: 2px solid rgb(17, 17, 17);">
+                  <p style="font-size:20px; font-weight:900; margin:0;">Multiplication</p>
+                  <div style="border: 2px solid rgb(17, 17, 17); margin: 10px 0;">
+                    <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/69641544f8a93b7feed22da3.png" style="width:100%; display:block;" alt="Multiplication puzzle preview">
+                  </div>
+                  <p style="margin:0;">Generate multiplication puzzles and reveal the picture as students solve.</p>
+                  <div style="margin-top:12px;">
+                    <a class="is-button--locked">🔒 Members Only</a>
+                  </div>
+                </div>
+
+                <!-- DIVISION -->
+                <div style="flex: 1 1 0%; padding: 18px;">
+                  <p style="font-size:20px; font-weight:900; margin:0;">Division</p>
+                  <div style="border: 2px solid rgb(17, 17, 17); margin: 10px 0;">
+                    <img src="https://storage.googleapis.com/revex-membership-production/memberships/F9vnmU5R8sOuTGoxp5by/courses/division-c32e.png" style="width:100%; display:block;" alt="Division puzzle preview">
+                  </div>
+                  <p style="margin:0;">Generate division puzzles and reveal the picture as students solve.</p>
+                  <div style="margin-top:12px;">
+                    <a class="is-button--locked">🔒 Members Only</a>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
           </div>
         </section>
       </main>
