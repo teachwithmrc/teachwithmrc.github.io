@@ -23,7 +23,7 @@
 <body>
   <iframe
     id="hubFrame"
-    src="ultimate_math_printables_hub.html?v=20260223-multiplication-standard"
+    src="multiplication_graphic_organizer_generator.html?v=20260225-standard-problems"
     title="Multiplication Standard Generator"
     loading="eager"
   ></iframe>
@@ -37,25 +37,11 @@
         if (el) el.click();
       }
 
-      function setDifficulty(doc) {
-        const select = doc.getElementById("difficultySelect");
-        if (!select) return;
-        const hasDouble = Array.from(select.options).some((o) => o.value === "double");
-        if (!hasDouble) return;
-        select.value = "double";
-        select.dispatchEvent(new Event("change", { bubbles: true }));
-      }
-
       frame.addEventListener("load", function () {
         try {
           const doc = frame.contentDocument;
           if (!doc) return;
-
-          // Force non-Tic-Tac-Toe worksheet mode for multiplication preview.
-          clickIfPresent(doc, '#gameTypeRow .pill[data-game-type="rollread"]');
-          // Configure the math hub to multiplication so this is distinct from partial products.
-          clickIfPresent(doc, '#operationRow .pill[data-operation="multiplication"]');
-          setDifficulty(doc);
+          // Ensure default worksheet content is rendered when loaded in preview wrappers.
           clickIfPresent(doc, "#btnGenerate");
         } catch (_) {
           // Ignore cross-document access issues if source changes.
