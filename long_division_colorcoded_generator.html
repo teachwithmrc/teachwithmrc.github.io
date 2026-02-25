@@ -67,6 +67,11 @@
       color: #425066;
     }
 
+    body.preview-locked .screen-only h1,
+    body.preview-locked .screen-only .subtitle {
+      display: none;
+    }
+
     .controls-card {
       background: var(--panel);
       border: 2px solid #d9dfeb;
@@ -90,10 +95,25 @@
       margin-bottom: 10px;
     }
 
+    body.preview-locked .controls-top {
+      align-items: center;
+      text-align: center;
+    }
+
     .type-buttons {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
+    }
+
+    body.preview-locked .type-buttons {
+      grid-template-columns: minmax(0, 1fr);
+      max-width: 260px;
+      margin: 0 auto;
+    }
+
+    body.preview-locked .type-buttons .type-btn:not([data-type="3x1"]) {
+      display: none;
     }
 
     .type-btn {
@@ -182,6 +202,19 @@
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 10px;
+    }
+
+    body.preview-locked .controls-grid,
+    body.preview-locked .note {
+      display: none;
+    }
+
+    body.preview-locked .button-row #printBtn {
+      display: none;
+    }
+
+    body.preview-locked #worksheetHost {
+      filter: blur(1.35px);
     }
 
     .button-row button {
@@ -1043,6 +1076,8 @@
       printBtn: document.getElementById("printBtn")
     };
 
+    const PREVIEW_MODE = new URLSearchParams(window.location.search).get("preview") === "scaffolded";
+
     const TYPE_CONFIG = {
       "2x1": { digits: 2, dividendMin: 10, dividendMax: 99, label: "2-digit by 1-digit" },
       "3x1": { digits: 3, dividendMin: 100, dividendMax: 999, label: "3-digit by 1-digit" },
@@ -1095,6 +1130,23 @@
       els.problemCountHint.textContent = perPage === 2
         ? "2-digit by 1-digit uses 2 problems per page."
         : "3-digit/4-digit uses 1 problem per page.";
+    }
+
+    function applyPreviewLockdown() {
+      if (!PREVIEW_MODE) return;
+      document.body.classList.add("preview-locked");
+      els.problemTypeButtons.forEach((btn) => {
+        if (btn.dataset.type !== "3x1") {
+          btn.disabled = true;
+          btn.setAttribute("aria-disabled", "true");
+        }
+      });
+      els.multiplesMode.value = "blank";
+      els.stepPromptMode.value = "blank";
+      els.remainderMode.value = "allow";
+      els.colorToggle.checked = true;
+      els.customProblem.value = "";
+      els.customProblem.disabled = true;
     }
 
     function getTotalProblemCount() {
@@ -1479,8 +1531,13 @@
     els.customProblem.addEventListener("change", renderWorksheet);
     els.printBtn.addEventListener("click", () => window.print());
 
+    if (PREVIEW_MODE) {
+      document.body.classList.add("preview-locked");
+      els.problemType.value = "3x1";
+    }
     setProblemType(els.problemType.value || "2x1");
     populateProblemCountOptions();
+    applyPreviewLockdown();
     renderWorksheet();
   </script>
 </body>
