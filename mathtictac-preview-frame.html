@@ -116,6 +116,44 @@
         if (coins) coins.remove();
       }
 
+      function keepChainUntil(node, container) {
+        let current = node;
+        while (current && current !== container) {
+          current.classList.add("is-customize-keep");
+          current = current.parentElement;
+        }
+        if (container) container.classList.add("is-customize-keep");
+      }
+
+      function showCopiesOnly(doc) {
+        const controls = doc.querySelector("#builderPanel .controls");
+        const copiesInput = doc.getElementById("copiesInput");
+        if (!controls || !copiesInput) return;
+
+        const row = copiesInput.closest(".row");
+        const copiesWrap = copiesInput.closest(".select-wrap");
+        const copiesLabel = Array.from(row?.querySelectorAll("span.label") || [])
+          .find((label) => label.textContent.trim().toLowerCase().startsWith("copies"));
+
+        const hideIds = [
+          "difficultyText",
+          "difficultySelectWrap",
+          "tttPerPageLabel",
+          "tttPerPageWrap",
+          "rollGridLabel",
+          "rollGridWrap"
+        ];
+        hideIds.forEach((id) => {
+          const el = doc.getElementById(id);
+          if (el) el.style.display = "none";
+        });
+
+        if (row) keepChainUntil(row, controls);
+        if (copiesWrap) keepChainUntil(copiesWrap, controls);
+        if (copiesLabel) keepChainUntil(copiesLabel, controls);
+        keepChainUntil(copiesInput, controls);
+      }
+
       function syncOverlayTop(doc) {
         const output = doc.getElementById("output");
         if (!output) return;
@@ -145,6 +183,7 @@
         clickIfPresent(doc, '#gameTypeRow .pill[data-game-type="tictactoe"]');
         clickIfPresent(doc, '#operationRow .pill[data-operation="addition"]');
         setSelectValue(doc.getElementById("tttPerPageSelect"), "4");
+        showCopiesOnly(doc);
 
         // Refresh worksheet output in selected mode.
         clickIfPresent(doc, "#btnGenerate");

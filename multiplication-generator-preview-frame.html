@@ -151,6 +151,35 @@
     (function () {
       const frame = document.getElementById("generatorFrame");
 
+      function injectTwoColumnStyle(doc) {
+        if (!doc || !doc.head) return;
+        if (doc.getElementById("previewTwoColStyle")) return;
+        const style = doc.createElement("style");
+        style.id = "previewTwoColStyle";
+        style.textContent = `
+          @media (max-width: 980px) {
+            .problems { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+          }
+        `;
+        doc.head.appendChild(style);
+      }
+
+      function applyTwoColumnLayout(wrapperDoc) {
+        if (!wrapperDoc) return;
+        const innerFrame = wrapperDoc.getElementById("hubFrame");
+        if (innerFrame && innerFrame.contentDocument) {
+          injectTwoColumnStyle(innerFrame.contentDocument);
+        } else {
+          injectTwoColumnStyle(wrapperDoc);
+        }
+        if (innerFrame && !innerFrame.dataset.previewTwoColBound) {
+          innerFrame.dataset.previewTwoColBound = "1";
+          innerFrame.addEventListener("load", function () {
+            injectTwoColumnStyle(innerFrame.contentDocument);
+          });
+        }
+      }
+
       function lockPrint() {
         try {
           const doc = frame.contentDocument;
@@ -167,6 +196,8 @@
           doc.addEventListener("contextmenu", function (event) {
             event.preventDefault();
           });
+
+          applyTwoColumnLayout(doc);
         } catch (_) {
           // Ignore cross-document errors if iframe origin changes.
         }

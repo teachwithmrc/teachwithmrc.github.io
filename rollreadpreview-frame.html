@@ -146,6 +146,17 @@
         clickIfPresent(doc, '#btnGenerate');
       }
 
+      function hideRollControls(doc) {
+        const rollControls = doc.querySelector(".roll-controls");
+        if (rollControls) rollControls.style.display = "none";
+        const rollBtn = doc.getElementById("rollBtn");
+        if (rollBtn) rollBtn.style.display = "none";
+        const resetBtn = doc.getElementById("resetRollBtn");
+        if (resetBtn) resetBtn.style.display = "none";
+        const status = doc.getElementById("rollStatus");
+        if (status) status.style.display = "none";
+      }
+
       function lockPrint(doc) {
         const printButtons = [
           ...doc.querySelectorAll("#btnPrint"),
@@ -173,6 +184,7 @@
           lockPrint(doc);
           bindOverlaySync(doc);
           syncOverlayTop(doc);
+          hideRollControls(doc);
 
           doc.addEventListener("contextmenu", function (event) {
             event.preventDefault();
@@ -181,10 +193,12 @@
           window.setTimeout(() => {
             configurePreview(doc);
             syncOverlayTop(doc);
+            hideRollControls(doc);
           }, 260);
 
           window.setTimeout(() => {
             syncOverlayTop(doc);
+            hideRollControls(doc);
           }, 900);
         } catch (_) {
           // Ignore cross-document errors if iframe origin changes.
