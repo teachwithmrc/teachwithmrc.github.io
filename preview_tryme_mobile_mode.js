@@ -1,16 +1,17 @@
 (function () {
   const fileName = (window.location.pathname.split('/').pop() || '').toLowerCase();
+  const isRollReadModelFrame = fileName === 'rollreadpreview-frame.html';
 
   const STEP_OVERRIDES = {
     'partialproducts-generator-preview-frame.html': [
       'Step 1: Select Problem Type (2x1 digit, 3x1 digit, etc.)',
       'Step 2: Customize Your Scaffold',
-      'Step 3: Tap Try Me!'
+      'Step 3: Tap Try Me! and generate as much as you need'
     ],
     'rollreadpreview-frame.html': [
       'Step 1: Select or Combine Over 40 Phonics Skills (example: FLSZ)',
       'Step 2: Customize Your List',
-      'Step 3: Tap Try Me!'
+      'Step 3: Tap Try Me! and generate as much as you need'
     ],
     'mathrollread-preview-frame.html': [
       'Step 1: Select Math Skill Focus',
@@ -64,6 +65,7 @@
       '    height: 100% !important;',
       '    min-height: 100dvh !important;',
       '  }',
+      isRollReadModelFrame ? '  .preview-host { border: 0 !important; }' : '',
       '}',
     ].join('\n');
 
@@ -120,12 +122,29 @@
       '.is-tryme-preview-scroll {',
       '  max-height: calc(100dvh - 250px) !important;',
       '  overflow: auto !important;',
+      '  width: 100% !important;',
+      '  display: block !important;',
+      '}',
+      '.is-tryme-preview-scroll img,',
+      '.is-tryme-preview-scroll canvas,',
+      '.is-tryme-preview-scroll svg,',
+      '.is-tryme-preview-scroll iframe,',
+      '.is-tryme-preview-scroll object,',
+      '.is-tryme-preview-scroll embed {',
+      '  max-width: 100% !important;',
+      '  height: auto !important;',
+      '}',
+      '.is-tryme-preview-scroll table {',
+      '  max-width: 100% !important;',
       '}',
       '@media (max-width: 900px) {',
       '  .is-tryme-generate {',
       '    min-height: 80px !important;',
       '    min-width: min(94vw, 320px) !important;',
       '    font-size: 2.05rem !important;',
+      '  }',
+      '  .is-tryme-preview-scroll {',
+      '    max-height: calc(100dvh - 230px) !important;',
       '  }',
       '}',
     ].join('\n');
@@ -158,7 +177,34 @@
     return allButtons.find((btn) => /generate/i.test(btn.textContent || '')) || null;
   }
 
+  function getPreviewRoots(doc) {
+    const selectors = [
+      '#worksheetHost',
+      '#output',
+      '.preview-output',
+      '.sheet-host',
+      '#preview',
+      '#worksheetWrap',
+      '.worksheet-wrap',
+      '.worksheet-host',
+      '.print-sheet',
+      '.page-preview',
+      '#renderHost',
+    ];
+    const roots = [];
+    selectors.forEach((selector) => {
+      doc.querySelectorAll(selector).forEach((el) => roots.push(el));
+    });
+    return roots;
+  }
+
+  function inPreview(roots, el) {
+    if (!el || !roots.length) return false;
+    return roots.some((root) => root === el || root.contains(el));
+  }
+
   function hideCustomization(doc, generateBtn) {
+    const previewRoots = getPreviewRoots(doc);
     const hideSelectors = [
       '#btnPrint', '#printBtn', '#btnResetScore', '#resetRollBtn', '#rollBtn',
       '#btnSameBoard', '#btnNewBoard', '#btnC4Reset', '#btnC4New', '#btnC4ResetRound',
@@ -173,12 +219,147 @@
     hideSelectors.forEach((selector) => {
       doc.querySelectorAll(selector).forEach((el) => {
         if (generateBtn && (el === generateBtn || el.contains(generateBtn))) return;
+        if (inPreview(previewRoots, el)) return;
         el.style.setProperty('display', 'none', 'important');
       });
     });
 
     doc.querySelectorAll('.toolbar button, .button-row button, .controls-row button').forEach((btn) => {
-      if (btn !== generateBtn) btn.style.setProperty('display', 'none', 'important');
+      if (btn === generateBtn) return;
+      if (inPreview(previewRoots, btn)) return;
+      btn.style.setProperty('display', 'none', 'important');
+    });
+
+    const controlSelectors = [
+      'select',
+      'input',
+      'textarea',
+      'fieldset',
+      'legend',
+      '.option-box',
+      '.skill-button',
+      '.chip',
+      '.chip-pill',
+      '.toggle',
+      '[class*="control"]',
+      '[id*="control"]',
+      '[class*="setting"]',
+      '[id*="setting"]',
+      '[class*="option"]',
+      '[id*="option"]',
+      '[class*="custom"]',
+      '[id*="custom"]',
+      '[class*="picker"]',
+      '[id*="picker"]',
+      '[class*="selector"]',
+      '[id*="selector"]',
+    ];
+
+    doc.querySelectorAll(controlSelectors.join(',')).forEach((el) => {
+      if (generateBtn && (el === generateBtn || el.contains(generateBtn) || generateBtn.contains(el))) return;
+      if (el.closest('#isTryMeStepsPanel, #isTryMeActionWrap')) return;
+      if (inPreview(previewRoots, el)) return;
+      el.style.setProperty('display', 'none', 'important');
+    });
+  }
+
+  function isRollReadModelDoc(doc) {
+    const title = (doc && doc.title ? doc.title : '').toLowerCase();
+    return isRollReadModelFrame || title.indexOf('reading roll and read printables') >= 0;
+  }
+
+  function setDisplay(doc, selectors, value) {
+    selectors.forEach((selector) => {
+      doc.querySelectorAll(selector).forEach((el) => {
+        el.style.setProperty('display', value, 'important');
+      });
+    });
+  }
+
+  function hideSectionFor(doc, selector) {
+    const el = doc.querySelector(selector);
+    if (!el) return;
+    const host = el.closest('.table-section') || el.closest('.row') || el;
+    host.style.setProperty('display', 'none', 'important');
+  }
+
+  function injectRollReadMinimalStyle(doc) {
+    if (!doc || !doc.head || doc.getElementById('is-rollread-minimal-style')) return;
+    const style = doc.createElement('style');
+    style.id = 'is-rollread-minimal-style';
+    style.textContent = [
+      'body.is-rollread-minimal .app {',
+      '  max-width: 100% !important;',
+      '}',
+      'body.is-rollread-minimal h1,',
+      'body.is-rollread-minimal .feature-badge,',
+      'body.is-rollread-minimal .subtitle,',
+      'body.is-rollread-minimal .sheet-title {',
+      '  display: none !important;',
+      '}',
+      'body.is-rollread-minimal #controlsPanel,',
+      'body.is-rollread-minimal .controls,',
+      'body.is-rollread-minimal .table-section,',
+      'body.is-rollread-minimal .steps-2-3-row,',
+      'body.is-rollread-minimal .toolbar,',
+      'body.is-rollread-minimal .row {',
+      '  border: 0 !important;',
+      '  background: transparent !important;',
+      '  box-shadow: none !important;',
+      '  padding: 0 !important;',
+      '  margin: 0 !important;',
+      '}',
+      'body.is-rollread-minimal .is-tryme-steps {',
+      '  border: 0 !important;',
+      '  background: transparent !important;',
+      '  box-shadow: none !important;',
+      '  margin: 0 auto 6px !important;',
+      '  padding: 0 !important;',
+      '}',
+      'body.is-rollread-minimal .is-tryme-steps h3 {',
+      '  display: none !important;',
+      '}',
+      'body.is-rollread-minimal .is-tryme-steps ul {',
+      '  list-style: none !important;',
+      '  padding: 0 !important;',
+      '  margin: 0 !important;',
+      '  display: grid !important;',
+      '  gap: 4px !important;',
+      '  text-align: center !important;',
+      '}',
+      'body.is-rollread-minimal .is-tryme-steps li {',
+      '  margin: 0 !important;',
+      '  font-size: 14px !important;',
+      '  font-weight: 800 !important;',
+      '  color: #1f365f !important;',
+      '}',
+      'body.is-rollread-minimal .is-tryme-action-wrap {',
+      '  margin: 6px auto 10px !important;',
+      '}',
+      'body.is-rollread-minimal #output {',
+      '  margin-top: 8px !important;',
+      '}',
+      '@media (max-width: 900px) {',
+      '  body.is-rollread-minimal .is-tryme-generate {',
+      '    min-width: min(96vw, 340px) !important;',
+      '  }',
+      '}',
+    ].join('\n');
+    doc.head.appendChild(style);
+  }
+
+  function applyRollReadMinimal(doc) {
+    if (!doc || !doc.body) return;
+    doc.body.classList.add('is-rollread-minimal');
+    injectRollReadMinimalStyle(doc);
+
+    hideSectionFor(doc, '#blendOptions');
+    hideSectionFor(doc, '#contentOptions');
+    hideSectionFor(doc, '#rollGridSizeRow');
+    setDisplay(doc, ['#btnPrint', '#btnResetScore', '#rollBtn', '#resetRollBtn', '.roll-controls'], 'none');
+
+    ['.skill-block-grid', '.chips-wrap', '.chips-title', '.skill-block', '.skill-header', '.skill-button'].forEach((selector) => {
+      doc.querySelectorAll(selector).forEach((el) => el.style.removeProperty('display'));
     });
   }
 
@@ -235,7 +416,7 @@
   }
 
   function markPreviewArea(doc) {
-    const target = doc.querySelector('#worksheetHost, #output, .preview-output, .sheet-host');
+    const target = doc.querySelector('#worksheetHost, #output, .preview-output, .sheet-host, #preview, #worksheetWrap, .worksheet-wrap, .worksheet-host, .print-sheet, .page-preview, #renderHost');
     if (target) target.classList.add('is-tryme-preview-scroll');
   }
 
@@ -257,6 +438,10 @@
     ensureActionWrap(doc, btn);
     hideCustomization(doc, btn);
     markPreviewArea(doc);
+
+    if (isRollReadModelDoc(doc)) {
+      applyRollReadMinimal(doc);
+    }
 
     if (doc.body.dataset.tryMeAutoClicked !== '1') {
       doc.body.dataset.tryMeAutoClicked = '1';
