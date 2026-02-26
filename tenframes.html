@@ -246,32 +246,33 @@
 
   /* ========= PRINT FIT ========= */
   @media print{
+    @page{ margin:0.35in; }
     .menu, .controls{ display:none; }
     .wrap{ padding:0; max-width:none; }
 
     body{
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
-      zoom: 0.92; /* within-10 sweet spot */
+      zoom: 0.94; /* slightly larger while staying one page */
     }
 
-    .title{ font-size:24px; margin:4px 0 6px; }
-    .cell{ min-height:165px; padding:8px; gap:8px; }
-    .expr{ font-size:20px; }
-    .frames{ width:220px; gap:8px; }
-    .tfcell{ height:30px; padding-top:1px; }
-    .footer{ margin-top:6px; font-size:11px; }
+    .title{ font-size:25px; margin:4px 0 6px; }
+    .cell{ min-height:172px; padding:9px; gap:9px; }
+    .expr{ font-size:21px; }
+    .frames{ width:228px; gap:9px; }
+    .tfcell{ height:31px; padding-top:1px; }
+    .footer{ margin-top:5px; font-size:10px; }
 
     /* Over-10: fill the page more (bigger problems) */
-    body[data-skill="over10_add"], body[data-skill="over10_sub"]{ zoom: 0.95; }
+    body[data-skill="over10_add"], body[data-skill="over10_sub"]{ zoom: 0.97; }
     body[data-skill="over10_add"] .cell,
-    body[data-skill="over10_sub"] .cell{ min-height:185px; padding:10px; gap:10px; }
+    body[data-skill="over10_sub"] .cell{ min-height:192px; padding:11px; gap:10px; }
     body[data-skill="over10_add"] .expr,
-    body[data-skill="over10_sub"] .expr{ font-size:22px; }
+    body[data-skill="over10_sub"] .expr{ font-size:23px; }
     body[data-skill="over10_add"] .frames,
-    body[data-skill="over10_sub"] .frames{ width:240px; gap:10px; }
+    body[data-skill="over10_sub"] .frames{ width:248px; gap:10px; }
     body[data-skill="over10_add"] .tfcell,
-    body[data-skill="over10_sub"] .tfcell{ height:32px; padding-top:2px; }
+    body[data-skill="over10_sub"] .tfcell{ height:33px; padding-top:2px; }
   }
 </style>
 </head>
