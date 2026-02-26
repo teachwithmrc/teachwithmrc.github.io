@@ -709,6 +709,50 @@
     }
     /* END MOBILE NAV DROPDOWN OVERRIDES */
 
+  
+/* MOBILE QUICK NAV BAR */
+    @media (max-width:1100px){
+      .is-mobile-quick-nav{
+        display:grid;
+        grid-template-columns:repeat(5,minmax(0,1fr));
+        gap:6px;
+        margin:0 0 10px;
+        position:sticky;
+        top:0;
+        z-index:90;
+        background:#f3f5f7;
+        padding:8px 0;
+      }
+      .is-mobile-quick-nav-link{
+        min-height:36px;
+        border:1px solid #cdd9ea;
+        border-radius:10px;
+        background:#fff;
+        text-decoration:none;
+        color:#174166;
+        font-size:11px;
+        font-weight:800;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        padding:0 4px;
+        line-height:1.15;
+      }
+      .is-mobile-quick-nav-link.is-active{
+        border-color:#58b6e7;
+        background:#e9f8ff;
+        color:#0f3a5e;
+      }
+      .is-home-sections .is-layout{
+        align-items:start;
+      }
+    }
+    @media (min-width:1101px){
+      .is-mobile-quick-nav{ display:none !important; }
+    }
+    /* END MOBILE QUICK NAV BAR */
+
   </style>
 </head>
 <body>
@@ -966,6 +1010,53 @@
     }
 
     document.querySelectorAll('.is-nav-card').forEach(applyDropdown);
+  })();
+</script>
+<script id="isMobileQuickNavScript">
+  (function(){
+    const sections = document.querySelectorAll('.is-home-sections');
+    if (!sections.length) return;
+
+    const links = [
+      { label: 'Home', href: './mobile-preview/home-preview.html', key: 'home' },
+      { label: 'Generators', href: './mobile-preview/generators.html', key: 'generators' },
+      { label: 'Math', href: './mobile-preview/math-resources.html', key: 'math' },
+      { label: 'Reading', href: './mobile-preview/reading-phonics.html', key: 'reading' },
+      { label: 'More', href: './mobile-preview/more.html', key: 'more' }
+    ];
+
+    function activeKey(){
+      const path = (window.location.pathname || '').toLowerCase();
+      if (path.includes('/mobile-preview/generators.html')) return 'generators';
+      if (path.includes('/mobile-preview/math-resources.html')) return 'math';
+      if (path.includes('/mobile-preview/reading-phonics.html')) return 'reading';
+      if (path.includes('/mobile-preview/more.html')) return 'more';
+      if (path.includes('/mobile-preview/home-preview.html') || path.endsWith('/mobile-preview/') || path.endsWith('/mobile-preview/index.html')) return 'home';
+      return '';
+    }
+
+    const current = activeKey();
+
+    sections.forEach((section) => {
+      if (section.querySelector('.is-mobile-quick-nav')) return;
+      const layout = section.querySelector('.is-wrap.is-layout') || section.querySelector('.is-wrap');
+      if (!layout) return;
+
+      const nav = document.createElement('nav');
+      nav.className = 'is-mobile-quick-nav';
+      nav.setAttribute('aria-label', 'Mobile quick navigation');
+
+      links.forEach((item) => {
+        const a = document.createElement('a');
+        a.className = 'is-mobile-quick-nav-link';
+        if (current && current === item.key) a.classList.add('is-active');
+        a.href = item.href;
+        a.textContent = item.label;
+        nav.appendChild(a);
+      });
+
+      section.insertBefore(nav, layout);
+    });
   })();
 </script>
 </body>
