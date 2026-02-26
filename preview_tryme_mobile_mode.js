@@ -66,6 +66,7 @@
       '    min-height: 100dvh !important;',
       '  }',
       isRollReadModelFrame ? '  .preview-host { border: 0 !important; }' : '',
+      isRollReadModelFrame ? '  .preview-watermark, .preview-shade, .preview-paywall { display: none !important; }' : '',
       '}',
     ].join('\n');
 
@@ -124,6 +125,9 @@
       '  overflow: auto !important;',
       '  width: 100% !important;',
       '  display: block !important;',
+      '}',
+      '.is-tryme-fit-target {',
+      '  transform-origin: top center !important;',
       '}',
       '.is-tryme-preview-scroll img,',
       '.is-tryme-preview-scroll canvas,',
@@ -363,6 +367,124 @@
     });
   }
 
+  function pickFitTarget(roots) {
+    const selectors = [
+      '.sheet',
+      '#sheet',
+      '.page',
+      '.worksheet',
+      '.worksheet-page',
+      '.print-page',
+      '.paper',
+      '.preview-page',
+    ];
+
+    const candidates = [];
+    roots.forEach((root) => {
+      selectors.forEach((selector) => {
+        root.querySelectorAll(selector).forEach((el) => candidates.push({ root, el }));
+      });
+    });
+
+    if (!candidates.length) {
+      roots.forEach((root) => {
+        const first = root.firstElementChild;
+        if (first) candidates.push({ root, el: first });
+      });
+    }
+
+    if (!candidates.length) return null;
+
+    let best = candidates[0];
+    let bestArea = 0;
+    candidates.forEach((entry) => {
+      const w = Math.max(entry.el.scrollWidth || 0, entry.el.offsetWidth || 0, entry.el.getBoundingClientRect().width || 0);
+      const h = Math.max(entry.el.scrollHeight || 0, entry.el.offsetHeight || 0, entry.el.getBoundingClientRect().height || 0);
+      const area = w * h;
+      if (area > bestArea) {
+        best = entry;
+        bestArea = area;
+      }
+    });
+
+    return best;
+  }
+
+  function fitPreview(doc) {
+    if (!doc || !doc.defaultView || !doc.body) return;
+
+    const win = doc.defaultView;
+    if (win.innerWidth > 900) return;
+
+    const roots = getPreviewRoots(doc);
+    if (!roots.length) return;
+
+    const targetEntry = pickFitTarget(roots);
+    if (!targetEntry || !targetEntry.el || !targetEntry.root) return;
+
+    const root = targetEntry.root;
+    const target = targetEntry.el;
+
+    target.style.removeProperty('transform');
+    target.style.removeProperty('width');
+    target.style.removeProperty('max-width');
+    target.style.removeProperty('margin');
+
+    const naturalW = Math.max(target.scrollWidth || 0, target.offsetWidth || 0, target.getBoundingClientRect().width || 0);
+    const naturalH = Math.max(target.scrollHeight || 0, target.offsetHeight || 0, target.getBoundingClientRect().height || 0);
+    if (!naturalW || !naturalH) return;
+
+    const availW = Math.max(220, Math.min((root.clientWidth || win.innerWidth) - 6, win.innerWidth - 6));
+    const availH = Math.max(200, (root.clientHeight || Math.floor(win.innerHeight * 0.58)) - 6);
+
+    let scale = Math.min(availW / naturalW, availH / naturalH, 1);
+    if (!Number.isFinite(scale) || scale <= 0) scale = 1;
+
+    const scaledH = Math.max(180, Math.ceil(naturalH * scale));
+
+    root.style.setProperty('display', 'flex', 'important');
+    root.style.setProperty('justify-content', 'center', 'important');
+    root.style.setProperty('align-items', 'flex-start', 'important');
+    root.style.setProperty('overflow', 'hidden', 'important');
+    root.style.setProperty('height', `${scaledH}px`, 'important');
+    root.style.setProperty('max-height', `${scaledH}px`, 'important');
+
+    target.classList.add('is-tryme-fit-target');
+    target.style.setProperty('width', `${Math.ceil(naturalW)}px`, 'important');
+    target.style.setProperty('max-width', 'none', 'important');
+    target.style.setProperty('margin', '0 auto', 'important');
+    target.style.setProperty('transform', `scale(${scale})`, 'important');
+  }
+
+  function winSetTimeout(win, fn, delay) {
+    if (win && typeof win.setTimeout === 'function') {
+      win.setTimeout(fn, delay);
+    } else {
+      window.setTimeout(fn, delay);
+    }
+  }
+
+  function scheduleFit(doc) {
+    if (!doc || !doc.defaultView || !doc.body) return;
+
+    [80, 220, 420, 850].forEach((delay) => {
+      winSetTimeout(doc.defaultView, () => fitPreview(doc), delay);
+    });
+
+    if (doc.body.dataset.tryMeFitBound === '1') return;
+    doc.body.dataset.tryMeFitBound = '1';
+
+    const onResize = () => fitPreview(doc);
+    doc.defaultView.addEventListener('resize', onResize);
+    doc.defaultView.addEventListener('orientationchange', onResize);
+
+    const roots = getPreviewRoots(doc);
+    roots.forEach((root) => {
+      const observer = new MutationObserver(() => fitPreview(doc));
+      observer.observe(root, { childList: true, subtree: true });
+    });
+  }
+
   function ensureSteps(doc, steps, anchor) {
     let panel = doc.getElementById('isTryMeStepsPanel');
     if (!panel) {
@@ -429,7 +551,11 @@
     const btn = findGenerateButton(doc);
     ensureSteps(doc, steps, btn ? btn.closest('.controls-card, .table-section, .toolbar, .button-row') : null);
 
-    if (!btn) return;
+    if (!btn) {
+      markPreviewArea(doc);
+      scheduleFit(doc);
+      return;
+    }
 
     btn.textContent = 'Try Me!';
     btn.classList.add('is-tryme-generate');
@@ -443,9 +569,11 @@
       applyRollReadMinimal(doc);
     }
 
+    scheduleFit(doc);
+
     if (doc.body.dataset.tryMeAutoClicked !== '1') {
       doc.body.dataset.tryMeAutoClicked = '1';
-      window.setTimeout(() => {
+      winSetTimeout(doc.defaultView, () => {
         try { btn.click(); } catch (_) {}
       }, 120);
     }
