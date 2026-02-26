@@ -111,6 +111,34 @@
         if (!option.classList.contains("selected")) option.click();
       }
 
+      function injectGenerateButtonStyles(doc) {
+        if (doc.getElementById("is-rollread-generate-style")) return;
+        const style = doc.createElement("style");
+        style.id = "is-rollread-generate-style";
+        style.textContent = `
+          #btnGenerate.primary{
+            min-width: 250px !important;
+            min-height: 72px !important;
+            padding: 16px 34px !important;
+            font-size: 2rem !important;
+            font-weight: 900 !important;
+            letter-spacing: 0.01em !important;
+            border-width: 4px !important;
+            border-radius: 999px !important;
+            box-shadow: 0 6px 0 #333 !important;
+          }
+          @media (max-width: 900px){
+            #btnGenerate.primary{
+              min-width: min(92%, 300px) !important;
+              min-height: 80px !important;
+              font-size: 2.15rem !important;
+              padding: 16px 30px !important;
+            }
+          }
+        `;
+        doc.head.appendChild(style);
+      }
+
       function syncOverlayTop(doc) {
         const output = doc.getElementById("output");
         if (!output) return;
@@ -131,6 +159,8 @@
       }
 
       function configurePreview(doc) {
+        injectGenerateButtonStyles(doc);
+
         clickIfPresent(doc, '[data-pick-game="rollread"]');
 
         doc
