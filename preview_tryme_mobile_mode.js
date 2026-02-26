@@ -1,6 +1,7 @@
 (function () {
   const fileName = (window.location.pathname.split('/').pop() || '').toLowerCase();
   const isRollReadModelFrame = fileName === 'rollreadpreview-frame.html';
+  const longDivisionExampleSrc = 'word images/longdivisionpreview.png?v=20260226-1';
 
   const STEP_OVERRIDES = {
     'partialproducts-generator-preview-frame.html': [
@@ -128,6 +129,24 @@
       '}',
       '.is-tryme-fit-target {',
       '  transform-origin: top center !important;',
+      '}',
+      '.is-tryme-example {',
+      '  margin: 6px auto 10px !important;',
+      '  text-align: center !important;',
+      '  max-width: 980px !important;',
+      '}',
+      '.is-tryme-example-label {',
+      '  margin: 0 0 6px !important;',
+      '  font-size: 13px !important;',
+      '  font-weight: 800 !important;',
+      '  color: #1f365f !important;',
+      '}',
+      '.is-tryme-example img {',
+      '  display: block !important;',
+      '  width: 100% !important;',
+      '  max-width: 520px !important;',
+      '  height: auto !important;',
+      '  margin: 0 auto !important;',
       '}',
       '.is-tryme-preview-scroll img,',
       '.is-tryme-preview-scroll canvas,',
@@ -272,6 +291,14 @@
     return isRollReadModelFrame || title.indexOf('reading roll and read printables') >= 0;
   }
 
+  function isLongDivisionModelDoc(doc) {
+    const title = (doc && doc.title ? doc.title : '').toLowerCase();
+    if (fileName === 'long-division-generator-preview-frame.html') return true;
+    if (fileName === 'division-generator-preview-frame.html') return true;
+    if (title.indexOf('long division generator') >= 0 && title.indexOf('scaffold') < 0) return true;
+    return false;
+  }
+
   function setDisplay(doc, selectors, value) {
     selectors.forEach((selector) => {
       doc.querySelectorAll(selector).forEach((el) => {
@@ -365,6 +392,50 @@
     ['.skill-block-grid', '.chips-wrap', '.chips-title', '.skill-block', '.skill-header', '.skill-button'].forEach((selector) => {
       doc.querySelectorAll(selector).forEach((el) => el.style.removeProperty('display'));
     });
+  }
+
+  function ensureLongDivisionExample(doc) {
+    if (!isLongDivisionModelDoc(doc)) return;
+    if (!doc || !doc.body) return;
+    if (doc.getElementById('isTryMeExampleImage')) return;
+
+    const wrap = doc.createElement('section');
+    wrap.id = 'isTryMeExampleImage';
+    wrap.className = 'is-tryme-example';
+
+    const label = doc.createElement('p');
+    label.className = 'is-tryme-example-label';
+    label.textContent = 'See Example';
+
+    const img = doc.createElement('img');
+    img.src = longDivisionExampleSrc;
+    img.alt = 'Long division worksheet example';
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.onerror = () => {
+      if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
+    };
+
+    wrap.appendChild(label);
+    wrap.appendChild(img);
+
+    const action = doc.getElementById('isTryMeActionWrap');
+    if (action && action.parentNode) {
+      if (action.nextSibling) {
+        action.parentNode.insertBefore(wrap, action.nextSibling);
+      } else {
+        action.parentNode.appendChild(wrap);
+      }
+      return;
+    }
+
+    const previewRoot = doc.querySelector('#worksheetHost, #output, .preview-output, .sheet-host, #preview, #worksheetWrap, .worksheet-wrap, .worksheet-host, .print-sheet, .page-preview, #renderHost');
+    if (previewRoot && previewRoot.parentNode) {
+      previewRoot.parentNode.insertBefore(wrap, previewRoot);
+      return;
+    }
+
+    doc.body.appendChild(wrap);
   }
 
   function pickFitTarget(roots) {
@@ -568,6 +639,8 @@
     if (isRollReadModelDoc(doc)) {
       applyRollReadMinimal(doc);
     }
+
+    ensureLongDivisionExample(doc);
 
     scheduleFit(doc);
 
