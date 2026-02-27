@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Addition Generator | 2-27 Generator Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --preview-ratio: 1.4375;
+      --bg:#eaf4fe;
+      --card:#ffffff;
+      --ink:#102b4a;
+      --muted:#5d7695;
+      --line:#c9daee;
+      --shadow:0 14px 30px rgba(16,43,74,.12);
+    }
+    * { box-sizing:border-box; }
+    html,body { margin:0; padding:0; background:radial-gradient(circle at 10% 0%, #d6ecff 0%, var(--bg) 44%); color:var(--ink); font-family:"Nunito", system-ui, sans-serif; }
+    
+    .shell { width:min(1280px, calc(100vw - 32px)); margin:0 auto; padding:14px 0 22px; }
+    .hero h1 { font-size:42px; }
+    .stage { width:100%; max-width:1240px; aspect-ratio:var(--preview-ratio); }
+    :root { --crop-top: 340px; }
+
+    .card { border:1px solid var(--line); border-radius:20px; background:var(--card); box-shadow:var(--shadow); overflow:hidden; }
+    .hero { background:linear-gradient(145deg, #79ccf7 0%, #59bbea 45%, #3e9bd3 100%); color:#fff; padding:14px 14px 12px; }
+    .hero h1 { margin:0; font-family:"Baloo 2","Nunito",sans-serif; line-height:1.02; letter-spacing:.01em; }
+    .hero p { margin:7px 0 0; font-size:13px; font-weight:800; line-height:1.3; }
+    .content { padding:12px; display:grid; gap:10px; }
+    .controls { border:2px solid #111; border-radius:12px; background:#fff; padding:10px; display:grid; gap:8px; }
+    .btn-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .btn { border:2px solid #111; border-radius:12px; min-height:46px; font-size:15px; font-weight:900; font-family:"Nunito", system-ui, sans-serif; cursor:pointer; }
+    .btn.primary { background:#6ec1ff; color:#fff; }
+    .btn.secondary { background:#fff; color:#111; }
+    .status { margin:0; font-size:12px; font-weight:800; color:var(--muted); text-align:center; }
+    .stage { position:relative; border:2px solid #111; border-radius:12px; overflow:hidden; background:#fff; }
+    .iframe-crop { position:absolute; left:0; top:calc(-1 * var(--crop-top)); width:100%; height:calc(100% + var(--crop-top)); border:0; display:block; }
+    .watermark { position:absolute; inset:0; pointer-events:none; z-index:3; opacity:.48;
+      background-image:
+        repeating-linear-gradient(-26deg, rgba(0,0,0,.08) 0 18px, rgba(255,255,255,.06) 18px 36px),
+        url("data:image/svg+xml,%3Csvg width='340' height='220' viewBox='0 0 340 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-22 170 110)'%3E%3Ctext x='18' y='90' fill='%23000' fill-opacity='.26' font-family='Poppins' font-size='34' font-weight='900'%3EPREVIEW ONLY%3C/text%3E%3Ctext x='44' y='146' fill='%23000' fill-opacity='.2' font-family='Poppins' font-size='22' font-weight='800'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+      background-size:auto, 340px 220px; background-repeat:repeat; }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="card" aria-label="Addition Generator preview">
+      <header class="hero"><h1>Addition Generator</h1><p>Tap Generate Preview and see a fresh sample instantly.</p></header>
+      <div class="content">
+        <section class="controls">
+          <div class="btn-row"><button id="generateBtn" class="btn primary" type="button">Generate Preview</button><button id="printBtn" class="btn secondary" type="button">Print</button></div>
+          <p id="status" class="status">Ready.</p>
+        </section>
+        <section class="stage" aria-label="Generated preview"><iframe id="previewFrame" class="iframe-crop" title="Addition Generator generated preview"></iframe><div class="watermark" aria-hidden="true"></div></section>
+      </div>
+    </section>
+  </main>
+  <script>
+    (function() {
+      const SOURCE = '../../addition-generator-preview.html';
+      const frame = document.getElementById('previewFrame');
+      const status = document.getElementById('status');
+      const gen = document.getElementById('generateBtn');
+      const printBtn = document.getElementById('printBtn');
+      let run = 0;
+      function clickGenerate(doc) {
+        if (!doc) return false;
+        const els = doc.querySelectorAll('button,input[type="button"],input[type="submit"],a[role="button"]');
+        for (const el of els) {
+          if (el.disabled) continue;
+          const t = (((el.textContent||'') + ' ' + (el.value||'') + ' ' + (el.getAttribute('aria-label')||'')).trim()).toLowerCase();
+          if (!t) continue;
+          if (t.includes('generate') || t.includes('try me') || t.includes('regenerate') || t.includes('create') || t.includes('build')) { el.click(); return true; }
+        }
+        return false;
+      }
+      function walk(win, depth) {
+        if (!win || depth > 6) return false;
+        let clicked = false;
+        try {
+          const doc = win.document;
+          clicked = clickGenerate(doc) || clicked;
+          const iframes = doc.querySelectorAll('iframe');
+          for (const fr of iframes) { try { clicked = walk(fr.contentWindow, depth + 1) || clicked; } catch (e) {} }
+        } catch (e) {}
+        return clicked;
+      }
+      function fitRatioFromGif() {
+        const gif = new Image();
+        gif.onload = function() { if (gif.naturalWidth > 0 && gif.naturalHeight > 0) document.documentElement.style.setProperty('--preview-ratio', String(gif.naturalWidth / gif.naturalHeight)); };
+        gif.src = 'https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/699fd28c753f15732d25dd10.gif';
+      }
+      function refresh() {
+        run += 1;
+        const url = new URL(encodeURI(SOURCE), window.location.href);
+        url.searchParams.set('seed', Date.now().toString(36) + Math.random().toString(36).slice(2, 7));
+        status.textContent = 'Loading preview ' + run + '...';
+        frame.src = url.toString();
+      }
+      frame.addEventListener('load', function() {
+        status.textContent = 'Preview ' + run + ' loaded. Generating...';
+        [240, 800, 1600].forEach(function(delay) { setTimeout(function() { const clicked = walk(frame.contentWindow, 0); if (clicked) status.textContent = 'Preview ' + run + ' generated.'; }, delay); });
+      });
+      printBtn.addEventListener('click', function() { try { walk(frame.contentWindow, 0); setTimeout(function() { frame.contentWindow.print(); }, 300); } catch (e) { status.textContent = 'Print blocked in this preview.'; } });
+      gen.addEventListener('click', refresh);
+      fitRatioFromGif();
+      refresh();
+    })();
+  </script>
+</body>
+</html>
