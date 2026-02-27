@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generate Preview | Mobile Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:#eaf4fe;
+      --card:#ffffff;
+      --ink:#102b4a;
+      --muted:#5d7695;
+      --line:#c9daee;
+      --accent:#4daee4;
+      --shadow:0 14px 30px rgba(16,43,74,.12);
+      --radius:18px;
+    }
+    * { box-sizing:border-box; }
+    html, body {
+      margin:0;
+      padding:0;
+      background:radial-gradient(circle at 10% 0%, #d6ecff 0%, var(--bg) 44%);
+      color:var(--ink);
+      font-family:"Nunito", system-ui, sans-serif;
+    }
+    .phone-wrap {
+      min-height:100dvh;
+      display:grid;
+      place-items:start center;
+      padding:12px;
+    }
+    .phone-card {
+      width:min(100%, 430px);
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .hero {
+      padding:16px 16px 14px;
+      background:linear-gradient(145deg, #79ccf7 0%, #59bbea 45%, #3e9bd3 100%);
+      color:#fff;
+    }
+    .hero a {
+      display:inline-flex;
+      align-items:center;
+      min-height:30px;
+      padding:0 10px;
+      border-radius:999px;
+      text-decoration:none;
+      font-size:12px;
+      font-weight:800;
+      border:1px solid rgba(255,255,255,.48);
+      color:#fff;
+      background:rgba(255,255,255,.18);
+      margin-bottom:8px;
+    }
+    .hero h1 {
+      margin:0;
+      font-family:"Baloo 2", "Nunito", sans-serif;
+      font-size:31px;
+      line-height:1;
+      letter-spacing:.01em;
+    }
+    .hero p {
+      margin:8px 0 0;
+      font-size:14px;
+      line-height:1.35;
+      font-weight:700;
+    }
+    .content {
+      padding:14px;
+      display:grid;
+      gap:12px;
+    }
+    .controls {
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:#fff;
+      padding:12px;
+      display:grid;
+      gap:8px;
+    }
+    .btn-row {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:8px;
+    }
+    .btn {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:0 14px;
+      border-radius:11px;
+      text-decoration:none;
+      font-size:14px;
+      font-weight:800;
+      border:1px solid #1e5e89;
+      color:#fff;
+      background:linear-gradient(180deg, #2c8cca 0%, #236e9f 100%);
+      cursor:pointer;
+    }
+    .btn.secondary {
+      border-color:#bfd3e8;
+      color:#18446a;
+      background:#eff7ff;
+    }
+    .btn:active { transform:translateY(1px); }
+    .status {
+      margin:0;
+      font-size:12px;
+      font-weight:800;
+      color:var(--muted);
+      line-height:1.35;
+    }
+    .frame-wrap {
+      border:1px solid var(--line);
+      border-radius:16px;
+      overflow:hidden;
+      background:#fff;
+      min-height:64dvh;
+    }
+    .frame-wrap iframe {
+      width:100%;
+      height:64dvh;
+      min-height:620px;
+      border:0;
+      display:block;
+      background:#fff;
+    }
+    @media (max-width:360px) {
+      .hero h1 { font-size:27px; }
+      .frame-wrap iframe { min-height:560px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="phone-wrap">
+    <article class="phone-card">
+      <header class="hero">
+        <a href="./generators.html" aria-label="Back to mobile generators">Back to Generators</a>
+        <h1 id="generatorTitle">Generator Preview Test</h1>
+        <p>Tap <strong>Generate Preview</strong> to load a fresh random sample underneath.</p>
+      </header>
+      <section class="content">
+        <section class="controls">
+          <div class="btn-row">
+            <button id="generateBtn" class="btn" type="button">Generate Preview</button>
+            <a id="openFullBtn" class="btn secondary" href="#" target="_blank" rel="noopener noreferrer">Open Full Preview Page</a>
+          </div>
+          <p id="statusText" class="status">Ready.</p>
+        </section>
+        <section class="frame-wrap" aria-label="Generator preview frame">
+          <iframe id="previewFrame" title="Generator preview"></iframe>
+        </section>
+      </section>
+    </article>
+  </main>
+  <script>
+    (function() {
+      const SOURCES = {
+        rounding: {
+          title: "Rounding Generator",
+          src: "../rounding-generator-preview.html"
+        },
+        addition: {
+          title: "Addition Generator",
+          src: "../addition-generator-preview.html"
+        },
+        subtraction: {
+          title: "Subtraction Generator",
+          src: "../subtraction-generator-preview.html"
+        },
+        multiplication: {
+          title: "Multiplication Generator",
+          src: "../multiply-generator-preview.html"
+        },
+        division: {
+          title: "Long Division Generator",
+          src: "../division-generator-preview.html"
+        }
+      };
+
+      const params = new URLSearchParams(window.location.search);
+      const key = params.get("g");
+      const config = SOURCES[key] || SOURCES.division;
+
+      const titleEl = document.getElementById("generatorTitle");
+      const frameEl = document.getElementById("previewFrame");
+      const statusEl = document.getElementById("statusText");
+      const generateBtn = document.getElementById("generateBtn");
+      const openFullBtn = document.getElementById("openFullBtn");
+
+      let runCount = 0;
+
+      titleEl.textContent = config.title + " Preview Test";
+      openFullBtn.href = config.src;
+
+      function clickGenerateInDoc(doc) {
+        if (!doc) return false;
+        const nodes = doc.querySelectorAll("button, input[type='button'], input[type='submit'], a[role='button']");
+        for (const node of nodes) {
+          const label = (
+            (node.textContent || "") + " " +
+            (node.value || "") + " " +
+            (node.getAttribute("aria-label") || "")
+          ).trim().toLowerCase();
+          if (!label) continue;
+          if (label.includes("generate") && !label.includes("regenerate locked")) {
+            node.click();
+            return true;
+          }
+        }
+        return false;
+      }
+
+      function walkFramesAndGenerate(win, depth) {
+        if (!win || depth > 4) return false;
+        let clicked = false;
+        try {
+          const doc = win.document;
+          clicked = clickGenerateInDoc(doc) || clicked;
+          const children = doc.querySelectorAll("iframe");
+          for (const child of children) {
+            try {
+              clicked = walkFramesAndGenerate(child.contentWindow, depth + 1) || clicked;
+            } catch (err) {
+              // Ignore cross-frame access errors.
+            }
+          }
+        } catch (err) {
+          // Ignore frame access errors.
+        }
+        return clicked;
+      }
+
+      function refreshPreview() {
+        runCount += 1;
+        const seed = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+        const url = new URL(config.src, window.location.href);
+        url.searchParams.set("mobilePreviewSeed", seed);
+        statusEl.textContent = "Loading preview " + runCount + "...";
+        frameEl.src = url.toString();
+      }
+
+      frameEl.addEventListener("load", function() {
+        statusEl.textContent = "Preview " + runCount + " loaded. Generating fresh sample...";
+        [220, 760, 1600].forEach(function(delay) {
+          setTimeout(function() {
+            const clicked = walkFramesAndGenerate(frameEl.contentWindow, 0);
+            if (clicked) {
+              statusEl.textContent = "Preview " + runCount + " generated.";
+            }
+          }, delay);
+        });
+      });
+
+      generateBtn.addEventListener("click", refreshPreview);
+      refreshPreview();
+    })();
+  </script>
+</body>
+</html>
