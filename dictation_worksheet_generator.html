@@ -245,21 +245,24 @@
       min-height: 0.36in;
     }
 
-    .dict-row,
-    .sentence-row {
-      border: 1.6px solid #111;
-      border-radius: 6px;
-      padding: 0.05in 0.06in;
-      margin-bottom: 0.05in;
+    .dict-table {
       display: grid;
-      grid-template-columns: 0.34in 2.4in 0.36in 1fr;
-      align-items: center;
       gap: 0.06in;
     }
 
-    .sentence-row {
-      grid-template-columns: 0.34in 2.6in 0.36in 1fr;
-      align-items: start;
+    .dict-row {
+      display: grid;
+      grid-template-columns: 2.7in 1fr;
+      align-items: center;
+      gap: 0.08in;
+      margin-bottom: 0.01in;
+    }
+
+    .dict-left {
+      display: grid;
+      grid-template-columns: 0.34in 1fr 0.34in;
+      align-items: center;
+      gap: 0.05in;
     }
 
     .cue {
@@ -268,25 +271,30 @@
       align-items: center;
       justify-content: center;
       width: 100%;
-      border: 1.6px solid #111;
-      border-radius: 6px;
-      background: #fff;
       text-transform: lowercase;
       font-weight: 700;
       font-size: 20pt;
       line-height: 1;
       white-space: pre-wrap;
       word-break: break-word;
-      padding: 0 8px;
+      padding: 0 3px;
     }
 
     .cue.boxes {
       font-family: "BoxesFont", monospace;
       font-weight: 400;
       letter-spacing: 0;
-      font-size: 64px;
+      font-size: 86px;
       line-height: 0.85;
       min-height: 0.48in;
+    }
+
+    .sound-cue {
+      justify-content: flex-start;
+      min-height: 0.38in;
+      font-size: 72px;
+      line-height: 0.82;
+      color: #1a1a1a;
     }
 
     .cue.line {
@@ -318,9 +326,61 @@
       width: 100%;
     }
 
-    .sentence-lines {
+    .sentence-list {
+      display: grid;
+      gap: 0.08in;
+    }
+
+    .sentence-item {
+      display: grid;
+      gap: 0.04in;
+    }
+
+    .sentence-head {
+      display: grid;
+      grid-template-columns: 0.34in 1fr;
+      gap: 0.05in;
+      align-items: center;
+    }
+
+    .sentence-cue {
+      justify-content: flex-start;
+      font-size: 92px;
+      line-height: 0.8;
+      min-height: 0.46in;
+    }
+
+    .primary-lines {
       display: grid;
       gap: 0.06in;
+      padding-left: 0.39in;
+    }
+
+    .primary-line {
+      height: 0.46in;
+      border-top: 1px solid #1b1b1b;
+      border-bottom: 2px solid #111;
+      position: relative;
+    }
+
+    .primary-line::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      border-bottom: 1px solid #4e8cbf;
+      opacity: 0.8;
+    }
+
+    .answer-key {
+      margin-top: 0.04in;
+    }
+
+    .key-line {
+      font-size: 8.4pt;
+      line-height: 1.25;
+      margin-bottom: 0.03in;
     }
 
     .hfw-table {
@@ -363,18 +423,15 @@
     @media (max-width: 680px) {
       .control-grid { grid-template-columns: 1fr; }
       .app { width: min(560px, 96vw); }
-      .dict-row,
-      .sentence-row {
-        grid-template-columns: 0.3in 1fr;
-        gap: 0.05in;
+      .dict-row {
+        grid-template-columns: 1fr;
       }
-      .arrow,
-      .dict-row .answer-line,
-      .sentence-row .answer-line,
-      .sentence-row .sentence-lines {
-        grid-column: 1 / -1;
+      .dict-left {
+        grid-template-columns: 0.34in 1fr 0.3in;
       }
-      .arrow { text-align: left; margin-left: 0.35in; }
+      .primary-lines {
+        padding-left: 0.34in;
+      }
     }
 
     @media print {
@@ -401,7 +458,7 @@
   <main class="app">
     <section class="title-card">
       <h1 class="title">Dictation Worksheet Generator</h1>
-      <p class="sub">Pick one skill, choose cue styles, and print a two-page worksheet with sounds, words, HFW rewrite, and sentence dictation.</p>
+      <p class="sub">Pick one skill, choose cue styles, and print a two-page worksheet with sounds, words, HFW rewrite, whole-length sentence cues, and a full answer key.</p>
     </section>
 
     <section class="controls">
@@ -435,14 +492,6 @@
           <input id="sentenceCount" type="number" min="1" max="5" value="3" />
         </div>
         <div class="field">
-          <label for="sentenceCueMode">Sentence Cue Mode</label>
-          <select id="sentenceCueMode">
-            <option value="bySound">By Sounds (e.g., 11 1111 11)</option>
-            <option value="byWords">By Word Length (e.g., 2 4 2 3)</option>
-            <option value="line">Line Cue</option>
-          </select>
-        </div>
-        <div class="field">
           <label>Options</label>
           <div class="toggle-wrap">
             <input id="includeBlends" type="checkbox" />
@@ -469,7 +518,6 @@
         wordCueMode: document.getElementById("wordCueMode"),
         hfwCount: document.getElementById("hfwCount"),
         sentenceCount: document.getElementById("sentenceCount"),
-        sentenceCueMode: document.getElementById("sentenceCueMode"),
         includeBlends: document.getElementById("includeBlends"),
         generateBtn: document.getElementById("generateBtn"),
         printBtn: document.getElementById("printBtn"),
@@ -548,6 +596,46 @@
         "oa", "ow", "oe", "oo", "ew", "ue", "oi", "oy", "ou", "au", "aw",
         "ar", "or", "er", "ir", "ur"
       ];
+      const CHUNK_TO_SOUND_LABEL = {
+        c: "/k/", k: "/k/", ck: "/k/",
+        sh: "/sh/", th: "/th/", ch: "/ch/", wh: "/wh/",
+        ng: "/ng/", nk: "/nk/",
+        ar: "/ar/", or: "/or/", er: "/er/", ir: "/ir/", ur: "/ur/",
+        ai: "/a/", ay: "/a/", eigh: "/a/",
+        ee: "/e/", ea: "/e/",
+        oa: "/o/", ow: "/o/", oe: "/o/",
+        oo: "/oo/", ew: "/u/", ue: "/u/",
+        oi: "/oi/", oy: "/oi/", ou: "/ow/", au: "/aw/", aw: "/aw/"
+      };
+      const SOUND_SPELLING_OPTIONS = {
+        "/k/": ["c", "k", "ck"],
+        "/sh/": ["sh"],
+        "/th/": ["th"],
+        "/ch/": ["ch"],
+        "/wh/": ["wh"],
+        "/ng/": ["ng"],
+        "/nk/": ["nk"],
+        "/a/": ["a", "ai", "ay"],
+        "/e/": ["e", "ee", "ea"],
+        "/i/": ["i", "igh", "y"],
+        "/o/": ["o", "oa", "ow", "oe"],
+        "/u/": ["u", "ew", "ue"],
+        "/oo/": ["oo"],
+        "/oi/": ["oi", "oy"],
+        "/ow/": ["ou", "ow"],
+        "/aw/": ["au", "aw"],
+        "/ar/": ["ar"],
+        "/or/": ["or"],
+        "/er/": ["er"],
+        "/ir/": ["ir"],
+        "/ur/": ["ur"]
+      };
+      const SKILL_SOUND_HINT = {
+        ck: "/k/", sh: "/sh/", th: "/th/", ch: "/ch/", wh: "/wh/",
+        "-all": "/all/", "-ng": "/ng/", "-nk": "/nk/",
+        a_e: "/a/", i_e: "/i/", o_e: "/o/", u_e: "/u/",
+        ar: "/ar/", or: "/or/", "er/ir/ur": "/er/"
+      };
 
       const patternLookup = buildPatternLookup();
 
@@ -796,6 +884,52 @@
         return ["a", "e", "i", "o", "u", "m", "s", "t"].slice(0, maxCount);
       }
 
+      function chunkToSoundLabel(chunk) {
+        const value = String(chunk || "").toLowerCase();
+        if (!value) return "";
+        if (Object.prototype.hasOwnProperty.call(CHUNK_TO_SOUND_LABEL, value)) {
+          return CHUNK_TO_SOUND_LABEL[value];
+        }
+        if (value.length === 1) return `/${value}/`;
+        return `/${value}/`;
+      }
+
+      function spellingsForSoundLabel(label, allWords, seedChunk = "") {
+        const normalized = String(label || "").toLowerCase();
+        const pool = SOUND_SPELLING_OPTIONS[normalized] || (seedChunk ? [seedChunk] : [normalized.replace(/\//g, "")]);
+        if (normalized === "/k/") return pool;
+        const matched = pool.filter((spelling) => {
+          if (!spelling) return false;
+          const low = spelling.toLowerCase();
+          return allWords.some((word) => word.includes(low));
+        });
+        return matched.length ? matched : pool;
+      }
+
+      function deriveSoundEntries(words, maxCount, skill) {
+        const chunks = deriveSounds(words, Math.max(maxCount * 2, 8));
+        const entries = [];
+        const used = new Set();
+        const hint = SKILL_SOUND_HINT[skill];
+        if (hint) {
+          const spellings = spellingsForSoundLabel(hint, words, hint.replace(/\//g, ""));
+          entries.push({ sound: hint, spellings, pattern: spellings.map((s) => String(s.length)).join(" ") });
+          used.add(hint);
+        }
+        for (const chunk of chunks) {
+          const sound = chunkToSoundLabel(chunk);
+          if (!sound || used.has(sound)) continue;
+          const spellings = spellingsForSoundLabel(sound, words, chunk);
+          entries.push({ sound, spellings, pattern: spellings.map((s) => String(s.length)).join(" ") });
+          used.add(sound);
+          if (entries.length >= maxCount) break;
+        }
+        if (!entries.length) {
+          entries.push({ sound: "/a/", spellings: ["a"], pattern: "1" });
+        }
+        return entries.slice(0, maxCount);
+      }
+
       function pickWithBackfill(pool, count, fallbackPool = []) {
         const base = uniqueByLower(pool);
         const fallback = uniqueByLower(fallbackPool);
@@ -867,16 +1001,21 @@
         const selectedWords = pickWithBackfill(words, wordCount, ["rush", "dish", "shop", "flag"]);
         const selectedHfws = pickWithBackfill(hfws, hfwCount, DEFAULT_HFW);
         const selectedSentences = pickWithBackfill(sentences, sentenceCount, DEFAULT_SENTENCES);
-        const selectedSounds = deriveSounds(selectedWords, soundsCount);
+        const soundEntries = deriveSoundEntries(selectedWords, soundsCount, skill);
+        const selectedSounds = soundEntries.map((entry) => entry.sound);
 
         const wordCueMode = ui.wordCueMode.value;
-        const sentenceCueMode = ui.sentenceCueMode.value;
 
         const soundCells = [];
         for (let i = 0; i < 8; i += 1) {
-          if (i < soundsCount) {
+          if (i < soundEntries.length) {
+            const entry = soundEntries[i];
             soundCells.push(
-              `<div class="sound-cell"><div class="item-num">${i + 1}.</div><div class="write-line"></div></div>`
+              `<div class="sound-cell">` +
+                `<div class="item-num">${i + 1}.</div>` +
+                `<div class="cue boxes sound-cue">${escapeHtml(entry.pattern)}</div>` +
+                `<div class="write-line"></div>` +
+              `</div>`
             );
           } else {
             soundCells.push(
@@ -891,9 +1030,11 @@
           else if (wordCueMode === "wholeWord") cueValue = patternByWholeWord(word);
           return (
             `<div class="dict-row">` +
-              `<div class="item-num">${index + 1}.</div>` +
-              cueHtml(cueValue, wordCueMode) +
-              `<div class="arrow">-&gt;</div>` +
+              `<div class="dict-left">` +
+                `<div class="item-num">${index + 1}.</div>` +
+                cueHtml(cueValue, wordCueMode) +
+                `<div class="arrow">&rarr;</div>` +
+              `</div>` +
               `<div class="answer-line"></div>` +
             `</div>`
           );
@@ -910,15 +1051,17 @@
         )).join("");
 
         const sentenceRows = selectedSentences.map((sentence, index) => {
-          let cueValue = "";
-          if (sentenceCueMode === "bySound") cueValue = sentencePatternBySound(sentence);
-          else if (sentenceCueMode === "byWords") cueValue = sentencePatternByWordCount(sentence);
+          const cueValue = sentencePatternByWordCount(sentence);
           return (
-            `<div class="sentence-row">` +
-              `<div class="item-num">${index + 1}.</div>` +
-              cueHtml(cueValue, sentenceCueMode) +
-              `<div class="arrow">-&gt;</div>` +
-              `<div class="sentence-lines"><div class="answer-line"></div><div class="answer-line"></div></div>` +
+            `<div class="sentence-item">` +
+              `<div class="sentence-head">` +
+                `<div class="item-num">${index + 1}.</div>` +
+                `<div class="cue boxes sentence-cue">${escapeHtml(cueValue)}</div>` +
+              `</div>` +
+              `<div class="primary-lines">` +
+                `<div class="primary-line"></div>` +
+                `<div class="primary-line"></div>` +
+              `</div>` +
             `</div>`
           );
         }).join("");
@@ -928,11 +1071,22 @@
           wordCueMode === "wholeWord" ? "Whole Word Count" :
           "Line Cue"
         );
-        const sentenceModeText = (
-          sentenceCueMode === "bySound" ? "By Sounds" :
-          sentenceCueMode === "byWords" ? "By Words" :
-          "Line Cue"
-        );
+        const soundsKeyText = soundEntries
+          .map((entry, index) => `${index + 1}. ${entry.sound}: ${entry.spellings.join(", ")} (${entry.pattern.replace(/\s+/g, ", ")})`)
+          .join(" | ");
+        const wordsKeyText = selectedWords
+          .map((word, index) => {
+            let cueValue = "";
+            if (wordCueMode === "bySound") cueValue = patternBySound(word);
+            else if (wordCueMode === "wholeWord") cueValue = patternByWholeWord(word);
+            const suffix = cueValue ? ` [${cueValue}]` : "";
+            return `${index + 1}. ${word}${suffix}`;
+          })
+          .join(" | ");
+        const hfwKeyText = selectedHfws.map((word, index) => `${index + 1}. ${word}`).join(" | ");
+        const sentenceKeyText = selectedSentences
+          .map((sentence, index) => `${index + 1}. ${sentencePatternByWordCount(sentence)} -> ${sentence}`)
+          .join(" | ");
 
         ui.output.innerHTML = `
           <section class="page">
@@ -948,7 +1102,7 @@
             <section class="section">
               <h3 class="section-title">
                 <span>1. Spell Sounds</span>
-                <span class="section-note">Two rows, 4 each</span>
+                <span class="section-note">Two rows, 4 each | Sound spelling key on page 2</span>
               </h3>
               <div class="sound-grid">${soundCells.join("")}</div>
             </section>
@@ -958,7 +1112,7 @@
                 <span>2. Spell Words</span>
                 <span class="section-note">${escapeHtml(wordModeText)} | Arrow to rewrite line</span>
               </h3>
-              ${wordRows}
+              <div class="dict-table">${wordRows}</div>
             </section>
           </section>
 
@@ -990,15 +1144,26 @@
             <section class="section">
               <h3 class="section-title">
                 <span>4. Write Sentences</span>
-                <span class="section-note">${escapeHtml(sentenceModeText)} | Arrow to sentence lines</span>
+                <span class="section-note">Whole Word Length in Boxes Font + Primary Lines</span>
               </h3>
-              ${sentenceRows}
+              <div class="sentence-list">${sentenceRows}</div>
+            </section>
+
+            <section class="section answer-key">
+              <h3 class="section-title">
+                <span>Answer Key</span>
+                <span class="section-note">All Parts</span>
+              </h3>
+              <div class="key-line"><strong>Sounds:</strong> ${escapeHtml(soundsKeyText)}</div>
+              <div class="key-line"><strong>Words:</strong> ${escapeHtml(wordsKeyText)}</div>
+              <div class="key-line"><strong>HFW:</strong> ${escapeHtml(hfwKeyText)}</div>
+              <div class="key-line"><strong>Sentences:</strong> ${escapeHtml(sentenceKeyText)}</div>
             </section>
           </section>
         `;
 
         const soundSample = selectedSounds.join(", ");
-        ui.status.textContent = `Generated ${selectedWords.length} words, ${selectedHfws.length} HFW, ${selectedSentences.length} sentences | sounds sample: ${soundSample}`;
+        ui.status.textContent = `Generated ${selectedWords.length} words, ${selectedHfws.length} HFW, ${selectedSentences.length} sentences | sounds sample: ${soundSample} | answer key included`;
       }
 
       buildSkillSelect();
