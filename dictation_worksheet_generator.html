@@ -186,9 +186,28 @@
     .name-row {
       display: flex;
       justify-content: space-between;
-      font-weight: 700;
-      font-size: 11pt;
+      gap: 0.18in;
       margin-bottom: 0.08in;
+      font-family: "Arial", "Helvetica", sans-serif;
+      font-size: 11pt;
+      font-weight: 700;
+    }
+
+    .name-field {
+      flex: 1 1 0;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: end;
+      gap: 8px;
+    }
+
+    .name-field.date {
+      max-width: 2.4in;
+    }
+
+    .line-slot {
+      border-bottom: 2px solid #111;
+      min-height: 0.22in;
     }
 
     .section {
@@ -245,8 +264,7 @@
       min-height: 0.36in;
     }
 
-    .dict-row,
-    .sentence-row {
+    .dict-row {
       border: 1.6px solid #111;
       border-radius: 6px;
       padding: 0.05in 0.06in;
@@ -255,11 +273,6 @@
       grid-template-columns: 0.34in 2.4in 0.36in 1fr;
       align-items: center;
       gap: 0.06in;
-    }
-
-    .sentence-row {
-      grid-template-columns: 0.34in 2.6in 0.36in 1fr;
-      align-items: start;
     }
 
     .cue {
@@ -289,6 +302,80 @@
       min-height: 0.48in;
     }
 
+    .sound-cue {
+      border: none;
+      background: transparent;
+      justify-content: flex-start;
+      font-size: 72px;
+      min-height: 0.5in;
+      line-height: 0.9;
+      padding-left: 0;
+    }
+
+    .word-cue {
+      border: none;
+      background: transparent;
+      font-size: 82px;
+      min-height: 0.52in;
+      line-height: 0.84;
+    }
+
+    .sentence-list {
+      display: grid;
+      gap: 0.08in;
+    }
+
+    .sentence-item {
+      border: 1.6px solid #111;
+      border-radius: 6px;
+      padding: 0.05in 0.06in;
+      display: grid;
+      gap: 0.04in;
+    }
+
+    .sentence-head {
+      display: grid;
+      grid-template-columns: 0.34in 1fr;
+      gap: 0.05in;
+      align-items: center;
+    }
+
+    .sentence-cue {
+      border: none;
+      background: transparent;
+      justify-content: flex-start;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: clip;
+      font-size: 72px;
+      line-height: 0.88;
+      min-height: 0.5in;
+      padding-left: 0;
+    }
+
+    .primary-lines {
+      display: grid;
+      gap: 0.05in;
+      padding-left: 0.39in;
+    }
+
+    .primary-line {
+      height: 0.34in;
+      border-top: 1px solid #1b1b1b;
+      border-bottom: 2px solid #111;
+      position: relative;
+    }
+
+    .primary-line::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      border-bottom: 1px solid #4e8cbf;
+      opacity: 0.8;
+    }
+
     .cue.line {
       font-family: inherit;
       font-size: 0;
@@ -316,11 +403,6 @@
       border-bottom: 2px solid #111;
       min-height: 0.36in;
       width: 100%;
-    }
-
-    .sentence-lines {
-      display: grid;
-      gap: 0.06in;
     }
 
     .hfw-table {
@@ -363,18 +445,21 @@
     @media (max-width: 680px) {
       .control-grid { grid-template-columns: 1fr; }
       .app { width: min(560px, 96vw); }
-      .dict-row,
-      .sentence-row {
+      .dict-row {
         grid-template-columns: 0.3in 1fr;
         gap: 0.05in;
       }
       .arrow,
-      .dict-row .answer-line,
-      .sentence-row .answer-line,
-      .sentence-row .sentence-lines {
+      .dict-row .answer-line {
         grid-column: 1 / -1;
       }
       .arrow { text-align: left; margin-left: 0.35in; }
+      .sentence-head {
+        grid-template-columns: 0.3in 1fr;
+      }
+      .primary-lines {
+        padding-left: 0.34in;
+      }
     }
 
     @media print {
@@ -415,8 +500,8 @@
           <input id="soundsCount" type="number" min="1" max="8" value="8" />
         </div>
         <div class="field">
-          <label for="wordCount">Spell Words (max 10)</label>
-          <input id="wordCount" type="number" min="1" max="10" value="10" />
+          <label for="wordCount">Spell Words (max 6)</label>
+          <input id="wordCount" type="number" min="1" max="6" value="6" />
         </div>
         <div class="field">
           <label for="wordCueMode">Word Cue Mode</label>
@@ -826,10 +911,10 @@
         ui.skillSelect.value = "sh";
       }
 
-      function cueHtml(value, mode) {
-        if (mode === "line") return '<div class="cue line"></div>';
+      function cueHtml(value, mode, extraClass = "") {
+        if (mode === "line") return `<div class="cue line ${extraClass}"></div>`;
         const safe = escapeHtml(value || "1");
-        return `<div class="cue boxes">${safe}</div>`;
+        return `<div class="cue boxes ${extraClass}">${safe}</div>`;
       }
 
       function escapeHtml(text) {
@@ -846,7 +931,7 @@
         const includeBlends = !!ui.includeBlends.checked;
 
         const soundsCount = clamp(ui.soundsCount.value, 1, 8);
-        const wordCount = clamp(ui.wordCount.value, 1, 10);
+        const wordCount = clamp(ui.wordCount.value, 1, 6);
         const hfwCount = clamp(ui.hfwCount.value, 3, 6);
         const sentenceCount = clamp(ui.sentenceCount.value, 1, 5);
 
@@ -864,7 +949,8 @@
 
         const hfws = getHfwList(skill);
 
-        const selectedWords = pickWithBackfill(words, wordCount, ["rush", "dish", "shop", "flag"]);
+        const shortWords = words.filter((word) => word.length <= 8);
+        const selectedWords = pickWithBackfill(shortWords.length ? shortWords : words, wordCount, ["rush", "dish", "shop", "flag"]);
         const selectedHfws = pickWithBackfill(hfws, hfwCount, DEFAULT_HFW);
         const selectedSentences = pickWithBackfill(sentences, sentenceCount, DEFAULT_SENTENCES);
         const selectedSounds = deriveSounds(selectedWords, soundsCount);
@@ -874,9 +960,14 @@
 
         const soundCells = [];
         for (let i = 0; i < 8; i += 1) {
-          if (i < soundsCount) {
+          if (i < selectedSounds.length) {
+            const cueValue = patternBySound(selectedSounds[i]);
             soundCells.push(
-              `<div class="sound-cell"><div class="item-num">${i + 1}.</div><div class="write-line"></div></div>`
+              `<div class="sound-cell">` +
+                `<div class="item-num">${i + 1}.</div>` +
+                cueHtml(cueValue, "bySound", "sound-cue") +
+                `<div class="write-line"></div>` +
+              `</div>`
             );
           } else {
             soundCells.push(
@@ -892,7 +983,7 @@
           return (
             `<div class="dict-row">` +
               `<div class="item-num">${index + 1}.</div>` +
-              cueHtml(cueValue, wordCueMode) +
+              cueHtml(cueValue, wordCueMode, "word-cue") +
               `<div class="arrow">-&gt;</div>` +
               `<div class="answer-line"></div>` +
             `</div>`
@@ -914,11 +1005,15 @@
           if (sentenceCueMode === "bySound") cueValue = sentencePatternBySound(sentence);
           else if (sentenceCueMode === "byWords") cueValue = sentencePatternByWordCount(sentence);
           return (
-            `<div class="sentence-row">` +
-              `<div class="item-num">${index + 1}.</div>` +
-              cueHtml(cueValue, sentenceCueMode) +
-              `<div class="arrow">-&gt;</div>` +
-              `<div class="sentence-lines"><div class="answer-line"></div><div class="answer-line"></div></div>` +
+            `<div class="sentence-item">` +
+              `<div class="sentence-head">` +
+                `<div class="item-num">${index + 1}.</div>` +
+                cueHtml(cueValue, sentenceCueMode, "sentence-cue") +
+              `</div>` +
+              `<div class="primary-lines">` +
+                `<div class="primary-line"></div>` +
+                `<div class="primary-line"></div>` +
+              `</div>` +
             `</div>`
           );
         }).join("");
@@ -941,8 +1036,8 @@
               <div class="doc-meta">Skill: ${escapeHtml(skill)}</div>
             </header>
             <div class="name-row">
-              <span>Name: ________________________</span>
-              <span>Date: _____________</span>
+              <div class="name-field"><span>Name</span><span class="line-slot"></span></div>
+              <div class="name-field date"><span>Date</span><span class="line-slot"></span></div>
             </div>
 
             <section class="section">
@@ -990,9 +1085,9 @@
             <section class="section">
               <h3 class="section-title">
                 <span>4. Write Sentences</span>
-                <span class="section-note">${escapeHtml(sentenceModeText)} | Arrow to sentence lines</span>
+                <span class="section-note">${escapeHtml(sentenceModeText)} | One cue line + primary lines</span>
               </h3>
-              ${sentenceRows}
+              <div class="sentence-list">${sentenceRows}</div>
             </section>
           </section>
         `;

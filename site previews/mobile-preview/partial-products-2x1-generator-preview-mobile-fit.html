@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Partial Products Organizer - Mobile Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --preview-ratio: 1.4375;
+    --preview-scale: 0.57;
+    --tone0:#f7ead8;
+    --tone1:#e7f2fb;
+    --tone2:#e5f6e9;
+    --tone3:#f9e3f1;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; font-family:"Poppins",Arial,sans-serif; color:#111; background:#fff; }
+  .wrap{ max-width:460px; margin:0 auto; padding:10px; }
+
+  .usage-steps{ border:2px solid #111; border-radius:12px; background:#f8fbff; padding:10px 12px; margin-bottom:10px; }
+  .usage-steps h2{ margin:0 0 8px; font-size:30px; line-height:1.05; font-weight:900; text-align:center; }
+  .usage-steps p{ margin:0; text-align:center; font-size:13px; font-weight:700; line-height:1.35; }
+
+  .controls{ border:2px solid #111; border-radius:12px; padding:12px; margin-bottom:12px; }
+  .controls-top{ display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:flex-end; }
+  .field{ display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .field label{ font-size:16px; font-weight:900; }
+  select{ height:56px; width:100%; border:2px solid #111; border-radius:10px; padding:8px 10px; font-family:"Poppins",Arial,sans-serif; font-size:20px; font-weight:800; background:#fff; }
+
+  .controls-actions{ margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .btn{ border:2px solid #111; border-radius:14px; height:52px; padding:0 8px; font-family:"Poppins",Arial,sans-serif; font-size:17px; font-weight:900; cursor:pointer; }
+  .btn-primary{ background:#6ec1ff; color:#fff; }
+  .btn-secondary{ background:#fff; color:#111; }
+  .hint{ margin-top:8px; text-align:center; font-size:13px; font-weight:700; line-height:1.35; }
+
+  .preview-shell{ position:relative; margin-top:4px; width:100%; aspect-ratio:var(--preview-ratio); overflow:hidden; border:2px solid #111; background:#fff; }
+  .preview-content{ position:absolute; left:50%; top:0; width:calc(100% / var(--preview-scale)); transform:translateX(-50%) scale(var(--preview-scale)); transform-origin:top center; padding:10px; }
+
+  .sheet{ border:2px solid #111; padding:10px 10px 8px; background:#fff; }
+  .sheet-header{ display:flex; align-items:flex-end; justify-content:space-between; gap:8px; margin-bottom:8px; }
+  .sheet-title{ margin:0; font-size:23px; line-height:1.1; font-weight:900; }
+  .name-line{ white-space:nowrap; font-family:Arial,sans-serif; font-size:16px; font-weight:800; }
+  .name-line .line{ display:inline-block; width:130px; border-bottom:2px solid #111; transform:translateY(-2px); margin-left:4px; }
+
+  .problem-card{ border:2px solid #111; padding:10px; display:flex; flex-direction:column; gap:10px; min-height:640px; }
+  .problem-top{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .problem-id{ font-size:17px; font-weight:900; }
+  .problem-eq{ border:2px solid #111; border-radius:8px; padding:5px 10px; font-size:22px; font-weight:900; line-height:1; background:#fff; }
+
+  .area-panel,.algorithm-panel,.multiples-block{ border:2px solid #111; border-radius:8px; padding:8px; }
+  .area-title,.algorithm-title,.multiples-title{ margin:0 0 7px; font-size:14px; font-weight:900; text-transform:uppercase; letter-spacing:.02em; }
+
+  .area-top-grid{ display:grid; gap:8px; margin-bottom:8px; }
+  .area-main{ display:grid; grid-template-columns:auto 1fr; gap:8px; }
+  .area-left-wrap{ display:grid; gap:8px; }
+  .area-grid{ display:grid; gap:8px; }
+  .pv-box{ display:flex; align-items:center; justify-content:center; min-height:40px; border:2px solid #111; border-radius:6px; font-size:18px; font-weight:800; background:#fff; }
+  .area-cell{ border:2px solid #111; border-radius:8px; min-height:88px; padding:6px 8px; display:flex; flex-direction:column; justify-content:space-between; }
+  .tone-0{ background:var(--tone0); }
+  .tone-1{ background:var(--tone1); }
+  .tone-2{ background:var(--tone2); }
+  .tone-3{ background:var(--tone3); }
+  .eq-line{ font-size:14px; font-weight:800; line-height:1.2; }
+  .blank-line{ display:block; width:100%; border-bottom:3px solid #111; min-height:1.2em; }
+
+  .algorithm-table{ border-collapse:separate; border-spacing:4px; margin:0 auto; }
+  .alg-sign{ width:24px; text-align:center; font-size:24px; font-weight:700; line-height:1; }
+  .alg-cell{ width:36px; height:36px; border:2px solid #111; text-align:center; vertical-align:middle; font-size:19px; font-weight:800; background:#fff; }
+  .alg-cell.partial{ border-color:#777; }
+  .alg-separator td{ padding-top:0; padding-bottom:0; }
+  .alg-line{ border-top:4px solid #000; height:0; }
+
+  .multiples-table{ width:100%; border-collapse:collapse; }
+  .multiples-table td{ border:2px solid #111; text-align:center; vertical-align:middle; padding:4px; font-size:13px; font-weight:800; min-width:34px; background:#fff; }
+  .multiple-blank{ display:block; width:100%; min-height:1.1em; border-bottom:2px solid #111; }
+
+  .sheet-footer{ margin-top:8px; font-size:11px; line-height:1.35; font-weight:700; text-align:left; }
+  .copyright{ margin-top:8px; text-align:center; font-size:12px; font-weight:700; letter-spacing:.2px; }
+
+  .preview-watermark{ position:absolute; inset:0; z-index:118; pointer-events:none; opacity:.52; background-image:repeating-linear-gradient(-26deg, rgba(0,0,0,.08) 0 18px, rgba(255,255,255,.06) 18px 36px), url("data:image/svg+xml,%3Csvg width='340' height='220' viewBox='0 0 340 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-22 170 110)'%3E%3Ctext x='18' y='90' fill='%23000' fill-opacity='.26' font-family='Poppins' font-size='34' font-weight='900'%3EPREVIEW ONLY%3C/text%3E%3Ctext x='44' y='146' fill='%23000' fill-opacity='.2' font-family='Poppins' font-size='22' font-weight='800'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E"); background-size:auto, 340px 220px; background-repeat:repeat; }
+  .preview-paywall{ position:absolute; left:0; right:0; bottom:0; z-index:120; pointer-events:none; display:flex; align-items:flex-end; justify-content:center; padding:6px; background:linear-gradient(to top, rgba(0,0,0,.62), rgba(0,0,0,0)); }
+  .preview-paywall-card{ width:min(96%, 420px); border:1px solid #fff; border-radius:10px; background:rgba(17,17,17,.90); color:#fff; text-align:center; padding:7px 8px 6px; box-shadow:0 8px 20px rgba(0,0,0,.3); pointer-events:auto; }
+  .preview-paywall-card h3{ margin:0 0 2px; font-size:.72rem; line-height:1.2; font-weight:900; letter-spacing:.02em; text-transform:uppercase; }
+  .preview-paywall-card p{ margin:0 0 4px; font-size:.62rem; line-height:1.2; opacity:.95; font-weight:600; }
+  .preview-paywall-card a{ display:inline-block; text-decoration:none; background:#fff; color:#111; border-radius:7px; padding:4px 8px; font-size:.62rem; font-weight:900; }
+
+  @media screen and (max-width:430px){ :root{ --preview-scale:0.52; } .controls-top{ grid-template-columns:1fr; } }
+  @media print{ body{ display:none !important; } }
+</style>
+</head>
+<body oncontextmenu="return false;">
+<div class="wrap">
+  <section class="usage-steps" aria-label="How this preview works">
+    <h2>Partial Products Preview</h2>
+    <p>Select problem type and multiples fill mode, then tap <strong>Generate Preview</strong>.</p>
+  </section>
+
+  <div class="controls">
+    <div class="controls-top">
+      <div class="field">
+        <label for="problemType">Type of Problem</label>
+        <select id="problemType">
+          <option value="2x1" selected>2 x 1</option>
+          <option value="3x1">3 x 1</option>
+          <option value="4x1">4 x 1</option>
+          <option value="2x2">2 x 2</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="fillMultiplesValues">Multiples Filled In</label>
+        <select id="fillMultiplesValues">
+          <option value="yes" selected>Yes</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="controls-actions">
+      <button type="button" id="btnGen" class="btn btn-primary">Generate Preview</button>
+      <button type="button" id="btnPrint" class="btn btn-secondary">Print</button>
+    </div>
+
+    <div class="hint" id="hint"></div>
+  </div>
+
+  <div class="preview-shell" aria-label="Partial Products Preview">
+    <div class="preview-content">
+      <section class="sheet" id="worksheetHost"></section>
+      <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+    </div>
+
+    <div class="preview-watermark" aria-hidden="true"></div>
+    <div class="preview-paywall" aria-hidden="false">
+      <div class="preview-paywall-card">
+        <h3>Premium Resource</h3>
+        <p>Generate is enabled in preview mode. Join membership to unlock full worksheet visibility and printing.</p>
+        <a href="https://member.interventionstation.com/join" target="_blank" rel="noopener">Join Membership</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function syncPreviewRatioToGif(){
+    const refGif = "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/699fd28c753f15732d25dd10.gif";
+    const img = new Image();
+    img.onload = function(){
+      if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+        const ratio = img.naturalWidth / img.naturalHeight;
+        document.documentElement.style.setProperty("--preview-ratio", String(ratio));
+      }
+    };
+    img.src = refGif;
+  })();
+
+  const $ = (id) => document.getElementById(id);
+
+  const TYPE_CONFIG = {
+    "2x1": { aDigits: 2, bDigits: 1, label: "2 x 1" },
+    "3x1": { aDigits: 3, bDigits: 1, label: "3 x 1" },
+    "4x1": { aDigits: 4, bDigits: 1, label: "4 x 1" },
+    "2x2": { aDigits: 2, bDigits: 2, label: "2 x 2" }
+  };
+
+  function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+  function randomWithDigits(digits){ if(digits === 1) return randInt(2, 9); const min = Math.pow(10, digits - 1); const max = Math.pow(10, digits) - 1; return randInt(min, max); }
+
+  function splitPlaceParts(value, digits){
+    const txt = String(Math.max(0, value)).padStart(digits, "0");
+    return txt.split("").map((ch, idx) => Number(ch) * Math.pow(10, digits - idx - 1));
+  }
+
+  function buildProblem(cfg){ return { a: randomWithDigits(cfg.aDigits), b: randomWithDigits(cfg.bDigits) }; }
+
+  function rightAlignDigits(value, cols){
+    const arr = new Array(cols).fill("&nbsp;");
+    const txt = String(value);
+    let idx = cols - txt.length;
+    for(const ch of txt){ if(idx >= 0 && idx < cols) arr[idx] = ch; idx += 1; }
+    return arr;
+  }
+
+  function toneClass(index){ return `tone-${index % 4}`; }
+
+  function buildAreaModel(problem, cfg){
+    const aParts = splitPlaceParts(problem.a, cfg.aDigits);
+    const bParts = splitPlaceParts(problem.b, cfg.bDigits);
+
+    const topCols = aParts.map(part => `<div class="pv-box">${part}</div>`).join("");
+    const leftRows = bParts.map(part => `<div class="pv-box">${part}</div>`).join("");
+
+    const areaCells = [];
+    for(let r = 0; r < bParts.length; r += 1){
+      for(let c = 0; c < aParts.length; c += 1){
+        areaCells.push(`
+          <div class="area-cell ${toneClass((r * aParts.length) + c)}">
+            <div class="eq-line">${bParts[r]} x ${aParts[c]} =</div>
+            <span class="blank-line"></span>
+          </div>
+        `);
+      }
+    }
+
+    return `
+      <section class="area-panel">
+        <h3 class="area-title">Area Model / Partial Products</h3>
+        <div class="area-top-grid" style="grid-template-columns: 70px repeat(${aParts.length}, 1fr);">
+          <div></div>
+          ${topCols}
+        </div>
+        <div class="area-main">
+          <div class="area-left-wrap" style="grid-template-rows: repeat(${bParts.length}, 1fr);">
+            ${leftRows}
+          </div>
+          <div class="area-grid" style="grid-template-columns: repeat(${aParts.length}, 1fr); grid-template-rows: repeat(${bParts.length}, 1fr);">
+            ${areaCells.join("")}
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  function buildAlgorithm(problem, cfg){
+    const aParts = splitPlaceParts(problem.a, cfg.aDigits);
+    const bParts = splitPlaceParts(problem.b, cfg.bDigits);
+
+    const partials = [];
+    for(let r = 0; r < bParts.length; r += 1){
+      for(let c = 0; c < aParts.length; c += 1){
+        partials.push(bParts[r] * aParts[c]);
+      }
+    }
+
+    const productDigits = String(problem.a * problem.b).length;
+    const partialMax = partials.reduce((m, p) => Math.max(m, String(Math.abs(p)).length), productDigits);
+    const cols = Math.max(3, partialMax);
+
+    const setupA = rightAlignDigits(problem.a, cols);
+    const setupB = rightAlignDigits(problem.b, cols);
+
+    function rowHtml(sign, cells, className){
+      return `<tr><td class="alg-sign">${sign}</td>${cells.map(v => `<td class="alg-cell ${className || ""}">${v}</td>`).join("")}</tr>`;
+    }
+
+    const partialRows = Array.from({ length: Math.max(1, cfg.bDigits) }, (_, idx) => rowHtml(idx === Math.max(1, cfg.bDigits) - 1 ? "+" : "&nbsp;", new Array(cols).fill("&nbsp;"), "partial")).join("");
+
+    return `
+      <section class="algorithm-panel">
+        <h3 class="algorithm-title">Standard Algorithm</h3>
+        <table class="algorithm-table" aria-label="Aligned addition table">
+          ${rowHtml("&nbsp;", setupA, "")}
+          ${rowHtml("x", setupB, "")}
+          <tr class="alg-separator"><td class="alg-sign">&nbsp;</td><td class="alg-line" colspan="${cols}"></td></tr>
+          ${partialRows}
+          <tr class="alg-separator"><td class="alg-sign">&nbsp;</td><td class="alg-line" colspan="${cols}"></td></tr>
+          ${rowHtml("&nbsp;", new Array(cols).fill("&nbsp;"), "")}
+        </table>
+      </section>
+    `;
+  }
+
+  function buildMultiples(problem, cfg, filled){
+    if(cfg.bDigits !== 1){
+      return `
+        <section class="multiples-block">
+          <h3 class="multiples-title">Multiples Helper</h3>
+          <div style="font-size:13px;font-weight:700;">Multiples helper is shown for 1-digit multipliers.</div>
+        </section>
+      `;
+    }
+
+    const base = problem.b;
+    const headers = Array.from({ length: 10 }, (_, i) => `<td>x${i + 1}</td>`).join("");
+    const values = Array.from({ length: 10 }, (_, i) => filled ? `<td>${base * (i + 1)}</td>` : '<td><span class="multiple-blank"></span></td>').join("");
+
+    return `
+      <section class="multiples-block">
+        <h3 class="multiples-title">Multiples Helper (${base})</h3>
+        <table class="multiples-table" aria-label="Multiples helper table">
+          <tr>${headers}</tr>
+          <tr>${values}</tr>
+        </table>
+      </section>
+    `;
+  }
+
+  function updateHint(cfg, filled){
+    const fillText = filled ? "Multiples values prefilled." : "Multiples values left blank.";
+    $("hint").textContent = `Generating ${cfg.label} partial products preview. ${fillText}`;
+  }
+
+  function build(){
+    const type = $("problemType").value;
+    const cfg = TYPE_CONFIG[type] || TYPE_CONFIG["2x1"];
+    const filled = $("fillMultiplesValues").value === "yes";
+
+    const problem = buildProblem(cfg);
+
+    $("worksheetHost").innerHTML = `
+      <header class="sheet-header">
+        <h2 class="sheet-title">Partial Products Organizer</h2>
+        <div class="name-line">Name:<span class="line"></span></div>
+      </header>
+
+      <article class="problem-card">
+        <div class="problem-top">
+          <div class="problem-id">Problem 1</div>
+          <div class="problem-eq">${problem.a} x ${problem.b}</div>
+        </div>
+
+        ${buildAreaModel(problem, cfg)}
+        ${buildAlgorithm(problem, cfg)}
+        ${buildMultiples(problem, cfg, filled)}
+      </article>
+
+      <div class="sheet-footer">Students solve using area model, partial products, and standard algorithm checks.</div>
+    `;
+
+    updateHint(cfg, filled);
+  }
+
+  function lockedPreviewAction(){ alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access."); }
+  function blockShortcuts(event){ const blocked = (event.ctrlKey || event.metaKey) && ["p","s","u"].includes(event.key.toLowerCase()); if(blocked) event.preventDefault(); }
+
+  document.addEventListener("keydown", blockShortcuts);
+  $("btnGen").addEventListener("click", build);
+  $("btnPrint").addEventListener("click", lockedPreviewAction);
+  ["problemType", "fillMultiplesValues"].forEach(id => $(id).addEventListener("change", build));
+  build();
+</script>
+</body>
+</html>
