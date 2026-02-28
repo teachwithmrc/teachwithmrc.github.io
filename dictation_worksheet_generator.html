@@ -1,0 +1,1011 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dictation Worksheet Generator</title>
+  <script src="fluencyDataFull_v8-2_clean.js"></script>
+  <script src="newtry_FULL.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    @font-face {
+      font-family: "BoxesFont";
+      src: url("fonts/boxes2.otf") format("opentype"), url("fonts/boxes.ttf") format("truetype");
+      font-display: block;
+    }
+
+    :root {
+      --ink: #111;
+      --card: #ffffff;
+      --line: #202020;
+      --bg: #f4f6fb;
+      --accent: #0b7285;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 10% -10%, #e7fbff, #f4f6fb 42%, #ffffff 100%);
+      color: var(--ink);
+      font-family: "Poppins", "Century Gothic", Arial, sans-serif;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .app {
+      width: min(1100px, 96vw);
+      margin: 18px auto 36px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .title-card,
+    .controls {
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      background: var(--card);
+      padding: 14px 16px;
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(1.5rem, 2.7vw, 2.2rem);
+      line-height: 1.1;
+      font-weight: 800;
+    }
+
+    .sub {
+      margin: 4px 0 0;
+      color: #223;
+      font-size: 0.97rem;
+      line-height: 1.35;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(170px, 1fr));
+      gap: 10px;
+    }
+
+    .field {
+      display: grid;
+      gap: 5px;
+      align-content: start;
+    }
+
+    .field label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #1e2a38;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      border: 2px solid #181818;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font: inherit;
+      font-size: 0.95rem;
+      background: #fff;
+    }
+
+    .toggle-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      border: 2px solid #111;
+      border-radius: 10px;
+      padding: 9px 14px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      background: #fff;
+      color: #111;
+    }
+
+    .btn.primary {
+      background: #111;
+      color: #fff;
+    }
+
+    .status {
+      font-size: 0.92rem;
+      color: #223;
+      font-weight: 600;
+    }
+
+    .sheet-wrap {
+      display: grid;
+      gap: 0.16in;
+      justify-items: center;
+    }
+
+    @page { size: letter; margin: 0.35in; }
+
+    .page {
+      width: min(8.5in, calc(100vw - 24px));
+      background: #fff;
+      border: 2px solid #111;
+      border-radius: 10px;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+      padding: 0.18in 0.2in 0.2in;
+      min-height: 10.74in;
+      break-after: page;
+      page-break-after: always;
+    }
+
+    .page:last-child {
+      break-after: auto;
+      page-break-after: auto;
+    }
+
+    .doc-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 8px;
+      margin-bottom: 0.06in;
+      border-bottom: 2px solid #111;
+      padding-bottom: 0.05in;
+    }
+
+    .doc-title {
+      margin: 0;
+      font-size: 18pt;
+      font-weight: 800;
+      line-height: 1.05;
+    }
+
+    .doc-meta {
+      font-size: 10.6pt;
+      font-weight: 700;
+      text-align: right;
+      line-height: 1.2;
+    }
+
+    .name-row {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 11pt;
+      margin-bottom: 0.08in;
+    }
+
+    .section {
+      border: 2px solid #111;
+      border-radius: 8px;
+      padding: 0.06in 0.08in;
+      margin-bottom: 0.07in;
+    }
+
+    .section-title {
+      margin: 0 0 0.05in;
+      font-size: 13.2pt;
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .section-note {
+      font-size: 9.4pt;
+      font-weight: 700;
+      color: #2a2a2a;
+    }
+
+    .sound-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.06in;
+    }
+
+    .sound-cell {
+      border: 1.6px solid #111;
+      border-radius: 6px;
+      min-height: 0.95in;
+      padding: 0.06in;
+      display: grid;
+      align-content: start;
+      gap: 0.04in;
+    }
+
+    .sound-cell.muted {
+      opacity: 0.25;
+    }
+
+    .item-num {
+      font-size: 11.5pt;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .write-line {
+      border-bottom: 2px solid #111;
+      min-height: 0.36in;
+    }
+
+    .dict-row,
+    .sentence-row {
+      border: 1.6px solid #111;
+      border-radius: 6px;
+      padding: 0.05in 0.06in;
+      margin-bottom: 0.05in;
+      display: grid;
+      grid-template-columns: 0.34in 2.4in 0.36in 1fr;
+      align-items: center;
+      gap: 0.06in;
+    }
+
+    .sentence-row {
+      grid-template-columns: 0.34in 2.6in 0.36in 1fr;
+      align-items: start;
+    }
+
+    .cue {
+      min-height: 0.36in;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      border: 1.6px solid #111;
+      border-radius: 6px;
+      background: #fff;
+      text-transform: lowercase;
+      font-weight: 700;
+      font-size: 20pt;
+      line-height: 1;
+      white-space: pre-wrap;
+      word-break: break-word;
+      padding: 0 8px;
+    }
+
+    .cue.boxes {
+      font-family: "BoxesFont", monospace;
+      font-weight: 400;
+      letter-spacing: 0;
+      font-size: 64px;
+      line-height: 0.85;
+      min-height: 0.48in;
+    }
+
+    .cue.line {
+      font-family: inherit;
+      font-size: 0;
+      position: relative;
+      min-height: 0.42in;
+    }
+
+    .cue.line::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      bottom: 10px;
+      border-bottom: 2px solid #111;
+    }
+
+    .arrow {
+      text-align: center;
+      font-size: 18pt;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .answer-line {
+      border-bottom: 2px solid #111;
+      min-height: 0.36in;
+      width: 100%;
+    }
+
+    .sentence-lines {
+      display: grid;
+      gap: 0.06in;
+    }
+
+    .hfw-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .hfw-table th,
+    .hfw-table td {
+      border: 1.6px solid #111;
+      padding: 0.05in 0.06in;
+      text-align: left;
+      font-size: 11.4pt;
+    }
+
+    .hfw-table th {
+      font-size: 10.8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      background: #f7f7f7;
+    }
+
+    .hfw-word {
+      font-size: 14pt;
+      font-weight: 700;
+      text-transform: lowercase;
+      width: 1.2in;
+    }
+
+    .hfw-line {
+      border-bottom: 2px solid #111;
+      min-height: 0.34in;
+      width: 100%;
+    }
+
+    @media (max-width: 980px) {
+      .control-grid { grid-template-columns: repeat(2, minmax(160px, 1fr)); }
+    }
+
+    @media (max-width: 680px) {
+      .control-grid { grid-template-columns: 1fr; }
+      .app { width: min(560px, 96vw); }
+      .dict-row,
+      .sentence-row {
+        grid-template-columns: 0.3in 1fr;
+        gap: 0.05in;
+      }
+      .arrow,
+      .dict-row .answer-line,
+      .sentence-row .answer-line,
+      .sentence-row .sentence-lines {
+        grid-column: 1 / -1;
+      }
+      .arrow { text-align: left; margin-left: 0.35in; }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        margin: 0;
+      }
+      .title-card,
+      .controls {
+        display: none !important;
+      }
+      .sheet-wrap {
+        display: block;
+      }
+      .page {
+        width: auto;
+        margin: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="title-card">
+      <h1 class="title">Dictation Worksheet Generator</h1>
+      <p class="sub">Pick one skill, choose cue styles, and print a two-page worksheet with sounds, words, HFW rewrite, and sentence dictation.</p>
+    </section>
+
+    <section class="controls">
+      <div class="control-grid">
+        <div class="field">
+          <label for="skillSelect">Skill</label>
+          <select id="skillSelect"></select>
+        </div>
+        <div class="field">
+          <label for="soundsCount">Spell Sounds (max 8)</label>
+          <input id="soundsCount" type="number" min="1" max="8" value="8" />
+        </div>
+        <div class="field">
+          <label for="wordCount">Spell Words (max 10)</label>
+          <input id="wordCount" type="number" min="1" max="10" value="10" />
+        </div>
+        <div class="field">
+          <label for="wordCueMode">Word Cue Mode</label>
+          <select id="wordCueMode">
+            <option value="bySound">By Sound (e.g., 112)</option>
+            <option value="wholeWord">Whole Word Count (e.g., 4)</option>
+            <option value="line">Line Cue</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="hfwCount">HFW Words (3-6)</label>
+          <input id="hfwCount" type="number" min="3" max="6" value="4" />
+        </div>
+        <div class="field">
+          <label for="sentenceCount">Sentences</label>
+          <input id="sentenceCount" type="number" min="1" max="5" value="3" />
+        </div>
+        <div class="field">
+          <label for="sentenceCueMode">Sentence Cue Mode</label>
+          <select id="sentenceCueMode">
+            <option value="bySound">By Sounds (e.g., 11 1111 11)</option>
+            <option value="byWords">By Word Length (e.g., 2 4 2 3)</option>
+            <option value="line">Line Cue</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Options</label>
+          <div class="toggle-wrap">
+            <input id="includeBlends" type="checkbox" />
+            <span>Include blends when available</span>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="generateBtn" class="btn primary" type="button">Generate Worksheet</button>
+        <button id="printBtn" class="btn" type="button">Print</button>
+        <span id="status" class="status"></span>
+      </div>
+    </section>
+
+    <section id="output" class="sheet-wrap"></section>
+  </main>
+
+  <script>
+    (() => {
+      const ui = {
+        skillSelect: document.getElementById("skillSelect"),
+        soundsCount: document.getElementById("soundsCount"),
+        wordCount: document.getElementById("wordCount"),
+        wordCueMode: document.getElementById("wordCueMode"),
+        hfwCount: document.getElementById("hfwCount"),
+        sentenceCount: document.getElementById("sentenceCount"),
+        sentenceCueMode: document.getElementById("sentenceCueMode"),
+        includeBlends: document.getElementById("includeBlends"),
+        generateBtn: document.getElementById("generateBtn"),
+        printBtn: document.getElementById("printBtn"),
+        output: document.getElementById("output"),
+        status: document.getElementById("status")
+      };
+
+      const SKILL_GROUPS = [
+        { title: "CVC / Foundational", skills: ["Short A", "Short E", "Short I", "Short O", "Short U", "FLSZ", "Mixed CVC"] },
+        { title: "Digraphs", skills: ["ck", "sh", "th", "ch", "wh", "Digraphs Mixed"] },
+        { title: "Glued Sounds", skills: ["-all", "-ng", "-nk", "Glued Mixed"] },
+        { title: "Silent E (VCe)", skills: ["a_e", "i_e", "o_e", "u_e", "Mixed VCe"] },
+        { title: "R-Controlled", skills: ["ar", "or", "er/ir/ur", "Mixed R-Controlled"] },
+        { title: "Vowel Teams", skills: ["Long A (ai/ay)", "Long E (ee/ea)", "Long I (igh/y/ie)", "Long O (oa/ow/oe)", "Long U (oo/ew/ue)", "Mixed Vowel Teams"] },
+        { title: "Diphthongs / Variant", skills: ["Diphthongs (oy/oi)", "Diphthongs (ow/ou)", "Variant Vowels (au/aw)", "Variant Vowel (oo)"] }
+      ];
+
+      const PREFIX = {
+        "Short A": "0.1 - Short A",
+        "Short O": "0.2 - Short O",
+        "Short I": "0.3 - Short I",
+        "Short U": "0.4 - Short U",
+        "Short E": "0.5 - Short E",
+        "FLSZ": "0.6 - FLSZ",
+        "ck": "1.1 - ck",
+        "sh": "1.2 - sh",
+        "th": "1.3 - th",
+        "ch": "1.4 - ch",
+        "wh": "1.5 - wh",
+        "-all": "3.1 - all",
+        "-ng": "3.2 - ng",
+        "-nk": "3.3 - nk",
+        "a_e": "2.1 - a_e",
+        "i_e": "2.2 - i_e",
+        "o_e": "2.3 - o_e",
+        "u_e": "2.4 - u_e",
+        "ar": "4.1 - ar",
+        "or": "4.2 - or",
+        "er/ir/ur": "4.3 - er, ir, ur"
+      };
+
+      const MIXED_RULES = {
+        "Mixed CVC": ["0.1 - Short A", "0.5 - Short E", "0.3 - Short I", "0.2 - Short O", "0.4 - Short U", "0.6 - FLSZ"],
+        "Digraphs Mixed": ["1.1 - ck", "1.2 - sh", "1.3 - th", "1.4 - ch", "1.5 - wh"],
+        "Glued Mixed": ["3.1 - all", "3.2 - ng", "3.3 - nk"],
+        "Mixed VCe": ["2.1 - a_e", "2.2 - i_e", "2.3 - o_e", "2.4 - u_e"],
+        "Mixed R-Controlled": ["4.1 - ar", "4.2 - or", "4.3 - er, ir, ur"],
+        "Long A (ai/ay)": ["6.1 - ay", "6.2 - ai"],
+        "Long E (ee/ea)": ["6.4 - ee", "6.5 - ea"],
+        "Long I (igh/y/ie)": ["6.6 - igh", "6.7 - Final y", "6.8 - ie"],
+        "Long O (oa/ow/oe)": ["6.9 - oa", "6.10 - ow", "6.11 - oe"],
+        "Long U (oo/ew/ue)": ["6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
+        "Mixed Vowel Teams": [
+          "6.1 - ay", "6.2 - ai", "6.4 - ee", "6.5 - ea",
+          "6.6 - igh", "6.7 - Final y", "6.8 - ie",
+          "6.9 - oa", "6.10 - ow", "6.11 - oe",
+          "6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"
+        ],
+        "Diphthongs (oy/oi)": ["7.4 - oy", "7.3 - oi"],
+        "Diphthongs (ow/ou)": ["7.2 - ow", "7.1 - ou"],
+        "Variant Vowels (au/aw)": ["7.5 - aw", "7.6 - au"],
+        "Variant Vowel (oo)": ["7.7 - oo variant"]
+      };
+
+      const DEFAULT_HFW = ["the", "said", "you", "was", "come", "some", "to", "they"];
+      const DEFAULT_SENTENCES = [
+        "She can rush to the shed.",
+        "The fish is in the red dish.",
+        "He went to the store.",
+        "The duck sat on the path."
+      ];
+      const VOWELS = new Set(["a", "e", "i", "o", "u"]);
+      const SOUND_CHUNKS = [
+        "eigh", "tion", "sion", "tch", "dge", "igh", "ore", "air", "ear", "ure",
+        "ck", "sh", "th", "ch", "wh", "qu", "ng", "nk", "ai", "ay", "ee", "ea",
+        "oa", "ow", "oe", "oo", "ew", "ue", "oi", "oy", "ou", "au", "aw",
+        "ar", "or", "er", "ir", "ur"
+      ];
+
+      const patternLookup = buildPatternLookup();
+
+      function wordsDict() {
+        if (typeof fluencyWords !== "undefined") return fluencyWords;
+        if (typeof fluencyData !== "undefined" && fluencyData.words) return fluencyData.words;
+        return {};
+      }
+
+      function sentsDict() {
+        if (typeof fluencySentences !== "undefined") return fluencySentences;
+        if (typeof fluencyData !== "undefined" && fluencyData.sentences) return fluencyData.sentences;
+        return {};
+      }
+
+      function hfwDict() {
+        if (typeof trickyWords !== "undefined") return trickyWords;
+        if (typeof fluencyData !== "undefined" && fluencyData.trickySticky) return fluencyData.trickySticky;
+        return {};
+      }
+
+      function readDict(dict, key) {
+        return Array.isArray(dict[key]) ? dict[key] : [];
+      }
+
+      function shuffle(arr) {
+        const out = [...arr];
+        for (let i = out.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [out[i], out[j]] = [out[j], out[i]];
+        }
+        return out;
+      }
+
+      function clamp(num, min, max) {
+        const n = Number(num);
+        if (!Number.isFinite(n)) return min;
+        return Math.max(min, Math.min(max, n));
+      }
+
+      function uniqueByLower(values) {
+        const seen = new Set();
+        const out = [];
+        for (const raw of values) {
+          const val = String(raw || "").trim();
+          if (!val) continue;
+          const key = val.toLowerCase();
+          if (seen.has(key)) continue;
+          seen.add(key);
+          out.push(val);
+        }
+        return out;
+      }
+
+      function cleanWord(value) {
+        const text = String(value || "").trim();
+        if (!text) return "";
+        const matches = text.match(/[A-Za-z']+/g);
+        if (!matches || matches.length !== 1) return "";
+        return matches[0].replace(/'/g, "").toLowerCase();
+      }
+
+      function cleanSentence(value) {
+        const text = String(value || "").trim();
+        if (!text) return "";
+        const tokens = tokenizeWords(text);
+        if (tokens.length < 2) return "";
+        const sentence = tokens.join(" ");
+        return sentence.charAt(0).toUpperCase() + sentence.slice(1) + ".";
+      }
+
+      function tokenizeWords(text) {
+        return (String(text).match(/[A-Za-z']+/g) || [])
+          .map((t) => t.replace(/'/g, "").toLowerCase())
+          .filter(Boolean);
+      }
+
+      function readWithBlends(dict, prefix, type, blends) {
+        const typeLower = type.toLowerCase();
+        const baseKeys = [`${prefix} ${type}`, `${prefix} ${typeLower}`, `${prefix}`];
+        let base = [];
+        for (const key of baseKeys) {
+          base = base.concat(readDict(dict, key));
+        }
+        if (!blends) return base;
+
+        const blendCandidates = [
+          `${prefix} with Blends ${type}`,
+          `${prefix} with blends ${type}`,
+          `${prefix} with Blends ${typeLower}`,
+          `${prefix} with blends ${typeLower}`
+        ];
+        const bPrefix = prefix.replace(" - ", "b - ");
+        blendCandidates.push(
+          `${bPrefix} with Blends ${type}`,
+          `${bPrefix} with blends ${type}`,
+          `${bPrefix} with Blends ${typeLower}`,
+          `${bPrefix} with blends ${typeLower}`
+        );
+
+        for (const key of blendCandidates) {
+          const got = readDict(dict, key);
+          if (!got.length) continue;
+          if (got.length < 30) return uniqueByLower(got.concat(base));
+          return got;
+        }
+        return base;
+      }
+
+      function getList(label, type, blends) {
+        const dict = type === "Words" ? wordsDict() : sentsDict();
+        if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)) {
+          let all = [];
+          for (const prefix of MIXED_RULES[label]) {
+            all = all.concat(readWithBlends(dict, prefix, type, blends));
+          }
+          return all;
+        }
+        const prefix = PREFIX[label];
+        if (prefix) return readWithBlends(dict, prefix, type, blends);
+
+        const keys = Object.keys(dict);
+        const tailA = ` ${type}`;
+        const tailB = ` ${type.toLowerCase()}`;
+        const want = label.toLowerCase();
+        const guess = keys.find((k) => k.toLowerCase().includes(want) && (k.endsWith(tailA) || k.endsWith(tailB)));
+        return guess ? readDict(dict, guess) : [];
+      }
+
+      function listPrefixesForLabel(label) {
+        if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)) return MIXED_RULES[label];
+        if (PREFIX[label]) return [PREFIX[label]];
+        return [label];
+      }
+
+      function getHfwList(label) {
+        const dict = hfwDict();
+        const keys = Object.keys(dict);
+        const prefixes = listPrefixesForLabel(label);
+        let all = [];
+
+        for (const prefix of prefixes) {
+          const p = prefix.toLowerCase();
+          for (const key of keys) {
+            const keyLow = key.toLowerCase();
+            if (keyLow.startsWith(p) || keyLow.includes(p)) {
+              all = all.concat(readDict(dict, key));
+            }
+          }
+          const code = prefix.split(" - ")[0];
+          if (code && code.includes(".")) {
+            for (const key of keys) {
+              if (key.toLowerCase().startsWith(code.toLowerCase() + " -")) {
+                all = all.concat(readDict(dict, key));
+              }
+            }
+          }
+        }
+
+        const cleaned = uniqueByLower(all.map(cleanWord).filter(Boolean));
+        return cleaned.length ? cleaned : [...DEFAULT_HFW];
+      }
+
+      function splitWordIntoChunks(rawWord) {
+        const word = cleanWord(rawWord);
+        if (!word) return [];
+        const out = [];
+        let i = 0;
+        while (i < word.length) {
+          let matched = "";
+          for (const chunk of SOUND_CHUNKS) {
+            if (word.startsWith(chunk, i)) {
+              matched = chunk;
+              break;
+            }
+          }
+          if (!matched && i === word.length - 2 && word[word.length - 1] === "e" && !VOWELS.has(word[i])) {
+            matched = word.slice(i, i + 2);
+          }
+          if (!matched) matched = word[i];
+          out.push(matched);
+          i += matched.length;
+        }
+        return out;
+      }
+
+      function buildPatternLookup() {
+        const lookup = new Map();
+        if (typeof soundBoxWords === "undefined" || !soundBoxWords) return lookup;
+        const groups = Object.values(soundBoxWords);
+        for (const list of groups) {
+          if (!Array.isArray(list)) continue;
+          for (const item of list) {
+            if (!item || typeof item !== "object") continue;
+            const word = cleanWord(item.word);
+            const pattern = String(item.pattern || "").trim();
+            if (!word || !pattern) continue;
+            if (!lookup.has(word)) lookup.set(word, pattern);
+          }
+        }
+        return lookup;
+      }
+
+      function patternBySound(word) {
+        const normalized = cleanWord(word);
+        if (!normalized) return "";
+        if (patternLookup.has(normalized)) return patternLookup.get(normalized);
+        const chunks = splitWordIntoChunks(normalized);
+        return chunks.map((chunk) => String(chunk.length)).join("");
+      }
+
+      function patternByWholeWord(word) {
+        const normalized = cleanWord(word);
+        return normalized ? String(normalized.length) : "";
+      }
+
+      function sentencePatternBySound(sentence) {
+        const words = tokenizeWords(sentence);
+        return words.map((w) => patternBySound(w)).join(" ");
+      }
+
+      function sentencePatternByWordCount(sentence) {
+        const words = tokenizeWords(sentence);
+        return words.map((w) => String(cleanWord(w).length)).join(" ");
+      }
+
+      function deriveSounds(words, maxCount) {
+        const freq = new Map();
+        for (const word of words.slice(0, 120)) {
+          const chunks = splitWordIntoChunks(word);
+          for (const chunk of chunks) {
+            if (!chunk) continue;
+            const current = freq.get(chunk) || 0;
+            freq.set(chunk, current + 1);
+          }
+        }
+        const ranked = [...freq.entries()]
+          .sort((a, b) => {
+            if (b[1] !== a[1]) return b[1] - a[1];
+            if (b[0].length !== a[0].length) return b[0].length - a[0].length;
+            return a[0].localeCompare(b[0]);
+          })
+          .map(([chunk]) => chunk)
+          .slice(0, maxCount);
+        if (ranked.length) return ranked;
+        return ["a", "e", "i", "o", "u", "m", "s", "t"].slice(0, maxCount);
+      }
+
+      function pickWithBackfill(pool, count, fallbackPool = []) {
+        const base = uniqueByLower(pool);
+        const fallback = uniqueByLower(fallbackPool);
+        const source = base.length ? base : fallback;
+        if (!source.length || count <= 0) return [];
+        const out = [];
+        let bag = shuffle(source);
+        while (out.length < count) {
+          if (!bag.length) bag = shuffle(source);
+          out.push(bag.shift());
+        }
+        return out;
+      }
+
+      function buildSkillSelect() {
+        ui.skillSelect.innerHTML = "";
+        for (const group of SKILL_GROUPS) {
+          const optgroup = document.createElement("optgroup");
+          optgroup.label = group.title;
+          for (const label of group.skills) {
+            const option = document.createElement("option");
+            option.value = label;
+            option.textContent = label;
+            optgroup.appendChild(option);
+          }
+          ui.skillSelect.appendChild(optgroup);
+        }
+        ui.skillSelect.value = "sh";
+      }
+
+      function cueHtml(value, mode) {
+        if (mode === "line") return '<div class="cue line"></div>';
+        const safe = escapeHtml(value || "1");
+        return `<div class="cue boxes">${safe}</div>`;
+      }
+
+      function escapeHtml(text) {
+        return String(text)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function generateWorksheet() {
+        const skill = ui.skillSelect.value;
+        const includeBlends = !!ui.includeBlends.checked;
+
+        const soundsCount = clamp(ui.soundsCount.value, 1, 8);
+        const wordCount = clamp(ui.wordCount.value, 1, 10);
+        const hfwCount = clamp(ui.hfwCount.value, 3, 6);
+        const sentenceCount = clamp(ui.sentenceCount.value, 1, 5);
+
+        ui.soundsCount.value = String(soundsCount);
+        ui.wordCount.value = String(wordCount);
+        ui.hfwCount.value = String(hfwCount);
+        ui.sentenceCount.value = String(sentenceCount);
+
+        const wordsRaw = getList(skill, "Words", includeBlends);
+        const words = uniqueByLower(wordsRaw.map(cleanWord).filter(Boolean));
+
+        const sentencesRaw = getList(skill, "Sentences", includeBlends);
+        let sentences = uniqueByLower(sentencesRaw.map(cleanSentence).filter(Boolean));
+        if (!sentences.length) sentences = [...DEFAULT_SENTENCES];
+
+        const hfws = getHfwList(skill);
+
+        const selectedWords = pickWithBackfill(words, wordCount, ["rush", "dish", "shop", "flag"]);
+        const selectedHfws = pickWithBackfill(hfws, hfwCount, DEFAULT_HFW);
+        const selectedSentences = pickWithBackfill(sentences, sentenceCount, DEFAULT_SENTENCES);
+        const selectedSounds = deriveSounds(selectedWords, soundsCount);
+
+        const wordCueMode = ui.wordCueMode.value;
+        const sentenceCueMode = ui.sentenceCueMode.value;
+
+        const soundCells = [];
+        for (let i = 0; i < 8; i += 1) {
+          if (i < soundsCount) {
+            soundCells.push(
+              `<div class="sound-cell"><div class="item-num">${i + 1}.</div><div class="write-line"></div></div>`
+            );
+          } else {
+            soundCells.push(
+              `<div class="sound-cell muted"><div class="item-num">${i + 1}.</div><div class="write-line"></div></div>`
+            );
+          }
+        }
+
+        const wordRows = selectedWords.map((word, index) => {
+          let cueValue = "";
+          if (wordCueMode === "bySound") cueValue = patternBySound(word);
+          else if (wordCueMode === "wholeWord") cueValue = patternByWholeWord(word);
+          return (
+            `<div class="dict-row">` +
+              `<div class="item-num">${index + 1}.</div>` +
+              cueHtml(cueValue, wordCueMode) +
+              `<div class="arrow">-&gt;</div>` +
+              `<div class="answer-line"></div>` +
+            `</div>`
+          );
+        }).join("");
+
+        const hfwRows = selectedHfws.map((word, index) => (
+          `<tr>` +
+            `<td class="item-num">${index + 1}.</td>` +
+            `<td class="hfw-word">${escapeHtml(word)}</td>` +
+            `<td><div class="hfw-line"></div></td>` +
+            `<td><div class="hfw-line"></div></td>` +
+            `<td><div class="hfw-line"></div></td>` +
+          `</tr>`
+        )).join("");
+
+        const sentenceRows = selectedSentences.map((sentence, index) => {
+          let cueValue = "";
+          if (sentenceCueMode === "bySound") cueValue = sentencePatternBySound(sentence);
+          else if (sentenceCueMode === "byWords") cueValue = sentencePatternByWordCount(sentence);
+          return (
+            `<div class="sentence-row">` +
+              `<div class="item-num">${index + 1}.</div>` +
+              cueHtml(cueValue, sentenceCueMode) +
+              `<div class="arrow">-&gt;</div>` +
+              `<div class="sentence-lines"><div class="answer-line"></div><div class="answer-line"></div></div>` +
+            `</div>`
+          );
+        }).join("");
+
+        const wordModeText = (
+          wordCueMode === "bySound" ? "By Sound" :
+          wordCueMode === "wholeWord" ? "Whole Word Count" :
+          "Line Cue"
+        );
+        const sentenceModeText = (
+          sentenceCueMode === "bySound" ? "By Sounds" :
+          sentenceCueMode === "byWords" ? "By Words" :
+          "Line Cue"
+        );
+
+        ui.output.innerHTML = `
+          <section class="page">
+            <header class="doc-head">
+              <h2 class="doc-title">Dictation Worksheet</h2>
+              <div class="doc-meta">Skill: ${escapeHtml(skill)}</div>
+            </header>
+            <div class="name-row">
+              <span>Name: ________________________</span>
+              <span>Date: _____________</span>
+            </div>
+
+            <section class="section">
+              <h3 class="section-title">
+                <span>1. Spell Sounds</span>
+                <span class="section-note">Two rows, 4 each</span>
+              </h3>
+              <div class="sound-grid">${soundCells.join("")}</div>
+            </section>
+
+            <section class="section">
+              <h3 class="section-title">
+                <span>2. Spell Words</span>
+                <span class="section-note">${escapeHtml(wordModeText)} | Arrow to rewrite line</span>
+              </h3>
+              ${wordRows}
+            </section>
+          </section>
+
+          <section class="page">
+            <header class="doc-head">
+              <h2 class="doc-title">Dictation Worksheet</h2>
+              <div class="doc-meta">Skill: ${escapeHtml(skill)}</div>
+            </header>
+
+            <section class="section">
+              <h3 class="section-title">
+                <span>3. Spell HFW Words</span>
+                <span class="section-note">Rewrite each word 3 times</span>
+              </h3>
+              <table class="hfw-table">
+                <thead>
+                  <tr>
+                    <th style="width:0.45in;">#</th>
+                    <th style="width:1.35in;">Word</th>
+                    <th>Write 1</th>
+                    <th>Write 2</th>
+                    <th>Write 3</th>
+                  </tr>
+                </thead>
+                <tbody>${hfwRows}</tbody>
+              </table>
+            </section>
+
+            <section class="section">
+              <h3 class="section-title">
+                <span>4. Write Sentences</span>
+                <span class="section-note">${escapeHtml(sentenceModeText)} | Arrow to sentence lines</span>
+              </h3>
+              ${sentenceRows}
+            </section>
+          </section>
+        `;
+
+        const soundSample = selectedSounds.join(", ");
+        ui.status.textContent = `Generated ${selectedWords.length} words, ${selectedHfws.length} HFW, ${selectedSentences.length} sentences | sounds sample: ${soundSample}`;
+      }
+
+      buildSkillSelect();
+      ui.generateBtn.addEventListener("click", generateWorksheet);
+      ui.printBtn.addEventListener("click", () => window.print());
+      generateWorksheet();
+    })();
+  </script>
+</body>
+</html>
