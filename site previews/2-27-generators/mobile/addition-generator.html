@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Addition Generator - Mobile Preview</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --preview-ratio: 1.4375;
-    --crop-top: 300px;
+    --preview-scale: 0.72;
   }
   *{ box-sizing:border-box; }
   html,body{
@@ -29,7 +29,7 @@
   }
   .usage-steps h2{
     margin:0 0 8px;
-    font-size:clamp(22px,7vw,30px);
+    font-size:30px;
     line-height:1.05;
     font-weight:900;
     text-align:center;
@@ -63,7 +63,7 @@
     border-radius:10px;
     padding:8px 10px;
     font-family:"Poppins",Arial,sans-serif;
-    font-size:18px;
+    font-size:20px;
     font-weight:800;
     background:#fff;
   }
@@ -87,13 +87,83 @@
   .btn-primary{ background:#6ec1ff; color:#fff; }
   .btn-secondary{ background:#fff; color:#111; }
 
-  .status{
-    margin:10px 0 0;
+  .hidden-options{ display:none; }
+
+  .hint{
+    margin-top:8px;
     text-align:center;
-    font-size:12px;
+    font-size:13px;
     font-weight:700;
-    color:#444;
+    color:#1d3a66;
+  }
+
+  .nameLine{
+    font-family:Arial,sans-serif;
+    font-size:20px;
+    font-weight:800;
+    margin:4px 0 8px;
+  }
+
+  .title{
+    text-align:center;
+    font-size:28px;
+    font-weight:900;
+    margin:6px 0 10px;
+  }
+
+  .grid{ border:2px solid #111; }
+  .row{ display:grid; grid-template-columns:1fr 1fr; }
+  .cell{
+    border-right:2px solid #111;
+    border-bottom:2px solid #111;
+    padding:12px 12px 14px;
+    min-height:245px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .row .cell:last-child{ border-right:none; }
+  .grid .row:last-child .cell{ border-bottom:none; }
+
+  .prompt{ font-size:20px; font-weight:900; line-height:1.2; }
+
+  .problemCard{
+    margin-top:4px;
+    border:2px solid #111;
+    padding:10px;
+    min-height:150px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .vertical{
+    font-family:"Poppins",Arial,sans-serif;
+    font-size:38px;
+    line-height:1.1;
+    font-weight:900;
+    text-align:right;
+    min-width:150px;
+  }
+  .vertical .line{
+    border-top:4px solid #111;
+    margin-top:6px;
+    padding-top:8px;
+  }
+  .plus{ margin-right:8px; }
+
+  .answerBlank{
+    display:block;
     min-height:1.2em;
+    border-bottom:4px solid #111;
+  }
+
+  .copyright{
+    margin-top:10px;
+    text-align:center;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.2px;
   }
 
   .preview-shell{
@@ -106,14 +176,14 @@
     background:#fff;
   }
 
-  .preview-frame{
+  .preview-content{
     position:absolute;
-    inset:0;
-    width:100%;
-    height:calc(100% + var(--crop-top));
-    transform:translateY(calc(-1 * var(--crop-top)));
-    border:0;
-    background:#fff;
+    left:50%;
+    top:0;
+    width:calc(100% / var(--preview-scale));
+    transform:translateX(-50%) scale(var(--preview-scale));
+    transform-origin:top center;
+    padding:10px;
   }
 
   .preview-watermark{
@@ -133,13 +203,72 @@
     background-repeat:repeat;
   }
 
-  @media (max-width:430px){
+  .preview-paywall{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:120;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    padding:6px;
+    pointer-events:none;
+    background:linear-gradient(to top, rgba(0,0,0,.62), rgba(0,0,0,0));
+  }
+
+  .preview-paywall-card{
+    width:min(96%, 420px);
+    border:1px solid #fff;
+    border-radius:10px;
+    background:rgba(17,17,17,.90);
+    color:#fff;
+    text-align:center;
+    padding:7px 8px 6px;
+    box-shadow:0 8px 20px rgba(0,0,0,.3);
+    pointer-events:auto;
+  }
+
+  .preview-paywall-card h3{
+    margin:0 0 2px;
+    font-size:.72rem;
+    line-height:1.2;
+    font-weight:900;
+    letter-spacing:.02em;
+    text-transform:uppercase;
+  }
+
+  .preview-paywall-card p{
+    margin:0 0 4px;
+    font-size:.62rem;
+    line-height:1.2;
+    opacity:.95;
+    font-weight:600;
+  }
+
+  .preview-paywall-card a{
+    display:inline-block;
+    text-decoration:none;
+    background:#fff;
+    color:#111;
+    border-radius:7px;
+    padding:4px 8px;
+    font-size:.62rem;
+    font-weight:900;
+  }
+
+  @media screen and (max-width:430px){
+    :root{ --preview-scale: 0.66; }
     .controls-top{ grid-template-columns:1fr; }
-    :root{ --crop-top: 255px; }
+    .vertical{ font-size:34px; min-width:130px; }
+  }
+
+  @media print{
+    body{ display:none !important; }
   }
 </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 <div class="wrap">
   <section class="usage-steps" aria-label="How this preview works">
     <h2>Addition Generator Preview</h2>
@@ -149,19 +278,19 @@
   <div class="controls">
     <div class="controls-top">
       <div class="field">
-        <label for="difficulty">Difficulty</label>
-        <select id="difficulty">
-          <option>Standard</option>
-          <option>Mixed</option>
-          <option>Challenge</option>
+        <label for="digits">Addend Digits</label>
+        <select id="digits">
+          <option value="2" selected>2 Digits</option>
+          <option value="3">3 Digits</option>
+          <option value="4">4 Digits</option>
         </select>
       </div>
       <div class="field">
-        <label for="problems">Problems</label>
-        <select id="problems">
-          <option>4 Problems</option>
-          <option>6 Problems</option>
-          <option>8 Problems</option>
+        <label for="mode">Problem Mode</label>
+        <select id="mode">
+          <option value="mixed" selected>Mixed</option>
+          <option value="regroup">Regrouping</option>
+          <option value="no-regroup">No Regrouping</option>
         </select>
       </div>
     </div>
@@ -170,120 +299,162 @@
       <button type="button" id="btnGen" class="btn btn-primary">Generate Preview</button>
       <button type="button" id="btnPrint" class="btn btn-secondary">Print</button>
     </div>
-    <p id="status" class="status">Ready.</p>
+
+    <div class="hidden-options" aria-hidden="true">
+      <input id="showAnswers" type="checkbox">
+    </div>
+
+    <div class="hint" id="hint"></div>
   </div>
 
   <div class="preview-shell" aria-label="Addition Generator Preview">
-    <iframe id="previewFrame" class="preview-frame" title="Addition Generator generated preview"></iframe>
+    <div class="preview-content">
+      <div class="nameLine">Name: ______________________</div>
+      <div class="title" id="sheetTitle">Addition Practice</div>
+      <div class="grid" id="grid"></div>
+      <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+    </div>
+
     <div class="preview-watermark" aria-hidden="true"></div>
+    <div class="preview-paywall" aria-hidden="false">
+      <div class="preview-paywall-card">
+        <h3>Premium Resource</h3>
+        <p>Generate is enabled in preview mode. Join membership to unlock full worksheet visibility and printing.</p>
+        <a href="https://member.interventionstation.com/join" target="_blank" rel="noopener">Join Membership</a>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-  (function(){
-    const SOURCE = "../../addition-generator-preview-frame.html";
-    const REF_GIF = "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/699fd28c753f15732d25dd10.gif";
-
-    const frame = document.getElementById("previewFrame");
-    const status = document.getElementById("status");
-    const btnGen = document.getElementById("btnGen");
-    const btnPrint = document.getElementById("btnPrint");
-
-    function syncPreviewRatio(){
-      const img = new Image();
-      img.onload = function(){
-        if(img.naturalWidth > 0 && img.naturalHeight > 0){
-          const ratio = img.naturalWidth / img.naturalHeight;
-          document.documentElement.style.setProperty("--preview-ratio", String(ratio));
-        }
-      };
-      img.src = REF_GIF;
-    }
-
-    function clickGenerateInDoc(doc){
-      if(!doc) return false;
-      const nodes = doc.querySelectorAll('button,input[type="button"],input[type="submit"],a[role="button"]');
-      for(const node of nodes){
-        if(node.disabled) continue;
-        const label = (((node.textContent || "") + " " + (node.value || "") + " " + (node.getAttribute("aria-label") || "")).trim()).toLowerCase();
-        if(!label) continue;
-        if(
-          label.includes("generate") ||
-          label.includes("try me") ||
-          label.includes("regenerate") ||
-          label.includes("create") ||
-          label.includes("build")
-        ){
-          node.click();
-          return true;
-        }
+  (function syncPreviewRatioToGif(){
+    const refGif = "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/699fd28c753f15732d25dd10.gif";
+    const img = new Image();
+    img.onload = function(){
+      if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+        const ratio = img.naturalWidth / img.naturalHeight;
+        document.documentElement.style.setProperty("--preview-ratio", String(ratio));
       }
-      return false;
-    }
-
-    function walkAndGenerate(win, depth){
-      if(!win || depth > 7) return false;
-      let clicked = false;
-      try{
-        const doc = win.document;
-        clicked = clickGenerateInDoc(doc) || clicked;
-        const iframes = doc.querySelectorAll("iframe");
-        for(const fr of iframes){
-          try{ clicked = walkAndGenerate(fr.contentWindow, depth + 1) || clicked; }
-          catch(err){}
-        }
-      }catch(err){}
-      return clicked;
-    }
-
-    function loadFresh(){
-      const url = new URL(encodeURI(SOURCE), window.location.href);
-      url.searchParams.set("seed", Date.now().toString(36) + Math.random().toString(36).slice(2,8));
-      frame.dataset.autoGenerate = "1";
-      status.textContent = "Loading preview...";
-      frame.src = url.toString();
-    }
-
-    frame.addEventListener("load", function(){
-      if(frame.dataset.autoGenerate !== "1"){
-        status.textContent = "Preview loaded.";
-        return;
-      }
-
-      frame.dataset.autoGenerate = "0";
-      let finished = false;
-      [260, 900, 1700].forEach(function(ms, idx){
-        setTimeout(function(){
-          if(finished) return;
-          const clicked = walkAndGenerate(frame.contentWindow, 0);
-          if(clicked){
-            finished = true;
-            status.textContent = "Generated preview.";
-          }else if(idx === 2){
-            status.textContent = "Preview loaded.";
-          }
-        }, ms);
-      });
-    });
-
-    btnGen.addEventListener("click", loadFresh);
-
-    btnPrint.addEventListener("click", function(){
-      try{
-        const clicked = walkAndGenerate(frame.contentWindow, 0);
-        if(clicked){
-          setTimeout(function(){ frame.contentWindow.print(); }, 260);
-        }else{
-          frame.contentWindow.print();
-        }
-      }catch(err){
-        status.textContent = "Print is blocked in this preview.";
-      }
-    });
-
-    syncPreviewRatio();
-    loadFresh();
+    };
+    img.src = refGif;
   })();
+
+  const $ = (id) => document.getElementById(id);
+  const PROBLEM_COUNT = 2;
+
+  function setTitle(){
+    const digits = parseInt($("digits").value, 10);
+    $("sheetTitle").textContent = `${digits}-Digit Addition Practice`;
+  }
+
+  function randomInt(min, max){
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function maxForDigits(d){
+    if(d <= 1) return 9;
+    return Math.pow(10, d) - 1;
+  }
+
+  function minForDigits(d){
+    if(d <= 1) return 0;
+    return Math.pow(10, d - 1);
+  }
+
+  function hasRegroup(a, b){
+    let x = a;
+    let y = b;
+    while(x > 0 || y > 0){
+      if((x % 10) + (y % 10) >= 10) return true;
+      x = Math.floor(x / 10);
+      y = Math.floor(y / 10);
+    }
+    return false;
+  }
+
+  function pickProblem(digits, mode){
+    const min = minForDigits(digits);
+    const max = maxForDigits(digits);
+
+    for(let i = 0; i < 800; i++){
+      const a = randomInt(min, max);
+      const b = randomInt(min, max);
+      const regroup = hasRegroup(a, b);
+      if(mode === "regroup" && !regroup) continue;
+      if(mode === "no-regroup" && regroup) continue;
+      return { a, b };
+    }
+
+    return { a: randomInt(min, max), b: randomInt(min, max) };
+  }
+
+  function fmt(n){
+    return n.toLocaleString("en-US");
+  }
+
+  function makeVerticalProblem(index, a, b){
+    const card = document.createElement("div");
+    card.className = "cell";
+
+    const prompt = document.createElement("div");
+    prompt.className = "prompt";
+    prompt.textContent = `${index}. Solve.`;
+
+    const box = document.createElement("div");
+    box.className = "problemCard";
+
+    const vertical = document.createElement("div");
+    vertical.className = "vertical";
+    vertical.innerHTML = `
+      <div>${fmt(a)}</div>
+      <div><span class="plus">+</span>${fmt(b)}</div>
+      <div class="line"><span class="answerBlank" aria-hidden="true"></span></div>
+    `;
+
+    box.appendChild(vertical);
+    card.appendChild(prompt);
+    card.appendChild(box);
+    return card;
+  }
+
+  function build(){
+    const digits = parseInt($("digits").value, 10);
+    const mode = $("mode").value;
+
+    setTitle();
+    $("hint").textContent = `Generating ${digits}-digit addition problems (${mode.replace("-", " ")}).`;
+
+    const grid = $("grid");
+    grid.innerHTML = "";
+
+    const row = document.createElement("div");
+    row.className = "row";
+
+    for(let i = 0; i < PROBLEM_COUNT; i++){
+      const p = pickProblem(digits, mode);
+      row.appendChild(makeVerticalProblem(i + 1, p.a, p.b));
+    }
+
+    grid.appendChild(row);
+  }
+
+  function lockedPreviewAction(){
+    alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access.");
+  }
+
+  function blockShortcuts(event){
+    const blocked = (event.ctrlKey || event.metaKey) && ["p","s","u"].includes(event.key.toLowerCase());
+    if(blocked) event.preventDefault();
+  }
+
+  document.addEventListener("keydown", blockShortcuts);
+
+  $("btnGen").addEventListener("click", build);
+  $("btnPrint").addEventListener("click", lockedPreviewAction);
+  ["digits", "mode"].forEach(id => $(id).addEventListener("change", build));
+
+  setTitle();
+  build();
 </script>
 </body>
 </html>
