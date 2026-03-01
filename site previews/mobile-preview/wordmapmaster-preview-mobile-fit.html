@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root{ --preview-ratio:1.4375; --preview-scale:0.70; }
+  @font-face { font-family:'BoxesFont'; src:url('../../fonts/boxes2.otf') format('opentype'); }
   *{ box-sizing:border-box; }
   html,body{ margin:0; padding:0; font-family:"Poppins",Arial,sans-serif; color:#111; background:#fff; }
   .wrap{ max-width:460px; margin:0 auto; padding:10px; }
@@ -47,8 +48,16 @@
   .word-table{ width:100%; border-collapse:collapse; border:2px solid #111; }
   .word-table td{ width:50%; border:2px solid #111; padding:8px 6px; vertical-align:middle; text-align:center; min-height:114px; }
   .word{ font-size:23px; font-weight:900; line-height:1.1; margin-bottom:8px; }
-  .pattern{ display:flex; justify-content:center; gap:4px; flex-wrap:wrap; min-height:36px; }
-  .sound-box{ min-width:24px; height:30px; border:2px solid #111; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800; line-height:1; padding:0 4px; background:#fff; }
+  .pattern{
+    font-size:56px;
+    transform:scale(1.3);
+    display:inline-block;
+    font-family:'BoxesFont', monospace;
+    font-weight:normal;
+    line-height:1;
+    margin-top:8px;
+    margin-bottom:10px;
+  }
 
   .copyright{ margin-top:8px; text-align:center; font-size:12px; font-weight:700; letter-spacing:.2px; }
 
@@ -73,7 +82,7 @@
   <div class="controls">
     <div class="controls-top">
       <div class="field">
-        <label for="digraphSkill">Type of Problem</label>
+        <label for="digraphSkill">Phonics Skill</label>
         <select id="digraphSkill">
           <option value="Digraphs Mixed" selected>Digraphs Mixed</option>
           <option value="Digraph(ck)">Digraph ck</option>
@@ -201,10 +210,8 @@
     return fetchBase(skill);
   }
 
-  function patternToBoxes(pattern){
-    const chars = Array.from(String(pattern || "").trim());
-    if(!chars.length) return '<span class="sound-box">&nbsp;</span>';
-    return chars.map(ch => `<span class="sound-box">${ch === " " ? "&nbsp;" : ch}</span>`).join("");
+  function renderPattern(pattern){
+    return String(pattern || "").trim() || "&nbsp;";
   }
 
   function updateHint(skill, includeBlends){
@@ -241,11 +248,11 @@
         <tr>
           <td>
             <div class="word">${left.word}</div>
-            <div class="pattern">${patternToBoxes(left.pattern)}</div>
+            <div class="pattern">${renderPattern(left.pattern)}</div>
           </td>
           <td>
             <div class="word">${right.word}</div>
-            <div class="pattern">${patternToBoxes(right.pattern)}</div>
+            <div class="pattern">${renderPattern(right.pattern)}</div>
           </td>
         </tr>
       `);

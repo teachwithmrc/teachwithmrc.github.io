@@ -48,8 +48,15 @@
   .problem-id{ font-size:17px; font-weight:900; }
   .problem-eq{ border:2px solid #111; border-radius:8px; padding:5px 10px; font-size:22px; font-weight:900; line-height:1; background:#fff; }
 
-  .area-panel,.algorithm-panel,.multiples-block{ border:2px solid #111; border-radius:8px; padding:8px; }
-  .area-title,.algorithm-title,.multiples-title{ margin:0 0 7px; font-size:14px; font-weight:900; text-transform:uppercase; letter-spacing:.02em; }
+  .workspace-row{
+    display:grid;
+    grid-template-columns:minmax(0, 2fr) minmax(0, 1fr);
+    gap:10px;
+    align-items:start;
+  }
+
+  .area-panel,.addition-panel,.multiples-block{ border:2px solid #111; border-radius:8px; padding:8px; }
+  .area-title,.addition-title,.multiples-title{ margin:0 0 7px; font-size:14px; font-weight:900; text-transform:uppercase; letter-spacing:.02em; }
 
   .area-top-grid{ display:grid; gap:8px; margin-bottom:8px; }
   .area-main{ display:grid; grid-template-columns:auto 1fr; gap:8px; }
@@ -64,12 +71,39 @@
   .eq-line{ font-size:14px; font-weight:800; line-height:1.2; }
   .blank-line{ display:block; width:100%; border-bottom:3px solid #111; min-height:1.2em; }
 
-  .algorithm-table{ border-collapse:separate; border-spacing:4px; margin:0 auto; }
-  .alg-sign{ width:24px; text-align:center; font-size:24px; font-weight:700; line-height:1; }
-  .alg-cell{ width:36px; height:36px; border:2px solid #111; text-align:center; vertical-align:middle; font-size:19px; font-weight:800; background:#fff; }
-  .alg-cell.partial{ border-color:#777; }
-  .alg-separator td{ padding-top:0; padding-bottom:0; }
-  .alg-line{ border-top:4px solid #000; height:0; }
+  .addition-table{
+    border-collapse:separate;
+    border-spacing:4px;
+    margin:0 auto;
+  }
+
+  .add-sign{
+    width:24px;
+    text-align:center;
+    font-size:24px;
+    font-weight:700;
+    line-height:1;
+  }
+
+  .add-cell{
+    width:36px;
+    height:36px;
+    border:2px solid #111;
+    text-align:center;
+    vertical-align:middle;
+    font-size:19px;
+    font-weight:800;
+    background:#fff;
+  }
+
+  .add-separator td{ padding-top:0; padding-bottom:0; }
+  .add-line{ border-top:4px solid #000; height:0; }
+
+  .add-cell.partial{ border-color:#777; }
+  .add-cell.partial.tone-0{ background:var(--tone0); }
+  .add-cell.partial.tone-1{ background:var(--tone1); }
+  .add-cell.partial.tone-2{ background:var(--tone2); }
+  .add-cell.partial.tone-3{ background:var(--tone3); }
 
   .multiples-table{ width:100%; border-collapse:collapse; }
   .multiples-table td{ border:2px solid #111; text-align:center; vertical-align:middle; padding:4px; font-size:13px; font-weight:800; min-width:34px; background:#fff; }
@@ -85,7 +119,11 @@
   .preview-paywall-card p{ margin:0 0 4px; font-size:.62rem; line-height:1.2; opacity:.95; font-weight:600; }
   .preview-paywall-card a{ display:inline-block; text-decoration:none; background:#fff; color:#111; border-radius:7px; padding:4px 8px; font-size:.62rem; font-weight:900; }
 
-  @media screen and (max-width:430px){ :root{ --preview-scale:0.52; } .controls-top{ grid-template-columns:1fr; } }
+  @media screen and (max-width:430px){
+    :root{ --preview-scale:0.52; }
+    .controls-top{ grid-template-columns:1fr; }
+    .workspace-row{ grid-template-columns:1fr; }
+  }
   @media print{ body{ display:none !important; } }
 </style>
 </head>
@@ -174,15 +212,18 @@
 
   function buildProblem(cfg){ return { a: randomWithDigits(cfg.aDigits), b: randomWithDigits(cfg.bDigits) }; }
 
+  function toneClass(index){ return `tone-${index % 4}`; }
+
   function rightAlignDigits(value, cols){
     const arr = new Array(cols).fill("&nbsp;");
     const txt = String(value);
     let idx = cols - txt.length;
-    for(const ch of txt){ if(idx >= 0 && idx < cols) arr[idx] = ch; idx += 1; }
+    for(const ch of txt){
+      if(idx >= 0 && idx < cols) arr[idx] = ch;
+      idx += 1;
+    }
     return arr;
   }
-
-  function toneClass(index){ return `tone-${index % 4}`; }
 
   function buildAreaModel(problem, cfg){
     const aParts = splitPlaceParts(problem.a, cfg.aDigits);
@@ -222,45 +263,6 @@
     `;
   }
 
-  function buildAlgorithm(problem, cfg){
-    const aParts = splitPlaceParts(problem.a, cfg.aDigits);
-    const bParts = splitPlaceParts(problem.b, cfg.bDigits);
-
-    const partials = [];
-    for(let r = 0; r < bParts.length; r += 1){
-      for(let c = 0; c < aParts.length; c += 1){
-        partials.push(bParts[r] * aParts[c]);
-      }
-    }
-
-    const productDigits = String(problem.a * problem.b).length;
-    const partialMax = partials.reduce((m, p) => Math.max(m, String(Math.abs(p)).length), productDigits);
-    const cols = Math.max(3, partialMax);
-
-    const setupA = rightAlignDigits(problem.a, cols);
-    const setupB = rightAlignDigits(problem.b, cols);
-
-    function rowHtml(sign, cells, className){
-      return `<tr><td class="alg-sign">${sign}</td>${cells.map(v => `<td class="alg-cell ${className || ""}">${v}</td>`).join("")}</tr>`;
-    }
-
-    const partialRows = Array.from({ length: Math.max(1, cfg.bDigits) }, (_, idx) => rowHtml(idx === Math.max(1, cfg.bDigits) - 1 ? "+" : "&nbsp;", new Array(cols).fill("&nbsp;"), "partial")).join("");
-
-    return `
-      <section class="algorithm-panel">
-        <h3 class="algorithm-title">Standard Algorithm</h3>
-        <table class="algorithm-table" aria-label="Aligned addition table">
-          ${rowHtml("&nbsp;", setupA, "")}
-          ${rowHtml("x", setupB, "")}
-          <tr class="alg-separator"><td class="alg-sign">&nbsp;</td><td class="alg-line" colspan="${cols}"></td></tr>
-          ${partialRows}
-          <tr class="alg-separator"><td class="alg-sign">&nbsp;</td><td class="alg-line" colspan="${cols}"></td></tr>
-          ${rowHtml("&nbsp;", new Array(cols).fill("&nbsp;"), "")}
-        </table>
-      </section>
-    `;
-  }
-
   function buildMultiples(problem, cfg, filled){
     if(cfg.bDigits !== 1){
       return `
@@ -281,6 +283,61 @@
         <table class="multiples-table" aria-label="Multiples helper table">
           <tr>${headers}</tr>
           <tr>${values}</tr>
+        </table>
+      </section>
+    `;
+  }
+
+  function buildAdditionTable(problem, cfg){
+    const aParts = splitPlaceParts(problem.a, cfg.aDigits);
+    const bParts = splitPlaceParts(problem.b, cfg.bDigits);
+
+    const partials = [];
+    for(let r = 0; r < bParts.length; r += 1){
+      for(let c = 0; c < aParts.length; c += 1){
+        partials.push({
+          leftPart: bParts[r],
+          topPart: aParts[c],
+          shift: (cfg.aDigits - c - 1) + (cfg.bDigits - r - 1),
+          tone: toneClass((r * aParts.length) + c)
+        });
+      }
+    }
+
+    const productDigits = String(problem.a * problem.b).length;
+    const partialMax = partials.reduce((m, p) => {
+      const len = String(Math.abs(p.leftPart * p.topPart)).length;
+      return Math.max(m, len);
+    }, productDigits);
+    const cols = Math.max(3, partialMax);
+
+    const setupA = rightAlignDigits(problem.a, cols);
+    const setupB = rightAlignDigits(problem.b, cols);
+
+    function rowHtml(sign, cells, className){
+      return `<tr><td class="add-sign">${sign}</td>${cells.map(v => `<td class="add-cell ${className || ""}">${v}</td>`).join("")}</tr>`;
+    }
+
+    const partialRows = partials.map((p, idx) => {
+      const cells = new Array(cols).fill("&nbsp;");
+      for(let i = 0; i < Math.min(p.shift, cols); i += 1){
+        cells[cols - 1 - i] = "0";
+      }
+      const sign = idx === partials.length - 1 ? "+" : "&nbsp;";
+      return rowHtml(sign, cells, `partial ${p.tone}`);
+    }).join("");
+
+    const lineRow = `<tr class="add-separator"><td class="add-sign">&nbsp;</td><td class="add-line" colspan="${cols}"></td></tr>`;
+
+    return `
+      <section class="addition-panel">
+        <h3 class="addition-title">Add Partial Products</h3>
+        <table class="addition-table" aria-label="Addition part table">
+          ${rowHtml("&nbsp;", setupA, "")}
+          ${rowHtml("&times;", setupB, "")}
+          ${lineRow}
+          ${partialRows}
+          ${rowHtml("&nbsp;", new Array(cols).fill("&nbsp;"), "")}
         </table>
       </section>
     `;
@@ -310,12 +367,14 @@
           <div class="problem-eq">${problem.a} x ${problem.b}</div>
         </div>
 
-        ${buildAreaModel(problem, cfg)}
-        ${buildAlgorithm(problem, cfg)}
+        <div class="workspace-row">
+          ${buildAreaModel(problem, cfg)}
+          ${buildAdditionTable(problem, cfg)}
+        </div>
         ${buildMultiples(problem, cfg, filled)}
       </article>
 
-      <div class="sheet-footer">Students solve using area model, partial products, and standard algorithm checks.</div>
+      <div class="sheet-footer">Students solve using area model, partial products, and the addition part.</div>
     `;
 
     updateHint(cfg, filled);

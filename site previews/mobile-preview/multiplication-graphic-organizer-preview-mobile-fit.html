@@ -233,20 +233,37 @@
     return `background:${color};`;
   }
 
-  function rowCellsWithValues(totalCols, colorOn){
+  function numberToDigits(num, digits){
+    return String(num).padStart(digits, "0").split("");
+  }
+
+  function alignedDigitRow(totalCols, number, digits){
+    const row = new Array(totalCols).fill("");
+    const vals = numberToDigits(number, digits);
+    const start = totalCols - digits;
+    for(let i = 0; i < vals.length; i += 1){
+      row[start + i] = vals[i];
+    }
+    return row;
+  }
+
+  function rowCellsWithValues(totalCols, colorOn, values){
     const cells = [];
     for(let i = 0; i < totalCols; i += 1){
-      cells.push(`<div class="digit-cell" style="${cellStyleByColumn(i, totalCols, colorOn)}">&nbsp;</div>`);
+      const value = values && values[i] !== "" && values[i] !== undefined ? values[i] : "&nbsp;";
+      cells.push(`<div class="digit-cell" style="${cellStyleByColumn(i, totalCols, colorOn)}">${value}</div>`);
     }
     return cells.join("");
   }
 
   function problemLetter(index){ const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; return letters[index] || "A"; }
 
-  function problemHtml(problem, index, totalCols, colorOn, bDigits){
+  function problemHtml(problem, index, totalCols, colorOn, aDigits, bDigits){
     const letter = problemLetter(index);
     const rowTemplate = `grid-template-columns: var(--op-width) repeat(${totalCols}, var(--cell-size));`;
     const lineTemplate = `grid-template-columns: var(--op-width) calc(${totalCols} * var(--cell-size) + ${(totalCols - 1)} * var(--cell-gap));`;
+    const aRow = alignedDigitRow(totalCols, problem.a, aDigits);
+    const bRow = alignedDigitRow(totalCols, problem.b, bDigits);
 
     const partialRows = bDigits > 1
       ? Array.from({ length: bDigits }, () => `
@@ -274,12 +291,12 @@
 
           <div class="table-row" style="${rowTemplate}">
             <div class="op-cell">&nbsp;</div>
-            ${rowCellsWithValues(totalCols, colorOn)}
+            ${rowCellsWithValues(totalCols, colorOn, aRow)}
           </div>
 
           <div class="table-row" style="${rowTemplate}">
             <div class="op-cell">x</div>
-            ${rowCellsWithValues(totalCols, colorOn)}
+            ${rowCellsWithValues(totalCols, colorOn, bRow)}
           </div>
 
           <div class="line-row" style="${lineTemplate}">
@@ -324,7 +341,7 @@
       </header>
 
       <div class="problems">
-        ${problems.map((p, i) => problemHtml(p, i, totalCols, colorOn, cfg.bDigits)).join("")}
+        ${problems.map((p, i) => problemHtml(p, i, totalCols, colorOn, cfg.aDigits, cfg.bDigits)).join("")}
       </div>
 
       <div class="sheet-footer">Advanced organizer: students place digits, carry/regroup when needed, and solve in the table boxes.</div>
