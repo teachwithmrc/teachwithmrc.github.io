@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tic Tac Toe Preview - Short A Playable</title>
+  <title>Short A CVC Game Playable Preview</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -40,21 +40,6 @@
       font-size: 2rem;
     }
 
-    .hero-image {
-      display: block;
-      width: min(760px, 100%);
-      margin: 0 auto 12px;
-      height: auto;
-      object-fit: contain;
-    }
-
-    .subtitle {
-      text-align: center;
-      margin: 0 0 14px;
-      color: #3c5670;
-      font-weight: 600;
-    }
-
     .note {
       border: 2px solid #000;
       border-radius: 12px;
@@ -68,7 +53,7 @@
     .tabs {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
+      gap: 14px;
       margin-bottom: 14px;
     }
 
@@ -79,26 +64,32 @@
       font: inherit;
       font-weight: 800;
       color: var(--ink);
-      padding: 10px 8px;
+      padding: 10px;
       cursor: pointer;
-      min-height: 58px;
+      min-height: 220px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 6px;
+      justify-content: flex-start;
+      gap: 10px;
       text-align: center;
       transition: transform 120ms ease, filter 120ms ease;
     }
 
     .tab-icon {
-      width: 26px;
-      height: 26px;
-      object-fit: contain;
+      width: min(220px, 100%);
+      height: 150px;
+      object-fit: cover;
       display: block;
+      border-radius: 10px;
+      border: 2px solid rgba(0, 0, 0, 0.35);
+      background: #fff;
     }
 
     .tab-label {
-      display: inline-block;
+      display: block;
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+      line-height: 1.1;
     }
 
     .tab:hover {
@@ -526,8 +517,8 @@
 
     @media (max-width: 760px) {
       .tabs { grid-template-columns: 1fr; }
-      .tab { min-height: 56px; }
-      .tab-icon { width: 24px; height: 24px; }
+      .tab { min-height: 0; }
+      .tab-icon { width: min(420px, 100%); height: 180px; }
       .cell { min-height: 116px; }
       .prompt { font-size: 1rem; }
       .roll-table td { font-size: 0.92rem; height: 58px; }
@@ -537,28 +528,26 @@
 </head>
 <body oncontextmenu="return false;">
   <main class="app">
-    <h1>Tic Tac Toe</h1>
-    <img class="hero-image" src="images/tictac.png" alt="Tic Tac Toe board">
-    <p class="subtitle">Short A is fully playable here.</p>
+    <h1>Short A CVC Game Playable Preview</h1>
     <div class="note">Playable teaser unlocked: Short A only. To use other reading skills, open the full generator.</div>
 
     <div class="tabs" id="tabs">
       <button class="tab active" data-mode="ttt" type="button">
         <img class="tab-icon" src="images/tictac.png" alt="">
-        <span class="tab-label">Short A Tic Tac Toe</span>
+        <span class="tab-label">Tic Tac Toe</span>
       </button>
       <button class="tab" data-mode="connect4" type="button">
         <img class="tab-icon" src="images/row.png" alt="">
-        <span class="tab-label">Short A 4 in a Row</span>
+        <span class="tab-label">4 in a Row</span>
       </button>
       <button class="tab" data-mode="rollread" type="button">
         <img class="tab-icon" src="images/game.png" alt="">
-        <span class="tab-label">Short A Roll and Read</span>
+        <span class="tab-label">Roll and Read</span>
       </button>
     </div>
 
     <section class="panel active" data-panel="ttt">
-      <h2>Short A Tic Tac Toe</h2>
+      <h2>Tic Tac Toe</h2>
       <p class="meta">Read the word before placing X or O.</p>
       <p class="score" id="tttScore"></p>
       <p class="turn-indicator" id="tttTurn"></p>
@@ -570,15 +559,12 @@
       </div>
       <div class="actions">
         <button class="btn" id="tttSame" type="button">Play Again (Same Words)</button>
-        <button class="btn" id="tttNew" type="button">New Short A Board</button>
+        <button class="btn" id="tttNew" type="button">New Board</button>
       </div>
     </section>
 
     <section class="panel" data-panel="connect4">
-      <h2>Short A 4 in a Row</h2>
-      <figure class="panel-preview">
-        <img src="images/row.png" alt="4 in a Row preview board">
-      </figure>
+      <h2>4 in a Row</h2>
       <p class="meta">Read the prompt card, then drop your piece.</p>
       <p class="score" id="c4Score"></p>
       <p class="turn-indicator" id="c4Turn"></p>
@@ -599,10 +585,7 @@
     </section>
 
     <section class="panel" data-panel="rollread">
-      <h2>Short A Roll and Read</h2>
-      <figure class="panel-preview">
-        <img src="images/game.png" alt="Roll and Read preview board">
-      </figure>
+      <h2>Roll and Read</h2>
       <p class="meta">Roll, then click the highlighted cell after reading it.</p>
       <div class="roll-controls">
         <div class="die"><img id="rrDieImg" class="die-img" src="images/dice1.png" alt="Current die: 1"></div>
@@ -612,7 +595,7 @@
       </div>
       <table class="roll-table" id="rrTable"></table>
       <div class="actions">
-        <button class="btn" id="rrNew" type="button">New Short A Grid</button>
+        <button class="btn" id="rrNew" type="button">New Grid</button>
       </div>
     </section>
 
