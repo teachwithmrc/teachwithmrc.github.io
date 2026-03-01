@@ -23,6 +23,22 @@
   html,body{ margin:0; padding:0; font-family:"Poppins",Arial,sans-serif; color:var(--ink); background:#fff; }
   .wrap{ max-width:460px; margin:0 auto; padding:10px; }
 
+  .organizer-nav{ display:grid; grid-template-columns:1fr auto 1fr; gap:8px; align-items:center; margin:0 0 10px; }
+  .organizer-nav a{
+    display:block;
+    border:2px solid #111;
+    border-radius:10px;
+    padding:8px 10px;
+    text-decoration:none;
+    color:#111;
+    font-weight:900;
+    text-align:center;
+    background:#fff;
+    font-size:14px;
+    line-height:1.1;
+  }
+  .organizer-nav a:hover{ background:#eef6ff; }
+
   .usage-steps{ border:2px solid #111; border-radius:12px; background:#f8fbff; padding:10px 12px; margin-bottom:10px; }
   .usage-steps h2{ margin:0 0 8px; font-size:30px; line-height:1.05; font-weight:900; text-align:center; }
   .usage-steps p{ margin:0; text-align:center; font-size:13px; font-weight:700; line-height:1.35; }
@@ -96,6 +112,12 @@
     <p>Choose first/second number digit lengths, then tap <strong>Generate Preview</strong>.</p>
   </section>
 
+  <nav class="organizer-nav" aria-label="Organizer navigation">
+    <a href="addition-graphic-organizer-preview-mobile-fit.html">← Back</a>
+    <a href="main-mobile-preview-hub.html">Hub</a>
+    <a href="multiplication-graphic-organizer-preview-mobile-fit.html">Next →</a>
+  </nav>
+
   <div class="controls">
     <div class="controls-top">
       <div class="field">
@@ -131,7 +153,7 @@
     <div class="hidden-options" aria-hidden="true">
       <input id="colorToggle" type="checkbox" checked>
       <input id="showProblemEq" type="checkbox" checked>
-      <input id="scaffoldToggle" type="checkbox">
+      <input id="scaffoldToggle" type="checkbox" checked>
       <input id="requireBorrowing" type="checkbox">
     </div>
 
