@@ -2,130 +2,280 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Division Generator - Mobile Preview</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-  :root{ --preview-ratio:0.9; --preview-scale:0.64; --ink:#111; --line:#111; }
+  :root{
+    --preview-ratio: 1.4375;
+    --crop-top: 300px;
+  }
   *{ box-sizing:border-box; }
-  html,body{ margin:0; padding:0; font-family:"Poppins",Arial,sans-serif; color:var(--ink); background:#fff; }
+  html,body{
+    margin:0;
+    padding:0;
+    font-family:"Poppins",Arial,sans-serif;
+    color:#111;
+    background:#fff;
+  }
   .wrap{ max-width:460px; margin:0 auto; padding:10px; }
-  .usage{ border:2px solid var(--line); border-radius:12px; background:#f8fbff; padding:10px 12px; margin-bottom:10px; }
-  .usage h2{ margin:0 0 8px; font-size:30px; line-height:1.05; font-weight:900; text-align:center; }
-  .usage p{ margin:0; text-align:center; font-size:13px; font-weight:700; line-height:1.35; }
-  .controls{ border:2px solid var(--line); border-radius:12px; padding:12px; margin-bottom:12px; }
-  .controls-top{ display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:flex-end; }
+
+  .usage-steps{
+    border:2px solid #111;
+    border-radius:12px;
+    background:#f8fbff;
+    padding:10px 12px;
+    margin-bottom:10px;
+  }
+  .usage-steps h2{
+    margin:0 0 8px;
+    font-size:clamp(22px,7vw,30px);
+    line-height:1.05;
+    font-weight:900;
+    text-align:center;
+  }
+  .usage-steps p{
+    margin:0;
+    text-align:center;
+    font-size:13px;
+    font-weight:700;
+    line-height:1.35;
+  }
+
+  .controls{
+    border:2px solid #111;
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:12px;
+  }
+  .controls-top{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    align-items:flex-end;
+    gap:12px;
+  }
   .field{ display:flex; flex-direction:column; gap:8px; min-width:0; }
-  .field label{ font-size:14px; font-weight:900; }
-  select{ height:56px; width:100%; border:2px solid var(--line); border-radius:10px; padding:8px 10px; font-family:"Poppins",Arial,sans-serif; font-size:16px; font-weight:800; background:#fff; }
-  .actions{ margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  .btn{ border:2px solid var(--line); border-radius:14px; height:52px; padding:0 8px; font-family:"Poppins",Arial,sans-serif; font-size:17px; font-weight:900; cursor:pointer; }
+  .field label{ font-size:16px; font-weight:900; }
+  select{
+    height:56px;
+    width:100%;
+    border:2px solid #111;
+    border-radius:10px;
+    padding:8px 10px;
+    font-family:"Poppins",Arial,sans-serif;
+    font-size:18px;
+    font-weight:800;
+    background:#fff;
+  }
+
+  .controls-actions{
+    margin-top:12px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .btn{
+    border:2px solid #111;
+    border-radius:14px;
+    height:52px;
+    padding:0 8px;
+    font-family:"Poppins",Arial,sans-serif;
+    font-size:17px;
+    font-weight:900;
+    cursor:pointer;
+  }
   .btn-primary{ background:#6ec1ff; color:#fff; }
   .btn-secondary{ background:#fff; color:#111; }
-  .hint{ margin-top:8px; text-align:center; font-size:13px; font-weight:700; line-height:1.35; }
-  .preview-shell{ position:relative; width:100%; aspect-ratio:var(--preview-ratio); overflow:auto; -webkit-overflow-scrolling:touch; border:2px solid var(--line); background:#fff; }
-  .preview-content{ position:absolute; left:50%; top:0; width:calc(100% / var(--preview-scale)); transform:translateX(-50%) scale(var(--preview-scale)); transform-origin:top center; padding:10px 10px 90px; }
-  .sheet{ border:2px solid var(--line); padding:10px; background:#fff; }
-  .sheet-title{ margin:0 0 6px; text-align:center; font-size:24px; font-weight:900; line-height:1.1; }
-  .sheet-meta{ margin:0 0 8px; text-align:center; font-size:12px; font-weight:700; color:#3a4a5b; }
-  .name-line{ text-align:right; font-size:14px; font-weight:800; margin-bottom:8px; }
-  .name-line .line{ display:inline-block; width:130px; border-bottom:2px solid #111; transform:translateY(-2px); margin-left:4px; }
-  .grid{ border:2px solid #111; display:grid; grid-template-columns:1fr 1fr; }
-  .cell{ border-right:2px solid #111; border-bottom:2px solid #111; min-height:92px; padding:8px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:18px; font-weight:800; line-height:1.15; }
-  .cell:nth-child(2n){ border-right:none; }
-  .cell:nth-last-child(-n+2){ border-bottom:none; }
-  .footer-note{ margin-top:8px; text-align:right; font-size:10px; color:#666; font-weight:700; }
-  .copyright{ margin-top:8px; text-align:center; font-size:12px; font-weight:700; letter-spacing:.2px; }
-  .preview-watermark{ position:absolute; inset:0; z-index:118; pointer-events:none; opacity:.52; background-image:repeating-linear-gradient(-26deg, rgba(0,0,0,.08) 0 18px, rgba(255,255,255,.06) 18px 36px), url("data:image/svg+xml,%3Csvg width='340' height='220' viewBox='0 0 340 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-22 170 110)'%3E%3Ctext x='18' y='90' fill='%23000' fill-opacity='.26' font-family='Poppins' font-size='34' font-weight='900'%3EPREVIEW ONLY%3C/text%3E%3Ctext x='44' y='146' fill='%23000' fill-opacity='.2' font-family='Poppins' font-size='22' font-weight='800'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E"); background-size:auto,340px 220px; background-repeat:repeat; }
-  .preview-paywall{ position:absolute; left:0; right:0; bottom:0; z-index:120; pointer-events:none; display:flex; align-items:flex-end; justify-content:center; padding:5px; background:linear-gradient(to top, rgba(0,0,0,.45), rgba(0,0,0,0)); }
-  .preview-paywall-card{ width:min(96%,420px); border:1px solid #fff; border-radius:10px; background:rgba(17,17,17,.88); color:#fff; text-align:center; padding:6px 8px 5px; box-shadow:0 8px 20px rgba(0,0,0,.3); pointer-events:auto; }
-  .preview-paywall-card h3{ margin:0 0 2px; font-size:.72rem; line-height:1.2; font-weight:900; text-transform:uppercase; }
-  .preview-paywall-card p{ margin:0 0 4px; font-size:.62rem; line-height:1.2; font-weight:600; }
-  .preview-paywall-card a{ display:inline-block; text-decoration:none; background:#fff; color:#111; border-radius:7px; padding:4px 8px; font-size:.62rem; font-weight:900; }
-  @media screen and (max-width:430px){ :root{ --preview-scale:0.6; } .controls-top{ grid-template-columns:1fr; } }
-  @media print{ body{ display:none !important; } }
+
+  .status{
+    margin:10px 0 0;
+    text-align:center;
+    font-size:12px;
+    font-weight:700;
+    color:#444;
+    min-height:1.2em;
+  }
+
+  .preview-shell{
+    position:relative;
+    margin-top:4px;
+    width:100%;
+    aspect-ratio:var(--preview-ratio);
+    overflow:hidden;
+    border:2px solid #111;
+    background:#fff;
+  }
+
+  .preview-frame{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:calc(100% + var(--crop-top));
+    transform:translateY(calc(-1 * var(--crop-top)));
+    border:0;
+    background:#fff;
+  }
+
+  .preview-watermark{
+    position:absolute;
+    inset:0;
+    z-index:118;
+    pointer-events:none;
+    opacity:.52;
+    background-image:
+      repeating-linear-gradient(
+        -26deg,
+        rgba(0,0,0,.08) 0 18px,
+        rgba(255,255,255,.06) 18px 36px
+      ),
+      url("data:image/svg+xml,%3Csvg width='340' height='220' viewBox='0 0 340 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-22 170 110)'%3E%3Ctext x='18' y='90' fill='%23000' fill-opacity='.26' font-family='Poppins' font-size='34' font-weight='900'%3EPREVIEW ONLY%3C/text%3E%3Ctext x='44' y='146' fill='%23000' fill-opacity='.2' font-family='Poppins' font-size='22' font-weight='800'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+    background-size:auto, 340px 220px;
+    background-repeat:repeat;
+  }
+
+  @media (max-width:430px){
+    .controls-top{ grid-template-columns:1fr; }
+    :root{ --crop-top: 255px; }
+  }
 </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 <div class="wrap">
-  <section class="usage">
+  <section class="usage-steps" aria-label="How this preview works">
     <h2>Division Generator Preview</h2>
-    <p>Pick division type and remainder mode, then tap <strong>Generate Preview</strong>.</p>
+    <p>Tap <strong>Generate Preview</strong> to refresh the worksheet sample.</p>
   </section>
 
   <div class="controls">
     <div class="controls-top">
       <div class="field">
-        <label for="sel1">Division Type</label>
-        <select id="sel1"></select>
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty">
+          <option>Standard</option>
+          <option>Mixed</option>
+          <option>Challenge</option>
+        </select>
       </div>
       <div class="field">
-        <label for="sel2">Remainders</label>
-        <select id="sel2"></select>
+        <label for="problems">Problems</label>
+        <select id="problems">
+          <option>4 Problems</option>
+          <option>6 Problems</option>
+          <option>8 Problems</option>
+        </select>
       </div>
     </div>
-    <div class="actions">
+
+    <div class="controls-actions">
       <button type="button" id="btnGen" class="btn btn-primary">Generate Preview</button>
       <button type="button" id="btnPrint" class="btn btn-secondary">Print</button>
     </div>
-    <div id="hint" class="hint"></div>
+    <p id="status" class="status">Ready.</p>
   </div>
 
-  <div class="preview-shell" aria-label="Preview worksheet">
-    <div class="preview-content">
-      <section class="sheet" id="sheet"></section>
-      <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
-    </div>
+  <div class="preview-shell" aria-label="Division Generator Preview">
+    <iframe id="previewFrame" class="preview-frame" title="Division Generator generated preview"></iframe>
     <div class="preview-watermark" aria-hidden="true"></div>
-    <div class="preview-paywall" aria-hidden="false">
-      <div class="preview-paywall-card">
-        <h3>Preview Mode</h3>
-        <p>Generate is enabled. Printing is locked for members.</p>
-        <a href="https://member.interventionstation.com/join" target="_blank" rel="noopener">Join Membership</a>
-      </div>
-    </div>
   </div>
 </div>
 
 <script>
-  const OPTIONS1 = [{"value":"facts","label":"Facts"},{"value":"2x1","label":"2-Digit by 1"},{"value":"3x1","label":"3-Digit by 1"}];
-  const OPTIONS2 = [{"value":"allow","label":"Allow"},{"value":"none","label":"No Remainders"}];
-  const SAMPLE = [
-    "read and respond", "build the pattern", "say it, spell it", "tap and track", "find the match", "sound it out",
-    "circle the clue", "write the answer", "mark the box", "read and check", "show your work", "explain the step"
-  ];
-  const $ = (id) => document.getElementById(id);
-  function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
-  function fillSelect(id, items){
-    $(id).innerHTML = items.map((x, i) => `<option value="${x.value}"${i===0?" selected":""}>${x.label}</option>`).join("");
-  }
-  function build(){
-    const a = $("sel1").value;
-    const b = $("sel2").value;
-    const aLabel = OPTIONS1.find((x) => x.value === a)?.label || a;
-    const bLabel = OPTIONS2.find((x) => x.value === b)?.label || b;
-    const cells = Array.from({ length: 8 }, (_, i) => {
-      const prompt = SAMPLE[(i + randInt(0, SAMPLE.length - 1)) % SAMPLE.length];
-      return `<div class="cell">${aLabel}<br>${bLabel}<br><span style="font-size:13px; font-weight:700;">${prompt}</span></div>`;
-    }).join("");
-    $("sheet").innerHTML = `
-      <h2 class="sheet-title">Division Generator</h2>
-      <div class="sheet-meta">${aLabel} • ${bLabel}</div>
-      <div class="name-line">Name:<span class="line"></span></div>
-      <div class="grid">${cells}</div>
-      <div class="footer-note">Sample preview layout for mobile testing.</div>
-    `;
-    $("hint").textContent = `${aLabel} + ${bLabel} selected.`;
-  }
-  function locked(){ alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access."); }
-  function blockShortcuts(event){ const blocked = (event.ctrlKey || event.metaKey) && ["p","s","u"].includes(event.key.toLowerCase()); if(blocked){ event.preventDefault(); locked(); } }
-  document.addEventListener("keydown", blockShortcuts);
-  fillSelect("sel1", OPTIONS1);
-  fillSelect("sel2", OPTIONS2);
-  $("btnGen").addEventListener("click", build);
-  $("btnPrint").addEventListener("click", locked);
-  ["sel1","sel2"].forEach((id) => $(id).addEventListener("change", build));
-  build();
+  (function(){
+    const SOURCE = "../../division-generator-preview.html";
+    const REF_GIF = "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/699fd28c753f15732d25dd10.gif";
+
+    const frame = document.getElementById("previewFrame");
+    const status = document.getElementById("status");
+    const btnGen = document.getElementById("btnGen");
+    const btnPrint = document.getElementById("btnPrint");
+
+    function syncPreviewRatio(){
+      const img = new Image();
+      img.onload = function(){
+        if(img.naturalWidth > 0 && img.naturalHeight > 0){
+          const ratio = img.naturalWidth / img.naturalHeight;
+          document.documentElement.style.setProperty("--preview-ratio", String(ratio));
+        }
+      };
+      img.src = REF_GIF;
+    }
+
+    function clickGenerateInDoc(doc){
+      if(!doc) return false;
+      const nodes = doc.querySelectorAll('button,input[type="button"],input[type="submit"],a[role="button"]');
+      for(const node of nodes){
+        if(node.disabled) continue;
+        const label = (((node.textContent || "") + " " + (node.value || "") + " " + (node.getAttribute("aria-label") || "")).trim()).toLowerCase();
+        if(!label) continue;
+        if(
+          label.includes("generate") ||
+          label.includes("try me") ||
+          label.includes("regenerate") ||
+          label.includes("create") ||
+          label.includes("build")
+        ){
+          node.click();
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function walkAndGenerate(win, depth){
+      if(!win || depth > 7) return false;
+      let clicked = false;
+      try{
+        const doc = win.document;
+        clicked = clickGenerateInDoc(doc) || clicked;
+        const iframes = doc.querySelectorAll("iframe");
+        for(const fr of iframes){
+          try{ clicked = walkAndGenerate(fr.contentWindow, depth + 1) || clicked; }
+          catch(err){}
+        }
+      }catch(err){}
+      return clicked;
+    }
+
+    function loadFresh(){
+      const url = new URL(encodeURI(SOURCE), window.location.href);
+      url.searchParams.set("seed", Date.now().toString(36) + Math.random().toString(36).slice(2,8));
+      frame.dataset.autoGenerate = "1";
+      status.textContent = "Loading preview...";
+      frame.src = url.toString();
+    }
+
+    frame.addEventListener("load", function(){
+      if(frame.dataset.autoGenerate !== "1"){
+        status.textContent = "Preview loaded.";
+        return;
+      }
+
+      frame.dataset.autoGenerate = "0";
+      let finished = false;
+      [260, 900, 1700].forEach(function(ms, idx){
+        setTimeout(function(){
+          if(finished) return;
+          const clicked = walkAndGenerate(frame.contentWindow, 0);
+          if(clicked){
+            finished = true;
+            status.textContent = "Generated preview.";
+          }else if(idx === 2){
+            status.textContent = "Preview loaded.";
+          }
+        }, ms);
+      });
+    });
+
+    btnGen.addEventListener("click", loadFresh);
+
+    btnPrint.addEventListener("click", function(){
+      alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access.");
+      status.textContent = "Print is blocked in preview mode.";
+    });
+
+    syncPreviewRatio();
+    loadFresh();
+  })();
 </script>
 </body>
 </html>

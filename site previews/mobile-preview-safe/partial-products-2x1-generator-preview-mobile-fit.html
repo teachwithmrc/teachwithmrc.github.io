@@ -98,7 +98,7 @@
   .eq-line{ font-size:14px; font-weight:800; line-height:1.2; }
   .blank-line{ display:block; width:100%; border-bottom:3px solid #111; min-height:1.2em; }
 
-  .addition-table{ border-collapse:collapse; border-spacing:0; margin:0 auto; }
+  .addition-table{ border-collapse:separate; border-spacing:4px; margin:0 auto; }
 
   .add-sign{
     width:24px;
@@ -109,22 +109,21 @@
   }
 
   .add-cell{
-    width:40px;
-    height:34px;
-    border:0;
+    width:36px;
+    height:36px;
+    border:2px solid #111;
     text-align:center;
     vertical-align:middle;
-    font-size:20px;
-    font-weight:900;
-    background:transparent;
+    font-size:19px;
+    font-weight:800;
+    background:#fff;
     font-variant-numeric:tabular-nums;
-    padding:0;
   }
 
   .add-separator td{ padding-top:0; padding-bottom:0; }
   .add-line{ border-top:4px solid #000; height:0; }
 
-  .add-cell.partial{ border-color:transparent; }
+  .add-cell.partial{ border-color:#777; }
   .add-cell.partial.tone-0{ background:var(--tone0); }
   .add-cell.partial.tone-1{ background:var(--tone1); }
   .add-cell.partial.tone-2{ background:var(--tone2); }
