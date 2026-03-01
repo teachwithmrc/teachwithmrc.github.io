@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mobile Preview Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#111; --line:#111; }
+  * { box-sizing:border-box; }
+  body {
+    margin:0;
+    font-family:"Poppins", Arial, sans-serif;
+    color:var(--ink);
+    background:linear-gradient(180deg,#f7fbff 0%,#f2f5fa 100%);
+  }
+  .wrap { max-width:860px; margin:0 auto; padding:14px; }
+  .hero {
+    border:2px solid var(--line);
+    border-radius:14px;
+    background:#fff;
+    padding:14px;
+    margin-bottom:12px;
+    text-align:center;
+  }
+  .hero h1 { margin:0 0 6px; font-size:1.7rem; line-height:1.1; font-weight:800; }
+  .hero p { margin:0; font-size:.95rem; font-weight:600; color:#32455f; }
+
+  .section {
+    border:2px solid var(--line);
+    border-radius:14px;
+    background:#fff;
+    padding:12px;
+    margin-bottom:12px;
+  }
+  .section h2 {
+    margin:0 0 10px;
+    font-size:1.1rem;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+  }
+  .grid {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+  }
+  a.item {
+    display:block;
+    text-decoration:none;
+    color:#111;
+    border:2px solid #111;
+    border-radius:10px;
+    background:#fff;
+    padding:10px;
+    font-weight:700;
+    line-height:1.25;
+    min-height:52px;
+  }
+  a.item:hover { background:#eef6ff; }
+
+  .footer {
+    text-align:center;
+    font-size:.8rem;
+    color:#56667c;
+    font-weight:700;
+    padding:4px 0 10px;
+  }
+
+  @media (max-width:640px){
+    .grid { grid-template-columns:1fr; }
+    .hero h1 { font-size:1.45rem; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Mobile Preview Hub</h1>
+      <p>All generator/game mobile previews in one place (safe-folder copies only).</p>
+    </section>
+
+    <section class="section">
+      <h2>Math Organizers</h2>
+      <div class="grid">
+        <a class="item" href="addition-graphic-organizer-preview-mobile-fit.html">Addition Graphic Organizer</a>
+        <a class="item" href="subtraction-graphic-organizer-preview-mobile-fit.html">Subtraction Graphic Organizer</a>
+        <a class="item" href="multiplication-graphic-organizer-preview-mobile-fit.html">Multiplication Graphic Organizer</a>
+        <a class="item" href="partial-products-2x1-generator-preview-mobile-fit.html">Partial Products 2x1</a>
+        <a class="item" href="long-division-colorcoded-generator-preview-mobile-fit.html">Long Division Color-Coded</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Math Generators</h2>
+      <div class="grid">
+        <a class="item" href="addition-generator-preview-mobile-fit.html">Addition Generator</a>
+        <a class="item" href="subtraction-generator-preview-mobile-fit.html">Subtraction Generator</a>
+        <a class="item" href="multiplication-generator-preview-mobile-fit.html">Multiplication Generator</a>
+        <a class="item" href="division-generator-preview-mobile-fit.html">Division Generator</a>
+        <a class="item" href="rounding-generator-preview-mobile-fit.html">Rounding Generator</a>
+        <a class="item" href="tenframes-preview-mobile-fit.html">Ten Frames</a>
+        <a class="item" href="coin-counter-generator-preview-mobile-fit.html">Coin Counter</a>
+        <a class="item" href="manipulatives-add-sub-generator-preview-mobile-fit.html">Add/Sub Manipulatives + Hundreds Chart</a>
+        <a class="item" href="math-tic-tac-toe-generator-preview-mobile-fit.html">Math Tic Tac Toe</a>
+        <a class="item" href="math-roll-and-read-generator-preview-mobile-fit.html">Math Roll and Read</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>SOR and Phonics</h2>
+      <div class="grid">
+        <a class="item" href="wordmapmaster-preview-mobile-fit.html">Word Mapping</a>
+        <a class="item" href="r-controlled-tictactoe-generator-preview-mobile-fit.html">R-Controlled Tic Tac Toe</a>
+        <a class="item" href="sor-fluency-grid-preview-mobile-fit.html">SOR Fluency Grid</a>
+        <a class="item" href="sor-roll-and-read-preview-mobile-fit.html">SOR Roll and Read</a>
+        <a class="item" href="sor-tic-tac-toe-preview-mobile-fit.html">SOR Tic Tac Toe</a>
+        <a class="item" href="sor-word-ladder-preview-mobile-fit.html">SOR Word Ladder</a>
+        <a class="item" href="pyramid-spelling-generator-preview-mobile-fit.html">Pyramid Spelling</a>
+        <a class="item" href="spelling-pics-generator-preview-mobile-fit.html">Spelling with Pictures</a>
+      </div>
+    </section>
+
+    <div class="footer">Safe folder path: <code>site previews/mobile-preview-safe/</code></div>
+  </div>
+</body>
+</html>
