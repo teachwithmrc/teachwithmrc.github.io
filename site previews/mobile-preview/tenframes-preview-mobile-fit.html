@@ -3,634 +3,344 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ten Frame Generator</title>
-
+<title>Ten Frames Generator - Mobile Preview</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-
 <style>
+  :root{
+    --preview-ratio:0.80;
+    --preview-scale:0.72;
+    --ink:#111;
+    --line:#111;
+  }
+
   *{ box-sizing:border-box; }
-  html, body{
-    margin:0; padding:0;
-    font-family:"Poppins", Arial, sans-serif;
-    background:#fff; color:#111;
-    overflow-x:hidden;
-  }
-  .wrap{ max-width:980px; margin:0 auto; padding:12px; }
+  html,body{ margin:0; padding:0; font-family:"Poppins",Arial,sans-serif; color:var(--ink); background:#fff; }
+  .wrap{ max-width:460px; margin:0 auto; padding:10px; }
 
-  /* ========= TOP MENU ========= */
-  .menu{
-    display:flex;
-    justify-content:center;
-    margin-bottom:12px;
-  }
-  .skillSelect{
-    height:46px;
-    min-width:280px;
-    border:2px solid #111;
-    border-radius:12px;
-    padding:8px 12px;
-    font-family:"Poppins",Arial,sans-serif;
-    font-weight:900;
-    font-size:15px;
-    background:#fff;
-    color:#111;
+  .usage-steps{ border:2px solid var(--line); border-radius:12px; background:#f8fbff; padding:10px 12px; margin-bottom:10px; }
+  .usage-steps h2{ margin:0 0 8px; font-size:30px; line-height:1.05; font-weight:900; text-align:center; }
+  .usage-steps p{ margin:0; text-align:center; font-size:13px; font-weight:700; line-height:1.35; }
+
+  .controls{ border:2px solid var(--line); border-radius:12px; padding:12px; margin-bottom:12px; }
+  .controls-top{ display:grid; grid-template-columns:1fr; gap:12px; align-items:flex-end; }
+  .field{ display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .field label{ font-size:16px; font-weight:900; }
+  select{
+    height:56px; width:100%; border:2px solid var(--line); border-radius:10px; padding:8px 10px;
+    font-family:"Poppins",Arial,sans-serif; font-size:18px; font-weight:800; background:#fff;
   }
 
-  /* ========= CONTROLS ========= */
-  .controls{
-    border:2px solid #111;
-    border-radius:12px;
-    padding:12px;
-    margin-bottom:12px;
+  .controls-actions{ margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .btn{
+    border:2px solid var(--line); border-radius:14px; height:52px; padding:0 8px;
+    font-family:"Poppins",Arial,sans-serif; font-size:17px; font-weight:900; cursor:pointer;
   }
+  .btn-primary{ background:#6ec1ff; color:#fff; }
+  .btn-secondary{ background:#fff; color:#111; }
+  .hint{ margin-top:8px; text-align:center; font-size:13px; font-weight:700; line-height:1.35; }
 
-  .controls-top{
-    display:flex;
-    flex-wrap:wrap;
-    gap:12px;
-    align-items:flex-end;
-    justify-content:center;
-  }
-  .field{
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-    min-width:200px;
-  }
-  .field label{
-    font-size:12px;
-    font-weight:800;
-  }
-
-  /* Only style number inputs (prevents huge toggle bug) */
-  input[type="number"]{
-    height:42px;
-    min-width:200px;
-    border:2px solid #111;
-    border-radius:10px;
-    padding:8px 12px;
-    font-family:"Poppins", Arial, sans-serif;
-    font-size:14px;
-    background:#fff;
-  }
-  input[type="number"]:disabled{
-    opacity:0.75;
-    background:#f5f5f5;
-    cursor:not-allowed;
-  }
-
-  .hint{
-    width:100%;
-    text-align:center;
-    font-size:13px;
-    font-weight:700;
-    margin-top:8px;
-  }
-
-  /* Pretty toggle switches */
-  .toggleRow{
-    margin-top:10px;
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    justify-content:center;
-    align-items:center;
-  }
-  .toggle{
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    padding:10px 12px;
-    border:2px solid #111;
-    border-radius:14px;
-    font-weight:900;
-    font-size:15px;
-    line-height:1;
-    user-select:none;
-    background:#fff;
-  }
-  .toggle input[type="checkbox"]{
-    appearance:none;
-    -webkit-appearance:none;
-    width:44px;
-    height:26px;
-    border:2px solid #111;
-    border-radius:999px;
+  .preview-shell{
     position:relative;
-    margin:0;
-    padding:0;
+    width:100%;
+    aspect-ratio:var(--preview-ratio);
+    overflow:hidden;
+    border:2px solid var(--line);
     background:#fff;
-    cursor:pointer;
-    flex:0 0 auto;
-    min-width:44px;
   }
-  .toggle input[type="checkbox"]::after{
-    content:"";
+  .preview-content{
     position:absolute;
-    top:50%;
-    left:3px;
-    width:18px;
-    height:18px;
-    border:2px solid #111;
-    border-radius:999px;
-    background:#fff;
-    transform:translateY(-50%);
-    transition:all .15s ease;
-  }
-  .toggle input[type="checkbox"]:checked{ background:#111; }
-  .toggle input[type="checkbox"]:checked::after{ left:19px; background:#fff; }
-
-  .controls-actions{
-    margin-top:12px;
-    display:flex;
-    justify-content:center;
-    gap:14px;
-    flex-wrap:wrap;
-  }
-  button{
-    height:54px;
-    padding:0 30px;
-    border:2px solid #111;
-    border-radius:14px;
-    font-weight:900;
-    font-size:18px;
-    font-family:"Poppins", Arial, sans-serif;
-    background:#111;
-    color:#fff;
-    cursor:pointer;
-  }
-  button.secondary{
-    background:#fff;
-    color:#111;
-  }
-
-  /* ========= SHEET ========= */
-  .title{
-    text-align:center;
-    font-size:28px;
-    font-weight:900;
-    margin:6px 0 10px;
-  }
-
-  .table{ border:2px solid #111; }
-  .row{ display:grid; grid-template-columns:1fr 1fr; }
-
-  .cell{
-    border-right:2px solid #111;
-    border-bottom:2px solid #111;
-    min-height:190px;
+    left:50%;
+    top:0;
+    width:calc(100% / var(--preview-scale));
+    transform:translateX(-50%) scale(var(--preview-scale));
+    transform-origin:top center;
     padding:10px;
+  }
+
+  .sheet{ border:2px solid var(--line); padding:10px; background:#fff; }
+  .sheet-title{ text-align:center; font-size:24px; font-weight:900; line-height:1.1; margin:2px 0 8px; }
+
+  .table{ border:2px solid var(--line); }
+  .row{ display:grid; grid-template-columns:1fr 1fr; }
+  .cell{
+    border-right:2px solid var(--line);
+    border-bottom:2px solid var(--line);
+    min-height:124px;
+    padding:7px 8px;
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:10px;
+    gap:7px;
   }
   .row .cell:last-child{ border-right:none; }
   .table .row:last-child .cell{ border-bottom:none; }
 
   .expr{
-    font-size:22px;
+    font-size:18px;
     font-weight:900;
     text-align:center;
     line-height:1.1;
+    white-space:nowrap;
   }
   .blank{
     display:inline-block;
-    width:95px;
+    width:68px;
     border-bottom:3px solid #111;
-    transform: translateY(-3px);
+    transform:translateY(-2px);
   }
 
   .frames{
     display:grid;
-    gap:10px;
-    width:235px;
+    gap:6px;
+    width:164px;
   }
   .tenframe{ border:2px solid #111; }
-  .tfgrid{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-  }
+  .tfgrid{ display:grid; grid-template-columns:repeat(5,1fr); }
   .tfcell{
     border:2px solid #111;
-    height:34px;
+    height:23px;
     display:flex;
     align-items:flex-start;
     justify-content:center;
-    padding-top:2px;
-    position:relative;
+    padding-top:1px;
   }
-
-  /* Cross-out overlay */
-  .cross::before, .cross::after{
-    content:"";
-    position:absolute;
-    width:86%;
-    height:3px;
+  .dot{
+    width:76%;
+    height:76%;
+    border-radius:50%;
     background:#111;
-    top:50%;
-    left:7%;
-    transform-origin:center;
-  }
-  .cross::before{ transform:translateY(-50%) rotate(45deg); }
-  .cross::after{  transform:translateY(-50%) rotate(-45deg); }
-
-  .footer{
-    text-align:center;
-    font-size:12px;
-    font-weight:800;
-    margin-top:10px;
+    display:block;
   }
 
-  /* ========= PRINT FIT ========= */
-  @media print{
-    @page{ margin:0.35in; }
-    .menu, .controls{ display:none; }
-    .wrap{ padding:0; max-width:none; }
+  .sheet-footer{ margin-top:8px; text-align:right; font-size:10px; font-weight:700; color:#666; }
+  .copyright{ margin-top:8px; text-align:center; font-size:12px; font-weight:700; letter-spacing:.2px; }
 
-    body{
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-      zoom: 0.94; /* slightly larger while staying one page */
-    }
-
-    .title{ font-size:25px; margin:4px 0 6px; }
-    .cell{ min-height:172px; padding:9px; gap:9px; }
-    .expr{ font-size:21px; }
-    .frames{ width:228px; gap:9px; }
-    .tfcell{ height:31px; padding-top:1px; }
-    .footer{ margin-top:5px; font-size:10px; }
-
-    /* Over-10: fill the page more (bigger problems) */
-    body[data-skill="over10_add"], body[data-skill="over10_sub"]{ zoom: 0.97; }
-    body[data-skill="over10_add"] .cell,
-    body[data-skill="over10_sub"] .cell{ min-height:192px; padding:11px; gap:10px; }
-    body[data-skill="over10_add"] .expr,
-    body[data-skill="over10_sub"] .expr{ font-size:23px; }
-    body[data-skill="over10_add"] .frames,
-    body[data-skill="over10_sub"] .frames{ width:248px; gap:10px; }
-    body[data-skill="over10_add"] .tfcell,
-    body[data-skill="over10_sub"] .tfcell{ height:33px; padding-top:2px; }
+  .preview-watermark{
+    position:absolute; inset:0; z-index:118; pointer-events:none; opacity:.52;
+    background-image:
+      repeating-linear-gradient(-26deg, rgba(0,0,0,.08) 0 18px, rgba(255,255,255,.06) 18px 36px),
+      url("data:image/svg+xml,%3Csvg width='340' height='220' viewBox='0 0 340 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-22 170 110)'%3E%3Ctext x='18' y='90' fill='%23000' fill-opacity='.26' font-family='Poppins' font-size='34' font-weight='900'%3EPREVIEW ONLY%3C/text%3E%3Ctext x='44' y='146' fill='%23000' fill-opacity='.2' font-family='Poppins' font-size='22' font-weight='800'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+    background-size:auto, 340px 220px;
+    background-repeat:repeat;
   }
+  .preview-paywall{
+    position:absolute; left:0; right:0; bottom:0; z-index:120; pointer-events:none; display:flex;
+    align-items:flex-end; justify-content:center; padding:6px;
+    background:linear-gradient(to top, rgba(0,0,0,.62), rgba(0,0,0,0));
+  }
+  .preview-paywall-card{
+    width:min(96%, 420px); border:1px solid #fff; border-radius:10px; background:rgba(17,17,17,.90);
+    color:#fff; text-align:center; padding:7px 8px 6px; box-shadow:0 8px 20px rgba(0,0,0,.3); pointer-events:auto;
+  }
+  .preview-paywall-card h3{ margin:0 0 2px; font-size:.72rem; line-height:1.2; font-weight:900; letter-spacing:.02em; text-transform:uppercase; }
+  .preview-paywall-card p{ margin:0 0 4px; font-size:.62rem; line-height:1.2; opacity:.95; font-weight:600; }
+  .preview-paywall-card a{ display:inline-block; text-decoration:none; background:#fff; color:#111; border-radius:7px; padding:4px 8px; font-size:.62rem; font-weight:900; }
+
+  @media screen and (max-width:430px){ :root{ --preview-scale:0.68; } }
+  @media print{ body{ display:none !important; } }
 </style>
 </head>
-
-<body>
+<body oncontextmenu="return false;">
 <div class="wrap">
-
-  <div class="menu">
-    <select id="skillSelect" class="skillSelect" aria-label="Ten frame mode">
-      <option value="within10_add" selected>Add Within 10</option>
-      <option value="within10_sub">Subtract Within 10</option>
-      <option value="over10_add">Add Within 20</option>
-      <option value="over10_sub">Subtract Within 20</option>
-    </select>
-  </div>
+  <section class="usage-steps" aria-label="How this preview works">
+    <h2>Ten Frames Preview</h2>
+    <p>Choose a problem type, then tap <strong>Generate Preview</strong>.</p>
+  </section>
 
   <div class="controls">
     <div class="controls-top">
       <div class="field">
-        <label for="min">Lowest #</label>
-        <input id="min" type="number" value="0" min="0" max="20">
+        <label for="problemType">Problem Type</label>
+        <select id="problemType" aria-label="Ten frame mode">
+          <option value="within10_add" selected>Add Within 10</option>
+          <option value="within10_sub">Subtract Within 10</option>
+          <option value="within20_add">Add Within 20</option>
+          <option value="within20_sub">Subtract Within 20</option>
+        </select>
       </div>
-      <div class="field">
-        <label for="max">Highest #</label>
-        <input id="max" type="number" value="10" min="1" max="20">
-      </div>
-    </div>
-
-    <div class="hint" id="hintText">Within 10 is locked to 0–10.</div>
-
-    <div class="toggleRow">
-      <label class="toggle">
-        <input id="prefill" type="checkbox" checked>
-        Prefill
-      </label>
     </div>
 
     <div class="controls-actions">
-      <button type="button" id="btnGen">Generate</button>
-      <button type="button" class="secondary" id="btnPrint">Print</button>
+      <button type="button" id="btnGen" class="btn btn-primary">Generate Preview</button>
+      <button type="button" id="btnPrint" class="btn btn-secondary">Print</button>
     </div>
+
+    <div class="hint" id="hint"></div>
   </div>
 
-  <div class="title" id="sheetTitle">Add Within 10 Using Ten Frames</div>
-  <div class="table" id="table"></div>
-  <div class="footer">Copyright - Generated from InterventionStation.com - @TeachWithMrC</div>
+  <div class="preview-shell" aria-label="Ten frames preview worksheet">
+    <div class="preview-content">
+      <section class="sheet" id="worksheetHost"></section>
+      <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+    </div>
 
+    <div class="preview-watermark" aria-hidden="true"></div>
+    <div class="preview-paywall" aria-hidden="false">
+      <div class="preview-paywall-card">
+        <h3>Premium Resource</h3>
+        <p>Generate is enabled in preview mode. Join membership to unlock full worksheet visibility and printing.</p>
+        <a href="https://member.interventionstation.com/join" target="_blank" rel="noopener">Join Membership</a>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
   const $ = (id) => document.getElementById(id);
+  const PROBLEM_COUNT = 8;
 
-  let SKILL = "within10_add";
-  document.body.setAttribute("data-skill", SKILL);
+  function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
 
-  function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
-
-  function normalizeBounds(){
-    let lo = clamp(parseInt($("min").value || "0",10), 0, 20);
-    let hi = clamp(parseInt($("max").value || "10",10), 1, 20);
-    if (hi < lo) [lo,hi] = [hi,lo];
-    $("min").value = lo;
-    $("max").value = hi;
-    return { lo, hi };
+  function randInt(min, max){
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  /* ---------- Dots helpers ---------- */
-  function dots20(n){
-    n = clamp(n,0,20);
-    const f1 = Array(10).fill(false);
-    const f2 = Array(10).fill(false);
-    for(let i=0;i<Math.min(10,n);i++) f1[i]=true;
-    for(let i=0;i<Math.max(0,n-10);i++) f2[i]=true;
-    return [f1,f2];
-  }
   function dots10(n){
-    n = clamp(n,0,10);
     const f = Array(10).fill(false);
-    for(let i=0;i<n;i++) f[i]=true;
+    for(let i = 0; i < clamp(n, 0, 10); i += 1) f[i] = true;
     return f;
   }
 
-  // Print-safe dot (SVG)
-  function dotSVG(){
-    const ns="http://www.w3.org/2000/svg";
-    const svg=document.createElementNS(ns,"svg");
-    svg.setAttribute("viewBox","0 0 100 100");
-    svg.style.width="84%";
-    svg.style.height="84%";
-    const c=document.createElementNS(ns,"circle");
-    c.setAttribute("cx","50");
-    c.setAttribute("cy","50");
-    c.setAttribute("r","43");
-    c.setAttribute("fill","#111");
-    svg.appendChild(c);
-    return svg;
+  function dots20(n){
+    const nSafe = clamp(n, 0, 20);
+    const f1 = Array(10).fill(false);
+    const f2 = Array(10).fill(false);
+    for(let i = 0; i < Math.min(10, nSafe); i += 1) f1[i] = true;
+    for(let i = 0; i < Math.max(0, nSafe - 10); i += 1) f2[i] = true;
+    return [f1, f2];
   }
 
-  function buildFrame(boolArr, crossSet){
-    const ten=document.createElement("div");
-    ten.className="tenframe";
-    const g=document.createElement("div");
-    g.className="tfgrid";
-    for(let i=0;i<10;i++){
-      const cell=document.createElement("div");
-      cell.className="tfcell";
-      if(boolArr[i]) cell.appendChild(dotSVG());
-      if(crossSet && crossSet.has(i)) cell.classList.add("cross");
-      g.appendChild(cell);
+  function buildFrame(boolArr){
+    const ten = document.createElement("div");
+    ten.className = "tenframe";
+    const grid = document.createElement("div");
+    grid.className = "tfgrid";
+    for(let i = 0; i < 10; i += 1){
+      const cell = document.createElement("div");
+      cell.className = "tfcell";
+      if (boolArr[i]) {
+        const dot = document.createElement("span");
+        dot.className = "dot";
+        cell.appendChild(dot);
+      }
+      grid.appendChild(cell);
     }
-    ten.appendChild(g);
+    ten.appendChild(grid);
     return ten;
   }
 
-  // Cross out the last b dots out of a
-  function crossSetsFor(a, b){
-    const crossIndices = new Set();
-    const start = Math.max(0, a - b);
-    for(let i=start; i<a; i++) crossIndices.add(i);
-
-    const cross1 = new Set();
-    const cross2 = new Set();
-    crossIndices.forEach(idx=>{
-      if(idx < 10) cross1.add(idx);
-      else cross2.add(idx - 10);
-    });
-    return { cross1, cross2 };
-  }
-
-  /* ---------- Shuffle ---------- */
-  function shuffle(arr){
-    for(let i=arr.length-1;i>0;i--){
-      const j=Math.floor(Math.random()*(i+1));
-      [arr[i],arr[j]]=[arr[j],arr[i]];
-    }
-    return arr;
-  }
-
-  /* ---------- Build all possible problems (instant + no freezes) ---------- */
-  function buildProblemPool(skill, lo, hi){
+  function uniqueProblems(mode, needed){
     const pool = [];
 
-    if(skill === "within10_add"){
-      // Add within 10: a+b<=10
-      for(let a=0;a<=9;a++){
-        for(let b=0;b<=9;b++){
-          if(a===0 && b===0) continue;
-          if(a+b<=10) pool.push({a,b});
+    if(mode === "within10_add"){
+      for(let a = 0; a <= 10; a += 1){
+        for(let b = 0; b <= 10; b += 1){
+          if(a + b <= 10 && !(a === 0 && b === 0)) pool.push({ a, b });
         }
       }
-      // remove commutative duplicates by keeping min/max key
-      const seen = new Set();
-      const uniq = [];
-      for(const q of pool){
-        const x=Math.min(q.a,q.b), y=Math.max(q.a,q.b);
-        const k=`A:${x}+${y}`;
-        if(seen.has(k)) continue;
-        seen.add(k);
-        uniq.push({a:y,b:x}); // bigger first looks nicer
+    } else if(mode === "within10_sub"){
+      for(let a = 1; a <= 10; a += 1){
+        for(let b = 0; b < a; b += 1) pool.push({ a, b });
       }
-      return uniq;
-    }
-
-    if(skill === "within10_sub"){
-      for(let a=1;a<=10;a++){
-        for(let b=0;b<a;b++){
-          pool.push({a,b});
+    } else if(mode === "within20_add"){
+      for(let a = 0; a <= 20; a += 1){
+        for(let b = 0; b <= 20; b += 1){
+          if(a + b <= 20 && a + b >= 11) pool.push({ a, b });
         }
       }
-      return pool;
+    } else {
+      for(let a = 11; a <= 20; a += 1){
+        for(let b = 0; b < a; b += 1) pool.push({ a, b });
+      }
     }
 
-    if(skill === "over10_add"){
-      // Over 10: two single digits, sum >10, <=20. Bound applies to FIRST number.
-      // We'll generate all valid pairs with a in [6..9] and b in [1..9] then filter by bounds.
-      for(let a=6;a<=9;a++){
-        for(let b=1;b<=9;b++){
-          const A=Math.max(a,b), B=Math.min(a,b);
-          const s=A+B;
-          if(s<=10 || s>20) continue;
-          if(A<lo || A>hi) continue; // first number range
-          pool.push({a:A,b:B});
-        }
-      }
-      // remove duplicates via commutative key
-      const seen = new Set();
-      const uniq = [];
-      for(const q of pool){
-        const x=Math.min(q.a,q.b), y=Math.max(q.a,q.b);
-        const k=`A:${x}+${y}`;
-        if(seen.has(k)) continue;
-        seen.add(k);
-        uniq.push({a:y,b:x});
-      }
-      return uniq;
+    for(let i = pool.length - 1; i > 0; i -= 1){
+      const j = randInt(0, i);
+      [pool[i], pool[j]] = [pool[j], pool[i]];
     }
 
-    if(skill === "over10_sub"){
-      // Over 10 subtraction: a in [max(11,lo)..min(20,hi)], b in [1..min(9,a-1)]
-      const amin = Math.max(11, lo);
-      const amax = Math.min(20, hi);
-      
-      for(let a=amin; a<=amax; a++){
-        for(let b=1; b<=Math.min(9,a-1); b++){
-          pool.push({a,b});
-        }
+    const picked = pool.slice(0, needed);
+    while(picked.length < needed){
+      if(!pool.length){
+        picked.push({ a: randInt(1, 9), b: randInt(0, 8) });
+      } else {
+        picked.push(pool[randInt(0, pool.length - 1)]);
       }
-
-      // Prefer "cross 10" problems FIRST, but don't require it.
-      // cross10 = b > a-10
-      const cross = [];
-      const nonCross = [];
-      for(const q of pool){
-        if(q.b > (q.a - 10)) cross.push(q);
-        else nonCross.push(q);
-      }
-
-      // Shuffle inside each group and return cross-first
-      shuffle(cross);
-      shuffle(nonCross);
-      return cross.concat(nonCross);
     }
-
-    return pool;
+    return picked;
   }
 
-  /* ---------- Render one problem ---------- */
-  function buildCell(mode, a, b, framesCount, prefill, crossOut){
-    const cell=document.createElement("div");
-    cell.className="cell";
+  function buildCell(mode, a, b){
+    const isAdd = mode.includes("_add");
+    const uses20 = mode.includes("20");
+    const op = isAdd ? "+" : "−";
 
-    const op=(mode==="add")?"+":"−";
-    cell.innerHTML=`<div class="expr">${a} ${op} ${b} = <span class="blank"></span></div>`;
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    cell.innerHTML = `<div class="expr">${a} ${op} ${b} = <span class="blank"></span></div>`;
 
-    const fs=document.createElement("div");
-    fs.className="frames";
+    const frames = document.createElement("div");
+    frames.className = "frames";
 
-    if(framesCount===2){
-      if(prefill){
-        const [f1,f2] = dots20(a);
-        if(mode==="sub" && crossOut){
-          const { cross1, cross2 } = crossSetsFor(a, b);
-          fs.appendChild(buildFrame(f1, cross1));
-          fs.appendChild(buildFrame(f2, cross2));
-        }else{
-          fs.appendChild(buildFrame(f1));
-          fs.appendChild(buildFrame(f2));
-        }
-      }else{
-        fs.appendChild(buildFrame(Array(10).fill(false)));
-        fs.appendChild(buildFrame(Array(10).fill(false)));
-      }
-    }else{
-      if(prefill){
-        const f = dots10(a);
-        if(mode==="sub" && crossOut){
-          const { cross1 } = crossSetsFor(a, b);
-          fs.appendChild(buildFrame(f, cross1));
-        }else{
-          fs.appendChild(buildFrame(f));
-        }
-      }else{
-        fs.appendChild(buildFrame(Array(10).fill(false)));
-      }
+    if(uses20){
+      const [f1, f2] = dots20(a);
+      frames.appendChild(buildFrame(f1));
+      frames.appendChild(buildFrame(f2));
+    } else {
+      frames.appendChild(buildFrame(dots10(a)));
     }
 
-    cell.appendChild(fs);
+    cell.appendChild(frames);
     return cell;
   }
 
-  /* ---------- Build worksheet ---------- */
   function build(){
-    let { lo, hi } = normalizeBounds();
-    const prefill = $("prefill").checked;
-    const crossOut = false;
+    const mode = $("problemType").value;
+    let title = "Add Within 10 Using Ten Frames";
+    if(mode === "within10_sub") title = "Subtract Within 10 Using Ten Frames";
+    if(mode === "within20_add") title = "Add Within 20 Using Ten Frames";
+    if(mode === "within20_sub") title = "Subtract Within 20 Using Ten Frames";
 
-    const within10 = (SKILL==="within10_add" || SKILL==="within10_sub");
-    
-    let mode="add";
-    let rows=5;     
-    let frames=1;
-    let title="";
+    const problems = uniqueProblems(mode, PROBLEM_COUNT);
+    const table = document.createElement("div");
+    table.className = "table";
 
-    if(within10){
-      lo=0; hi=10;
-      $("min").value=0; $("max").value=10;
-      $("min").disabled=true; $("max").disabled=true;
-      $("hintText").textContent="Within 10 is locked to 0–10.";
-    }else{
-      $("min").disabled=false; $("max").disabled=false;
-      $("hintText").textContent="Over 10 uses your Lowest/Highest as the FIRST number range (up to 20).";
-
-      // === FIX: Auto-adjust range if user is in Over-10 Subtraction but Max is too low ===
-      if(SKILL === "over10_sub" && hi < 11){
-        hi = 20;
-        $("max").value = 20;
-      }
-    }
-
-    if(SKILL==="within10_add"){ mode="add"; rows=5; frames=1; title="Add Within 10 Using Ten Frames"; }
-    if(SKILL==="within10_sub"){ mode="sub"; rows=5; frames=1; title="Subtract Within 10 Using Ten Frames"; }
-    if(SKILL==="over10_add"){   mode="add"; rows=4; frames=2; title="Add Over 10 (to 20) Using Ten Frames"; }
-    if(SKILL==="over10_sub"){   mode="sub"; rows=4; frames=2; title="Subtract Over 10 (to 20) Using Ten Frames"; }
-
-    $("sheetTitle").textContent=title;
-
-    const total = rows * 2;
-
-    // Build full pool instantly (pass potentially fixed lo/hi)
-    let pool = buildProblemPool(SKILL, lo, hi);
-
-    // Shuffle whole pool (except over10_sub already cross-first internally)
-    if(SKILL !== "over10_sub") shuffle(pool);
-
-    // Take as many unique as possible
-    const picked = pool.slice(0, total);
-
-    // If the teacher chose a super-tight range, we might not have enough unique items.
-    // Fill the rest with repeats (but still random) so Generate ALWAYS works.
-    while(picked.length < total){
-      if(pool.length === 0){
-        // ultimate fallback if pool is empty (should not happen with fix)
-        picked.push({a:9,b:4});
-      }else{
-        picked.push(pool[Math.floor(Math.random()*pool.length)]);
-      }
-    }
-
-    // Render
-    const table=$("table");
-    table.innerHTML="";
-
-    for(let i=0;i<rows;i++){
-      const row=document.createElement("div");
-      row.className="row";
-
-      const left = picked[i*2];
-      const right= picked[i*2 + 1];
-
-      row.appendChild(buildCell(mode,left.a,left.b,frames,prefill,crossOut));
-      row.appendChild(buildCell(mode,right.a,right.b,frames,prefill,crossOut));
+    for(let i = 0; i < 4; i += 1){
+      const row = document.createElement("div");
+      row.className = "row";
+      const left = problems[i * 2];
+      const right = problems[(i * 2) + 1];
+      row.appendChild(buildCell(mode, left.a, left.b));
+      row.appendChild(buildCell(mode, right.a, right.b));
       table.appendChild(row);
     }
+
+    $("worksheetHost").innerHTML = `<div class="sheet-title">${title}</div>`;
+    $("worksheetHost").appendChild(table);
+    $("worksheetHost").insertAdjacentHTML("beforeend", "<div class='sheet-footer'>No cross-outs in subtraction preview mode.</div>");
+
+    const hintMap = {
+      within10_add: "Add within 10 selected.",
+      within10_sub: "Subtract within 10 selected.",
+      within20_add: "Add within 20 selected.",
+      within20_sub: "Subtract within 20 selected."
+    };
+    $("hint").textContent = hintMap[mode] || "Problem type selected.";
   }
 
-  function setSkill(skill){
-    SKILL = skill;
-    document.body.setAttribute("data-skill", SKILL);
-    $("skillSelect").value = skill;
-    build();
+  function lockedPreviewAction(){
+    alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access.");
   }
 
-  $("skillSelect").addEventListener("change",(e)=> setSkill(e.target.value));
+  function blockShortcuts(event){
+    const blocked = (event.ctrlKey || event.metaKey) && ["p", "s", "u"].includes(event.key.toLowerCase());
+    if(blocked) event.preventDefault();
+  }
 
+  document.addEventListener("keydown", blockShortcuts);
   $("btnGen").addEventListener("click", build);
-  $("btnPrint").addEventListener("click", ()=>window.print());
-
-  ["min","max","prefill"].forEach(id=>{
-    $(id).addEventListener("change", build);
-  });
+  $("btnPrint").addEventListener("click", lockedPreviewAction);
+  $("problemType").addEventListener("change", build);
 
   build();
 </script>
