@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Long Division Color-Coded Organizer Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1d2430;
+      --panel: #ffffff;
+      --surface: #f4f6fa;
+      --line: #171717;
+      --soft-line: #8e98aa;
+      --teal: #a9ddd3;
+      --paper: #ffffff;
+      --tone0-fill: rgba(182, 128, 224, 0.24);
+      --tone1-fill: rgba(255, 200, 110, 0.15);
+      --tone2-fill: rgba(145, 205, 230, 0.15);
+      --tone3-fill: rgba(178, 220, 170, 0.15);
+      --tone0-line: #bb86e0;
+      --tone1-line: #f3c883;
+      --tone2-line: #9ecbe2;
+      --tone3-line: #b3d5a8;
+      --tone0-strong: #dcb3f3;
+      --tone1-strong: #ffe2b3;
+      --tone2-strong: #d1ecf8;
+      --tone3-strong: #dcefd5;
+      --canvas-label-col: 24px;
+      --canvas-digit-col: 50px;
+      --canvas-rem-col: 22px;
+      --canvas-row-h: 40px;
+      --canvas-col-gap: 4px;
+      --canvas-row-gap: 8px;
+      --box-font: "Poppins", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    @page {
+      size: letter landscape;
+      margin: 0.25in;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #f8f9fc 0%, #f1f3f7 55%, #edf0f5 100%);
+      color: var(--ink);
+      font-family: "Poppins", sans-serif;
+    }
+
+    .app {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 14px 14px 36px;
+    }
+
+    .screen-only h1 {
+      margin: 2px 0 2px;
+      font-size: clamp(1.3rem, 2.8vw, 2rem);
+      line-height: 1.2;
+      text-align: center;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+
+    .screen-only .subtitle {
+      margin: 0 0 12px;
+      text-align: center;
+      font-size: 0.95rem;
+      color: #425066;
+    }
+
+    body.preview-locked .screen-only h1,
+    body.preview-locked .screen-only .subtitle {
+      display: none;
+    }
+
+    .controls-card {
+      background: var(--panel);
+      border: 2px solid #d9dfeb;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(33, 43, 63, 0.06);
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      align-items: end;
+    }
+
+    .controls-top {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    body.preview-locked .controls-top {
+      align-items: center;
+      text-align: center;
+    }
+
+    .type-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    body.preview-locked .type-buttons {
+      grid-template-columns: minmax(0, 1fr);
+      max-width: 260px;
+      margin: 0 auto;
+    }
+
+    body.preview-locked .type-buttons .type-btn:not([data-type="3x1"]) {
+      display: none;
+    }
+
+    .type-btn {
+      border: 2px solid #1f2b3e;
+      border-radius: 10px;
+      background: #fff;
+      color: #1f2b3e;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 8px 10px;
+      cursor: pointer;
+      line-height: 1.2;
+    }
+
+    .type-btn.active {
+      background: #1f2b3e;
+      color: #fff;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .field label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      color: #43516a;
+      text-transform: uppercase;
+    }
+
+    .field-hint {
+      font-size: 0.78rem;
+      color: #5a677f;
+      line-height: 1.25;
+    }
+
+    .field select,
+    .field input,
+    .field textarea {
+      font-family: inherit;
+      border: 2px solid #cfd7e5;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      font-size: 0.95rem;
+      padding: 8px 10px;
+      outline: none;
+      width: 100%;
+    }
+
+    .hidden-options {
+      display: none;
+    }
+
+    .field textarea {
+      min-height: 64px;
+      resize: vertical;
+    }
+
+    .field.custom-problem {
+      grid-column: 2;
+    }
+
+    .checkbox-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      border: 2px solid #cfd7e5;
+      border-radius: 10px;
+      padding: 7px 10px;
+      background: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #32415a;
+    }
+
+    .checkbox-wrap input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    body.preview-locked .controls-grid,
+    body.preview-locked .note {
+      display: none;
+    }
+
+    body.preview-locked .button-row #printBtn {
+      display: none;
+    }
+
+    body.preview-locked #worksheetHost {
+      filter: blur(1.1px);
+    }
+
+    body.preview-secure #worksheetHost {
+      position: relative;
+    }
+
+    body.preview-secure #worksheetHost::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 150;
+      pointer-events: none;
+      opacity: 0.52;
+      background-image:
+        repeating-linear-gradient(-26deg, rgba(0,0,0,.08) 0 18px, rgba(255,255,255,.06) 18px 36px),
+        url("data:image/svg+xml,%3Csvg width='340' height='220' viewBox='0 0 340 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-22 170 110)'%3E%3Ctext x='18' y='90' fill='%23000' fill-opacity='.26' font-family='Poppins' font-size='34' font-weight='900'%3EPREVIEW ONLY%3C/text%3E%3Ctext x='44' y='146' fill='%23000' fill-opacity='.2' font-family='Poppins' font-size='22' font-weight='800'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+      background-size: auto, 340px 220px;
+      background-repeat: repeat;
+    }
+
+    body.preview-secure #worksheetHost::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 92px;
+      z-index: 151;
+      pointer-events: none;
+      background: linear-gradient(to top, rgba(0,0,0,.56), rgba(0,0,0,0));
+    }
+
+    .preview-lock-banner {
+      display: none;
+      position: fixed;
+      left: 50%;
+      bottom: 8px;
+      transform: translateX(-50%);
+      z-index: 3000;
+      width: min(96vw, 480px);
+      border: 1px solid #fff;
+      border-radius: 10px;
+      background: rgba(17, 17, 17, 0.9);
+      color: #fff;
+      text-align: center;
+      padding: 7px 8px 6px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.3);
+      gap: 4px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .preview-lock-banner strong {
+      font-size: 0.72rem;
+      line-height: 1.2;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .preview-lock-banner span {
+      font-size: 0.62rem;
+      line-height: 1.2;
+      font-weight: 600;
+      opacity: 0.95;
+    }
+
+    .preview-lock-banner a {
+      display: inline-block;
+      text-decoration: none;
+      background: #fff;
+      color: #111;
+      border-radius: 7px;
+      padding: 4px 8px;
+      font-size: 0.62rem;
+      font-weight: 900;
+    }
+
+    body.preview-secure .preview-lock-banner {
+      display: flex;
+    }
+
+    .button-row button {
+      border: 2px solid #1f2b3e;
+      border-radius: 10px;
+      background: #fff;
+      color: #1f2b3e;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+
+    .button-row button.primary {
+      background: #1f2b3e;
+      color: #fff;
+    }
+
+    .note {
+      margin-top: 8px;
+      font-size: 0.84rem;
+      color: #5a677f;
+    }
+
+    #worksheetHost {
+      margin-top: 12px;
+    }
+
+    .sheet {
+      width: 11in;
+      min-height: 8.5in;
+      margin: 0 auto;
+      background: var(--paper);
+      border: 1px solid #d6dbe7;
+      box-shadow: 0 12px 30px rgba(25, 35, 55, 0.1);
+      padding: 0.3in;
+      position: relative;
+    }
+
+    .sheet + .sheet {
+      margin-top: 14px;
+    }
+
+    .sheet-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 2px solid #ced5e3;
+      padding-bottom: 7px;
+      margin-bottom: 10px;
+    }
+
+    .sheet-title {
+      margin: 0;
+      font-size: 1.03rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .name-line {
+      white-space: nowrap;
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+
+    .name-line .line {
+      display: inline-block;
+      width: 140px;
+      border-bottom: 2px solid #111;
+      transform: translateY(-2px);
+      margin-left: 5px;
+    }
+
+    .organizer {
+      padding: 2px 0;
+      display: grid;
+      grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.34fr);
+      gap: 9px;
+      min-height: 0;
+    }
+
+    .two-up {
+      display: grid;
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .two-up.single {
+      grid-template-rows: minmax(0, 1fr);
+    }
+
+    .organizer-block {
+      padding: 2px 0 4px;
+    }
+
+    .organizer-block + .organizer-block {
+      border-top: 1px solid #d5dce9;
+      padding-top: 8px;
+    }
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .problem-equation {
+      font-size: 1.02rem;
+      font-weight: 800;
+      padding: 0 2px 2px;
+      text-align: left;
+      background: transparent;
+    }
+
+    .workspace {
+      padding: 2px 0 6px;
+      background: transparent;
+    }
+
+    .workspace-layout {
+      display: block;
+    }
+
+    .problem-canvas-wrap {
+      position: relative;
+      overflow: visible;
+    }
+
+    .problem-canvas {
+      position: relative;
+      display: grid;
+      grid-template-columns: var(--canvas-label-col) var(--canvas-digit-col) repeat(var(--digits), var(--canvas-digit-col)) var(--canvas-rem-col) var(--canvas-digit-col);
+      grid-template-rows: repeat(var(--rows), var(--canvas-row-h));
+      column-gap: var(--canvas-col-gap);
+      row-gap: var(--canvas-row-gap);
+      align-items: center;
+      justify-content: start;
+      overflow: visible;
+    }
+
+    .problem-canvas.no-remainder {
+      grid-template-columns: var(--canvas-label-col) var(--canvas-digit-col) repeat(var(--digits), var(--canvas-digit-col));
+    }
+
+    .remainder-label {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      text-align: center;
+      align-self: center;
+      justify-self: center;
+      text-transform: uppercase;
+    }
+
+    .canvas-box {
+      width: var(--canvas-digit-col);
+      height: var(--canvas-row-h);
+      border: 2px solid #111;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.94rem;
+      font-weight: 700;
+      background: #fff;
+      line-height: 1;
+    }
+
+    .canvas-box.ghost {
+      border: 0;
+      background: transparent;
+    }
+
+    .canvas-box.divisor {
+      background: #bdeee5;
+    }
+
+    .canvas-box.blank-gray {
+      background: #f0f0f0;
+    }
+
+    .canvas-box.minus-cell {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+      justify-content: center;
+      padding-right: 0;
+    }
+
+    .division-top-line {
+      align-self: start;
+      border-top: 6px solid #111;
+      height: 1px;
+      width: 100%;
+      z-index: 3;
+    }
+
+    .division-left-line {
+      justify-self: start;
+      width: 1px;
+      height: 100%;
+      border-left: 6px solid #111;
+      z-index: 3;
+      transform: translateX(-2px);
+    }
+
+    .down-arrow {
+      width: 16px;
+      height: 24px;
+      position: relative;
+      justify-self: center;
+      align-self: end;
+      transform: translateY(8px);
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .down-arrow::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 0;
+      width: 4px;
+      height: 14px;
+      border-radius: 2px;
+      background: currentColor;
+      opacity: 0.95;
+    }
+
+    .down-arrow::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 12px;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 12px solid currentColor;
+      opacity: 0.95;
+    }
+
+    .down-arrow.arrow-0 { color: #c9a8df; }
+    .down-arrow.arrow-1 { color: #f3c883; }
+    .down-arrow.arrow-2 { color: #9ecbe2; }
+    .down-arrow.arrow-3 { color: #b3d5a8; }
+
+    .digit-box {
+      min-width: 38px;
+      height: 38px;
+      border: 2px solid #111;
+      border-radius: 2px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.08rem;
+      font-weight: 700;
+      font-family: var(--box-font);
+      font-variant-numeric: tabular-nums;
+      background: #fff;
+    }
+
+    .digit-box.small {
+      min-width: 34px;
+      height: 34px;
+      font-size: 0.98rem;
+    }
+
+    .digit-box.divisor-fixed {
+      background: var(--teal);
+    }
+
+    .bracket-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+
+    .quotient-row {
+      display: flex;
+      gap: 4px;
+      padding-left: 13px;
+    }
+
+    .dividend-row-wrap {
+      display: flex;
+      align-items: stretch;
+      gap: 5px;
+    }
+
+    .bracket-stem {
+      width: 10px;
+      border-left: 4px solid #111;
+      margin-top: 3px;
+    }
+
+    .dividend-row {
+      display: flex;
+      gap: 4px;
+      padding-top: 5px;
+      border-top: 4px solid #111;
+    }
+
+    .remainder-wrap {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 700;
+      font-size: 1.12rem;
+      margin-left: 2px;
+      padding-bottom: 3px;
+    }
+
+    .remainder-value {
+      min-width: 18px;
+      text-align: center;
+      border-bottom: 2px solid #111;
+      line-height: 1;
+      padding-bottom: 1px;
+    }
+
+    .step-panels {
+      display: grid;
+      grid-template-columns: repeat(var(--step-count), minmax(0, 1fr));
+      gap: 5px;
+      font-family: var(--box-font);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .step-panel {
+      border: 2px solid #111;
+      border-radius: 3px;
+      padding: 5px 4px;
+      position: relative;
+      min-height: 118px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      overflow: visible;
+    }
+
+    .step-panel:not(:last-child)::after {
+      content: "➜";
+      position: absolute;
+      right: -13px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.15rem;
+      font-weight: 800;
+      line-height: 1;
+      z-index: 2;
+      color: #111;
+    }
+
+    .step-title {
+      width: 100%;
+      text-align: center;
+      font-size: 0.66rem;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .minus-line {
+      width: 88%;
+      border-bottom: 4px solid #111;
+      position: relative;
+      margin: 2px 0;
+      min-height: 8px;
+    }
+
+    .minus-line::before {
+      content: "−";
+      position: absolute;
+      left: -12px;
+      top: -13px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .strip {
+      border: 2px solid #111;
+      border-radius: 4px;
+      padding: 6px 7px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .strip-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .strip-label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      border: 2px solid #111;
+      border-radius: 3px;
+      padding: 1px 7px;
+      background: #fff;
+      flex: 0 0 auto;
+    }
+
+    .strip-question {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      flex-wrap: wrap;
+      font-size: 0.86rem;
+      font-weight: 700;
+      line-height: 1.25;
+      font-family: var(--box-font);
+    }
+
+    .target-digits {
+      display: inline-flex;
+      gap: 2px;
+      align-items: center;
+    }
+
+    .strip-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .strip-table th,
+    .strip-table td {
+      border: 1px solid #111;
+      text-align: center;
+      height: 32px;
+      font-size: 0.79rem;
+      font-weight: 700;
+      padding: 0;
+      font-family: var(--box-font);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .strip-table th.tone-head.tone-0 { background: var(--tone0-strong); }
+    .strip-table th.tone-head.tone-1 { background: var(--tone1-strong); }
+    .strip-table th.tone-head.tone-2 { background: var(--tone2-strong); }
+    .strip-table th.tone-head.tone-3 { background: var(--tone3-strong); }
+
+    .multiple-cell {
+      position: relative;
+      background: #fff;
+    }
+
+    .tone-0-bg { background: var(--tone0-fill); }
+    .tone-1-bg { background: var(--tone1-fill); }
+    .tone-2-bg { background: var(--tone2-fill); }
+    .tone-3-bg { background: var(--tone3-fill); }
+
+    .color-fill .tone-0 {
+      background: var(--tone0-fill);
+    }
+
+    .color-fill .tone-1 {
+      background: var(--tone1-fill);
+    }
+
+    .color-fill .tone-2 {
+      background: var(--tone2-fill);
+    }
+
+    .color-fill .tone-3 {
+      background: var(--tone3-fill);
+    }
+
+    .color-line .tone-0 {
+      box-shadow: inset 0 0 0 3px var(--tone0-line);
+    }
+
+    .color-line .tone-1 {
+      box-shadow: inset 0 0 0 3px var(--tone1-line);
+    }
+
+    .color-line .tone-2 {
+      box-shadow: inset 0 0 0 3px var(--tone2-line);
+    }
+
+    .color-line .tone-3 {
+      box-shadow: inset 0 0 0 3px var(--tone3-line);
+    }
+
+    .no-color .tone-0,
+    .no-color .tone-1,
+    .no-color .tone-2,
+    .no-color .tone-3 {
+      background: #fff !important;
+      box-shadow: none !important;
+      border-color: #111 !important;
+    }
+
+    .no-color .strip-table th.tone-head {
+      background: #efefef !important;
+    }
+
+    .no-color .canvas-box.divisor {
+      background: #fff !important;
+      box-shadow: none !important;
+    }
+
+    .color-line .canvas-box.divisor {
+      background: #fff;
+      box-shadow: inset 0 0 0 3px var(--tone1-line);
+    }
+
+    .footer-note {
+      position: static;
+      margin-top: 8px;
+      text-align: left;
+      font-size: 0.64rem;
+      color: #6a7485;
+    }
+
+    @media (max-width: 980px) {
+      .controls-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .type-buttons {
+        grid-template-columns: 1fr;
+      }
+
+      .field.custom-problem {
+        grid-column: auto;
+      }
+
+      .sheet {
+        width: 100%;
+        min-height: 0;
+        padding: 12px;
+      }
+
+      .organizer {
+        min-height: 0;
+        grid-template-columns: 1fr;
+      }
+
+      .two-up {
+        grid-template-rows: auto;
+      }
+
+      .workspace-layout {
+        display: block;
+      }
+
+      .footer-note {
+        position: static;
+        margin-top: 8px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      :root {
+        --canvas-label-col: 18px;
+        --canvas-digit-col: 40px;
+        --canvas-rem-col: 18px;
+        --canvas-row-h: 32px;
+        --canvas-col-gap: 3px;
+        --canvas-row-gap: 6px;
+      }
+
+      .app {
+        padding: 10px 10px 32px;
+      }
+
+      .controls-card {
+        padding: 10px;
+      }
+
+      .button-row {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .button-row button {
+        width: 100%;
+      }
+
+      .sheet {
+        padding: 10px;
+      }
+
+      .sheet-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .name-line {
+        width: 100%;
+        text-align: left;
+      }
+
+      .problem-canvas-wrap {
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 6px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .problem-canvas {
+        min-width: max-content;
+      }
+
+      .canvas-box {
+        font-size: 0.82rem;
+      }
+
+      .canvas-box.minus-cell {
+        font-size: 1.56rem;
+      }
+
+      .problem-equation {
+        font-size: 0.92rem;
+      }
+    }
+
+    @media (max-width: 460px) {
+      :root {
+        --canvas-label-col: 16px;
+        --canvas-digit-col: 34px;
+        --canvas-rem-col: 16px;
+        --canvas-row-h: 28px;
+        --canvas-col-gap: 2px;
+        --canvas-row-gap: 5px;
+      }
+
+      .app {
+        padding: 8px 8px 28px;
+      }
+
+      .screen-only .subtitle {
+        font-size: 0.86rem;
+      }
+
+      .field label,
+      .field-hint {
+        font-size: 0.74rem;
+      }
+
+      .field select,
+      .field input,
+      .field textarea {
+        font-size: 0.9rem;
+      }
+
+      .type-btn {
+        font-size: 0.84rem;
+        padding: 8px 8px;
+      }
+
+      .sheet {
+        padding: 8px;
+      }
+
+      .sheet-title {
+        font-size: 0.92rem;
+      }
+
+      .name-line {
+        font-size: 0.78rem;
+      }
+
+      .name-line .line {
+        width: 112px;
+      }
+    }
+
+    @media print {
+      @page {
+        size: letter landscape;
+        margin: 0.25in;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: #fff;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .screen-only {
+        display: none !important;
+      }
+
+      .app {
+        margin: 0;
+        max-width: none;
+        padding: 0;
+      }
+
+      #worksheetHost {
+        margin: 0;
+      }
+
+      .sheet {
+        width: 10.42in;
+        min-height: 7.9in;
+        margin: 0 auto;
+        border: 0;
+        box-shadow: none;
+        padding: 0.16in 0.16in 0.28in;
+        box-sizing: border-box;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        page-break-after: always;
+        break-after: page;
+      }
+
+      .sheet:last-child {
+        page-break-after: auto;
+        break-after: auto;
+      }
+
+      .sheet-header {
+        padding-bottom: 5px;
+        margin-bottom: 8px;
+      }
+
+      .sheet-title {
+        font-size: 0.96rem;
+      }
+
+      .name-line {
+        font-size: 0.78rem;
+      }
+
+      .organizer {
+        min-height: 0;
+        grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.12fr);
+        gap: 5px;
+      }
+
+      .two-up {
+        gap: 4px;
+      }
+
+      .organizer-block {
+        padding: 1px 0 2px;
+      }
+
+      .organizer-block + .organizer-block {
+        padding-top: 5px;
+      }
+
+      .left-column {
+        gap: 6px;
+      }
+
+      .problem-equation {
+        font-size: 0.94rem;
+      }
+
+      .workspace {
+        padding: 1px 0 4px;
+      }
+
+      .workspace-layout {
+        display: block;
+      }
+
+      .problem-canvas {
+        grid-template-columns: 20px 44px repeat(var(--digits), 44px) 18px 44px;
+        grid-template-rows: repeat(var(--rows), 34px);
+        column-gap: 3px;
+        row-gap: 6px;
+      }
+
+      .problem-canvas.no-remainder {
+        grid-template-columns: 20px 44px repeat(var(--digits), 44px);
+      }
+
+      .remainder-label {
+        font-size: 1.7rem;
+      }
+
+      .canvas-box {
+        width: 44px;
+        height: 34px;
+        font-size: 0.85rem;
+      }
+
+      .canvas-box.minus-cell {
+        font-size: 1.8rem;
+      }
+
+      .down-arrow {
+        width: 14px;
+        height: 20px;
+        transform: translateY(6px);
+      }
+
+      .down-arrow::before {
+        left: 5px;
+        width: 3px;
+        height: 12px;
+      }
+
+      .down-arrow::after {
+        left: 0;
+        top: 10px;
+        border-left-width: 7px;
+        border-right-width: 7px;
+        border-top-width: 10px;
+      }
+
+      .digit-box {
+        min-width: 32px;
+        height: 32px;
+        font-size: 0.96rem;
+      }
+
+      .digit-box.small {
+        min-width: 30px;
+        height: 30px;
+        font-size: 0.86rem;
+      }
+
+      .step-panel {
+        min-height: 104px;
+        padding: 4px 3px;
+      }
+
+      .step-title {
+        font-size: 0.62rem;
+      }
+
+      .strip {
+        padding: 4px 5px;
+        gap: 4px;
+      }
+
+      .strip-head {
+        gap: 6px;
+      }
+
+      .strip-label {
+        font-size: 0.68rem;
+        padding: 1px 6px;
+      }
+
+      .strip-question {
+        font-size: 0.79rem;
+        line-height: 1.2;
+        gap: 2px;
+      }
+
+      .strip-table th,
+      .strip-table td {
+        height: 28px;
+        font-size: 0.72rem;
+      }
+
+      .right-column {
+        gap: 4px;
+      }
+
+      .footer-note {
+        position: absolute;
+        left: 0.16in;
+        right: 0.16in;
+        bottom: 0.07in;
+        margin: 0;
+        font-size: 0.58rem;
+        line-height: 1.2;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="screen-only">
+      <h1>Long Division Color-Coded Organizer Generator</h1>
+      <p class="subtitle">Your right-side step-strip format with matching color logic</p>
+
+      <section class="controls-card">
+        <div class="controls-top">
+          <div class="field">
+            <label for="problemTypeSelect">Problem Type</label>
+            <select id="problemTypeSelect">
+              <option value="2x1" selected>2-digit by 1-digit</option>
+              <option value="3x1">3-digit by 1-digit</option>
+              <option value="4x1">4-digit by 1-digit</option>
+            </select>
+          </div>
+          <input id="problemType" type="hidden" value="2x1" />
+        </div>
+
+        <div class="controls-grid">
+          <div class="field">
+            <label for="multiplesMode">Display Multiples</label>
+            <select id="multiplesMode">
+              <option value="filled" selected>Yes (show multiples)</option>
+              <option value="blank">No (students fill in)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="hidden-options" aria-hidden="true">
+          <select id="problemSetCount"></select>
+          <div id="problemCountHint"></div>
+          <select id="stepPromptMode">
+            <option value="blank" selected>No (students fill in)</option>
+            <option value="filled">Yes (show step parts)</option>
+          </select>
+          <select id="remainderMode">
+            <option value="allow" selected>Allow remainders</option>
+            <option value="none">No remainders (exact only)</option>
+          </select>
+          <input id="colorToggle" type="checkbox" checked>
+          <input id="customProblem" type="text" value="">
+        </div>
+
+        <div class="button-row">
+          <button id="generateBtn" class="primary" type="button">Generate</button>
+          <button id="printBtn" type="button">Print</button>
+        </div>
+
+        <div class="note" id="statusText">Choose a problem type and generate a new worksheet preview.</div>
+      </section>
+    </div>
+
+    <div id="worksheetHost"></div>
+  </div>
+
+  <div class="preview-lock-banner" aria-hidden="false">
+    <strong>Preview Mode</strong>
+    <span>Generate is enabled. Printing is locked for members.</span>
+    <a href="https://member.interventionstation.com/join" target="_blank" rel="noopener">Join Membership</a>
+  </div>
+
+  <script>
+    const els = {
+      host: document.getElementById("worksheetHost"),
+      problemType: document.getElementById("problemType"),
+      problemTypeSelect: document.getElementById("problemTypeSelect"),
+      problemSetCount: document.getElementById("problemSetCount"),
+      problemCountHint: document.getElementById("problemCountHint"),
+      customProblem: document.getElementById("customProblem"),
+      multiplesMode: document.getElementById("multiplesMode"),
+      stepPromptMode: document.getElementById("stepPromptMode"),
+      remainderMode: document.getElementById("remainderMode"),
+      colorToggle: document.getElementById("colorToggle"),
+      statusText: document.getElementById("statusText"),
+      generateBtn: document.getElementById("generateBtn"),
+      printBtn: document.getElementById("printBtn")
+    };
+
+    const PREVIEW_MODE = new URLSearchParams(window.location.search).get("preview") === "scaffolded";
+    const PREVIEW_SECURE = true;
+
+    const TYPE_CONFIG = {
+      "2x1": { digits: 2, dividendMin: 10, dividendMax: 99, label: "2-digit by 1-digit" },
+      "3x1": { digits: 3, dividendMin: 100, dividendMax: 999, label: "3-digit by 1-digit" },
+      "4x1": { digits: 4, dividendMin: 1000, dividendMax: 9999, label: "4-digit by 1-digit" }
+    };
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function getTypeConfig() {
+      return TYPE_CONFIG[els.problemType.value] || TYPE_CONFIG["2x1"];
+    }
+
+    function setProblemType(typeKey) {
+      if (!TYPE_CONFIG[typeKey]) return;
+      els.problemType.value = typeKey;
+      if (els.problemTypeSelect) els.problemTypeSelect.value = typeKey;
+    }
+
+    function getProblemsPerPage(cfg) {
+      return cfg.digits >= 3 ? 1 : 2;
+    }
+
+    function populateProblemCountOptions() {
+      const cfg = getTypeConfig();
+      const perPage = getProblemsPerPage(cfg);
+      const previous = Number(els.problemSetCount.value);
+      let selectedValue = Number.isFinite(previous) ? previous : (perPage === 2 ? 4 : 3);
+
+      const options = [];
+      for (let pages = 1; pages <= 5; pages += 1) {
+        const total = pages * perPage;
+        const label = perPage === 2
+          ? `${total} (2 per page)`
+          : `${total} (1 per page)`;
+        options.push({ value: total, label });
+      }
+
+      if (!options.some((o) => o.value === selectedValue)) {
+        selectedValue = options[Math.min(2, options.length - 1)].value;
+      }
+
+      els.problemSetCount.innerHTML = options
+        .map((o) => `<option value="${o.value}"${o.value === selectedValue ? " selected" : ""}>${o.label}</option>`)
+        .join("");
+
+      els.problemCountHint.textContent = perPage === 2
+        ? "2-digit by 1-digit uses 2 problems per page."
+        : "3-digit/4-digit uses 1 problem per page.";
+    }
+
+    function applyPreviewLockdown() {
+      if (!PREVIEW_MODE) return;
+      document.body.classList.add("preview-locked");
+      if (els.problemTypeSelect) {
+        els.problemTypeSelect.value = "3x1";
+        els.problemTypeSelect.disabled = true;
+      }
+      els.multiplesMode.value = "filled";
+      els.stepPromptMode.value = "blank";
+      els.remainderMode.value = "allow";
+      els.colorToggle.checked = true;
+      els.customProblem.value = "";
+      els.customProblem.disabled = true;
+    }
+
+    function getTotalProblemCount() {
+      const raw = Number(els.problemSetCount.value);
+      if (!Number.isFinite(raw)) return 1;
+      return Math.max(1, raw);
+    }
+
+    function parseProblemToken(token, cfg) {
+      const clean = token.trim().replace(/\s+/g, "");
+      if (!clean) return null;
+
+      let dividend = null;
+      let divisor = null;
+
+      const slashMatch = clean.match(/^(\d+)(?:\/|÷)(\d+)$/);
+      if (slashMatch) {
+        dividend = Number(slashMatch[1]);
+        divisor = Number(slashMatch[2]);
+      }
+
+      const bracketMatch = clean.match(/^(\d+)\)(\d+)$/);
+      if (bracketMatch) {
+        divisor = Number(bracketMatch[1]);
+        dividend = Number(bracketMatch[2]);
+      }
+
+      if (!Number.isFinite(dividend) || !Number.isFinite(divisor)) return null;
+      if (divisor < 2 || divisor > 9) return null;
+      if (dividend < cfg.dividendMin || dividend > cfg.dividendMax) return null;
+      return { dividend, divisor };
+    }
+
+    function makeRandomProblem(cfg, allowRemainder) {
+      if (allowRemainder) {
+        return {
+          dividend: randInt(cfg.dividendMin, cfg.dividendMax),
+          divisor: randInt(2, 9)
+        };
+      }
+
+      for (let tries = 0; tries < 800; tries += 1) {
+        const divisor = randInt(2, 9);
+        const dividend = randInt(cfg.dividendMin, cfg.dividendMax);
+        if (dividend % divisor === 0) {
+          return { dividend, divisor };
+        }
+      }
+
+      return {
+        dividend: cfg.dividendMin,
+        divisor: 2
+      };
+    }
+
+    function getProblems(cfg, requestedCount) {
+      const allowRemainder = els.remainderMode.value === "allow";
+      const problemCount = Math.max(1, requestedCount);
+      const tokens = els.customProblem.value
+        .split(/[\n,;]+/)
+        .map((token) => token.trim())
+        .filter(Boolean);
+
+      if (tokens.length > 0) {
+        const parsed = [];
+        for (const token of tokens.slice(0, problemCount)) {
+          const problem = parseProblemToken(token, cfg);
+          if (!problem) {
+            return {
+              problems: [],
+              warning: true,
+              message: "Invalid custom problem. Use examples like 654/6 or 6)654."
+            };
+          }
+          parsed.push(problem);
+        }
+
+        const problems = new Array(problemCount).fill(0).map((_, idx) => {
+          const source = parsed[Math.min(idx, parsed.length - 1)];
+          return { ...source };
+        });
+
+        if (!allowRemainder) {
+          const hasRemainder = problems.some((p) => (p.dividend % p.divisor) !== 0);
+          if (hasRemainder) {
+            return {
+              problems: [],
+              warning: true,
+              message: "Custom problem has a remainder. Pick an exact-division problem or allow remainders."
+            };
+          }
+        }
+
+        return {
+          problems,
+          warning: false,
+          message: problemCount === 1
+            ? "Generated custom problem."
+            : (parsed.length === 1
+              ? "Generated custom problems (duplicated input as needed)."
+              : "Generated custom problems.")
+        };
+      }
+
+      return {
+        problems: new Array(problemCount).fill(0).map(() => makeRandomProblem(cfg, allowRemainder)),
+        warning: false,
+        message: allowRemainder
+          ? `Generated ${problemCount} random problem${problemCount === 1 ? "" : "s"}.`
+          : `Generated ${problemCount} random problem${problemCount === 1 ? "" : "s"} with no remainders.`
+      };
+    }
+
+    function toneClass(index) {
+      return `tone-${index % 4}`;
+    }
+
+    function computeLongDivisionSteps(dividend, divisor) {
+      const digits = String(dividend).split("").map((d) => Number(d));
+      const steps = [];
+      let current = 0;
+      const toneFor = (idx) => `tone-${idx % 4}`;
+
+      for (let i = 0; i < digits.length; i += 1) {
+        current = (current * 10) + digits[i];
+        const qDigit = Math.floor(current / divisor);
+        const product = qDigit * divisor;
+        const remainder = current - product;
+        const nextDigit = i < digits.length - 1 ? digits[i + 1] : null;
+        const nextPartial = nextDigit === null ? remainder : (remainder * 10) + nextDigit;
+        const partialDisplay = i === 0
+          ? String(current)
+          : `${steps[i - 1].remainder}${digits[i]}`;
+        const partialDigitTones = i === 0
+          ? [toneFor(0)]
+          : [toneFor(i - 1), toneFor(i)];
+
+        steps.push({
+          index: i,
+          tone: toneFor(i),
+          partialDividend: current,
+          partialDisplay,
+          partialDigitTones,
+          quotientDigit: qDigit,
+          product,
+          remainder,
+          nextDigit,
+          nextPartial
+        });
+
+        current = remainder;
+      }
+
+      return {
+        steps,
+        quotientDigits: steps.map((s) => s.quotientDigit),
+        finalRemainder: current
+      };
+    }
+
+    function digitBoxesWithTones(text, tones, small = true, showValues = true) {
+      const chars = String(text).split("");
+      return chars.map((ch, idx) => {
+        const tone = tones[Math.min(idx, tones.length - 1)] || "tone-0";
+        const val = showValues ? ch : "&nbsp;";
+        return `<span class="digit-box ${small ? "small" : ""} ${tone}">${val}</span>`;
+      }).join("");
+    }
+
+    function rightAlignChars(value, len) {
+      const chars = String(value).split("");
+      const out = new Array(len).fill("&nbsp;");
+      let k = len - 1;
+      for (let i = chars.length - 1; i >= 0 && k >= 0; i -= 1) {
+        out[k] = chars[i];
+        k -= 1;
+      }
+      return out;
+    }
+
+    function canvasBox(row, col, cls, value = "&nbsp;") {
+      return `<div class="canvas-box ${cls}" style="grid-row:${row};grid-column:${col};">${value}</div>`;
+    }
+
+    function renderProblemCanvas(problem, stepsData, cfg, showAnswers, showRemainderHeader) {
+      const n = cfg.digits;
+      const rows = (2 * n) + 2;
+      const firstDigitCol = 3;
+      const remLabelCol = firstDigitCol + n;
+      const remCol = remLabelCol + 1;
+      const dividendDigits = String(problem.dividend).split("");
+      const chunks = [];
+      const toneForLane = (lane) => `tone-${Math.max(0, lane) % 4}`;
+
+      for (let i = 0; i < n; i += 1) {
+        const qVal = showAnswers ? stepsData.quotientDigits[i] : "&nbsp;";
+        chunks.push(canvasBox(1, firstDigitCol + i, toneForLane(i), qVal));
+      }
+
+      if (showRemainderHeader) {
+        chunks.push(`<div class="remainder-label" style="grid-row:1;grid-column:${remLabelCol};">R</div>`);
+        chunks.push(canvasBox(1, remCol, "blank-gray", showAnswers ? stepsData.finalRemainder : "&nbsp;"));
+      }
+
+      chunks.push(canvasBox(2, 2, "divisor", problem.divisor));
+      for (let i = 0; i < n; i += 1) {
+        chunks.push(canvasBox(2, firstDigitCol + i, toneForLane(i), dividendDigits[i]));
+      }
+
+      chunks.push(`<div class="division-top-line" style="grid-row:2;grid-column:${firstDigitCol} / ${firstDigitCol + n};"></div>`);
+      chunks.push(`<div class="division-left-line" style="grid-row:2;grid-column:${firstDigitCol};"></div>`);
+
+      let row = 3;
+
+      for (let i = 0; i < stepsData.steps.length; i += 1) {
+        const step = stepsData.steps[i];
+        const startDigit = i === 0 ? 0 : Math.min(i - 1, n - 2);
+        const startCol = firstDigitCol + startDigit;
+
+        chunks.push(canvasBox(row, startCol - 1, "ghost minus-cell", "&minus;"));
+
+        const productLen = i === 0 ? 1 : 2;
+        const productChars = showAnswers ? rightAlignChars(step.product, productLen) : new Array(productLen).fill("&nbsp;");
+        for (let j = 0; j < productLen; j += 1) {
+          const lane = startDigit + j;
+          chunks.push(canvasBox(row, startCol + j, toneForLane(lane), productChars[j]));
+        }
+
+        row += 1;
+
+        if (i < stepsData.steps.length - 1) {
+          const bringStartLane = startDigit + (productLen - 1);
+          const leftTone = toneForLane(bringStartLane);
+          const nextTone = toneForLane(Math.min(bringStartLane + 1, n - 1));
+          const bringChars = showAnswers ? rightAlignChars(step.nextPartial, 2) : ["&nbsp;", "&nbsp;"];
+          const bringStartCol = firstDigitCol + bringStartLane;
+          chunks.push(canvasBox(row, bringStartCol, leftTone, bringChars[0]));
+          chunks.push(canvasBox(row, bringStartCol + 1, nextTone, bringChars[1]));
+          const arrowTone = (bringStartLane + 1) % 4;
+          chunks.push(`<div class="down-arrow arrow-${arrowTone}" style="grid-row:${row - 1};grid-column:${bringStartCol + 1};"></div>`);
+          row += 1;
+        } else {
+          const remChars = showAnswers ? rightAlignChars(stepsData.finalRemainder, 2) : ["&nbsp;", "&nbsp;"];
+          chunks.push(canvasBox(row, startCol, "", remChars[0]));
+          chunks.push(canvasBox(row, startCol + 1, "", remChars[1]));
+        }
+      }
+
+      return `
+        <div class="problem-canvas-wrap">
+          <div class="problem-canvas${showRemainderHeader ? "" : " no-remainder"}" style="--digits:${n};--rows:${rows};">
+            ${chunks.join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderMultipleCells(divisor, mode, tone) {
+      let cells = "";
+      for (let i = 0; i <= 10; i += 1) {
+        const value = mode === "filled" ? String(divisor * i) : "&nbsp;";
+        cells += `<td class="multiple-cell ${tone}">${value}</td>`;
+      }
+      return cells;
+    }
+
+    function renderStepStrip(step, problem, multiplesMode, showPromptValues) {
+      const headers = new Array(11).fill(0).map((_, i) => `<th class="tone-head ${step.tone}">x${i}</th>`).join("");
+      const divisorValue = showPromptValues ? problem.divisor : "&nbsp;";
+
+      return `
+        <section class="strip">
+          <div class="strip-head">
+            <div class="strip-label ${step.tone}">Step ${step.index + 1}</div>
+            <p class="strip-question">
+              How many times does
+              <span class="digit-box small divisor-fixed">${divisorValue}</span>
+              go into
+              <span class="target-digits">${digitBoxesWithTones(step.partialDisplay, step.partialDigitTones, true, showPromptValues)}</span>
+              evenly or without going over?
+            </p>
+          </div>
+
+          <table class="strip-table" aria-label="Step multiples strip">
+            <thead>
+              <tr>${headers}</tr>
+            </thead>
+            <tbody>
+              <tr>${renderMultipleCells(problem.divisor, multiplesMode, step.tone)}</tr>
+            </tbody>
+          </table>
+        </section>
+      `;
+    }
+
+    function renderWorksheet() {
+      const cfg = getTypeConfig();
+      const perPage = getProblemsPerPage(cfg);
+      const totalProblemCount = getTotalProblemCount();
+      const setCount = Math.max(1, Math.ceil(totalProblemCount / perPage));
+      const source = getProblems(cfg, totalProblemCount);
+      const title = "Long Division Color-Coded Step Organizer";
+      const colorClass = els.colorToggle.checked ? "color-fill" : "no-color";
+
+      els.statusText.textContent = source.message;
+      els.statusText.style.color = source.warning ? "#a33a3a" : "#5a677f";
+
+      if (!source.problems || source.problems.length === 0) {
+        els.host.innerHTML = "";
+        return;
+      }
+
+      const showAnswers = false;
+      const showPromptValues = els.stepPromptMode.value === "filled";
+      const showRemainderHeader = els.remainderMode.value === "allow";
+      const sheets = new Array(setCount).fill(0).map((_, pageIndex) => {
+        const pageProblems = source.problems.slice(pageIndex * perPage, (pageIndex + 1) * perPage);
+        const organizerBlocks = pageProblems.map((problem) => {
+          const stepsData = computeLongDivisionSteps(problem.dividend, problem.divisor);
+          const strips = stepsData.steps
+            .map((step) => renderStepStrip(step, problem, els.multiplesMode.value, showPromptValues))
+            .join("");
+
+          return `
+            <section class="organizer-block">
+              <section class="organizer">
+                <section class="left-column">
+                  <div class="problem-equation">${problem.dividend} &divide; ${problem.divisor}</div>
+                  <div class="workspace">
+                    <div class="workspace-layout">
+                      ${renderProblemCanvas(problem, stepsData, cfg, showAnswers, showRemainderHeader)}
+                    </div>
+                  </div>
+                </section>
+
+                <section class="right-column">
+                  ${strips}
+                </section>
+              </section>
+            </section>
+          `;
+        }).join("");
+
+        return `
+          <section class="sheet ${colorClass}">
+            <header class="sheet-header">
+              <h2 class="sheet-title">${title} (${cfg.label})</h2>
+              <div class="name-line">Name:<span class="line"></span></div>
+            </header>
+
+            <section class="two-up${perPage === 1 ? " single" : ""}">
+              ${organizerBlocks}
+            </section>
+
+            <div class="footer-note">Copyright - InterventionStation.com - @TeachwithMrC</div>
+          </section>
+        `;
+      }).join("");
+
+      els.host.innerHTML = sheets;
+    }
+
+    let refreshTimer = null;
+    function queueRender(delay = 120) {
+      window.clearTimeout(refreshTimer);
+      refreshTimer = window.setTimeout(renderWorksheet, delay);
+    }
+
+    els.generateBtn.addEventListener("click", renderWorksheet);
+    els.problemTypeSelect.addEventListener("change", () => {
+      setProblemType(els.problemTypeSelect.value);
+      populateProblemCountOptions();
+      renderWorksheet();
+    });
+    [els.problemSetCount, els.multiplesMode, els.stepPromptMode, els.remainderMode].forEach((el) => {
+      el.addEventListener("change", renderWorksheet);
+    });
+    els.colorToggle.addEventListener("change", renderWorksheet);
+    els.customProblem.addEventListener("input", () => queueRender(180));
+    els.customProblem.addEventListener("change", renderWorksheet);
+    function blockedPreviewAction() {
+      alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access.");
+    }
+
+    function blockShortcuts(event) {
+      const blocked = (event.ctrlKey || event.metaKey) && ["p", "s", "u"].includes(String(event.key || "").toLowerCase());
+      if (blocked) {
+        event.preventDefault();
+        blockedPreviewAction();
+      }
+    }
+
+    function enablePreviewSecure() {
+      document.body.classList.add("preview-secure");
+      if (els.printBtn) els.printBtn.style.display = "none";
+      window.print = blockedPreviewAction;
+      document.addEventListener("keydown", blockShortcuts);
+      if (els.statusText) {
+        els.statusText.textContent = "Preview mode enabled: worksheet is watermarked and printing is locked.";
+      }
+    }
+
+    els.printBtn.addEventListener("click", () => {
+      if (PREVIEW_SECURE) {
+        blockedPreviewAction();
+        return;
+      }
+      window.print();
+    });
+
+    if (PREVIEW_MODE) {
+      document.body.classList.add("preview-locked");
+      els.problemType.value = "3x1";
+    }
+    setProblemType(els.problemType.value || "2x1");
+    populateProblemCountOptions();
+    applyPreviewLockdown();
+    if (PREVIEW_SECURE) enablePreviewSecure();
+    renderWorksheet();
+  </script>
+</body>
+</html>

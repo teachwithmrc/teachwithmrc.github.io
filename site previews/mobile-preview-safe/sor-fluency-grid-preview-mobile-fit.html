@@ -49,7 +49,7 @@
 
 <script>
   (function(){
-    const SOURCE = "../fluencygridpreview.html";
+    const SOURCE = "../../fluencygridpreview.html";
     const REF_GIF = "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/699fd28c753f15732d25dd10.gif";
     const frame = document.getElementById("previewFrame");
     const status = document.getElementById("status");
@@ -73,14 +73,35 @@
       frame.src = url.toString();
     }
 
+    function generateInsideFrame(){
+      try{
+        const doc = frame.contentDocument || frame.contentWindow?.document;
+        const btn = doc?.getElementById("btnGenerate");
+        if(!btn) return false;
+        btn.click();
+        status.textContent = "Generated preview.";
+        return true;
+      }catch(_err){
+        return false;
+      }
+    }
+
     frame.addEventListener("load", function(){
       status.textContent = "Generated preview.";
     });
 
-    btnGen.addEventListener("click", loadFresh);
+    btnGen.addEventListener("click", function(){
+      if(!generateInsideFrame()){
+        loadFresh();
+      }
+    });
     btnPrint.addEventListener("click", function(){
       alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access.");
       status.textContent = "Print is blocked in preview mode.";
+    });
+
+    frame.addEventListener("load", function(){
+      setTimeout(generateInsideFrame, 160);
     });
 
     syncPreviewRatio();
