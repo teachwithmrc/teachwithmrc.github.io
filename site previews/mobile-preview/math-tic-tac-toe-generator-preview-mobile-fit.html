@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Math Tic Tac Toe Generator - Mobile Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --preview-ratio: 1.4375;
+    --preview-scale: 0.70;
+    --ink:#111;
+    --line:#111;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; font-family:"Poppins",Arial,sans-serif; color:var(--ink); background:#fff; }
+  .wrap{ max-width:460px; margin:0 auto; padding:10px; }
+
+  .usage-steps{ border:2px solid var(--line); border-radius:12px; background:#f8fbff; padding:10px 12px; margin-bottom:10px; }
+  .usage-steps h2{ margin:0 0 8px; font-size:30px; line-height:1.05; font-weight:900; text-align:center; }
+  .usage-steps p{ margin:0; text-align:center; font-size:13px; font-weight:700; line-height:1.35; }
+
+  .controls{ border:2px solid var(--line); border-radius:12px; padding:12px; margin-bottom:12px; }
+  .controls-top{ display:grid; grid-template-columns:1fr; align-items:flex-end; gap:12px; }
+  .field{ display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .field label{ font-size:16px; font-weight:900; }
+  select{
+    height:56px; width:100%; border:2px solid var(--line); border-radius:10px; padding:8px 10px;
+    font-family:"Poppins",Arial,sans-serif; font-size:18px; font-weight:800; background:#fff;
+  }
+
+  .controls-actions{ margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .btn{
+    border:2px solid var(--line); border-radius:14px; height:52px; padding:0 8px;
+    font-family:"Poppins",Arial,sans-serif; font-size:17px; font-weight:900; cursor:pointer;
+  }
+  .btn-primary{ background:#6ec1ff; color:#fff; }
+  .btn-secondary{ background:#fff; color:#111; }
+  .hint{ margin-top:8px; text-align:center; font-size:13px; font-weight:700; line-height:1.35; }
+
+  .preview-shell{
+    position:relative; width:100%; aspect-ratio:var(--preview-ratio); overflow:hidden;
+    border:2px solid var(--line); background:#fff;
+  }
+  .preview-content{
+    position:absolute; left:50%; top:0; width:calc(100% / var(--preview-scale));
+    transform:translateX(-50%) scale(var(--preview-scale)); transform-origin:top center; padding:10px;
+  }
+
+  .sheet{ border:2px solid var(--line); padding:10px; background:#fff; }
+  .sheet-header{
+    display:flex; align-items:flex-end; justify-content:space-between; gap:8px;
+    border-bottom:2px solid #bdbdbd; padding-bottom:6px; margin-bottom:8px;
+  }
+  .sheet-title{ margin:0; font-size:23px; line-height:1.1; font-weight:900; }
+  .sheet-meta{ margin-top:2px; font-size:11px; font-weight:700; color:#37475a; line-height:1.25; }
+  .name-line{ white-space:nowrap; font-family:Arial,sans-serif; font-size:16px; font-weight:800; }
+  .name-line .line{ display:inline-block; width:110px; border-bottom:2px solid var(--line); transform:translateY(-2px); margin-left:4px; }
+
+  .board-wrap{ border:2px solid #000; border-radius:8px; padding:6px; }
+  .ttt-board{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    grid-template-rows:repeat(3, 1fr);
+    width:100%;
+    aspect-ratio:1 / 1;
+    border:4px solid #000;
+    background:#fff;
+  }
+  .ttt-cell{
+    border-right:4px solid #000;
+    border-bottom:4px solid #000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:4px;
+    overflow:hidden;
+    position:relative;
+    background:#fff;
+  }
+  .ttt-cell:nth-child(3n){ border-right:none; }
+  .ttt-cell:nth-child(n+7){ border-bottom:none; }
+
+  .cell-text{
+    font-size:1.05rem;
+    font-weight:800;
+    line-height:1.12;
+    white-space:nowrap;
+    max-width:100%;
+  }
+
+  .counting-line{
+    font-size:0.98rem;
+    font-weight:800;
+    line-height:1.12;
+  }
+
+  .rounding-line{
+    font-size:0.85rem;
+    font-weight:800;
+    line-height:1.15;
+  }
+
+  .tenframe-group{ display:flex; flex-wrap:wrap; justify-content:center; gap:4px; }
+  .tenframe{ border:2px solid #111; border-radius:2px; background:#fff; overflow:hidden; }
+  .tfgrid{ display:grid; grid-template-columns:repeat(5, 1fr); }
+  .tfcell{
+    border:1.7px solid #111;
+    width:13px;
+    height:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding-top:1px;
+    position:relative;
+    background:#fff;
+  }
+  .tfdot{ width:70%; height:70%; border-radius:50%; background:#111; display:block; }
+
+  .clock-wrap{ display:grid; gap:2px; justify-items:center; }
+  .clock-face{ width:66px; height:66px; }
+  .clock-svg{ width:100%; height:100%; display:block; }
+  .clock-outline{ fill:#fff; stroke:#1f3448; stroke-width:2.1; }
+  .clock-tick{ stroke:#37506a; stroke-width:1; stroke-linecap:round; }
+  .clock-hand{ stroke:#192b3d; stroke-linecap:round; }
+  .clock-hand.hour{ stroke-width:3; }
+  .clock-hand.minute{ stroke-width:2.2; }
+  .clock-center{ fill:#192b3d; }
+  .clock-answer{ font-family:"Courier New",monospace; font-size:0.66rem; font-weight:700; line-height:1; }
+
+  .coin-strip{ display:flex; flex-wrap:wrap; gap:4px; justify-content:center; align-items:center; }
+  .coin-face{ width:30px; height:30px; object-fit:contain; display:block; }
+
+  .sheet-footer{ margin-top:7px; text-align:right; font-size:10px; font-weight:700; color:#666; }
+  .copyright{ margin-top:8px; text-align:center; font-size:12px; font-weight:700; letter-spacing:.2px; }
+
+  .preview-watermark{
+    position:absolute; inset:0; z-index:118; pointer-events:none; opacity:.52;
+    background-image:
+      repeating-linear-gradient(-26deg, rgba(0,0,0,.08) 0 18px, rgba(255,255,255,.06) 18px 36px),
+      url("data:image/svg+xml,%3Csvg width='340' height='220' viewBox='0 0 340 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-22 170 110)'%3E%3Ctext x='18' y='90' fill='%23000' fill-opacity='.26' font-family='Poppins' font-size='34' font-weight='900'%3EPREVIEW ONLY%3C/text%3E%3Ctext x='44' y='146' fill='%23000' fill-opacity='.2' font-family='Poppins' font-size='22' font-weight='800'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+    background-size:auto, 340px 220px; background-repeat:repeat;
+  }
+  .preview-paywall{
+    position:absolute; left:0; right:0; bottom:0; z-index:120; pointer-events:none; display:flex;
+    align-items:flex-end; justify-content:center; padding:6px; background:linear-gradient(to top, rgba(0,0,0,.62), rgba(0,0,0,0));
+  }
+  .preview-paywall-card{
+    width:min(96%, 420px); border:1px solid #fff; border-radius:10px; background:rgba(17,17,17,.90);
+    color:#fff; text-align:center; padding:7px 8px 6px; box-shadow:0 8px 20px rgba(0,0,0,.3); pointer-events:auto;
+  }
+  .preview-paywall-card h3{ margin:0 0 2px; font-size:.72rem; line-height:1.2; font-weight:900; letter-spacing:.02em; text-transform:uppercase; }
+  .preview-paywall-card p{ margin:0 0 4px; font-size:.62rem; line-height:1.2; opacity:.95; font-weight:600; }
+  .preview-paywall-card a{ display:inline-block; text-decoration:none; background:#fff; color:#111; border-radius:7px; padding:4px 8px; font-size:.62rem; font-weight:900; }
+
+  @media screen and (max-width:430px){ :root{ --preview-scale:0.655; } }
+  @media print{ body{ display:none !important; } }
+</style>
+</head>
+<body oncontextmenu="return false;">
+<div class="wrap">
+  <section class="usage-steps" aria-label="How this preview works">
+    <h2>Math Tic Tac Toe Preview</h2>
+    <p>Default is <strong>Basic Addition Facts</strong>. Use the dropdown for other skills, then tap <strong>Generate Preview</strong>.</p>
+  </section>
+
+  <div class="controls">
+    <div class="controls-top">
+      <div class="field">
+        <label for="skillSelect">Other Skills</label>
+        <select id="skillSelect"></select>
+      </div>
+    </div>
+
+    <div class="controls-actions">
+      <button type="button" id="btnGen" class="btn btn-primary">Generate Preview</button>
+      <button type="button" id="btnPrint" class="btn btn-secondary">Print</button>
+    </div>
+
+    <div class="hint" id="hint"></div>
+  </div>
+
+  <div class="preview-shell" aria-label="Math Tic Tac Toe preview worksheet">
+    <div class="preview-content">
+      <section class="sheet" id="worksheetHost"></section>
+      <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+    </div>
+
+    <div class="preview-watermark" aria-hidden="true"></div>
+    <div class="preview-paywall" aria-hidden="false">
+      <div class="preview-paywall-card">
+        <h3>Premium Resource</h3>
+        <p>Generate is enabled in preview mode. Join membership to unlock full worksheet visibility and printing.</p>
+        <a href="https://member.interventionstation.com/join" target="_blank" rel="noopener">Join Membership</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+
+  const SKILLS = [
+    { value: "addition", label: "Basic Addition Facts" },
+    { value: "subtraction", label: "Subtraction Facts" },
+    { value: "multiplication", label: "Multiplication Facts" },
+    { value: "division", label: "Division Facts" },
+    { value: "rounding", label: "Rounding to 10" },
+    { value: "counting", label: "Counting Patterns" },
+    { value: "tenframes", label: "Ten Frames" },
+    { value: "tellingtime", label: "Telling Time" },
+    { value: "coins", label: "Coins" }
+  ];
+
+  const COIN_DEFS = [
+    { value: 25, img: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f715cda9ca3b4afc8.png" },
+    { value: 10, img: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f7213971802a4d866.png" },
+    { value: 5, img: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f30ec4a3836469e61.png" },
+    { value: 1, img: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/698d1f7f3fdd0e810fca84ef.png" }
+  ];
+
+  function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+  function choose(arr){ return arr[randInt(0, arr.length - 1)]; }
+
+  function populateSkills(){
+    $("skillSelect").innerHTML = SKILLS.map((skill) => (
+      `<option value="${skill.value}">${skill.label}</option>`
+    )).join("");
+    $("skillSelect").value = "addition";
+  }
+
+  function makeAdditionPrompt(){
+    const a = randInt(0, 10);
+    const b = randInt(0, 10);
+    return { kind: "math", text: `${a} + ${b}` };
+  }
+
+  function makeSubtractionPrompt(){
+    let a = randInt(0, 20);
+    let b = randInt(0, 20);
+    if (b > a) [a, b] = [b, a];
+    return { kind: "math", text: `${a} - ${b}` };
+  }
+
+  function makeMultiplicationPrompt(){
+    const a = randInt(2, 12);
+    const b = randInt(2, 12);
+    return { kind: "math", text: `${a} x ${b}` };
+  }
+
+  function makeDivisionPrompt(){
+    const divisor = randInt(2, 12);
+    const quotient = randInt(2, 12);
+    const dividend = divisor * quotient;
+    return { kind: "math", text: `${dividend} ÷ ${divisor}` };
+  }
+
+  function makeRoundingPrompt(){
+    const number = randInt(12, 999);
+    return { kind: "rounding", text: `Round ${number} to nearest 10` };
+  }
+
+  function makeCountingPrompt(){
+    const mode = choose(["forward", "backward", "missing"]);
+    if (mode === "forward") {
+      const start = randInt(0, 40);
+      return { kind: "counting", text: `${start}, ${start + 1}, ${start + 2}, ____` };
+    }
+    if (mode === "backward") {
+      const start = randInt(6, 50);
+      return { kind: "counting", text: `${start}, ${start - 1}, ${start - 2}, ____` };
+    }
+    const start = randInt(3, 40);
+    return { kind: "counting", text: `${start}, ____, ${start + 2}, ${start + 3}` };
+  }
+
+  function makeTenFramePrompt(){
+    return { kind: "tenframes", total: randInt(1, 20) };
+  }
+
+  function makeTellingTimePrompt(){
+    const hour = randInt(1, 12);
+    const minute = randInt(0, 11) * 5;
+    return { kind: "tellingtime", hour, minute };
+  }
+
+  function makeCoinPrompt(){
+    const count = randInt(2, 4);
+    const coins = [];
+    for (let i = 0; i < count; i += 1) coins.push(choose(COIN_DEFS));
+    return { kind: "coins", coins };
+  }
+
+  function makePrompt(skill){
+    if (skill === "addition") return makeAdditionPrompt();
+    if (skill === "subtraction") return makeSubtractionPrompt();
+    if (skill === "multiplication") return makeMultiplicationPrompt();
+    if (skill === "division") return makeDivisionPrompt();
+    if (skill === "rounding") return makeRoundingPrompt();
+    if (skill === "counting") return makeCountingPrompt();
+    if (skill === "tenframes") return makeTenFramePrompt();
+    if (skill === "tellingtime") return makeTellingTimePrompt();
+    return makeCoinPrompt();
+  }
+
+  function renderTenFrames(total){
+    let remaining = total;
+    const frameHtml = [];
+    const frameCount = Math.ceil(total / 10);
+    for(let f = 0; f < frameCount; f += 1){
+      const fill = Math.min(10, remaining);
+      remaining -= fill;
+      const cells = [];
+      for(let i = 0; i < 10; i += 1){
+        cells.push(`<span class="tfcell">${i < fill ? '<span class="tfdot"></span>' : ""}</span>`);
+      }
+      frameHtml.push(`<div class="tenframe"><div class="tfgrid">${cells.join("")}</div></div>`);
+    }
+    return `<div class="tenframe-group">${frameHtml.join("")}</div>`;
+  }
+
+  function pointAtAngle(cx, cy, radius, angleDegrees){
+    const radians = (angleDegrees - 90) * (Math.PI / 180);
+    return {
+      x: cx + (radius * Math.cos(radians)),
+      y: cy + (radius * Math.sin(radians))
+    };
+  }
+
+  function renderClock(hour, minute){
+    const minuteAngle = minute * 6;
+    const hourAngle = ((hour % 12) + (minute / 60)) * 30;
+    const hourTip = pointAtAngle(50, 50, 19, hourAngle);
+    const minuteTip = pointAtAngle(50, 50, 30, minuteAngle);
+
+    const ticks = [];
+    for(let i = 0; i < 12; i += 1){
+      const outer = pointAtAngle(50, 50, 45, i * 30);
+      const inner = pointAtAngle(50, 50, 39, i * 30);
+      ticks.push(`<line class="clock-tick" x1="${inner.x.toFixed(2)}" y1="${inner.y.toFixed(2)}" x2="${outer.x.toFixed(2)}" y2="${outer.y.toFixed(2)}"></line>`);
+    }
+
+    return `
+      <div class="clock-wrap">
+        <div class="clock-face">
+          <svg class="clock-svg" viewBox="0 0 100 100" role="img" aria-label="Tell the time">
+            <circle class="clock-outline" cx="50" cy="50" r="46"></circle>
+            ${ticks.join("")}
+            <line class="clock-hand hour" x1="50" y1="50" x2="${hourTip.x.toFixed(2)}" y2="${hourTip.y.toFixed(2)}"></line>
+            <line class="clock-hand minute" x1="50" y1="50" x2="${minuteTip.x.toFixed(2)}" y2="${minuteTip.y.toFixed(2)}"></line>
+            <circle class="clock-center" cx="50" cy="50" r="2.8"></circle>
+          </svg>
+        </div>
+        <div class="clock-answer">___ : ___</div>
+      </div>
+    `;
+  }
+
+  function renderCoins(coins){
+    const images = coins.map((coin) => `<img class="coin-face" src="${coin.img}" alt="Coin" loading="lazy">`).join("");
+    return `<div class="coin-strip">${images}</div>`;
+  }
+
+  function renderPrompt(prompt){
+    if (prompt.kind === "math") return `<div class="cell-text">${prompt.text}</div>`;
+    if (prompt.kind === "counting") return `<div class="counting-line">${prompt.text}</div>`;
+    if (prompt.kind === "rounding") return `<div class="rounding-line">${prompt.text}</div>`;
+    if (prompt.kind === "tenframes") return renderTenFrames(prompt.total);
+    if (prompt.kind === "tellingtime") return renderClock(prompt.hour, prompt.minute);
+    return renderCoins(prompt.coins);
+  }
+
+  function build(){
+    const skill = $("skillSelect").value;
+    const skillLabel = SKILLS.find((s) => s.value === skill)?.label || "Basic Addition Facts";
+    const prompts = Array.from({ length: 9 }, () => makePrompt(skill));
+
+    $("worksheetHost").innerHTML = `
+      <header class="sheet-header">
+        <div>
+          <h2 class="sheet-title">Math Tic Tac Toe</h2>
+          <div class="sheet-meta">${skillLabel}</div>
+        </div>
+        <div class="name-line">Name:<span class="line"></span></div>
+      </header>
+      <div class="board-wrap">
+        <div class="ttt-board">
+          ${prompts.map((prompt) => `<div class="ttt-cell">${renderPrompt(prompt)}</div>`).join("")}
+        </div>
+      </div>
+      <div class="sheet-footer">Preview mode: one sample board is shown for mobile testing.</div>
+    `;
+
+    $("hint").textContent = `${skillLabel} selected.`;
+  }
+
+  function lockedPreviewAction(){
+    alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access.");
+  }
+
+  function blockShortcuts(event){
+    const blocked = (event.ctrlKey || event.metaKey) && ["p","s","u"].includes(event.key.toLowerCase());
+    if (blocked) event.preventDefault();
+  }
+
+  document.addEventListener("keydown", blockShortcuts);
+  $("btnGen").addEventListener("click", build);
+  $("btnPrint").addEventListener("click", lockedPreviewAction);
+  $("skillSelect").addEventListener("change", build);
+
+  populateSkills();
+  build();
+</script>
+</body>
+</html>

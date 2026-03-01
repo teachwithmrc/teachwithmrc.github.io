@@ -18,15 +18,9 @@
   .usage-steps p{ margin:0; text-align:center; font-size:13px; font-weight:700; line-height:1.35; }
 
   .controls{ border:2px solid #111; border-radius:12px; padding:12px; margin-bottom:12px; }
-  .controls-top{ display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:flex-end; }
-  .field{ display:flex; flex-direction:column; gap:8px; min-width:0; }
-  .field label{ font-size:16px; font-weight:900; }
-  select{ height:56px; width:100%; border:2px solid #111; border-radius:10px; padding:8px 10px; font-family:"Poppins",Arial,sans-serif; font-size:18px; font-weight:800; background:#fff; }
-
-  .controls-actions{ margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .controls-actions{ margin-top:4px; display:grid; grid-template-columns:1fr; gap:10px; }
   .btn{ border:2px solid #111; border-radius:14px; height:52px; padding:0 8px; font-family:"Poppins",Arial,sans-serif; font-size:17px; font-weight:900; cursor:pointer; }
   .btn-primary{ background:#6ec1ff; color:#fff; }
-  .btn-secondary{ background:#fff; color:#111; }
 
   .skills-note{ margin-top:8px; text-align:center; font-size:13px; font-weight:800; color:#1d3a66; }
   details.skills-dropdown{ margin-top:8px; border:2px solid #111; border-radius:10px; padding:8px; background:#fff; }
@@ -68,7 +62,7 @@
   .preview-paywall-card p{ margin:0 0 4px; font-size:.62rem; line-height:1.2; opacity:.95; font-weight:600; }
   .preview-paywall-card a{ display:inline-block; text-decoration:none; background:#fff; color:#111; border-radius:7px; padding:4px 8px; font-size:.62rem; font-weight:900; }
 
-  @media screen and (max-width:430px){ :root{ --preview-scale:0.64; } .controls-top{ grid-template-columns:1fr; } }
+  @media screen and (max-width:430px){ :root{ --preview-scale:0.64; } }
   @media print{ body{ display:none !important; } }
 </style>
 </head>
@@ -76,35 +70,12 @@
 <div class="wrap">
   <section class="usage-steps" aria-label="How this preview works">
     <h2>Word Mapping Preview</h2>
-    <p>Select a digraph setting, then tap <strong>Generate Preview</strong> to refresh the sample worksheet.</p>
+    <p>Tap <strong>Generate Preview</strong> to refresh a digraph worksheet mix (with or without blends).</p>
   </section>
 
   <div class="controls">
-    <div class="controls-top">
-      <div class="field">
-        <label for="digraphSkill">Phonics Skill</label>
-        <select id="digraphSkill">
-          <option value="Digraphs Mixed" selected>Digraphs Mixed</option>
-          <option value="Digraph(ck)">Digraph ck</option>
-          <option value="Digraph(sh)">Digraph sh</option>
-          <option value="Digraph(th)">Digraph th</option>
-          <option value="Digraph(ch)">Digraph ch</option>
-          <option value="Digraph(wh)">Digraph wh</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="includeBlends">Include Blend Words</label>
-        <select id="includeBlends">
-          <option value="no" selected>No</option>
-          <option value="yes">Yes</option>
-        </select>
-      </div>
-    </div>
-
     <div class="controls-actions">
       <button type="button" id="btnGen" class="btn btn-primary">Generate Preview</button>
-      <button type="button" id="btnPrint" class="btn btn-secondary">Print</button>
     </div>
 
     <div class="skills-note">Over 40 phonics skills are available in the full generator.</div>
@@ -183,53 +154,35 @@
     return out;
   }
 
-  function getWordsForDigraph(skill, source, includeBlends){
-    const blendSuffixes = [" with Blends", " with Digraphs and Blends"];
-
-    function fetchBase(base){
-      if(!includeBlends) return source[base] || [];
-      let result = [];
-      for(const suffix of blendSuffixes){
+  function getDigraphPool(source){
+    const bases = ["Digraph(ck)","Digraph(sh)","Digraph(th)","Digraph(ch)","Digraph(wh)"];
+    const suffixes = ["", " with Blends", " with Digraphs and Blends"];
+    let words = [];
+    for(const base of bases){
+      for(const suffix of suffixes){
         const key = `${base}${suffix}`;
-        if(source[key]) result = result.concat(source[key]);
+        if(Array.isArray(source[key])) words = words.concat(source[key]);
       }
-      if(source[base]) result = result.concat(source[base]);
-      return dedupe(result);
     }
-
-    if(skill === "Digraphs Mixed"){
-      return dedupe([].concat(
-        fetchBase("Digraph(ck)"),
-        fetchBase("Digraph(sh)"),
-        fetchBase("Digraph(th)"),
-        fetchBase("Digraph(ch)"),
-        fetchBase("Digraph(wh)")
-      ));
-    }
-
-    return fetchBase(skill);
+    return dedupe(words);
   }
 
   function renderPattern(pattern){
     return String(pattern || "").trim() || "&nbsp;";
   }
 
-  function updateHint(skill, includeBlends){
-    const blendLabel = includeBlends ? "Blends included." : "Blends not included.";
-    $("hint").textContent = `Generating ${skill} words. ${blendLabel}`;
+  function updateHint(){
+    $("hint").textContent = "Generating a mixed digraph set (with and without blends).";
   }
 
   function build(){
-    const skill = $("digraphSkill").value;
-    const includeBlends = $("includeBlends").value === "yes";
-
     if(typeof soundBoxWords === "undefined"){
       $("output").innerHTML = '<div style="font-size:14px;font-weight:700;text-align:center;">Word data is unavailable. Please check <code>newtry_FULL.js</code>.</div>';
       $("hint").textContent = "Could not load phonics word data.";
       return;
     }
 
-    let words = getWordsForDigraph(skill, soundBoxWords, includeBlends);
+    let words = getDigraphPool(soundBoxWords);
     if(!Array.isArray(words) || !words.length){
       $("output").innerHTML = '<div style="font-size:14px;font-weight:700;text-align:center;">No words found for this setting.</div>';
       $("hint").textContent = "No words available for the selected option.";
@@ -258,7 +211,7 @@
       `);
     }
 
-    const title = skill === "Digraphs Mixed" ? "Digraph Word Mapping" : `${skill} Word Mapping`;
+    const title = "Digraph Word Mapping";
 
     $("output").innerHTML = `
       <div class="name-line">Name: ______________________</div>
@@ -267,18 +220,15 @@
       <table class="word-table">${rows.join("")}</table>
     `;
 
-    updateHint(skill, includeBlends);
+    updateHint();
   }
 
-  function lockedPreviewAction(){ alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access."); }
   function blockShortcuts(event){ const blocked = (event.ctrlKey || event.metaKey) && ["p","s","u"].includes(event.key.toLowerCase()); if(blocked) event.preventDefault(); }
 
   document.addEventListener("keydown", blockShortcuts);
 
   function wire(){
     $("btnGen").addEventListener("click", build);
-    $("btnPrint").addEventListener("click", lockedPreviewAction);
-    ["digraphSkill", "includeBlends"].forEach(id => $(id).addEventListener("change", build));
     build();
   }
 

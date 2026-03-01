@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Manipulatives Add/Sub Generator - Mobile Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --preview-ratio: 1.4375;
+    --preview-scale: 0.69;
+    --ink:#111;
+    --line:#111;
+    --p1:#f5f5f5;
+    --p2:#f7ead8;
+    --p3:#e7f2fb;
+    --p4:#e5f6e9;
+    --p5:#fcecc8;
+    --p6:#f9e3f1;
+    --p7:#e1f4f6;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; font-family:"Poppins",Arial,sans-serif; color:var(--ink); background:#fff; }
+  .wrap{ max-width:460px; margin:0 auto; padding:10px; }
+
+  .usage-steps{ border:2px solid var(--line); border-radius:12px; background:#f8fbff; padding:10px 12px; margin-bottom:10px; }
+  .usage-steps h2{ margin:0 0 8px; font-size:30px; line-height:1.05; font-weight:900; text-align:center; }
+  .usage-steps p{ margin:0; text-align:center; font-size:13px; font-weight:700; line-height:1.35; }
+
+  .controls{ border:2px solid var(--line); border-radius:12px; padding:12px; margin-bottom:12px; }
+  .controls-top{ display:grid; grid-template-columns:1fr 1fr; align-items:flex-end; gap:12px; }
+  .field{ display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .field label{ font-size:16px; font-weight:900; }
+  select{
+    height:56px; width:100%; border:2px solid var(--line); border-radius:10px; padding:8px 10px;
+    font-family:"Poppins",Arial,sans-serif; font-size:20px; font-weight:800; background:#fff;
+  }
+
+  .controls-actions{ margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .btn{ border:2px solid var(--line); border-radius:14px; height:52px; padding:0 8px; font-family:"Poppins",Arial,sans-serif; font-size:17px; font-weight:900; cursor:pointer; }
+  .btn-primary{ background:#6ec1ff; color:#fff; }
+  .btn-secondary{ background:#fff; color:#111; }
+  .hint{ margin-top:8px; text-align:center; font-size:13px; font-weight:700; line-height:1.35; }
+
+  .preview-shell{
+    position:relative; width:100%; aspect-ratio:var(--preview-ratio); overflow:hidden;
+    border:2px solid var(--line); background:#fff;
+  }
+  .preview-content{
+    position:absolute; left:50%; top:0; width:calc(100% / var(--preview-scale));
+    transform:translateX(-50%) scale(var(--preview-scale)); transform-origin:top center; padding:10px;
+  }
+
+  .sheet{ border:2px solid var(--line); background:#fff; padding:10px; }
+  .sheet-header{ display:flex; align-items:flex-end; justify-content:space-between; gap:8px; margin-bottom:8px; }
+  .sheet-title{ margin:0; font-size:23px; line-height:1.1; font-weight:900; }
+  .name-line{ white-space:nowrap; font-family:Arial,sans-serif; font-size:16px; font-weight:800; }
+  .name-line .line{ display:inline-block; width:120px; border-bottom:2px solid var(--line); transform:translateY(-2px); margin-left:4px; }
+
+  .problems{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .problem-wrap{ border:2px solid var(--line); padding:8px; display:flex; flex-direction:column; gap:8px; min-height:260px; }
+
+  .problem-head{
+    border:2px solid var(--line); border-radius:4px; background:#fff; padding:5px 8px; min-height:36px;
+    display:inline-flex; align-items:center; gap:5px; max-width:100%;
+  }
+  .problem-badge{
+    width:20px; height:20px; border:2px solid var(--line); border-radius:50%;
+    display:inline-flex; align-items:center; justify-content:center; font-size:0.68rem;
+    font-weight:800; line-height:1; background:#fff; flex:0 0 auto;
+  }
+  .problem-text{ display:inline-flex; align-items:center; line-height:1.05; font-size:1rem; font-weight:800; letter-spacing:0.2px; }
+
+  .setup-table{ --cell:32px; --gap:3px; --op:24px; display:flex; flex-direction:column; gap:0; align-items:center; }
+  .table-row{ display:grid; gap:var(--gap); align-items:center; justify-items:stretch; width:max-content; }
+  .op-cell{
+    width:var(--op); height:var(--cell); display:flex; align-items:center; justify-content:center;
+    font-size:1.5rem; font-weight:700; line-height:1; color:var(--line);
+  }
+  .digit-cell{
+    width:var(--cell); height:var(--cell); border:2px solid var(--line); display:flex; align-items:center;
+    justify-content:center; font-size:1.25rem; font-weight:800; line-height:1; background:#fff;
+  }
+  .carry-row .op-cell{ height:calc(var(--cell) * 0.65); font-size:1rem; }
+  .carry-row .digit-cell{ height:calc(var(--cell) * 0.65); font-size:0.95rem; border-color:#9ba6bb; }
+  .line-row{ display:grid; gap:var(--gap); align-items:center; margin:0; width:max-content; }
+  .line-spacer{ width:var(--op); height:0; }
+  .sum-line{ height:0; border-top:4px solid #000; align-self:center; margin:1px 0; }
+
+  .visual-panel{ border:2px solid var(--line); border-radius:6px; padding:6px; background:#fff; }
+  .visual-title{ margin:0 0 6px; font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.3px; text-align:center; }
+
+  .manip-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; }
+  .manip-col{ border:2px solid var(--line); border-radius:5px; padding:4px; min-height:60px; }
+  .manip-col h4{ margin:0 0 4px; font-size:0.56rem; text-align:center; text-transform:uppercase; }
+  .block-bin{ display:flex; flex-wrap:wrap; align-items:flex-start; gap:3px; min-height:38px; }
+  .block-one{ width:8px; height:8px; background:#3b82f6; border:1px solid #1f4f90; }
+  .block-ten{ width:6px; height:22px; background:#f59e0b; border:1px solid #9a5f02; }
+  .block-hundred{ width:14px; height:14px; background:#10b981; border:1px solid #0a6f4d; }
+
+  .chart-grid{
+    display:grid; grid-template-columns:repeat(10, 1fr); gap:1px; border:2px solid var(--line);
+    padding:2px; background:#fff;
+  }
+  .chart-cell{
+    height:13px; display:flex; align-items:center; justify-content:center; border:1px solid #dde3ef;
+    font-size:0.45rem; line-height:1; font-weight:700; background:#fff;
+  }
+  .chart-cell.path{ background:#dbeafe; border-color:#93c5fd; }
+  .chart-cell.start{ background:#fde68a; border-color:#f59e0b; }
+  .chart-cell.result{ background:#bbf7d0; border-color:#22c55e; }
+
+  .sheet-footer{ margin-top:8px; font-size:11px; line-height:1.35; font-weight:700; }
+  .copyright{ margin-top:8px; text-align:center; font-size:12px; font-weight:700; letter-spacing:.2px; }
+
+  .preview-watermark{
+    position:absolute; inset:0; z-index:118; pointer-events:none; opacity:.52;
+    background-image:
+      repeating-linear-gradient(-26deg, rgba(0,0,0,.08) 0 18px, rgba(255,255,255,.06) 18px 36px),
+      url("data:image/svg+xml,%3Csvg width='340' height='220' viewBox='0 0 340 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-22 170 110)'%3E%3Ctext x='18' y='90' fill='%23000' fill-opacity='.26' font-family='Poppins' font-size='34' font-weight='900'%3EPREVIEW ONLY%3C/text%3E%3Ctext x='44' y='146' fill='%23000' fill-opacity='.2' font-family='Poppins' font-size='22' font-weight='800'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+    background-size:auto, 340px 220px; background-repeat:repeat;
+  }
+  .preview-paywall{
+    position:absolute; left:0; right:0; bottom:0; z-index:120; pointer-events:none; display:flex;
+    align-items:flex-end; justify-content:center; padding:6px; background:linear-gradient(to top, rgba(0,0,0,.62), rgba(0,0,0,0));
+  }
+  .preview-paywall-card{
+    width:min(96%, 420px); border:1px solid #fff; border-radius:10px; background:rgba(17,17,17,.90);
+    color:#fff; text-align:center; padding:7px 8px 6px; box-shadow:0 8px 20px rgba(0,0,0,.3); pointer-events:auto;
+  }
+  .preview-paywall-card h3{ margin:0 0 2px; font-size:.72rem; line-height:1.2; font-weight:900; letter-spacing:.02em; text-transform:uppercase; }
+  .preview-paywall-card p{ margin:0 0 4px; font-size:.62rem; line-height:1.2; opacity:.95; font-weight:600; }
+  .preview-paywall-card a{ display:inline-block; text-decoration:none; background:#fff; color:#111; border-radius:7px; padding:4px 8px; font-size:.62rem; font-weight:900; }
+
+  @media screen and (max-width:430px){
+    :root{ --preview-scale:0.655; }
+    .controls-top{ grid-template-columns:1fr; }
+  }
+  @media print{ body{ display:none !important; } }
+</style>
+</head>
+<body oncontextmenu="return false;">
+<div class="wrap">
+  <section class="usage-steps" aria-label="How this preview works">
+    <h2>Manipulatives Add/Sub Preview</h2>
+    <p>Pick operation and visual type, then tap <strong>Generate Preview</strong>.</p>
+  </section>
+
+  <div class="controls">
+    <div class="controls-top">
+      <div class="field">
+        <label for="operation">Type of Problem</label>
+        <select id="operation">
+          <option value="add" selected>Addition</option>
+          <option value="sub">Subtraction</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="visualType">Visual Type</label>
+        <select id="visualType">
+          <option value="manip" selected>Manipulatives</option>
+          <option value="chart">Hundreds Chart</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="controls-actions">
+      <button type="button" id="btnGen" class="btn btn-primary">Generate Preview</button>
+      <button type="button" id="btnPrint" class="btn btn-secondary">Print</button>
+    </div>
+
+    <div class="hint" id="hint"></div>
+  </div>
+
+  <div class="preview-shell" aria-label="Manipulatives Add/Sub preview worksheet">
+    <div class="preview-content">
+      <section class="sheet" id="worksheetHost"></section>
+      <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+    </div>
+
+    <div class="preview-watermark" aria-hidden="true"></div>
+    <div class="preview-paywall" aria-hidden="false">
+      <div class="preview-paywall-card">
+        <h3>Premium Resource</h3>
+        <p>Generate is enabled in preview mode. Join membership to unlock full worksheet visibility and printing.</p>
+        <a href="https://member.interventionstation.com/join" target="_blank" rel="noopener">Join Membership</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const PROBLEM_COUNT = 2;
+  const PLACE_COLORS = ["var(--p1)","var(--p2)","var(--p3)","var(--p4)","var(--p5)","var(--p6)","var(--p7)"];
+
+  function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+  function genProblem(operation, visual){
+    if (visual === "chart") {
+      if (operation === "add") {
+        const a = randInt(5, 70);
+        const b = randInt(2, Math.min(25, 100 - a));
+        return { a, b, op: "+", answer: a + b };
+      }
+      const a = randInt(25, 100);
+      const b = randInt(2, Math.min(25, a - 1));
+      return { a, b, op: "-", answer: a - b };
+    }
+
+    if (operation === "add") {
+      const a = randInt(25, 287);
+      const b = randInt(18, 186);
+      return { a, b, op: "+", answer: a + b };
+    }
+    const a = randInt(120, 398);
+    const b = randInt(11, Math.min(189, a - 1));
+    return { a, b, op: "-", answer: a - b };
+  }
+
+  function digitsOf(n){ return String(Math.abs(n)).split("").map(Number); }
+  function padDigits(n, cols){
+    const arr = digitsOf(n);
+    while (arr.length < cols) arr.unshift("");
+    return arr;
+  }
+
+  function placeValue(n){
+    const abs = Math.abs(n);
+    return {
+      hundreds: Math.floor(abs / 100),
+      tens: Math.floor((abs % 100) / 10),
+      ones: abs % 10
+    };
+  }
+
+  function blocksMarkup(count, type){
+    let html = "";
+    for (let i = 0; i < count; i += 1) html += `<span class="block-${type}"></span>`;
+    return html || "<span></span>";
+  }
+
+  function manipColumn(title, count, type){
+    return `
+      <div class="manip-col">
+        <h4>${title}</h4>
+        <div class="block-bin">${blocksMarkup(count, type)}</div>
+      </div>
+    `;
+  }
+
+  function manipulativesHtml(problem, operation){
+    const top = placeValue(problem.a);
+    const bottom = placeValue(problem.b);
+    const label = operation === "add" ? "Add with Blocks" : "Subtract with Blocks";
+    return `
+      <div class="visual-panel">
+        <div class="visual-title">${label}</div>
+        <div class="manip-grid">
+          ${manipColumn("Hundreds", top.hundreds + (operation === "add" ? bottom.hundreds : 0), "hundred")}
+          ${manipColumn("Tens", top.tens + (operation === "add" ? bottom.tens : 0), "ten")}
+          ${manipColumn("Ones", top.ones + (operation === "add" ? bottom.ones : 0), "one")}
+        </div>
+      </div>
+    `;
+  }
+
+  function chartCellClass(n, start, end){
+    if (n === start) return "chart-cell start";
+    if (n === end) return "chart-cell result";
+    if (start < end && n > start && n < end) return "chart-cell path";
+    if (start > end && n < start && n > end) return "chart-cell path";
+    return "chart-cell";
+  }
+
+  function chartHtml(problem, operation){
+    const start = problem.a;
+    const end = operation === "add" ? problem.a + problem.b : problem.a - problem.b;
+    let cells = "";
+    for (let i = 1; i <= 100; i += 1) {
+      cells += `<div class="${chartCellClass(i, start, end)}">${i}</div>`;
+    }
+    return `
+      <div class="visual-panel">
+        <div class="visual-title">Hundreds Chart Model</div>
+        <div class="chart-grid">${cells}</div>
+      </div>
+    `;
+  }
+
+  function verticalSetupHtml(problem, operation, cols){
+    const top = padDigits(problem.a, cols);
+    const bottom = padDigits(problem.b, cols);
+    const colorStart = PLACE_COLORS.length - cols;
+    const op = operation === "add" ? "+" : "-";
+
+    const topCells = top.map((digit, i) => `<div class="digit-cell" style="background:${PLACE_COLORS[colorStart + i]}">${digit}</div>`).join("");
+    const bottomCells = bottom.map((digit, i) => `<div class="digit-cell" style="background:${PLACE_COLORS[colorStart + i]}">${digit}</div>`).join("");
+    const carryCells = Array.from({ length: cols }, () => `<div class="digit-cell"></div>`).join("");
+    const answerCells = Array.from({ length: cols }, (_, i) => `<div class="digit-cell" style="background:${PLACE_COLORS[colorStart + i]}"></div>`).join("");
+    const ruleCells = Array.from({ length: cols }, () => `<div class="sum-line"></div>`).join("");
+
+    return `
+      <div class="setup-table">
+        <div class="table-row carry-row" style="grid-template-columns: var(--op) repeat(${cols}, var(--cell));">
+          <div class="op-cell"></div>${carryCells}
+        </div>
+        <div class="table-row" style="grid-template-columns: var(--op) repeat(${cols}, var(--cell));">
+          <div class="op-cell"></div>${topCells}
+        </div>
+        <div class="table-row" style="grid-template-columns: var(--op) repeat(${cols}, var(--cell));">
+          <div class="op-cell">${op}</div>${bottomCells}
+        </div>
+        <div class="line-row" style="grid-template-columns: var(--op) repeat(${cols}, var(--cell));">
+          <div class="line-spacer"></div>${ruleCells}
+        </div>
+        <div class="table-row" style="grid-template-columns: var(--op) repeat(${cols}, var(--cell));">
+          <div class="op-cell"></div>${answerCells}
+        </div>
+      </div>
+    `;
+  }
+
+  function problemHtml(problem, index, operation, visual){
+    const cols = Math.max(String(problem.a).length, String(problem.b).length);
+    const visualHtml = visual === "chart" ? chartHtml(problem, operation) : manipulativesHtml(problem, operation);
+    return `
+      <article class="problem-wrap">
+        <div class="problem-head">
+          <span class="problem-badge">${index + 1}</span>
+          <span class="problem-text">${problem.a} ${problem.op} ${problem.b}</span>
+        </div>
+        ${verticalSetupHtml(problem, operation, cols)}
+        ${visualHtml}
+      </article>
+    `;
+  }
+
+  function build(){
+    const operation = $("operation").value;
+    const visual = $("visualType").value;
+    const opLabel = operation === "add" ? "Addition" : "Subtraction";
+    const visualLabel = visual === "chart" ? "Hundreds Chart" : "Manipulatives";
+
+    const problems = Array.from({ length: PROBLEM_COUNT }, () => genProblem(operation, visual));
+
+    $("worksheetHost").innerHTML = `
+      <header class="sheet-header">
+        <h2 class="sheet-title">${opLabel} with ${visualLabel}</h2>
+        <div class="name-line">Name:<span class="line"></span></div>
+      </header>
+      <div class="problems">
+        ${problems.map((problem, i) => problemHtml(problem, i, operation, visual)).join("")}
+      </div>
+      <div class="sheet-footer">Preview mode: problem type and visual model selection are active for mobile testing.</div>
+    `;
+
+    $("hint").textContent = `${opLabel} + ${visualLabel} selected.`;
+  }
+
+  function lockedPreviewAction(){
+    alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access.");
+  }
+
+  function blockShortcuts(event){
+    const blocked = (event.ctrlKey || event.metaKey) && ["p","s","u"].includes(event.key.toLowerCase());
+    if (blocked) event.preventDefault();
+  }
+
+  document.addEventListener("keydown", blockShortcuts);
+  $("btnGen").addEventListener("click", build);
+  $("btnPrint").addEventListener("click", lockedPreviewAction);
+  ["operation", "visualType"].forEach((id) => $(id).addEventListener("change", build));
+
+  build();
+</script>
+</body>
+</html>
