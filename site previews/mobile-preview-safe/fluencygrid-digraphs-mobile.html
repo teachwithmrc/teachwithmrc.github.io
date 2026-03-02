@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fluency Grid Mobile - Digraphs Mixed</title>
+  <script src="../../fluencyDataFull_v8-2_clean.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #f6f8fc;
+      color: #111;
+      font-family: "Poppins", Arial, sans-serif;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    .hero {
+      border: 2px solid #111;
+      border-radius: 12px;
+      background: #fff;
+      padding: 12px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      margin: 0 0 4px;
+      font-size: clamp(24px, 7.5vw, 34px);
+      font-weight: 900;
+      line-height: 1.05;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 700;
+      color: #2f4d73;
+      line-height: 1.3;
+    }
+
+    .controls {
+      border: 2px solid #111;
+      border-radius: 12px;
+      background: #fff;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .controls-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn {
+      border: 2px solid #111;
+      border-radius: 14px;
+      min-height: 52px;
+      padding: 10px 8px;
+      font-family: "Poppins", Arial, sans-serif;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: #6ec1ff;
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: #111;
+    }
+
+    .status {
+      margin: 8px 0 0;
+      min-height: 1.2em;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #4a4a4a;
+    }
+
+    .sheet-wrap {
+      border: 2px solid #111;
+      border-radius: 10px;
+      background: #fff;
+      padding: 8px;
+      overflow-x: auto;
+    }
+
+    .page {
+      width: 100%;
+      min-width: 0;
+      margin: 0 auto;
+      background: #fff;
+      border: 2px solid #111;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .worksheet-title {
+      margin: 0 0 5px;
+      font-size: clamp(24px, 7vw, 30px);
+      line-height: 1.05;
+      font-weight: 800;
+    }
+
+    .skills-line {
+      margin: 0 0 7px;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .worksheet-directions {
+      margin: 0 0 10px;
+      font-size: 12px;
+      line-height: 1.3;
+      font-weight: 600;
+    }
+
+    table.roll {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .roll td {
+      border: 1px solid #111;
+      width: 16.66%;
+      min-height: 54px;
+      height: 54px;
+      padding: 4px;
+      vertical-align: middle;
+    }
+
+    .word-cell {
+      font-size: clamp(12px, 3.7vw, 18px);
+      font-weight: 700;
+      line-height: 1.05;
+      overflow-wrap: anywhere;
+    }
+
+    .sentence-cell {
+      font-size: clamp(9px, 2.6vw, 12px);
+      font-weight: 600;
+      line-height: 1.2;
+      text-align: left;
+      overflow-wrap: anywhere;
+    }
+
+    #copyright {
+      margin-top: 7px;
+      font-size: 10px;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+      .hero, .controls {
+        display: none !important;
+      }
+      .wrap {
+        max-width: none;
+        padding: 0;
+      }
+      .sheet-wrap {
+        border: 0;
+        padding: 0;
+        overflow: visible;
+      }
+      .page {
+        border: 0;
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Fluency Grid Mobile</h1>
+      <p>Digraphs Mixed only. Generate always uses words + sentences.</p>
+    </section>
+
+    <section class="controls">
+      <div class="controls-row">
+        <button type="button" id="btnGenerate" class="btn btn-primary">Generate</button>
+        <button type="button" id="btnPrint" class="btn btn-secondary">Print</button>
+      </div>
+      <p id="status" class="status">Ready.</p>
+    </section>
+
+    <section class="sheet-wrap">
+      <div id="output"></div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      const PREFIX = {
+        "Digraph(ck)": "1.1 - ck",
+        "Digraph(sh)": "1.2 - sh",
+        "Digraph(th)": "1.3 - th",
+        "Digraph(ch)": "1.4 - ch",
+        "Digraph(wh)": "1.5 - wh"
+      };
+
+      const MIXED_RULES = {
+        "Digraphs Mixed": ["1.1 - ck", "1.2 - sh", "1.3 - th", "1.4 - ch", "1.5 - wh"]
+      };
+
+      function toArray(x) {
+        if (Array.isArray(x)) return x.slice();
+        if (x == null) return [];
+        try { return Array.from(x); } catch (_e) { return []; }
+      }
+
+      function shuffle(list) {
+        const a = toArray(list);
+        for (let i = a.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const t = a[i];
+          a[i] = a[j];
+          a[j] = t;
+        }
+        return a;
+      }
+
+      function uniqueByLowercase(list) {
+        const seen = new Set();
+        const out = [];
+        for (const item of toArray(list)) {
+          const key = String(item).toLowerCase();
+          if (!seen.has(key)) {
+            seen.add(key);
+            out.push(item);
+          }
+        }
+        return out;
+      }
+
+      function fillToN(list, n) {
+        const base = toArray(list);
+        if (!base.length || !Number.isFinite(n) || n <= 0) return [];
+        const out = [];
+        let bag = shuffle(base);
+        while (out.length < n) {
+          if (!bag.length) {
+            bag = shuffle(base);
+            if (!bag.length) break;
+          }
+          out.push(bag.shift());
+        }
+        return out.slice(0, n);
+      }
+
+      function wordsDict() {
+        return (typeof fluencyWords !== "undefined")
+          ? fluencyWords
+          : ((typeof window.fluencyData === "object" && window.fluencyData) ? window.fluencyData.words : {});
+      }
+
+      function sentsDict() {
+        return (typeof fluencySentences !== "undefined")
+          ? fluencySentences
+          : ((typeof window.fluencyData === "object" && window.fluencyData) ? window.fluencyData.sentences : {});
+      }
+
+      function readDict(dict, key) {
+        return Array.isArray(dict[key]) ? dict[key] : [];
+      }
+
+      function readWithBlends(dict, prefix, type, blends) {
+        const typeLower = type.toLowerCase();
+        const baseKeys = [prefix + " " + type, prefix + " " + typeLower, prefix];
+        let base = [];
+        for (const k of baseKeys) {
+          base = base.concat(readDict(dict, k));
+        }
+
+        if (blends) {
+          const candidates = [
+            prefix + " with Blends " + type,
+            prefix + " with blends " + type,
+            prefix + " with Blends " + typeLower,
+            prefix + " with blends " + typeLower,
+            prefix + " with BLENDS " + type
+          ];
+
+          const bPrefix = prefix.replace(" - ", "b - ");
+          candidates.push(
+            bPrefix + " with Blends " + type,
+            bPrefix + " with blends " + type,
+            bPrefix + " with Blends " + typeLower,
+            bPrefix + " with blends " + typeLower
+          );
+
+          for (const k of candidates) {
+            const got = readDict(dict, k);
+            if (got.length) {
+              const MIN_BACKFILL = 30;
+              return (got.length < MIN_BACKFILL) ? uniqueByLowercase(got.concat(base)) : got;
+            }
+          }
+        }
+
+        return base;
+      }
+
+      function getList(label, type, blends) {
+        const dict = (type === "Words") ? wordsDict() : sentsDict();
+
+        if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)) {
+          let all = [];
+          for (const p of MIXED_RULES[label]) {
+            all = all.concat(readWithBlends(dict, p, type, blends));
+          }
+          return all;
+        }
+
+        const prefix = PREFIX[label];
+        if (prefix) return readWithBlends(dict, prefix, type, blends);
+
+        return [];
+      }
+
+      function buildFluencyGrid(cells) {
+        const cols = 6;
+        const rows = Math.ceil(cells.length / cols);
+        const tbl = document.createElement("table");
+        tbl.className = "roll";
+
+        let idx = 0;
+        for (let r = 0; r < rows; r += 1) {
+          const row = tbl.insertRow();
+          for (let c = 0; c < cols; c += 1) {
+            const td = row.insertCell();
+            const val = cells[idx++] || "";
+            const isSentence = val.includes(" ");
+            td.className = isSentence ? "sentence-cell" : "word-cell";
+            td.textContent = val;
+          }
+        }
+
+        return tbl;
+      }
+
+      function generateGrid() {
+        const status = document.getElementById("status");
+        const output = document.getElementById("output");
+
+        if (!wordsDict() && !sentsDict()) {
+          status.textContent = "Data failed to load.";
+          output.innerHTML = "";
+          return;
+        }
+
+        const labels = ["Digraphs Mixed"];
+        const includeBlends = false;
+        const total = 30;
+
+        const words = uniqueByLowercase(labels.flatMap((lbl) => getList(lbl, "Words", includeBlends)));
+        const sents = uniqueByLowercase(labels.flatMap((lbl) => getList(lbl, "Sentences", includeBlends)));
+
+        const half = Math.floor(total / 2);
+        const w = fillToN(shuffle(words), half);
+        const s = fillToN(shuffle(sents), total - w.length);
+        let content = shuffle(w.concat(s));
+
+        while (content.length < total && content.length > 0) {
+          content = content.concat(content);
+        }
+        content = content.slice(0, total);
+
+        const page = document.createElement("div");
+        page.className = "page";
+
+        const title = document.createElement("div");
+        title.className = "worksheet-title";
+        title.textContent = "Fluency Grid";
+
+        const skills = document.createElement("div");
+        skills.className = "skills-line";
+        skills.innerHTML = "<strong>Skills:</strong> Digraphs Mixed";
+
+        const directions = document.createElement("div");
+        directions.className = "worksheet-directions";
+        directions.innerHTML = "<strong>Directions:</strong> Read each item. Words and sentences are mixed.";
+
+        const copy = document.createElement("div");
+        copy.id = "copyright";
+        copy.textContent = "Copyright - InterventionStation.com - @TeachwithMrC";
+
+        page.appendChild(title);
+        page.appendChild(skills);
+        page.appendChild(directions);
+        page.appendChild(buildFluencyGrid(content));
+        page.appendChild(copy);
+
+        output.innerHTML = "";
+        output.appendChild(page);
+        status.textContent = "Generated Digraphs Mixed (words + sentences).";
+      }
+
+      document.getElementById("btnGenerate").addEventListener("click", generateGrid);
+      document.getElementById("btnPrint").addEventListener("click", function () {
+        window.print();
+      });
+
+      generateGrid();
+    })();
+  </script>
+</body>
+</html>

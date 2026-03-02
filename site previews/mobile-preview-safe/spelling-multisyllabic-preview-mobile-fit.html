@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Pyramid Spelling - Mobile Preview</title>
+<title>Spelling Multisyllabic - Mobile Preview</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --preview-ratio:0.78;
     --crop-top:0px;
-    --frame-scale:0.83;
-    --frame-extra-height:620px;
+    --frame-scale:0.84;
+    --frame-extra-height:560px;
   }
   *{ box-sizing:border-box; }
   html,body{ margin:0; padding:0; font-family:"Poppins",Arial,sans-serif; color:#111; background:#fff; }
@@ -18,12 +18,14 @@
   .usage-steps{ border:2px solid #111; border-radius:12px; background:#f8fbff; padding:10px 12px; margin-bottom:10px; }
   .usage-steps h2{ margin:0 0 8px; font-size:clamp(22px,7vw,30px); line-height:1.05; font-weight:900; text-align:center; }
   .usage-steps p{ margin:0; text-align:center; font-size:13px; font-weight:700; line-height:1.35; }
+
   .controls{ border:2px solid #111; border-radius:12px; padding:12px; margin-bottom:12px; }
   .controls-actions{ margin-top:4px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
   .btn{ border:2px solid #111; border-radius:14px; height:52px; padding:0 8px; font-family:"Poppins",Arial,sans-serif; font-size:17px; font-weight:900; cursor:pointer; }
   .btn-primary{ background:#6ec1ff; color:#fff; }
   .btn-secondary{ background:#fff; color:#111; }
   .status{ margin:10px 0 0; text-align:center; font-size:12px; font-weight:700; color:#444; min-height:1.2em; }
+
   .preview-shell{ position:relative; width:100%; aspect-ratio:var(--preview-ratio); overflow:hidden; border:2px solid #111; background:#fff; }
   .preview-frame{
     position:absolute;
@@ -36,12 +38,13 @@
     border:0;
     background:#fff;
   }
-  .preview-watermark{ position:absolute; inset:0; z-index:118; pointer-events:none; opacity:.52; background-image:repeating-linear-gradient(-26deg, rgba(0,0,0,.08) 0 18px, rgba(255,255,255,.06) 18px 36px), url("data:image/svg+xml,%3Csvg width='340' height='220' viewBox='0 0 340 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-22 170 110)'%3E%3Ctext x='18' y='90' fill='%23000' fill-opacity='.26' font-family='Poppins' font-size='34' font-weight='900'%3EPREVIEW ONLY%3C/text%3E%3Ctext x='44' y='146' fill='%23000' fill-opacity='.2' font-family='Poppins' font-size='22' font-weight='800'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E"); background-size:auto, 340px 220px; background-repeat:repeat; }
+  .preview-watermark{ position:absolute; inset:0; z-index:118; pointer-events:none; opacity:.52; background-image:repeating-linear-gradient(-26deg, rgba(0,0,0,.08) 0 18px, rgba(255,255,255,.06) 18px 36px), url("data:image/svg+xml,%3Csvg width='340' height='220' viewBox='0 0 340 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-22 170 110)'%3E%3Ctext x='18' y='90' fill='%23000' fill-opacity='.26' font-family='Poppins' font-size='34' font-weight='900'%3EPREVIEW ONLY%3C/text%3E%3Ctext x='44' y='146' fill='%23000' fill-opacity='.2' font-family='Poppins' font-size='22' font-weight='800'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E"); background-size:auto,340px 220px; background-repeat:repeat; }
+
   @media (max-width:430px){
     :root{
-      --preview-ratio:0.74;
-      --frame-scale:0.79;
-      --frame-extra-height:700px;
+      --preview-ratio:0.76;
+      --frame-scale:0.8;
+      --frame-extra-height:620px;
     }
   }
   @media print{ body{ display:none !important; } }
@@ -50,8 +53,8 @@
 <body oncontextmenu="return false;">
 <div class="wrap">
   <section class="usage-steps" aria-label="How this preview works">
-    <h2>Pyramid Spelling Preview</h2>
-    <p>Tap <strong>Generate Preview</strong> to make a new digraph worksheet preview.</p>
+    <h2>Spelling Multisyllabic Preview</h2>
+    <p>Tap <strong>Generate Preview</strong> to generate a new <strong>R-Controlled</strong> worksheet preview.</p>
   </section>
 
   <div class="controls">
@@ -62,63 +65,72 @@
     <p id="status" class="status">Ready.</p>
   </div>
 
-  <div class="preview-shell" aria-label="Pyramid Spelling Preview">
-    <iframe id="previewFrame" class="preview-frame" title="Pyramid Spelling generated preview"></iframe>
+  <div class="preview-shell" aria-label="Spelling Multisyllabic Preview">
+    <iframe id="previewFrame" class="preview-frame" title="Spelling Multisyllabic generated preview"></iframe>
     <div class="preview-watermark" aria-hidden="true"></div>
   </div>
 </div>
 
 <script>
   (function(){
-    const SOURCE = "../../pyramid-spelling-generator-preview-frame.html?v=20260225-pyramid-digraph-condensed";
+    const SOURCE = "../../spelling_multisyllabic.html?v=20260225-spellingpics-rcontrolled-example";
     const frame = document.getElementById("previewFrame");
     const status = document.getElementById("status");
     const btnGen = document.getElementById("btnGen");
     const btnPrint = document.getElementById("btnPrint");
 
-    function getInnerDocs(){
-      const outerDoc = frame.contentDocument || frame.contentWindow?.document;
-      if(!outerDoc) return {};
-      const liveFrame = outerDoc.getElementById("liveFrame");
-      const innerDoc = liveFrame?.contentDocument || liveFrame?.contentWindow?.document;
-      return { outerDoc, innerDoc };
+    function forceRControlledSelection(doc){
+      if(!doc) return;
+
+      const rCategory = doc.querySelector(".category-tile.rctrl:not(.locked)");
+      if(rCategory) rCategory.click();
+
+      const rSkill = Array.from(doc.querySelectorAll(".skill-button"))
+        .find((btn) => btn.dataset.skill === "Mixed R-Controlled");
+      if(rSkill && !rSkill.classList.contains("selected")) rSkill.click();
+
+      const mode6 = doc.querySelector("input[name='worksheetMode'][value='6']");
+      if(mode6 && !mode6.checked){
+        mode6.checked = true;
+        mode6.dispatchEvent(new Event("change", { bubbles:true }));
+      }
+
+      const blendsNo = doc.getElementById("includeBlendsNo");
+      if(blendsNo && !blendsNo.classList.contains("selected")) blendsNo.click();
     }
 
-    function jumpToWorksheet(innerDoc){
-      if(!innerDoc) return;
-      const printArea = innerDoc.getElementById("printArea");
+    function jumpToWorksheet(doc){
+      if(!doc) return;
+      const printArea = doc.getElementById("printArea");
       if(printArea) printArea.scrollIntoView({ behavior:"auto", block:"start" });
+    }
+
+    function loadFresh(){
+      const url = new URL(encodeURI(SOURCE), window.location.href);
+      url.searchParams.set("seed", Date.now().toString(36) + Math.random().toString(36).slice(2,8));
+      status.textContent = "Loading R-Controlled preview...";
+      frame.src = url.toString();
     }
 
     function clickInnerGenerate(){
       try{
-        const { innerDoc } = getInnerDocs();
-        const btn = innerDoc?.getElementById("btnGenerate");
+        const doc = frame.contentDocument || frame.contentWindow?.document;
+        forceRControlledSelection(doc);
+        const btn = doc?.getElementById("btnGenerate");
         if(!btn) return false;
         btn.click();
-        jumpToWorksheet(innerDoc);
-        setTimeout(() => jumpToWorksheet(innerDoc), 320);
-        status.textContent = "Generated preview.";
+        jumpToWorksheet(doc);
+        setTimeout(() => jumpToWorksheet(doc), 280);
+        status.textContent = "Generated R-Controlled preview.";
         return true;
       }catch(_err){
         return false;
       }
     }
 
-    function loadFresh(){
-      const url = new URL(encodeURI(SOURCE), window.location.href);
-      url.searchParams.set("seed", Date.now().toString(36) + Math.random().toString(36).slice(2,8));
-      status.textContent = "Loading preview...";
-      frame.src = url.toString();
-    }
-
     frame.addEventListener("load", function(){
-      status.textContent = "Preparing preview...";
-      setTimeout(function(){
-        if(!clickInnerGenerate()){
-          status.textContent = "Preview loaded.";
-        }
-      }, 380);
+      status.textContent = "Preparing R-Controlled preview...";
+      setTimeout(clickInnerGenerate, 260);
     });
 
     btnGen.addEventListener("click", function(){

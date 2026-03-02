@@ -35,6 +35,7 @@
   .btn{ border:2px solid var(--line); border-radius:14px; height:52px; padding:0 8px; font-family:"Poppins",Arial,sans-serif; font-size:17px; font-weight:900; cursor:pointer; }
   .btn-primary{ background:#6ec1ff; color:#fff; }
   .btn-secondary{ background:#fff; color:#111; }
+  .promo-note{ margin:8px 0 0; text-align:center; font-size:13px; font-weight:800; color:#2f4d73; }
   .status{ margin:10px 0 0; text-align:center; font-size:12px; font-weight:700; color:#444; min-height:1.2em; }
 
   .preview-shell{ position:relative; width:100%; aspect-ratio:var(--preview-ratio); overflow:auto; -webkit-overflow-scrolling:touch; border:2px solid var(--line); background:#fff; }
@@ -80,7 +81,6 @@
   @media (max-width:430px){ :root{ --preview-scale:0.58; } }
   @media print{ body{ display:none !important; } }
 </style>
-<script src="../../newtry_FULL.js"></script>
 </head>
 <body oncontextmenu="return false;">
 <div class="wrap">
@@ -99,6 +99,7 @@
       <button type="button" id="btnGen" class="btn btn-primary">Generate</button>
       <button type="button" id="btnPrint" class="btn btn-secondary">Print</button>
     </div>
+    <p class="promo-note">Choose or Combine over 40 Phonics Skills</p>
     <p id="status" class="status">Ready.</p>
   </section>
 
@@ -112,7 +113,7 @@
     <div class="preview-paywall" aria-hidden="false">
       <div class="preview-paywall-card">
         <h3>Preview Mode</h3>
-        <p>Generate is enabled. Printing is locked for members.</p>
+        <p>Printing is for Members Only. Create an Unlimited Amount as a Member.</p>
         <a href="https://member.interventionstation.com/join" target="_blank" rel="noopener">Join Membership</a>
       </div>
     </div>
@@ -139,11 +140,37 @@
   const status = document.getElementById("status");
   const btnGen = document.getElementById("btnGen");
   const btnPrint = document.getElementById("btnPrint");
-  const boxesFontReady = (document.fonts && document.fonts.load)
-    ? document.fonts.load('60px "BoxesFont"').then(function(){
-        return document.fonts.check('60px "BoxesFont"');
-      }).catch(function(){ return false; })
-    : Promise.resolve(false);
+  const DATA_SOURCES = [
+    "../../newtry_FULL.js",
+    "../newtry_FULL.js",
+    "file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/newtry_FULL.js",
+    "https://teachwithmrc.github.io/newtry_FULL.js"
+  ];
+
+  function hasData(){
+    return !!(typeof window !== "undefined" && typeof window.soundBoxWords === "object" && window.soundBoxWords);
+  }
+
+  function loadScript(src){
+    return new Promise(function(resolve){
+      const s = document.createElement("script");
+      s.src = src + (src.indexOf("?") === -1 ? "?" : "&") + "v=" + Date.now();
+      s.async = true;
+      s.onload = function(){ resolve(true); };
+      s.onerror = function(){ resolve(false); };
+      document.head.appendChild(s);
+    });
+  }
+
+  async function ensureDataLoaded(){
+    if(hasData()) return true;
+    for(const src of DATA_SOURCES){
+      status.textContent = "Loading JS data source...";
+      await loadScript(src);
+      if(hasData()) return true;
+    }
+    return false;
+  }
 
   function shuffle(list){
     const a = list.slice();
@@ -169,7 +196,10 @@
   }
 
   function getDataPool(){
-    const src = (typeof soundBoxWords === "object" && soundBoxWords) ? soundBoxWords : null;
+    const src =
+      (typeof window !== "undefined" && typeof window.soundBoxWords === "object" && window.soundBoxWords)
+        ? window.soundBoxWords
+        : ((typeof soundBoxWords === "object" && soundBoxWords) ? soundBoxWords : null);
     if(!src) return [];
 
     let pool = [];
@@ -225,18 +255,15 @@
   }
 
   function generateWhenFontReady(){
-    boxesFontReady.then(function(ready){
+    ensureDataLoaded().then(function(){
       generate();
-      if(!ready){
-        status.textContent = "Generated, but Boxes font did not load. Refresh and try again.";
-      }
     });
   }
 
   btnGen.addEventListener("click", generateWhenFontReady);
   btnPrint.addEventListener("click", function(){
-    alert("Hey members only!");
-    status.textContent = "Print is members only.";
+    alert("Printing is for Members Only.\nCreate an Unlimited Amount as a Member.");
+    status.textContent = "Printing is for Members Only.";
   });
 
   generateWhenFontReady();
