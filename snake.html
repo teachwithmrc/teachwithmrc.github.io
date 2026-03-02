@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Snake</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <title>Snake Sounds</title>
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: Arial, sans-serif;
       margin: 24px;
       text-align: center;
+      color: #111;
     }
 
     h1 {
@@ -17,9 +17,14 @@
     }
 
     .status {
-      margin-bottom: 16px;
+      margin-bottom: 6px;
       font-size: 18px;
       font-weight: 600;
+    }
+
+    .substatus {
+      margin-bottom: 16px;
+      font-size: 16px;
     }
 
     .game-wrap {
@@ -36,17 +41,25 @@
     }
 
     .cell {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      user-select: none;
     }
 
     .cell.snake {
       background: #2f855a;
+      color: #2f855a;
     }
 
     .cell.food {
       background: #e53e3e;
+      color: #fff;
     }
 
     .controls {
@@ -57,21 +70,15 @@
       margin-bottom: 12px;
     }
 
-    button {
-      font-family: 'Poppins', sans-serif;
+    button,
+    .link-button {
+      font-family: Arial, sans-serif;
       padding: 8px 12px;
       border: 1px solid #000;
       background: #fff;
-      cursor: pointer;
-    }
-
-    .link-button {
-      display: inline-block;
-      padding: 8px 12px;
-      border: 1px solid #000;
       color: #000;
       text-decoration: none;
-      background: #fff;
+      cursor: pointer;
     }
 
     .dpad {
@@ -105,9 +112,14 @@
   </style>
 </head>
 <body>
-  <h1>Snake</h1>
-  <p>Use Arrow Keys or WASD.</p>
-  <div class="status">Score: <span id="score">0</span></div>
+  <h1>Snake Sounds</h1>
+  <p>Collect sounds in order to build the word.</p>
+  <div class="status">Score: <span id="score">0</span> | Words: <span id="wordsCompleted">0</span></div>
+  <div class="substatus">
+    Word: <strong id="targetWord">shop</strong>
+    | Next sound: <strong id="nextSound">sh</strong>
+    | Progress: <span id="soundProgress">_ _ _</span>
+  </div>
 
   <div class="game-wrap">
     <div id="gameBoard" aria-label="Snake game board"></div>
@@ -132,33 +144,68 @@
 
   <div id="gameMessage"></div>
 
+  <script src="./newtry_FULL.js"></script>
   <script src="./snake-game-logic.js"></script>
   <script>
+    const gameApi = window.SnakeGameLogic;
+    if (!gameApi) {
+      document.getElementById('gameMessage').textContent = 'Game failed to load.';
+      throw new Error('Snake game logic did not load');
+    }
+
     const {
       DIRECTIONS,
       createInitialGameState,
       setNextDirection,
-      stepGame
-    } = window.SnakeGameLogic;
+      stepGame,
+      normalizeWordPool
+    } = gameApi;
 
     const GRID_SIZE = 16;
-    const TICK_MS = 140;
+    const TICK_MS = 150;
 
     const boardEl = document.getElementById('gameBoard');
     const scoreEl = document.getElementById('score');
+    const wordsCompletedEl = document.getElementById('wordsCompleted');
+    const targetWordEl = document.getElementById('targetWord');
+    const nextSoundEl = document.getElementById('nextSound');
+    const soundProgressEl = document.getElementById('soundProgress');
     const messageEl = document.getElementById('gameMessage');
     const pauseButtonEl = document.getElementById('pauseButton');
     const restartButtonEl = document.getElementById('restartButton');
 
-    let gameState = createInitialGameState(GRID_SIZE);
     let gameIntervalId = null;
+    const wordPool = buildWordPoolFromSoundBox(window.soundBoxWords);
+    const startingWord = findStartingWord(wordPool, 'shop');
+    let gameState = createInitialGameState(GRID_SIZE, { wordPool, startingWord });
+
+    function findStartingWord(pool, preferred) {
+      const lowered = String(preferred || '').toLowerCase();
+      return pool.find((entry) => entry.word === lowered) || null;
+    }
+
+    function buildWordPoolFromSoundBox(soundBoxWords) {
+      if (!soundBoxWords || typeof soundBoxWords !== 'object') {
+        return normalizeWordPool([]);
+      }
+
+      const allWords = [];
+      Object.values(soundBoxWords).forEach((group) => {
+        if (!Array.isArray(group)) {
+          return;
+        }
+        group.forEach((entry) => allWords.push(entry));
+      });
+
+      return normalizeWordPool(allWords);
+    }
 
     function pointKey(point) {
       return point.x + ',' + point.y;
     }
 
     function renderBoard() {
-      boardEl.style.gridTemplateColumns = `repeat(${gameState.gridSize}, 20px)`;
+      boardEl.style.gridTemplateColumns = `repeat(${gameState.gridSize}, 22px)`;
       boardEl.innerHTML = '';
 
       const snakeSet = new Set(gameState.snake.map(pointKey));
@@ -175,6 +222,7 @@
             cell.classList.add('snake');
           } else if (foodKey === key) {
             cell.classList.add('food');
+            cell.textContent = gameState.food.sound;
           }
 
           fragment.appendChild(cell);
@@ -183,6 +231,12 @@
 
       boardEl.appendChild(fragment);
       scoreEl.textContent = String(gameState.score);
+      wordsCompletedEl.textContent = String(gameState.wordsCompleted);
+      targetWordEl.textContent = gameState.currentWord;
+      nextSoundEl.textContent = gameState.targetSounds[gameState.targetSoundIndex] || '-';
+      soundProgressEl.textContent = gameState.targetSounds
+        .map((sound, index) => (index < gameState.targetSoundIndex ? sound : '_'))
+        .join(' ');
 
       if (gameState.isGameOver) {
         messageEl.textContent = 'Game Over. Press Restart.';
@@ -206,7 +260,7 @@
     }
 
     function restartGame() {
-      gameState = createInitialGameState(GRID_SIZE);
+      gameState = createInitialGameState(GRID_SIZE, { wordPool, startingWord });
       pauseButtonEl.textContent = 'Pause';
       renderBoard();
     }
