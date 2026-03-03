@@ -5,6 +5,12 @@ const DIRECTIONS = {
   RIGHT: { x: 1, y: 0 }
 };
 
+const DEFAULT_WORD_POOL = [
+  { word: 'shop', split: ['sh', 'o', 'p'] },
+  { word: 'fish', split: ['f', 'i', 'sh'] },
+  { word: 'math', split: ['m', 'a', 'th'] }
+];
+
 function samePoint(a, b) {
   return a.x === b.x && a.y === b.y;
 }
@@ -13,7 +19,55 @@ function isReverseDirection(current, next) {
   return current.x + next.x === 0 && current.y + next.y === 0;
 }
 
-function spawnFood(gridSize, snake, randomFn = Math.random) {
+function normalizeWordEntry(entry) {
+  if (!entry || typeof entry.word !== 'string' || !Array.isArray(entry.split)) {
+    return null;
+  }
+
+  const word = entry.word.trim().toLowerCase();
+  const split = entry.split
+    .map((sound) => String(sound).trim().toLowerCase())
+    .filter((sound) => sound.length > 0);
+
+  if (!word || split.length < 2) {
+    return null;
+  }
+
+  return { word, split };
+}
+
+function normalizeWordPool(wordPool) {
+  if (!Array.isArray(wordPool) || wordPool.length === 0) {
+    return DEFAULT_WORD_POOL;
+  }
+
+  const seen = new Set();
+  const normalized = [];
+
+  wordPool.forEach((entry) => {
+    const parsed = normalizeWordEntry(entry);
+    if (!parsed) {
+      return;
+    }
+
+    const key = parsed.word + '|' + parsed.split.join('-');
+    if (seen.has(key)) {
+      return;
+    }
+
+    seen.add(key);
+    normalized.push(parsed);
+  });
+
+  return normalized.length > 0 ? normalized : DEFAULT_WORD_POOL;
+}
+
+function pickWord(wordPool, randomFn = Math.random) {
+  const index = Math.floor(randomFn() * wordPool.length);
+  return wordPool[index];
+}
+
+function spawnFood(gridSize, snake, sound, randomFn = Math.random) {
   const openCells = [];
 
   for (let y = 0; y < gridSize; y += 1) {
@@ -30,13 +84,19 @@ function spawnFood(gridSize, snake, randomFn = Math.random) {
   }
 
   const index = Math.floor(randomFn() * openCells.length);
-  return openCells[index];
+  const cell = openCells[index];
+  return { x: cell.x, y: cell.y, sound };
 }
 
-function createInitialGameState(gridSize = 16, randomFn = Math.random) {
+function createInitialGameState(gridSize = 16, options = {}) {
+  const randomFn = options.randomFn || Math.random;
+  const wordPool = normalizeWordPool(options.wordPool);
+  const startingWord = normalizeWordEntry(options.startingWord);
+  const word = startingWord || pickWord(wordPool, randomFn);
+
   const center = Math.floor(gridSize / 2);
   const snake = [{ x: center, y: center }];
-  const food = spawnFood(gridSize, snake, randomFn);
+  const food = spawnFood(gridSize, snake, word.split[0], randomFn);
 
   return {
     gridSize,
@@ -46,7 +106,12 @@ function createInitialGameState(gridSize = 16, randomFn = Math.random) {
     food,
     score: 0,
     isGameOver: false,
-    isPaused: false
+    isPaused: false,
+    currentWord: word.word,
+    targetSounds: word.split,
+    targetSoundIndex: 0,
+    wordsCompleted: 0,
+    wordPool
   };
 }
 
@@ -108,9 +173,19 @@ function stepGame(state, randomFn = Math.random) {
     nextSnake.pop();
   }
 
-  if (willGrow) {
-    const nextFood = spawnFood(state.gridSize, nextSnake, randomFn);
-    const boardIsFull = nextFood === null;
+  if (!willGrow) {
+    return {
+      ...state,
+      snake: nextSnake,
+      direction
+    };
+  }
+
+  const nextSoundIndex = state.targetSoundIndex + 1;
+  const finishedWord = nextSoundIndex >= state.targetSounds.length;
+
+  if (!finishedWord) {
+    const nextFood = spawnFood(state.gridSize, nextSnake, state.targetSounds[nextSoundIndex], randomFn);
 
     return {
       ...state,
@@ -118,21 +193,42 @@ function stepGame(state, randomFn = Math.random) {
       direction,
       food: nextFood,
       score: state.score + 1,
-      isGameOver: boardIsFull
+      targetSoundIndex: nextSoundIndex,
+      isGameOver: nextFood === null
     };
   }
+
+  const nextWord = pickWord(state.wordPool, randomFn);
+  const nextFood = spawnFood(state.gridSize, nextSnake, nextWord.split[0], randomFn);
 
   return {
     ...state,
     snake: nextSnake,
-    direction
+    direction,
+    food: nextFood,
+    score: state.score + 1,
+    currentWord: nextWord.word,
+    targetSounds: nextWord.split,
+    targetSoundIndex: 0,
+    wordsCompleted: state.wordsCompleted + 1,
+    isGameOver: nextFood === null
   };
 }
 
-window.SnakeGameLogic = {
+const SnakeGameLogic = {
   DIRECTIONS,
   createInitialGameState,
   setNextDirection,
   stepGame,
-  spawnFood
+  spawnFood,
+  normalizeWordPool,
+  normalizeWordEntry
 };
+
+if (typeof window !== 'undefined') {
+  window.SnakeGameLogic = SnakeGameLogic;
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = SnakeGameLogic;
+}

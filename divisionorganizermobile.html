@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Long Division Mobile Preview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1f365f;
+      --line: #d7dfec;
+      --panel: #ffffff;
+      --bg: #f3f5f7;
+      --blue: #1976d2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding: 12px;
+    }
+
+    .top {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 8px 22px rgba(16, 24, 40, 0.08);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(23px, 6.8vw, 33px);
+      line-height: 1.05;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .btns {
+      display: flex;
+      gap: 10px;
+      margin: 12px 0 10px;
+    }
+
+    .main-btn {
+      flex: 1;
+      min-height: 50px;
+      border-radius: 12px;
+      border: 2px solid #111;
+      font: inherit;
+      font-weight: 700;
+      font-size: 17px;
+      cursor: pointer;
+      background: #fff;
+    }
+
+    #btnGenerate {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    #typeRow {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .type-btn {
+      border: 1px solid #b7c9df;
+      border-radius: 10px;
+      padding: 8px 6px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      background: #f7fbff;
+      color: #28486e;
+      line-height: 1.2;
+    }
+
+    .type-btn.active {
+      background: #dcecff;
+      border-color: #6ea7e8;
+      color: #163e6d;
+    }
+
+    .preview {
+      position: relative;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 420px;
+    }
+
+    #worksheetHost {
+      position: relative;
+      z-index: 1;
+    }
+
+    .sheet {
+      width: 100%;
+      min-height: 700px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 10px 10px 130px;
+      position: relative;
+    }
+
+    .sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 8px;
+      border-bottom: 2px solid #000;
+      padding-bottom: 4px;
+      margin-bottom: 8px;
+    }
+
+    .sheet-title {
+      margin: 0;
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      line-height: 1.2;
+    }
+
+    .name-line {
+      white-space: nowrap;
+      font-size: 0.64rem;
+      font-weight: 600;
+    }
+
+    .name-line .line {
+      display: inline-block;
+      width: 60px;
+      border-bottom: 2px solid #000;
+      transform: translateY(-2px);
+      margin-left: 4px;
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      align-items: start;
+    }
+
+    .problem-card {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      border: 2px solid #000;
+      padding: 5px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .problem-main {
+      display: grid;
+      grid-template-columns: 90px minmax(0, 1fr);
+      gap: 5px;
+      align-items: start;
+    }
+
+    .multiples-panel {
+      border: 2px solid #000;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-self: start;
+    }
+
+    .multiples-head {
+      border-bottom: 2px solid #000;
+      text-align: center;
+      font-size: 0.62rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 2px 1px;
+    }
+
+    .multiples-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 0.64rem;
+      font-weight: 700;
+    }
+
+    .multiples-table td {
+      border-top: 2px solid #000;
+      text-align: center;
+      height: 18px;
+      padding: 1px;
+    }
+
+    .multiples-table td:first-child {
+      width: 44%;
+      border-right: 2px solid #000;
+    }
+
+    .problem-panel {
+      display: flex;
+      align-items: flex-start;
+      border: 2px solid #000;
+      background: #fff;
+      padding: 3px;
+      overflow-x: auto;
+    }
+
+    .ld-table-wrap {
+      --cell-w: 25px;
+      --cell-h: 18px;
+      --cell-font: 0.8rem;
+      --minus-w: 14px;
+      --minus-font: 0.95rem;
+      width: fit-content;
+    }
+
+    .ld-table { border-collapse: collapse; table-layout: fixed; }
+
+    .ld-table td {
+      width: var(--cell-w);
+      height: var(--cell-h);
+      padding: 0;
+      text-align: center;
+      vertical-align: middle;
+      font-size: var(--cell-font);
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .ld-minus-col { width: var(--minus-w) !important; }
+    .ld-pad { border: 0; background: transparent; }
+    .ld-box { border: 2px solid #000; background: #fff; }
+    .ld-minus-mark { border: 0; background: transparent; font-size: var(--minus-font); font-weight: 800; text-align: right; padding-right: 2px; }
+    .ld-rem-label { border: 0; background: transparent; font-weight: 800; font-size: calc(var(--cell-font) * 0.82); width: 12px !important; text-align: center; }
+    .ld-dividend-top { border-top: 4px solid #000 !important; }
+    .ld-bracket-left { border-left: 4px solid #000 !important; }
+    .ld-line-under { border-bottom: 4px solid #000 !important; }
+
+    .footer-note {
+      margin-top: 7px;
+      padding-top: 4px;
+      border-top: 2px solid #000;
+      text-align: left;
+      font-size: 0.54rem;
+      font-weight: 600;
+      color: #000;
+      line-height: 1.15;
+    }
+
+    .watermark {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='170' height='130' viewBox='0 0 170 130' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-28 85 65)'%3E%3Ctext x='8' y='54' fill='%23000000' fill-opacity='0.31' font-family='Poppins' font-size='21' font-weight='900'%3EPREVIEW%3C/text%3E%3Ctext x='12' y='84' fill='%23000000' fill-opacity='0.24' font-family='Poppins' font-size='11' font-weight='800'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+      background-size: 170px 130px;
+      background-repeat: repeat;
+    }
+
+    .lock-panel {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 5;
+      background: rgba(5, 11, 20, 0.98);
+      color: #fff;
+      text-align: center;
+      padding: 10px 10px 12px;
+      border-top: 2px solid #fff;
+    }
+
+    .lock-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      margin: 0 0 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .lock-copy {
+      margin: 0 0 8px;
+      font-size: 0.75rem;
+      line-height: 1.25;
+      font-weight: 600;
+    }
+
+    .join-btn {
+      display: inline-block;
+      text-decoration: none;
+      color: #051426;
+      background: #fff;
+      border: 2px solid #fff;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+
+    @media print { body { display: none !important; } }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="top" aria-label="Controls">
+      <h1>Long Division Organizer</h1>
+      <div class="btns">
+        <button id="btnGenerate" class="main-btn" type="button">Generate</button>
+        <button id="btnPrint" class="main-btn" type="button">Print</button>
+      </div>
+      <div id="typeRow" role="radiogroup" aria-label="Problem type">
+        <button type="button" class="type-btn active" data-type="2x1">2 by 1</button>
+        <button type="button" class="type-btn" data-type="3x1">3 by 1</button>
+        <button type="button" class="type-btn" data-type="4x1">4 by 1</button>
+      </div>
+    </section>
+
+    <section class="preview" aria-label="Worksheet preview">
+      <div id="worksheetHost"></div>
+      <div class="watermark" aria-hidden="true"></div>
+      <div class="lock-panel" aria-hidden="false">
+        <p class="lock-title">Members Only</p>
+        <p class="lock-copy">Printing is for Members Only. Create an Unlimited Amount as a Member.</p>
+        <a class="join-btn" href="https://interventionstation.com" target="_blank" rel="noopener noreferrer">Join</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const els = {
+      host: document.getElementById("worksheetHost"),
+      typeButtons: Array.from(document.querySelectorAll(".type-btn")),
+      generateBtn: document.getElementById("btnGenerate"),
+      printBtn: document.getElementById("btnPrint")
+    };
+
+    const state = {
+      problemType: "2x1",
+      problemMode: "random",
+      templateMode: "normal",
+      remainderMode: "without",
+      multiplesMode: "blank",
+      sheetTitle: "Long Division Practice Organizer"
+    };
+
+    const TYPE_CONFIG = {
+      "2x1": { digits: 2, min: 10, max: 99, label: "2-digit by 1-digit", cardCount: 6 },
+      "3x1": { digits: 3, min: 100, max: 999, label: "3-digit by 1-digit", cardCount: 4 },
+      "4x1": { digits: 4, min: 1000, max: 9999, label: "4-digit by 1-digit", cardCount: 4 }
+    };
+
+    function getTypeConfig() {
+      return TYPE_CONFIG[state.problemType] || TYPE_CONFIG["2x1"];
+    }
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function setProblemType(typeKey) {
+      if (!TYPE_CONFIG[typeKey]) return;
+      state.problemType = typeKey;
+      els.typeButtons.forEach(function (btn) {
+        btn.classList.toggle("active", btn.dataset.type === typeKey);
+      });
+    }
+
+    function matchesRemainderMode(problem, remainderMode) {
+      const rem = problem.dividend % problem.divisor;
+      if (remainderMode === "with") return rem !== 0;
+      if (remainderMode === "without") return rem === 0;
+      return true;
+    }
+
+    function makeRandomProblem(cfg, remainderMode) {
+      for (let tries = 0; tries < 4000; tries += 1) {
+        const divisor = randInt(2, 9);
+        const firstDigit = randInt(1, divisor - 1);
+        let rest = "";
+        for (let i = 1; i < cfg.digits; i += 1) {
+          rest += String(randInt(0, 9));
+        }
+        const dividend = Number(String(firstDigit) + rest);
+        if (dividend < cfg.min || dividend > cfg.max) continue;
+        const problem = { dividend: dividend, divisor: divisor };
+        if (!matchesRemainderMode(problem, remainderMode)) continue;
+        return problem;
+      }
+
+      for (let divisor = 2; divisor <= 9; divisor += 1) {
+        for (let dividend = cfg.min; dividend <= cfg.max; dividend += 1) {
+          const firstDigit = Number(String(dividend)[0]);
+          const problem = { dividend: dividend, divisor: divisor };
+          if (firstDigit >= divisor) continue;
+          if (!matchesRemainderMode(problem, remainderMode)) continue;
+          return problem;
+        }
+      }
+
+      return { dividend: cfg.min, divisor: 2 };
+    }
+
+    function buildProblems(cfg, cardCount, remainderMode) {
+      const problems = [];
+      const seen = new Set();
+      let tries = 0;
+
+      while (problems.length < cardCount && tries < 4000) {
+        const p = makeRandomProblem(cfg, remainderMode);
+        const key = String(p.dividend) + "/" + String(p.divisor);
+        tries += 1;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        problems.push(p);
+      }
+
+      return {
+        problems: problems,
+        warning: false,
+        message: "Generated " + String(problems.length) + " random " + cfg.label + " problems."
+      };
+    }
+
+    function multiplesRowsHtml(divisor, mode, blankTemplate) {
+      let rows = "";
+      for (let i = 1; i <= 9; i += 1) {
+        const value = blankTemplate ? "&nbsp;" : (mode === "filled" ? String(divisor * i) : "&nbsp;");
+        rows += "<tr><td>x" + String(i) + "</td><td>" + value + "</td></tr>";
+      }
+      return rows;
+    }
+
+    function longDivisionGridHtml(problem, cfg, blankTemplate, cardCount, showRemainderBox) {
+      const n = cfg.digits;
+      const digits = String(problem.dividend).split("");
+      const rows = [];
+
+      const td = function (content, cls) { return "<td class=\"" + cls + "\">" + content + "</td>"; };
+
+      let row = "<tr>" + td("&nbsp;", "ld-pad ld-minus-col") + td("&nbsp;", "ld-pad");
+      for (let i = 0; i < n; i += 1) row += td("&nbsp;", "ld-box");
+      if (showRemainderBox) {
+        row += td("R", "ld-rem-label");
+        row += td("&nbsp;", "ld-box");
+      }
+      row += "</tr>";
+      rows.push(row);
+
+      row = "<tr>" + td("&nbsp;", "ld-pad ld-minus-col") + td(blankTemplate ? "&nbsp;" : problem.divisor, "ld-box");
+      for (let i = 0; i < n; i += 1) {
+        row += td(blankTemplate ? "&nbsp;" : digits[i], "ld-box ld-dividend-top" + (i === 0 ? " ld-bracket-left" : ""));
+      }
+      if (showRemainderBox) {
+        row += td("&nbsp;", "ld-pad");
+        row += td("&nbsp;", "ld-pad");
+      }
+      row += "</tr>";
+      rows.push(row);
+
+      const totalCols = n + 2 + (showRemainderBox ? 2 : 0);
+
+      for (let i = 0; i < n; i += 1) {
+        const startDigit = i === 0 ? 0 : Math.min(i - 1, n - 2);
+        const startCol = 2 + startDigit;
+        const productLen = i === 0 ? 1 : 2;
+        const bringStart = i < n - 1 ? 2 + Math.min(startDigit + (productLen - 1), n - 2) : startCol;
+
+        let sub = "<tr>";
+        for (let c = 0; c < totalCols; c += 1) {
+          if (c === 0) sub += td("&nbsp;", "ld-pad ld-minus-col");
+          else if (c === 1) sub += td("&minus;", "ld-minus-mark");
+          else if (c >= startCol && c < startCol + productLen) sub += td("&nbsp;", "ld-box ld-line-under");
+          else sub += td("&nbsp;", "ld-pad");
+        }
+        sub += "</tr>";
+        rows.push(sub);
+
+        let bring = "<tr>";
+        for (let c = 0; c < totalCols; c += 1) {
+          if (c <= 1) bring += td("&nbsp;", c === 0 ? "ld-pad ld-minus-col" : "ld-pad");
+          else if (c >= bringStart && c < bringStart + 2) bring += td("&nbsp;", "ld-box");
+          else bring += td("&nbsp;", "ld-pad");
+        }
+        bring += "</tr>";
+        rows.push(bring);
+      }
+
+      const isFourUp = cardCount === 4;
+      const cellW = isFourUp ? (n >= 4 ? 28 : (n === 3 ? 30 : 31)) : (n >= 4 ? 24 : (n === 3 ? 26 : 31));
+      const cellH = isFourUp ? (n >= 4 ? 21 : (n === 3 ? 23 : 24)) : (n >= 4 ? 17 : (n === 3 ? 18 : 24));
+      const cellFont = isFourUp ? (n >= 4 ? "0.86rem" : (n === 3 ? "0.9rem" : "0.95rem")) : (n >= 4 ? "0.75rem" : (n === 3 ? "0.8rem" : "0.92rem"));
+      const minusFont = isFourUp ? (n >= 4 ? "0.9rem" : (n === 3 ? "1rem" : "1.06rem")) : (n >= 4 ? "0.82rem" : (n === 3 ? "0.9rem" : "1.1rem"));
+
+      return "<div class=\"ld-table-wrap\" style=\"--cell-w:" + String(cellW) + "px;--cell-h:" + String(cellH) + "px;--cell-font:" + cellFont + ";--minus-font:" + minusFont + ";\"><table class=\"ld-table\" aria-label=\"Long division workspace\"><tbody>" + rows.join("") + "</tbody></table></div>";
+    }
+
+    function renderProblemCard(problem, cfg, blankTemplate, cardCount, showRemainderBox) {
+      return "" +
+        "<article class=\"problem-card\">" +
+          "<div class=\"problem-main\">" +
+            "<div class=\"multiples-panel\">" +
+              "<div class=\"multiples-head\">Multiples</div>" +
+              "<table class=\"multiples-table\" aria-label=\"Multiples chart\"><tbody>" + multiplesRowsHtml(problem.divisor, state.multiplesMode, blankTemplate) + "</tbody></table>" +
+            "</div>" +
+            "<div class=\"problem-panel\">" + longDivisionGridHtml(problem, cfg, blankTemplate, cardCount, showRemainderBox) + "</div>" +
+          "</div>" +
+        "</article>";
+    }
+
+    function renderWorksheet() {
+      const cfg = getTypeConfig();
+      const cardCount = cfg.cardCount;
+      const remainderMode = state.remainderMode;
+      const source = buildProblems(cfg, cardCount, remainderMode);
+      const blankTemplate = state.templateMode === "blank";
+      const showRemainderBox = remainderMode !== "without";
+      const title = (state.sheetTitle || "").trim() || "Long Division Practice Organizer";
+
+      if (!source.problems.length) {
+        els.host.innerHTML = "";
+        return;
+      }
+
+      const cards = source.problems.map(function (p) {
+        return renderProblemCard(p, cfg, blankTemplate, cardCount, showRemainderBox);
+      }).join("");
+
+      els.host.innerHTML = "" +
+        "<section class=\"sheet\">" +
+          "<header class=\"sheet-header\">" +
+            "<h2 class=\"sheet-title\">" + title + " (" + cfg.label + ")</h2>" +
+            "<div class=\"name-line\">Name:<span class=\"line\"></span></div>" +
+          "</header>" +
+          "<section class=\"problem-grid\">" + cards + "</section>" +
+          "<div class=\"footer-note\">Copyright - InterventionStation.com - @TeachwithMrC</div>" +
+        "</section>";
+    }
+
+    els.generateBtn.addEventListener("click", renderWorksheet);
+
+    els.typeButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        setProblemType(btn.dataset.type);
+      });
+    });
+
+    els.printBtn.addEventListener("click", function () {
+      alert("Printing is for Members Only. Create an Unlimited Amount as a Member.");
+    });
+
+    setProblemType("2x1");
+    renderWorksheet();
+  </script>
+</body>
+</html>
