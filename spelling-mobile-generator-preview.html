@@ -170,6 +170,10 @@
   const btnGenerate = document.getElementById('btnGenerate');
   const btnPrint = document.getElementById('btnPrint');
   const RAW_IMAGE_BASE = 'https://raw.githubusercontent.com/teachwithmrc/teachwithmrc.github.io/main/images/';
+  const PATTERN_OVERRIDES = {
+    chirp: '221',
+    churp: '221'
+  };
 
   let imageIndex = null;
   const imageSrcCache = new Map();
@@ -285,9 +289,15 @@
     );
   }
 
+  function getDisplayPattern(item){
+    const safeWord = String(item.word || '').toLowerCase().trim();
+    if (PATTERN_OVERRIDES[safeWord]) return PATTERN_OVERRIDES[safeWord];
+    return String(item.pattern || '').replace(/[^1-4]/g, '') || '111';
+  }
+
   function cardHtml(item){
     const safeWord = String(item.word || '').toLowerCase();
-    const safePattern = String(item.pattern || '').replace(/[^1-4]/g, '') || '111';
+    const safePattern = getDisplayPattern(item);
     const img = item._imgSrc
       ? '<img alt="' + safeWord + '" src="' + item._imgSrc + '">' 
       : '<div class="missing-img" aria-hidden="true"></div>';
