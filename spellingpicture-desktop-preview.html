@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intervention Station | Spelling Picture Desktop Preview</title>
+  <script src="./newtry_FULL.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --brand-blue:#66c9f4;
+      --ink:#102246;
+      --border:rgba(0,0,0,.55);
+      --offwhite:#f3f5f7;
+      --panel:#ffffff;
+    }
+    html,body{ margin:0; padding:0; font-family:"Poppins",system-ui,sans-serif; background:var(--offwhite); color:var(--ink); }
+    *,*::before,*::after{ box-sizing:border-box; }
+
+    .is-home-sections{ padding:18px 0 34px; }
+    .is-wrap{ width:min(1440px, calc(100% - 32px)); margin:0 auto; }
+    .is-layout{ display:grid; grid-template-columns:320px minmax(0,1fr); gap:12px; align-items:start; }
+
+    .is-nav{ position:sticky; top:16px; }
+    .is-nav-card{ background:var(--panel); border:2px solid var(--border); overflow:hidden; }
+    .is-nav-group.is-nav-home{ padding:10px 12px 8px; border-bottom:2px solid rgba(0,0,0,.18); }
+    .is-nav-header{ background:var(--brand-blue); color:#fff; font-weight:700; font-size:22px; line-height:1.1; padding:12px 14px; margin:0; }
+    .is-nav-group{ padding:6px 12px 10px; }
+    .is-nav-link{ display:block; text-decoration:none; color:#102246; font-weight:600; font-size:14px; line-height:1.22; padding:6px 0; }
+    .is-nav-link:hover{ text-decoration:underline; }
+    .is-mt-12{ margin-top:8px; }
+
+    .is-main{ min-width:0; }
+    .is-page{ background:#fff; border:2px solid var(--border); padding:16px; min-height:900px; }
+
+    @font-face { font-family:'BoxesFont'; src:url('fonts/boxes2.otf') format('opentype'); }
+    .spg-wrap{ max-width:1320px; margin:0 auto; }
+
+    .spg-head{
+      border:2px solid #111;
+      border-radius:16px;
+      background:#fff;
+      padding:20px 18px;
+      margin-bottom:14px;
+      text-align:center;
+    }
+    .spg-head h1{
+      margin:0;
+      font-size:clamp(32px,3.8vw,50px);
+      line-height:1.06;
+      font-weight:800;
+      color:#111;
+    }
+
+    .spg-controls{
+      border:2px solid #111;
+      border-radius:16px;
+      background:#fff;
+      padding:16px;
+      margin-bottom:14px;
+    }
+    .spg-btn-row{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(220px, 300px));
+      justify-content:center;
+      gap:14px;
+    }
+    .spg-controls-note{
+      margin:12px 0 0;
+      text-align:center;
+      font-size:20px;
+      line-height:1.35;
+      font-weight:700;
+      color:#22344f;
+    }
+    .spg-btn{
+      width:100%;
+      border:2px solid #111;
+      border-radius:16px;
+      min-height:58px;
+      padding:12px 10px;
+      font-family:"Poppins",Arial,sans-serif;
+      font-size:20px;
+      font-weight:900;
+      cursor:pointer;
+      background:#6ec1ff;
+      color:#fff;
+    }
+    .spg-btn-print{ background:#fff; color:#111; }
+
+    .spg-sheet-wrap{
+      border:2px solid #111;
+      border-radius:14px;
+      background:#fff;
+      padding:14px;
+      overflow:auto;
+      max-height:84vh;
+    }
+
+    .spg-page {
+      position:relative;
+      width:100%;
+      max-width:1120px;
+      margin:0 auto;
+      background:#fff;
+      border:2px solid #000;
+      border-radius:10px;
+      padding:18px 18px 16px;
+      text-align:center;
+      overflow:hidden;
+      color:#111;
+    }
+    .spg-title{ margin:0 0 6px; font-size:clamp(40px,3.4vw,52px); line-height:1.04; font-weight:800; }
+    .spg-sub{ margin:0 0 10px; font-size:18px; font-weight:700; color:#3b4c65; }
+    .spg-name-row{ text-align:right; font-size:19px; font-weight:700; margin-bottom:12px; }
+    .spg-name-row .line{ display:inline-block; width:260px; border-bottom:3px solid #111; transform:translateY(-2px); margin-left:8px; }
+
+    .spg-word-bank{ border:2px solid #111; border-radius:12px; padding:12px 14px; margin-bottom:14px; }
+    .spg-word-bank-title{ margin:0 0 8px; font-size:17px; font-weight:700; }
+    .spg-word-bank-list{ display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:10px; }
+    .spg-word-pill{ font-size:24px; font-weight:700; text-transform:lowercase; }
+
+    .spg-grid{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .spg-card{ border:2px solid #000; border-radius:8px; padding:12px 8px 10px; min-height:280px; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; }
+    .spg-card img{ width:100%; max-width:210px; height:132px; object-fit:contain; margin-top:6px; }
+    .spg-missing-img{ width:100%; max-width:210px; height:132px; margin-top:6px; border:2px dashed #bbb; border-radius:8px; }
+    .spg-word{ font-size:34px; font-weight:800; line-height:1.05; margin-top:10px; text-transform:lowercase; }
+    .spg-pattern{ margin-top:6px; font-family:'BoxesFont', monospace; font-size:92px; line-height:0.84; }
+
+    .spg-footer{ margin-top:10px; text-align:right; font-size:12px; font-weight:700; color:#444; }
+
+    .spg-members-lock{
+      position:absolute;
+      left:16px;
+      right:16px;
+      bottom:16px;
+      z-index:30;
+      border:2px solid #fff;
+      border-radius:16px;
+      background:rgba(15,18,24,.9);
+      color:#fff;
+      text-align:center;
+      padding:14px 12px 16px;
+      box-shadow:0 8px 24px rgba(0,0,0,.35);
+    }
+    .spg-members-lock-title{ margin:0; font-size:46px; line-height:1; font-weight:900; }
+    .spg-members-lock-copy{ margin:10px 0 10px; font-size:16px; font-weight:700; }
+    .spg-members-lock a{
+      display:inline-block;
+      text-decoration:none;
+      border-radius:999px;
+      background:#fff;
+      color:#111;
+      border:2px solid #fff;
+      padding:10px 20px;
+      font-size:16px;
+      font-weight:800;
+    }
+
+    .spg-preview-overlay{
+      position:absolute; inset:0; pointer-events:none; z-index:10; opacity:.55;
+      background-image:
+        repeating-linear-gradient(-24deg, rgba(0,0,0,.12) 0 16px, rgba(255,255,255,.05) 16px 32px),
+        url("data:image/svg+xml,%3Csvg width='360' height='240' viewBox='0 0 360 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-23 180 120)'%3E%3Ctext x='22' y='112' fill='%23000' fill-opacity='.4' font-family='Poppins' font-size='40' font-weight='800'%3EPREVIEW%3C/text%3E%3Ctext x='92' y='158' fill='%23000' fill-opacity='.3' font-family='Poppins' font-size='20' font-weight='700'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+      background-size:auto,360px 240px;
+      background-repeat:repeat;
+    }
+
+    @media (max-width:1100px){
+      .is-layout{ grid-template-columns:1fr; }
+      .is-nav{ position:relative; top:auto; }
+      .spg-page{ max-width:100%; padding:12px; }
+      .spg-title{ font-size:clamp(28px,5vw,40px); }
+      .spg-sub{ font-size:14px; }
+      .spg-name-row{ font-size:14px; margin-bottom:8px; }
+      .spg-name-row .line{ width:150px; border-bottom:2px solid #111; }
+      .spg-word-bank-list{ grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+      .spg-word-pill{ font-size:18px; }
+      .spg-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+      .spg-card{ min-height:200px; padding:8px 6px 6px; }
+      .spg-card img,.spg-missing-img{ max-width:130px; height:90px; margin-top:4px; }
+      .spg-word{ font-size:24px; margin-top:6px; }
+      .spg-pattern{ font-size:60px; margin-top:4px; }
+      .spg-members-lock{ left:10px; right:10px; bottom:10px; padding:10px 10px 12px; }
+      .spg-members-lock-title{ font-size:30px; }
+      .spg-members-lock-copy{ margin:6px 0 8px; font-size:12px; }
+      .spg-members-lock a{ padding:7px 14px; font-size:12px; }
+      .spg-controls-note{ font-size:16px; margin-top:10px; }
+    }
+  </style>
+</head>
+<body>
+  <section class="is-home-sections">
+    <div class="is-wrap is-layout">
+      <aside class="is-nav" aria-label="Navigation">
+        <nav class="is-nav-card">
+          <div class="is-nav-group is-nav-home">
+            <a class="is-nav-link is-active" href="./home-preview.html">&#127968; Home</a>
+          </div>
+
+          <div class="is-nav-header">Math Generators</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./rounding-generator-preview.html">Rounding Generator</a>
+            <a class="is-nav-link" href="./addition-generator-preview.html">Addition Generator</a>
+            <a class="is-nav-link" href="./subtraction-generator-preview.html">Subtraction Generator</a>
+            <a class="is-nav-link" href="./multiply-generator-preview.html">Multiplication Generator</a>
+            <a class="is-nav-link" href="./partialproducts-generator-preview.html">Partial Products Generator</a>
+            <a class="is-nav-link" href="./division-generator-preview.html">Long Division</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">SOR Generators</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./tictacpreview.html">SOR Tic Tac Toe</a>
+            <a class="is-nav-link" href="./fluencygridpreview.html">SOR Fluency Grid</a>
+            <a class="is-nav-link" href="./rollreadpreview.html">SOR Roll and Read</a>
+            <a class="is-nav-link" href="./wordladderpreview.html">SOR Word Ladder</a>
+            <a class="is-nav-link" href="./word-map-preview.html">SOR Word Mapping</a>
+            <a class="is-nav-link" href="./spelling-with-pictures-generator-preview.html">Spelling Pics Generator</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Math Resources</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./placevalue-preview.html">Place Value</a>
+            <a class="is-nav-link" href="./rounding-preview.html">Rounding</a>
+            <a class="is-nav-link" href="./multiplication-preview.html">Multiplication (Printable Organizer)</a>
+            <a class="is-nav-link" href="./division-preview.html">Division (Printable Organizer)</a>
+            <a class="is-nav-link" href="./fractions-preview.html">Fractions</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Reading</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./heart-words-preview.html">Heart Words</a>
+            <a class="is-nav-link" href="./phonics-comics-preview.html">Phonics Comics</a>
+            <a class="is-nav-link" href="./fix-mixup-preview.html">Fix the Mix Up</a>
+            <a class="is-nav-link" href="./spelling-preview.html">Spelling by Phonics Skill</a>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="is-main">
+        <section class="is-page">
+          <div class="spg-wrap">
+            <section class="spg-head">
+              <h1>Spelling Picture Worksheet Generator</h1>
+            </section>
+
+            <section class="spg-controls">
+              <div class="spg-btn-row">
+                <button id="spgBtnGenerate" class="spg-btn" type="button">Generate</button>
+                <button id="spgBtnPrint" class="spg-btn spg-btn-print" type="button">Print</button>
+              </div>
+              <p class="spg-controls-note">Choose or Combine Over 40 Phonics Skills!<br>Use with a Word Bank or for Dictation!</p>
+            </section>
+
+            <section class="spg-sheet-wrap">
+              <div id="spgOutput"></div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+  </section>
+
+<script>
+(function(){
+  const outputEl = document.getElementById('spgOutput');
+  const btnGenerate = document.getElementById('spgBtnGenerate');
+  const btnPrint = document.getElementById('spgBtnPrint');
+  const RAW_IMAGE_BASE = 'https://raw.githubusercontent.com/teachwithmrc/teachwithmrc.github.io/main/images/';
+  const PATTERN_OVERRIDES = {
+    chirp: '221',
+    churp: '221'
+  };
+
+  let imageIndex = null;
+  const imageSrcCache = new Map();
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i = a.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function normalizeWord(word){
+    return (word || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  }
+
+  function dedupeWords(list){
+    const seen = new Set();
+    const out = [];
+    for(const item of list){
+      if(!item || !item.word) continue;
+      const key = String(item.word).toLowerCase();
+      if(seen.has(key)) continue;
+      seen.add(key);
+      out.push(item);
+    }
+    return out;
+  }
+
+  function canLoadImage(url){
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = url;
+    });
+  }
+
+  async function ensureImageIndex(){
+    if(imageIndex !== null) return;
+    imageIndex = new Map();
+    const sources = ['./jsonimages.json', '../jsonimages.json', '../../jsonimages.json'];
+    for(const src of sources){
+      try{
+        const res = await fetch(src, { cache: 'no-store' });
+        if(!res.ok) continue;
+        const list = await res.json();
+        if(!Array.isArray(list)) continue;
+        for(const item of list){
+          if(!item || !item.name) continue;
+          const base = item.name.replace(/\.[^.]+$/, '');
+          imageIndex.set(base.toLowerCase(), item.name);
+          imageIndex.set(normalizeWord(base), item.name);
+        }
+        break;
+      }catch(_err){ }
+    }
+  }
+
+  function imageCandidates(word){
+    const w = (word || '').trim();
+    const low = w.toLowerCase();
+    const norm = normalizeWord(w);
+    const list = [];
+
+    if(imageIndex){
+      const byLow = imageIndex.get(low);
+      const byNorm = imageIndex.get(norm);
+      if(byLow) list.push('images/' + encodeURIComponent(byLow));
+      if(byNorm) list.push('images/' + encodeURIComponent(byNorm));
+      if(byLow) list.push('../images/' + encodeURIComponent(byLow));
+      if(byNorm) list.push('../images/' + encodeURIComponent(byNorm));
+    }
+
+    [low, norm].forEach((k) => {
+      if(!k) return;
+      list.push('images/' + encodeURIComponent(k) + '.png');
+      list.push('images/' + encodeURIComponent(k) + '.jpg');
+      list.push('../images/' + encodeURIComponent(k) + '.png');
+      list.push('../images/' + encodeURIComponent(k) + '.jpg');
+      list.push(RAW_IMAGE_BASE + encodeURIComponent(k) + '.png');
+      list.push(RAW_IMAGE_BASE + encodeURIComponent(k) + '.jpg');
+    });
+
+    return [...new Set(list)];
+  }
+
+  async function getVerifiedImageSrc(word){
+    const key = String(word || '').toLowerCase();
+    if(imageSrcCache.has(key)) return imageSrcCache.get(key);
+
+    const candidates = imageCandidates(word);
+    for(const url of candidates){
+      const ok = await canLoadImage(url);
+      if(ok){
+        imageSrcCache.set(key, url);
+        return url;
+      }
+    }
+
+    imageSrcCache.set(key, null);
+    return null;
+  }
+
+  function getRControlledWords(source){
+    function fetchBase(base){ return source[base] || []; }
+    return [].concat(
+      fetchBase('R-Controlled(ar)'),
+      fetchBase('R-Controlled(or)'),
+      fetchBase('R-Controlled(er,ir,ur)')
+    );
+  }
+
+  function getDisplayPattern(item){
+    const safeWord = String(item.word || '').toLowerCase().trim();
+    if (PATTERN_OVERRIDES[safeWord]) return PATTERN_OVERRIDES[safeWord];
+    return String(item.pattern || '').replace(/[^1-4]/g, '') || '111';
+  }
+
+  function cardHtml(item){
+    const safeWord = String(item.word || '').toLowerCase();
+    const safePattern = getDisplayPattern(item);
+    const img = item._imgSrc
+      ? '<img alt="' + safeWord + '" src="' + item._imgSrc + '">' 
+      : '<div class="spg-missing-img" aria-hidden="true"></div>';
+
+    return '' +
+      '<div class="spg-card">' +
+        img +
+        '<div class="spg-word">' + safeWord + '</div>' +
+        '<div class="spg-pattern">' + safePattern + '</div>' +
+      '</div>';
+  }
+
+  async function generate(){
+    if(typeof soundBoxWords === 'undefined'){
+      outputEl.innerHTML = '<article class="spg-page"><p class="spg-sub">Missing data: newtry_FULL.js did not load.</p></article>';
+      return;
+    }
+
+    await ensureImageIndex();
+
+    const allWords = dedupeWords(getRControlledWords(soundBoxWords));
+    const shuffled = shuffle(allWords);
+    const picked = [];
+
+    for(const item of shuffled){
+      const src = await getVerifiedImageSrc(item.word);
+      if(!src) continue;
+      picked.push({ ...item, _imgSrc: src });
+      if(picked.length >= 6) break;
+    }
+
+    while(picked.length < 6 && shuffled.length){
+      const fallback = shuffled[picked.length % shuffled.length];
+      picked.push({ ...fallback, _imgSrc: null });
+      if(picked.length >= 6) break;
+    }
+
+    if(!picked.length){
+      outputEl.innerHTML = '<article class="spg-page"><p class="spg-sub">No R-Controlled picture matches found.</p></article>';
+      return;
+    }
+
+    const wordBank = shuffle(picked.map((p) => String(p.word || '').toLowerCase()));
+    const cards = picked.map(cardHtml).join('');
+    const bank = wordBank.map((w) => '<div class="spg-word-pill">' + w + '</div>').join('');
+
+    outputEl.innerHTML = '' +
+      '<article class="spg-page">' +
+        '<h2 class="spg-title">Mixed R-Controlled Worksheet</h2>' +
+        '<p class="spg-sub">Spelling with Pictures</p>' +
+        '<div class="spg-name-row">Name:<span class="line"></span></div>' +
+        '<section class="spg-word-bank">' +
+          '<p class="spg-word-bank-title">Word Bank</p>' +
+          '<div class="spg-word-bank-list">' + bank + '</div>' +
+        '</section>' +
+        '<section class="spg-grid">' + cards + '</section>' +
+        '<div class="spg-footer">Copyright - InterventionStation.com - @TeachwithMrC</div>' +
+        '<div class="spg-members-lock">' +
+          '<p class="spg-members-lock-title">Members Only</p>' +
+          '<p class="spg-members-lock-copy">Printing is for Members Only. Create an Unlimited Amount as a Member.</p>' +
+          '<a href="https://interventionstation.com" target="_blank" rel="noopener noreferrer">Join Membership</a>' +
+        '</div>' +
+        '<div class="spg-preview-overlay" aria-hidden="true"></div>' +
+      '</article>';
+  }
+
+  btnGenerate.addEventListener('click', generate);
+  btnPrint.addEventListener('click', () => {
+    alert('Printing is for Members Only. Create an Unlimited Amount as a Member.');
+  });
+
+  window.addEventListener('load', () => {
+    setTimeout(generate, 120);
+  });
+})();
+</script>
+</body>
+</html>
