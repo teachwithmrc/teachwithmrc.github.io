@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intervention Station | What's Inside</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --brand-dark:#2f3e4e;
+      --brand-blue:#66c9f4;
+      --ink:#102246;
+      --border:rgba(0,0,0,.55);
+      --offwhite:#f3f5f7;
+      --panel:#ffffff;
+    }
+
+    html,body{
+      margin:0;
+      padding:0;
+      font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--ink);
+      background:var(--offwhite);
+    }
+    *,*::before,*::after{ box-sizing:border-box; }
+    img{ display:block; max-width:100%; height:auto; }
+    body{ overflow-x:hidden; }
+
+    .top-cta-wrap{ background:var(--brand-dark); }
+    .top-cta-bar{
+      position:sticky;
+      top:0;
+      z-index:9999;
+      background:var(--brand-dark);
+      width:min(1200px, calc(100% - 32px));
+      margin:0 auto;
+      padding:12px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:nowrap;
+    }
+    .top-logo{
+      width:auto;
+      height:auto;
+      max-width:min(480px, 40vw);
+    }
+    .top-buttons-row{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:10px;
+      flex-wrap:nowrap;
+    }
+    .top-buttons-row a{
+      display:inline-flex;
+      text-decoration:none;
+    }
+    .top-buttons-row button{
+      appearance:none;
+      width:168px;
+      min-width:168px;
+      height:46px;
+      padding:0 14px;
+      background:var(--brand-blue);
+      border:2px solid var(--brand-blue);
+      border-radius:12px;
+      color:#fff;
+      font-family:"Poppins",system-ui,sans-serif;
+      font-size:16px;
+      font-weight:600;
+      line-height:1;
+      white-space:nowrap;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+    }
+
+    .is-home-sections{
+      background:var(--offwhite);
+      padding:18px 0 34px;
+    }
+    .is-home-sections .is-wrap{
+      width:min(1200px, calc(100% - 32px));
+      margin:0 auto;
+    }
+    .is-home-sections .is-layout{
+      display:grid;
+      grid-template-columns:320px minmax(0,1fr);
+      gap:12px;
+      align-items:start;
+    }
+    .is-home-sections .is-main{ min-width:0; }
+    .is-home-sections .is-nav{
+      position:sticky;
+      top:16px;
+    }
+    .is-home-sections .is-nav-card{
+      background:var(--panel);
+      border:2px solid var(--border);
+      padding:0;
+      overflow:hidden;
+    }
+    .is-home-sections .is-nav-group.is-nav-home{
+      padding:10px 12px 8px;
+      border-bottom:2px solid rgba(0,0,0,.18);
+    }
+    .is-home-sections .is-mt-12{ margin-top:8px; }
+    .is-home-sections .is-nav-header{
+      background:var(--brand-blue);
+      color:#fff;
+      font-weight:700;
+      font-size:22px;
+      line-height:1.1;
+      padding:12px 14px;
+      margin:0;
+    }
+    .is-home-sections .is-nav-group{ padding:6px 12px 10px; }
+    .is-home-sections .is-nav-link{
+      display:block;
+      text-decoration:none;
+      color:#102246;
+      font-weight:600;
+      font-size:14px;
+      line-height:1.22;
+      padding:6px 0;
+      word-break:break-word;
+    }
+    .is-home-sections .is-nav-link:hover{ text-decoration:underline; }
+    .is-home-sections .is-nav-link.is-active{
+      color:#0f2e52;
+      text-decoration:underline;
+      text-decoration-thickness:2px;
+    }
+    .is-page{
+      background:var(--panel);
+      border:2px solid var(--border);
+      overflow:hidden;
+      padding:16px;
+    }
+    .is-page-hero{
+      background:linear-gradient(135deg, #eff8ff 0%, #f9fcff 100%);
+      border:1px solid #d5e6f5;
+      border-radius:16px;
+      padding:18px;
+      margin-bottom:16px;
+    }
+    .is-page-hero p{
+      margin:0 0 8px;
+      color:#4d84b7;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .is-page-hero h1{
+      margin:0 0 8px;
+      font-size:34px;
+      line-height:1.04;
+      color:#0e2b4f;
+    }
+    .is-page-hero .lead{
+      margin:0;
+      font-size:15px;
+      line-height:1.55;
+      color:#4f6689;
+      font-weight:600;
+      text-transform:none;
+      letter-spacing:0;
+    }
+    .is-action-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+    .is-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:46px;
+      padding:0 18px;
+      border-radius:999px;
+      text-decoration:none;
+      font-weight:900;
+      font-size:15px;
+      white-space:nowrap;
+    }
+    .is-btn-primary{
+      background:#6ec1ff;
+      border:1px solid #5aaee9;
+      color:#fff;
+      box-shadow:0 8px 18px rgba(16,40,70,.14);
+    }
+    .is-btn-secondary{
+      background:#fff;
+      border:1px solid #cfd7ef;
+      color:#1f365f;
+    }
+    .is-stat-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:12px;
+      margin-bottom:16px;
+    }
+    .is-stat-card{
+      background:#fff;
+      border:1px solid #d7e5f3;
+      border-radius:16px;
+      padding:16px;
+      box-shadow:0 8px 18px rgba(31,54,95,.05);
+    }
+    .is-stat-card strong{
+      display:block;
+      font-size:32px;
+      line-height:1;
+      color:#0f2e52;
+      margin-bottom:8px;
+    }
+    .is-stat-card span{
+      display:block;
+      font-size:13px;
+      line-height:1.45;
+      color:#4f6689;
+      font-weight:700;
+    }
+    .is-quick-strip{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:10px;
+      margin:0 0 16px;
+    }
+    .is-quick-pill{
+      border-radius:14px;
+      padding:14px 12px;
+      color:#fff;
+      font-weight:800;
+      line-height:1.3;
+      box-shadow:0 8px 18px rgba(31,54,95,.08);
+    }
+    .is-quick-pill strong{
+      display:block;
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:6px;
+      opacity:.9;
+    }
+    .is-quick-pill:nth-child(1){ background:linear-gradient(135deg, #66c9f4, #4f9fd3); }
+    .is-quick-pill:nth-child(2){ background:linear-gradient(135deg, #1f365f, #365d90); }
+    .is-quick-pill:nth-child(3){ background:linear-gradient(135deg, #3aa76d, #5bb989); }
+    .is-quick-pill:nth-child(4){ background:linear-gradient(135deg, #f29b4b, #df7d29); }
+    .is-section{
+      border:1px solid #d7e5f3;
+      border-radius:16px;
+      background:#fff;
+      padding:18px;
+      box-shadow:0 10px 22px rgba(31,54,95,.05);
+      margin-bottom:14px;
+    }
+    .is-section h2{
+      margin:0 0 8px;
+      font-size:24px;
+      line-height:1.1;
+      color:#0f2e52;
+    }
+    .is-section-intro{
+      margin:0 0 14px;
+      color:#4f6689;
+      font-size:14px;
+      line-height:1.5;
+      font-weight:600;
+    }
+    .is-card-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:12px;
+    }
+    .is-card{
+      border:1px solid #dbe7f2;
+      border-radius:14px;
+      padding:14px;
+      background:#fbfdff;
+    }
+    .is-card h3{
+      margin:0 0 8px;
+      font-size:18px;
+      line-height:1.15;
+      color:#0f2e52;
+    }
+    .is-card p{
+      margin:0 0 10px;
+      font-size:13px;
+      line-height:1.5;
+      color:#4f6689;
+      font-weight:600;
+    }
+    .is-pill{
+      display:inline-flex;
+      align-items:center;
+      min-height:30px;
+      padding:0 10px;
+      border-radius:999px;
+      background:#eaf5ff;
+      color:#24507d;
+      font-size:12px;
+      font-weight:900;
+    }
+    .is-proof-list{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:10px 14px;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+    .is-proof-list li{
+      border-top:1px solid #e5eef7;
+      padding-top:10px;
+      font-size:14px;
+      line-height:1.5;
+      color:#4f6689;
+      font-weight:600;
+    }
+    .is-proof-list strong{
+      color:#0f2e52;
+    }
+    .is-note{
+      margin:10px 0 0;
+      font-size:12px;
+      line-height:1.5;
+      color:#6c7f9d;
+      font-weight:600;
+    }
+    .is-mini-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:10px;
+    }
+    .is-mini-card{
+      border:1px solid #dbe7f2;
+      border-radius:14px;
+      padding:14px;
+      background:#fbfdff;
+    }
+    .is-mini-card strong{
+      display:block;
+      font-size:24px;
+      line-height:1;
+      color:#0f2e52;
+      margin-bottom:8px;
+    }
+    .is-mini-card span{
+      display:block;
+      font-size:12px;
+      line-height:1.45;
+      color:#4f6689;
+      font-weight:700;
+    }
+    .is-highlight-band{
+      border:1px solid #d7e5f3;
+      background:linear-gradient(135deg, #f7fbff 0%, #eef7ff 100%);
+      border-radius:16px;
+      padding:16px;
+      margin-bottom:14px;
+    }
+    .is-highlight-band h2{
+      margin:0 0 10px;
+      font-size:22px;
+      line-height:1.1;
+      color:#0f2e52;
+    }
+    .is-highlight-list{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:10px;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+    .is-highlight-list li{
+      background:#fff;
+      border:1px solid #dbe7f2;
+      border-radius:14px;
+      padding:12px;
+      font-size:13px;
+      line-height:1.45;
+      color:#4f6689;
+      font-weight:700;
+    }
+    .is-highlight-list strong{
+      display:block;
+      color:#0f2e52;
+      font-size:16px;
+      margin-bottom:4px;
+    }
+    .is-accordion{
+      display:grid;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .is-accordion-item{
+      border:1px solid #d7e5f3;
+      border-radius:16px;
+      background:#fff;
+      box-shadow:0 10px 22px rgba(31,54,95,.05);
+      overflow:hidden;
+    }
+    .is-accordion-item[open]{
+      border-color:#b8d6f0;
+      box-shadow:0 14px 28px rgba(31,54,95,.08);
+    }
+    .is-accordion-summary{
+      list-style:none;
+      cursor:pointer;
+      padding:18px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:16px;
+      background:linear-gradient(135deg, #f8fcff 0%, #eef7ff 100%);
+    }
+    .is-accordion-summary::-webkit-details-marker{ display:none; }
+    .is-accordion-kicker{
+      display:inline-flex;
+      align-items:center;
+      min-height:28px;
+      padding:0 10px;
+      border-radius:999px;
+      background:#dff1ff;
+      color:#23527f;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      margin-bottom:10px;
+    }
+    .is-accordion-summary h2{
+      margin:0 0 8px;
+      font-size:24px;
+      line-height:1.08;
+      color:#0f2e52;
+    }
+    .is-accordion-summary p{
+      margin:0;
+      font-size:14px;
+      line-height:1.5;
+      color:#4f6689;
+      font-weight:600;
+      max-width:760px;
+    }
+    .is-accordion-toggle{
+      flex:0 0 auto;
+      width:38px;
+      height:38px;
+      border-radius:999px;
+      background:#1f365f;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:24px;
+      line-height:1;
+      font-weight:400;
+      margin-top:2px;
+    }
+    .is-accordion-item[open] .is-accordion-toggle{ transform:rotate(45deg); }
+    .is-accordion-body{
+      padding:0 18px 18px;
+    }
+    .is-accordion-body .is-mini-grid,
+    .is-accordion-body .is-card-grid,
+    .is-accordion-body .is-highlight-list{
+      margin-top:14px;
+    }
+    .is-accordion-note{
+      margin:14px 0 0;
+      font-size:12px;
+      line-height:1.5;
+      color:#6c7f9d;
+      font-weight:600;
+    }
+
+    @media (max-width:1100px){
+      .is-home-sections .is-layout{ grid-template-columns:1fr; }
+      .is-home-sections .is-nav{ position:relative; top:auto; }
+    }
+    @media (max-width:980px){
+      .top-cta-bar{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .top-buttons-row{
+        width:100%;
+        justify-content:stretch;
+        flex-wrap:wrap;
+      }
+      .top-buttons-row a{
+        flex:1 1 100%;
+      }
+      .top-buttons-row button{
+        width:100%;
+        min-width:0;
+      }
+      .is-stat-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+      .is-accordion-summary{
+        padding:16px;
+      }
+      .is-accordion-summary h2{
+        font-size:22px;
+      }
+      .is-quick-strip{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+      .is-mini-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+      .is-highlight-list{ grid-template-columns:1fr; }
+      .is-card-grid,
+      .is-proof-list{ grid-template-columns:1fr; }
+    }
+    @media (max-width:640px){
+      .is-page-hero h1{ font-size:28px; }
+      .is-stat-grid{ grid-template-columns:1fr; }
+      .is-quick-strip,
+      .is-mini-grid{ grid-template-columns:1fr; }
+    }
+  </style>
+  <script src="./shared-left-nav.js" defer></script>
+</head>
+<body>
+  <div class="top-cta-wrap">
+    <div class="top-cta-bar">
+      <img
+        src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png"
+        height="95"
+        width="500"
+        alt="Intervention Station"
+        class="top-logo"
+      />
+      <div class="top-buttons-row">
+        <a href="./home-preview.html#join">
+          <button type="button"><div class="main-heading-button">Join Membership</div></button>
+        </a>
+        <a href="./whats-inside-preview.html">
+          <button type="button"><div class="main-heading-button">What's Inside?</div></button>
+        </a>
+        <a href="./home-preview.html">
+          <button type="button"><div class="main-heading-button">Back Home</div></button>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <section class="is-home-sections">
+    <div class="is-wrap is-layout">
+      <aside class="is-nav" aria-label="Navigation">
+        <nav class="is-nav-card">
+          <div class="is-nav-group is-nav-home">
+            <a class="is-nav-link" href="./home-preview.html">&#127968; Home</a>
+            <a class="is-nav-link is-active" href="./whats-inside-preview.html">What's Inside</a>
+          </div>
+
+          <div class="is-nav-header">Math Generators</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./rounding-generator-preview.html">Rounding Generator</a>
+            <a class="is-nav-link" href="./addition-generator-preview.html">Addition Generator</a>
+            <a class="is-nav-link" href="./subtraction-generator-preview.html">Subtraction Generator</a>
+            <a class="is-nav-link" href="./multiply-generator-preview.html">Multiplication Generator</a>
+            <a class="is-nav-link" href="./partialproducts-generator-preview.html">Partial Products Generator</a>
+            <a class="is-nav-link" href="./division-generator-preview.html">Long Division</a>
+            <a class="is-nav-link" href="./long-division-scaffolded-generator-preview.html">Long Division Scaffold</a>
+            <a class="is-nav-link" href="./addsubtractmodels-generator-preview.html">Manipulatives / Hundreds Chart</a>
+            <a class="is-nav-link" href="./ten-frame-preview.html">Ten Frame Generator</a>
+            <a class="is-nav-link" href="./coin-counter-generator-preview.html">Coin Counter Generator</a>
+            <a class="is-nav-link" href="./mathtictac-preview.html">Tic Tac Toe Generator</a>
+            <a class="is-nav-link" href="./mathrollread-preview.html">Math Roll &amp; Read</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">SOR Generators</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./tictacpreview.html">SOR Tic Tac Toe</a>
+            <a class="is-nav-link" href="./fluencygridpreview.html">SOR Fluency Grid</a>
+            <a class="is-nav-link" href="./rollreadpreview.html">SOR Roll and Read</a>
+            <a class="is-nav-link" href="./wordladderpreview.html">SOR Word Ladder</a>
+            <a class="is-nav-link" href="./word-map-preview.html">SOR Word Mapping</a>
+            <a class="is-nav-link" href="./pyramid-spelling-generator-preview.html">Pyramid Spelling</a>
+            <a class="is-nav-link" href="./spelling-with-pictures-generator-preview.html">Spelling Pics Generator</a>
+          </div>
+
+          <div class="is-nav-header is-mt-12">Resource Libraries</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link" href="./placevalue-preview.html">Math Resources</a>
+            <a class="is-nav-link" href="./heart-words-preview.html">Reading Resources</a>
+            <a class="is-nav-link" href="./readinggames-preview.html">Games</a>
+            <a class="is-nav-link" href="./math-song-preview.html">Learning Songs</a>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="is-main">
+        <section class="is-page">
+          <header class="is-page-hero">
+            <p>Membership Overview</p>
+            <h1>What Teachers Actually Unlock Inside Intervention Station</h1>
+            <div class="lead">Not one worksheet pack. A growing intervention library with generators, printables, slides, games, and songs teachers can use all year.</div>
+            <div class="is-action-row">
+              <a class="is-btn is-btn-primary" href="./home-preview.html#join">Join Membership</a>
+              <a class="is-btn is-btn-secondary" href="./home-preview.html">Back to Home</a>
+            </div>
+          </header>
+
+          <section class="is-quick-strip" aria-label="Quick reasons to join">
+            <div class="is-quick-pill">
+              <strong>Make More</strong>
+              Unlimited fresh worksheets instead of reusing the same pages.
+            </div>
+            <div class="is-quick-pill">
+              <strong>Teach Faster</strong>
+              Small-group tools, printables, and ready-to-go practice.
+            </div>
+            <div class="is-quick-pill">
+              <strong>Cover More Skills</strong>
+              Math, phonics, spelling, fluency, songs, and games.
+            </div>
+            <div class="is-quick-pill">
+              <strong>Keep It Fresh</strong>
+              Generators plus resource libraries for all-year intervention.
+            </div>
+          </section>
+
+          <section class="is-stat-grid" aria-label="Membership counts">
+            <div class="is-stat-card">
+              <strong>19</strong>
+              <span>Customizable generators already linked in the current preview</span>
+            </div>
+            <div class="is-stat-card">
+              <strong>48+</strong>
+              <span>Verified printable math resources across the previewed math library</span>
+            </div>
+            <div class="is-stat-card">
+              <strong>200+</strong>
+              <span>Reading supports when you combine the verified slide, pyramid, set, and activity libraries</span>
+            </div>
+            <div class="is-stat-card">
+              <strong>29</strong>
+              <span>Learning song downloads and previews already inside the music library</span>
+            </div>
+          </section>
+
+          <section class="is-accordion" aria-label="What's inside categories">
+            <details class="is-accordion-item" open>
+              <summary class="is-accordion-summary">
+                <div>
+                  <span class="is-accordion-kicker">Generators</span>
+                  <h2>SOR Generators</h2>
+                  <p>Instantly create phonics worksheets based on a very specific scope and sequence. Combine or select from over 40 phonics skills to make Tic Tac Toe, Roll and Read, Fluency Grids, Word Ladders, Word Mapping, and more.</p>
+                </div>
+                <span class="is-accordion-toggle" aria-hidden="true">+</span>
+              </summary>
+              <div class="is-accordion-body">
+                <div class="is-mini-grid">
+                  <div class="is-mini-card"><strong>7</strong><span>SOR worksheet generators</span></div>
+                  <div class="is-mini-card"><strong>40+</strong><span>Phonics skills to mix and match</span></div>
+                  <div class="is-mini-card"><strong>Fast</strong><span>Perfect for small groups and intervention prep</span></div>
+                  <div class="is-mini-card"><strong>Fresh</strong><span>Make new sheets without starting over</span></div>
+                </div>
+              </div>
+            </details>
+
+            <details class="is-accordion-item">
+              <summary class="is-accordion-summary">
+                <div>
+                  <span class="is-accordion-kicker">Generators</span>
+                  <h2>Math Generators</h2>
+                  <p>Create fresh math practice in seconds for the exact skill you need. Generate rounding, operations, division, partial products, coin counting, ten frames, manipulatives, math Tic Tac Toe, and Roll and Read pages without remaking the same worksheet again and again.</p>
+                </div>
+                <span class="is-accordion-toggle" aria-hidden="true">+</span>
+              </summary>
+              <div class="is-accordion-body">
+                <div class="is-mini-grid">
+                  <div class="is-mini-card"><strong>12</strong><span>Math generators already in the preview</span></div>
+                  <div class="is-mini-card"><strong>On Demand</strong><span>Fresh practice for the exact standard or skill</span></div>
+                  <div class="is-mini-card"><strong>Flexible</strong><span>Use for centers, homework, intervention, or review</span></div>
+                  <div class="is-mini-card"><strong>Fast Prep</strong><span>Less worksheet hunting, more teaching time</span></div>
+                </div>
+              </div>
+            </details>
+
+            <details class="is-accordion-item">
+              <summary class="is-accordion-summary">
+                <div>
+                  <span class="is-accordion-kicker">Reading Library</span>
+                  <h2>Reading Resources</h2>
+                  <p>These reading resources are built to be decodable, follow a specific scope and sequence, and use fun scaffolded activities to build reading skills and confidence at the same time.</p>
+                </div>
+                <span class="is-accordion-toggle" aria-hidden="true">+</span>
+              </summary>
+              <div class="is-accordion-body">
+                <div class="is-mini-grid">
+                  <div class="is-mini-card"><strong>12</strong><span>Heart word sets</span></div>
+                  <div class="is-mini-card"><strong>97</strong><span>Blending slide decks</span></div>
+                  <div class="is-mini-card"><strong>77</strong><span>High-frequency word pyramids</span></div>
+                  <div class="is-mini-card"><strong>23</strong><span>Pick the Pic activities</span></div>
+                  <div class="is-mini-card"><strong>8</strong><span>Phonics maze activities</span></div>
+                  <div class="is-mini-card"><strong>18</strong><span>Spelling Google Sheets resources</span></div>
+                  <div class="is-mini-card"><strong>7</strong><span>Fix the Mix Up activities</span></div>
+                  <div class="is-mini-card"><strong>6</strong><span>Phonics comics, with decodables coming soon</span></div>
+                </div>
+              </div>
+            </details>
+
+            <details class="is-accordion-item">
+              <summary class="is-accordion-summary">
+                <div>
+                  <span class="is-accordion-kicker">Math Library</span>
+                  <h2>Math Resources</h2>
+                  <p>These math resources have been used by hundreds of teachers and viewed hundreds of thousands of times because they work for all students, especially when teachers need clear scaffolds that actually move learning forward.</p>
+                </div>
+                <span class="is-accordion-toggle" aria-hidden="true">+</span>
+              </summary>
+              <div class="is-accordion-body">
+                <div class="is-mini-grid">
+                  <div class="is-mini-card"><strong>5</strong><span>Place value resources</span></div>
+                  <div class="is-mini-card"><strong>5</strong><span>Addition organizers</span></div>
+                  <div class="is-mini-card"><strong>7</strong><span>Multiplication resources</span></div>
+                  <div class="is-mini-card"><strong>5</strong><span>Long division resources</span></div>
+                  <div class="is-mini-card"><strong>10</strong><span>Fractions resources</span></div>
+                  <div class="is-mini-card"><strong>5</strong><span>Decimals resources</span></div>
+                  <div class="is-mini-card"><strong>8</strong><span>Rounding resources</span></div>
+                  <div class="is-mini-card"><strong>3+</strong><span>Google puzzle and riddle resources</span></div>
+                </div>
+              </div>
+            </details>
+
+            <details class="is-accordion-item">
+              <summary class="is-accordion-summary">
+                <div>
+                  <span class="is-accordion-kicker">Music</span>
+                  <h2>Learning Songs</h2>
+                  <p>TeachwithMrC's videos have been viewed over 250 million times and received over 10 million likes. These songs have been featured on GMA, Ryan Seacrest, and more, and each one comes with fill-in lyrics, activities, and slides with the music.</p>
+                </div>
+                <span class="is-accordion-toggle" aria-hidden="true">+</span>
+              </summary>
+              <div class="is-accordion-body">
+                <ul class="is-highlight-list">
+                  <li><strong>250M+</strong>Video views across TeachwithMrC songs and content.</li>
+                  <li><strong>10M+</strong>Likes showing real teacher and student engagement.</li>
+                  <li><strong>29 Songs</strong>Song downloads and previews in the current library.</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="is-accordion-item">
+              <summary class="is-accordion-summary">
+                <div>
+                  <span class="is-accordion-kicker">Engagement</span>
+                  <h2>Interactive Games</h2>
+                  <p>Use interactive games to keep your class working and engaged at the same time. Pick from Tic Tac Toe, 4 in a Row, and Roll and Read. You can even have students fill in the correct answers for math, and the games follow the SOR scope and sequence while also covering almost every elementary math skill.</p>
+                </div>
+                <span class="is-accordion-toggle" aria-hidden="true">+</span>
+              </summary>
+              <div class="is-accordion-body">
+                <ul class="is-highlight-list">
+                  <li><strong>Reading + Math</strong>Use games across decoding, fluency, and elementary math.</li>
+                  <li><strong>Student Input</strong>Students can solve and fill in correct answers as they play.</li>
+                  <li><strong>Easy Rotation</strong>Great for centers, small groups, review, and classwide engagement.</li>
+                </ul>
+              </div>
+            </details>
+          </section>
+
+          <section class="is-section">
+            <h2>Best Homepage Angle</h2>
+            <div class="is-card-grid">
+              <article class="is-card">
+                <h3>Main Promise</h3>
+                <p>One membership gives teachers generators plus a deep printable library so they can make fresh intervention practice all year.</p>
+              </article>
+              <article class="is-card">
+                <h3>Best Proof Stack</h3>
+                <p>Lead with 19 generators, then back it up with the size of the reading, math, music, and game libraries.</p>
+              </article>
+            </div>
+            <p class="is-note">Counts above are based on the current preview inventory I could verify directly from the pages in this folder, plus your provided positioning copy for songs, games, and resource messaging.</p>
+          </section>
+        </section>
+      </main>
+    </div>
+  </section>
+</body>
+</html>
