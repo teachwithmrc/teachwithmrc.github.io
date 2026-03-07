@@ -26,6 +26,13 @@
       --tone1-strong: #ffe2b3;
       --tone2-strong: #d1ecf8;
       --tone3-strong: #dcefd5;
+      --canvas-label-col: 24px;
+      --canvas-digit-col: 50px;
+      --canvas-rem-col: 22px;
+      --canvas-row-h: 40px;
+      --canvas-col-gap: 4px;
+      --canvas-row-gap: 8px;
+      --box-font: "Poppins", Arial, sans-serif;
     }
 
     * {
@@ -49,107 +56,6 @@
       max-width: 1160px;
       margin: 0 auto;
       padding: 14px 14px 36px;
-    }
-
-    .mobile-topbar {
-      background: transparent;
-      border: 0;
-      border-radius: 0;
-      padding: 0;
-      margin-bottom: 12px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .logo-compare {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    .logo-compare .logo-tile:nth-child(2) {
-      display: none;
-    }
-
-    .logo-tile {
-      background: transparent;
-      border: 0;
-      border-radius: 0;
-      min-height: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-    }
-
-    .logo-tile img {
-      width: 100%;
-      max-width: 100%;
-      height: auto;
-      object-fit: contain;
-      display: block;
-    }
-
-    .top-actions {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-      background: transparent;
-    }
-
-    .top-action-btn {
-      appearance: none;
-      -webkit-appearance: none;
-      min-height: 44px;
-      border-radius: 10px;
-      border: 2px solid #66c9f4;
-      background: #66c9f4;
-      color: #fff;
-      text-decoration: none;
-      font-size: 0.95rem;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-      text-align: center;
-      padding: 0 10px;
-    }
-
-    .preview-hub-nav {
-      border: 2px solid #d9dfeb;
-      border-radius: 12px;
-      background: #fff;
-      padding: 8px;
-      margin-bottom: 10px;
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .hub-nav-btn {
-      min-height: 42px;
-      border: 2px solid #1f2b3e;
-      border-radius: 10px;
-      background: #fff;
-      color: #1f2b3e;
-      text-decoration: none;
-      font-size: 0.86rem;
-      font-weight: 800;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 0 10px;
-      line-height: 1.15;
-    }
-
-    .hub-nav-btn.hub {
-      background: #1f2b3e;
-      border-color: #1f2b3e;
-      color: #fff;
-      min-width: 88px;
     }
 
     .screen-only h1 {
@@ -533,17 +439,17 @@
     .problem-canvas {
       position: relative;
       display: grid;
-      grid-template-columns: 24px 50px repeat(var(--digits), 50px) 22px 50px;
-      grid-template-rows: repeat(var(--rows), 40px);
-      column-gap: 4px;
-      row-gap: 8px;
+      grid-template-columns: var(--canvas-label-col) var(--canvas-digit-col) repeat(var(--digits), var(--canvas-digit-col)) var(--canvas-rem-col) var(--canvas-digit-col);
+      grid-template-rows: repeat(var(--rows), var(--canvas-row-h));
+      column-gap: var(--canvas-col-gap);
+      row-gap: var(--canvas-row-gap);
       align-items: center;
       justify-content: start;
       overflow: visible;
     }
 
     .problem-canvas.no-remainder {
-      grid-template-columns: 24px 50px repeat(var(--digits), 50px);
+      grid-template-columns: var(--canvas-label-col) var(--canvas-digit-col) repeat(var(--digits), var(--canvas-digit-col));
     }
 
     .remainder-label {
@@ -557,8 +463,8 @@
     }
 
     .canvas-box {
-      width: 50px;
-      height: 40px;
+      width: var(--canvas-digit-col);
+      height: var(--canvas-row-h);
       border: 2px solid #111;
       border-radius: 2px;
       display: flex;
@@ -657,6 +563,8 @@
       justify-content: center;
       font-size: 1.08rem;
       font-weight: 700;
+      font-family: var(--box-font);
+      font-variant-numeric: tabular-nums;
       background: #fff;
     }
 
@@ -724,6 +632,8 @@
       display: grid;
       grid-template-columns: repeat(var(--step-count), minmax(0, 1fr));
       gap: 5px;
+      font-family: var(--box-font);
+      font-variant-numeric: tabular-nums;
     }
 
     .step-panel {
@@ -825,6 +735,7 @@
       font-size: 0.86rem;
       font-weight: 700;
       line-height: 1.25;
+      font-family: var(--box-font);
     }
 
     .target-digits {
@@ -847,6 +758,8 @@
       font-size: 0.79rem;
       font-weight: 700;
       padding: 0;
+      font-family: var(--box-font);
+      font-variant-numeric: tabular-nums;
     }
 
     .strip-table th.tone-head.tone-0 { background: var(--tone0-strong); }
@@ -932,10 +845,6 @@
         grid-template-columns: 1fr;
       }
 
-      .preview-hub-nav {
-        grid-template-columns: 1fr;
-      }
-
       .type-buttons {
         grid-template-columns: 1fr;
       }
@@ -966,6 +875,123 @@
       .footer-note {
         position: static;
         margin-top: 8px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      :root {
+        --canvas-label-col: 18px;
+        --canvas-digit-col: 40px;
+        --canvas-rem-col: 18px;
+        --canvas-row-h: 32px;
+        --canvas-col-gap: 3px;
+        --canvas-row-gap: 6px;
+      }
+
+      .app {
+        padding: 10px 10px 32px;
+      }
+
+      .controls-card {
+        padding: 10px;
+      }
+
+      .button-row {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .button-row button {
+        width: 100%;
+      }
+
+      .sheet {
+        padding: 10px;
+      }
+
+      .sheet-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .name-line {
+        width: 100%;
+        text-align: left;
+      }
+
+      .problem-canvas-wrap {
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 6px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .problem-canvas {
+        min-width: max-content;
+      }
+
+      .canvas-box {
+        font-size: 0.82rem;
+      }
+
+      .canvas-box.minus-cell {
+        font-size: 1.56rem;
+      }
+
+      .problem-equation {
+        font-size: 0.92rem;
+      }
+    }
+
+    @media (max-width: 460px) {
+      :root {
+        --canvas-label-col: 16px;
+        --canvas-digit-col: 34px;
+        --canvas-rem-col: 16px;
+        --canvas-row-h: 28px;
+        --canvas-col-gap: 2px;
+        --canvas-row-gap: 5px;
+      }
+
+      .app {
+        padding: 8px 8px 28px;
+      }
+
+      .screen-only .subtitle {
+        font-size: 0.86rem;
+      }
+
+      .field label,
+      .field-hint {
+        font-size: 0.74rem;
+      }
+
+      .field select,
+      .field input,
+      .field textarea {
+        font-size: 0.9rem;
+      }
+
+      .type-btn {
+        font-size: 0.84rem;
+        padding: 8px 8px;
+      }
+
+      .sheet {
+        padding: 8px;
+      }
+
+      .sheet-title {
+        font-size: 0.92rem;
+      }
+
+      .name-line {
+        font-size: 0.78rem;
+      }
+
+      .name-line .line {
+        width: 112px;
       }
     }
 
@@ -1179,27 +1205,6 @@
 </head>
 <body>
   <div class="app">
-    <div class="mobile-topbar">
-      <div class="logo-compare">
-        <div class="logo-tile">
-          <img src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/69a8e95d618c8d5889de9d26.png" alt="Logo option one" />
-        </div>
-        <div class="logo-tile">
-          <img src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/69a8e95d618c8d5889de9d26.png" alt="Logo option two" />
-        </div>
-      </div>
-      <div class="top-actions">
-        <a class="top-action-btn" href="https://member.interventionstation.com/join">Join Now</a>
-        <a class="top-action-btn" href="https://member.interventionstation.com/login">Log In</a>
-      </div>
-    </div>
-
-    <nav class="preview-hub-nav" aria-label="Preview generator navigation">
-      <a class="hub-nav-btn" href="partial-products-2x1-generator-preview-mobile-fit.html">← Partial Products 2x1</a>
-      <a class="hub-nav-btn hub" href="main-mobile-preview-hub.html">Hub</a>
-      <a class="hub-nav-btn" href="../../divisionorganizermobile.html">Division Generator →</a>
-    </nav>
-
     <div class="screen-only">
       <h1>Long Division Color-Coded Organizer Generator</h1>
       <p class="subtitle">Your right-side step-strip format with matching color logic</p>

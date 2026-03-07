@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ten Frames Generator - Mobile Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --preview-ratio:0.80;
+    --preview-scale:0.72;
+    --ink:#111;
+    --line:#111;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; font-family:"Poppins",Arial,sans-serif; color:var(--ink); background:#fff; }
+  .wrap{ max-width:460px; margin:0 auto; padding:10px; }
+
+  .usage-steps{ border:2px solid var(--line); border-radius:12px; background:#f8fbff; padding:10px 12px; margin-bottom:10px; }
+  .usage-steps h2{ margin:0 0 8px; font-size:30px; line-height:1.05; font-weight:900; text-align:center; }
+  .usage-steps p{ margin:0; text-align:center; font-size:13px; font-weight:700; line-height:1.35; }
+
+  .controls{ border:2px solid var(--line); border-radius:12px; padding:12px; margin-bottom:12px; }
+  .controls-top{ display:grid; grid-template-columns:1fr; gap:12px; align-items:flex-end; }
+  .field{ display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .field label{ font-size:16px; font-weight:900; }
+  select{
+    height:56px; width:100%; border:2px solid var(--line); border-radius:10px; padding:8px 10px;
+    font-family:"Poppins",Arial,sans-serif; font-size:18px; font-weight:800; background:#fff;
+  }
+
+  .controls-actions{ margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .btn{
+    border:2px solid var(--line); border-radius:14px; height:52px; padding:0 8px;
+    font-family:"Poppins",Arial,sans-serif; font-size:17px; font-weight:900; cursor:pointer;
+  }
+  .btn-primary{ background:#6ec1ff; color:#fff; }
+  .btn-secondary{ background:#fff; color:#111; }
+  .hint{ margin-top:8px; text-align:center; font-size:13px; font-weight:700; line-height:1.35; }
+
+  .preview-shell{
+    position:relative;
+    width:100%;
+    aspect-ratio:var(--preview-ratio);
+    overflow:hidden;
+    border:2px solid var(--line);
+    background:#fff;
+  }
+  .preview-content{
+    position:absolute;
+    left:50%;
+    top:0;
+    width:calc(100% / var(--preview-scale));
+    transform:translateX(-50%) scale(var(--preview-scale));
+    transform-origin:top center;
+    padding:10px;
+  }
+
+  .sheet{ border:2px solid var(--line); padding:10px; background:#fff; }
+  .sheet-title{ text-align:center; font-size:24px; font-weight:900; line-height:1.1; margin:2px 0 8px; }
+
+  .table{ border:2px solid var(--line); }
+  .row{ display:grid; grid-template-columns:1fr 1fr; }
+  .cell{
+    border-right:2px solid var(--line);
+    border-bottom:2px solid var(--line);
+    min-height:124px;
+    padding:7px 8px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:7px;
+  }
+  .row .cell:last-child{ border-right:none; }
+  .table .row:last-child .cell{ border-bottom:none; }
+
+  .expr{
+    font-size:18px;
+    font-weight:900;
+    text-align:center;
+    line-height:1.1;
+    white-space:nowrap;
+  }
+  .blank{
+    display:inline-block;
+    width:68px;
+    border-bottom:3px solid #111;
+    transform:translateY(-2px);
+  }
+
+  .frames{
+    display:grid;
+    gap:6px;
+    width:164px;
+  }
+  .tenframe{ border:2px solid #111; }
+  .tfgrid{ display:grid; grid-template-columns:repeat(5,1fr); }
+  .tfcell{
+    border:2px solid #111;
+    height:23px;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding-top:1px;
+  }
+  .dot{
+    width:76%;
+    height:76%;
+    border-radius:50%;
+    background:#111;
+    display:block;
+  }
+
+  .sheet-footer{ margin-top:8px; text-align:right; font-size:10px; font-weight:700; color:#666; }
+  .copyright{ margin-top:8px; text-align:center; font-size:12px; font-weight:700; letter-spacing:.2px; }
+
+  .preview-watermark{
+    position:absolute; inset:0; z-index:118; pointer-events:none; opacity:.52;
+    background-image:
+      repeating-linear-gradient(-26deg, rgba(0,0,0,.08) 0 18px, rgba(255,255,255,.06) 18px 36px),
+      url("data:image/svg+xml,%3Csvg width='340' height='220' viewBox='0 0 340 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-22 170 110)'%3E%3Ctext x='18' y='90' fill='%23000' fill-opacity='.26' font-family='Poppins' font-size='34' font-weight='900'%3EPREVIEW ONLY%3C/text%3E%3Ctext x='44' y='146' fill='%23000' fill-opacity='.2' font-family='Poppins' font-size='22' font-weight='800'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+    background-size:auto, 340px 220px;
+    background-repeat:repeat;
+  }
+  .preview-paywall{
+    position:absolute; left:0; right:0; bottom:0; z-index:120; pointer-events:none; display:flex;
+    align-items:flex-end; justify-content:center; padding:6px;
+    background:linear-gradient(to top, rgba(0,0,0,.62), rgba(0,0,0,0));
+  }
+  .preview-paywall-card{
+    width:min(96%, 420px); border:1px solid #fff; border-radius:10px; background:rgba(17,17,17,.90);
+    color:#fff; text-align:center; padding:7px 8px 6px; box-shadow:0 8px 20px rgba(0,0,0,.3); pointer-events:auto;
+  }
+  .preview-paywall-card h3{ margin:0 0 2px; font-size:.72rem; line-height:1.2; font-weight:900; letter-spacing:.02em; text-transform:uppercase; }
+  .preview-paywall-card p{ margin:0 0 4px; font-size:.62rem; line-height:1.2; opacity:.95; font-weight:600; }
+  .preview-paywall-card a{ display:inline-block; text-decoration:none; background:#fff; color:#111; border-radius:7px; padding:4px 8px; font-size:.62rem; font-weight:900; }
+
+  @media screen and (max-width:430px){ :root{ --preview-scale:0.68; } }
+  @media print{ body{ display:none !important; } }
+</style>
+</head>
+<body oncontextmenu="return false;">
+<div class="wrap">
+  <section class="usage-steps" aria-label="How this preview works">
+    <h2>Ten Frames Preview</h2>
+    <p>Choose a problem type, then tap <strong>Generate Preview</strong>.</p>
+  </section>
+
+  <div class="controls">
+    <div class="controls-top">
+      <div class="field">
+        <label for="problemType">Problem Type</label>
+        <select id="problemType" aria-label="Ten frame mode">
+          <option value="within10_add" selected>Add Within 10</option>
+          <option value="within10_sub">Subtract Within 10</option>
+          <option value="within20_add">Add Within 20</option>
+          <option value="within20_sub">Subtract Within 20</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="controls-actions">
+      <button type="button" id="btnGen" class="btn btn-primary">Generate Preview</button>
+      <button type="button" id="btnPrint" class="btn btn-secondary">Print</button>
+    </div>
+
+    <div class="hint" id="hint"></div>
+  </div>
+
+  <div class="preview-shell" aria-label="Ten frames preview worksheet">
+    <div class="preview-content">
+      <section class="sheet" id="worksheetHost"></section>
+      <div class="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>
+    </div>
+
+    <div class="preview-watermark" aria-hidden="true"></div>
+    <div class="preview-paywall" aria-hidden="false">
+      <div class="preview-paywall-card">
+        <h3>Premium Resource</h3>
+        <p>Generate is enabled in preview mode. Join membership to unlock full worksheet visibility and printing.</p>
+        <a href="https://member.interventionstation.com/join" target="_blank" rel="noopener">Join Membership</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const PROBLEM_COUNT = 8;
+
+  function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+  function randInt(min, max){
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function dots10(n){
+    const f = Array(10).fill(false);
+    for(let i = 0; i < clamp(n, 0, 10); i += 1) f[i] = true;
+    return f;
+  }
+
+  function dots20(n){
+    const nSafe = clamp(n, 0, 20);
+    const f1 = Array(10).fill(false);
+    const f2 = Array(10).fill(false);
+    for(let i = 0; i < Math.min(10, nSafe); i += 1) f1[i] = true;
+    for(let i = 0; i < Math.max(0, nSafe - 10); i += 1) f2[i] = true;
+    return [f1, f2];
+  }
+
+  function buildFrame(boolArr){
+    const ten = document.createElement("div");
+    ten.className = "tenframe";
+    const grid = document.createElement("div");
+    grid.className = "tfgrid";
+    for(let i = 0; i < 10; i += 1){
+      const cell = document.createElement("div");
+      cell.className = "tfcell";
+      if (boolArr[i]) {
+        const dot = document.createElement("span");
+        dot.className = "dot";
+        cell.appendChild(dot);
+      }
+      grid.appendChild(cell);
+    }
+    ten.appendChild(grid);
+    return ten;
+  }
+
+  function uniqueProblems(mode, needed){
+    const pool = [];
+
+    if(mode === "within10_add"){
+      for(let a = 0; a <= 10; a += 1){
+        for(let b = 0; b <= 10; b += 1){
+          if(a + b <= 10 && !(a === 0 && b === 0)) pool.push({ a, b });
+        }
+      }
+    } else if(mode === "within10_sub"){
+      for(let a = 1; a <= 10; a += 1){
+        for(let b = 0; b < a; b += 1) pool.push({ a, b });
+      }
+    } else if(mode === "within20_add"){
+      for(let a = 0; a <= 20; a += 1){
+        for(let b = 0; b <= 20; b += 1){
+          if(a + b <= 20 && a + b >= 11) pool.push({ a, b });
+        }
+      }
+    } else {
+      for(let a = 11; a <= 20; a += 1){
+        for(let b = 0; b < a; b += 1) pool.push({ a, b });
+      }
+    }
+
+    for(let i = pool.length - 1; i > 0; i -= 1){
+      const j = randInt(0, i);
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+
+    const picked = pool.slice(0, needed);
+    while(picked.length < needed){
+      if(!pool.length){
+        picked.push({ a: randInt(1, 9), b: randInt(0, 8) });
+      } else {
+        picked.push(pool[randInt(0, pool.length - 1)]);
+      }
+    }
+    return picked;
+  }
+
+  function buildCell(mode, a, b){
+    const isAdd = mode.includes("_add");
+    const uses20 = mode.includes("20");
+    const op = isAdd ? "+" : "−";
+
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    cell.innerHTML = `<div class="expr">${a} ${op} ${b} = <span class="blank"></span></div>`;
+
+    const frames = document.createElement("div");
+    frames.className = "frames";
+
+    if(uses20){
+      const [f1, f2] = dots20(a);
+      frames.appendChild(buildFrame(f1));
+      frames.appendChild(buildFrame(f2));
+    } else {
+      frames.appendChild(buildFrame(dots10(a)));
+    }
+
+    cell.appendChild(frames);
+    return cell;
+  }
+
+  function build(){
+    const mode = $("problemType").value;
+    let title = "Add Within 10 Using Ten Frames";
+    if(mode === "within10_sub") title = "Subtract Within 10 Using Ten Frames";
+    if(mode === "within20_add") title = "Add Within 20 Using Ten Frames";
+    if(mode === "within20_sub") title = "Subtract Within 20 Using Ten Frames";
+
+    const problems = uniqueProblems(mode, PROBLEM_COUNT);
+    const table = document.createElement("div");
+    table.className = "table";
+
+    for(let i = 0; i < 4; i += 1){
+      const row = document.createElement("div");
+      row.className = "row";
+      const left = problems[i * 2];
+      const right = problems[(i * 2) + 1];
+      row.appendChild(buildCell(mode, left.a, left.b));
+      row.appendChild(buildCell(mode, right.a, right.b));
+      table.appendChild(row);
+    }
+
+    $("worksheetHost").innerHTML = `<div class="sheet-title">${title}</div>`;
+    $("worksheetHost").appendChild(table);
+    $("worksheetHost").insertAdjacentHTML("beforeend", "<div class='sheet-footer'>No cross-outs in subtraction preview mode.</div>");
+
+    const hintMap = {
+      within10_add: "Add within 10 selected.",
+      within10_sub: "Subtract within 10 selected.",
+      within20_add: "Add within 20 selected.",
+      within20_sub: "Subtract within 20 selected."
+    };
+    $("hint").textContent = hintMap[mode] || "Problem type selected.";
+  }
+
+  function lockedPreviewAction(){
+    alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access.");
+  }
+
+  function blockShortcuts(event){
+    const blocked = (event.ctrlKey || event.metaKey) && ["p", "s", "u"].includes(event.key.toLowerCase());
+    if(blocked) event.preventDefault();
+  }
+
+  document.addEventListener("keydown", blockShortcuts);
+  $("btnGen").addEventListener("click", build);
+  $("btnPrint").addEventListener("click", lockedPreviewAction);
+  $("problemType").addEventListener("change", build);
+
+  build();
+</script>
+</body>
+</html>

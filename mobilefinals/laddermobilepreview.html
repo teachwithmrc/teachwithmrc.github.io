@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>R-Controlled Ladders Mobile Preview</title>
+
+  <script src="rladders.js" defer></script>
+  <script src="ladder_image_fallback.js" defer></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face { font-family: 'BoxesFont'; src: url('fonts/boxes2.otf') format('opentype'); }
+    @font-face { font-family: 'UnderlineFont'; src: url('fonts/underlines.otf') format('opentype'); }
+
+    :root {
+      --ink: #1f365f;
+      --line: #d7dfec;
+      --panel: #ffffff;
+      --bg: #f3f5f7;
+      --blue: #1976d2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding: 12px;
+    }
+
+    .top {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 8px 22px rgba(16, 24, 40, 0.08);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(23px, 7vw, 33px);
+      line-height: 1.05;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: #35516f;
+      margin: 0;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    .btns {
+      display: flex;
+      gap: 10px;
+      margin: 12px 0 10px;
+    }
+
+    button {
+      border-radius: 12px;
+      border: 2px solid #111;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      background: #fff;
+    }
+
+    .btn-main {
+      flex: 1;
+      min-height: 50px;
+      font-size: 17px;
+      padding: 0 12px;
+    }
+
+    #btnGenerate {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    #btnPrint {
+      color: #111;
+      background: #f8fbff;
+    }
+
+    .control-group {
+      margin-top: 8px;
+    }
+
+    .group-label {
+      margin: 0 0 6px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #2f4c70;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .option-row {
+      display: grid;
+      gap: 7px;
+    }
+
+    #blendRow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    #displayRow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .option-btn {
+      border: 1px solid #b7c9df;
+      border-radius: 10px;
+      padding: 8px 6px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.2;
+      background: #f7fbff;
+      color: #28486e;
+    }
+
+    .option-btn.selected {
+      background: #dcecff;
+      border-color: #6ea7e8;
+      color: #163e6d;
+    }
+
+    .preview {
+      position: relative;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 420px;
+    }
+
+    #output {
+      position: relative;
+      z-index: 1;
+    }
+
+    .page {
+      width: 100%;
+      min-height: 700px;
+      padding: 10px 8px 126px;
+      position: relative;
+      overflow: hidden;
+      background: #fff;
+      text-align: center;
+    }
+
+    .head-title {
+      margin: 0 0 4px;
+      font-size: 19px;
+      line-height: 1.1;
+      font-weight: 800;
+    }
+
+    .head-copy {
+      margin: 0 0 10px;
+      font-size: 11px;
+      line-height: 1.3;
+      font-weight: 600;
+    }
+
+    table.ladder {
+      border-collapse: collapse;
+      margin: 0 auto;
+      width: 100%;
+      table-layout: fixed;
+      background: #fff;
+    }
+
+    .img-cell {
+      width: 27%;
+      padding: 4px;
+      border: 1px solid #000;
+      vertical-align: middle;
+    }
+
+    .pattern-cell {
+      width: 43%;
+      padding: 4px;
+      border: 1px solid #000;
+      vertical-align: middle;
+    }
+
+    .hint-cell {
+      width: 30%;
+      padding: 3px;
+      border: 1px solid #000;
+      vertical-align: middle;
+    }
+
+    .img-cell img {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+    }
+
+    .first-word {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+    }
+
+    .pattern {
+      line-height: 1;
+      font-size: 58px;
+      letter-spacing: 0;
+    }
+
+    .hint-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f0f0f0;
+      border: 2px solid #000;
+      border-radius: 10px;
+      padding: 4px 6px;
+      font-size: 13px;
+      line-height: 1.2;
+      font-weight: 700;
+      min-height: 36px;
+      text-align: center;
+      word-break: break-word;
+    }
+
+    #copyright {
+      font-size: 11px;
+      text-align: right;
+      margin-top: 8px;
+      display: block;
+    }
+
+    .watermark {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='230' height='180' viewBox='0 0 230 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-28 115 90)'%3E%3Ctext x='10' y='76' fill='%23000000' fill-opacity='0.26' font-family='Poppins' font-size='27' font-weight='900'%3EPREVIEW%3C/text%3E%3Ctext x='18' y='118' fill='%23000000' fill-opacity='0.2' font-family='Poppins' font-size='15' font-weight='800'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+      background-size: 230px 180px;
+      background-repeat: repeat;
+    }
+
+    .lock-panel {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 5;
+      background: rgba(5, 11, 20, 0.98);
+      color: #fff;
+      text-align: center;
+      padding: 10px 10px 12px;
+      border-top: 2px solid #fff;
+    }
+
+    .lock-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      margin: 0 0 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .lock-copy {
+      margin: 0 0 8px;
+      font-size: 0.75rem;
+      line-height: 1.25;
+      font-weight: 600;
+    }
+
+    .join-btn {
+      display: inline-block;
+      text-decoration: none;
+      color: #051426;
+      background: #fff;
+      border: 2px solid #fff;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+
+    @media print {
+      body { display: none !important; }
+    }
+  </style>
+<style>
+.mf-topbar{background:transparent;padding:10px 10px 0;margin:0 auto 10px;max-width:1160px}.mf-logo{display:block;width:100%;max-width:100%;height:auto}.mf-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}.mf-btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;border-radius:10px;border:2px solid #66c9f4;background:#66c9f4;color:#fff;text-decoration:none;font:700 14px/1 "Poppins",sans-serif}@media (max-width:520px){.mf-actions{grid-template-columns:1fr}}
+</style>
+  <script src="/newtry_FULL.js" defer></script>
+</head>
+<body>
+<div class="mf-topbar">
+  <img class="mf-logo" src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/69a8e95d618c8d5889de9d26.png" alt="Intervention Station" />
+  <div class="mf-actions">
+    <a class="mf-btn" href="https://interventionstation.com/membershipchoices">Join Now</a>
+    <a class="mf-btn" href="https://member.interventionstation.com/login">Log In</a>
+  </div>
+</div>
+  <main class="app">
+    <section class="top" aria-label="Controls">
+      <h1>R-Controlled Word Ladders</h1>
+      <p class="subtitle">Mobile preview mode.</p>
+
+      <div class="btns">
+        <button id="btnGenerate" class="btn-main" type="button">Generate</button>
+        <button id="btnPrint" class="btn-main" type="button">Print</button>
+      </div>
+
+      <div class="control-group">
+        <p class="group-label">Blend Mode</p>
+        <div class="option-row" id="blendRow" role="radiogroup" aria-label="Blend mode">
+          <button type="button" class="option-btn selected" data-blend="No Blends">No Blends</button>
+          <button type="button" class="option-btn" data-blend="Include Blends">Include Blends</button>
+          <button type="button" class="option-btn" data-blend="Only Blends">Only Blends</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <p class="group-label">Display</p>
+        <div class="option-row" id="displayRow" role="radiogroup" aria-label="Display mode">
+          <button type="button" class="option-btn selected" data-style="elkonin">Elkonin Boxes</button>
+          <button type="button" class="option-btn" data-style="underlines">Underlines</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="preview" aria-label="Worksheet preview">
+      <div id="output"></div>
+      <div class="watermark" aria-hidden="true"></div>
+      <div class="lock-panel" aria-hidden="false">
+        <p class="lock-title">Members Only</p>
+        <p class="lock-copy">Printing is for Members Only. Create an Unlimited Amount as a Member.</p>
+        <a class="join-btn" href="https://interventionstation.com" target="_blank" rel="noopener noreferrer">Join</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const state = {
+      blendMode: "No Blends",
+      cellStyle: "elkonin",
+      boldChanged: true
+    };
+
+    function NS() {
+      return (window && window.RCTRL_NS) ? window.RCTRL_NS : null;
+    }
+
+    function getPattern(word) {
+      const dict = NS()?.patterns?.() || {};
+      return dict[(word || "").toLowerCase()] || "111";
+    }
+
+    function getImage(word) {
+      const dict = NS()?.images?.() || {};
+      return dict[(word || "").toLowerCase()] || "images/placeholder_110.png";
+    }
+
+    function splitByPattern(word, pattern) {
+      const chunks = [];
+      let i = 0;
+      for (let j = 0; j < pattern.length; j += 1) {
+        const d = pattern[j];
+        const len = (d === "3") ? 3 : ((d === "2") ? 2 : 1);
+        chunks.push(word.slice(i, i + len));
+        i += len;
+      }
+      return chunks;
+    }
+
+    function arraysEqual(a, b) {
+      return a.length === b.length && a.every(function (v, i) { return v === b[i]; });
+    }
+
+    function getStepChange(prevWord, word, prevPat, pat) {
+      if (!prevWord) return null;
+      const A = splitByPattern(prevWord, prevPat);
+      const B = splitByPattern(word, pat);
+
+      if (A.length === B.length) {
+        const changed = [];
+        for (let i = 0; i < A.length; i += 1) {
+          if ((A[i] || "") !== (B[i] || "")) changed.push(i);
+        }
+        if (changed.length !== 1) return null;
+
+        const idx = changed[0];
+        const from = A[idx] || "";
+        const to = B[idx] || "";
+
+        if (to.length === from.length + 1 && (to.startsWith(from) || to.endsWith(from))) {
+          const added = to.startsWith(from) ? to.slice(-1) : to.slice(0, to.length - from.length);
+          const atEnd = to.startsWith(from);
+          return { kind: "add_letter", index: idx, from: from, to: to, added: added, atEnd: atEnd };
+        }
+
+        if (from.length === to.length + 1 && (from.startsWith(to) || from.endsWith(to))) {
+          const removed = from.startsWith(to) ? from.slice(-1) : from.slice(0, from.length - to.length);
+          const atEnd = from.startsWith(to);
+          return { kind: "remove_letter", index: idx, from: from, to: to, removed: removed, atEnd: atEnd };
+        }
+
+        return { kind: "replace", index: idx, from: from, to: to };
+      }
+
+      if (B.length === A.length + 1) {
+        for (let i = 0; i < B.length; i += 1) {
+          const test = B.slice(0, i).concat(B.slice(i + 1));
+          if (arraysEqual(A, test)) return { kind: "add_chunk", index: i, from: "", to: B[i] || "" };
+        }
+      }
+
+      if (A.length === B.length + 1) {
+        for (let i = 0; i < A.length; i += 1) {
+          const test = A.slice(0, i).concat(A.slice(i + 1));
+          if (arraysEqual(B, test)) return { kind: "remove_chunk", index: i, from: A[i] || "", to: "" };
+        }
+      }
+
+      return null;
+    }
+
+    function getHintFromStep(step, prevWord, word) {
+      if (!step) return prevWord + " → " + word;
+      if (step.kind === "add_letter") {
+        const micro = step.atEnd
+          ? (step.from + " → " + step.from + "<b>" + step.added + "</b>")
+          : (step.from + " → <b>" + step.added + "</b>" + step.from);
+        return "+ " + step.added + " <span style=\"font-size:11px;opacity:.82;margin-left:6px;\">" + micro + "</span>";
+      }
+      if (step.kind === "remove_letter") {
+        const micro = step.atEnd
+          ? (step.from.slice(0, -1) + "<b>" + step.removed + "</b> → " + step.to)
+          : ("<b>" + step.removed + "</b>" + step.from.slice(1) + " → " + step.to);
+        return "- " + step.removed + " <span style=\"font-size:11px;opacity:.82;margin-left:6px;\">" + micro + "</span>";
+      }
+      if (step.kind === "add_chunk") return "+ " + step.to;
+      if (step.kind === "remove_chunk") return "- " + step.from;
+      if (step.kind === "replace") return step.from + " → " + step.to;
+      return prevWord + " → " + word;
+    }
+
+    function isValidLadder(ladder) {
+      if (!Array.isArray(ladder) || ladder.length < 2) return false;
+      for (let i = 1; i < ladder.length; i += 1) {
+        const prev = ladder[i - 1] || "";
+        const word = ladder[i] || "";
+        const prevP = getPattern(prev);
+        const patt = getPattern(word);
+        if (!getStepChange(prev, word, prevP, patt)) return false;
+      }
+      return true;
+    }
+
+    function renderLadder() {
+      const api = NS();
+      if (!api) {
+        alert("R-controlled data not loaded. Check rladders.js path/name.");
+        return;
+      }
+
+      const ladders = api.getLaddersByMode(state.blendMode).filter(isValidLadder);
+      if (!Array.isArray(ladders) || !ladders.length) {
+        alert(state.blendMode === "Only Blends"
+          ? "No valid one-change r-controlled blend ladders found."
+          : "No valid one-change r-controlled ladders available.");
+        return;
+      }
+
+      const useFont = (state.cellStyle === "underlines") ? "UnderlineFont" : "BoxesFont";
+      const ladder = ladders[Math.floor(Math.random() * ladders.length)];
+
+      const rows = ladder.map(function (word, i) {
+        const first = (i === 0);
+        const prev = ladder[i - 1] || "";
+        const patt = getPattern(word);
+        const prevP = getPattern(prev);
+        const step = first ? null : getStepChange(prev, word, prevP, patt);
+        const changedIdx = (state.boldChanged && step) ? step.index : -1;
+
+        const resolvedImgSrc = window.ladderImageFallback
+          ? window.ladderImageFallback.ensureSrc(getImage(word), word)
+          : getImage(word);
+
+        const patternHTML = first
+          ? ""
+          : Array.from(patt).map(function (ch, idx) {
+              return (idx === changedIdx) ? ("<span style=\"font-weight:700;\">" + ch + "</span>") : ch;
+            }).join("");
+
+        const display = first
+          ? ("<div class=\"first-word\">" + word + "</div>")
+          : ("<div class=\"pattern\" style=\"font-family:'" + useFont + "', monospace; font-size:" + (useFont === "UnderlineFont" ? "50px" : "58px") + ";\">" + patternHTML + "</div>");
+
+        const hintHTML = first
+          ? "<div class=\"hint-box\"></div>"
+          : ("<div class=\"hint-box\">" + getHintFromStep(step, prev, word) + "</div>");
+
+        return "<tr>" +
+          ("<td class=\"img-cell\"><img src=\"" + resolvedImgSrc + "\" alt=\"" + word + "\" data-word=\"" + word + "\" onerror=\"window.ladderImageFallback && window.ladderImageFallback.handleError(this,this.dataset.word)\"></td>") +
+          ("<td class=\"pattern-cell\">" + display + "</td>") +
+          ("<td class=\"hint-cell\">" + hintHTML + "</td>") +
+          "</tr>";
+      }).join("");
+
+      const titleSuffix = (state.blendMode === "Include Blends")
+        ? " - Include Blends"
+        : (state.blendMode === "Only Blends")
+          ? " - Only Blends"
+          : " - No Blends";
+
+      const html = "" +
+        "<div class=\"page\">" +
+          "<h2 class=\"head-title\">R-Controlled Word Ladders" + titleSuffix + "</h2>" +
+          "<p class=\"head-copy\"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>" +
+          "<table class=\"ladder\">" + rows + "</table>" +
+          "<div id=\"copyright\">Copyright - InterventionStation.com - @TeachwithMrC</div>" +
+        "</div>";
+
+      document.getElementById("output").innerHTML = html;
+    }
+
+    document.querySelectorAll("#blendRow .option-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll("#blendRow .option-btn").forEach(function (b) {
+          b.classList.remove("selected");
+        });
+        btn.classList.add("selected");
+        state.blendMode = btn.getAttribute("data-blend") || "No Blends";
+      });
+    });
+
+    document.querySelectorAll("#displayRow .option-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll("#displayRow .option-btn").forEach(function (b) {
+          b.classList.remove("selected");
+        });
+        btn.classList.add("selected");
+        state.cellStyle = btn.getAttribute("data-style") || "elkonin";
+      });
+    });
+
+    document.getElementById("btnGenerate").addEventListener("click", renderLadder);
+    document.getElementById("btnPrint").addEventListener("click", function () {
+      alert("Printing is for Members Only. Create an Unlimited Amount as a Member.");
+    });
+
+    window.addEventListener("DOMContentLoaded", function () {
+      setTimeout(renderLadder, 30);
+    });
+  </script>
+</body>
+</html>
