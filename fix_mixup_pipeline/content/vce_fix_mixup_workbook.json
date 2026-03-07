@@ -1,0 +1,255 @@
+{
+  "worksheet_title": "Fix the Mix-Up",
+  "rows_per_page": 2,
+  "directions": "Read the words and write the sentence about the picture. Remember to start with a capital letter and end with punctuation.",
+  "sets": [
+    {
+      "id": "2.2_i_e_long_i",
+      "skill_line": "Skill: 2.2 - i_e (Long I), HFW: live, give",
+      "rows": [
+        {
+          "text_boxes": ["the bike.", "Mike can", "ride"],
+          "scene_asset_stems": ["boy", "bike"]
+        },
+        {
+          "text_boxes": ["the red bike.", "Mike can", "ride"],
+          "scene_asset_stems": ["boy", "bike"]
+        },
+        {
+          "text_boxes": ["Mike can ride", "a big", "bike."],
+          "scene_asset_stems": ["boy", "bike"]
+        },
+        {
+          "text_boxes": ["Mike can", "ride his", "bike."],
+          "scene_asset_stems": ["boy", "bike"]
+        },
+        {
+          "text_boxes": ["his bike.", "to ride", "Mike likes"],
+          "scene_asset_stems": ["boy", "bike"]
+        },
+        {
+          "text_boxes": ["Ike the pup", "has a", "white kite."],
+          "scene_asset_stems": ["pup", "kite"]
+        },
+        {
+          "text_boxes": ["at nine.", "will shine", "The sun"],
+          "scene_asset_stems": ["sun", "clock"]
+        },
+        {
+          "text_boxes": ["to the man.", "Give the", "dime"],
+          "scene_asset_stems": ["dime", "man"]
+        },
+        {
+          "text_boxes": ["to the man.", "Give the", "red dime"],
+          "scene_asset_stems": ["dime", "man"]
+        },
+        {
+          "text_boxes": ["I like", "the big", "pine."],
+          "scene_asset_stems": ["pine"]
+        },
+        {
+          "text_boxes": ["the big", "red pine.", "I like"],
+          "scene_asset_stems": ["pine"]
+        },
+        {
+          "text_boxes": ["a mile.", "We can", "hike"],
+          "scene_asset_stems": ["hike"]
+        },
+        {
+          "text_boxes": ["for a mile.", "We can", "hike"],
+          "scene_asset_stems": ["hike"]
+        },
+        {
+          "text_boxes": ["up the", "big hill.", "We can hike"],
+          "scene_asset_stems": ["hike", "hill"]
+        }
+      ]
+    },
+    {
+      "id": "2.3_o_e_long_o",
+      "skill_line": "Skill: 2.3 - o_e (Long O), HFW: one, done, love",
+      "rows": [
+        {
+          "text_boxes": ["has a", "red nose.", "Cole the dog"],
+          "scene_asset_stems": ["dog", "nose"]
+        },
+        {
+          "text_boxes": ["at home.", "Rose woke", "up"],
+          "scene_asset_stems": ["girl", "home"]
+        },
+        {
+          "text_boxes": ["at her home.", "Rose woke", "up"],
+          "scene_asset_stems": ["girl", "home"]
+        },
+        {
+          "text_boxes": ["with Cole.", "Rose is", "at home"],
+          "scene_asset_stems": ["girl", "home", "dog"]
+        },
+        {
+          "text_boxes": ["We love", "the big", "joke."],
+          "scene_asset_stems": ["boy"]
+        },
+        {
+          "text_boxes": ["by Cole.", "We love", "the joke"],
+          "scene_asset_stems": ["boy", "dog"]
+        },
+        {
+          "text_boxes": ["a big bone.", "The dog", "has"],
+          "scene_asset_stems": ["dog", "bone"]
+        },
+        {
+          "text_boxes": ["The big dog", "has a", "bone."],
+          "scene_asset_stems": ["dog", "bone"]
+        },
+        {
+          "text_boxes": ["a bone.", "the dog", "Hope gave"],
+          "scene_asset_stems": ["girl", "dog", "bone"]
+        },
+        {
+          "text_boxes": ["on the bed.", "Put the", "robe"],
+          "scene_asset_stems": ["robe", "bed"]
+        },
+        {
+          "text_boxes": ["on the bed.", "Put the", "red robe"],
+          "scene_asset_stems": ["robe", "bed"]
+        },
+        {
+          "text_boxes": ["done yet?", "Is the", "job"],
+          "scene_asset_stems": ["job"]
+        },
+        {
+          "text_boxes": ["done yet?", "Is the", "big job"],
+          "scene_asset_stems": ["job"]
+        }
+      ]
+    },
+    {
+      "id": "2.4_u_e_long_u",
+      "skill_line": "Skill: 2.4 - u_e (Long U), HFW: could, would, should, two",
+      "rows": [
+        {
+          "text_boxes": ["Luke has", "a cute", "big mule."],
+          "scene_asset_stems": ["boy", "mule"]
+        },
+        {
+          "text_boxes": ["the tube.", "June can", "use"],
+          "scene_asset_stems": ["girl", "tube"]
+        },
+        {
+          "text_boxes": ["the big tube.", "June can", "use"],
+          "scene_asset_stems": ["girl", "tube"]
+        },
+        {
+          "text_boxes": ["on the", "big tube.", "June sat"],
+          "scene_asset_stems": ["girl", "tube"]
+        },
+        {
+          "text_boxes": ["is quite", "rude.", "The duke"],
+          "scene_asset_stems": ["king"]
+        },
+        {
+          "text_boxes": ["The big duke", "is quite", "rude."],
+          "scene_asset_stems": ["king"]
+        },
+        {
+          "text_boxes": ["a rude man.", "The duke", "is"],
+          "scene_asset_stems": ["king", "man"]
+        },
+        {
+          "text_boxes": ["is mad.", "That rude", "duke"],
+          "scene_asset_stems": ["king"]
+        },
+        {
+          "text_boxes": ["to me.", "was rude", "The duke"],
+          "scene_asset_stems": ["king", "boy"]
+        },
+        {
+          "text_boxes": ["Run to", "the big", "dune."],
+          "scene_asset_stems": ["dune"]
+        },
+        {
+          "text_boxes": ["Run to", "the big", "sand dune."],
+          "scene_asset_stems": ["dune", "sand"]
+        },
+        {
+          "text_boxes": ["for the game.", "Use the", "cube"],
+          "scene_asset_stems": ["cube"]
+        },
+        {
+          "text_boxes": ["Use the", "red cube", "for the game."],
+          "scene_asset_stems": ["cube"]
+        },
+        {
+          "text_boxes": ["two cubes.", "I would", "like"],
+          "scene_asset_stems": ["cube"]
+        },
+        {
+          "text_boxes": ["two red cubes.", "I would", "like"],
+          "scene_asset_stems": ["cube"]
+        },
+        {
+          "text_boxes": ["two cubes.", "I should", "get"],
+          "scene_asset_stems": ["cube"]
+        },
+        {
+          "text_boxes": ["two cubes.", "We should", "use"],
+          "scene_asset_stems": ["cube"]
+        },
+        {
+          "text_boxes": ["the two cubes.", "We should", "use"],
+          "scene_asset_stems": ["cube"]
+        },
+        {
+          "text_boxes": ["two cubes.", "Luke would", "like"],
+          "scene_asset_stems": ["boy", "cube"]
+        },
+        {
+          "text_boxes": ["Luke has", "two cute", "cubes."],
+          "scene_asset_stems": ["boy", "cube"]
+        },
+        {
+          "text_boxes": ["Luke has", "two big", "cubes."],
+          "scene_asset_stems": ["boy", "cube"]
+        }
+      ]
+    },
+    {
+      "id": "2.5_mixed_vce",
+      "skill_line": "Skill: 2.5 - Mixed VCe Review",
+      "rows": [
+        {
+          "text_boxes": ["to Jane.", "Mike gave", "a rose"],
+          "scene_asset_stems": ["boy", "girl", "rose"]
+        },
+        {
+          "text_boxes": ["is in", "the big lake.", "The whale"],
+          "scene_asset_stems": ["whale", "lake"]
+        },
+        {
+          "text_boxes": ["is done.", "the cake", "I hope"],
+          "scene_asset_stems": ["cake"]
+        },
+        {
+          "text_boxes": ["to ride.", "Use the", "rope"],
+          "scene_asset_stems": ["rope"]
+        },
+        {
+          "text_boxes": ["the mule.", "Use the rope", "to ride"],
+          "scene_asset_stems": ["rope", "mule"]
+        },
+        {
+          "text_boxes": ["with the flute.", "Rose had", "a fun time"],
+          "scene_asset_stems": ["girl", "flute"]
+        },
+        {
+          "text_boxes": ["to the home.", "Take the", "bike"],
+          "scene_asset_stems": ["bike", "home"]
+        },
+        {
+          "text_boxes": ["to the home.", "Take the", "red bike"],
+          "scene_asset_stems": ["bike", "home"]
+        }
+      ]
+    }
+  ]
+}
