@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manipulatives Add/Sub Desktop Preview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1f365f;
+      --line: #d7dfec;
+      --panel: #ffffff;
+      --bg: #f3f5f7;
+      --blue: #1976d2;
+      --p1: #f5f5f5;
+      --p2: #f7ead8;
+      --p3: #e7f2fb;
+      --p4: #e5f6e9;
+      --p5: #fcecc8;
+      --p6: #f9e3f1;
+      --p7: #e1f4f6;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1320px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding: 18px;
+    }
+
+    .top {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      position: relative;
+      top: auto;
+      z-index: 20;
+      box-shadow: 0 8px 22px rgba(16, 24, 40, 0.08);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(23px, 6.8vw, 33px);
+      line-height: 1.05;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .subtitle {
+      margin: 6px 0 0;
+      font-size: 12px;
+      text-align: center;
+      color: #35516f;
+      font-weight: 600;
+    }
+
+    .btns {
+      display: flex;
+      gap: 10px;
+      margin: 12px 0 10px;
+    }
+
+    .main-btn {
+      flex: 1;
+      min-height: 50px;
+      border-radius: 12px;
+      border: 2px solid #111;
+      font: inherit;
+      font-weight: 700;
+      font-size: 17px;
+      cursor: pointer;
+      background: #fff;
+    }
+
+    #btnGenerate { background: var(--blue); color: #fff; }
+
+    #modelRow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .model-btn {
+      border: 1px solid #b7c9df;
+      border-radius: 10px;
+      padding: 8px 6px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      background: #f7fbff;
+      color: #28486e;
+      line-height: 1.2;
+    }
+
+    .model-btn.active {
+      background: #dcecff;
+      border-color: #6ea7e8;
+      color: #163e6d;
+    }
+
+    .preview {
+      position: relative;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 980px;
+    }
+
+    #worksheetHost {
+      position: relative;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .sheet {
+      width: 100%;
+      min-height: 1180px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 10px 8px 132px;
+      position: relative;
+    }
+
+    .sheet-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 10px;
+      border-bottom: 2px solid #ced7e6;
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+
+    .sheet-title {
+      margin: 0;
+      font-size: 0.84rem;
+      font-weight: 800;
+      line-height: 1.22;
+    }
+
+    .name-line {
+      white-space: nowrap;
+      font-size: 0.66rem;
+      font-weight: 600;
+    }
+
+    .name-line .line {
+      display: inline-block;
+      width: 66px;
+      border-bottom: 2px solid #111;
+      transform: translateY(-2px);
+      margin-left: 4px;
+    }
+
+    .problems {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      border: 0;
+    }
+
+    .problem-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 6px;
+      border: 2px solid #cfd6e3;
+      background: #fff;
+    }
+
+    .problem-head {
+      border: 2px solid #111;
+      border-radius: 4px;
+      background: #fff;
+      padding: 4px 8px;
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .problem-badge {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #111;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.62rem;
+      font-weight: 800;
+      line-height: 1;
+      background: #fff;
+      flex: 0 0 auto;
+    }
+
+    .problem-text {
+      display: inline-flex;
+      align-items: center;
+      line-height: 1.05;
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.1px;
+    }
+
+    .problem-body {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .add-table {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 18px repeat(2, 26px);
+      gap: 3px;
+      align-items: center;
+    }
+
+    .op-cell {
+      width: 18px;
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .digit-cell {
+      width: 26px;
+      height: 26px;
+      border: 2px solid #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 800;
+      line-height: 1;
+      background: #fff;
+    }
+
+    .line-row {
+      display: grid;
+      grid-template-columns: 18px calc(2 * 26px + 3px);
+      gap: 3px;
+      align-items: center;
+    }
+
+    .line-spacer { width: 18px; }
+    .sum-line { border-top: 4px solid #000; height: 0; }
+
+    .manip-panel {
+      border: 0;
+      border-radius: 0;
+      padding: 4px 0 0;
+      width: auto;
+      min-height: 0;
+      background: transparent;
+    }
+
+    .manip-add-grid {
+      display: grid;
+      grid-template-columns: 58px max-content max-content;
+      column-gap: 8px;
+      row-gap: 2px;
+      align-items: start;
+      justify-content: start;
+    }
+
+    .manip-add-grid .row-bottom {
+      margin-top: 12px;
+    }
+
+    .manip-col-head {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #111;
+      text-align: center;
+      line-height: 1;
+      padding-top: auto;
+      margin: 0;
+      align-self: start;
+      border: 2px solid #111;
+      border-radius: 4px;
+      padding: 2px 8px;
+      background: #fff;
+    }
+
+    .manip-num-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 32px;
+      padding: 2px 8px;
+      border: 2px solid #111;
+      border-radius: 6px;
+      font-size: 1.02rem;
+      font-weight: 800;
+      background: #fff;
+      line-height: 1;
+    }
+
+    .manip-num {
+      font-size: 1.08rem;
+      font-weight: 800;
+      text-align: center;
+      color: #111;
+      line-height: 1;
+      min-height: 94px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .tens-col {
+      min-height: 94px;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .ones-col {
+      min-height: 94px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+
+    .manip-bin {
+      border: 0;
+      border-radius: 0;
+      min-height: 94px;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(5, max-content);
+      grid-auto-rows: max-content;
+      align-content: flex-start;
+      justify-content: flex-start;
+      gap: 4px 6px;
+      background: transparent;
+    }
+
+    .manip-bin.tens-inline {
+      grid-template-columns: repeat(10, max-content);
+      grid-auto-rows: max-content;
+    }
+
+    .block-img {
+      display: block;
+      object-fit: contain;
+      flex: 0 0 auto;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .block-img-one { width: 15px; height: 15px; }
+    .block-img-ten { width: 22px; height: 90px; }
+
+    .tenframe {
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      width: 76px;
+      height: 94px;
+      max-width: 76px;
+      padding: 0;
+    }
+
+    .tfgrid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      gap: 2px;
+      height: 100%;
+    }
+
+    .tfcell {
+      border: 1px dotted #c8d0dd;
+      width: auto;
+      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .hc-wrap {
+      width: 100%;
+      max-width: 170px;
+      margin: 0 auto;
+      border: 2px solid #111;
+      border-radius: 6px;
+      padding: 3px;
+      background: #fff;
+    }
+
+    .hc-title {
+      text-align: center;
+      font-size: 0.56rem;
+      font-weight: 900;
+      margin-bottom: 2px;
+      text-transform: uppercase;
+    }
+
+    .hc-instruction {
+      text-align: center;
+      font-size: 0.48rem;
+      line-height: 1.2;
+      margin-bottom: 3px;
+      color: #4d5f7a;
+    }
+
+    .hc-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 14px);
+      grid-template-rows: repeat(10, 14px);
+      gap: 1px;
+      justify-content: center;
+      margin-bottom: 3px;
+    }
+
+    .hc-cell {
+      border: 1px solid #111;
+      font-size: 0.38rem;
+      line-height: 1;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+    }
+
+    .hc-cell.start { background: #e1f4f6; border-color: #63a6ad; }
+    .hc-cell.tens { background: #fcecc8; border-color: #dca462; }
+    .hc-cell.result { background: #e5f6e9; border-color: #76b275; }
+
+    .hc-equation {
+      text-align: center;
+      font-size: 0.52rem;
+      font-weight: 800;
+      color: #2d3e57;
+    }
+
+    .blank-ink {
+      font-family: "Courier New", monospace;
+      font-weight: 700;
+    }
+
+    .footer-note {
+      margin-top: 7px;
+      padding-top: 4px;
+      border-top: 2px solid #000;
+      text-align: left;
+      font-size: 0.54rem;
+      font-weight: 600;
+      color: #000;
+      line-height: 1.15;
+    }
+
+    .watermark {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='180' height='140' viewBox='0 0 180 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-28 90 70)'%3E%3Ctext x='8' y='56' fill='%23000000' fill-opacity='0.30' font-family='Poppins' font-size='22' font-weight='900'%3EPREVIEW%3C/text%3E%3Ctext x='12' y='88' fill='%23000000' fill-opacity='0.24' font-family='Poppins' font-size='11' font-weight='800'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+      background-size: 180px 140px;
+      background-repeat: repeat;
+    }
+
+    .lock-panel {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 5;
+      background: rgba(5, 11, 20, 0.98);
+      color: #fff;
+      text-align: center;
+      padding: 10px 10px 12px;
+      border-top: 2px solid #fff;
+    }
+
+    .lock-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      margin: 0 0 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .lock-copy {
+      margin: 0 0 8px;
+      font-size: 0.75rem;
+      line-height: 1.25;
+      font-weight: 600;
+    }
+
+    .join-btn {
+      display: inline-block;
+      text-decoration: none;
+      color: #051426;
+      background: #fff;
+      border: 2px solid #fff;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+
+    @media print { body { display: none !important; } }
+  
+@media (min-width: 1080px){
+  .btns, .controls-actions{ max-width:720px; margin-left:auto; margin-right:auto; }
+  #modelRow{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .preview{ min-height: 1160px; }
+  .sheet{ padding: 18px 16px 160px; }
+  .problems{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .problem-wrap{ min-height: 430px; justify-content:flex-start; }
+  .preview-shell{ min-height: 1020px; }
+  .preview-content{ width: 100%; left: 0; transform: none; position: relative; padding: 18px; }
+  .sheet{ max-width: 1120px; margin: 0 auto; }
+  .roll-table td{ height: 124px; }
+}
+
+<style>
+.mf-topbar{background:transparent;padding:10px 10px 0;margin:0 auto 10px;max-width:1160px}.mf-logo{display:block;width:100%;max-width:100%;height:auto}.mf-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}.mf-btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;border-radius:10px;border:2px solid #66c9f4;background:#66c9f4;color:#fff;text-decoration:none;font:700 14px/1 "Poppins",sans-serif}@media (max-width:520px){.mf-actions{grid-template-columns:1fr}}
+</style>
+  <script src="/newtry_FULL.js" defer></script>
+</head>
+<body>
+<div class="mf-topbar">
+  <img class="mf-logo" src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/69a8e95d618c8d5889de9d26.png" alt="Intervention Station" />
+  <div class="mf-actions">
+    <a class="mf-btn" href="https://interventionstation.com/membershipchoices">Join Now</a>
+    <a class="mf-btn" href="https://member.interventionstation.com/login">Log In</a>
+  </div>
+</div>
+  <main class="app">
+    <section class="top" aria-label="Controls">
+      <h1>Manipulatives Worksheet Generator</h1>
+      <p class="subtitle">Forced to 2 digit + 2 digit.</p>
+      <div class="btns">
+        <button id="btnGenerate" class="main-btn" type="button">Generate</button>
+        <button id="btnPrint" class="main-btn" type="button">Print</button>
+      </div>
+      <div id="modelRow" role="radiogroup" aria-label="Visual model">
+        <button type="button" class="model-btn" data-model="chart">Hundreds Chart</button>
+        <button type="button" class="model-btn active" data-model="blocks">Base 10 Blocks</button>
+      </div>
+    </section>
+
+    <section class="preview" aria-label="Worksheet preview">
+      <div id="worksheetHost"></div>
+      <div class="watermark" aria-hidden="true"></div>
+      <div class="lock-panel" aria-hidden="false">
+        <p class="lock-title">Members Only</p>
+        <p class="lock-copy">Printing is for Members Only. Create an Unlimited Amount as a Member.</p>
+        <a class="join-btn" href="https://interventionstation.com" target="_blank" rel="noopener noreferrer">Join</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const PLACE_COLORS = [
+      "var(--p1)", "var(--p2)", "var(--p3)", "var(--p4)", "var(--p5)", "var(--p6)", "var(--p7)"
+    ];
+
+    const MANIP_ASSETS = {
+      one: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6991b7ac36a392985e69ed13.png",
+      ten: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6991b7ac24813caed1b26a70.png"
+    };
+
+    const state = { model: "blocks" };
+    const host = document.getElementById("worksheetHost");
+    const modelBtns = Array.from(document.querySelectorAll(".model-btn"));
+
+    function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function random2Digit() { return randInt(10, 99); }
+
+    function hasRegrouping(a, b) {
+      const aLow = String(a).split("").reverse().map(Number);
+      const bLow = String(b).split("").reverse().map(Number);
+      const places = Math.max(aLow.length, bLow.length);
+      for (let i = 0; i < places; i += 1) {
+        const ad = aLow[i] ?? 0;
+        const bd = bLow[i] ?? 0;
+        if (ad + bd >= 10) return true;
+      }
+      return false;
+    }
+
+    function randomAddProblem() {
+      while (true) {
+        const a = random2Digit();
+        const b = random2Digit();
+        if (!hasRegrouping(a, b)) continue;
+        return { a: a, b: b };
+      }
+    }
+
+    function blockImage(type) {
+      return '<img class="block-img block-img-' + type + '" src="' + MANIP_ASSETS[type] + '" alt="" loading="lazy" decoding="async">';
+    }
+
+    function blocksMarkup(count, type) {
+      if (count <= 0) return "";
+      const maxRender = type === "ten" ? 14 : 20;
+      const display = Math.min(count, maxRender);
+      const blocks = [];
+      for (let i = 0; i < display; i += 1) blocks.push(blockImage(type));
+      if (count > maxRender) blocks.push('<span class="count-note">x' + String(count) + '</span>');
+      return blocks.join("");
+    }
+
+    function onesMarkup(count) {
+      const cappedCount = Math.max(0, Math.min(10, count));
+      const cells = [];
+      for (let i = 0; i < 10; i += 1) {
+        const filled = i < cappedCount ? blockImage("one") : "";
+        cells.push('<div class="tfcell">' + filled + '</div>');
+      }
+      return '<div class="tenframe"><div class="tfgrid">' + cells.join("") + '</div></div>';
+    }
+
+    function placeValueCounts(number) {
+      const n = Math.max(0, Number(number) || 0);
+      return { tens: Math.floor((n % 100) / 10), ones: n % 10 };
+    }
+
+    function placeHeader(label) {
+      return '<div class="manip-col-head">' + label + '</div>';
+    }
+
+    function manipAddRow(number, rowClass) {
+      const counts = placeValueCounts(number);
+      return '' +
+        '<div class="manip-num ' + rowClass + '"><span class="manip-num-chip">' + String(number) + '</span></div>' +
+        '<div class="tens-col ' + rowClass + '"><div class="manip-bin tens-inline">' + blocksMarkup(counts.tens, "ten") + '</div></div>' +
+        '<div class="ones-col ' + rowClass + '">' + onesMarkup(counts.ones) + '</div>';
+    }
+
+    function additionManipHtml(problem) {
+      return '' +
+        '<div class="manip-add-grid">' +
+          '<div></div>' + placeHeader("Tens") + placeHeader("Ones") +
+          manipAddRow(problem.a, "row-top") +
+          manipAddRow(problem.b, "row-bottom") +
+        '</div>';
+    }
+
+    function hundredChartHtml(problem) {
+      const bT = Math.floor(problem.b / 10);
+      const bO = problem.b % 10;
+      const start = problem.a;
+      const tensStep = start + bT * 10;
+      const result = start + problem.b;
+      const cells = [];
+      for (let n = 1; n <= 100; n += 1) {
+        const marks = [];
+        if (n === start) marks.push("start");
+        if (n === tensStep) marks.push("tens");
+        if (n === result) marks.push("result");
+        cells.push('<div class="hc-cell ' + marks.join(" ") + '">' + String(n) + '</div>');
+      }
+      return '' +
+        '<div class="hc-wrap">' +
+          '<div class="hc-title">Hundreds Chart</div>' +
+          '<div class="hc-instruction">Start at ' + String(problem.a) + '. Move down ' + String(bT) + ' tens and right ' + String(bO) + ' ones.</div>' +
+          '<div class="hc-grid">' + cells.join("") + '</div>' +
+          '<div class="hc-equation">' + String(problem.a) + ' + ' + String(problem.b) + ' = <span class="blank-ink">_____</span></div>' +
+        '</div>';
+    }
+
+    function alignedDigitRow(totalCols, number, digits) {
+      const row = new Array(totalCols).fill("");
+      const vals = String(number).padStart(digits, "0").split("").map(Number);
+      const start = totalCols - digits;
+      for (let i = 0; i < vals.length; i += 1) row[start + i] = vals[i];
+      return row;
+    }
+
+    function cellStyleByColumn(colIndex, totalCols) {
+      if (colIndex === 0) return "background:#fff;";
+      const placeFromRight = totalCols - 1 - colIndex;
+      const color = PLACE_COLORS[placeFromRight % PLACE_COLORS.length];
+      return 'background:' + color + ';';
+    }
+
+    function rowCellsWithValues(totalCols, values) {
+      const cells = [];
+      for (let i = 0; i < totalCols; i += 1) {
+        const value = values && values[i] !== "" && values[i] !== undefined ? values[i] : "&nbsp;";
+        cells.push('<div class="digit-cell" style="' + cellStyleByColumn(i, totalCols) + '">' + value + '</div>');
+      }
+      return cells.join("");
+    }
+
+    function problemLetter(index) {
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      return letters[index] || ("A" + String(index - letters.length + 1));
+    }
+
+    function problemHtml(problem, index) {
+      const totalCols = 2;
+      const aRow = alignedDigitRow(totalCols, problem.a, 2);
+      const bRow = alignedDigitRow(totalCols, problem.b, 2);
+      const sRow = new Array(totalCols).fill("");
+      const manipHtml = state.model === "chart" ? hundredChartHtml(problem) : additionManipHtml(problem);
+
+      return '' +
+        '<section class="problem-wrap">' +
+          '<div class="problem-head"><span class="problem-badge">' + problemLetter(index) + '</span><span class="problem-text">' + String(problem.a) + ' + ' + String(problem.b) + '</span></div>' +
+          '<div class="problem-body">' +
+            '<div class="add-table">' +
+              '<div class="table-row"><div class="op-cell">&nbsp;</div>' + rowCellsWithValues(totalCols, aRow) + '</div>' +
+              '<div class="table-row"><div class="op-cell">+</div>' + rowCellsWithValues(totalCols, bRow) + '</div>' +
+              '<div class="line-row"><div class="line-spacer"></div><div class="sum-line"></div></div>' +
+              '<div class="table-row"><div class="op-cell">&nbsp;</div>' + rowCellsWithValues(totalCols, sRow) + '</div>' +
+            '</div>' +
+            '<div class="manip-panel">' + manipHtml + '</div>' +
+          '</div>' +
+        '</section>';
+    }
+
+    function renderWorksheet() {
+      const problems = [];
+      for (let i = 0; i < 4; i += 1) problems.push(randomAddProblem());
+      host.innerHTML = '' +
+        '<section class="sheet no-color">' +
+          '<header class="sheet-header">' +
+            '<h2 class="sheet-title">Addition Manipulatives Practice (2-digit + 2-digit)</h2>' +
+            '<div class="name-line">Name:<span class="line"></span></div>' +
+          '</header>' +
+          '<div class="problems">' + problems.map((p, i) => problemHtml(p, i)).join("") + '</div>' +
+          '<div class="footer-note">Copyright - InterventionStation.com - @TeachwithMrC</div>' +
+        '</section>';
+    }
+
+    function setModel(model) {
+      state.model = model === "chart" ? "chart" : "blocks";
+      modelBtns.forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.model === state.model);
+      });
+    }
+
+    modelBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        setModel(btn.dataset.model);
+        renderWorksheet();
+      });
+    });
+
+    document.getElementById("btnGenerate").addEventListener("click", renderWorksheet);
+    document.getElementById("btnPrint").addEventListener("click", () => {
+      alert("Printing is for Members Only. Create an Unlimited Amount as a Member.");
+    });
+
+    setModel("blocks");
+    renderWorksheet();
+  </script>
+</body>
+</html>

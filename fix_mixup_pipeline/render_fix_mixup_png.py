@@ -73,12 +73,12 @@ def draw_text_centered(
     min_size: int,
 ) -> None:
     x1, y1, x2, y2 = box
-    fnt = fit_font(draw, text, font_path, max_size, min_size, x2 - x1 - 20, y2 - y1 - 12)
+    fnt = fit_font(draw, text, font_path, max_size, min_size, x2 - x1 - 12, y2 - y1 - 8)
     bbox = draw.textbbox((0, 0), text, font=fnt)
     w = bbox[2] - bbox[0]
     h = bbox[3] - bbox[1]
     x = x1 + ((x2 - x1) - w) / 2
-    y = y1 + ((y2 - y1) - h) / 2 - 2
+    y = y1 + ((y2 - y1) - h) / 2 - 1
     draw.text((x, y), text, fill=BLACK, font=fnt)
 
 
@@ -148,14 +148,13 @@ def load_asset(stem: str) -> Image.Image:
     raise FileNotFoundError(f"Missing asset for stem '{stem}' in {IMAGE_DIR}")
 
 
-def paste_asset(
-    canvas: Image.Image,
+def build_asset_placement(
     asset: Image.Image,
     panel_box: Tuple[int, int, int, int],
     x_ratio: float,
     y_ratio: float,
     scale: float,
-) -> None:
+) -> Dict[str, Any]:
     x1, y1, x2, y2 = panel_box
     panel_w = x2 - x1
     panel_h = y2 - y1
@@ -167,7 +166,66 @@ def paste_asset(
     baseline_y = y1 + int(panel_h * y_ratio)
     paste_x = center_x - target_w // 2
     paste_y = baseline_y - target_h
-    canvas.alpha_composite(resized, (paste_x, paste_y))
+    return {
+        "image": resized,
+        "x": paste_x,
+        "y": paste_y,
+        "w": target_w,
+        "h": target_h,
+    }
+
+
+def paste_scene_assets(
+    canvas: Image.Image,
+    row: Dict[str, Any],
+    panel_box: Tuple[int, int, int, int],
+) -> None:
+    placements: List[Dict[str, Any]] = []
+    for scene_asset in sorted(row.get("scene_assets", []), key=lambda item: item.get("z", 0)):
+        asset = load_asset(scene_asset["stem"])
+        placements.append(
+            build_asset_placement(
+                asset,
+                panel_box,
+                float(scene_asset.get("x", 0.5)),
+                float(scene_asset.get("y", 0.88)),
+                float(scene_asset.get("scale", 0.6)),
+            )
+        )
+
+    if not placements:
+        return
+
+    left = min(item["x"] for item in placements)
+    right = max(item["x"] + item["w"] for item in placements)
+    top = min(item["y"] for item in placements)
+    bottom = max(item["y"] + item["h"] for item in placements)
+
+    x1, y1, x2, y2 = panel_box
+    pad_x = max(18, int((x2 - x1) * 0.06))
+    pad_y = max(12, int((y2 - y1) * 0.06))
+
+    cluster_center_x = (left + right) / 2
+    panel_center_x = (x1 + x2) / 2
+    dx = int(round(panel_center_x - cluster_center_x))
+    dy = 0
+
+    shifted_left = left + dx
+    shifted_right = right + dx
+    if shifted_left < x1 + pad_x:
+        dx += (x1 + pad_x) - shifted_left
+    if shifted_right > x2 - pad_x:
+        dx -= shifted_right - (x2 - pad_x)
+
+    shifted_top = top + dy
+    shifted_bottom = bottom + dy
+    if shifted_top < y1 + pad_y:
+        dy += (y1 + pad_y) - shifted_top
+    if shifted_bottom > y2 - pad_y:
+        dy -= shifted_bottom - (y2 - pad_y)
+
+    for item in placements:
+        canvas.alpha_composite(item["image"], (item["x"] + dx, item["y"] + dy))
 
 
 def auto_scene_assets(row: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -238,33 +296,24 @@ def draw_row(
     draw.rectangle(row_box, outline=BLACK, width=4)
 
     panel_w = int((x2 - x1) * 0.31)
-    panel_box = (x1 + 14, y1 + 18, x1 + panel_w - 10, y2 - 18)
+    panel_box = (x1 + 34, y1 + 20, x1 + panel_w - 22, y2 - 24)
     right_box = (x1 + panel_w + 8, y1 + 12, x2 - 10, y2 - 12)
 
     num_font = font(FONT_TEXT, 42)
     draw.text((x1 + 20, y1 + 18), f"{row_number}.", fill=BLACK, font=num_font)
 
-    for scene_asset in sorted(row.get("scene_assets", []), key=lambda item: item.get("z", 0)):
-        asset = load_asset(scene_asset["stem"])
-        paste_asset(
-            canvas,
-            asset,
-            panel_box,
-            float(scene_asset.get("x", 0.5)),
-            float(scene_asset.get("y", 0.88)),
-            float(scene_asset.get("scale", 0.6)),
-        )
+    paste_scene_assets(canvas, row, panel_box)
 
     rx1, ry1, rx2, ry2 = right_box
     gap = 20
-    top_h = 110
+    top_h = 116
     text_boxes = row["text_boxes"]
 
-    measure_font = font(FONT_TEXT, 40)
+    measure_font = font(FONT_TEXT, 46)
     weights = []
     for text in text_boxes:
         bbox = draw.textbbox((0, 0), text, font=measure_font)
-        weights.append(max(1, bbox[2] - bbox[0] + 70))
+        weights.append(max(1, bbox[2] - bbox[0] + 52))
 
     total_gap = gap * 2
     available_w = (rx2 - rx1) - total_gap
@@ -276,7 +325,7 @@ def draw_row(
     for idx, text in enumerate(text_boxes):
         box = (bx, ry1, bx + widths[idx], ry1 + top_h)
         draw.rounded_rectangle(box, radius=22, outline=BLACK, width=4, fill=WHITE)
-        draw_text_centered(draw, box, text, FONT_TEXT, 42, 22)
+        draw_text_centered(draw, box, text, FONT_TEXT, 52, 26)
         bx += widths[idx] + gap
 
     lines_box = (rx1, ry1 + top_h + 18, rx2, ry2)
@@ -346,21 +395,24 @@ def render_page(data: Dict[str, Any], output_path: Path) -> None:
         line_x = text_x if idx == 0 else directions_x
         draw.text((line_x, directions_y + idx * 36), line, fill=BLACK, font=dir_text_font)
 
+    footer_reserved = 92
     rows_top = directions_y + max(44, len(lines) * 36) + 28
-    usable_h = height - rows_top - 70
+    usable_h = height - rows_top - footer_reserved
     row_h = usable_h // max(1, len(rows))
 
     for idx, row in enumerate(rows, start=1):
         row_y1 = rows_top + (idx - 1) * row_h
         row_y2 = rows_top + idx * row_h
         if idx == len(rows):
-            row_y2 = height - 68
+            row_y2 = height - footer_reserved + 12
         draw_row(image, draw, row, idx, (margin + 6, row_y1, width - margin - 6, row_y2))
 
     footer_font = font(FONT_REGULAR, 18)
     footer_bbox = draw.textbbox((0, 0), footer, font=footer_font)
     footer_w = footer_bbox[2] - footer_bbox[0]
-    draw.text(((width - footer_w) / 2, height - 42), footer, fill=BLACK, font=footer_font)
+    footer_h = footer_bbox[3] - footer_bbox[1]
+    footer_y = height - margin - footer_h - 12
+    draw.text(((width - footer_w) / 2, footer_y), footer, fill=BLACK, font=footer_font)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     image.convert("RGB").save(output_path, "PNG")

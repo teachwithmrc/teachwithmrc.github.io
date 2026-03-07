@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roll and Read Mobile Preview</title>
+
+  <script src="https://teachwithmrc.github.io/fluencyDataFull_v8-2_clean.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --ink: #1f365f;
+      --line: #d7dfec;
+      --panel: #ffffff;
+      --bg: #f3f5f7;
+      --blue: #1976d2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding: 12px;
+    }
+
+    .top {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 8px 22px rgba(16, 24, 40, 0.08);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(24px, 7vw, 34px);
+      line-height: 1.05;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: #35516f;
+      margin: 0;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    .btns {
+      display: flex;
+      gap: 10px;
+      margin: 12px 0 8px;
+    }
+
+    button {
+      flex: 1;
+      min-height: 50px;
+      border-radius: 12px;
+      border: 2px solid #111;
+      font: inherit;
+      font-weight: 700;
+      font-size: 17px;
+      padding: 0 12px;
+      cursor: pointer;
+      background: #fff;
+    }
+
+    #btnGenerate {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    #btnPrint {
+      color: #111;
+      border-color: #111;
+      background: #f8fbff;
+    }
+
+    #modeRow {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .mode-option {
+      border: 1px solid #b7c9df;
+      border-radius: 10px;
+      padding: 8px 6px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #f7fbff;
+      user-select: none;
+      line-height: 1.2;
+    }
+
+    .mode-option.selected {
+      background: #dcecff;
+      border-color: #6ea7e8;
+      color: #23466f;
+    }
+
+    .preview {
+      position: relative;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 420px;
+    }
+
+    #output {
+      position: relative;
+      z-index: 1;
+    }
+
+    .page {
+      width: 100%;
+      min-height: 700px;
+      padding: 12px 10px 120px;
+      position: relative;
+      overflow: hidden;
+      background: #fff;
+      text-align: center;
+    }
+
+    .worksheet-title {
+      font-size: 28px;
+      margin-bottom: 6px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .skills-line {
+      font-size: 13px;
+      margin: 6px 0 10px;
+      line-height: 1.3;
+    }
+
+    .worksheet-directions {
+      font-size: 14px;
+      margin-bottom: 12px;
+      line-height: 1.35;
+    }
+
+    table.roll {
+      margin: 0 auto;
+      border-collapse: collapse;
+      width: 100%;
+      table-layout: fixed;
+      background: #fff;
+    }
+
+    .roll td {
+      border: 1px solid #000;
+      width: 16.66%;
+      height: 62px;
+      text-align: center;
+      vertical-align: middle;
+      padding: 3px;
+      word-break: break-word;
+    }
+
+    .dice-cell { height: 58px; }
+    .word-cell { font-size: 15px; font-weight: 700; line-height: 1.05; }
+    .sentence-cell { font-size: 10px; text-align: left; padding: 4px; line-height: 1.12; }
+
+    #copyright {
+      font-size: 11px;
+      text-align: right;
+      margin-top: 8px;
+      display: block;
+    }
+
+    .watermark {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='150' height='150' viewBox='0 0 150 150' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='8' y='82' fill='%23000000' opacity='0.28' transform='rotate(-38 75 75)' font-family='Poppins' font-weight='900' font-size='24'%3EPREVIEW%3C/text%3E%3C/svg%3E");
+      background-size: 150px 150px;
+      background-repeat: repeat;
+    }
+
+    .lock-panel {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 5;
+      background: rgba(5, 11, 20, 0.98);
+      color: #fff;
+      text-align: center;
+      padding: 10px 10px 12px;
+      border-top: 2px solid #fff;
+    }
+
+    .lock-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      margin: 0 0 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .lock-copy {
+      margin: 0 0 8px;
+      font-size: 0.75rem;
+      line-height: 1.25;
+      font-weight: 600;
+    }
+
+    .join-btn {
+      display: inline-block;
+      text-decoration: none;
+      color: #051426;
+      background: #fff;
+      border: 2px solid #fff;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+
+    @media print {
+      body { display: none !important; }
+    }
+  </style>
+<style>
+  .mf-topbar,
+  .organizer-nav,
+  .top-cta-wrap,
+  .is-ticker,
+  .top-buttons-row,
+  .main-heading-button,
+  .mf-actions,
+  .mf-logo {
+    display:none !important;
+  }
+</style>
+
+</head>
+<body>
+  <main class="app">
+    <section class="top" aria-label="Controls">
+      <h1>Roll and Read Worksheet Generator</h1>
+      <p class="subtitle">Skill: Variant Vowels Mixed.</p>
+
+      <div class="btns">
+        <button id="btnGenerate" type="button">Generate</button>
+        <button id="btnPrint" type="button">Print</button>
+      </div>
+
+      <div id="modeRow" role="radiogroup" aria-label="Content mode">
+        <button type="button" class="mode-option" data-mode="words">Words</button>
+        <button type="button" class="mode-option" data-mode="sentences">Sentences</button>
+        <button type="button" class="mode-option selected" data-mode="both">Both</button>
+      </div>
+    </section>
+
+    <section class="preview" aria-label="Worksheet preview">
+      <div id="output"></div>
+      <div class="watermark" aria-hidden="true"></div>
+      <div class="lock-panel" aria-hidden="false">
+        <p class="lock-title">Members Only</p>
+        <p class="lock-copy">Printing is for Members Only. Create an Unlimited Amount as a Member.</p>
+        <a class="join-btn" href="https://interventionstation.com" target="_blank" rel="noopener noreferrer">Join</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    if (typeof CSS === "undefined" || typeof CSS.escape !== "function") {
+      window.CSS = window.CSS || {};
+      CSS.escape = CSS.escape || function (sel) {
+        return (sel + "").replace(/[^a-zA-Z0-9_-]/g, "\\$&");
+      };
+    }
+
+    function toArray(x) {
+      if (Array.isArray(x)) return x.slice();
+      if (x == null) return [];
+      try { return Array.from(x); } catch (_) { return []; }
+    }
+
+    function shuffle(list) {
+      const a = toArray(list);
+      const n = a.length >>> 0;
+      for (let i = n - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const t = a[i];
+        a[i] = a[j];
+        a[j] = t;
+      }
+      return a;
+    }
+
+    function uniqueByLowercase(list) {
+      const seen = new Set();
+      const out = [];
+      for (const item of toArray(list)) {
+        const key = String(item).toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          out.push(item);
+        }
+      }
+      return out;
+    }
+
+    function fillToN(list, n) {
+      const base = toArray(list);
+      if (base.length === 0 || !Number.isFinite(n) || n <= 0) return [];
+      const out = [];
+      let bag = shuffle(base);
+      while (out.length < n) {
+        if (bag.length === 0) {
+          bag = shuffle(base);
+          if (bag.length === 0) break;
+        }
+        out.push(bag.shift());
+      }
+      return out.slice(0, n);
+    }
+
+    const FORCED_SKILL = "Variant Vowels Mixed";
+    const includeBlends = false;
+    const gridSize = 30;
+
+    const PREFIX = {
+      "Short A": "0.1 - Short A",
+      "Short O": "0.2 - Short O",
+      "Short I": "0.3 - Short I",
+      "Short U": "0.4 - Short U",
+      "Short E": "0.5 - Short E",
+      "FLSZ": "0.6 - FLSZ",
+      "ck": "1.1 - ck",
+      "sh": "1.2 - sh",
+      "th": "1.3 - th",
+      "ch": "1.4 - ch",
+      "wh": "1.5 - wh",
+      "-all": "3.1 - all",
+      "-ng": "3.2 - ng",
+      "-nk": "3.3 - nk",
+      "a_e": "2.1 - a_e",
+      "i_e": "2.2 - i_e",
+      "o_e": "2.3 - o_e",
+      "u_e": "2.4 - u_e",
+      "ar": "4.1 - ar",
+      "or": "4.2 - or",
+      "er/ir/ur": "4.3 - er, ir, ur"
+    };
+
+    const MIXED_RULES = {
+      "Mixed CVC": ["0.1 - Short A", "0.5 - Short E", "0.3 - Short I", "0.2 - Short O", "0.4 - Short U", "0.6 - FLSZ"],
+      "Digraphs Mixed": ["1.1 - ck", "1.2 - sh", "1.3 - th", "1.4 - ch", "1.5 - wh"],
+      "Glued Mixed": ["3.1 - all", "3.2 - ng", "3.3 - nk"],
+      "Mixed VCe": ["2.1 - a_e", "2.2 - i_e", "2.3 - o_e", "2.4 - u_e"],
+      "Mixed R-Controlled": ["4.1 - ar", "4.2 - or", "4.3 - er, ir, ur"],
+      "Long A (ai/ay)": ["6.1 - ay", "6.2 - ai"],
+      "Long E (ee/ea)": ["6.4 - ee", "6.5 - ea"],
+      "Long I (igh/y/ie)": ["6.6 - igh", "6.7 - Final y", "6.8 - ie"],
+      "Long O (oa/ow/oe)": ["6.9 - oa", "6.10 - ow", "6.11 - oe"],
+      "Long U (oo/ew/ue)": ["6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
+      "Mixed Vowel Teams": [
+        "6.1 - ay", "6.2 - ai", "6.4 - ee", "6.5 - ea",
+        "6.6 - igh", "6.7 - Final y", "6.8 - ie",
+        "6.9 - oa", "6.10 - ow", "6.11 - oe",
+        "6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"
+      ],
+      "Diphthongs (oy/oi)": ["7.4 - oy", "7.3 - oi"],
+      "Diphthongs (ow/ou)": ["7.2 - ow", "7.1 - ou"],
+      "Variant Vowels (au/aw)": ["7.5 - aw", "7.6 - au"],
+      "Variant Vowel (oo)": ["7.7 - oo variant"],
+      "Variant Vowels Mixed": ["7.5 - aw", "7.6 - au", "7.7 - oo variant"]
+    };
+
+    function wordsDict() {
+      return (typeof fluencyWords !== "undefined")
+        ? fluencyWords
+        : (typeof fluencyData !== "undefined" ? fluencyData.words : {});
+    }
+
+    function sentsDict() {
+      return (typeof fluencySentences !== "undefined")
+        ? fluencySentences
+        : (typeof fluencyData !== "undefined" ? fluencyData.sentences : {});
+    }
+
+    function readDict(dict, key) {
+      return Array.isArray(dict[key]) ? dict[key] : [];
+    }
+
+    function readWithBlends(dict, prefix, type, blends) {
+      const typeLower = type.toLowerCase();
+      const baseKeys = [prefix + " " + type, prefix + " " + typeLower, prefix];
+      let base = [];
+      for (const k of baseKeys) {
+        base = base.concat(readDict(dict, k));
+      }
+
+      if (blends) {
+        const candidates = [
+          prefix + " with Blends " + type,
+          prefix + " with blends " + type,
+          prefix + " with Blends " + typeLower,
+          prefix + " with blends " + typeLower,
+          prefix + " with BLENDS " + type
+        ];
+
+        const bPrefix = prefix.replace(" - ", "b - ");
+        candidates.push(
+          bPrefix + " with Blends " + type,
+          bPrefix + " with blends " + type,
+          bPrefix + " with Blends " + typeLower,
+          bPrefix + " with blends " + typeLower
+        );
+
+        for (const k of candidates) {
+          const got = readDict(dict, k);
+          if (got.length) {
+            const MIN_BACKFILL = 30;
+            return (got.length < MIN_BACKFILL) ? uniqueByLowercase(got.concat(base)) : got;
+          }
+        }
+      }
+
+      return base;
+    }
+
+    function getList(label, type, blends) {
+      const dict = (type === "Words") ? wordsDict() : sentsDict();
+
+      if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)) {
+        let all = [];
+        for (const p of MIXED_RULES[label]) {
+          all = all.concat(readWithBlends(dict, p, type, blends));
+        }
+        return all;
+      }
+
+      const prefix = PREFIX[label];
+      if (prefix) return readWithBlends(dict, prefix, type, blends);
+
+      const tail1 = " " + type;
+      const tail2 = " " + type.toLowerCase();
+      const want = label.toLowerCase();
+      const keys = Object.keys(dict);
+      const guess = keys.find(function (k) {
+        return k.toLowerCase().includes(want) && (k.endsWith(tail1) || k.endsWith(tail2));
+      });
+
+      return guess ? readDict(dict, guess) : [];
+    }
+
+    function buildRollAndReadTable(cells) {
+      const cols = 6;
+      const rows = Math.ceil(cells.length / cols);
+      const tbl = document.createElement("table");
+      tbl.className = "roll";
+
+      const header = tbl.insertRow();
+      for (let c = 0; c < cols; c += 1) {
+        const td = header.insertCell();
+        td.className = "dice-cell";
+        const img = document.createElement("img");
+        img.src = "https://teachwithmrc.github.io/images/dice" + (c + 1) + ".png";
+        img.alt = "Die " + (c + 1);
+        img.style.width = "38px";
+        img.style.height = "38px";
+        td.appendChild(img);
+      }
+
+      let idx = 0;
+      for (let r = 0; r < rows; r += 1) {
+        const row = tbl.insertRow();
+        for (let c = 0; c < cols; c += 1) {
+          const td = row.insertCell();
+          const val = cells[idx++] || "";
+          const isSentence = String(val).includes(" ");
+          td.className = isSentence ? "sentence-cell" : "word-cell";
+          td.textContent = val;
+        }
+      }
+
+      return tbl;
+    }
+
+    let mode = "both";
+
+    function generateRollAndRead() {
+      if (!wordsDict() && !sentsDict()) {
+        alert("Data not loaded. Check the <script src=\"...\"> file name.");
+        return;
+      }
+
+      const labels = [FORCED_SKILL];
+      const TOTAL = gridSize;
+      let pool = [];
+
+      if (mode === "words") {
+        const unionW = labels.flatMap(function (lbl) { return getList(lbl, "Words", includeBlends); });
+        pool = uniqueByLowercase(unionW);
+      } else if (mode === "sentences") {
+        const unionS = labels.flatMap(function (lbl) { return getList(lbl, "Sentences", includeBlends); });
+        pool = uniqueByLowercase(unionS);
+      } else {
+        const words = uniqueByLowercase(labels.flatMap(function (lbl) { return getList(lbl, "Words", includeBlends); }));
+        const sents = uniqueByLowercase(labels.flatMap(function (lbl) { return getList(lbl, "Sentences", includeBlends); }));
+        const half = Math.floor(TOTAL / 2);
+        const w = fillToN(shuffle(words), half);
+        const s = fillToN(shuffle(sents), TOTAL - w.length);
+        pool = shuffle(w.concat(s));
+      }
+
+      let content = (mode === "both") ? pool : fillToN(shuffle(pool), TOTAL);
+      if (content.length < TOTAL) {
+        alert("Not enough content found using these settings.");
+        return;
+      }
+      content = content.slice(0, TOTAL);
+
+      const output = document.getElementById("output");
+      output.innerHTML = "";
+
+      const page = document.createElement("div");
+      page.className = "page";
+
+      const title = document.createElement("div");
+      title.className = "worksheet-title";
+      title.textContent = "Roll and Read";
+
+      const skills = document.createElement("div");
+      skills.className = "skills-line";
+      skills.innerHTML = "<strong>Skill:</strong> " + FORCED_SKILL;
+
+      const directions = document.createElement("div");
+      directions.className = "worksheet-directions";
+      directions.innerHTML = "<strong>Directions:</strong> Roll a die, read one item from that column, and keep going!";
+
+      const table = buildRollAndReadTable(content);
+
+      const copy = document.createElement("div");
+      copy.id = "copyright";
+      copy.textContent = "Copyright - InterventionStation.com - @TeachwithMrC";
+
+      page.appendChild(title);
+      page.appendChild(skills);
+      page.appendChild(directions);
+      page.appendChild(table);
+      page.appendChild(copy);
+      output.appendChild(page);
+    }
+
+    document.querySelectorAll("#modeRow .mode-option").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll("#modeRow .mode-option").forEach(function (b) {
+          b.classList.remove("selected");
+        });
+        btn.classList.add("selected");
+        mode = btn.getAttribute("data-mode") || "both";
+      });
+    });
+
+    document.getElementById("btnGenerate").addEventListener("click", generateRollAndRead);
+    document.getElementById("btnPrint").addEventListener("click", function () {
+      alert("Printing is for Members Only. Create an Unlimited Amount as a Member.");
+    });
+
+    window.addEventListener("DOMContentLoaded", function () {
+      generateRollAndRead();
+    });
+  </script>
+</body>
+</html>
