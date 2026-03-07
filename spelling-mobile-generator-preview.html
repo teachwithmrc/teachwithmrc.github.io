@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Spelling Generator Preview - Mobile</title>
+<script src="./newtry_FULL.js" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  @font-face { font-family:'BoxesFont'; src:url('fonts/boxes2.otf') format('opentype'); }
+  :root{ --line:#111; }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; font-family:"Poppins",Arial,sans-serif; background:#f6f8fc; color:#111; }
+  .wrap{ max-width:480px; margin:0 auto; padding:10px; }
+
+  .head{
+    border:2px solid var(--line);
+    border-radius:12px;
+    background:#fff;
+    padding:12px 10px;
+    margin-bottom:10px;
+    text-align:center;
+  }
+  .head h1{
+    margin:0;
+    font-size:clamp(26px,7.2vw,38px);
+    line-height:1.06;
+    font-weight:800;
+  }
+
+  .controls{
+    border:2px solid var(--line);
+    border-radius:12px;
+    background:#fff;
+    padding:12px;
+    margin-bottom:10px;
+  }
+  .btn-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .btn{
+    width:100%;
+    border:2px solid var(--line);
+    border-radius:14px;
+    min-height:52px;
+    padding:10px 8px;
+    font-family:"Poppins",Arial,sans-serif;
+    font-size:17px;
+    font-weight:900;
+    cursor:pointer;
+    background:#6ec1ff;
+    color:#fff;
+  }
+  .btn-print{
+    background:#fff;
+    color:#111;
+  }
+
+  .sheet-wrap{
+    border:2px solid var(--line);
+    border-radius:10px;
+    background:#fff;
+    padding:8px;
+    overflow:auto;
+    -webkit-overflow-scrolling:touch;
+    max-height:82vh;
+  }
+
+  .page {
+    position:relative;
+    width:100%;
+    max-width:100%;
+    margin:0 auto;
+    background:#fff;
+    border:2px solid #000;
+    border-radius:8px;
+    padding:10px;
+    text-align:center;
+    overflow:hidden;
+  }
+  .title{ margin:0 0 4px; font-size:clamp(24px,7vw,30px); line-height:1.05; font-weight:800; }
+  .sub{ margin:0 0 6px; font-size:12px; font-weight:700; color:#3b4c65; }
+  .name-row{ text-align:right; font-size:13px; font-weight:700; margin-bottom:7px; }
+  .name-row .line{ display:inline-block; width:120px; border-bottom:2px solid #111; transform:translateY(-2px); margin-left:4px; }
+
+  .word-bank{ border:2px solid #111; border-radius:9px; padding:6px 8px; margin-bottom:8px; }
+  .word-bank-title{ margin:0 0 4px; font-size:12px; font-weight:700; }
+  .word-bank-list{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
+  .word-pill{ font-size:15px; font-weight:700; text-transform:lowercase; }
+
+  .grid{ display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .card{ border:2px solid #000; border-radius:6px; padding:5px 4px 3px; min-height:180px; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; }
+  .card img{ width:100%; max-width:120px; height:84px; object-fit:contain; margin-top:4px; }
+  .missing-img{ width:100%; max-width:120px; height:84px; margin-top:4px; border:2px dashed #bbb; border-radius:6px; }
+  .word{ font-size:20px; font-weight:800; line-height:1.05; margin-top:6px; text-transform:lowercase; }
+  .pattern{ margin-top:3px; font-family:'BoxesFont', monospace; font-size:54px; line-height:0.86; }
+
+  .footer{ margin-top:8px; text-align:right; font-size:10px; font-weight:700; color:#444; }
+
+  .members-lock{
+    position:absolute;
+    left:10px;
+    right:10px;
+    bottom:10px;
+    z-index:30;
+    border:2px solid #fff;
+    border-radius:14px;
+    background:rgba(15,18,24,.9);
+    color:#fff;
+    text-align:center;
+    padding:10px 10px 12px;
+    box-shadow:0 8px 24px rgba(0,0,0,.35);
+  }
+  .members-lock-title{
+    margin:0;
+    font-size:28px;
+    line-height:1;
+    font-weight:900;
+  }
+  .members-lock-copy{
+    margin:6px 0 8px;
+    font-size:11px;
+    font-weight:700;
+  }
+  .members-lock a{
+    display:inline-block;
+    text-decoration:none;
+    border-radius:999px;
+    background:#fff;
+    color:#111;
+    border:2px solid #fff;
+    padding:6px 14px;
+    font-size:12px;
+    font-weight:800;
+  }
+
+  .preview-overlay{
+    position:absolute; inset:0; pointer-events:none; z-index:10; opacity:.55;
+    background-image:
+      repeating-linear-gradient(-24deg, rgba(0,0,0,.12) 0 16px, rgba(255,255,255,.05) 16px 32px),
+      url("data:image/svg+xml,%3Csvg width='360' height='240' viewBox='0 0 360 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-23 180 120)'%3E%3Ctext x='22' y='112' fill='%23000' fill-opacity='.4' font-family='Poppins' font-size='40' font-weight='800'%3EPREVIEW%3C/text%3E%3Ctext x='92' y='158' fill='%23000' fill-opacity='.3' font-family='Poppins' font-size='20' font-weight='700'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+    background-size:auto,360px 240px;
+    background-repeat:repeat;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="head">
+    <h1>Spelling Picture Worksheet Generator</h1>
+  </section>
+
+  <section class="controls">
+    <div class="btn-row">
+      <button id="btnGenerate" class="btn" type="button">Generate</button>
+      <button id="btnPrint" class="btn btn-print" type="button">Print</button>
+    </div>
+  </section>
+
+  <section class="sheet-wrap">
+    <div id="output"></div>
+  </section>
+</div>
+
+<script>
+(function(){
+  const outputEl = document.getElementById('output');
+  const btnGenerate = document.getElementById('btnGenerate');
+  const btnPrint = document.getElementById('btnPrint');
+  const RAW_IMAGE_BASE = 'https://raw.githubusercontent.com/teachwithmrc/teachwithmrc.github.io/main/images/';
+  const PATTERN_OVERRIDES = {
+    chirp: '221',
+    churp: '221'
+  };
+
+  let imageIndex = null;
+  const imageSrcCache = new Map();
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i = a.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function normalizeWord(word){
+    return (word || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  }
+
+  function dedupeWords(list){
+    const seen = new Set();
+    const out = [];
+    for(const item of list){
+      if(!item || !item.word) continue;
+      const key = String(item.word).toLowerCase();
+      if(seen.has(key)) continue;
+      seen.add(key);
+      out.push(item);
+    }
+    return out;
+  }
+
+  function canLoadImage(url){
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = url;
+    });
+  }
+
+  async function ensureImageIndex(){
+    if(imageIndex !== null) return;
+    imageIndex = new Map();
+    const sources = ['./jsonimages.json', '../jsonimages.json', '../../jsonimages.json'];
+    for(const src of sources){
+      try{
+        const res = await fetch(src, { cache: 'no-store' });
+        if(!res.ok) continue;
+        const list = await res.json();
+        if(!Array.isArray(list)) continue;
+        for(const item of list){
+          if(!item || !item.name) continue;
+          const base = item.name.replace(/\.[^.]+$/, '');
+          imageIndex.set(base.toLowerCase(), item.name);
+          imageIndex.set(normalizeWord(base), item.name);
+        }
+        break;
+      }catch(_err){ /* keep trying */ }
+    }
+  }
+
+  function imageCandidates(word){
+    const w = (word || '').trim();
+    const low = w.toLowerCase();
+    const norm = normalizeWord(w);
+    const list = [];
+
+    if(imageIndex){
+      const byLow = imageIndex.get(low);
+      const byNorm = imageIndex.get(norm);
+      if(byLow) list.push('images/' + encodeURIComponent(byLow));
+      if(byNorm) list.push('images/' + encodeURIComponent(byNorm));
+      if(byLow) list.push('../images/' + encodeURIComponent(byLow));
+      if(byNorm) list.push('../images/' + encodeURIComponent(byNorm));
+    }
+
+    [low, norm].forEach((k) => {
+      if(!k) return;
+      list.push('images/' + encodeURIComponent(k) + '.png');
+      list.push('images/' + encodeURIComponent(k) + '.jpg');
+      list.push('../images/' + encodeURIComponent(k) + '.png');
+      list.push('../images/' + encodeURIComponent(k) + '.jpg');
+      list.push(RAW_IMAGE_BASE + encodeURIComponent(k) + '.png');
+      list.push(RAW_IMAGE_BASE + encodeURIComponent(k) + '.jpg');
+    });
+
+    return [...new Set(list)];
+  }
+
+  async function getVerifiedImageSrc(word){
+    const key = String(word || '').toLowerCase();
+    if(imageSrcCache.has(key)) return imageSrcCache.get(key);
+
+    const candidates = imageCandidates(word);
+    for(const url of candidates){
+      // eslint-disable-next-line no-await-in-loop
+      const ok = await canLoadImage(url);
+      if(ok){
+        imageSrcCache.set(key, url);
+        return url;
+      }
+    }
+
+    imageSrcCache.set(key, null);
+    return null;
+  }
+
+  function getRControlledWords(source){
+    function fetchBase(base){ return source[base] || []; }
+    return [].concat(
+      fetchBase('R-Controlled(ar)'),
+      fetchBase('R-Controlled(or)'),
+      fetchBase('R-Controlled(er,ir,ur)')
+    );
+  }
+
+  function getDisplayPattern(item){
+    const safeWord = String(item.word || '').toLowerCase().trim();
+    if (PATTERN_OVERRIDES[safeWord]) return PATTERN_OVERRIDES[safeWord];
+    return String(item.pattern || '').replace(/[^1-4]/g, '') || '111';
+  }
+
+  function cardHtml(item){
+    const safeWord = String(item.word || '').toLowerCase();
+    const safePattern = getDisplayPattern(item);
+    const img = item._imgSrc
+      ? '<img alt="' + safeWord + '" src="' + item._imgSrc + '">' 
+      : '<div class="missing-img" aria-hidden="true"></div>';
+
+    return '' +
+      '<div class="card">' +
+        img +
+        '<div class="word">' + safeWord + '</div>' +
+        '<div class="pattern">' + safePattern + '</div>' +
+      '</div>';
+  }
+
+  async function generate(){
+    if(typeof soundBoxWords === 'undefined'){
+      outputEl.innerHTML = '<article class="page"><p class="sub">Missing data: newtry_FULL.js did not load.</p></article>';
+      return;
+    }
+
+    await ensureImageIndex();
+
+    const allWords = dedupeWords(getRControlledWords(soundBoxWords));
+    const shuffled = shuffle(allWords);
+    const picked = [];
+
+    for(const item of shuffled){
+      // eslint-disable-next-line no-await-in-loop
+      const src = await getVerifiedImageSrc(item.word);
+      if(!src) continue;
+      picked.push({ ...item, _imgSrc: src });
+      if(picked.length >= 6) break;
+    }
+
+    while(picked.length < 6 && shuffled.length){
+      const fallback = shuffled[picked.length % shuffled.length];
+      picked.push({ ...fallback, _imgSrc: null });
+      if(picked.length >= 6) break;
+    }
+
+    if(!picked.length){
+      outputEl.innerHTML = '<article class="page"><p class="sub">No R-Controlled picture matches found.</p></article>';
+      return;
+    }
+
+    const wordBank = shuffle(picked.map((p) => String(p.word || '').toLowerCase()));
+    const cards = picked.map(cardHtml).join('');
+    const bank = wordBank.map((w) => '<div class="word-pill">' + w + '</div>').join('');
+
+    outputEl.innerHTML = '' +
+      '<article class="page">' +
+        '<h2 class="title">Mixed R-Controlled Worksheet</h2>' +
+        '<p class="sub">Spelling with Pictures</p>' +
+        '<div class="name-row">Name:<span class="line"></span></div>' +
+        '<section class="word-bank">' +
+          '<p class="word-bank-title">Word Bank</p>' +
+          '<div class="word-bank-list">' + bank + '</div>' +
+        '</section>' +
+        '<section class="grid">' + cards + '</section>' +
+        '<div class="footer">Copyright - InterventionStation.com - @TeachwithMrC</div>' +
+        '<div class="members-lock">' +
+          '<p class="members-lock-title">Members Only</p>' +
+          '<p class="members-lock-copy">Printing is for Members Only. Create an Unlimited Amount as a Member.</p>' +
+          '<a href="https://interventionstation.com" target="_blank" rel="noopener noreferrer">Join Membership</a>' +
+        '</div>' +
+        '<div class="preview-overlay" aria-hidden="true"></div>' +
+      '</article>';
+  }
+
+  btnGenerate.addEventListener('click', generate);
+  btnPrint.addEventListener('click', () => {
+    alert('Printing is for Members Only. Create an Unlimited Amount as a Member.');
+  });
+
+  window.addEventListener('load', () => {
+    setTimeout(generate, 120);
+  });
+})();
+</script>
+</body>
+</html>

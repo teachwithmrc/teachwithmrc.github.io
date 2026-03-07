@@ -139,54 +139,6 @@
     .section-body { padding:10px 10px 8px; background:#fff; }
     .section-body.is-collapsed { display:none; }
 
-    .generator-list { display:grid; gap:8px; }
-    .generator-item {
-      border:1px solid #d8e7f7;
-      border-radius:11px;
-      overflow:hidden;
-      background:#fcfeff;
-    }
-    .generator-toggle {
-      width:100%;
-      border:0;
-      background:#f7fcff;
-      color:#12385e;
-      min-height:44px;
-      padding:0 12px;
-      font-size:14px;
-      font-weight:800;
-      font-family:inherit;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      text-align:left;
-    }
-    .generator-icon {
-      font-size:16px;
-      color:#4d86b0;
-      transition:transform .15s ease;
-      margin-left:8px;
-      flex:0 0 auto;
-    }
-    .generator-toggle[aria-expanded="true"] .generator-icon { transform:rotate(180deg); }
-    .generator-body { padding:0 8px 8px; background:#fff; border-top:1px solid #d8e7f7; }
-    .generator-body.is-collapsed { display:none; }
-    .generator-frame-wrap {
-      margin-top:8px;
-      border:1px solid #d8e7f7;
-      border-radius:10px;
-      overflow:hidden;
-      background:#fff;
-    }
-    .generator-frame {
-      width:100%;
-      height:70vh;
-      min-height:420px;
-      border:0;
-      display:block;
-      background:#fff;
-    }
-
     .link-list { display:grid; gap:8px; }
     .link-card {
       display:flex;
@@ -293,58 +245,13 @@
   <div class="search-row"><input id="searchLinks" class="search-input" type="search" placeholder="Search links on this page" aria-label="Search links" /></div>
   <section class="section">
   <button class="section-header" type="button" aria-expanded="true">Updated Generator Hub <span class="toggle-icon">−</span></button>
-  <div class="section-body"><div class="link-list"><a class="link-card" data-link-title="join membership" href="https://teachwithmrc.github.io/site%20previews/home-preview.html#join">Join Membership</a><a class="link-card" data-link-title="reading game modes preview" href="https://teachwithmrc.github.io/ultimate_reading_game_modes_preview.html">Reading Game</a></div></div>
+  <div class="section-body"><div class="link-list"><a class="link-card" data-link-title="main mobile preview hub all updated generators" href="../mobile-preview-safe/main-mobile-preview-hub.html">Open Main Mobile Generator Hub</a><a class="link-card" data-link-title="reading game modes preview" href="../../ultimate_reading_game_modes_preview.html">Reading Game</a></div></div>
 </section><section class="section">
   <button class="section-header" type="button" aria-expanded="true">Updated Math Generators <span class="toggle-icon">−</span></button>
-  <div class="section-body">
-    <div class="generator-list">
-      <article class="generator-item" data-generator-title="long division color-coded generator">
-        <button class="generator-toggle" type="button" aria-expanded="false">Long Division Color-Coded <span class="generator-icon">▾</span></button>
-        <div class="generator-body is-collapsed">
-          <div class="generator-frame-wrap"><iframe class="generator-frame" title="Long Division Color-Coded Generator" loading="lazy" data-frame-src="https://teachwithmrc.github.io/site%20previews/mobile-preview-safe/long-division-colorcoded-generator-preview-mobile-fit.html"></iframe></div>
-        </div>
-      </article>
-      <article class="generator-item" data-generator-title="partial products 2x1 generator">
-        <button class="generator-toggle" type="button" aria-expanded="false">Partial Products 2x1 <span class="generator-icon">▾</span></button>
-        <div class="generator-body is-collapsed">
-          <div class="generator-frame-wrap"><iframe class="generator-frame" title="Partial Products 2x1 Generator" loading="lazy" data-frame-src="https://teachwithmrc.github.io/site%20previews/mobile-preview-safe/partial-products-2x1-generator-preview-mobile-fit.html"></iframe></div>
-        </div>
-      </article>
-      <article class="generator-item" data-generator-title="subtraction graphic organizer generator">
-        <button class="generator-toggle" type="button" aria-expanded="false">Subtraction Graphic Organizer <span class="generator-icon">▾</span></button>
-        <div class="generator-body is-collapsed">
-          <div class="generator-frame-wrap"><iframe class="generator-frame" title="Subtraction Graphic Organizer Generator" loading="lazy" data-frame-src="https://teachwithmrc.github.io/site%20previews/mobile-preview-safe/subtraction-graphic-organizer-preview-mobile-fit.html"></iframe></div>
-        </div>
-      </article>
-      <article class="generator-item" data-generator-title="addition graphic organizer generator">
-        <button class="generator-toggle" type="button" aria-expanded="false">Addition Graphic Organizer <span class="generator-icon">▾</span></button>
-        <div class="generator-body is-collapsed">
-          <div class="generator-frame-wrap"><iframe class="generator-frame" title="Addition Graphic Organizer Generator" loading="lazy" data-frame-src="https://teachwithmrc.github.io/site%20previews/mobile-preview-safe/addition-graphic-organizer-preview-mobile-fit.html"></iframe></div>
-        </div>
-      </article>
-      <article class="generator-item" data-generator-title="division generator">
-        <button class="generator-toggle" type="button" aria-expanded="false">Division Generator <span class="generator-icon">▾</span></button>
-        <div class="generator-body is-collapsed">
-          <div class="generator-frame-wrap"><iframe class="generator-frame" title="Division Generator" loading="lazy" data-frame-src="https://teachwithmrc.github.io/divisionorganizermobile.html"></iframe></div>
-        </div>
-      </article>
-      <article class="generator-item" data-generator-title="math tic tac toe generator">
-        <button class="generator-toggle" type="button" aria-expanded="false">Math Tic Tac Toe <span class="generator-icon">▾</span></button>
-        <div class="generator-body is-collapsed">
-          <div class="generator-frame-wrap"><iframe class="generator-frame" title="Math Tic Tac Toe Generator" loading="lazy" data-frame-src="https://teachwithmrc.github.io/math-tictac-mobile-preview.html"></iframe></div>
-        </div>
-      </article>
-      <article class="generator-item" data-generator-title="add/sub manipulatives plus hundreds chart">
-        <button class="generator-toggle" type="button" aria-expanded="false">Add/Sub Manipulatives + Hundreds Chart <span class="generator-icon">▾</span></button>
-        <div class="generator-body is-collapsed">
-          <div class="generator-frame-wrap"><iframe class="generator-frame" title="Add/Sub Manipulatives + Hundreds Chart" loading="lazy" data-frame-src="https://teachwithmrc.github.io/ladder/manipulatives-mobile-preview.html"></iframe></div>
-        </div>
-      </article>
-    </div>
-  </div>
+  <div class="section-body"><div class="link-list"><a class="link-card" data-link-title="rounding generator mobile preview" href="https://teachwithmrc.github.io/site%20previews/rounding-generator-preview.html">Rounding Generator</a><a class="link-card" data-link-title="coin counter mobile preview" href="https://teachwithmrc.github.io/site%20previews/coin-counter-generator-preview.html">Coin Counter</a><a class="link-card" data-link-title="ten frames mobile preview" href="https://teachwithmrc.github.io/site%20previews/ten-frame-preview.html">Ten Frames</a><a class="link-card" data-link-title="division organizer mobile preview" href="../../divisionorganizermobile.html">Division Generator</a><a class="link-card" data-link-title="math tic tac toe mobile preview" href="../../math-tictac-mobile-preview.html">Math Tic Tac Toe</a><a class="link-card" data-link-title="math roll and read mobile preview" href="https://teachwithmrc.github.io/site%20previews/math-roll-and-read-generator-preview.html">Math Roll and Read</a><a class="link-card" data-link-title="add subtract manipulatives mobile preview" href="../../ladder/manipulatives-mobile-preview.html">Add/Sub Manipulatives + Hundreds Chart</a><a class="link-card" data-link-title="addition organizer mobile preview" href="../mobile-preview-safe/addition-graphic-organizer-preview-mobile-fit.html">Addition Graphic Organizer</a><a class="link-card" data-link-title="subtraction organizer mobile preview" href="../mobile-preview-safe/subtraction-graphic-organizer-preview-mobile-fit.html">Subtraction Graphic Organizer</a><a class="link-card" data-link-title="multiplication organizer mobile preview" href="https://teachwithmrc.github.io/site%20previews/multiplication-generator-preview.html">Multiplication Graphic Organizer</a><a class="link-card" data-link-title="partial products 2x1 mobile preview" href="../mobile-preview-safe/partial-products-2x1-generator-preview-mobile-fit.html">Partial Products 2x1</a><a class="link-card" data-link-title="long division color coded mobile preview" href="../mobile-preview-safe/long-division-colorcoded-generator-preview-mobile-fit.html">Long Division Color-Coded</a></div></div>
 </section><section class="section">
   <button class="section-header" type="button" aria-expanded="true">Updated Reading Generators <span class="toggle-icon">−</span></button>
-  <div class="section-body"><div class="link-list"><a class="link-card" data-link-title="word mapping mobile preview" href="https://teachwithmrc.github.io/site%20previews/mobile-preview-safe/wordmapmaster-preview-mobile-fit.html">Word Mapping</a><a class="link-card" data-link-title="reading tic tac toe mobile preview" href="https://teachwithmrc.github.io/ladder/tic-tac-preview-march1st.html">SOR Tic Tac Toe</a><a class="link-card" data-link-title="reading roll and read mobile preview" href="https://teachwithmrc.github.io/ladder/rollreadpreview31.html">SOR Roll and Read</a><a class="link-card" data-link-title="word ladder mobile preview" href="https://teachwithmrc.github.io/laddermobilepreview.html">SOR Word Ladder</a><a class="link-card" data-link-title="pyramid spelling mobile preview" href="https://teachwithmrc.github.io/ladder/pyramidpreview.html">Pyramid Spelling</a><a class="link-card" data-link-title="spelling with pictures mobile preview" href="https://teachwithmrc.github.io/ladder/spelling-mobile-generator.html">Spelling with Pictures</a></div></div>
+  <div class="section-body"><div class="link-list"><a class="link-card" data-link-title="word mapping mobile preview" href="../mobile-preview-safe/wordmapmaster-preview-mobile-fit.html">Word Mapping</a><a class="link-card" data-link-title="reading tic tac toe mobile preview" href="../../ladder/tic-tac-preview-march1st.html">SOR Tic Tac Toe</a><a class="link-card" data-link-title="fluency grid mobile preview" href="https://teachwithmrc.github.io/site%20previews/fluencygridpreview.html">Fluency Grid</a><a class="link-card" data-link-title="reading roll and read mobile preview" href="../../ladder/rollreadpreview31.html">SOR Roll and Read</a><a class="link-card" data-link-title="word ladder mobile preview" href="../../laddermobilepreview.html">SOR Word Ladder</a><a class="link-card" data-link-title="pyramid spelling mobile preview" href="../../ladder/pyramidpreview.html">Pyramid Spelling</a><a class="link-card" data-link-title="spelling with pictures mobile preview" href="../../ladder/spelling-mobile-generator.html">Spelling with Pictures</a></div></div>
 </section>
 </section>
   </main>
@@ -359,16 +266,10 @@
             const text = el.getAttribute('data-link-title') || '';
             el.style.display = text.includes(q) ? '' : 'none';
           });
-          document.querySelectorAll('.generator-item').forEach((item) => {
-            const title = (item.getAttribute('data-generator-title') || '').toLowerCase();
-            const visible = !q || title.includes(q);
-            item.style.display = visible ? '' : 'none';
-          });
           document.querySelectorAll('.section').forEach((section) => {
-            const visibleLinks = Array.from(section.querySelectorAll('[data-link-title]')).some((el) => el.style.display !== 'none');
-            const visibleGenerators = Array.from(section.querySelectorAll('.generator-item')).some((item) => item.style.display !== 'none');
+            const visible = Array.from(section.querySelectorAll('[data-link-title]')).some((el) => el.style.display !== 'none');
             const hasNotes = section.querySelector('.note-chip');
-            section.style.display = (visibleLinks || visibleGenerators || hasNotes) ? '' : 'none';
+            section.style.display = (visible || hasNotes) ? '' : 'none';
           });
         });
       }
@@ -380,22 +281,6 @@
           btn.setAttribute('aria-expanded', String(!collapsed));
           const icon = btn.querySelector('.toggle-icon');
           if (icon) icon.textContent = collapsed ? '+' : '−';
-        });
-      });
-
-      document.querySelectorAll('.generator-toggle').forEach((btn) => {
-        btn.addEventListener('click', function() {
-          const item = btn.closest('.generator-item');
-          const body = item.querySelector('.generator-body');
-          const collapsed = body.classList.toggle('is-collapsed');
-          btn.setAttribute('aria-expanded', String(!collapsed));
-          if (!collapsed) {
-            const frame = item.querySelector('.generator-frame');
-            const src = frame ? frame.getAttribute('data-frame-src') : '';
-            if (frame && src && !frame.getAttribute('src')) {
-              frame.setAttribute('src', src);
-            }
-          }
         });
       });
     })();
