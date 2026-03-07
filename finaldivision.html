@@ -1,0 +1,1613 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scaffolded Long Division Color Coded Graphic Organizer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --brand-dark:#2f3e4e;
+      --brand-blue:#66c9f4;
+      --brand-blue-deep:#1f6d96;
+      --ink:#102246;
+      --border:rgba(0,0,0,.55);
+      --offwhite:#f3f5f7;
+      --panel:#ffffff;
+      --muted:#546a92;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{
+      margin:0;
+      padding:0;
+      font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--ink);
+      background:var(--offwhite);
+    }
+    body{ overflow-x:hidden; }
+    a{ color:inherit; }
+
+    .top-cta-wrap{
+      position:sticky;
+      top:0;
+      z-index:9999;
+      background:var(--brand-dark);
+      box-shadow:0 8px 20px rgba(0,0,0,.12);
+    }
+    .top-cta-bar{
+      width:min(1200px, calc(100% - 32px));
+      margin:0 auto;
+      padding:14px 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .top-cta-copy strong{
+      display:block;
+      color:#fff;
+      font-size:16px;
+      line-height:1.1;
+      font-weight:900;
+    }
+    .top-cta-copy span{
+      display:block;
+      color:rgba(255,255,255,.85);
+      font-size:13px;
+      line-height:1.3;
+      font-weight:600;
+      margin-top:4px;
+    }
+    .top-cta-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .top-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:46px;
+      padding:0 18px;
+      border-radius:999px;
+      text-decoration:none;
+      font-size:15px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .top-btn-primary{
+      background:var(--brand-blue);
+      color:#fff;
+      border:1px solid #57b9e3;
+    }
+    .top-btn-secondary{
+      background:rgba(255,255,255,.08);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.16);
+    }
+
+    .is-ticker{
+      background:var(--brand-dark);
+      border-top:1px solid rgba(255,255,255,.18);
+      border-bottom:1px solid rgba(255,255,255,.18);
+      overflow:hidden;
+      width:100%;
+    }
+    .is-ticker-track{
+      display:flex;
+      align-items:center;
+      gap:28px;
+      padding:10px 0;
+      width:max-content;
+      white-space:nowrap;
+      animation:isTickerScroll 34s linear infinite;
+      will-change:transform;
+    }
+    .is-ticker:hover .is-ticker-track{ animation-play-state:paused; }
+    .is-ticker-item{
+      display:inline-flex;
+      align-items:center;
+      flex:0 0 auto;
+      color:#fff;
+      font-size:12px;
+      font-weight:650;
+      line-height:1.1;
+    }
+    .is-ticker-star{
+      color:#ffe08a;
+      margin-right:6px;
+      font-weight:900;
+    }
+    @keyframes isTickerScroll{
+      from{ transform:translate3d(0,0,0); }
+      to{ transform:translate3d(-50%,0,0); }
+    }
+
+    .is-home-sections{
+      background:var(--offwhite);
+      padding:18px 0 34px;
+    }
+    .is-wrap{
+      width:min(1200px, calc(100% - 32px));
+      margin:0 auto;
+    }
+    .is-layout{
+      display:grid;
+      grid-template-columns:320px minmax(0,1fr);
+      gap:12px;
+      align-items:start;
+    }
+    .is-main{ min-width:0; }
+
+    .is-nav{
+      position:sticky;
+      top:98px;
+    }
+    .is-nav-card{
+      background:var(--panel);
+      border:2px solid var(--border);
+      padding:0;
+      overflow:hidden;
+    }
+    .is-nav-group.is-nav-home{
+      padding:10px 12px 8px;
+      border-bottom:2px solid rgba(0,0,0,.18);
+    }
+    .is-mt-12{ margin-top:8px; }
+    .is-nav-header{
+      background:var(--brand-blue);
+      color:#fff;
+      font-weight:700;
+      font-size:22px;
+      line-height:1.1;
+      padding:12px 14px;
+      margin:0;
+    }
+    .is-nav-group{ padding:6px 12px 10px; }
+    .is-nav-link{
+      display:block;
+      text-decoration:none;
+      color:var(--ink);
+      font-weight:600;
+      font-size:14px;
+      line-height:1.22;
+      padding:6px 0;
+      word-break:break-word;
+    }
+    .is-nav-link:hover{ text-decoration:underline; }
+    .is-nav-link.is-active{
+      color:#0f2e52;
+      text-decoration:underline;
+      text-decoration-thickness:2px;
+    }
+
+    .is-page{
+      background:var(--panel);
+      border:2px solid var(--border);
+      overflow:hidden;
+      padding:16px;
+    }
+
+    .hero-card{
+      border:1px solid #cfd7ef;
+      background:
+        radial-gradient(circle at top right, rgba(102, 201, 244, .25), transparent 38%),
+        linear-gradient(135deg, #ffffff 0%, #f5fbff 100%);
+      border-radius:22px;
+      padding:22px;
+      box-shadow:0 14px 30px rgba(31,54,95,.08);
+      margin-bottom:16px;
+    }
+    .hero-card__eyebrow{
+      margin:0 0 10px;
+      color:var(--brand-blue-deep);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .hero-card h1{
+      margin:0;
+      font-size:34px;
+      line-height:1.02;
+      font-weight:900;
+      color:#0e2b4f;
+      max-width:900px;
+    }
+    .hero-card__sub{
+      margin:12px 0 0;
+      font-size:17px;
+      line-height:1.45;
+      font-weight:600;
+      color:#436280;
+      max-width:820px;
+    }
+    .hero-card__actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+    .pill-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:48px;
+      padding:0 18px;
+      border-radius:999px;
+      text-decoration:none;
+      font-size:15px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .pill-btn--primary{
+      background:#6ec1ff;
+      color:#fff;
+      border:1px solid #5aaee9;
+      box-shadow:0 8px 18px rgba(16,40,70,.14);
+    }
+    .pill-btn--secondary{
+      background:#fff;
+      color:#1f365f;
+      border:1px solid #cfd7ef;
+    }
+
+    .review-section{
+      margin-bottom:16px;
+      border:1px solid #cfd7ef;
+      background:#fff;
+      border-radius:18px;
+      padding:14px;
+      box-shadow:0 10px 22px rgba(31,54,95,.07);
+    }
+    .review-section__eyebrow{
+      margin:0 0 6px;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:#4d84b7;
+    }
+    .review-section h2{
+      margin:0 0 14px;
+      font-size:22px;
+      line-height:1.08;
+      color:#0e2b4f;
+    }
+    .review-slider{
+      position:relative;
+      overflow:hidden;
+    }
+    .review-track{
+      display:flex;
+      transition:transform .45s ease;
+      will-change:transform;
+    }
+    .review-card{
+      flex:0 0 100%;
+      min-width:100%;
+      border:1px solid #dbe6f2;
+      background:linear-gradient(180deg, #fbfdff 0%, #f4f9ff 100%);
+      border-radius:16px;
+      padding:14px;
+    }
+    .review-stars{
+      color:#ffbf47;
+      font-size:15px;
+      letter-spacing:1px;
+      margin-bottom:8px;
+    }
+    .review-quote{
+      margin:0 0 14px;
+      font-size:15px;
+      line-height:1.45;
+      font-weight:700;
+      color:#153555;
+    }
+    .review-author{
+      margin:0;
+      font-size:12px;
+      line-height:1.35;
+      font-weight:700;
+      color:#557091;
+    }
+    .review-dots{
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      margin-top:14px;
+    }
+    .review-dot{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      border:0;
+      padding:0;
+      background:#d0dceb;
+      cursor:pointer;
+    }
+    .review-dot.is-active{ background:#66c9f4; }
+
+    .generator-shell{
+      border:1px solid #cfd7ef;
+      background:#fff;
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow:0 10px 22px rgba(31,54,95,.07);
+      position: relative;
+    }
+    .app {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 14px 14px 36px;
+    }
+    .screen-only{
+      padding-top:2px;
+    }
+    .controls-card {
+      background: #ffffff;
+      border: 2px solid #d9dfeb;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(33, 43, 63, 0.06);
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      align-items: end;
+    }
+    .controls-top {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    body.preview-locked .controls-top {
+      align-items: center;
+      text-align: center;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+    .field label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      color: #43516a;
+      text-transform: uppercase;
+    }
+    .field select,
+    .field input,
+    .field textarea {
+      font-family: inherit;
+      border: 2px solid #cfd7e5;
+      border-radius: 10px;
+      background: #fff;
+      color: #1d2430;
+      font-size: 0.95rem;
+      padding: 8px 10px;
+      outline: none;
+      width: 100%;
+    }
+    .hidden-options {
+      display: none;
+    }
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .button-row button {
+      border: 2px solid #1f2b3e;
+      border-radius: 10px;
+      background: #fff;
+      color: #1f2b3e;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+    .button-row button.primary {
+      background: #1f2b3e;
+      color: #fff;
+    }
+    body.preview-locked .controls-grid,
+    body.preview-locked .note {
+      display: none;
+    }
+    body.preview-locked .button-row #printBtn {
+      display: none;
+    }
+    .note {
+      margin-top: 8px;
+      font-size: 0.84rem;
+      color: #5a677f;
+    }
+    #worksheetHost {
+      margin-top: 12px;
+    }
+    body.preview-locked #worksheetHost {
+      filter: blur(1.1px);
+    }
+    body.preview-secure #worksheetHost {
+      position: relative;
+    }
+    body.preview-secure #worksheetHost::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 150;
+      pointer-events: none;
+      opacity: 0.52;
+      background-image:
+        repeating-linear-gradient(-26deg, rgba(0,0,0,.08) 0 18px, rgba(255,255,255,.06) 18px 36px),
+        url("data:image/svg+xml,%3Csvg width='340' height='220' viewBox='0 0 340 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-22 170 110)'%3E%3Ctext x='18' y='90' fill='%23000' fill-opacity='.26' font-family='Poppins' font-size='34' font-weight='900'%3EPREVIEW ONLY%3C/text%3E%3Ctext x='44' y='146' fill='%23000' fill-opacity='.2' font-family='Poppins' font-size='22' font-weight='800'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+      background-size: auto, 340px 220px;
+      background-repeat: repeat;
+    }
+    body.preview-secure #worksheetHost::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 92px;
+      z-index: 151;
+      pointer-events: none;
+      background: linear-gradient(to top, rgba(0,0,0,.56), rgba(0,0,0,0));
+    }
+    .preview-lock-banner {
+      display: none;
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      z-index: 3000;
+      width: min(92vw, 640px);
+      border: 2px solid #66c9f4;
+      border-radius: 18px;
+      background: #2f3e4e;
+      color: #fff;
+      text-align: center;
+      padding: 16px 18px 14px;
+      box-shadow: 0 14px 32px rgba(0,0,0,.3);
+      gap: 8px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .preview-lock-banner strong {
+      font-size: 1.08rem;
+      line-height: 1.15;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .preview-lock-banner span {
+      font-size: 0.9rem;
+      line-height: 1.3;
+      font-weight: 700;
+      opacity: 0.98;
+      max-width: 34rem;
+    }
+    .preview-lock-banner a {
+      display: inline-flex;
+      text-decoration: none;
+      background: #66c9f4;
+      color: #fff;
+      border: 1px solid #57b9e3;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      line-height: 1;
+      justify-content: center;
+      align-items: center;
+      white-space: nowrap;
+    }
+    body.preview-secure .preview-lock-banner {
+      display: flex;
+    }
+    .sheet {
+      width: 11in;
+      min-height: 8.5in;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid #d6dbe7;
+      box-shadow: 0 12px 30px rgba(25, 35, 55, 0.1);
+      padding: 0.3in;
+      position: relative;
+    }
+    .sheet-scale-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: hidden;
+    }
+    .sheet-scale-wrap + .sheet-scale-wrap {
+      margin-top: 14px;
+    }
+    .sheet + .sheet {
+      margin-top: 14px;
+    }
+    .sheet-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 2px solid #ced5e3;
+      padding-bottom: 7px;
+      margin-bottom: 10px;
+    }
+    .sheet-title {
+      margin: 0;
+      font-size: 1.03rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+    .name-line {
+      white-space: nowrap;
+      font-size: 0.84rem;
+      font-weight: 600;
+    }
+    .name-line .line {
+      display: inline-block;
+      width: 140px;
+      border-bottom: 2px solid #111;
+      transform: translateY(-2px);
+      margin-left: 5px;
+    }
+    .organizer {
+      padding: 2px 0;
+      display: grid;
+      grid-template-columns: minmax(0, 0.96fr) minmax(0, 1.34fr);
+      gap: 9px;
+      min-height: 0;
+    }
+    .two-up {
+      display: grid;
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .two-up.single {
+      grid-template-rows: minmax(0, 1fr);
+    }
+    .organizer-block {
+      padding: 2px 0 4px;
+    }
+    .organizer-block + .organizer-block {
+      border-top: 1px solid #d5dce9;
+      padding-top: 8px;
+    }
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .problem-equation {
+      font-size: 1.02rem;
+      font-weight: 800;
+      padding: 0 2px 2px;
+      text-align: left;
+      background: transparent;
+    }
+    .workspace {
+      padding: 2px 0 6px;
+      background: transparent;
+    }
+    .workspace-layout {
+      display: block;
+    }
+    .problem-canvas-wrap {
+      position: relative;
+      overflow: visible;
+    }
+    .problem-canvas {
+      position: relative;
+      display: grid;
+      grid-template-columns: 24px 50px repeat(var(--digits), 50px) 22px 50px;
+      grid-template-rows: repeat(var(--rows), 40px);
+      column-gap: 4px;
+      row-gap: 8px;
+      align-items: center;
+      justify-content: start;
+      overflow: visible;
+    }
+    .problem-canvas.no-remainder {
+      grid-template-columns: 24px 50px repeat(var(--digits), 50px);
+    }
+    .remainder-label {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      text-align: center;
+      align-self: center;
+      justify-self: center;
+      text-transform: uppercase;
+    }
+    .canvas-box {
+      width: 50px;
+      height: 40px;
+      border: 2px solid #111;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.94rem;
+      font-weight: 700;
+      background: #fff;
+      line-height: 1;
+    }
+    .canvas-box.ghost {
+      border: 0;
+      background: transparent;
+    }
+    .canvas-box.divisor {
+      background: #bdeee5;
+    }
+    .canvas-box.blank-gray {
+      background: #f0f0f0;
+    }
+    .canvas-box.minus-cell {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+      justify-content: center;
+      padding-right: 0;
+    }
+    .division-top-line {
+      align-self: start;
+      border-top: 6px solid #111;
+      height: 1px;
+      width: 100%;
+      z-index: 3;
+    }
+    .division-left-line {
+      justify-self: start;
+      width: 1px;
+      height: 100%;
+      border-left: 6px solid #111;
+      z-index: 3;
+      transform: translateX(-2px);
+    }
+    .down-arrow {
+      width: 16px;
+      height: 24px;
+      position: relative;
+      justify-self: center;
+      align-self: end;
+      transform: translateY(8px);
+      pointer-events: none;
+      z-index: 4;
+    }
+    .down-arrow::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 0;
+      width: 4px;
+      height: 14px;
+      border-radius: 2px;
+      background: currentColor;
+      opacity: 0.95;
+    }
+    .down-arrow::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 12px;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 12px solid currentColor;
+      opacity: 0.95;
+    }
+    .down-arrow.arrow-0 { color: #c9a8df; }
+    .down-arrow.arrow-1 { color: #f3c883; }
+    .down-arrow.arrow-2 { color: #9ecbe2; }
+    .down-arrow.arrow-3 { color: #b3d5a8; }
+    .digit-box {
+      min-width: 38px;
+      height: 38px;
+      border: 2px solid #111;
+      border-radius: 2px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.08rem;
+      font-weight: 700;
+      background: #fff;
+    }
+    .digit-box.small {
+      min-width: 34px;
+      height: 34px;
+      font-size: 0.98rem;
+    }
+    .digit-box.divisor-fixed {
+      background: #a9ddd3;
+    }
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .strip {
+      border: 2px solid #111;
+      border-radius: 4px;
+      padding: 6px 7px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .strip-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .strip-label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      border: 2px solid #111;
+      border-radius: 3px;
+      padding: 1px 7px;
+      background: #fff;
+      flex: 0 0 auto;
+    }
+    .strip-question {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      flex-wrap: wrap;
+      font-size: 0.86rem;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .target-digits {
+      display: inline-flex;
+      gap: 2px;
+      align-items: center;
+    }
+    .strip-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .strip-table th,
+    .strip-table td {
+      border: 1px solid #111;
+      text-align: center;
+      height: 32px;
+      font-size: 0.79rem;
+      font-weight: 700;
+      padding: 0;
+    }
+    .tone-0-bg { background: rgba(182, 128, 224, 0.24); }
+    .tone-1-bg { background: rgba(255, 200, 110, 0.15); }
+    .tone-2-bg { background: rgba(145, 205, 230, 0.15); }
+    .tone-3-bg { background: rgba(178, 220, 170, 0.15); }
+    .tone-0 { background: rgba(182, 128, 224, 0.24); }
+    .tone-1 { background: rgba(255, 200, 110, 0.15); }
+    .tone-2 { background: rgba(145, 205, 230, 0.15); }
+    .tone-3 { background: rgba(178, 220, 170, 0.15); }
+    .strip-table th.tone-head.tone-0 { background: #dcb3f3; }
+    .strip-table th.tone-head.tone-1 { background: #ffe2b3; }
+    .strip-table th.tone-head.tone-2 { background: #d1ecf8; }
+    .strip-table th.tone-head.tone-3 { background: #dcefd5; }
+    .no-color .tone-0,
+    .no-color .tone-1,
+    .no-color .tone-2,
+    .no-color .tone-3 {
+      background: #fff !important;
+      box-shadow: none !important;
+      border-color: #111 !important;
+    }
+    .no-color .strip-table th.tone-head {
+      background: #efefef !important;
+    }
+    .no-color .canvas-box.divisor {
+      background: #fff !important;
+      box-shadow: none !important;
+    }
+    .footer-note {
+      position: static;
+      margin-top: 8px;
+      text-align: left;
+      font-size: 0.64rem;
+      color: #6a7485;
+    }
+
+    @media (max-width:1100px){
+      .is-layout{ grid-template-columns:1fr; }
+      .is-nav{ position:relative; top:auto; }
+    }
+    @media (max-width:900px){
+      .top-cta-bar{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .top-cta-actions{
+        width:100%;
+        justify-content:flex-start;
+      }
+      .hero-card h1{ font-size:31px; }
+      .review-section h2{ font-size:20px; }
+      .controls-grid {
+        grid-template-columns: 1fr;
+      }
+      .sheet {
+        width: 100%;
+        min-height: 0;
+        padding: 12px;
+      }
+      .sheet-scale-wrap {
+        overflow-x: auto;
+        justify-content: flex-start;
+      }
+      .organizer {
+        min-height: 0;
+        grid-template-columns: 1fr;
+      }
+      .two-up {
+        grid-template-rows: auto;
+      }
+    }
+    @media (max-width:780px){
+      .pill-btn{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-cta-wrap">
+    <div class="top-cta-bar">
+      <div class="top-cta-copy">
+        <strong>Intervention Station Membership</strong>
+        <span>Unlock the scaffolded long division organizer and the rest of the generator library.</span>
+      </div>
+      <div class="top-cta-actions">
+        <a class="top-btn top-btn-secondary" href="#generator">See the Generator</a>
+        <a class="top-btn top-btn-primary" href="https://teachwithmrc.github.io/site-preview-march3rd/home-preview.html#join">Join Now</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="is-ticker" aria-hidden="true">
+    <div class="is-ticker-track">
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"My students finally understand each step."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"This saved me so much prep time for intervention groups."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"The color coding makes long division click."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"Exactly the scaffold my struggling learners needed."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"My students finally understand each step."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"This saved me so much prep time for intervention groups."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"The color coding makes long division click."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">★</span>"Exactly the scaffold my struggling learners needed."</div>
+    </div>
+  </div>
+
+  <section class="is-home-sections">
+    <div class="is-wrap">
+      <div class="is-layout">
+        <aside class="is-nav">
+          <nav class="is-nav-card" aria-label="Resource navigation">
+            <div class="is-nav-group is-nav-home">
+              <a class="is-nav-link" href="./site-preview-march3rd/home-preview.html">Home</a>
+            </div>
+
+            <div class="is-nav-header">Math Generators</div>
+            <div class="is-nav-group">
+              <a class="is-nav-link" href="./rounding-generator-preview.html">Rounding Generator</a>
+              <a class="is-nav-link" href="./addition-generator-preview.html">Addition Generator</a>
+              <a class="is-nav-link" href="./subtraction-generator-preview.html">Subtraction Generator</a>
+              <a class="is-nav-link" href="./multiply-generator-preview.html">Multiplication Generator</a>
+              <a class="is-nav-link" href="./partialproducts-generator-preview.html">Partial Products Generator</a>
+              <a class="is-nav-link" href="./division-generator-preview.html">Long Division</a>
+              <a class="is-nav-link is-active" href="./finaldivision.html">Long Division Scaffold</a>
+              <a class="is-nav-link" href="./ten-frame-preview.html">Ten Frame Generator</a>
+              <a class="is-nav-link" href="./coin-counter-generator-preview.html">Coin Counter Generator</a>
+            </div>
+
+            <div class="is-nav-header is-mt-12">Math Resources</div>
+            <div class="is-nav-group">
+              <a class="is-nav-link" href="./division-preview.html">Division Organizer</a>
+              <a class="is-nav-link" href="./addition-preview.html">Addition Organizer</a>
+              <a class="is-nav-link" href="./multiplication-preview.html">Multiplication Organizer</a>
+              <a class="is-nav-link" href="./decimals-preview.html">Decimals</a>
+              <a class="is-nav-link" href="./fractions-preview.html">Fractions</a>
+            </div>
+
+            <div class="is-nav-header is-mt-12">Reading</div>
+            <div class="is-nav-group">
+              <a class="is-nav-link" href="./phonicspreview.html">Phonics Resources</a>
+              <a class="is-nav-link" href="./readinggames-preview.html">Reading Games</a>
+            </div>
+          </nav>
+        </aside>
+
+        <main class="is-main">
+          <section class="is-page">
+            <section class="hero-card">
+              <p class="hero-card__eyebrow">Math Intervention Generator</p>
+              <h1>Scaffolded Long Division Color Coded Graphic Organizer</h1>
+              <p class="hero-card__sub">Instantly generate unlimited scaffolded, color-coded long division problems exactly how you want them. Adjust the problem type, inputs, and layout, then print ready-to-use intervention pages in seconds.</p>
+              <div class="hero-card__actions">
+                <a class="pill-btn pill-btn--primary" href="https://teachwithmrc.github.io/site-preview-march3rd/home-preview.html#join">Join to Unlock Full Access</a>
+                <a class="pill-btn pill-btn--secondary" href="#generator">See the Generator</a>
+              </div>
+            </section>
+
+            <section class="review-section" aria-label="Long division reviews">
+              <p class="review-section__eyebrow">Teacher Reviews</p>
+              <h2>Join the hundreds of teachers who have used this resource</h2>
+              <div class="review-slider" data-review-slider>
+                <div class="review-track">
+                  <article class="review-card">
+                    <div class="review-stars" aria-hidden="true">★★★★★</div>
+                    <p class="review-quote">“The built-in scaffolds made long division much less intimidating for my intervention students. I used it the same day I found it.”</p>
+                    <p class="review-author">4th Grade Teacher</p>
+                  </article>
+                  <article class="review-card">
+                    <div class="review-stars" aria-hidden="true">★★★★★</div>
+                    <p class="review-quote">“I love being able to control the problem type and generate fresh practice without reformatting anything myself.”</p>
+                    <p class="review-author">Special Education Teacher</p>
+                  </article>
+                  <article class="review-card">
+                    <div class="review-stars" aria-hidden="true">★★★★★</div>
+                    <p class="review-quote">“The color coding is what finally helped my small group track each step correctly. Huge time saver.”</p>
+                    <p class="review-author">Interventionist</p>
+                  </article>
+                  <article class="review-card">
+                    <div class="review-stars" aria-hidden="true">★★★★★</div>
+                    <p class="review-quote">“This is one of those resources that looks clean, teaches well, and saves prep time every single week.”</p>
+                    <p class="review-author">Upper Elementary Math Teacher</p>
+                  </article>
+                </div>
+                <div class="review-dots" aria-label="Review slider navigation">
+                  <button class="review-dot is-active" type="button" aria-label="Show review 1"></button>
+                  <button class="review-dot" type="button" aria-label="Show review 2"></button>
+                  <button class="review-dot" type="button" aria-label="Show review 3"></button>
+                  <button class="review-dot" type="button" aria-label="Show review 4"></button>
+                </div>
+              </div>
+            </section>
+
+            <section class="generator-shell" id="generator">
+              <div class="app">
+                <div class="screen-only">
+                  <section class="controls-card">
+                    <div class="controls-top">
+                      <div class="field">
+                        <label for="problemTypeSelect">Problem Type</label>
+                        <select id="problemTypeSelect">
+                          <option value="2x1" selected>2-digit by 1-digit</option>
+                          <option value="3x1">3-digit by 1-digit</option>
+                          <option value="4x1">4-digit by 1-digit</option>
+                        </select>
+                      </div>
+                      <input id="problemType" type="hidden" value="2x1" />
+                    </div>
+
+                    <div class="controls-grid">
+                      <div class="field">
+                        <label for="multiplesMode">Display Multiples</label>
+                        <select id="multiplesMode">
+                          <option value="filled" selected>Yes (show multiples)</option>
+                          <option value="blank">No (students fill in)</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="hidden-options" aria-hidden="true">
+                      <select id="problemSetCount"></select>
+                      <div id="problemCountHint"></div>
+                      <select id="stepPromptMode">
+                        <option value="blank" selected>No (students fill in)</option>
+                        <option value="filled">Yes (show step parts)</option>
+                      </select>
+                      <select id="remainderMode">
+                        <option value="allow" selected>Allow remainders</option>
+                        <option value="none">No remainders (exact only)</option>
+                      </select>
+                      <input id="colorToggle" type="checkbox" checked>
+                      <input id="customProblem" type="text" value="">
+                    </div>
+
+                    <div class="button-row">
+                      <button id="generateBtn" class="primary" type="button">Generate</button>
+                      <button id="printBtn" type="button">Print</button>
+                    </div>
+
+                    <div class="note" id="statusText">Choose a problem type and generate a new worksheet preview.</div>
+                  </section>
+                </div>
+
+                <div id="worksheetHost"></div>
+              </div>
+            </section>
+          </section>
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const els = {
+      host: document.getElementById("worksheetHost"),
+      problemType: document.getElementById("problemType"),
+      problemTypeSelect: document.getElementById("problemTypeSelect"),
+      problemSetCount: document.getElementById("problemSetCount"),
+      problemCountHint: document.getElementById("problemCountHint"),
+      customProblem: document.getElementById("customProblem"),
+      multiplesMode: document.getElementById("multiplesMode"),
+      stepPromptMode: document.getElementById("stepPromptMode"),
+      remainderMode: document.getElementById("remainderMode"),
+      colorToggle: document.getElementById("colorToggle"),
+      statusText: document.getElementById("statusText"),
+      generateBtn: document.getElementById("generateBtn"),
+      printBtn: document.getElementById("printBtn")
+    };
+
+    const PREVIEW_MODE = new URLSearchParams(window.location.search).get("preview") === "scaffolded";
+    const PREVIEW_SECURE = true;
+
+    const TYPE_CONFIG = {
+      "2x1": { digits: 2, dividendMin: 10, dividendMax: 99, label: "2-digit by 1-digit" },
+      "3x1": { digits: 3, dividendMin: 100, dividendMax: 999, label: "3-digit by 1-digit" },
+      "4x1": { digits: 4, dividendMin: 1000, dividendMax: 9999, label: "4-digit by 1-digit" }
+    };
+
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function getTypeConfig() {
+      return TYPE_CONFIG[els.problemType.value] || TYPE_CONFIG["2x1"];
+    }
+
+    function setProblemType(typeKey) {
+      if (!TYPE_CONFIG[typeKey]) return;
+      els.problemType.value = typeKey;
+      if (els.problemTypeSelect) els.problemTypeSelect.value = typeKey;
+    }
+
+    function getProblemsPerPage(cfg) {
+      return cfg.digits >= 3 ? 1 : 2;
+    }
+
+    function populateProblemCountOptions() {
+      els.problemSetCount.innerHTML = '<option value="2" selected>2 problems</option>';
+      els.problemCountHint.textContent = "This preview shows 2 generated problems.";
+    }
+
+    function applyPreviewLockdown() {
+      if (!PREVIEW_MODE) return;
+      document.body.classList.add("preview-locked");
+      if (els.problemTypeSelect) {
+        els.problemTypeSelect.value = "3x1";
+        els.problemTypeSelect.disabled = true;
+      }
+      els.multiplesMode.value = "filled";
+      els.stepPromptMode.value = "blank";
+      els.remainderMode.value = "allow";
+      els.colorToggle.checked = true;
+      els.customProblem.value = "";
+      els.customProblem.disabled = true;
+    }
+
+    function getTotalProblemCount() {
+      return 2;
+    }
+
+    function parseProblemToken(token, cfg) {
+      const clean = token.trim().replace(/\s+/g, "");
+      if (!clean) return null;
+
+      let dividend = null;
+      let divisor = null;
+
+      const slashMatch = clean.match(/^(\d+)(?:\/|÷)(\d+)$/);
+      if (slashMatch) {
+        dividend = Number(slashMatch[1]);
+        divisor = Number(slashMatch[2]);
+      }
+
+      const bracketMatch = clean.match(/^(\d+)\)(\d+)$/);
+      if (bracketMatch) {
+        divisor = Number(bracketMatch[1]);
+        dividend = Number(bracketMatch[2]);
+      }
+
+      if (!Number.isFinite(dividend) || !Number.isFinite(divisor)) return null;
+      if (divisor < 2 || divisor > 9) return null;
+      if (dividend < cfg.dividendMin || dividend > cfg.dividendMax) return null;
+      return { dividend, divisor };
+    }
+
+    function makeRandomProblem(cfg, allowRemainder) {
+      if (allowRemainder) {
+        return {
+          dividend: randInt(cfg.dividendMin, cfg.dividendMax),
+          divisor: randInt(2, 9)
+        };
+      }
+
+      for (let tries = 0; tries < 800; tries += 1) {
+        const divisor = randInt(2, 9);
+        const dividend = randInt(cfg.dividendMin, cfg.dividendMax);
+        if (dividend % divisor === 0) {
+          return { dividend, divisor };
+        }
+      }
+
+      return { dividend: cfg.dividendMin, divisor: 2 };
+    }
+
+    function getProblems(cfg, requestedCount) {
+      const allowRemainder = els.remainderMode.value === "allow";
+      const problemCount = Math.max(1, requestedCount);
+      const tokens = els.customProblem.value
+        .split(/[\n,;]+/)
+        .map((token) => token.trim())
+        .filter(Boolean);
+
+      if (tokens.length > 0) {
+        const parsed = [];
+        for (const token of tokens.slice(0, problemCount)) {
+          const problem = parseProblemToken(token, cfg);
+          if (!problem) {
+            return {
+              problems: [],
+              warning: true,
+              message: "Invalid custom problem. Use examples like 654/6 or 6)654."
+            };
+          }
+          parsed.push(problem);
+        }
+
+        const problems = new Array(problemCount).fill(0).map((_, idx) => {
+          const source = parsed[Math.min(idx, parsed.length - 1)];
+          return { ...source };
+        });
+
+        if (!allowRemainder) {
+          const hasRemainder = problems.some((p) => (p.dividend % p.divisor) !== 0);
+          if (hasRemainder) {
+            return {
+              problems: [],
+              warning: true,
+              message: "Custom problem has a remainder. Pick an exact-division problem or allow remainders."
+            };
+          }
+        }
+
+        return {
+          problems,
+          warning: false,
+          message: problemCount === 1
+            ? "Generated custom problem."
+            : (parsed.length === 1
+              ? "Generated custom problems (duplicated input as needed)."
+              : "Generated custom problems.")
+        };
+      }
+
+      return {
+        problems: new Array(problemCount).fill(0).map(() => makeRandomProblem(cfg, allowRemainder)),
+        warning: false,
+        message: allowRemainder
+          ? `Generated ${problemCount} random problem${problemCount === 1 ? "" : "s"}.`
+          : `Generated ${problemCount} random problem${problemCount === 1 ? "" : "s"} with no remainders.`
+      };
+    }
+
+    function digitBoxesWithTones(text, tones, small = true, showValues = true) {
+      const chars = String(text).split("");
+      return chars.map((ch, idx) => {
+        const tone = tones[Math.min(idx, tones.length - 1)] || "tone-0";
+        const val = showValues ? ch : "&nbsp;";
+        return `<span class="digit-box ${small ? "small" : ""} ${tone}">${val}</span>`;
+      }).join("");
+    }
+
+    function rightAlignChars(value, len) {
+      const chars = String(value).split("");
+      const out = new Array(len).fill("&nbsp;");
+      let k = len - 1;
+      for (let i = chars.length - 1; i >= 0 && k >= 0; i -= 1) {
+        out[k] = chars[i];
+        k -= 1;
+      }
+      return out;
+    }
+
+    function canvasBox(row, col, cls, value = "&nbsp;") {
+      return `<div class="canvas-box ${cls}" style="grid-row:${row};grid-column:${col};">${value}</div>`;
+    }
+
+    function computeLongDivisionSteps(dividend, divisor) {
+      const digits = String(dividend).split("").map((d) => Number(d));
+      const steps = [];
+      let current = 0;
+      const toneFor = (idx) => `tone-${idx % 4}`;
+
+      for (let i = 0; i < digits.length; i += 1) {
+        current = (current * 10) + digits[i];
+        const qDigit = Math.floor(current / divisor);
+        const product = qDigit * divisor;
+        const remainder = current - product;
+        const nextDigit = i < digits.length - 1 ? digits[i + 1] : null;
+        const nextPartial = nextDigit === null ? remainder : (remainder * 10) + nextDigit;
+        const partialDisplay = i === 0 ? String(current) : `${steps[i - 1].remainder}${digits[i]}`;
+        const partialDigitTones = i === 0 ? [toneFor(0)] : [toneFor(i - 1), toneFor(i)];
+
+        steps.push({
+          index: i,
+          tone: toneFor(i),
+          partialDividend: current,
+          partialDisplay,
+          partialDigitTones,
+          quotientDigit: qDigit,
+          product,
+          remainder,
+          nextDigit,
+          nextPartial
+        });
+
+        current = remainder;
+      }
+
+      return {
+        steps,
+        quotientDigits: steps.map((s) => s.quotientDigit),
+        finalRemainder: current
+      };
+    }
+
+    function renderProblemCanvas(problem, stepsData, cfg, showAnswers, showRemainderHeader) {
+      const n = cfg.digits;
+      const rows = (2 * n) + 2;
+      const firstDigitCol = 3;
+      const remLabelCol = firstDigitCol + n;
+      const remCol = remLabelCol + 1;
+      const dividendDigits = String(problem.dividend).split("");
+      const chunks = [];
+      const toneForLane = (lane) => `tone-${Math.max(0, lane) % 4}`;
+
+      for (let i = 0; i < n; i += 1) {
+        const qVal = showAnswers ? stepsData.quotientDigits[i] : "&nbsp;";
+        chunks.push(canvasBox(1, firstDigitCol + i, toneForLane(i), qVal));
+      }
+
+      if (showRemainderHeader) {
+        chunks.push(`<div class="remainder-label" style="grid-row:1;grid-column:${remLabelCol};">R</div>`);
+        chunks.push(canvasBox(1, remCol, "blank-gray", showAnswers ? stepsData.finalRemainder : "&nbsp;"));
+      }
+
+      chunks.push(canvasBox(2, 2, "divisor", problem.divisor));
+      for (let i = 0; i < n; i += 1) {
+        chunks.push(canvasBox(2, firstDigitCol + i, toneForLane(i), dividendDigits[i]));
+      }
+
+      chunks.push(`<div class="division-top-line" style="grid-row:2;grid-column:${firstDigitCol} / ${firstDigitCol + n};"></div>`);
+      chunks.push(`<div class="division-left-line" style="grid-row:2;grid-column:${firstDigitCol};"></div>`);
+
+      let row = 3;
+
+      for (let i = 0; i < stepsData.steps.length; i += 1) {
+        const step = stepsData.steps[i];
+        const startDigit = i === 0 ? 0 : Math.min(i - 1, n - 2);
+        const startCol = firstDigitCol + startDigit;
+
+        chunks.push(canvasBox(row, startCol - 1, "ghost minus-cell", "&minus;"));
+
+        const productLen = i === 0 ? 1 : 2;
+        const productChars = showAnswers ? rightAlignChars(step.product, productLen) : new Array(productLen).fill("&nbsp;");
+        for (let j = 0; j < productLen; j += 1) {
+          const lane = startDigit + j;
+          chunks.push(canvasBox(row, startCol + j, toneForLane(lane), productChars[j]));
+        }
+
+        row += 1;
+
+        if (i < stepsData.steps.length - 1) {
+          const bringStartLane = startDigit + (productLen - 1);
+          const leftTone = toneForLane(bringStartLane);
+          const nextTone = toneForLane(Math.min(bringStartLane + 1, n - 1));
+          const bringChars = showAnswers ? rightAlignChars(step.nextPartial, 2) : ["&nbsp;", "&nbsp;"];
+          const bringStartCol = firstDigitCol + bringStartLane;
+          chunks.push(canvasBox(row, bringStartCol, leftTone, bringChars[0]));
+          chunks.push(canvasBox(row, bringStartCol + 1, nextTone, bringChars[1]));
+          const arrowTone = (bringStartLane + 1) % 4;
+          chunks.push(`<div class="down-arrow arrow-${arrowTone}" style="grid-row:${row - 1};grid-column:${bringStartCol + 1};"></div>`);
+          row += 1;
+        } else {
+          const remChars = showAnswers ? rightAlignChars(stepsData.finalRemainder, 2) : ["&nbsp;", "&nbsp;"];
+          chunks.push(canvasBox(row, startCol, "", remChars[0]));
+          chunks.push(canvasBox(row, startCol + 1, "", remChars[1]));
+        }
+      }
+
+      return `
+        <div class="problem-canvas-wrap">
+          <div class="problem-canvas${showRemainderHeader ? "" : " no-remainder"}" style="--digits:${n};--rows:${rows};">
+            ${chunks.join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderMultipleCells(divisor, mode, tone) {
+      let cells = "";
+      for (let i = 0; i <= 10; i += 1) {
+        const value = mode === "filled" ? String(divisor * i) : "&nbsp;";
+        cells += `<td class="multiple-cell ${tone}">${value}</td>`;
+      }
+      return cells;
+    }
+
+    function renderStepStrip(step, problem, multiplesMode, showPromptValues) {
+      const headers = new Array(11).fill(0).map((_, i) => `<th class="tone-head ${step.tone}">x${i}</th>`).join("");
+      const divisorValue = showPromptValues ? problem.divisor : "&nbsp;";
+
+      return `
+        <section class="strip">
+          <div class="strip-head">
+            <div class="strip-label ${step.tone}">Step ${step.index + 1}</div>
+            <p class="strip-question">
+              How many times does
+              <span class="digit-box small divisor-fixed">${divisorValue}</span>
+              go into
+              <span class="target-digits">${digitBoxesWithTones(step.partialDisplay, step.partialDigitTones, true, showPromptValues)}</span>
+              evenly or without going over?
+            </p>
+          </div>
+          <table class="strip-table" aria-label="Step multiples strip">
+            <thead>
+              <tr>${headers}</tr>
+            </thead>
+            <tbody>
+              <tr>${renderMultipleCells(problem.divisor, multiplesMode, step.tone)}</tr>
+            </tbody>
+          </table>
+        </section>
+      `;
+    }
+
+    function renderWorksheet() {
+      const cfg = getTypeConfig();
+      const perPage = getProblemsPerPage(cfg);
+      const totalProblemCount = getTotalProblemCount();
+      const setCount = Math.max(1, Math.ceil(totalProblemCount / perPage));
+      const source = getProblems(cfg, totalProblemCount);
+      const title = "Long Division Color-Coded Step Organizer";
+      const colorClass = els.colorToggle.checked ? "color-fill" : "no-color";
+
+      els.statusText.textContent = source.message;
+      els.statusText.style.color = source.warning ? "#a33a3a" : "#5a677f";
+
+      if (!source.problems || source.problems.length === 0) {
+        els.host.innerHTML = "";
+        return;
+      }
+
+      const showAnswers = false;
+      const showPromptValues = els.stepPromptMode.value === "filled";
+      const showRemainderHeader = els.remainderMode.value === "allow";
+      const sheets = new Array(setCount).fill(0).map((_, pageIndex) => {
+        const pageProblems = source.problems.slice(pageIndex * perPage, (pageIndex + 1) * perPage);
+        const organizerBlocks = pageProblems.map((problem) => {
+          const stepsData = computeLongDivisionSteps(problem.dividend, problem.divisor);
+          const strips = stepsData.steps
+            .map((step) => renderStepStrip(step, problem, els.multiplesMode.value, showPromptValues))
+            .join("");
+
+          return `
+            <section class="organizer-block">
+              <section class="organizer">
+                <section class="left-column">
+                  <div class="problem-equation">${problem.dividend} &divide; ${problem.divisor}</div>
+                  <div class="workspace">
+                    <div class="workspace-layout">
+                      ${renderProblemCanvas(problem, stepsData, cfg, showAnswers, showRemainderHeader)}
+                    </div>
+                  </div>
+                </section>
+                <section class="right-column">
+                  ${strips}
+                </section>
+              </section>
+            </section>
+          `;
+        }).join("");
+
+        return `
+          <div class="sheet-scale-wrap">
+            <section class="sheet ${colorClass}">
+              <header class="sheet-header">
+                <h2 class="sheet-title">${title} (${cfg.label})</h2>
+                <div class="name-line">Name:<span class="line"></span></div>
+              </header>
+              <section class="two-up${perPage === 1 ? " single" : ""}">
+                ${organizerBlocks}
+              </section>
+              <div class="footer-note">Copyright - InterventionStation.com - @TeachwithMrC</div>
+            </section>
+          </div>
+        `;
+      }).join("");
+
+      els.host.innerHTML = sheets;
+      fitSheetsToWidth();
+    }
+
+    function fitSheetsToWidth() {
+      const wraps = Array.from(document.querySelectorAll(".sheet-scale-wrap"));
+      wraps.forEach((wrap) => {
+        const sheet = wrap.querySelector(".sheet");
+        if (!sheet) return;
+
+        wrap.style.height = "";
+        sheet.style.transform = "";
+        sheet.style.transformOrigin = "";
+        sheet.style.removeProperty("width");
+
+        if (window.innerWidth <= 900) {
+          return;
+        }
+
+        const available = wrap.clientWidth - 8;
+        const sheetWidth = sheet.offsetWidth;
+        const sheetHeight = sheet.offsetHeight;
+        if (!available || !sheetWidth || !sheetHeight) return;
+
+        const scale = Math.min(1, available / sheetWidth);
+        sheet.style.transformOrigin = "top center";
+        sheet.style.transform = `scale(${scale})`;
+        wrap.style.height = `${sheetHeight * scale}px`;
+      });
+    }
+
+    let refreshTimer = null;
+    function queueRender(delay = 120) {
+      window.clearTimeout(refreshTimer);
+      refreshTimer = window.setTimeout(renderWorksheet, delay);
+    }
+
+    function blockedPreviewAction() {
+      alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access.");
+    }
+
+    function blockShortcuts(event) {
+      const blocked = (event.ctrlKey || event.metaKey) && ["p", "s", "u"].includes(String(event.key || "").toLowerCase());
+      if (blocked) {
+        event.preventDefault();
+        blockedPreviewAction();
+      }
+    }
+
+    function enablePreviewSecure() {
+      document.body.classList.add("preview-secure");
+      if (els.printBtn) els.printBtn.style.display = "none";
+      window.print = blockedPreviewAction;
+      document.addEventListener("keydown", blockShortcuts);
+      if (els.statusText) {
+        els.statusText.textContent = "Preview mode enabled: worksheet is watermarked and printing is locked.";
+      }
+    }
+
+    els.generateBtn.addEventListener("click", renderWorksheet);
+    els.problemTypeSelect.addEventListener("change", () => {
+      setProblemType(els.problemTypeSelect.value);
+      populateProblemCountOptions();
+      renderWorksheet();
+    });
+    [els.problemSetCount, els.multiplesMode, els.stepPromptMode, els.remainderMode].forEach((el) => {
+      el.addEventListener("change", renderWorksheet);
+    });
+    els.colorToggle.addEventListener("change", renderWorksheet);
+    els.customProblem.addEventListener("input", () => queueRender(180));
+    els.customProblem.addEventListener("change", renderWorksheet);
+    els.printBtn.addEventListener("click", () => {
+      if (PREVIEW_SECURE) {
+        blockedPreviewAction();
+        return;
+      }
+      window.print();
+    });
+
+    if (PREVIEW_MODE) {
+      document.body.classList.add("preview-locked");
+      els.problemType.value = "3x1";
+    }
+    setProblemType(els.problemType.value || "2x1");
+    populateProblemCountOptions();
+    applyPreviewLockdown();
+    if (PREVIEW_SECURE) enablePreviewSecure();
+    renderWorksheet();
+    window.addEventListener("resize", fitSheetsToWidth);
+
+    const previewBanner = document.createElement("div");
+    previewBanner.className = "preview-lock-banner";
+    previewBanner.setAttribute("aria-hidden", "false");
+    previewBanner.innerHTML = '<strong>Preview Mode</strong><span>Generate is enabled. Printing is locked for members.</span><a href="https://teachwithmrc.github.io/site-preview-march3rd/home-preview.html#join" target="_blank" rel="noopener">Join Membership</a>';
+    document.body.appendChild(previewBanner);
+
+    function positionPreviewBanner() {
+      const rightColumn = document.querySelector(".is-main");
+      if (!rightColumn) return;
+      const rect = rightColumn.getBoundingClientRect();
+      const centerX = rect.left + (rect.width / 2);
+      previewBanner.style.left = `${centerX}px`;
+      previewBanner.style.maxWidth = `${Math.max(320, rect.width - 24)}px`;
+    }
+
+    positionPreviewBanner();
+    window.addEventListener("resize", positionPreviewBanner);
+
+    (function(){
+      const slider = document.querySelector("[data-review-slider]");
+      if (!slider) return;
+
+      const track = slider.querySelector(".review-track");
+      const slides = Array.from(slider.querySelectorAll(".review-card"));
+      const dots = Array.from(slider.querySelectorAll(".review-dot"));
+      if (!track || !slides.length || slides.length !== dots.length) return;
+
+      let index = 0;
+      let timer = null;
+
+      function render(nextIndex) {
+        index = (nextIndex + slides.length) % slides.length;
+        track.style.transform = "translateX(" + (-index * 100) + "%)";
+        dots.forEach(function(dot, dotIndex){
+          dot.classList.toggle("is-active", dotIndex === index);
+        });
+      }
+
+      function start() {
+        stop();
+        timer = window.setInterval(function(){
+          render(index + 1);
+        }, 4200);
+      }
+
+      function stop() {
+        if (timer) {
+          window.clearInterval(timer);
+          timer = null;
+        }
+      }
+
+      dots.forEach(function(dot, dotIndex){
+        dot.addEventListener("click", function(){
+          render(dotIndex);
+          start();
+        });
+      });
+
+      slider.addEventListener("mouseenter", stop);
+      slider.addEventListener("mouseleave", start);
+
+      render(0);
+      start();
+    })();
+  </script>
+</body>
+</html>

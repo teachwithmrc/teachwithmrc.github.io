@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reading Accordion Left Variations</title>
+  <script src="fluencyDataFull_v8-2_clean.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a2734;
+      --muted: #5d6f80;
+      --line: #c9d6e2;
+      --card: rgba(255, 255, 255, 0.92);
+      --shadow: 0 16px 36px rgba(16, 36, 56, 0.1);
+      --navy: #17324c;
+      --blue: #2a6cb0;
+      --bg:
+        radial-gradient(circle at top left, rgba(255,255,255,0.92), transparent 28%),
+        linear-gradient(135deg, #eef7fb 0%, #f7f5eb 48%, #eef1ff 100%);
+
+      --cvc: #f7ead8;
+      --dig: #fde3e6;
+      --glued: #eee1fb;
+      --vce: #dcecff;
+      --rctrl: #dff1e6;
+      --vteams: #fff3cb;
+      --dip: #ffe4d7;
+      --variant: #e8def4;
+      --soft: #dfe8f8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 24px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "DM Sans", sans-serif;
+    }
+
+    .app {
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(23,50,76,0.08);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Manrope", sans-serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+    }
+
+    .intro {
+      margin: 0;
+      color: var(--muted);
+      max-width: 920px;
+      font-size: 1rem;
+    }
+
+    .tab-row,
+    .option-row,
+    .chips-wrap,
+    .toolbar,
+    .segmented {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .view-tab,
+    .option-box,
+    .chip,
+    .toolbar button,
+    .mini-tab {
+      border: 1px solid rgba(23,50,76,0.12);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.88);
+      color: var(--ink);
+      font: inherit;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease, color 120ms ease;
+      box-shadow: 0 1px 0 rgba(16,36,56,0.03);
+    }
+
+    .view-tab:hover,
+    .option-box:hover,
+    .toolbar button:hover,
+    .mini-tab:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(16,36,56,0.08);
+    }
+
+    .view-tab {
+      padding: 12px 14px;
+      text-align: left;
+    }
+
+    .view-tab strong {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .view-tab span {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .view-tab.active,
+    .option-box.selected,
+    .mini-tab.active,
+    .toolbar .primary {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy);
+    }
+
+    .view-tab.active span {
+      color: rgba(255,255,255,0.78);
+    }
+
+    .shell {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 360px minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .shell[data-view="tabbed-right"] {
+      grid-template-columns: 360px minmax(0, 1fr);
+    }
+
+    .shell[data-view="sticky-actions"] {
+      grid-template-columns: 360px minmax(0, 1fr);
+    }
+
+    .shell[data-view="split-preview"] {
+      grid-template-columns: 360px minmax(0, 1fr);
+    }
+
+    .shell[data-view="compact-bar"] {
+      grid-template-columns: 360px minmax(0, 1fr);
+    }
+
+    .shell[data-view="two-column-right"] {
+      grid-template-columns: 360px minmax(0, 1fr);
+    }
+
+    .panel {
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(23,50,76,0.08);
+      border-radius: 26px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .left-rail {
+      position: sticky;
+      top: 16px;
+      display: grid;
+      gap: 14px;
+      max-height: calc(100vh - 32px);
+      overflow: auto;
+    }
+
+    .panel h2 {
+      margin: 0 0 6px;
+      font-family: "Manrope", sans-serif;
+      font-size: 1.18rem;
+      letter-spacing: -0.03em;
+    }
+
+    .copy {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .selection-note {
+      padding: 14px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #17324c 0%, #24547f 100%);
+      color: #fff;
+    }
+
+    .selection-note strong {
+      display: block;
+      margin-bottom: 6px;
+      font-family: "Manrope", sans-serif;
+    }
+
+    .selection-note small {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.86rem;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .search-row input,
+    .select-wrap select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font: inherit;
+      background: rgba(255,255,255,0.94);
+    }
+
+    .skill-groups {
+      display: grid;
+      gap: 12px;
+    }
+
+    .skill-group {
+      border-radius: 18px;
+      border: 1px solid rgba(23,50,76,0.08);
+      overflow: hidden;
+      background: rgba(255,255,255,0.72);
+    }
+
+    .skill-group summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: "Manrope", sans-serif;
+      font-weight: 800;
+    }
+
+    .skill-group summary::-webkit-details-marker { display: none; }
+    .skill-group summary span:last-child { font-size: 0.78rem; color: #56687a; }
+
+    .group-cvc summary { background: var(--cvc); }
+    .group-dig summary { background: var(--dig); }
+    .group-glued summary { background: var(--glued); }
+    .group-vce summary { background: var(--vce); }
+    .group-rctrl summary { background: var(--rctrl); }
+    .group-vteams summary { background: var(--vteams); }
+    .group-dip summary { background: var(--dip); }
+    .group-variant summary { background: var(--variant); }
+    .group-soft summary { background: var(--soft); }
+
+    .skills-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 14px;
+    }
+
+    .skill-button {
+      border: 1px solid rgba(23,50,76,0.12);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--ink);
+      padding: 10px 14px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease, color 120ms ease;
+    }
+
+    .skill-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(16,36,56,0.08);
+    }
+
+    .skill-button.selected {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy);
+    }
+
+    .right-stack {
+      display: grid;
+      gap: 16px;
+    }
+
+    .right-stack[data-view="classic"] {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .right-stack[data-view="tabbed-right"] .tabbed-layout {
+      display: grid;
+    }
+
+    .right-stack[data-view="sticky-actions"] .sticky-card {
+      position: sticky;
+      top: 16px;
+    }
+
+    .right-stack[data-view="split-preview"] .preview-split {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: minmax(300px, 420px) minmax(0, 1fr);
+    }
+
+    .right-stack[data-view="compact-bar"] .compact-wrap {
+      display: grid;
+      gap: 16px;
+    }
+
+    .right-stack[data-view="two-column-right"] .two-column-wrap {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+    }
+
+    .section-card {
+      padding: 16px;
+      border-radius: 22px;
+      background: rgba(242,247,251,0.82);
+      border: 1px solid rgba(23,50,76,0.06);
+    }
+
+    .section-label {
+      margin: 0 0 10px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #536577;
+    }
+
+    .option-box,
+    .mini-tab,
+    .toolbar button {
+      padding: 11px 14px;
+      font-weight: 700;
+    }
+
+    .chips-wrap {
+      margin-top: 10px;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #eaf1f6;
+      color: var(--ink);
+      border-color: rgba(23,50,76,0.08);
+      font-size: 0.86rem;
+      cursor: default;
+    }
+
+    .chip.empty {
+      background: #f3f6f9;
+      color: var(--muted);
+    }
+
+    .toolbar {
+      margin-top: 10px;
+    }
+
+    .toolbar button {
+      min-width: 130px;
+    }
+
+    .tab-panels {
+      margin-top: 14px;
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .preview-card {
+      background: #fff;
+      border: 1px solid rgba(23,50,76,0.08);
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: 0 10px 24px rgba(16,36,56,0.08);
+    }
+
+    .preview-card h3 {
+      margin: 0 0 6px;
+      font-family: "Manrope", sans-serif;
+      font-size: 1.05rem;
+    }
+
+    .preview-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .roll-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .roll-cell {
+      min-height: 82px;
+      border-radius: 16px;
+      border: 1px solid rgba(23,50,76,0.08);
+      background: #f8fbfd;
+      padding: 10px;
+      text-align: center;
+      font-weight: 700;
+      line-height: 1.15;
+      font-size: 0.92rem;
+    }
+
+    .die {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      font-size: 0.76rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .empty-state {
+      padding: 28px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.72);
+      border: 1px dashed rgba(23,50,76,0.18);
+      color: var(--muted);
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .compact-bar {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #17324c 0%, #24547f 100%);
+      color: #fff;
+    }
+
+    .compact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .compact-label {
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.78);
+      min-width: 110px;
+    }
+
+    .compact-wrap .option-box,
+    .compact-wrap .toolbar button {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border-color: rgba(255,255,255,0.16);
+    }
+
+    .compact-wrap .option-box.selected,
+    .compact-wrap .toolbar .primary {
+      background: #fff;
+      color: var(--navy);
+      border-color: #fff;
+    }
+
+    .compact-wrap .chip {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .mini-preview-note {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(23,50,76,0.08);
+      color: var(--muted);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    @media (max-width: 1100px) {
+      .shell,
+      .shell[data-view="tabbed-right"],
+      .shell[data-view="sticky-actions"],
+      .shell[data-view="split-preview"],
+      .shell[data-view="compact-bar"],
+      .shell[data-view="two-column-right"] {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .left-rail {
+        position: static;
+        max-height: none;
+      }
+
+      .right-stack[data-view="sticky-actions"] .sticky-card {
+        position: static;
+      }
+
+      .right-stack[data-view="split-preview"] .preview-split {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .right-stack[data-view="two-column-right"] .two-column-wrap {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 14px; }
+      .panel { padding: 14px; border-radius: 20px; }
+      .search-row { grid-template-columns: 1fr; }
+      .roll-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .view-tab { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <div class="eyebrow">Accordion Left Only</div>
+      <h1>Left accordion rail with the real reading options only</h1>
+      <p class="intro">This page removes the extra product ideas and sticks to the real controls from your original reading generators: skill selection, include blends, words or sentences or both, roll grid size, generate, and print. The only thing changing here is how the right side is presented.</p>
+    </header>
+
+    <div class="tab-row" id="viewTabs"></div>
+
+    <main class="shell" id="shell" data-view="classic">
+      <aside class="left-rail">
+        <section class="panel">
+          <h2>Skill Library</h2>
+          <p class="copy">Accordion left rail stays constant in every version below. Click one skill just like the current roll-and-read page.</p>
+          <div class="search-row">
+            <input id="skillSearch" type="search" placeholder="Search skills..." />
+            <button class="mini-tab" id="toggleAccordionsBtn" type="button">Collapse All</button>
+          </div>
+          <div class="selection-note">
+            <strong id="selectionTitle">Selected Skill</strong>
+            <small id="selectionMeta">Choose one skill from the accordion list.</small>
+            <div id="selectedChipTop" class="chips-wrap"></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="skill-groups" id="skillGroups"></div>
+        </section>
+      </aside>
+
+      <section class="right-stack" id="rightStack" data-view="classic">
+        <div class="panel section-card" id="classicSetup">
+          <h2>Version A: Classic Right Stack</h2>
+          <p class="copy">Closest to your current structure, just cleaner and locked into a left accordion rail.</p>
+
+          <div class="section-label">Step 2: Include Blends?</div>
+          <div class="option-row" id="blendOptions"></div>
+
+          <div class="section-label">Step 3: What would you like in the grid?</div>
+          <div class="option-row" id="contentOptions"></div>
+
+          <div class="section-label">Step 4: Generate & Print</div>
+          <div class="option-row" id="gridSizeWrap">
+            <span class="select-wrap" style="min-width:260px;">
+              <select id="gridSizeSelect">
+                <option value="18">18 cells (3 rows)</option>
+                <option value="24" selected>24 cells (4 rows)</option>
+                <option value="30">30 cells (5 rows)</option>
+              </select>
+            </span>
+          </div>
+          <div class="chips-wrap" id="selectedChipMain"></div>
+          <div class="toolbar">
+            <button id="btnGenerateClassic" class="primary" type="button">Generate</button>
+            <button id="btnPrintClassic" type="button">Print</button>
+          </div>
+        </div>
+
+        <div class="panel tabbed-layout" id="tabbedSetup" style="display:none;">
+          <h2>Version B: Tabbed Right Panel</h2>
+          <p class="copy">Same real controls, but the right side is separated into simple tabs so it feels less busy.</p>
+          <div class="segmented" id="rightMiniTabs">
+            <button class="mini-tab active" type="button" data-mini-tab="setup">Setup</button>
+            <button class="mini-tab" type="button" data-mini-tab="selected">Selected Skill</button>
+            <button class="mini-tab" type="button" data-mini-tab="preview">Preview</button>
+          </div>
+          <div class="tab-panels">
+            <div class="tab-panel active" data-mini-panel="setup">
+              <div class="section-label">Step 2: Include Blends?</div>
+              <div class="option-row" id="blendOptionsTabbed"></div>
+              <div class="section-label">Step 3: What would you like in the grid?</div>
+              <div class="option-row" id="contentOptionsTabbed"></div>
+              <div class="section-label">Step 4: Generate & Print</div>
+              <div class="option-row">
+                <span class="select-wrap" style="min-width:260px;">
+                  <select id="gridSizeSelectTabbed">
+                    <option value="18">18 cells (3 rows)</option>
+                    <option value="24" selected>24 cells (4 rows)</option>
+                    <option value="30">30 cells (5 rows)</option>
+                  </select>
+                </span>
+              </div>
+              <div class="toolbar">
+                <button id="btnGenerateTabbed" class="primary" type="button">Generate</button>
+                <button id="btnPrintTabbed" type="button">Print</button>
+              </div>
+            </div>
+            <div class="tab-panel" data-mini-panel="selected">
+              <div class="section-label">Selected Skill</div>
+              <div class="chips-wrap" id="selectedChipTabbed"></div>
+            </div>
+            <div class="tab-panel" data-mini-panel="preview">
+              <div id="previewMirror" class="empty-state">Generate to preview here.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel sticky-card" id="stickySetup" style="display:none;">
+          <h2>Version C: Sticky Actions Card</h2>
+          <p class="copy">Best when you want the generate panel to stay visible while the teacher scrolls the accordion rail.</p>
+          <div class="section-label">Selected Skill</div>
+          <div class="chips-wrap" id="selectedChipSticky"></div>
+          <div class="section-label">Step 2: Include Blends?</div>
+          <div class="option-row" id="blendOptionsSticky"></div>
+          <div class="section-label">Step 3: What would you like in the grid?</div>
+          <div class="option-row" id="contentOptionsSticky"></div>
+          <div class="section-label">Step 4: Generate & Print</div>
+          <div class="option-row">
+            <span class="select-wrap" style="min-width:260px;">
+              <select id="gridSizeSelectSticky">
+                <option value="18">18 cells (3 rows)</option>
+                <option value="24" selected>24 cells (4 rows)</option>
+                <option value="30">30 cells (5 rows)</option>
+              </select>
+            </span>
+          </div>
+          <div class="toolbar">
+            <button id="btnGenerateSticky" class="primary" type="button">Generate</button>
+            <button id="btnPrintSticky" type="button">Print</button>
+          </div>
+        </div>
+
+        <div class="preview-split" id="splitPreviewWrap" style="display:none;">
+          <div class="panel">
+            <h2>Version D: Setup + Preview Split</h2>
+            <p class="copy">Setup stays narrow while the preview sits beside it immediately, so the page feels faster.</p>
+            <div class="section-label">Selected Skill</div>
+            <div class="chips-wrap" id="selectedChipSplit"></div>
+            <div class="section-label">Step 2: Include Blends?</div>
+            <div class="option-row" id="blendOptionsSplit"></div>
+            <div class="section-label">Step 3: What would you like in the grid?</div>
+            <div class="option-row" id="contentOptionsSplit"></div>
+            <div class="section-label">Step 4: Generate & Print</div>
+            <div class="option-row">
+              <span class="select-wrap" style="min-width:260px;">
+                <select id="gridSizeSelectSplit">
+                  <option value="18">18 cells (3 rows)</option>
+                  <option value="24" selected>24 cells (4 rows)</option>
+                  <option value="30">30 cells (5 rows)</option>
+                </select>
+              </span>
+            </div>
+            <div class="toolbar">
+              <button id="btnGenerateSplit" class="primary" type="button">Generate</button>
+              <button id="btnPrintSplit" type="button">Print</button>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>Preview</h2>
+            <p class="copy">This version gives the preview its own dedicated side immediately.</p>
+            <div id="splitPreviewMount" class="empty-state">Generate to preview here.</div>
+          </div>
+        </div>
+
+        <div class="compact-wrap" id="compactWrap" style="display:none;">
+          <div class="compact-bar">
+            <h2 style="margin:0;">Version E: Compact Control Bar</h2>
+            <p class="copy" style="margin:0; color:rgba(255,255,255,0.82);">Everything the teacher needs sits in one tight block before the preview.</p>
+            <div class="compact-row">
+              <div class="compact-label">Selected Skill</div>
+              <div class="chips-wrap" id="selectedChipCompact" style="margin-top:0;"></div>
+            </div>
+            <div class="compact-row">
+              <div class="compact-label">Include Blends</div>
+              <div class="option-row" id="blendOptionsCompact"></div>
+            </div>
+            <div class="compact-row">
+              <div class="compact-label">Grid Content</div>
+              <div class="option-row" id="contentOptionsCompact"></div>
+            </div>
+            <div class="compact-row">
+              <div class="compact-label">Roll Grid Size</div>
+              <span class="select-wrap" style="min-width:260px;">
+                <select id="gridSizeSelectCompact">
+                  <option value="18">18 cells (3 rows)</option>
+                  <option value="24" selected>24 cells (4 rows)</option>
+                  <option value="30">30 cells (5 rows)</option>
+                </select>
+              </span>
+            </div>
+            <div class="toolbar">
+              <button id="btnGenerateCompact" class="primary" type="button">Generate</button>
+              <button id="btnPrintCompact" type="button">Print</button>
+            </div>
+          </div>
+          <div class="mini-preview-note">Good if you want the right side to feel super fast and almost toolbar-like instead of panel-like.</div>
+        </div>
+
+        <div class="two-column-wrap" id="twoColumnWrap" style="display:none;">
+          <div class="panel">
+            <h2>Version F: Two-Column Right Side</h2>
+            <p class="copy">Setup stays in a narrow column while preview stays open next to it all the time.</p>
+            <div class="section-label">Selected Skill</div>
+            <div class="chips-wrap" id="selectedChipTwoColumn"></div>
+            <div class="section-label">Step 2: Include Blends?</div>
+            <div class="option-row" id="blendOptionsTwoColumn"></div>
+            <div class="section-label">Step 3: What would you like in the grid?</div>
+            <div class="option-row" id="contentOptionsTwoColumn"></div>
+            <div class="section-label">Step 4: Generate & Print</div>
+            <div class="option-row">
+              <span class="select-wrap" style="min-width:260px;">
+                <select id="gridSizeSelectTwoColumn">
+                  <option value="18">18 cells (3 rows)</option>
+                  <option value="24" selected>24 cells (4 rows)</option>
+                  <option value="30">30 cells (5 rows)</option>
+                </select>
+              </span>
+            </div>
+            <div class="toolbar">
+              <button id="btnGenerateTwoColumn" class="primary" type="button">Generate</button>
+              <button id="btnPrintTwoColumn" type="button">Print</button>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>Open Preview</h2>
+            <p class="copy">This keeps the output visible while changing options, which is useful if you want teachers to compare changes instantly.</p>
+            <div id="twoColumnPreviewMount" class="empty-state">Generate to preview here.</div>
+          </div>
+        </div>
+
+        <div class="panel" id="outputPanel">
+          <h2>Live Preview</h2>
+          <p class="copy">The generated board below uses the same reading data file and the same real options from the original roll-and-read generator.</p>
+          <div id="output"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    if (typeof CSS === "undefined" || typeof CSS.escape !== "function") {
+      window.CSS = window.CSS || {};
+      CSS.escape = CSS.escape || function(sel) {
+        return (sel + "").replace(/[^a-zA-Z0-9_-]/g, "\\$&");
+      };
+    }
+
+    const VIEW_MODES = [
+      { id: "classic", title: "Version A", desc: "Classic right stack" },
+      { id: "tabbed-right", title: "Version B", desc: "Tabbed right panel" },
+      { id: "sticky-actions", title: "Version C", desc: "Sticky actions card" },
+      { id: "split-preview", title: "Version D", desc: "Setup + preview split" },
+      { id: "compact-bar", title: "Version E", desc: "Compact control bar" },
+      { id: "two-column-right", title: "Version F", desc: "Two-column right side" }
+    ];
+
+    const SKILL_GROUPS = [
+      { id: "cvc", label: "CVC", skills: ["Short A", "Short E", "Short I", "Short O", "Short U", "Mixed CVC", "FLSZ"] },
+      { id: "dig", label: "Digraphs", skills: ["ck", "sh", "th", "ch", "wh", "Digraphs Mixed"] },
+      { id: "glued", label: "Glued Sounds", skills: ["-all", "-ng", "-nk", "Glued Mixed"] },
+      { id: "vce", label: "VCe", skills: ["a_e", "i_e", "o_e", "u_e", "Mixed VCe"] },
+      { id: "rctrl", label: "R-Controlled", skills: ["ar", "or", "er/ir/ur", "Mixed R-Controlled"] },
+      { id: "vteams", label: "Vowel Teams", skills: ["Long A (ai/ay)", "Long E (ee/ea)", "Long I (igh/y/ie)", "Long O (oa/ow/oe)", "Long U (oo/ew/ue)", "Mixed Vowel Teams"] },
+      { id: "dip", label: "Diphthongs", skills: ["Diphthongs (oy/oi)", "Diphthongs (ow/ou)"] },
+      { id: "variant", label: "Variant Vowels", skills: ["Variant Vowels (au/aw)", "Variant Vowel (oo)"] },
+      { id: "soft", label: "Soft C/G", skills: ["Soft C (-ce)", "Soft G (-ge)", "Soft G (-dge)"] }
+    ];
+
+    const PREFIX = {
+      "Short A": "0.1 - Short A",
+      "Short O": "0.2 - Short O",
+      "Short I": "0.3 - Short I",
+      "Short U": "0.4 - Short U",
+      "Short E": "0.5 - Short E",
+      "FLSZ": "0.6 - FLSZ",
+      "ck": "1.1 - ck",
+      "sh": "1.2 - sh",
+      "th": "1.3 - th",
+      "ch": "1.4 - ch",
+      "wh": "1.5 - wh",
+      "-all": "3.1 - all",
+      "-ng": "3.2 - ng",
+      "-nk": "3.3 - nk",
+      "a_e": "2.1 - a_e",
+      "i_e": "2.2 - i_e",
+      "o_e": "2.3 - o_e",
+      "u_e": "2.4 - u_e",
+      "ar": "4.1 - ar",
+      "or": "4.2 - or",
+      "er/ir/ur": "4.3 - er, ir, ur",
+      "Soft C (-ce)": "10.1 - ce",
+      "Soft G (-ge)": "10.2 - ge",
+      "Soft G (-dge)": "10.3 - dge"
+    };
+
+    const MIXED_RULES = {
+      "Mixed CVC": ["0.1 - Short A", "0.5 - Short E", "0.3 - Short I", "0.2 - Short O", "0.4 - Short U", "0.6 - FLSZ"],
+      "Digraphs Mixed": ["1.1 - ck", "1.2 - sh", "1.3 - th", "1.4 - ch", "1.5 - wh"],
+      "Glued Mixed": ["3.1 - all", "3.2 - ng", "3.3 - nk"],
+      "Mixed VCe": ["2.1 - a_e", "2.2 - i_e", "2.3 - o_e", "2.4 - u_e"],
+      "Mixed R-Controlled": ["4.1 - ar", "4.2 - or", "4.3 - er, ir, ur"],
+      "Long A (ai/ay)": ["6.1 - ay", "6.2 - ai"],
+      "Long E (ee/ea)": ["6.4 - ee", "6.5 - ea"],
+      "Long I (igh/y/ie)": ["6.6 - igh", "6.7 - Final y", "6.8 - ie"],
+      "Long O (oa/ow/oe)": ["6.9 - oa", "6.10 - ow", "6.11 - oe"],
+      "Long U (oo/ew/ue)": ["6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
+      "Mixed Vowel Teams": ["6.1 - ay", "6.2 - ai", "6.4 - ee", "6.5 - ea", "6.6 - igh", "6.7 - Final y", "6.8 - ie", "6.9 - oa", "6.10 - ow", "6.11 - oe", "6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
+      "Diphthongs (oy/oi)": ["7.4 - oy", "7.3 - oi"],
+      "Diphthongs (ow/ou)": ["7.2 - ow", "7.1 - ou"],
+      "Variant Vowels (au/aw)": ["7.5 - aw", "7.6 - au"],
+      "Variant Vowel (oo)": ["7.7 - oo variant"]
+    };
+
+    const state = {
+      view: "classic",
+      selectedSkill: "FLSZ",
+      includeBlends: false,
+      mode: "words",
+      gridSize: 24,
+      search: ""
+    };
+
+    const viewTabsEl = document.getElementById("viewTabs");
+    const shellEl = document.getElementById("shell");
+    const rightStackEl = document.getElementById("rightStack");
+    const skillGroupsEl = document.getElementById("skillGroups");
+    const selectionTitleEl = document.getElementById("selectionTitle");
+    const selectionMetaEl = document.getElementById("selectionMeta");
+    const outputEl = document.getElementById("output");
+
+    function toArray(value) {
+      if (Array.isArray(value)) return value.slice();
+      if (value == null) return [];
+      try { return Array.from(value); } catch (_) { return []; }
+    }
+
+    function shuffle(items) {
+      const list = toArray(items);
+      for (let i = list.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const hold = list[i];
+        list[i] = list[j];
+        list[j] = hold;
+      }
+      return list;
+    }
+
+    function uniqueByLowercase(items) {
+      const out = [];
+      const seen = new Set();
+      for (const item of toArray(items)) {
+        const value = String(item || "").trim();
+        const key = value.toLowerCase();
+        if (value && !seen.has(key)) {
+          seen.add(key);
+          out.push(value);
+        }
+      }
+      return out;
+    }
+
+    function fillToN(items, count) {
+      const base = toArray(items);
+      if (!base.length || count <= 0) return [];
+      const out = [];
+      let bag = shuffle(base);
+      while (out.length < count) {
+        if (!bag.length) bag = shuffle(base);
+        out.push(bag.shift());
+      }
+      return out.slice(0, count);
+    }
+
+    function wordsDict() {
+      return (typeof fluencyWords !== "undefined")
+        ? fluencyWords
+        : ((typeof fluencyData !== "undefined" && fluencyData.words) ? fluencyData.words : {});
+    }
+
+    function sentsDict() {
+      return (typeof fluencySentences !== "undefined")
+        ? fluencySentences
+        : ((typeof fluencyData !== "undefined" && fluencyData.sentences) ? fluencyData.sentences : {});
+    }
+
+    function readDict(dict, key) {
+      return Array.isArray(dict[key]) ? dict[key] : [];
+    }
+
+    function readWithBlends(dict, prefix, type, blends) {
+      const typeLower = type.toLowerCase();
+      const baseKeys = [`${prefix} ${type}`, `${prefix} ${typeLower}`, `${prefix}`];
+      let base = [];
+      for (const key of baseKeys) base = base.concat(readDict(dict, key));
+
+      if (!blends) return base;
+
+      const candidates = [
+        `${prefix} with Blends ${type}`,
+        `${prefix} with blends ${type}`,
+        `${prefix} with Blends ${typeLower}`,
+        `${prefix} with blends ${typeLower}`
+      ];
+      const bPrefix = prefix.replace(" - ", "b - ");
+      candidates.push(
+        `${bPrefix} with Blends ${type}`,
+        `${bPrefix} with blends ${type}`,
+        `${bPrefix} with Blends ${typeLower}`,
+        `${bPrefix} with blends ${typeLower}`
+      );
+
+      for (const key of candidates) {
+        const list = readDict(dict, key);
+        if (list.length) return list.length < 9 ? uniqueByLowercase(list.concat(base)) : list;
+      }
+      return base;
+    }
+
+    function getList(label, type, blends) {
+      const dict = type === "Words" ? wordsDict() : sentsDict();
+
+      if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)) {
+        let all = [];
+        for (const prefix of MIXED_RULES[label]) {
+          all = all.concat(readWithBlends(dict, prefix, type, blends));
+        }
+        return all;
+      }
+
+      const prefix = PREFIX[label];
+      if (prefix) return readWithBlends(dict, prefix, type, blends);
+
+      const tail1 = " " + type;
+      const tail2 = " " + type.toLowerCase();
+      const want = label.toLowerCase();
+      const guess = Object.keys(dict).find((key) => key.toLowerCase().includes(want) && (key.endsWith(tail1) || key.endsWith(tail2)));
+      return guess ? readDict(dict, guess) : [];
+    }
+
+    function buildContent() {
+      const label = state.selectedSkill;
+      if (!label) return [];
+
+      if (state.mode === "words") {
+        return fillToN(shuffle(uniqueByLowercase(getList(label, "Words", state.includeBlends))), state.gridSize);
+      }
+      if (state.mode === "sentences") {
+        return fillToN(shuffle(uniqueByLowercase(getList(label, "Sentences", state.includeBlends))), state.gridSize);
+      }
+
+      const words = uniqueByLowercase(getList(label, "Words", state.includeBlends));
+      const sentences = uniqueByLowercase(getList(label, "Sentences", state.includeBlends));
+      const wordCount = Math.floor(state.gridSize / 2);
+      const wordPart = fillToN(shuffle(words), wordCount);
+      const sentencePart = fillToN(shuffle(sentences), state.gridSize - wordPart.length);
+      return shuffle(wordPart.concat(sentencePart));
+    }
+
+    function renderViewTabs() {
+      viewTabsEl.innerHTML = "";
+      VIEW_MODES.forEach((view) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "view-tab" + (view.id === state.view ? " active" : "");
+        button.innerHTML = `<strong>${view.title}</strong><span>${view.desc}</span>`;
+        button.addEventListener("click", () => {
+          state.view = view.id;
+          applyView();
+          renderViewTabs();
+        });
+        viewTabsEl.appendChild(button);
+      });
+    }
+
+    function renderSkillGroups() {
+      skillGroupsEl.innerHTML = "";
+
+      SKILL_GROUPS.forEach((group, index) => {
+        const filtered = group.skills.filter((skill) => {
+          if (!state.search.trim()) return true;
+          return skill.toLowerCase().includes(state.search.trim().toLowerCase());
+        });
+
+        if (!filtered.length) return;
+
+        const details = document.createElement("details");
+        details.className = `skill-group group-${group.id}`;
+        details.open = index === 0 || filtered.includes(state.selectedSkill);
+
+        const summary = document.createElement("summary");
+        summary.innerHTML = `<span>${group.label}</span><span>${filtered.length} skills</span>`;
+        details.appendChild(summary);
+
+        const wrap = document.createElement("div");
+        wrap.className = "skills-wrap";
+
+        filtered.forEach((skill) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "skill-button" + (skill === state.selectedSkill ? " selected" : "");
+          button.textContent = skill;
+          button.addEventListener("click", () => {
+            state.selectedSkill = skill;
+            renderSelection();
+            renderSkillGroups();
+          });
+          wrap.appendChild(button);
+        });
+
+        details.appendChild(wrap);
+        skillGroupsEl.appendChild(details);
+      });
+    }
+
+    function renderSelection() {
+      selectionTitleEl.textContent = state.selectedSkill || "Selected Skill";
+      selectionMetaEl.textContent = state.selectedSkill ? "Using the same one-skill flow as the original roll-and-read page." : "Choose one skill from the accordion list.";
+
+      ["selectedChipTop", "selectedChipMain", "selectedChipTabbed", "selectedChipSticky", "selectedChipSplit", "selectedChipCompact", "selectedChipTwoColumn"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.innerHTML = "";
+        const chip = document.createElement("div");
+        chip.className = "chip" + (state.selectedSkill ? "" : " empty");
+        chip.textContent = state.selectedSkill || "No skill selected";
+        el.appendChild(chip);
+      });
+    }
+
+    function renderOptionGroup(rootId, currentValue, options, onPick) {
+      const root = document.getElementById(rootId);
+      if (!root) return;
+      root.innerHTML = "";
+      options.forEach((option) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "option-box" + (option.value === currentValue ? " selected" : "");
+        button.textContent = option.label;
+        button.addEventListener("click", () => {
+          onPick(option.value);
+          renderAllOptions();
+        });
+        root.appendChild(button);
+      });
+    }
+
+    function renderAllOptions() {
+      const blendOptions = [
+        { value: false, label: "No - 3 Sounds" },
+        { value: true, label: "Yes - 4+ Sounds" }
+      ];
+      const contentOptions = [
+        { value: "words", label: "Words Only" },
+        { value: "sentences", label: "Sentences Only" },
+        { value: "both", label: "Both" }
+      ];
+
+      ["blendOptions", "blendOptionsTabbed", "blendOptionsSticky", "blendOptionsSplit", "blendOptionsCompact", "blendOptionsTwoColumn"].forEach((id) => {
+        renderOptionGroup(id, state.includeBlends, blendOptions, (value) => {
+          state.includeBlends = value;
+        });
+      });
+
+      ["contentOptions", "contentOptionsTabbed", "contentOptionsSticky", "contentOptionsSplit", "contentOptionsCompact", "contentOptionsTwoColumn"].forEach((id) => {
+        renderOptionGroup(id, state.mode, contentOptions, (value) => {
+          state.mode = value;
+        });
+      });
+
+      ["gridSizeSelect", "gridSizeSelectTabbed", "gridSizeSelectSticky", "gridSizeSelectSplit", "gridSizeSelectCompact", "gridSizeSelectTwoColumn"].forEach((id) => {
+        const select = document.getElementById(id);
+        if (!select) return;
+        select.value = String(state.gridSize);
+      });
+    }
+
+    function buildPreviewHtml(content) {
+      if (!content.length) {
+        return `<div class="empty-state">No content found for that skill with those settings.</div>`;
+      }
+
+      const cells = content.map((item, index) => {
+        return `<div class="roll-cell"><div class="die">${(index % 6) + 1}</div><div>${escapeHtml(item)}</div></div>`;
+      }).join("");
+
+      return `
+        <article class="preview-card">
+          <h3>Reading Roll and Read</h3>
+          <div class="preview-meta">
+            <span>${escapeHtml(state.selectedSkill)}</span>
+            <span>${state.includeBlends ? "Yes - 4+ Sounds" : "No - 3 Sounds"}</span>
+            <span>${modeLabel()}</span>
+            <span>${state.gridSize} cells</span>
+          </div>
+          <div class="roll-grid">${cells}</div>
+        </article>
+      `;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    function modeLabel() {
+      if (state.mode === "words") return "Words Only";
+      if (state.mode === "sentences") return "Sentences Only";
+      return "Both";
+    }
+
+    function generate() {
+      if (!state.selectedSkill) {
+        window.alert("Select one skill first.");
+        return;
+      }
+      const content = buildContent();
+      outputEl.innerHTML = buildPreviewHtml(content);
+
+      const previewMirror = document.getElementById("previewMirror");
+      if (previewMirror) previewMirror.outerHTML = `<div id="previewMirror">${buildPreviewHtml(content)}</div>`;
+
+      const splitPreviewMount = document.getElementById("splitPreviewMount");
+      if (splitPreviewMount) splitPreviewMount.outerHTML = `<div id="splitPreviewMount">${buildPreviewHtml(content)}</div>`;
+
+      const twoColumnPreviewMount = document.getElementById("twoColumnPreviewMount");
+      if (twoColumnPreviewMount) twoColumnPreviewMount.outerHTML = `<div id="twoColumnPreviewMount">${buildPreviewHtml(content)}</div>`;
+    }
+
+    function applyView() {
+      shellEl.dataset.view = state.view;
+      rightStackEl.dataset.view = state.view;
+
+      document.getElementById("classicSetup").style.display = state.view === "classic" ? "" : "none";
+      document.getElementById("tabbedSetup").style.display = state.view === "tabbed-right" ? "" : "none";
+      document.getElementById("stickySetup").style.display = state.view === "sticky-actions" ? "" : "none";
+      document.getElementById("splitPreviewWrap").style.display = state.view === "split-preview" ? "" : "none";
+      document.getElementById("compactWrap").style.display = state.view === "compact-bar" ? "" : "none";
+      document.getElementById("twoColumnWrap").style.display = state.view === "two-column-right" ? "" : "none";
+      document.getElementById("outputPanel").style.display = (state.view === "split-preview" || state.view === "two-column-right") ? "none" : "";
+    }
+
+    document.getElementById("skillSearch").addEventListener("input", (event) => {
+      state.search = event.target.value;
+      renderSkillGroups();
+    });
+
+    document.getElementById("toggleAccordionsBtn").addEventListener("click", (event) => {
+      const groups = skillGroupsEl.querySelectorAll("details");
+      const shouldOpen = Array.from(groups).some((group) => !group.open);
+      groups.forEach((group) => { group.open = shouldOpen; });
+      event.currentTarget.textContent = shouldOpen ? "Collapse All" : "Expand All";
+    });
+
+    ["gridSizeSelect", "gridSizeSelectTabbed", "gridSizeSelectSticky", "gridSizeSelectSplit", "gridSizeSelectCompact", "gridSizeSelectTwoColumn"].forEach((id) => {
+      const select = document.getElementById(id);
+      if (!select) return;
+      select.addEventListener("change", () => {
+        state.gridSize = Number(select.value) || 24;
+        renderAllOptions();
+      });
+    });
+
+    [
+      "btnGenerateClassic",
+      "btnGenerateTabbed",
+      "btnGenerateSticky",
+      "btnGenerateSplit",
+      "btnGenerateCompact",
+      "btnGenerateTwoColumn"
+    ].forEach((id) => {
+      const button = document.getElementById(id);
+      if (!button) return;
+      button.addEventListener("click", generate);
+    });
+
+    [
+      "btnPrintClassic",
+      "btnPrintTabbed",
+      "btnPrintSticky",
+      "btnPrintSplit",
+      "btnPrintCompact",
+      "btnPrintTwoColumn"
+    ].forEach((id) => {
+      const button = document.getElementById(id);
+      if (!button) return;
+      button.addEventListener("click", () => window.print());
+    });
+
+    document.querySelectorAll("[data-mini-tab]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = button.dataset.miniTab;
+        document.querySelectorAll("[data-mini-tab]").forEach((item) => item.classList.toggle("active", item === button));
+        document.querySelectorAll("[data-mini-panel]").forEach((panel) => {
+          panel.classList.toggle("active", panel.dataset.miniPanel === target);
+        });
+      });
+    });
+
+    renderViewTabs();
+    renderSelection();
+    renderSkillGroups();
+    renderAllOptions();
+    applyView();
+  </script>
+</body>
+</html>

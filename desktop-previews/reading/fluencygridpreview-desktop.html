@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fluency Grid Generator Preview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --line: #111;
+      --bg: #f6f8fc;
+      --panel: #fff;
+      --accent: #6ec1ff;
+      --text: #111;
+      --muted: #334861;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    .wrap {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .head {
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      padding: 20px 18px 18px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .head h1 {
+      margin: 0;
+      font-size: clamp(36px, 4.2vw, 58px);
+      line-height: 1.06;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      font-size: 20px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .controls {
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      padding: 16px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(220px, 300px));
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .btn {
+      width: 100%;
+      min-height: 58px;
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      padding: 12px 10px;
+      font-family: "Poppins", Arial, sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    #btnGenerate {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    #btnPrint {
+      background: #fff;
+      color: #111;
+    }
+
+    .promo-note {
+      margin: 12px 0 8px;
+      font-size: 18px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: #2f4d73;
+    }
+
+    .status {
+      margin: 0;
+      min-height: 1.3em;
+      font-size: 15px;
+      font-weight: 700;
+      color: #4a617c;
+    }
+
+    .sheet-wrap {
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 14px;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      max-height: 84vh;
+    }
+
+    .page {
+      position: relative;
+      width: 100%;
+      max-width: 1120px;
+      min-height: 860px;
+      margin: 0 auto;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 10px;
+      padding: 24px 24px 180px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .worksheet-title {
+      margin: 0 0 8px;
+      font-size: clamp(42px, 3.5vw, 54px);
+      line-height: 1.04;
+      font-weight: 800;
+    }
+
+    .skills-line {
+      margin: 0 0 8px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #22344f;
+    }
+
+    .worksheet-directions {
+      margin: 0 0 18px;
+      font-size: 20px;
+      line-height: 1.35;
+      font-weight: 600;
+      color: #23374f;
+    }
+
+    table.roll {
+      width: 100%;
+      margin: 0 auto;
+      border-collapse: collapse;
+      table-layout: fixed;
+      background: #fff;
+    }
+
+    .roll td {
+      width: 16.66%;
+      height: 118px;
+      border: 2px solid #000;
+      padding: 10px 8px;
+      text-align: center;
+      vertical-align: middle;
+      word-break: break-word;
+    }
+
+    .word-cell {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.08;
+    }
+
+    .sentence-cell {
+      font-size: 16px;
+      line-height: 1.3;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    #copyright {
+      margin-top: 12px;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 700;
+      color: #444;
+    }
+
+    .members-lock {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      z-index: 30;
+      border: 2px solid #fff;
+      border-radius: 16px;
+      background: rgba(15, 18, 24, 0.9);
+      color: #fff;
+      text-align: center;
+      padding: 14px 12px 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .members-lock-title {
+      margin: 0;
+      font-size: 46px;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .members-lock-copy {
+      margin: 10px 0 10px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .members-lock a {
+      display: inline-block;
+      text-decoration: none;
+      border-radius: 999px;
+      background: #fff;
+      color: #111;
+      border: 2px solid #fff;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .preview-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0.55;
+      background-image:
+        repeating-linear-gradient(-24deg, rgba(0, 0, 0, 0.12) 0 16px, rgba(255, 255, 255, 0.05) 16px 32px),
+        url("data:image/svg+xml,%3Csvg width='360' height='240' viewBox='0 0 360 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-23 180 120)'%3E%3Ctext x='22' y='112' fill='%23000' fill-opacity='.4' font-family='Poppins' font-size='40' font-weight='800'%3EPREVIEW%3C/text%3E%3Ctext x='92' y='158' fill='%23000' fill-opacity='.3' font-family='Poppins' font-size='20' font-weight='700'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+      background-size: auto, 360px 240px;
+      background-repeat: repeat;
+    }
+
+    @media (max-width: 1100px) {
+      .wrap { padding: 12px; }
+      .head { padding: 16px 14px 14px; }
+      .subtitle { font-size: 16px; }
+      .promo-note { font-size: 15px; }
+      .status { font-size: 13px; }
+      .page {
+        max-width: 100%;
+        min-height: 700px;
+        padding: 14px 14px 140px;
+      }
+      .worksheet-title { font-size: clamp(30px, 5vw, 40px); }
+      .skills-line { font-size: 16px; }
+      .worksheet-directions { font-size: 15px; margin-bottom: 12px; }
+      .roll td {
+        height: 84px;
+        padding: 6px;
+      }
+      .word-cell { font-size: 18px; }
+      .sentence-cell { font-size: 11px; line-height: 1.2; }
+      .members-lock {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        padding: 10px 10px 12px;
+      }
+      .members-lock-title { font-size: 30px; }
+      .members-lock-copy {
+        margin: 6px 0 8px;
+        font-size: 12px;
+      }
+      .members-lock a {
+        padding: 7px 14px;
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .btn-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body { display: none !important; }
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+  <div class="wrap">
+    <section class="head">
+      <h1>Fluency Grid Generator Preview</h1>
+      <p class="subtitle">Mobile version. Digraphs Mixed only. Words + Sentences always.</p>
+    </section>
+
+    <section class="controls">
+      <div class="btn-row">
+        <button id="btnGenerate" class="btn" type="button">Generate</button>
+        <button id="btnPrint" class="btn" type="button">Print</button>
+      </div>
+      <p class="promo-note">Choose or Combine Over 40 Phonics Skills using Words, Sentences or Both!</p>
+      <p id="status" class="status">Ready.</p>
+    </section>
+
+    <section class="sheet-wrap">
+      <div id="output"></div>
+    </section>
+  </div>
+
+  <script>
+    function toArray(value) {
+      if (Array.isArray(value)) return value.slice();
+      if (value == null) return [];
+      try { return Array.from(value); } catch (_) { return []; }
+    }
+
+    function shuffle(list) {
+      const arr = toArray(list);
+      for (let i = arr.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+      }
+      return arr;
+    }
+
+    function uniqueByLowercase(list) {
+      const seen = new Set();
+      const out = [];
+      for (const item of toArray(list)) {
+        const key = String(item).toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          out.push(item);
+        }
+      }
+      return out;
+    }
+
+    function fillToN(list, count) {
+      const base = toArray(list);
+      if (base.length === 0 || !Number.isFinite(count) || count <= 0) return [];
+      const out = [];
+      let bag = shuffle(base);
+      while (out.length < count) {
+        if (bag.length === 0) {
+          bag = shuffle(base);
+          if (bag.length === 0) break;
+        }
+        out.push(bag.shift());
+      }
+      return out.slice(0, count);
+    }
+
+    const DATA_SOURCES = [
+      "../../fluencyDataFull_v8-2_clean.js",
+      "../../ladder/fluencyDataFull_v8-2_clean.js",
+      "file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/fluencyDataFull_v8-2_clean.js",
+      "https://teachwithmrc.github.io/fluencyDataFull_v8-2_clean.js"
+    ];
+
+    function hasFluencyData() {
+      return !!(
+        (typeof fluencyWords !== "undefined" && fluencyWords) ||
+        (typeof window.fluencyData !== "undefined" && window.fluencyData && window.fluencyData.words)
+      );
+    }
+
+    function loadScript(src) {
+      return new Promise(function(resolve) {
+        const script = document.createElement("script");
+        script.src = src + (src.indexOf("?") === -1 ? "?" : "&") + "v=" + Date.now();
+        script.async = true;
+        script.onload = function() { resolve(true); };
+        script.onerror = function() { resolve(false); };
+        document.head.appendChild(script);
+      });
+    }
+
+    async function ensureFluencyData() {
+      if (hasFluencyData()) return true;
+      const status = document.getElementById("status");
+      for (const src of DATA_SOURCES) {
+        status.textContent = "Loading data...";
+        await loadScript(src);
+        if (hasFluencyData()) return true;
+      }
+      return false;
+    }
+
+    const PREFIX = {
+      "Short A": "0.1 - Short A",
+      "Short O": "0.2 - Short O",
+      "Short I": "0.3 - Short I",
+      "Short U": "0.4 - Short U",
+      "Short E": "0.5 - Short E",
+      "FLSZ": "0.6 - FLSZ",
+      "ck": "1.1 - ck",
+      "sh": "1.2 - sh",
+      "th": "1.3 - th",
+      "ch": "1.4 - ch",
+      "wh": "1.5 - wh",
+      "-all": "3.1 - all",
+      "-ng": "3.2 - ng",
+      "-nk": "3.3 - nk",
+      "a_e": "2.1 - a_e",
+      "i_e": "2.2 - i_e",
+      "o_e": "2.3 - o_e",
+      "u_e": "2.4 - u_e",
+      "ar": "4.1 - ar",
+      "or": "4.2 - or",
+      "er/ir/ur": "4.3 - er, ir, ur",
+      "Soft C (-ce)": "10.1 - ce",
+      "Soft G (-ge)": "10.2 - ge",
+      "Soft G (-dge)": "10.3 - dge"
+    };
+
+    const MIXED_RULES = {
+      "Mixed CVC": ["0.1 - Short A", "0.5 - Short E", "0.3 - Short I", "0.2 - Short O", "0.4 - Short U", "0.6 - FLSZ"],
+      "Digraphs Mixed": ["1.1 - ck", "1.2 - sh", "1.3 - th", "1.4 - ch", "1.5 - wh"],
+      "Glued Mixed": ["3.1 - all", "3.2 - ng", "3.3 - nk"],
+      "Mixed VCe": ["2.1 - a_e", "2.2 - i_e", "2.3 - o_e", "2.4 - u_e"],
+      "Mixed R-Controlled": ["4.1 - ar", "4.2 - or", "4.3 - er, ir, ur"],
+      "Long A (ai/ay)": ["6.1 - ay", "6.2 - ai"],
+      "Long E (ee/ea)": ["6.4 - ee", "6.5 - ea"],
+      "Long I (igh/y/ie)": ["6.6 - igh", "6.7 - Final y", "6.8 - ie"],
+      "Long O (oa/ow/oe)": ["6.9 - oa", "6.10 - ow", "6.11 - oe"],
+      "Long U (oo/ew/ue)": ["6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
+      "Mixed Vowel Teams": [
+        "6.1 - ay", "6.2 - ai", "6.4 - ee", "6.5 - ea",
+        "6.6 - igh", "6.7 - Final y", "6.8 - ie",
+        "6.9 - oa", "6.10 - ow", "6.11 - oe",
+        "6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"
+      ],
+      "Diphthongs (oy/oi)": ["7.4 - oy", "7.3 - oi"],
+      "Diphthongs (ow/ou)": ["7.2 - ow", "7.1 - ou"],
+      "Variant Vowels (au/aw)": ["7.5 - aw", "7.6 - au"],
+      "Variant Vowel (oo)": ["7.7 - oo variant"]
+    };
+
+    function wordsDict() {
+      return (typeof fluencyWords !== "undefined")
+        ? fluencyWords
+        : (typeof fluencyData !== "undefined" ? fluencyData.words : {});
+    }
+
+    function sentsDict() {
+      return (typeof fluencySentences !== "undefined")
+        ? fluencySentences
+        : (typeof fluencyData !== "undefined" ? fluencyData.sentences : {});
+    }
+
+    function readDict(dict, key) {
+      return Array.isArray(dict[key]) ? dict[key] : [];
+    }
+
+    function readWithBlends(dict, prefix, type, blends) {
+      const typeLower = type.toLowerCase();
+      const baseKeys = [prefix + " " + type, prefix + " " + typeLower, prefix];
+      let base = [];
+      for (const key of baseKeys) {
+        base = base.concat(readDict(dict, key));
+      }
+
+      if (blends) {
+        const candidates = [
+          prefix + " with Blends " + type,
+          prefix + " with blends " + type,
+          prefix + " with Blends " + typeLower,
+          prefix + " with blends " + typeLower,
+          prefix + " with BLENDS " + type
+        ];
+        const blendPrefix = prefix.replace(" - ", "b - ");
+        candidates.push(
+          blendPrefix + " with Blends " + type,
+          blendPrefix + " with blends " + type,
+          blendPrefix + " with Blends " + typeLower,
+          blendPrefix + " with blends " + typeLower
+        );
+
+        for (const key of candidates) {
+          const got = readDict(dict, key);
+          if (got.length) {
+            const minBackfill = 30;
+            return (got.length < minBackfill) ? uniqueByLowercase(got.concat(base)) : got;
+          }
+        }
+      }
+
+      return base;
+    }
+
+    function getList(label, type, blends) {
+      const dict = (type === "Words") ? wordsDict() : sentsDict();
+
+      if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)) {
+        let all = [];
+        for (const prefix of MIXED_RULES[label]) {
+          all = all.concat(readWithBlends(dict, prefix, type, blends));
+        }
+        return all;
+      }
+
+      const prefix = PREFIX[label];
+      if (prefix) return readWithBlends(dict, prefix, type, blends);
+
+      const tail1 = " " + type;
+      const tail2 = " " + type.toLowerCase();
+      const want = label.toLowerCase();
+      const keys = Object.keys(dict);
+      const guess = keys.find(function(key) {
+        return key.toLowerCase().includes(want) && (key.endsWith(tail1) || key.endsWith(tail2));
+      });
+
+      return guess ? readDict(dict, guess) : [];
+    }
+
+    function buildFluencyGrid(cells) {
+      const cols = 6;
+      const rows = Math.ceil(cells.length / cols);
+      const table = document.createElement("table");
+      table.className = "roll";
+
+      let idx = 0;
+      for (let r = 0; r < rows; r += 1) {
+        const row = table.insertRow();
+        for (let c = 0; c < cols; c += 1) {
+          const cell = row.insertCell();
+          const value = cells[idx++] || "";
+          const isSentence = String(value).includes(" ");
+          cell.className = isSentence ? "sentence-cell" : "word-cell";
+          cell.textContent = value;
+        }
+      }
+
+      return table;
+    }
+
+    function buildLockPanel() {
+      const lock = document.createElement("div");
+      lock.className = "members-lock";
+      lock.innerHTML = [
+        '<p class="members-lock-title">Members Only</p>',
+        '<p class="members-lock-copy">Printing is for Members Only. Create an Unlimited Amount as a Member.</p>',
+        '<a href="https://interventionstation.com" target="_blank" rel="noopener noreferrer">Join</a>'
+      ].join("");
+      return lock;
+    }
+
+    async function generateFluencyGrid() {
+      const status = document.getElementById("status");
+      const labels = ["Digraphs Mixed"];
+      const includeBlends = false;
+      const total = 30;
+
+      const dataOk = await ensureFluencyData();
+      if (!dataOk || (!wordsDict() && !sentsDict())) {
+        status.textContent = "Data not loaded. Check script access.";
+        document.getElementById("output").innerHTML = '<div class="page"><p class="worksheet-directions">Missing data: fluencyDataFull_v8-2_clean.js did not load.</p></div>';
+        return;
+      }
+
+      const words = uniqueByLowercase(labels.flatMap(function(label) {
+        return getList(label, "Words", includeBlends);
+      }));
+      const sentences = uniqueByLowercase(labels.flatMap(function(label) {
+        return getList(label, "Sentences", includeBlends);
+      }));
+
+      const half = Math.floor(total / 2);
+      const selectedWords = fillToN(shuffle(words), half);
+      const selectedSentences = fillToN(shuffle(sentences), total - selectedWords.length);
+      let content = shuffle(selectedWords.concat(selectedSentences));
+
+      while (content.length < total && content.length > 0) {
+        content = content.concat(content);
+      }
+      content = content.slice(0, total);
+
+      if (!content.length) {
+        status.textContent = "No digraph content found in data.";
+        return;
+      }
+
+      const output = document.getElementById("output");
+      output.innerHTML = "";
+
+      const page = document.createElement("div");
+      page.className = "page";
+
+      const title = document.createElement("div");
+      title.className = "worksheet-title";
+      title.textContent = "Fluency Grid";
+
+      const skills = document.createElement("div");
+      skills.className = "skills-line";
+      skills.innerHTML = "<strong>Skills:</strong> Digraphs Mixed";
+
+      const directions = document.createElement("div");
+      directions.className = "worksheet-directions";
+      directions.innerHTML = "<strong>Directions:</strong> Read each item. Words and sentences are mixed.";
+
+      const copyright = document.createElement("div");
+      copyright.id = "copyright";
+      copyright.textContent = "Copyright - InterventionStation.com - @TeachwithMrC";
+
+      const overlay = document.createElement("div");
+      overlay.className = "preview-overlay";
+
+      page.appendChild(title);
+      page.appendChild(skills);
+      page.appendChild(directions);
+      page.appendChild(buildFluencyGrid(content));
+      page.appendChild(copyright);
+      page.appendChild(overlay);
+      page.appendChild(buildLockPanel());
+      output.appendChild(page);
+
+      status.textContent = "Generated Digraphs Mixed (words + sentences).";
+    }
+
+    document.getElementById("btnGenerate").addEventListener("click", generateFluencyGrid);
+    document.getElementById("btnPrint").addEventListener("click", function() {
+      alert("Printing is for Members Only.\nCreate an Unlimited Amount as a Member.");
+      document.getElementById("status").textContent = "Printing is for Members Only.";
+    });
+
+    window.addEventListener("DOMContentLoaded", function() {
+      generateFluencyGrid();
+    });
+  </script>
+</body>
+</html>

@@ -180,6 +180,90 @@
       text-decoration:underline;
       text-decoration-thickness:2px;
     }
+    .is-home-sections .is-side-stack{
+      display:grid;
+      gap:12px;
+    }
+    .is-home-sections .is-side-card{
+      background:#fff;
+      border:1px solid #d7e5f3;
+      border-radius:16px;
+      padding:16px;
+      box-shadow:0 10px 22px rgba(31,54,95,0.07);
+    }
+    .is-home-sections .is-side-card h3{
+      margin:0 0 8px;
+      font-size:19px;
+      line-height:1.1;
+      color:#0f2e52;
+    }
+    .is-home-sections .is-side-card p{
+      margin:0 0 12px;
+      font-size:13px;
+      line-height:1.5;
+      font-weight:600;
+      color:#4f6689;
+    }
+    .is-home-sections .is-side-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:0 16px;
+      border-radius:999px;
+      background:#6ec1ff;
+      border:1px solid #5aaee9;
+      color:#fff;
+      font-size:14px;
+      font-weight:900;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+    .is-home-sections .is-side-stat-list{
+      display:grid;
+      gap:10px;
+    }
+    .is-home-sections .is-side-stat{
+      border-radius:14px;
+      padding:16px 14px;
+      background:linear-gradient(145deg, #ffffff 0%, #eef7ff 100%);
+      border:1px solid #d7e5f3;
+      text-align:center;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,0.8);
+    }
+    .is-home-sections .is-side-stat strong{
+      display:block;
+      font-size:38px;
+      line-height:.92;
+      color:#0f2e52;
+      margin-bottom:8px;
+      font-weight:900;
+      letter-spacing:-.04em;
+    }
+    .is-home-sections .is-side-stat span{
+      display:block;
+      font-size:12px;
+      line-height:1.4;
+      font-weight:700;
+      color:#4f6689;
+    }
+    .is-home-sections .is-side-links{
+      display:grid;
+      gap:8px;
+    }
+    .is-home-sections .is-side-link{
+      display:block;
+      border-radius:12px;
+      padding:11px 12px;
+      background:#f7fbff;
+      border:1px solid #d7e5f3;
+      color:#1f365f;
+      font-size:13px;
+      font-weight:800;
+      line-height:1.35;
+      text-decoration:none;
+    }
+    .is-home-sections .is-side-link:hover{ text-decoration:underline; }
 
     .is-unified-join{
       border:1px solid #cfd7ef;
@@ -451,6 +535,13 @@
       font-weight:600;
       color:#4f6689;
     }
+    .is-home .is-top-cta-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
     .is-home .is-join-btn{
       display:inline-flex;
       align-items:center;
@@ -466,6 +557,125 @@
       font-weight:900;
       white-space:nowrap;
       box-shadow:0 8px 18px rgba(16,40,70,.14);
+    }
+    .is-home .is-secondary-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      min-height:46px;
+      padding:0 18px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid #cfd7ef;
+      color:#1f365f;
+      font-size:15px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .is-home .is-generator-spotlight{
+      border:1px solid #cfd7ef;
+      background:linear-gradient(135deg, #f8fcff 0%, #eef7ff 100%);
+      border-radius:18px;
+      padding:18px;
+      box-shadow:0 10px 22px rgba(31,54,95,.07);
+      margin-bottom:16px;
+    }
+    .is-home .is-generator-spotlight-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:16px;
+    }
+    .is-home .is-generator-eyebrow{
+      margin:0 0 8px;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:#4d84b7;
+    }
+    .is-home .is-generator-spotlight h2{
+      margin:0 0 8px;
+      font-size:28px;
+      line-height:1.08;
+      color:#0e2b4f;
+    }
+    .is-home .is-generator-spotlight p{
+      margin:0;
+      font-size:14px;
+      line-height:1.5;
+      font-weight:600;
+      color:#4f6689;
+      max-width:720px;
+    }
+    .is-home .is-generator-cta{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .is-home .is-generator-stat-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .is-home .is-generator-stat{
+      background:#fff;
+      border:1px solid #d7e5f3;
+      border-radius:14px;
+      padding:14px;
+    }
+    .is-home .is-generator-stat strong{
+      display:block;
+      font-size:28px;
+      line-height:1;
+      color:#0f2e52;
+      margin-bottom:6px;
+    }
+    .is-home .is-generator-stat span{
+      display:block;
+      font-size:13px;
+      line-height:1.35;
+      font-weight:700;
+      color:#4f6689;
+    }
+    .is-home .is-generator-card-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:12px;
+    }
+    .is-home .is-generator-card{
+      background:#fff;
+      border:1px solid #d7e5f3;
+      border-radius:14px;
+      padding:14px;
+    }
+    .is-home .is-generator-card h3{
+      margin:0 0 8px;
+      font-size:18px;
+      line-height:1.15;
+      color:#0f2e52;
+    }
+    .is-home .is-generator-card p{
+      margin:0 0 10px;
+      font-size:13px;
+      line-height:1.45;
+      font-weight:600;
+      color:#4f6689;
+    }
+    .is-home .is-generator-meta{
+      display:inline-flex;
+      align-items:center;
+      min-height:30px;
+      padding:0 10px;
+      border-radius:999px;
+      background:#eaf5ff;
+      color:#24507d;
+      font-size:12px;
+      font-weight:900;
     }
 
     .is-home .is-intervention-grid{
@@ -531,7 +741,13 @@
     @media (max-width:980px){
       .is-home .is-top-cta{ flex-direction:column; align-items:flex-start; }
       .is-home .is-top-cta-action{ width:100%; }
-      .is-home .is-join-btn{ width:100%; }
+      .is-home .is-top-cta-actions{ width:100%; }
+      .is-home .is-join-btn,
+      .is-home .is-secondary-btn{ width:100%; }
+      .is-home .is-generator-spotlight-top{ flex-direction:column; }
+      .is-home .is-generator-cta{ width:100%; }
+      .is-home .is-generator-stat-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+      .is-home .is-generator-card-grid{ grid-template-columns:1fr; }
       .is-home .is-intervention-grid{ grid-template-columns:1fr; }
     }
     @media (max-width:700px){
@@ -748,6 +964,7 @@
     }
 
   </style>
+  <script src="./shared-left-nav.js" defer></script>
 </head>
 <body>
   <div class="is-ticker" aria-label="Reviews ticker">
@@ -777,7 +994,7 @@
         <a href="./home-preview.html#join">
           <button type="button"><div class="main-heading-button">Join Membership</div></button>
         </a>
-        <a href="./home-preview.html#join">
+        <a href="./whats-inside-preview.html">
           <button type="button"><div class="main-heading-button">What's Inside?</div></button>
         </a>
         <a href="./home-preview.html#join">
@@ -865,72 +1082,52 @@
             <a class="is-nav-link is-active" href="./home-preview.html">&#127968; Home</a>
           </div>
 
-          <div class="is-nav-header">Math Generators</div>
+          <div class="is-nav-header">Browse</div>
           <div class="is-nav-group">
-            <a class="is-nav-link" href="./rounding-generator-preview.html">Rounding Generator</a>
-            <a class="is-nav-link" href="https://teachwithmrc.github.io/site%20previews/mobile-preview-safe/addition-graphic-organizer-preview-mobile-fit.html">Addition Generator</a>
-            <a class="is-nav-link" href="https://teachwithmrc.github.io/site%20previews/mobile-preview-safe/subtraction-graphic-organizer-preview-mobile-fit.html">Subtraction Generator</a>
-            <a class="is-nav-link" href="./multiply-generator-preview.html">Multiplication Generator</a>
-            <a class="is-nav-link" href="https://teachwithmrc.github.io/site%20previews/mobile-preview-safe/partial-products-2x1-generator-preview-mobile-fit.html">Partial Products Generator</a>
-            <a class="is-nav-link" href="https://teachwithmrc.github.io/divisionorganizermobile.html">Long Division</a>
-            <a class="is-nav-link" href="https://teachwithmrc.github.io/site%20previews/mobile-preview-safe/long-division-colorcoded-generator-preview-mobile-fit.html">Long Division Scaffold</a>
-            <a class="is-nav-link" href="https://teachwithmrc.github.io/ladder/manipulatives-mobile-preview.html">Add and Subtract with Manipulatives or Hundreds Chart</a>
-            <a class="is-nav-link" href="./ten-frame-preview.html">Ten Frame Generator</a>
-            <a class="is-nav-link" href="./coin-counter-generator-preview.html">Coin Counter Generator</a>
-            <a class="is-nav-link" href="https://teachwithmrc.github.io/math-tictac-mobile-preview.html">Tic Tac Toe Generator</a>
-            <a class="is-nav-link" href="./mathrollread-preview.html">Math Roll &amp; Read Preview</a>
-          </div>
-
-          <div class="is-nav-header is-mt-12">SOR Generators</div>
-          <div class="is-nav-group">
-            <a class="is-nav-link" href="https://teachwithmrc.github.io/ladder/tic-tac-preview-march1st.html">SOR Tic Tac Toe</a>
-            <a class="is-nav-link" href="./fluencygridpreview.html">SOR Fluency Grid</a>
-            <a class="is-nav-link" href="https://teachwithmrc.github.io/ladder/rollreadpreview31.html">SOR Roll and Read</a>
-            <a class="is-nav-link" href="https://teachwithmrc.github.io/laddermobilepreview.html">SOR Word Ladder</a>
-            <a class="is-nav-link" href="https://teachwithmrc.github.io/site%20previews/mobile-preview-safe/wordmapmaster-preview-mobile-fit.html">SOR Word Mapping</a>
-            <a class="is-nav-link" href="https://teachwithmrc.github.io/ladder/pyramidpreview.html">Pyramid Spelling</a>
-            <a class="is-nav-link" href="./spelling-with-pictures-generator-preview.html">Spelling Pics Generator</a>
-          </div>
-
-          <div class="is-nav-header is-mt-12">Math Resources</div>
-          <div class="is-nav-group">
-            <a class="is-nav-link" href="./placevalue-preview.html">Place Value</a>
-            <a class="is-nav-link" href="./rounding-preview.html">Rounding</a>
-            <a class="is-nav-link" href="./addition-preview.html">Addition (Printable Organizer)</a>
-            <a class="is-nav-link" href="./multiplication-preview.html">Multiplication (Printable Organizer)</a>
-            <a class="is-nav-link" href="./division-preview.html">Division (Printable Organizer)</a>
-            <a class="is-nav-link" href="./decimals-preview.html">Decimals</a>
-            <a class="is-nav-link" href="./fractions-preview.html">Fractions</a>
-            <a class="is-nav-link" href="./google-puzzle-preview.html">Google Puzzle</a>
-            <a class="is-nav-link" href="./math-riddle-preview.html">Math Fact Riddles</a>
-          </div>
-
-          <div class="is-nav-header is-mt-12">Reading</div>
-          <div class="is-nav-group">
-            <a class="is-nav-link" href="./heart-words-preview.html">Heart Words</a>
-            <a class="is-nav-link" href="./phonics-comics-preview.html">Phonics Comics</a>
-            <a class="is-nav-link" href="./fix-mixup-preview.html">Fix the Mix Up</a>
-            <a class="is-nav-link" href="./blending-slides-preview.html">Blending Slides</a>
-            <a class="is-nav-link" href="./phonics-maze-preview.html">Phonics Path Maze</a>
-            <a class="is-nav-link" href="./pick-the-pic-preview.html">Pick the Pic</a>
-            <a class="is-nav-link" href="./hfw-pyramid-preview.html">High Frequency Word Pyramids</a>
-            <a class="is-nav-link" href="./spelling-preview.html">Spelling by Phonics Skill</a>
-            <a class="is-nav-link" href="./spelling-google-sheets-preview.html">Spelling Google Sheets</a>
-            <span class="is-nav-link" style="cursor:not-allowed; opacity:.7; text-decoration:none;">Decodable (COMING SOON)</span>
-          </div>
-
-          <div class="is-nav-header is-mt-12">Interactive Games</div>
-          <div class="is-nav-group">
-            <a class="is-nav-link" href="./readinggames-preview.html">Reading Games</a>
-            <a class="is-nav-link" href="./math-game-board-preview.html">Math Games</a>
-            <a class="is-nav-link" href="./games-preview.html">Games (Legacy)</a>
-          </div>
-
-          <div class="is-nav-header is-mt-12">Learning Songs</div>
-          <div class="is-nav-group">
-            <a class="is-nav-link" href="./math-song-preview.html">All Learning Songs and Resources</a>
+            <a class="is-nav-link" href="./generators-preview.html">Generators</a>
+            <a class="is-nav-link" href="./scaffolded-math-preview.html">Scaffolded Math</a>
+            <a class="is-nav-link" href="./sor-reading-preview.html">SOR Reading</a>
+            <a class="is-nav-link" href="./interactive-games-preview.html">Games</a>
+            <a class="is-nav-link" href="./learning-songs-preview.html">Songs</a>
+            <a class="is-nav-link" href="./whats-inside-preview.html">What's Included</a>
+            <a class="is-nav-link" href="./home-preview.html#join">Join</a>
           </div>
         </nav>
+
+        <div class="is-side-stack">
+          <section class="is-side-card" aria-label="Membership call to action">
+            <h3>Unlock the Full Library</h3>
+            <p>Members get the full generator bank, scaffolded printables, reading supports, games, and song downloads in one place.</p>
+            <a class="is-side-btn" href="./home-preview.html#join">Join Membership</a>
+          </section>
+
+          <section class="is-side-card" aria-label="Library highlights">
+            <h3>What Members Unlock</h3>
+            <div class="is-side-stat-list">
+              <div class="is-side-stat">
+                <strong>19</strong>
+                <span>Generators across math and SOR</span>
+              </div>
+              <div class="is-side-stat">
+                <strong>48+</strong>
+                <span>Scaffolded math resources</span>
+              </div>
+              <div class="is-side-stat">
+                <strong>200+</strong>
+                <span>SOR reading supports and practice pages</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="is-side-card" aria-label="Popular paths">
+            <h3>Popular Previews</h3>
+            <div class="is-side-links">
+              <a class="is-side-link" href="./math-generators-preview.html">Preview Math Generators</a>
+              <a class="is-side-link" href="./sor-generators-preview.html">Preview SOR Generators</a>
+              <a class="is-side-link" href="./scaffolded-math-preview.html">See Scaffolded Math</a>
+            </div>
+          </section>
+        </div>
       </aside>
 
       <main class="is-main">
@@ -987,10 +1184,64 @@
           <section class="is-top-cta" aria-label="Primary call to action">
             <div class="is-top-cta-text">
               <h1>Printable Resources + Generators for Busy Teachers</h1>
-              <p>Scaffolded math and reading support, a growing library of learning songs, and print-in-seconds generators that save you hours every week.</p>
+              <p>Members get instant access to 19 generators, a deep printable library, and ready-to-use intervention tools that turn one skill into unlimited fresh practice.</p>
             </div>
             <div class="is-top-cta-action">
-              <a href="./home-preview.html#join" class="is-join-btn">Join Membership</a>
+              <div class="is-top-cta-actions">
+                <a href="./home-preview.html#join" class="is-join-btn">Join Membership</a>
+                <a href="./whats-inside-preview.html" class="is-secondary-btn">See What's Inside</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="is-generator-spotlight" aria-label="Generator library spotlight">
+            <div class="is-generator-spotlight-top">
+              <div>
+                <p class="is-generator-eyebrow">Most Important for Promotion</p>
+                <h2>The generator library is the clearest reason to join.</h2>
+                <p>Lead with the fact that teachers are not buying one worksheet. They are unlocking a bank of generators that can keep making new math and reading practice on demand, plus the printables that support each skill.</p>
+              </div>
+              <div class="is-generator-cta">
+                <a href="./fluencygridpreview.html" class="is-join-btn">Preview a Generator</a>
+                <a href="./whats-inside-preview.html" class="is-secondary-btn">View Full Inventory</a>
+              </div>
+            </div>
+
+            <div class="is-generator-stat-grid">
+              <div class="is-generator-stat">
+                <strong>19</strong>
+                <span>Customizable generators across math and SOR</span>
+              </div>
+              <div class="is-generator-stat">
+                <strong>48+</strong>
+                <span>Verified printable math resources already previewed</span>
+              </div>
+              <div class="is-generator-stat">
+                <strong>200+</strong>
+                <span>Reading supports, slides, pyramids, and practice sets</span>
+              </div>
+              <div class="is-generator-stat">
+                <strong>29</strong>
+                <span>Song downloads and previews in the music library</span>
+              </div>
+            </div>
+
+            <div class="is-generator-card-grid">
+              <div class="is-generator-card">
+                <h3>Math Generators</h3>
+                <p>12 generators for rounding, addition, subtraction, multiplication, partial products, long division, manipulatives, ten frames, coin counting, Tic Tac Toe, and Roll &amp; Read.</p>
+                <span class="is-generator-meta">Unlimited fresh worksheets</span>
+              </div>
+              <div class="is-generator-card">
+                <h3>SOR Generators</h3>
+                <p>7 more generators for Tic Tac Toe, Fluency Grids, Roll and Read, Word Ladders, Word Mapping, Pyramid Spelling, and spelling with pictures.</p>
+                <span class="is-generator-meta">Print in seconds for small groups</span>
+              </div>
+              <div class="is-generator-card">
+                <h3>Built Around Full Resources</h3>
+                <p>The generators are backed by printable organizers, heart word sets, blending slides, phonics comics, games, and songs so teachers can teach the skill more than one way.</p>
+                <span class="is-generator-meta">Not just one-off printables</span>
+              </div>
             </div>
           </section>
 

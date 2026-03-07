@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intervention Station | Horizontal Notebook Tabs Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --navy:#102246;
+      --navy-soft:#23446e;
+      --sky:#66c9f4;
+      --sky-soft:#eaf7ff;
+      --sky-soft-2:#d9effd;
+      --panel:#ffffff;
+      --line:#d7e5f3;
+      --text:#4f6689;
+      --shadow:0 18px 40px rgba(16,34,70,.10);
+      --radius-xl:30px;
+      --radius-lg:22px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{
+      margin:0;
+      padding:0;
+      font-family:"Poppins",system-ui,sans-serif;
+      background:radial-gradient(circle at top left, #f8fcff 0%, #edf6ff 42%, #f3f7fb 100%);
+      color:var(--navy);
+    }
+    img{ display:block; max-width:100%; height:auto; }
+
+    .demo{
+      width:min(1320px, calc(100% - 32px));
+      margin:0 auto;
+      padding:52px 0 60px;
+    }
+    .intro{
+      max-width:780px;
+      margin-bottom:28px;
+    }
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      min-height:34px;
+      padding:0 14px;
+      border-radius:999px;
+      background:rgba(102,201,244,.18);
+      color:#24507d;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:12px;
+    }
+    .intro h1{
+      margin:0 0 10px;
+      font-size:clamp(2.1rem, 4vw, 3.6rem);
+      line-height:1.02;
+      letter-spacing:-.04em;
+    }
+    .intro p{
+      margin:0;
+      font-size:16px;
+      line-height:1.7;
+      color:var(--text);
+      font-weight:500;
+    }
+
+    .notebook{
+      position:relative;
+      padding-top:34px;
+    }
+    .notebook-tabs{
+      display:flex;
+      gap:10px;
+      overflow-x:auto;
+      padding:0 18px;
+      position:relative;
+      z-index:2;
+      scrollbar-width:none;
+    }
+    .notebook-tabs::-webkit-scrollbar{ display:none; }
+    .notebook-tab{
+      appearance:none;
+      border:0;
+      font:inherit;
+      font-size:15px;
+      font-weight:700;
+      color:var(--navy);
+      background:linear-gradient(180deg, var(--sky-soft) 0%, var(--sky-soft-2) 100%);
+      padding:16px 22px 15px;
+      border-radius:20px 20px 0 0;
+      cursor:pointer;
+      white-space:nowrap;
+      position:relative;
+      top:8px;
+      box-shadow:inset 0 0 0 1px rgba(16,34,70,.06);
+      transition:top .16s ease, box-shadow .16s ease, background .16s ease, color .16s ease;
+    }
+    .notebook-tab:hover{
+      top:4px;
+      background:linear-gradient(180deg, #def2ff 0%, #cbe9fd 100%);
+    }
+    .notebook-tab[aria-selected="true"]{
+      top:0;
+      background:#fff;
+      color:#0b2748;
+      font-weight:800;
+      box-shadow:0 -4px 0 #fff, 0 14px 26px rgba(16,34,70,.10);
+      z-index:3;
+    }
+    .notebook-tab[aria-selected="true"]::after{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:-12px;
+      height:16px;
+      background:#fff;
+    }
+
+    .notebook-panel-wrap{
+      background:linear-gradient(180deg, #ffffff 0%, #f9fcff 100%);
+      border:1px solid var(--line);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow);
+      padding:30px;
+      position:relative;
+      overflow:hidden;
+    }
+    .notebook-panel-wrap::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:var(--radius-xl);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.85);
+      pointer-events:none;
+    }
+    .notebook-panel[hidden]{ display:none; }
+    .panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:16px;
+      padding-bottom:20px;
+      margin-bottom:20px;
+      border-bottom:1px solid var(--line);
+    }
+    .eyebrow{
+      margin:0 0 8px;
+      font-size:12px;
+      line-height:1;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:#4d84b7;
+    }
+    .panel-head h2{
+      margin:0 0 8px;
+      font-size:clamp(1.8rem, 2.4vw, 2.5rem);
+      line-height:1.05;
+      letter-spacing:-.03em;
+    }
+    .panel-head p{
+      margin:0;
+      color:var(--text);
+      font-size:14px;
+      line-height:1.6;
+      font-weight:600;
+      max-width:720px;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      min-height:40px;
+      padding:0 14px;
+      border-radius:999px;
+      background:linear-gradient(135deg, var(--navy) 0%, var(--navy-soft) 100%);
+      color:#fff;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.02em;
+      white-space:nowrap;
+      box-shadow:0 10px 20px rgba(16,34,70,.15);
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:14px;
+      margin-bottom:18px;
+    }
+    .stat{
+      background:#eef7ff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:14px;
+    }
+    .stat strong{
+      display:block;
+      margin-bottom:6px;
+      font-size:28px;
+      line-height:1;
+    }
+    .stat span{
+      display:block;
+      font-size:13px;
+      line-height:1.35;
+      color:var(--text);
+      font-weight:700;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:16px;
+    }
+    .card{
+      display:flex;
+      flex-direction:column;
+      min-height:100%;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:var(--radius-lg);
+      overflow:hidden;
+      box-shadow:0 10px 24px rgba(16,34,70,.07);
+    }
+    .card img{
+      width:100%;
+      height:188px;
+      object-fit:cover;
+      background:#dce9f9;
+      border-bottom:1px solid var(--line);
+    }
+    .card-body{
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      flex:1;
+    }
+    .card h3{
+      margin:0;
+      font-size:18px;
+      line-height:1.22;
+    }
+    .card p{
+      margin:0;
+      font-size:13px;
+      line-height:1.55;
+      color:var(--text);
+      font-weight:600;
+      flex:1;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      min-height:30px;
+      width:max-content;
+      padding:0 10px;
+      border-radius:999px;
+      background:#eaf5ff;
+      color:#24507d;
+      font-size:12px;
+      font-weight:800;
+    }
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:0 14px;
+      border-radius:999px;
+      text-decoration:none;
+      font-size:14px;
+      font-weight:700;
+      transition:transform .16s ease;
+    }
+    .btn:hover{ transform:translateY(-2px); }
+    .btn-primary{
+      background:linear-gradient(135deg, #66c9f4 0%, #43b8ef 100%);
+      color:#fff;
+      box-shadow:0 10px 18px rgba(67,184,239,.20);
+    }
+    .btn-secondary{
+      background:#fff;
+      border:1px solid #cfd7ef;
+      color:var(--navy);
+    }
+
+    @media (max-width:1050px){
+      .grid{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+    }
+    @media (max-width:860px){
+      .panel-head{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .stats{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+    }
+    @media (max-width:680px){
+      .demo{ width:min(100% - 20px, 1320px); padding:34px 0 40px; }
+      .notebook{ padding-top:24px; }
+      .notebook-tabs{ padding:0 10px; }
+      .notebook-tab{
+        padding:14px 18px 13px;
+        font-size:14px;
+      }
+      .notebook-panel-wrap{ padding:20px; }
+      .grid{ grid-template-columns:1fr; }
+      .stats{ grid-template-columns:1fr; }
+      .card img{ height:172px; }
+      .actions{ flex-direction:column; }
+      .btn{ width:100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="demo">
+    <header class="intro">
+      <div class="kicker">Notebook Style Demo</div>
+      <h1>Horizontal tabs that feel like notebook dividers across the top</h1>
+      <p>This version pushes the category tabs to the top edge of the content panel so the entire section reads more like an organized notebook or binder insert.</p>
+    </header>
+
+    <section class="notebook" aria-label="Notebook style teacher library">
+      <div class="notebook-tabs" role="tablist" aria-label="Library categories">
+        <button class="notebook-tab" id="h-tab-math" type="button" role="tab" aria-selected="true" aria-controls="h-panel-math">Math Generators</button>
+        <button class="notebook-tab" id="h-tab-reading" type="button" role="tab" aria-selected="false" aria-controls="h-panel-reading" tabindex="-1">Reading Generators</button>
+        <button class="notebook-tab" id="h-tab-games" type="button" role="tab" aria-selected="false" aria-controls="h-panel-games" tabindex="-1">Printable Games</button>
+        <button class="notebook-tab" id="h-tab-slides" type="button" role="tab" aria-selected="false" aria-controls="h-panel-slides" tabindex="-1">Slides &amp; Songs</button>
+        <button class="notebook-tab" id="h-tab-popular" type="button" role="tab" aria-selected="false" aria-controls="h-panel-popular" tabindex="-1">New &amp; Popular</button>
+      </div>
+
+      <div class="notebook-panel-wrap">
+        <section class="notebook-panel" id="h-panel-math" role="tabpanel" aria-labelledby="h-tab-math">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Most Important for Conversion</p>
+              <h2>Math generators with the clearest, quickest teacher value</h2>
+              <p>Top tabs make the whole library feel like one organized notebook, while the math panel leads with the strongest join signal: fresh intervention practice whenever teachers need it.</p>
+            </div>
+            <div class="badge">12 math generators</div>
+          </div>
+          <div class="stats">
+            <div class="stat"><strong>12</strong><span>Math generators across key intervention skills</span></div>
+            <div class="stat"><strong>Fast</strong><span>Fresh printable practice in seconds</span></div>
+            <div class="stat"><strong>Visual</strong><span>Scaffolds and models already built in</span></div>
+            <div class="stat"><strong>Flexible</strong><span>Useful for groups, centers, and homework</span></div>
+          </div>
+          <div class="grid">
+            <article class="card">
+              <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049e186383c509dc54f.png" alt="Math generators preview" />
+              <div class="card-body">
+                <h3>Addition and Subtraction</h3>
+                <p>Create computation pages with visual support and differentiated formats for intervention blocks.</p>
+                <span class="chip">Unlimited fresh practice</span>
+                <div class="actions">
+                  <a class="btn btn-primary" href="./math-generators-preview.html">Open Preview</a>
+                  <a class="btn btn-secondary" href="./addition-generator-preview.html">See Example</a>
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/674515a001f2194ec471bb64.png" alt="Multiplication preview" />
+              <div class="card-body">
+                <h3>Multiplication and Division</h3>
+                <p>Show the depth of the library with previews that make harder math feel more structured and easier to teach.</p>
+                <span class="chip">High-support intervention</span>
+                <div class="actions">
+                  <a class="btn btn-primary" href="./multiplication-preview.html">View Multiplication</a>
+                  <a class="btn btn-secondary" href="./long-division-scaffolded-generator-preview.html">Long Division</a>
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b5d5571dd46.png" alt="Math tools preview" />
+              <div class="card-body">
+                <h3>Coins, Ten Frames, and Games</h3>
+                <p>Round out the offer with versatile formats that feel useful for centers and quick intervention wins.</p>
+                <span class="chip">Engaging printable variety</span>
+                <div class="actions">
+                  <a class="btn btn-primary" href="./counting-coins-generator-preview.html">Coins Preview</a>
+                  <a class="btn btn-secondary" href="./ten-frame-preview.html">Ten Frames</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="notebook-panel" id="h-panel-reading" role="tabpanel" aria-labelledby="h-tab-reading" hidden>
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Science Of Reading</p>
+              <h2>Reading generators that work like a coordinated intervention notebook</h2>
+              <p>The horizontal tabs help the reading side feel grouped and intentional, with each category reading like a labeled section in one premium teacher binder.</p>
+            </div>
+            <div class="badge">7 reading generators</div>
+          </div>
+          <div class="stats">
+            <div class="stat"><strong>SOR</strong><span>Aligned to explicit decoding routines</span></div>
+            <div class="stat"><strong>7</strong><span>Reading generators across phonics and spelling</span></div>
+            <div class="stat"><strong>Quick</strong><span>Print-and-teach small-group materials</span></div>
+            <div class="stat"><strong>Repeatable</strong><span>Fresh practice for the same target skill</span></div>
+          </div>
+          <div class="grid">
+            <article class="card">
+              <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530e18638d0cfa07bbe.png" alt="Fluency grid preview" />
+              <div class="card-body">
+                <h3>Fluency Grid Generator</h3>
+                <p>Build repeated-reading practice that improves automaticity without rebuilding materials by hand.</p>
+                <span class="chip">Targeted decoding fluency</span>
+                <div class="actions">
+                  <a class="btn btn-primary" href="./fluencygridpreview.html">Open Preview</a>
+                  <a class="btn btn-secondary" href="./sor-generators-preview.html">All Reading Tools</a>
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b07d871dd47.png" alt="Word mapping preview" />
+              <div class="card-body">
+                <h3>Word Mapping and Word Ladders</h3>
+                <p>Communicate depth by showing that phonics instruction is supported by more than one printable routine.</p>
+                <span class="chip">Structured phoneme-grapheme work</span>
+                <div class="actions">
+                  <a class="btn btn-primary" href="./wordmap2preview.html">Word Mapping</a>
+                  <a class="btn btn-secondary" href="./sor-generators-preview.html">Word Ladder Tools</a>
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c53098efbd78ecbbad10.png" alt="Spelling supports preview" />
+              <div class="card-body">
+                <h3>Pyramid Spelling and Picture Support</h3>
+                <p>Use spelling routines and visual supports to make the reading offer feel broader and more premium.</p>
+                <span class="chip">Printables that reinforce patterns</span>
+                <div class="actions">
+                  <a class="btn btn-primary" href="./pyramid-spelling-generator-preview.html">Pyramid Spelling</a>
+                  <a class="btn btn-secondary" href="./spelling-with-pictures-generator-preview.html">Picture Spelling</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="notebook-panel" id="h-panel-games" role="tabpanel" aria-labelledby="h-tab-games" hidden>
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Printable Games</p>
+              <h2>Game-style printables that still feel organized and instructional</h2>
+              <p>The top tab treatment makes the section feel even more like labeled notebook dividers, which works especially well for game categories and print-and-go formats.</p>
+            </div>
+            <div class="badge">Low-prep printable games</div>
+          </div>
+          <div class="stats">
+            <div class="stat"><strong>Centers</strong><span>Fast setup for rotations and stations</span></div>
+            <div class="stat"><strong>Pairs</strong><span>Easy partner practice with repeated trials</span></div>
+            <div class="stat"><strong>Math</strong><span>Game formats beyond plain worksheets</span></div>
+            <div class="stat"><strong>Reading</strong><span>Decoding practice with more energy</span></div>
+          </div>
+          <div class="grid">
+            <article class="card">
+              <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b5d5571dd46.png" alt="Math tic tac toe preview" />
+              <div class="card-body">
+                <h3>Math Tic Tac Toe</h3>
+                <p>Add engagement without giving up skill repetition for basic facts and intervention review.</p>
+                <span class="chip">Great for quick-win stations</span>
+                <div class="actions">
+                  <a class="btn btn-primary" href="./math-tic-tac-toe-generator-preview.html">View Math Game</a>
+                  <a class="btn btn-secondary" href="./math-roll-and-read-generator-preview.html">Roll and Read</a>
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b07d871dd47.png" alt="Reading tic tac toe preview" />
+              <div class="card-body">
+                <h3>Reading Tic Tac Toe</h3>
+                <p>Keep decoding practice varied while staying tightly aligned to the target pattern or concept.</p>
+                <span class="chip">High-repeat phonics game</span>
+                <div class="actions">
+                  <a class="btn btn-primary" href="./tictacpreview.html">Open Preview</a>
+                  <a class="btn btn-secondary" href="./roll-and-read-generator-preview.html">Roll and Read</a>
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049e186383c509dc54f.png" alt="Printable games collection preview" />
+              <div class="card-body">
+                <h3>Mix-and-Match Practice Formats</h3>
+                <p>Pair generators with printable games so the same skill can move across direct teaching and independent review.</p>
+                <span class="chip">Feels like a full toolkit</span>
+                <div class="actions">
+                  <a class="btn btn-primary" href="./whats-inside-preview.html">View Inventory</a>
+                  <a class="btn btn-secondary" href="./home-preview-generators-first-tabbed.html">See Vertical Version</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="notebook-panel" id="h-panel-slides" role="tabpanel" aria-labelledby="h-tab-slides" hidden>
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Slides And Songs</p>
+              <h2>Resources that make the library feel like a full teacher notebook</h2>
+              <p>This direction may be the strongest notebook metaphor because the tabs sit right on top of the panel, like labeled dividers for slides, songs, games, and generators.</p>
+            </div>
+            <div class="badge">Slides plus songs</div>
+          </div>
+          <div class="stats">
+            <div class="stat"><strong>29</strong><span>Song downloads already previewed</span></div>
+            <div class="stat"><strong>Slides</strong><span>Projectable supports for instruction</span></div>
+            <div class="stat"><strong>Visual</strong><span>Model first, then practice independently</span></div>
+            <div class="stat"><strong>Premium</strong><span>Signals a full resource ecosystem</span></div>
+          </div>
+          <div class="grid">
+            <article class="card">
+              <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530e18638d0cfa07bbe.png" alt="Fluency slides preview" />
+              <div class="card-body">
+                <h3>Fluency and Blending Slides</h3>
+                <p>Use slides to model the routine before students move into independent generator practice.</p>
+                <span class="chip">Whole-group to small-group flow</span>
+                <div class="actions">
+                  <a class="btn btn-primary" href="./fluencygridpreview.html">See Fluency</a>
+                  <a class="btn btn-secondary" href="./phonics-comics-preview.html">Reading Extras</a>
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049e186383c509dc54f.png" alt="Math songs preview" />
+              <div class="card-body">
+                <h3>Math Songs With Printables</h3>
+                <p>Reinforce concepts through routines students can remember, then follow up with printable practice.</p>
+                <span class="chip">Audio plus printable support</span>
+                <div class="actions">
+                  <a class="btn btn-primary" href="./math-song-preview.html">Preview Songs</a>
+                  <a class="btn btn-secondary" href="./whats-inside-preview.html">See What’s Inside</a>
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b07d871dd47.png" alt="Reading supports preview" />
+              <div class="card-body">
+                <h3>Comics and Reading Supports</h3>
+                <p>Use visual reading resources to make the offer feel richer and more classroom-ready.</p>
+                <span class="chip">Multiple ways to teach one skill</span>
+                <div class="actions">
+                  <a class="btn btn-primary" href="./phonics-comics-preview.html">Open Comics</a>
+                  <a class="btn btn-secondary" href="./home-preview-tabbed-library-demo.html">See Side Tabs</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="notebook-panel" id="h-panel-popular" role="tabpanel" aria-labelledby="h-tab-popular" hidden>
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">New And Popular</p>
+              <h2>A top-tab layout that feels closest to a premium notebook or binder</h2>
+              <p>If you want the strongest notebook metaphor, this is probably the better direction than the left-side tabs. It reads like labeled sections in a polished teacher planning binder.</p>
+            </div>
+            <div class="badge">Best notebook feel</div>
+          </div>
+          <div class="stats">
+            <div class="stat"><strong>19</strong><span>Customizable generators across subjects</span></div>
+            <div class="stat"><strong>48+</strong><span>Previewed printable math resources</span></div>
+            <div class="stat"><strong>200+</strong><span>Reading supports, slides, and printables</span></div>
+            <div class="stat"><strong>29</strong><span>Song downloads in the membership</span></div>
+          </div>
+          <div class="grid">
+            <article class="card">
+              <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049e186383c509dc54f.png" alt="Popular math resources preview" />
+              <div class="card-body">
+                <h3>Most Popular: Math Generators</h3>
+                <p>Teachers instantly understand the value of generating fresh practice instead of buying a single static worksheet pack.</p>
+                <span class="chip">Strongest quick-scan value</span>
+                <div class="actions">
+                  <a class="btn btn-primary" href="./math-generators-preview.html">Try Math</a>
+                  <a class="btn btn-secondary" href="./home-preview-generators-first-tabbed.html">Homepage Version</a>
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530e18638d0cfa07bbe.png" alt="Popular reading tools preview" />
+              <div class="card-body">
+                <h3>Reading Tools Teachers Reuse</h3>
+                <p>Fluency, mapping, and spelling routines show that the reading side of the membership has real repeat-use value.</p>
+                <span class="chip">Strong SOR story</span>
+                <div class="actions">
+                  <a class="btn btn-primary" href="./sor-generators-preview.html">See Reading</a>
+                  <a class="btn btn-secondary" href="./home-preview-tabbed-library-demo.html">Side Tabs Version</a>
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <img src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b07d871dd47.png" alt="Full resource library preview" />
+              <div class="card-body">
+                <h3>Best Premium Signal: Full Library</h3>
+                <p>Games, songs, slides, and printables make the membership feel broad, polished, and much easier to justify.</p>
+                <span class="chip">Broadest perceived value</span>
+                <div class="actions">
+                  <a class="btn btn-primary" href="./whats-inside-preview.html">Browse Library</a>
+                  <a class="btn btn-secondary" href="./home-preview-horizontal-notebook-tabs-demo.html">This Version</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      const root = document.querySelector('.notebook');
+      if (!root) return;
+      const tabs = Array.from(root.querySelectorAll('[role="tab"]'));
+      const panels = Array.from(root.querySelectorAll('[role="tabpanel"]'));
+
+      const activate = (tab) => {
+        const targetId = tab.getAttribute('aria-controls');
+        tabs.forEach((item) => {
+          const selected = item === tab;
+          item.setAttribute('aria-selected', selected ? 'true' : 'false');
+          item.tabIndex = selected ? 0 : -1;
+        });
+        panels.forEach((panel) => {
+          panel.hidden = panel.id !== targetId;
+        });
+      };
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => activate(tab));
+        tab.addEventListener('keydown', (event) => {
+          const key = event.key;
+          if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) return;
+          event.preventDefault();
+
+          let nextIndex = index;
+          if (key === 'Home') nextIndex = 0;
+          if (key === 'End') nextIndex = tabs.length - 1;
+          if (key === 'ArrowLeft' || key === 'ArrowUp') nextIndex = (index - 1 + tabs.length) % tabs.length;
+          if (key === 'ArrowRight' || key === 'ArrowDown') nextIndex = (index + 1) % tabs.length;
+
+          tabs[nextIndex].focus();
+          activate(tabs[nextIndex]);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
