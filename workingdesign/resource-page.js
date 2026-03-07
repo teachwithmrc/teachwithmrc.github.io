@@ -30,7 +30,7 @@
       style.id = "workingdesign-resource-overrides";
       style.textContent =
         "html,body{margin:0!important;padding:0!important;overflow:visible!important;height:auto!important;min-height:0!important;}" +
-        ".top-cta-wrap,.is-ticker,.is-nav,.head,.subtitle,.promo-note,.controls-note,.is-page-hero{display:none!important;}" +
+        ".top-cta-wrap,.is-ticker,.is-nav,.is-side-stack,.is-mobile-quick-nav,.is-unified-join,.head,.subtitle,.promo-note,.controls-note,.is-page-hero{display:none!important;}" +
         ".wrap{max-width:none!important;margin:0!important;padding:0!important;}" +
         ".is-home-sections .is-layout{grid-template-columns:1fr!important;}" +
         ".is-main{min-width:0!important;width:100%!important;}" +
