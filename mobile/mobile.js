@@ -112,6 +112,9 @@
   const categoryLinks = Array.from(document.querySelectorAll("[data-category]"));
   const laneLinks = Array.from(document.querySelectorAll("[data-lane]"));
   const homeLinks = Array.from(document.querySelectorAll("[data-view='home']"));
+  const topBar = document.querySelector(".top-cta-bar");
+  const valueBanner = document.querySelector(".is-value-banner");
+  const navEl = document.querySelector(".is-nav");
 
   if (!homePanel || !browserPanel || !lanePanel || !pickerEl || !viewport || !frame || !titleEl || !kickerEl || !laneKickerEl || !laneTitleEl || !laneSupportEl || !laneGridEl) {
     return;
@@ -218,12 +221,43 @@
     setActiveState(laneLinks, function (link) {
       return currentView === "lane" && link.dataset.lane === currentLaneId;
     });
+
+    const activeNavLink = document.querySelector(".is-nav-link--feature.is-current");
+    if (activeNavLink && activeNavLink.scrollIntoView) {
+      activeNavLink.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
+    }
   }
 
   function renderPanels() {
     homePanel.hidden = currentView !== "home";
     browserPanel.hidden = currentView !== "browser";
     lanePanel.hidden = currentView !== "lane";
+  }
+
+  function activePanel() {
+    if (currentView === "browser") {
+      return browserPanel;
+    }
+    if (currentView === "lane") {
+      return lanePanel;
+    }
+    return homePanel;
+  }
+
+  function topOffset() {
+    const topBarHeight = topBar ? topBar.offsetHeight : 0;
+    const bannerHeight = valueBanner ? valueBanner.offsetHeight : 0;
+    const navHeight = navEl ? navEl.offsetHeight : 0;
+    return Math.min(220, topBarHeight + bannerHeight + Math.min(navHeight, 86) + 12);
+  }
+
+  function scrollToActivePanel(behavior) {
+    const panel = activePanel();
+    if (!panel) {
+      return;
+    }
+    const targetTop = Math.max(0, window.scrollY + panel.getBoundingClientRect().top - topOffset());
+    window.scrollTo({ top: targetTop, behavior: behavior || "auto" });
   }
 
   function renderPicker() {
@@ -415,6 +449,15 @@
     window.setTimeout(fitFrame, 1400);
   }
 
+  function schedulePanelScroll(behavior) {
+    window.requestAnimationFrame(function () {
+      scrollToActivePanel(behavior);
+    });
+    window.setTimeout(function () {
+      scrollToActivePanel(behavior);
+    }, 140);
+  }
+
   function renderHome() {
     document.title = "Intervention Station | Generator Preview Home";
   }
@@ -442,7 +485,7 @@
     currentView = "home";
     render();
     setHash();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    schedulePanelScroll("smooth");
   }
 
   function openCategory(categoryId, itemId) {
@@ -458,7 +501,7 @@
     currentItemId = item ? item.id : category.items[0].id;
     render();
     setHash();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    schedulePanelScroll("smooth");
   }
 
   function openLane(laneId) {
@@ -469,7 +512,7 @@
     currentLaneId = laneId;
     render();
     setHash();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    schedulePanelScroll("smooth");
   }
 
   homeLinks.forEach(function (link) {
@@ -522,6 +565,7 @@
   window.addEventListener("hashchange", function () {
     parseHash();
     render();
+    schedulePanelScroll("auto");
   });
 
   if (window.ResizeObserver) {
@@ -592,4 +636,5 @@
 
   parseHash();
   render();
+  schedulePanelScroll("auto");
 })();

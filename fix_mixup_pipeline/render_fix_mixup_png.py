@@ -73,7 +73,7 @@ def draw_text_centered(
     min_size: int,
 ) -> None:
     x1, y1, x2, y2 = box
-    fnt = fit_font(draw, text, font_path, max_size, min_size, x2 - x1 - 12, y2 - y1 - 8)
+    fnt = fit_font(draw, text, font_path, max_size, min_size, x2 - x1 - 6, y2 - y1 - 6)
     bbox = draw.textbbox((0, 0), text, font=fnt)
     w = bbox[2] - bbox[0]
     h = bbox[3] - bbox[1]
@@ -309,11 +309,11 @@ def draw_row(
     top_h = 116
     text_boxes = row["text_boxes"]
 
-    measure_font = font(FONT_TEXT, 46)
+    measure_font = font(FONT_TEXT, 52)
     weights = []
     for text in text_boxes:
         bbox = draw.textbbox((0, 0), text, font=measure_font)
-        weights.append(max(1, bbox[2] - bbox[0] + 52))
+        weights.append(max(1, bbox[2] - bbox[0] + 34))
 
     total_gap = gap * 2
     available_w = (rx2 - rx1) - total_gap
@@ -325,7 +325,7 @@ def draw_row(
     for idx, text in enumerate(text_boxes):
         box = (bx, ry1, bx + widths[idx], ry1 + top_h)
         draw.rounded_rectangle(box, radius=22, outline=BLACK, width=4, fill=WHITE)
-        draw_text_centered(draw, box, text, FONT_TEXT, 52, 26)
+        draw_text_centered(draw, box, text, FONT_TEXT, 62, 28)
         bx += widths[idx] + gap
 
     lines_box = (rx1, ry1 + top_h + 18, rx2, ry2)
