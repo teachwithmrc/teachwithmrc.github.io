@@ -1,0 +1,53 @@
+{
+  "worksheet_title": "Fix the Mix-Up",
+  "skill_line": "Skill: R-Controlled Vowels",
+  "directions": "Read the words and write the sentence about the picture. Remember to start with a capital letter and end with punctuation.",
+  "rows": [
+    {
+      "text_boxes": [
+        "was by",
+        "the barn.",
+        "The bird"
+      ],
+      "scene_assets": [
+        {
+          "stem": "barn",
+          "x": 0.64,
+          "y": 0.90,
+          "scale": 0.54,
+          "z": 0
+        },
+        {
+          "stem": "bird",
+          "x": 0.24,
+          "y": 0.84,
+          "scale": 0.52,
+          "z": 1
+        }
+      ]
+    },
+    {
+      "text_boxes": [
+        "had the",
+        "corn.",
+        "The horse"
+      ],
+      "scene_assets": [
+        {
+          "stem": "horse",
+          "x": 0.28,
+          "y": 0.92,
+          "scale": 0.60,
+          "z": 0
+        },
+        {
+          "stem": "corn",
+          "x": 0.72,
+          "y": 0.88,
+          "scale": 0.40,
+          "z": 1
+        }
+      ]
+    }
+  ]
+}

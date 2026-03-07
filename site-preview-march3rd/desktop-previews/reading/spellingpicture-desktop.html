@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Spelling Generator Preview - Desktop</title>
-<script src="../../../ladder/newtry_FULL.js" defer></script>
+<script src="https://teachwithmrc.github.io/newtry_FULL.js" defer></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   @font-face { font-family:'BoxesFont'; src:url('https://teachwithmrc.github.io/fonts/boxes2.otf') format('opentype'); }
@@ -200,7 +200,7 @@
   const outputEl = document.getElementById('output');
   const btnGenerate = document.getElementById('btnGenerate');
   const btnPrint = document.getElementById('btnPrint');
-  const RAW_IMAGE_BASE = 'https://raw.githubusercontent.com/teachwithmrc/teachwithmrc.github.io/main/images/';
+  const RAW_IMAGE_BASE = 'https://teachwithmrc.github.io/images/';
   const PATTERN_OVERRIDES = {
     chirp: '221',
     churp: '221'
@@ -250,7 +250,6 @@
     const sources = [
       '../../../ladder/jsonimages.json',
       '../../jsonimages.json',
-      'https://teachwithmrc.github.io/ladder/jsonimages.json',
       'https://teachwithmrc.github.io/jsonimages.json'
     ];
     for(const src of sources){
