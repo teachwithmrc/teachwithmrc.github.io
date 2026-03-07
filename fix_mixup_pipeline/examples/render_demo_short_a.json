@@ -5,53 +5,46 @@
     {
       "text_boxes": [
         "at the",
-        "big map.",
+        "big log.",
         "The cat sat"
       ],
       "scene_assets": [
         {
-          "stem": "map",
-          "x": 0.40,
-          "y": 0.83,
-          "scale": 0.70,
+          "stem": "log",
+          "x": 0.50,
+          "y": 0.88,
+          "scale": 0.48,
           "z": 0
         },
         {
           "stem": "cat",
-          "x": 0.72,
-          "y": 0.88,
-          "scale": 0.42,
+          "x": 0.24,
+          "y": 0.90,
+          "scale": 0.56,
           "z": 1
         }
       ]
     },
     {
       "text_boxes": [
-        "a bag",
-        "and a cap.",
-        "Dad had"
+        "got a",
+        "hot pot.",
+        "Bob the Dog"
       ],
       "scene_assets": [
         {
-          "stem": "dad",
+          "stem": "dog",
           "x": 0.28,
-          "y": 0.88,
-          "scale": 0.58,
+          "y": 0.90,
+          "scale": 0.56,
           "z": 0
         },
         {
-          "stem": "bag",
-          "x": 0.62,
+          "stem": "pot",
+          "x": 0.68,
           "y": 0.90,
-          "scale": 0.40,
+          "scale": 0.44,
           "z": 1
-        },
-        {
-          "stem": "cap",
-          "x": 0.60,
-          "y": 0.46,
-          "scale": 0.18,
-          "z": 2
         }
       ]
     }

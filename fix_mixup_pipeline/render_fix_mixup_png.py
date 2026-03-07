@@ -9,6 +9,7 @@ call an image API.
 from __future__ import annotations
 
 import argparse
+from collections import deque
 import json
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
@@ -88,11 +89,62 @@ def trim_transparent(img: Image.Image) -> Image.Image:
     return img.crop(bbox) if bbox else img
 
 
+def color_distance(a: Tuple[int, int, int, int], b: Tuple[int, int, int, int]) -> int:
+    return sum(abs(int(a[idx]) - int(b[idx])) for idx in range(3))
+
+
+def remove_flat_background(img: Image.Image, tolerance: int = 24) -> Image.Image:
+    if img.mode != "RGBA":
+        img = img.convert("RGBA")
+
+    width, height = img.size
+    pixels = img.load()
+    corners = [
+        pixels[0, 0],
+        pixels[width - 1, 0],
+        pixels[0, height - 1],
+        pixels[width - 1, height - 1],
+    ]
+    ref = corners[0]
+    if not all(color_distance(ref, corner) <= tolerance for corner in corners[1:]):
+        return img
+
+    visited = set()
+    queue: deque[Tuple[int, int]] = deque()
+
+    for x in range(width):
+        queue.append((x, 0))
+        queue.append((x, height - 1))
+    for y in range(height):
+        queue.append((0, y))
+        queue.append((width - 1, y))
+
+    while queue:
+        x, y = queue.popleft()
+        if (x, y) in visited:
+            continue
+        visited.add((x, y))
+        current = pixels[x, y]
+        if current[3] == 0 or color_distance(current, ref) > tolerance:
+            continue
+        pixels[x, y] = (255, 255, 255, 0)
+        if x > 0:
+            queue.append((x - 1, y))
+        if x < width - 1:
+            queue.append((x + 1, y))
+        if y > 0:
+            queue.append((x, y - 1))
+        if y < height - 1:
+            queue.append((x, y + 1))
+
+    return img
+
+
 def load_asset(stem: str) -> Image.Image:
     for suffix in (".png", ".webp", ".jpg", ".jpeg"):
         path = IMAGE_DIR / f"{stem}{suffix}"
         if path.exists():
-            return trim_transparent(Image.open(path).convert("RGBA"))
+            return trim_transparent(remove_flat_background(Image.open(path).convert("RGBA")))
     raise FileNotFoundError(f"Missing asset for stem '{stem}' in {IMAGE_DIR}")
 
 

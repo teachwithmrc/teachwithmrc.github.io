@@ -5,9 +5,10 @@
   const frame = document.getElementById("resourceFrame");
   const navLinks = Array.from(document.querySelectorAll("[data-nav]"));
   const params = new URLSearchParams(window.location.search);
-  const lane = params.get("lane") || "";
-  const title = params.get("title") || "Resource Page";
-  const src = params.get("src") || "";
+  const pageConfig = window.WORKING_RESOURCE_PAGE || {};
+  const lane = params.get("lane") || pageConfig.lane || "";
+  const title = params.get("title") || pageConfig.title || "Resource Page";
+  const src = params.get("src") || pageConfig.src || "";
 
   function resolveSrc(path) {
     if (!path) {
