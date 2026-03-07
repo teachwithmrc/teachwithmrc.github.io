@@ -1,0 +1,30 @@
+{
+  "worksheet_title": "Fix the Mix-Up",
+  "skill_line": "Skill: Short I, HFW: to, do",
+  "skill_line_behavior": "match_reference",
+  "directions": "Read the words and write the sentence about the picture. Remember to start with a capital letter and end with punctuation.",
+  "rows": [
+    {
+      "text_boxes": [
+        "big fig.",
+        "Tim the kid",
+        "hid the"
+      ],
+      "answer_sentence": "Tim the kid hid the big fig.",
+      "image_brief": "A smiling boy crouching beside a leafy bush while holding or hiding a large fig.",
+      "asset_id": "row_1_scene",
+      "asset_hint": "fig"
+    },
+    {
+      "text_boxes": [
+        "Did the pig",
+        "do a",
+        "big jig?"
+      ],
+      "answer_sentence": "Did the pig do a big jig?",
+      "image_brief": "A happy pig dancing upright with simple musical notes around it.",
+      "asset_id": "row_2_scene",
+      "asset_hint": "pig"
+    }
+  ]
+}

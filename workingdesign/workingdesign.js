@@ -4,29 +4,29 @@
       id: "math-generators",
       label: "Math Generators",
       items: [
-        { id: "rounding", title: "Rounding", previewPath: "math/rounding-generator-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "addition", title: "Addition Generator", previewPath: "math/addition-graphic-organizer-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "subtraction", title: "Subtraction Generator", previewPath: "math/subtraction-graphic-organizer-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "multiplication", title: "Multiplication Generator", previewPath: "math/multiplication-graphic-organizer-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "partial-products", title: "Partial Products", previewPath: "math/partial-products-2x1-generator-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "long-division", title: "Long Division", previewPath: "math/divisionorganizermobile-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "long-division-scaffold", title: "Long Division Scaffold", previewPath: "math/long-division-colorcoded-generator-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "ten-frames", title: "Ten Frames", previewPath: "math/tenframes-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "coin-counter", title: "Coin Counter", previewPath: "math/coin-counter-generator-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "math-tic-tac-toe", title: "Math Tic Tac Toe", previewPath: "math/math-tictac-mobile-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 }
+        { id: "rounding", title: "Rounding", previewLocalPath: "../desktop-previews/math/rounding-generator-preview-desktop.html", previewWebPath: "/desktop-previews/math/rounding-generator-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "addition", title: "Addition Generator", previewLocalPath: "../desktop-previews/math/addition-graphic-organizer-preview-desktop.html", previewWebPath: "/desktop-previews/math/addition-graphic-organizer-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "subtraction", title: "Subtraction Generator", previewLocalPath: "../desktop-previews/math/subtraction-graphic-organizer-preview-desktop.html", previewWebPath: "/desktop-previews/math/subtraction-graphic-organizer-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "multiplication", title: "Multiplication Generator", previewLocalPath: "../desktop-previews/math/multiplication-graphic-organizer-preview-desktop.html", previewWebPath: "/desktop-previews/math/multiplication-graphic-organizer-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "partial-products", title: "Partial Products", previewLocalPath: "../desktop-previews/math/partial-products-2x1-generator-preview-desktop.html", previewWebPath: "/desktop-previews/math/partial-products-2x1-generator-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "long-division", title: "Long Division", previewLocalPath: "../desktop-previews/math/divisionorganizermobile-desktop.html", previewWebPath: "/desktop-previews/math/divisionorganizermobile-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "long-division-scaffold", title: "Long Division Scaffold", previewLocalPath: "../desktop-previews/math/long-division-colorcoded-generator-preview-desktop.html", previewWebPath: "/desktop-previews/math/long-division-colorcoded-generator-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "ten-frames", title: "Ten Frames", previewLocalPath: "../desktop-previews/math/tenframes-preview-desktop.html", previewWebPath: "/desktop-previews/math/tenframes-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "coin-counter", title: "Coin Counter", previewLocalPath: "../desktop-previews/math/coin-counter-generator-preview-desktop.html", previewWebPath: "/desktop-previews/math/coin-counter-generator-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "math-tic-tac-toe", title: "Math Tic Tac Toe", previewLocalPath: "../desktop-previews/math/math-tictac-mobile-preview-desktop.html", previewWebPath: "/desktop-previews/math/math-tictac-mobile-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 }
       ]
     },
     {
       id: "sor-generators",
       label: "SOR Generators",
       items: [
-        { id: "fluency-grid", title: "Fluency Grid", previewPath: "reading/fluencygridpreview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "word-mapping", title: "Word Mapping", previewPath: "reading/wordmapmaster-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "word-ladder", title: "Word Ladder", previewPath: "reading/laddermobilepreview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "roll-and-read", title: "Roll and Read", previewPath: "reading/rollread-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "pyramid-spelling", title: "Pyramid Spelling", previewPath: "reading/pyramidpreview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "spelling-with-pictures", title: "Spelling With Pictures", previewPath: "reading/spellingpicture-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "reading-tic-tac-toe", title: "Reading Tic Tac Toe", previewPath: "reading/tic-tac-preview-march1st-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 }
+        { id: "fluency-grid", title: "Fluency Grid", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/fluencygridpreview-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/fluencygridpreview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "word-mapping", title: "Word Mapping", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/wordmapmaster-preview-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/wordmapmaster-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "word-ladder", title: "Word Ladder", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/laddermobilepreview-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/laddermobilepreview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "roll-and-read", title: "Roll and Read", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/rollread-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/rollread-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "pyramid-spelling", title: "Pyramid Spelling", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/pyramidpreview-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/pyramidpreview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "spelling-with-pictures", title: "Spelling With Pictures", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/spellingpicture-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/spellingpicture-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "reading-tic-tac-toe", title: "Reading Tic Tac Toe", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/tic-tac-preview-march1st-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/tic-tac-preview-march1st-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 }
       ]
     }
   ];
@@ -138,13 +138,13 @@
   }
 
   function resolvePreviewUrl(item) {
-    if (!item || !item.previewPath) {
+    if (!item) {
       return "";
     }
     if (window.location.protocol === "file:") {
-      return "../desktop-previews/" + item.previewPath;
+      return item.previewLocalPath || "";
     }
-    return "/desktop-previews/" + item.previewPath;
+    return item.previewWebPath || "";
   }
 
   function parseHash() {
