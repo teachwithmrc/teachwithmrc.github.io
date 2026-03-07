@@ -1,0 +1,59 @@
+{
+  "worksheet_title": "Fix the Mix-Up",
+  "directions": "Read the words and write the sentence about the picture. Remember to start with a capital letter and end with punctuation.",
+  "rows": [
+    {
+      "text_boxes": [
+        "at the",
+        "big map.",
+        "The cat sat"
+      ],
+      "scene_assets": [
+        {
+          "stem": "map",
+          "x": 0.40,
+          "y": 0.83,
+          "scale": 0.70,
+          "z": 0
+        },
+        {
+          "stem": "cat",
+          "x": 0.72,
+          "y": 0.88,
+          "scale": 0.42,
+          "z": 1
+        }
+      ]
+    },
+    {
+      "text_boxes": [
+        "a bag",
+        "and a cap.",
+        "Dad had"
+      ],
+      "scene_assets": [
+        {
+          "stem": "dad",
+          "x": 0.28,
+          "y": 0.88,
+          "scale": 0.58,
+          "z": 0
+        },
+        {
+          "stem": "bag",
+          "x": 0.62,
+          "y": 0.90,
+          "scale": 0.40,
+          "z": 1
+        },
+        {
+          "stem": "cap",
+          "x": 0.60,
+          "y": 0.46,
+          "scale": 0.18,
+          "z": 2
+        }
+      ]
+    }
+  ]
+}
