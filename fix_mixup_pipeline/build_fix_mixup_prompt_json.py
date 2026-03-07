@@ -77,7 +77,7 @@ def slugify(value: str) -> str:
     return slug or "row"
 
 
-def has_existing_asset(asset_name: str) -> bool:
+def has_related_asset(asset_name: str) -> bool:
     if not asset_name:
         return False
     for candidate in IMAGE_DIR.glob(f"{asset_name}.*"):
@@ -147,7 +147,10 @@ def build_reference_edit_prompt(data: Dict[str, Any]) -> str:
         "Use the supplied gold-standard worksheet page as the base image.",
         f'Keep the worksheet title as "{title}".',
         build_skill_line_instruction(skill_line, skill_line_behavior),
-        f'Keep the directions block text exactly as: "{directions}" unless the reference already uses this exact wording.',
+        (
+            f'Replace the directions block text with this exact wording while preserving its existing position, '
+            f'font style, and line-wrap behavior as closely as possible: "{directions}".'
+        ),
         "Change only the editable content areas: the left-side illustrations and the text inside the three sentence boxes for each row.",
     ]
     parts.extend(build_row_instruction(row, index) for index, row in enumerate(data["rows"], start=1))
@@ -176,8 +179,8 @@ def build_illustration_prompts(data: Dict[str, Any]) -> List[Dict[str, Any]]:
             {
                 "row_number": index,
                 "asset_id": row.get("asset_id", f"row_{index}_scene"),
-                "existing_asset_available": has_existing_asset(asset_hint),
-                "existing_asset_hint": asset_hint,
+                "related_asset_available": has_related_asset(asset_hint),
+                "related_asset_hint": asset_hint,
                 "prompt": f"{row['image_brief'].strip()} {ILLUSTRATION_STYLE_SUFFIX}",
                 "constraints": [
                     "Match the black-and-white worksheet line art style of the gold-standard examples.",

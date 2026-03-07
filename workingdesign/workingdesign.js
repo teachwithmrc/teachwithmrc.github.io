@@ -4,29 +4,29 @@
       id: "math-generators",
       label: "Math Generators",
       items: [
-        { id: "rounding", title: "Rounding", previewLocalPath: "../desktop-previews/math/rounding-generator-preview-desktop.html", previewWebPath: "/desktop-previews/math/rounding-generator-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "addition", title: "Addition Generator", previewLocalPath: "../desktop-previews/math/addition-graphic-organizer-preview-desktop.html", previewWebPath: "/desktop-previews/math/addition-graphic-organizer-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "subtraction", title: "Subtraction Generator", previewLocalPath: "../desktop-previews/math/subtraction-graphic-organizer-preview-desktop.html", previewWebPath: "/desktop-previews/math/subtraction-graphic-organizer-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "multiplication", title: "Multiplication Generator", previewLocalPath: "../desktop-previews/math/multiplication-graphic-organizer-preview-desktop.html", previewWebPath: "/desktop-previews/math/multiplication-graphic-organizer-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "partial-products", title: "Partial Products", previewLocalPath: "../desktop-previews/math/partial-products-2x1-generator-preview-desktop.html", previewWebPath: "/desktop-previews/math/partial-products-2x1-generator-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "long-division", title: "Long Division", previewLocalPath: "../desktop-previews/math/divisionorganizermobile-desktop.html", previewWebPath: "/desktop-previews/math/divisionorganizermobile-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "long-division-scaffold", title: "Long Division Scaffold", previewLocalPath: "../desktop-previews/math/long-division-colorcoded-generator-preview-desktop.html", previewWebPath: "/desktop-previews/math/long-division-colorcoded-generator-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "ten-frames", title: "Ten Frames", previewLocalPath: "../desktop-previews/math/tenframes-preview-desktop.html", previewWebPath: "/desktop-previews/math/tenframes-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "coin-counter", title: "Coin Counter", previewLocalPath: "../desktop-previews/math/coin-counter-generator-preview-desktop.html", previewWebPath: "/desktop-previews/math/coin-counter-generator-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "math-tic-tac-toe", title: "Math Tic Tac Toe", previewLocalPath: "../desktop-previews/math/math-tictac-mobile-preview-desktop.html", previewWebPath: "/desktop-previews/math/math-tictac-mobile-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 }
+        { id: "rounding", title: "Rounding", group: "Place Value / Coins", previewLocalPath: "../desktop-previews/math/rounding-generator-preview-desktop.html", previewWebPath: "/desktop-previews/math/rounding-generator-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "addition", title: "Addition Generator", group: "Operations", previewLocalPath: "../desktop-previews/math/addition-graphic-organizer-preview-desktop.html", previewWebPath: "/desktop-previews/math/addition-graphic-organizer-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "subtraction", title: "Subtraction Generator", group: "Operations", previewLocalPath: "../desktop-previews/math/subtraction-graphic-organizer-preview-desktop.html", previewWebPath: "/desktop-previews/math/subtraction-graphic-organizer-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "multiplication", title: "Multiplication Generator", group: "Operations", previewLocalPath: "../desktop-previews/math/multiplication-graphic-organizer-preview-desktop.html", previewWebPath: "/desktop-previews/math/multiplication-graphic-organizer-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "partial-products", title: "Partial Products", group: "Operations", previewLocalPath: "../desktop-previews/math/partial-products-2x1-generator-preview-desktop.html", previewWebPath: "/desktop-previews/math/partial-products-2x1-generator-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "long-division", title: "Long Division", group: "Operations", previewLocalPath: "../desktop-previews/math/divisionorganizermobile-desktop.html", previewWebPath: "/desktop-previews/math/divisionorganizermobile-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "long-division-scaffold", title: "Long Division Scaffold", group: "Operations", previewLocalPath: "../desktop-previews/math/long-division-colorcoded-generator-preview-desktop.html", previewWebPath: "/desktop-previews/math/long-division-colorcoded-generator-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "ten-frames", title: "Ten Frames", group: "Place Value / Coins", previewLocalPath: "../desktop-previews/math/tenframes-preview-desktop.html", previewWebPath: "/desktop-previews/math/tenframes-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "coin-counter", title: "Coin Counter", group: "Place Value / Coins", previewLocalPath: "../desktop-previews/math/coin-counter-generator-preview-desktop.html", previewWebPath: "/desktop-previews/math/coin-counter-generator-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "math-tic-tac-toe", title: "Math Tic Tac Toe", group: "Games", previewLocalPath: "../desktop-previews/math/math-tictac-mobile-preview-desktop.html", previewWebPath: "/desktop-previews/math/math-tictac-mobile-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 }
       ]
     },
     {
       id: "sor-generators",
       label: "SOR Generators",
       items: [
-        { id: "fluency-grid", title: "Fluency Grid", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/fluencygridpreview-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/fluencygridpreview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "word-mapping", title: "Word Mapping", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/wordmapmaster-preview-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/wordmapmaster-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "word-ladder", title: "Word Ladder", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/laddermobilepreview-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/laddermobilepreview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "roll-and-read", title: "Roll and Read", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/rollread-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/rollread-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "pyramid-spelling", title: "Pyramid Spelling", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/pyramidpreview-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/pyramidpreview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "spelling-with-pictures", title: "Spelling With Pictures", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/spellingpicture-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/spellingpicture-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
-        { id: "reading-tic-tac-toe", title: "Reading Tic Tac Toe", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/tic-tac-preview-march1st-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/tic-tac-preview-march1st-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 }
+        { id: "fluency-grid", title: "Fluency Grid", group: "Fluency", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/fluencygridpreview-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/fluencygridpreview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "word-mapping", title: "Word Mapping", group: "Word Work", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/wordmapmaster-preview-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/wordmapmaster-preview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "word-ladder", title: "Word Ladder", group: "Word Work", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/laddermobilepreview-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/laddermobilepreview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "roll-and-read", title: "Roll and Read", group: "Fluency", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/rollread-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/rollread-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "pyramid-spelling", title: "Pyramid Spelling", group: "Word Work", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/pyramidpreview-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/pyramidpreview-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "spelling-with-pictures", title: "Spelling With Pictures", group: "Word Work", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/spellingpicture-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/spellingpicture-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 },
+        { id: "reading-tic-tac-toe", title: "Reading Tic Tac Toe", group: "Games", previewLocalPath: "../site-preview-march3rd/desktop-previews/reading/tic-tac-preview-march1st-desktop.html", previewWebPath: "/site-preview-march3rd/desktop-previews/reading/tic-tac-preview-march1st-desktop.html", sourceWidth: 1360, fallbackHeight: 1320 }
       ]
     }
   ];
@@ -54,12 +54,12 @@
       title: "Reading collections teachers can open by routine",
       support: "Choose a reading collection to open its real page.",
       cards: [
-        { title: "Heart Words", description: "Target tricky high-frequency words with visual routines and practice.", href: "../site-preview-march3rd/heart-words-preview.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b5d5571dd46.png", meta: "Open page" },
-        { title: "Phonics Comics", description: "Decodable stories built around phonics patterns kids will actually read.", href: "../site-preview-march3rd/phonics-comics-preview.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530f8a93b0572969e8c.png", meta: "Open page" },
+        { title: "Heart Words", description: "Target tricky high-frequency words with visual routines and practice.", href: "../site-preview-march3rd/heart-words-preview.html", image: "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/699b9026590acb0206880125.png", meta: "Open page" },
+        { title: "Phonics Comics", description: "Decodable stories built around phonics patterns kids will actually read.", href: "../site-preview-march3rd/phonics-comics-preview.html", image: "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/699b902620c03569d0246b67.png", meta: "Open page" },
         { title: "Fix the Mix Up", description: "Sentence-level reading repair tasks with visual support.", href: "../site-preview-march3rd/fix-mixup-preview.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b07d871dd47.png", meta: "Open page" },
-        { title: "Blending Slides", description: "Small-group blending routines for repeated connected practice.", href: "../site-preview-march3rd/blending-slides-preview.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b07d871dd47.png", meta: "Open page" },
+        { title: "Blending Slides", description: "Small-group blending routines for repeated connected practice.", href: "../site-preview-march3rd/blending-slides-preview.html", image: "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/699b90264c8da27f66b69b66.png", meta: "Open page" },
         { title: "Phonics Mazes", description: "Visual discrimination and word reading practice around one target skill.", href: "../site-preview-march3rd/phonics-maze-preview.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b5d5571dd46.png", meta: "Open page" },
-        { title: "Pick the Pic", description: "Picture-supported decoding and meaning checks tied to phonics patterns.", href: "../site-preview-march3rd/pick-the-pic-preview.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b5d5571dd46.png", meta: "Open page" },
+        { title: "Pick the Pic", description: "Picture-supported decoding and meaning checks tied to phonics patterns.", href: "../site-preview-march3rd/pick-the-pic-preview.html", image: "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/699b902620c03545a1246b66.png", meta: "Open page" },
         { title: "HFW Pyramids", description: "Repeated high-frequency word practice in a fast printable format.", href: "../site-preview-march3rd/hfw-pyramid-preview.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530e18638d0cfa07bbe.png", meta: "Open page" },
         { title: "Spelling by Phonics Skill", description: "Spelling collections aligned to phonics patterns and intervention groups.", href: "../site-preview-march3rd/spelling-preview.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c530f8a93b0572969e8c.png", meta: "Open page" }
       ]
@@ -72,8 +72,7 @@
       cards: [
         { title: "Reading Games", description: "Reading game boards and interactive activities built around skills.", href: "../site-preview-march3rd/readinggames-preview.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b07d871dd47.png", meta: "Open page" },
         { title: "Math Games", description: "Math game boards and practice formats that keep repetition engaging.", href: "../site-preview-march3rd/math-game-board-preview.html", image: "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/674515a001f2194ec471bb64.png", meta: "Open page" },
-        { title: "More Games", description: "The wider game collection across subjects and routines.", href: "../site-preview-march3rd/games-preview.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c53098efbd78ecbbad10.png", meta: "Open page" },
-        { title: "Reading Game Modes", description: "Preview the larger interactive reading game mode collection.", href: "../site-preview-march3rd/ultimate_reading_game_modes_preview.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b5d5571dd46.png", meta: "Open page" }
+        { title: "More Games", description: "The wider game collection across subjects and routines.", href: "../site-preview-march3rd/games-preview.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c53098efbd78ecbbad10.png", meta: "Open page" }
       ]
     },
     {
@@ -83,9 +82,7 @@
       support: "Choose a song page to open its full preview.",
       cards: [
         { title: "Math Learning Songs", description: "Song-based math routines with matching printables and posters.", href: "../site-preview-march3rd/math-song-preview.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c53098efbd78ecbbad10.png", meta: "Open page" },
-        { title: "Skip Counting Song", description: "Skip counting support with a focused song page and matching resources.", href: "../site-preview-march3rd/skip-counting-song-preview.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c53098efbd78ecbbad10.png", meta: "Open page" },
-        { title: "Song Library", description: "Open the full songs overview and browse all current song pages.", href: "../site-preview-march3rd/learning-songs-preview.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049e186383c509dc54f.png", meta: "Open page" },
-        { title: "What's Inside", description: "See how songs fit into the wider Intervention Station membership.", href: "../site-preview-march3rd/whats-inside-preview.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049e186383c509dc54f.png", meta: "Open page" }
+        { title: "Science Learning Songs", description: "A new science song page for Water Cycle, Planets, and Photosynthesis tracks.", directHref: "./science-learning-songs.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049e186383c509dc54f.png", meta: "Open page" }
       ]
     }
   ];
@@ -145,6 +142,18 @@
       return item.previewLocalPath || "";
     }
     return item.previewWebPath || "";
+  }
+
+  function buildResourceHref(card) {
+    if (card.directHref) {
+      return card.directHref;
+    }
+    const params = new URLSearchParams({
+      lane: currentLaneId,
+      title: card.title,
+      src: card.href
+    });
+    return "./resource-page.html?" + params.toString();
   }
 
   function parseHash() {
@@ -218,23 +227,52 @@
     const category = currentCategory();
     pickerEl.innerHTML = "";
 
+    const groups = [];
     category.items.forEach(function (item) {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "is-generator-option";
-      if (item.id === currentItemId) {
-        button.classList.add("is-active");
-      }
-      button.textContent = item.title;
-      button.addEventListener("click", function () {
-        if (item.id === currentItemId) {
-          return;
-        }
-        currentItemId = item.id;
-        render();
-        setHash();
+      const groupName = item.group || "More";
+      let group = groups.find(function (entry) {
+        return entry.name === groupName;
       });
-      pickerEl.appendChild(button);
+      if (!group) {
+        group = { name: groupName, items: [] };
+        groups.push(group);
+      }
+      group.items.push(item);
+    });
+
+    groups.forEach(function (group) {
+      const section = document.createElement("section");
+      section.className = "is-generator-group";
+
+      const label = document.createElement("h2");
+      label.className = "is-generator-group-label";
+      label.textContent = group.name;
+
+      const options = document.createElement("div");
+      options.className = "is-generator-group-options";
+
+      group.items.forEach(function (item) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "is-generator-option";
+        if (item.id === currentItemId) {
+          button.classList.add("is-active");
+        }
+        button.textContent = item.title;
+        button.addEventListener("click", function () {
+          if (item.id === currentItemId) {
+            return;
+          }
+          currentItemId = item.id;
+          render();
+          setHash();
+        });
+        options.appendChild(button);
+      });
+
+      section.appendChild(label);
+      section.appendChild(options);
+      pickerEl.appendChild(section);
     });
   }
 
@@ -265,7 +303,7 @@
     lane.cards.forEach(function (card) {
       const anchor = document.createElement("a");
       anchor.className = "is-lane-card";
-      anchor.href = card.href;
+      anchor.href = buildResourceHref(card);
 
       const image = document.createElement("img");
       image.className = "is-lane-card__media";
