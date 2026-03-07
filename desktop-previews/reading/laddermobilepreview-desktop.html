@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>R-Controlled Word Ladders</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    @font-face {
+      font-family: "BoxesFont";
+      src: url("https://teachwithmrc.github.io/fonts/boxes2.otf") format("opentype");
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "UnderlineFont";
+      src: url("https://teachwithmrc.github.io/fonts/underlines.otf") format("opentype");
+      font-display: swap;
+    }
+
+    :root {
+      --line: #111;
+      --bg: #f6f8fc;
+      --panel: #fff;
+      --accent: #1976d2;
+      --text: #1f365f;
+      --muted: #35516f;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    .wrap {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .head {
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      padding: 20px 18px 18px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .head h1 {
+      margin: 0;
+      font-size: clamp(36px, 4.2vw, 58px);
+      line-height: 1.06;
+      font-weight: 800;
+      color: #111;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      font-size: 20px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .controls {
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .btns {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(220px, 300px));
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .btn-main {
+      width: 100%;
+      min-height: 58px;
+      border-radius: 16px;
+      border: 2px solid var(--line);
+      font-family: "Poppins", Arial, sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      cursor: pointer;
+      padding: 12px 10px;
+      background: #fff;
+      color: #111;
+    }
+
+    #btnGenerate {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      gap: 14px;
+      margin-top: 14px;
+      align-items: start;
+    }
+
+    .control-group {
+      border: 2px solid #d7dfec;
+      border-radius: 14px;
+      background: #f7fbff;
+      padding: 12px;
+    }
+
+    .group-label {
+      margin: 0 0 8px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #2f4c70;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      text-align: center;
+    }
+
+    .option-row {
+      display: grid;
+      gap: 8px;
+    }
+
+    #blendRow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    #displayRow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .option-btn {
+      border: 2px solid #b7c9df;
+      border-radius: 14px;
+      padding: 12px 10px;
+      text-align: center;
+      font-family: "Poppins", Arial, sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.25;
+      background: #f7fbff;
+      color: #23466f;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .option-btn.selected {
+      background: #dcecff;
+      border-color: #6ea7e8;
+      color: #17385d;
+    }
+
+    .status-box {
+      border: 2px solid #d7dfec;
+      border-radius: 14px;
+      background: #fff;
+      padding: 16px 14px;
+      min-height: 100%;
+      display: grid;
+      align-content: center;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .status-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      color: #22344f;
+    }
+
+    .status-copy {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: #2f4d73;
+    }
+
+    .status {
+      margin: 0;
+      min-height: 1.3em;
+      font-size: 14px;
+      font-weight: 700;
+      color: #55657e;
+    }
+
+    .sheet-wrap {
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 14px;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      max-height: 84vh;
+    }
+
+    .page {
+      position: relative;
+      width: 100%;
+      max-width: 1120px;
+      min-height: 860px;
+      margin: 0 auto;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 10px;
+      padding: 18px 18px 186px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .head-title {
+      margin: 0 0 8px;
+      font-size: clamp(38px, 3.3vw, 50px);
+      line-height: 1.08;
+      font-weight: 800;
+      color: #111;
+    }
+
+    .head-copy {
+      margin: 0 0 16px;
+      font-size: 20px;
+      line-height: 1.35;
+      font-weight: 600;
+      color: #23374f;
+    }
+
+    table.ladder {
+      width: 100%;
+      margin: 0 auto;
+      border-collapse: collapse;
+      table-layout: fixed;
+      background: #fff;
+    }
+
+    .img-cell,
+    .pattern-cell,
+    .hint-cell {
+      border: 2px solid #000;
+      vertical-align: middle;
+      padding: 8px;
+    }
+
+    .img-cell {
+      width: 24%;
+    }
+
+    .pattern-cell {
+      width: 52%;
+    }
+
+    .hint-cell {
+      width: 24%;
+    }
+
+    .img-cell img {
+      width: 112px;
+      height: 112px;
+      object-fit: contain;
+    }
+
+    .first-word {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+      text-transform: lowercase;
+    }
+
+    .pattern {
+      line-height: 0.92;
+      font-size: 88px;
+      letter-spacing: 0;
+      white-space: nowrap;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .hint-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 60px;
+      background: #f0f0f0;
+      border: 2px solid #000;
+      border-radius: 12px;
+      padding: 6px 8px;
+      font-size: 18px;
+      line-height: 1.25;
+      font-weight: 700;
+      text-align: center;
+      word-break: break-word;
+    }
+
+    #copyright {
+      font-size: 12px;
+      text-align: right;
+      margin-top: 12px;
+      display: block;
+      font-weight: 700;
+      color: #444;
+    }
+
+    .preview-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+      opacity: 0.55;
+      background-image:
+        repeating-linear-gradient(-24deg, rgba(0, 0, 0, 0.12) 0 16px, rgba(255, 255, 255, 0.05) 16px 32px),
+        url("data:image/svg+xml,%3Csvg width='360' height='240' viewBox='0 0 360 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-23 180 120)'%3E%3Ctext x='22' y='112' fill='%23000' fill-opacity='.4' font-family='Poppins' font-size='40' font-weight='800'%3EPREVIEW%3C/text%3E%3Ctext x='92' y='158' fill='%23000' fill-opacity='.3' font-family='Poppins' font-size='20' font-weight='700'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+      background-size: auto, 360px 240px;
+      background-repeat: repeat;
+    }
+
+    .members-lock {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      z-index: 30;
+      border: 2px solid #fff;
+      border-radius: 16px;
+      background: rgba(15, 18, 24, 0.9);
+      color: #fff;
+      text-align: center;
+      padding: 14px 12px 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .members-lock-title {
+      margin: 0;
+      font-size: 46px;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .members-lock-copy {
+      margin: 10px 0 10px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .members-lock a {
+      display: inline-block;
+      text-decoration: none;
+      border-radius: 999px;
+      background: #fff;
+      color: #111;
+      border: 2px solid #fff;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 1100px) {
+      .wrap { padding: 12px; }
+      .head { padding: 16px 14px 14px; }
+      .subtitle { font-size: 16px; }
+      .btns { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .control-grid {
+        grid-template-columns: 1fr;
+      }
+      .status-box {
+        min-height: 0;
+      }
+      .page {
+        max-width: 100%;
+        min-height: 700px;
+        padding: 14px 14px 144px;
+      }
+      .head-title { font-size: clamp(30px, 4.8vw, 40px); }
+      .head-copy { font-size: 15px; margin-bottom: 12px; }
+      .img-cell img {
+        width: 74px;
+        height: 74px;
+      }
+      .first-word { font-size: 21px; }
+      .pattern { font-size: 56px; }
+      .hint-box {
+        min-height: 44px;
+        font-size: 12px;
+        padding: 5px 6px;
+      }
+      .members-lock {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        padding: 10px 10px 12px;
+      }
+      .members-lock-title { font-size: 30px; }
+      .members-lock-copy {
+        margin: 6px 0 8px;
+        font-size: 12px;
+      }
+      .members-lock a {
+        padding: 7px 14px;
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .btns {
+        grid-template-columns: 1fr;
+      }
+      #blendRow,
+      #displayRow {
+        grid-template-columns: 1fr;
+      }
+      .img-cell,
+      .pattern-cell,
+      .hint-cell {
+        padding: 5px;
+      }
+      .img-cell img {
+        width: 56px;
+        height: 56px;
+      }
+      .first-word { font-size: 16px; }
+      .pattern { font-size: 40px; }
+    }
+
+    @media print {
+      body { display: none !important; }
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+  <div class="wrap">
+    <section class="head">
+      <h1>R-Controlled Word Ladders</h1>
+      <p class="subtitle">Mobile preview mode.</p>
+    </section>
+
+    <section class="controls">
+      <div class="btns">
+        <button id="btnGenerate" class="btn-main" type="button">Generate</button>
+        <button id="btnPrint" class="btn-main" type="button">Print</button>
+      </div>
+
+      <div class="control-grid">
+        <div class="control-group">
+          <p class="group-label">Blend Mode</p>
+          <div class="option-row" id="blendRow" role="radiogroup" aria-label="Blend mode">
+            <button type="button" class="option-btn selected" data-blend="No Blends">No Blends</button>
+            <button type="button" class="option-btn" data-blend="Include Blends">Include Blends</button>
+            <button type="button" class="option-btn" data-blend="Only Blends">Only Blends</button>
+          </div>
+
+          <p class="group-label" style="margin-top:14px;">Display</p>
+          <div class="option-row" id="displayRow" role="radiogroup" aria-label="Display mode">
+            <button type="button" class="option-btn selected" data-style="elkonin">Elkonin Boxes</button>
+            <button type="button" class="option-btn" data-style="underlines">Underlines</button>
+          </div>
+        </div>
+
+        <div class="status-box">
+          <p class="status-title">Preview Options</p>
+          <p class="status-copy">Choose blends and display style, then generate a fresh r-controlled ladder.</p>
+          <p id="status" class="status">Ready.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet-wrap">
+      <div id="output"></div>
+    </section>
+  </div>
+
+  <script>
+    const DATA_SOURCES = [
+      "../../rladders.js",
+      "https://teachwithmrc.github.io/rladders.js?v=20260307-ladderdesktop"
+    ];
+
+    const state = {
+      blendMode: "No Blends",
+      cellStyle: "elkonin",
+      boldChanged: true
+    };
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function buildSvg(word) {
+      const label = escapeHtml((word || "?").toUpperCase());
+      return (
+        '<svg xmlns="http://www.w3.org/2000/svg" width="110" height="110" viewBox="0 0 110 110">' +
+        '<rect width="110" height="110" rx="12" ry="12" fill="#f6f9ff" stroke="#cfd7ef" stroke-width="2"/>' +
+        '<text x="55" y="54" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-size="12" fill="#1f365f">NO IMAGE</text>' +
+        '<text x="55" y="72" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-size="13" fill="#1f365f">' +
+        label +
+        "</text>" +
+        "</svg>"
+      );
+    }
+
+    function toDataUri(svg) {
+      return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    }
+
+    window.ladderImageFallback = {
+      getFallback(word) {
+        return toDataUri(buildSvg(word));
+      },
+      ensureSrc(src, word) {
+        return src && String(src).trim() ? src : this.getFallback(word);
+      },
+      handleError(imgEl, word) {
+        if (!imgEl) return;
+        imgEl.onerror = null;
+        imgEl.src = this.getFallback(word);
+      }
+    };
+
+    function loadScript(src) {
+      return new Promise(function(resolve) {
+        const script = document.createElement("script");
+        script.src = src + (src.indexOf("?") === -1 ? "?" : "&") + "v=" + Date.now();
+        script.async = true;
+        script.onload = function() { resolve(true); };
+        script.onerror = function() { resolve(false); };
+        document.head.appendChild(script);
+      });
+    }
+
+    async function ensureRControlledData() {
+      if (window.RCTRL_NS) return true;
+      const status = document.getElementById("status");
+      for (const src of DATA_SOURCES) {
+        status.textContent = "Loading data...";
+        await loadScript(src);
+        if (window.RCTRL_NS) return true;
+      }
+      return false;
+    }
+
+    function NS() {
+      return (window && window.RCTRL_NS) ? window.RCTRL_NS : null;
+    }
+
+    function getPattern(word) {
+      const dict = NS() && NS().patterns ? NS().patterns() : {};
+      return dict[(word || "").toLowerCase()] || "111";
+    }
+
+    function normalizeImagePath(src) {
+      const clean = String(src || "").trim();
+      if (!clean) return "";
+      if (/^(https?:|data:|file:)/i.test(clean)) return clean;
+      if (clean.startsWith("/")) return "https://teachwithmrc.github.io" + clean;
+      if (clean.startsWith("images/")) return "https://teachwithmrc.github.io/" + clean;
+      return clean;
+    }
+
+    function getImage(word) {
+      const dict = NS() && NS().images ? NS().images() : {};
+      return normalizeImagePath(dict[(word || "").toLowerCase()] || "images/placeholder_110.png");
+    }
+
+    function splitByPattern(word, pattern) {
+      const chunks = [];
+      let index = 0;
+      for (let i = 0; i < pattern.length; i += 1) {
+        const digit = pattern[i];
+        const length = (digit === "3") ? 3 : ((digit === "2") ? 2 : 1);
+        chunks.push(word.slice(index, index + length));
+        index += length;
+      }
+      return chunks;
+    }
+
+    function arraysEqual(a, b) {
+      return a.length === b.length && a.every(function(value, index) {
+        return value === b[index];
+      });
+    }
+
+    function getStepChange(prevWord, word, prevPat, pat) {
+      if (!prevWord) return null;
+      const prevChunks = splitByPattern(prevWord, prevPat);
+      const nextChunks = splitByPattern(word, pat);
+
+      if (prevChunks.length === nextChunks.length) {
+        const changed = [];
+        for (let i = 0; i < prevChunks.length; i += 1) {
+          if ((prevChunks[i] || "") !== (nextChunks[i] || "")) changed.push(i);
+        }
+        if (changed.length !== 1) return null;
+
+        const index = changed[0];
+        const from = prevChunks[index] || "";
+        const to = nextChunks[index] || "";
+
+        if (to.length === from.length + 1 && (to.startsWith(from) || to.endsWith(from))) {
+          const added = to.startsWith(from) ? to.slice(-1) : to.slice(0, to.length - from.length);
+          const atEnd = to.startsWith(from);
+          return { kind: "add_letter", index: index, from: from, to: to, added: added, atEnd: atEnd };
+        }
+
+        if (from.length === to.length + 1 && (from.startsWith(to) || from.endsWith(to))) {
+          const removed = from.startsWith(to) ? from.slice(-1) : from.slice(0, from.length - to.length);
+          const atEnd = from.startsWith(to);
+          return { kind: "remove_letter", index: index, from: from, to: to, removed: removed, atEnd: atEnd };
+        }
+
+        return { kind: "replace", index: index, from: from, to: to };
+      }
+
+      if (nextChunks.length === prevChunks.length + 1) {
+        for (let i = 0; i < nextChunks.length; i += 1) {
+          const test = nextChunks.slice(0, i).concat(nextChunks.slice(i + 1));
+          if (arraysEqual(prevChunks, test)) return { kind: "add_chunk", index: i, from: "", to: nextChunks[i] || "" };
+        }
+      }
+
+      if (prevChunks.length === nextChunks.length + 1) {
+        for (let i = 0; i < prevChunks.length; i += 1) {
+          const test = prevChunks.slice(0, i).concat(prevChunks.slice(i + 1));
+          if (arraysEqual(nextChunks, test)) return { kind: "remove_chunk", index: i, from: prevChunks[i] || "", to: "" };
+        }
+      }
+
+      return null;
+    }
+
+    function getHintFromStep(step, prevWord, word) {
+      if (!step) return prevWord + " → " + word;
+      if (step.kind === "add_letter") {
+        const micro = step.atEnd
+          ? (step.from + " → " + step.from + "<b>" + step.added + "</b>")
+          : (step.from + " → <b>" + step.added + "</b>" + step.from);
+        return "+ " + step.added + " <span style=\"font-size:11px;opacity:.82;margin-left:6px;\">" + micro + "</span>";
+      }
+      if (step.kind === "remove_letter") {
+        const micro = step.atEnd
+          ? (step.from.slice(0, -1) + "<b>" + step.removed + "</b> → " + step.to)
+          : ("<b>" + step.removed + "</b>" + step.from.slice(1) + " → " + step.to);
+        return "- " + step.removed + " <span style=\"font-size:11px;opacity:.82;margin-left:6px;\">" + micro + "</span>";
+      }
+      if (step.kind === "add_chunk") return "+ " + step.to;
+      if (step.kind === "remove_chunk") return "- " + step.from;
+      if (step.kind === "replace") return step.from + " → " + step.to;
+      return prevWord + " → " + word;
+    }
+
+    function isValidLadder(ladder) {
+      if (!Array.isArray(ladder) || ladder.length < 2) return false;
+      for (let i = 1; i < ladder.length; i += 1) {
+        const prev = ladder[i - 1] || "";
+        const word = ladder[i] || "";
+        const prevPattern = getPattern(prev);
+        const pattern = getPattern(word);
+        if (!getStepChange(prev, word, prevPattern, pattern)) return false;
+      }
+      return true;
+    }
+
+    async function renderLadder() {
+      const status = document.getElementById("status");
+      status.textContent = "Generating preview...";
+
+      const loaded = await ensureRControlledData();
+      if (!loaded || !NS()) {
+        status.textContent = "R-controlled data not loaded.";
+        document.getElementById("output").innerHTML = '<article class="page"><p class="head-copy">Missing data: rladders.js did not load.</p></article>';
+        return;
+      }
+
+      const ladders = NS().getLaddersByMode(state.blendMode).filter(isValidLadder);
+      if (!Array.isArray(ladders) || !ladders.length) {
+        const emptyMessage = (state.blendMode === "Only Blends")
+          ? "No valid one-change r-controlled blend ladders found."
+          : "No valid one-change r-controlled ladders available.";
+        alert(emptyMessage);
+        status.textContent = emptyMessage;
+        return;
+      }
+
+      const useFont = (state.cellStyle === "underlines") ? "UnderlineFont" : "BoxesFont";
+      const patternSize = (useFont === "UnderlineFont") ? "76px" : "88px";
+      const ladder = ladders[Math.floor(Math.random() * ladders.length)];
+
+      const rows = ladder.map(function(word, index) {
+        const isFirst = index === 0;
+        const prev = ladder[index - 1] || "";
+        const pattern = getPattern(word);
+        const prevPattern = getPattern(prev);
+        const step = isFirst ? null : getStepChange(prev, word, prevPattern, pattern);
+        const changedIndex = (state.boldChanged && step) ? step.index : -1;
+
+        const imageSrc = window.ladderImageFallback.ensureSrc(getImage(word), word);
+
+        const patternHtml = isFirst
+          ? ""
+          : Array.from(pattern).map(function(ch, patternIndex) {
+              return (patternIndex === changedIndex) ? ('<span style="font-weight:700;">' + ch + "</span>") : ch;
+            }).join("");
+
+        const displayHtml = isFirst
+          ? ('<div class="first-word">' + word + "</div>")
+          : ('<div class="pattern" style="font-family:\'' + useFont + '\', monospace; font-size:' + patternSize + ';">' + patternHtml + "</div>");
+
+        const hintHtml = isFirst
+          ? '<div class="hint-box"></div>'
+          : ('<div class="hint-box">' + getHintFromStep(step, prev, word) + "</div>");
+
+        return (
+          "<tr>" +
+            '<td class="img-cell"><img src="' + imageSrc + '" alt="' + word + '" data-word="' + word + '" onerror="window.ladderImageFallback.handleError(this,this.dataset.word)"></td>' +
+            '<td class="pattern-cell">' + displayHtml + "</td>" +
+            '<td class="hint-cell">' + hintHtml + "</td>" +
+          "</tr>"
+        );
+      }).join("");
+
+      const titleSuffix = (state.blendMode === "Include Blends")
+        ? " - Include Blends"
+        : (state.blendMode === "Only Blends")
+          ? " - Only Blends"
+          : " - No Blends";
+
+      document.getElementById("output").innerHTML = [
+        '<article class="page">',
+        '<h2 class="head-title">R-Controlled Word Ladders' + titleSuffix + "</h2>",
+        '<p class="head-copy"><strong>Directions:</strong> Start at the top of the ladder and spell the correct words.</p>',
+        '<table class="ladder">' + rows + "</table>",
+        '<div id="copyright">Copyright - InterventionStation.com - @TeachwithMrC</div>',
+        '<div class="preview-overlay" aria-hidden="true"></div>',
+        '<div class="members-lock">',
+        '<p class="members-lock-title">Members Only</p>',
+        '<p class="members-lock-copy">Printing is for Members Only. Create an Unlimited Amount as a Member.</p>',
+        '<a href="https://interventionstation.com" target="_blank" rel="noopener noreferrer">Join</a>',
+        "</div>",
+        "</article>"
+      ].join("");
+
+      status.textContent = "Generated " + state.blendMode + " preview.";
+    }
+
+    document.querySelectorAll("#blendRow .option-btn").forEach(function(button) {
+      button.addEventListener("click", function() {
+        document.querySelectorAll("#blendRow .option-btn").forEach(function(node) {
+          node.classList.remove("selected");
+        });
+        button.classList.add("selected");
+        state.blendMode = button.getAttribute("data-blend") || "No Blends";
+      });
+    });
+
+    document.querySelectorAll("#displayRow .option-btn").forEach(function(button) {
+      button.addEventListener("click", function() {
+        document.querySelectorAll("#displayRow .option-btn").forEach(function(node) {
+          node.classList.remove("selected");
+        });
+        button.classList.add("selected");
+        state.cellStyle = button.getAttribute("data-style") || "elkonin";
+      });
+    });
+
+    document.getElementById("btnGenerate").addEventListener("click", renderLadder);
+    document.getElementById("btnPrint").addEventListener("click", function() {
+      alert("Printing is for Members Only. Create an Unlimited Amount as a Member.");
+      document.getElementById("status").textContent = "Printing is for Members Only.";
+    });
+
+    window.addEventListener("DOMContentLoaded", function() {
+      renderLadder();
+    });
+  </script>
+</body>
+</html>

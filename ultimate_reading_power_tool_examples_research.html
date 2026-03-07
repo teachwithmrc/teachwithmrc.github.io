@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reading Power Tool Research Scenarios</title>
+  <script src="fluencyDataFull_v8-2_clean.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #18232d;
+      --muted: #607282;
+      --line: #cfd9e3;
+      --card: rgba(255,255,255,0.88);
+      --bg:
+        radial-gradient(circle at top right, rgba(255,255,255,0.9), transparent 32%),
+        linear-gradient(135deg, #edf7f7 0%, #f7f4ec 52%, #eef3ff 100%);
+      --shadow: 0 18px 38px rgba(16, 33, 48, 0.09);
+      --navy: #14324d;
+      --mint: #13795b;
+      --amber: #f1a33d;
+      --rose: #b55778;
+      --chip: #edf3f7;
+      --cvc: #f8e9d6;
+      --dig: #fbe3ea;
+      --glued: #ede1fb;
+      --vce: #dcecff;
+      --rctrl: #dff1e6;
+      --vteams: #fff2cb;
+      --dip: #ffe4d6;
+      --variant: #e7def5;
+      --soft: #dee8f7;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Outfit", sans-serif;
+      padding: 24px;
+    }
+
+    .app {
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(20,50,77,0.1);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2.1rem, 4vw, 3.8rem);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+    }
+
+    .intro {
+      margin: 0;
+      max-width: 980px;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .research-bar {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .research-card {
+      padding: 14px 16px;
+      border-radius: 20px;
+      background: var(--card);
+      border: 1px solid rgba(20,50,77,0.08);
+      box-shadow: var(--shadow);
+    }
+
+    .research-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    .research-card span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .mode-switcher,
+    .scenario-strip,
+    .button-row,
+    .chip-row,
+    .saved-row,
+    .preset-grid,
+    .control-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .mode-btn,
+    .scenario-btn,
+    .control-btn,
+    .skill-btn,
+    .mini-btn,
+    .saved-btn,
+    .chip,
+    .preset-btn {
+      border: 1px solid rgba(20,50,77,0.12);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.86);
+      color: var(--ink);
+      font: inherit;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease, color 120ms ease;
+      box-shadow: 0 1px 0 rgba(16,33,48,0.04);
+    }
+
+    .mode-btn:hover,
+    .scenario-btn:hover,
+    .control-btn:hover,
+    .skill-btn:hover,
+    .mini-btn:hover,
+    .saved-btn:hover,
+    .preset-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(16,33,48,0.09);
+    }
+
+    .mode-btn,
+    .scenario-btn,
+    .preset-btn {
+      padding: 12px 14px;
+      text-align: left;
+    }
+
+    .mode-btn strong,
+    .scenario-btn strong,
+    .preset-btn strong {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .mode-btn span,
+    .scenario-btn span,
+    .preset-btn span {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .mode-btn.active,
+    .scenario-btn.active,
+    .control-btn.active,
+    .mini-btn.active,
+    .saved-btn.active {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy);
+    }
+
+    .mode-btn.active span,
+    .scenario-btn.active span {
+      color: rgba(255,255,255,0.8);
+    }
+
+    .workspace {
+      display: grid;
+      gap: 16px;
+      align-items: start;
+      grid-template-columns: 320px minmax(320px, 1fr) 340px;
+      grid-template-areas:
+        "scenario scenario scenario"
+        "library center tray"
+        "library output tray";
+    }
+
+    .workspace[data-layout="accordion-left"] {
+      grid-template-columns: 350px minmax(0, 1fr) 330px;
+      grid-template-areas:
+        "scenario scenario scenario"
+        "library output tray"
+        "library output tray";
+    }
+
+    .workspace[data-layout="guided"] {
+      grid-template-columns: 380px minmax(0, 1fr);
+      grid-template-areas:
+        "scenario scenario"
+        "center tray"
+        "output output";
+    }
+
+    .workspace[data-layout="search-first"] {
+      grid-template-columns: 300px minmax(0, 1fr) 320px;
+      grid-template-areas:
+        "scenario scenario scenario"
+        "library center tray"
+        "output output output";
+    }
+
+    .workspace[data-layout="compare"] {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-areas:
+        "scenario scenario scenario"
+        "library center tray"
+        "output output output";
+    }
+
+    .workspace[data-layout="roster"] {
+      grid-template-columns: 280px minmax(0, 1fr) 360px;
+      grid-template-areas:
+        "scenario scenario scenario"
+        "tray center library"
+        "tray output output";
+    }
+
+    .panel {
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(20,50,77,0.08);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel.scenario { grid-area: scenario; }
+    .panel.library { grid-area: library; }
+    .panel.center { grid-area: center; }
+    .panel.tray { grid-area: tray; }
+    .panel.output { grid-area: output; }
+
+    .panel h2 {
+      margin: 0 0 6px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.18rem;
+      letter-spacing: -0.03em;
+    }
+
+    .copy {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .scenario-note {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #14324d 0%, #24517c 100%);
+      color: #fff;
+      margin-top: 12px;
+    }
+
+    .scenario-note strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .preset-btn {
+      min-height: 88px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(244,248,252,0.92));
+    }
+
+    .section-label {
+      margin: 14px 0 8px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #506170;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .search-row input,
+    .save-form input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font: inherit;
+      background: rgba(255,255,255,0.95);
+    }
+
+    .skill-groups {
+      display: grid;
+      gap: 12px;
+      max-height: 900px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .skill-group {
+      border-radius: 18px;
+      border: 1px solid rgba(20,50,77,0.08);
+      background: rgba(255,255,255,0.72);
+      overflow: hidden;
+    }
+
+    .skill-group summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 800;
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    .skill-group summary::-webkit-details-marker { display: none; }
+    .skill-group summary span:last-child { font-size: 0.78rem; color: #566879; }
+    .group-cvc summary { background: var(--cvc); }
+    .group-dig summary { background: var(--dig); }
+    .group-glued summary { background: var(--glued); }
+    .group-vce summary { background: var(--vce); }
+    .group-rctrl summary { background: var(--rctrl); }
+    .group-vteams summary { background: var(--vteams); }
+    .group-dip summary { background: var(--dip); }
+    .group-variant summary { background: var(--variant); }
+    .group-soft summary { background: var(--soft); }
+
+    .skills-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 14px;
+    }
+
+    .skill-card {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .skill-btn {
+      padding: 10px 14px;
+      padding-right: 38px;
+      border-radius: 999px;
+      font-weight: 700;
+      background: #fff;
+    }
+
+    .skill-btn.selected {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy);
+    }
+
+    .star-btn {
+      position: absolute;
+      right: 8px;
+      width: 24px;
+      height: 24px;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      color: #93a0ab;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .star-btn.active {
+      color: var(--amber);
+    }
+
+    .summary-card {
+      padding: 16px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #14324d 0%, #214f79 100%);
+      color: #fff;
+      display: grid;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .summary-card strong {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1rem;
+    }
+
+    .summary-card small {
+      color: rgba(255,255,255,0.82);
+      font-size: 0.86rem;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+      border-color: rgba(255,255,255,0.12);
+      font-size: 0.84rem;
+    }
+
+    .chip.light {
+      background: var(--chip);
+      color: var(--ink);
+      border-color: rgba(20,50,77,0.08);
+    }
+
+    .setting-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .setting {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(239,245,249,0.86);
+      border: 1px solid rgba(20,50,77,0.06);
+    }
+
+    .setting-title {
+      margin-bottom: 8px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #536577;
+    }
+
+    .control-btn,
+    .mini-btn,
+    .saved-btn {
+      padding: 10px 14px;
+      font-weight: 700;
+    }
+
+    .save-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .output-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .preview {
+      border-radius: 22px;
+      background: #fff;
+      border: 1px solid rgba(20,50,77,0.08);
+      padding: 16px;
+      box-shadow: 0 10px 22px rgba(16,33,48,0.07);
+    }
+
+    .preview h3 {
+      margin: 0 0 6px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.02rem;
+    }
+
+    .preview-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .board-grid {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .board-grid.roll {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .cell {
+      min-height: 76px;
+      border-radius: 15px;
+      border: 1px solid rgba(20,50,77,0.08);
+      background: #f7fbfd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      text-align: center;
+      font-weight: 700;
+      line-height: 1.18;
+    }
+
+    .cell.roll {
+      display: block;
+      min-height: 84px;
+      font-size: 0.9rem;
+    }
+
+    .die {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      margin-bottom: 6px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+
+    .empty {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 1150px) {
+      .research-bar {
+        grid-template-columns: 1fr;
+      }
+
+      .workspace,
+      .workspace[data-layout="accordion-left"],
+      .workspace[data-layout="guided"],
+      .workspace[data-layout="search-first"],
+      .workspace[data-layout="compare"],
+      .workspace[data-layout="roster"] {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+          "scenario"
+          "tray"
+          "center"
+          "library"
+          "output";
+      }
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 14px; }
+      .panel { padding: 14px; border-radius: 20px; }
+      .quick-grid { grid-template-columns: 1fr; }
+      .board-grid.roll { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .search-row { grid-template-columns: 1fr; }
+      .mode-btn, .scenario-btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <div class="eyebrow">Research-Based Scenarios</div>
+      <h1>5 more examples built around actual teacher workflows</h1>
+      <p class="intro">These versions lean harder into the left-library + right-generate idea. The goal is not just “more layouts,” but to test which structure wins in different teaching scenarios: quick whole-group prep, intervention groups, search-heavy use, batch planning, and repeat-use favorites.</p>
+    </header>
+
+    <section class="research-bar">
+      <article class="research-card">
+        <strong>Progressive disclosure</strong>
+        <span>Research consistently supports revealing complexity in steps instead of dumping every option at once. That makes accordions useful, but only when they support a clear active path.</span>
+      </article>
+      <article class="research-card">
+        <strong>Recognition over recall</strong>
+        <span>Recent, favorite, and saved sets reduce mental effort because teachers recognize options they already trust instead of rebuilding choices every time.</span>
+      </article>
+      <article class="research-card">
+        <strong>Stable navigation rails</strong>
+        <span>Desktop productivity tools work well with persistent left rails when the rail holds reusable navigation or filters and the main pane shows immediate results.</span>
+      </article>
+    </section>
+
+    <div class="mode-switcher" id="layoutModes"></div>
+
+    <main class="workspace" id="workspace" data-layout="accordion-left">
+      <section class="panel scenario">
+        <h2>Scenario Tests</h2>
+        <p class="copy">Pick a scenario, then switch layouts. Each layout is tuned for one use case so you can decide whether the accordion belongs on the left, in the center flow, or only for advanced filtering.</p>
+        <div class="scenario-strip" id="scenarioStrip"></div>
+        <div class="scenario-note">
+          <strong id="scenarioTitle">Scenario: Whole-group review in under 30 seconds</strong>
+          <span id="scenarioCopy">Teacher needs one quick board with minimal thinking. Presets, recent skills, and visible generate controls matter most.</span>
+        </div>
+      </section>
+
+      <section class="panel library">
+        <h2>Skill Library</h2>
+        <p class="copy">This is intentionally the “big decision surface.” The layouts differ in how much of it stays visible and how aggressively it collapses.</p>
+        <div class="search-row">
+          <input id="skillSearch" type="search" placeholder="Search skills, patterns, groups..." />
+          <button class="control-btn" id="collapseToggleBtn" type="button">Collapse All</button>
+        </div>
+        <div class="button-row">
+          <button class="mini-btn" id="favoritesOnlyBtn" type="button">Favorites Only</button>
+          <button class="mini-btn" id="randomBtn" type="button">Random Review</button>
+          <button class="mini-btn" id="clearBtn" type="button">Clear</button>
+        </div>
+        <div class="section-label">Library</div>
+        <div class="skill-groups" id="skillGroups"></div>
+      </section>
+
+      <section class="panel center">
+        <h2>Quick Picks</h2>
+        <p class="copy">This area changes role by layout: presets, guided steps, or intermediate review. It is the main place to test “boom, I’m ready” speed.</p>
+        <div class="quick-grid" id="presetGrid"></div>
+        <div class="section-label">Recent</div>
+        <div class="chip-row" id="recentRow"></div>
+        <div class="section-label">Favorites</div>
+        <div class="chip-row" id="favoritesRow"></div>
+      </section>
+
+      <section class="panel tray">
+        <h2>Generate Tray</h2>
+        <p class="copy">This right-side panel is the constant. If the left rail works, this tray should make teachers feel like they can generate without scrolling or thinking.</p>
+        <div class="summary-card">
+          <div>
+            <strong id="selectionTitle">No skills selected</strong><br />
+            <small id="selectionMeta">Pick a preset, click a skill, or choose a scenario-driven flow.</small>
+          </div>
+          <div class="chip-row" id="selectedChips"></div>
+        </div>
+        <div class="setting-stack">
+          <div class="setting">
+            <div class="setting-title">Game</div>
+            <div class="control-row" id="gameRow"></div>
+          </div>
+          <div class="setting">
+            <div class="setting-title">Difficulty</div>
+            <div class="control-row" id="difficultyRow"></div>
+          </div>
+          <div class="setting">
+            <div class="setting-title">Content</div>
+            <div class="control-row" id="contentRow"></div>
+          </div>
+          <div class="setting">
+            <div class="setting-title">Batch</div>
+            <div class="control-row" id="batchRow"></div>
+          </div>
+          <div class="setting">
+            <div class="setting-title">Saved Sets</div>
+            <div class="save-form">
+              <input id="savedName" type="text" placeholder="Save current selection..." />
+              <button class="control-btn" id="saveSetBtn" type="button">Save</button>
+            </div>
+            <div class="saved-row" id="savedRow"></div>
+          </div>
+          <div class="setting">
+            <div class="setting-title">Actions</div>
+            <div class="button-row">
+              <button class="control-btn active" id="generateBtn" type="button">Generate</button>
+              <button class="control-btn" id="classSetBtn" type="button">Class Set 25</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel output">
+        <h2>Instant Preview</h2>
+        <p class="copy" id="outputCopy">Generate a board to test whether this scenario/layout combination feels fast or annoying.</p>
+        <div class="chip-row">
+          <span class="chip light" id="layoutLabel">Example E</span>
+          <span class="chip light" id="countLabel">0 boards</span>
+        </div>
+        <div class="section-label">Preview</div>
+        <div class="output-grid" id="outputGrid"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const LAYOUTS = [
+      { id: "accordion-left", label: "Example E", title: "Accordion Left Rail", desc: "Best test for your instinct: skills left, generate right, preview beside it." },
+      { id: "guided", label: "Example F", title: "Guided Accordion Flow", desc: "Only one major step open at a time to cut overwhelm." },
+      { id: "search-first", label: "Example G", title: "Search-First Workspace", desc: "Optimized for teachers who know the skill and want it immediately." },
+      { id: "compare", label: "Example H", title: "Batch Compare Desk", desc: "Makes batch size and output comparison the main story." },
+      { id: "roster", label: "Example I", title: "Intervention Roster", desc: "Saved groups and repeat-use sets get priority over browsing." }
+    ];
+
+    const SCENARIOS = [
+      {
+        id: "whole-group",
+        title: "Whole-group review in under 30 seconds",
+        copy: "Teacher needs one quick board before the lesson starts. Presets and recent skills should beat deep browsing.",
+        preset: ["Mixed CVC", "Digraphs Mixed"],
+        recommendedLayout: "accordion-left"
+      },
+      {
+        id: "small-group",
+        title: "Small-group intervention with targeted patterns",
+        copy: "Teacher needs specific patterns for one intervention group. Saved sets and precise accordion browsing matter more than speed presets.",
+        preset: ["FLSZ", "ck", "sh", "-ng", "a_e"],
+        recommendedLayout: "roster"
+      },
+      {
+        id: "search",
+        title: "Teacher knows the exact skill already",
+        copy: "The interface should reward search and recognition, not force scanning every category again.",
+        preset: ["Long A (ai/ay)"],
+        recommendedLayout: "search-first"
+      },
+      {
+        id: "week-plan",
+        title: "Planning a full week of printables",
+        copy: "Teacher wants to generate 5 to 10 boards fast and compare output volume. Batch controls need to be impossible to miss.",
+        preset: ["Mixed CVC", "Mixed VCe", "Mixed R-Controlled"],
+        recommendedLayout: "compare"
+      },
+      {
+        id: "sub-plan",
+        title: "Sub plan or no-prep emergency",
+        copy: "Teacher needs low-friction defaults and a generate button that feels immediate. The layout should make the right choice obvious.",
+        preset: ["Short A", "Short O", "Digraphs Mixed"],
+        recommendedLayout: "guided"
+      }
+    ];
+
+    const SKILL_GROUPS = [
+      { id: "cvc", label: "CVC", skills: ["Short A", "Short E", "Short I", "Short O", "Short U", "Mixed CVC", "FLSZ"] },
+      { id: "dig", label: "Digraphs", skills: ["ck", "sh", "th", "ch", "wh", "Digraphs Mixed"] },
+      { id: "glued", label: "Glued Sounds", skills: ["-all", "-ng", "-nk", "Glued Mixed"] },
+      { id: "vce", label: "VCe", skills: ["a_e", "i_e", "o_e", "u_e", "Mixed VCe"] },
+      { id: "rctrl", label: "R-Controlled", skills: ["ar", "or", "er/ir/ur", "Mixed R-Controlled"] },
+      { id: "vteams", label: "Vowel Teams", skills: ["Long A (ai/ay)", "Long E (ee/ea)", "Long I (igh/y/ie)", "Long O (oa/ow/oe)", "Long U (oo/ew/ue)", "Mixed Vowel Teams"] },
+      { id: "dip", label: "Diphthongs", skills: ["Diphthongs (oy/oi)", "Diphthongs (ow/ou)"] },
+      { id: "variant", label: "Variant Vowels", skills: ["Variant Vowels (au/aw)", "Variant Vowel (oo)"] },
+      { id: "soft", label: "Soft C/G", skills: ["Soft C (-ce)", "Soft G (-ge)", "Soft G (-dge)"] }
+    ];
+
+    const PRESETS = [
+      { label: "Kindergarten", desc: "Short vowels and mixed CVC", skills: ["Short A", "Short E", "Short I", "Short O", "Short U", "Mixed CVC"] },
+      { label: "Digraph Review", desc: "Fast mixed digraph practice", skills: ["ck", "sh", "th", "ch", "wh"] },
+      { label: "Silent E", desc: "All VCe patterns", skills: ["a_e", "i_e", "o_e", "u_e", "Mixed VCe"] },
+      { label: "Mixed Review", desc: "Cross-skill warm-up", skills: ["Mixed CVC", "Digraphs Mixed", "Glued Mixed", "Mixed VCe"] },
+      { label: "Intervention", desc: "High-support targeted set", skills: ["FLSZ", "sh", "ck", "-ng", "a_e", "ar"] },
+      { label: "Vowel Teams", desc: "Long vowel review", skills: ["Long A (ai/ay)", "Long E (ee/ea)", "Long O (oa/ow/oe)", "Mixed Vowel Teams"] }
+    ];
+
+    const PREFIX = {
+      "Short A": "0.1 - Short A",
+      "Short O": "0.2 - Short O",
+      "Short I": "0.3 - Short I",
+      "Short U": "0.4 - Short U",
+      "Short E": "0.5 - Short E",
+      "FLSZ": "0.6 - FLSZ",
+      "ck": "1.1 - ck",
+      "sh": "1.2 - sh",
+      "th": "1.3 - th",
+      "ch": "1.4 - ch",
+      "wh": "1.5 - wh",
+      "-all": "3.1 - all",
+      "-ng": "3.2 - ng",
+      "-nk": "3.3 - nk",
+      "a_e": "2.1 - a_e",
+      "i_e": "2.2 - i_e",
+      "o_e": "2.3 - o_e",
+      "u_e": "2.4 - u_e",
+      "ar": "4.1 - ar",
+      "or": "4.2 - or",
+      "er/ir/ur": "4.3 - er, ir, ur",
+      "Soft C (-ce)": "10.1 - ce",
+      "Soft G (-ge)": "10.2 - ge",
+      "Soft G (-dge)": "10.3 - dge"
+    };
+
+    const MIXED_RULES = {
+      "Mixed CVC": ["0.1 - Short A", "0.5 - Short E", "0.3 - Short I", "0.2 - Short O", "0.4 - Short U", "0.6 - FLSZ"],
+      "Digraphs Mixed": ["1.1 - ck", "1.2 - sh", "1.3 - th", "1.4 - ch", "1.5 - wh"],
+      "Glued Mixed": ["3.1 - all", "3.2 - ng", "3.3 - nk"],
+      "Mixed VCe": ["2.1 - a_e", "2.2 - i_e", "2.3 - o_e", "2.4 - u_e"],
+      "Mixed R-Controlled": ["4.1 - ar", "4.2 - or", "4.3 - er, ir, ur"],
+      "Long A (ai/ay)": ["6.1 - ay", "6.2 - ai"],
+      "Long E (ee/ea)": ["6.4 - ee", "6.5 - ea"],
+      "Long I (igh/y/ie)": ["6.6 - igh", "6.7 - Final y", "6.8 - ie"],
+      "Long O (oa/ow/oe)": ["6.9 - oa", "6.10 - ow", "6.11 - oe"],
+      "Long U (oo/ew/ue)": ["6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
+      "Mixed Vowel Teams": ["6.1 - ay", "6.2 - ai", "6.4 - ee", "6.5 - ea", "6.6 - igh", "6.7 - Final y", "6.8 - ie", "6.9 - oa", "6.10 - ow", "6.11 - oe", "6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
+      "Diphthongs (oy/oi)": ["7.4 - oy", "7.3 - oi"],
+      "Diphthongs (ow/ou)": ["7.2 - ow", "7.1 - ou"],
+      "Variant Vowels (au/aw)": ["7.5 - aw", "7.6 - au"],
+      "Variant Vowel (oo)": ["7.7 - oo variant"]
+    };
+
+    const STORAGE_KEYS = {
+      favorites: "reading-research-favorites",
+      recent: "reading-research-recent",
+      saved: "reading-research-saved",
+      layout: "reading-research-layout",
+      scenario: "reading-research-scenario"
+    };
+
+    const state = {
+      layout: loadJson(STORAGE_KEYS.layout, "accordion-left"),
+      scenario: loadJson(STORAGE_KEYS.scenario, "whole-group"),
+      selectedSkills: new Set(),
+      favorites: new Set(loadJson(STORAGE_KEYS.favorites, [])),
+      recent: loadJson(STORAGE_KEYS.recent, []),
+      savedSets: loadJson(STORAGE_KEYS.saved, []),
+      favoritesOnly: false,
+      search: "",
+      game: "rollread",
+      difficulty: "mixed",
+      content: "words",
+      batch: 1
+    };
+
+    const workspaceEl = document.getElementById("workspace");
+    const layoutModesEl = document.getElementById("layoutModes");
+    const scenarioStripEl = document.getElementById("scenarioStrip");
+    const scenarioTitleEl = document.getElementById("scenarioTitle");
+    const scenarioCopyEl = document.getElementById("scenarioCopy");
+    const skillGroupsEl = document.getElementById("skillGroups");
+    const presetGridEl = document.getElementById("presetGrid");
+    const recentRowEl = document.getElementById("recentRow");
+    const favoritesRowEl = document.getElementById("favoritesRow");
+    const selectionTitleEl = document.getElementById("selectionTitle");
+    const selectionMetaEl = document.getElementById("selectionMeta");
+    const selectedChipsEl = document.getElementById("selectedChips");
+    const gameRowEl = document.getElementById("gameRow");
+    const difficultyRowEl = document.getElementById("difficultyRow");
+    const contentRowEl = document.getElementById("contentRow");
+    const batchRowEl = document.getElementById("batchRow");
+    const savedRowEl = document.getElementById("savedRow");
+    const outputGridEl = document.getElementById("outputGrid");
+    const outputCopyEl = document.getElementById("outputCopy");
+    const layoutLabelEl = document.getElementById("layoutLabel");
+    const countLabelEl = document.getElementById("countLabel");
+    const savedNameEl = document.getElementById("savedName");
+    const searchEl = document.getElementById("skillSearch");
+
+    function loadJson(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (_) {
+        return fallback;
+      }
+    }
+
+    function saveJson(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function toArray(value) {
+      if (Array.isArray(value)) return value.slice();
+      if (value == null) return [];
+      try { return Array.from(value); } catch (_) { return []; }
+    }
+
+    function shuffle(items) {
+      const list = toArray(items);
+      for (let i = list.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const hold = list[i];
+        list[i] = list[j];
+        list[j] = hold;
+      }
+      return list;
+    }
+
+    function uniqueByLowercase(items) {
+      const out = [];
+      const seen = new Set();
+      for (const item of toArray(items)) {
+        const value = String(item || "").trim();
+        const key = value.toLowerCase();
+        if (value && !seen.has(key)) {
+          seen.add(key);
+          out.push(value);
+        }
+      }
+      return out;
+    }
+
+    function fillToN(items, count) {
+      const base = toArray(items);
+      if (!base.length || count <= 0) return [];
+      const out = [];
+      let bag = shuffle(base);
+      while (out.length < count) {
+        if (!bag.length) bag = shuffle(base);
+        out.push(bag.shift());
+      }
+      return out.slice(0, count);
+    }
+
+    function wordsDict() {
+      return (typeof fluencyWords !== "undefined")
+        ? fluencyWords
+        : ((typeof fluencyData !== "undefined" && fluencyData.words) ? fluencyData.words : {});
+    }
+
+    function sentsDict() {
+      return (typeof fluencySentences !== "undefined")
+        ? fluencySentences
+        : ((typeof fluencyData !== "undefined" && fluencyData.sentences) ? fluencyData.sentences : {});
+    }
+
+    function readDict(dict, key) {
+      return Array.isArray(dict[key]) ? dict[key] : [];
+    }
+
+    function readWithBlends(dict, prefix, type, blends) {
+      const typeLower = type.toLowerCase();
+      const baseKeys = [`${prefix} ${type}`, `${prefix} ${typeLower}`, `${prefix}`];
+      let base = [];
+      for (const key of baseKeys) base = base.concat(readDict(dict, key));
+      if (!blends) return base;
+
+      const candidates = [
+        `${prefix} with Blends ${type}`,
+        `${prefix} with blends ${type}`,
+        `${prefix} with Blends ${typeLower}`,
+        `${prefix} with blends ${typeLower}`
+      ];
+      const bPrefix = prefix.replace(" - ", "b - ");
+      candidates.push(
+        `${bPrefix} with Blends ${type}`,
+        `${bPrefix} with blends ${type}`,
+        `${bPrefix} with Blends ${typeLower}`,
+        `${bPrefix} with blends ${typeLower}`
+      );
+
+      for (const key of candidates) {
+        const list = readDict(dict, key);
+        if (list.length) return list.length < 9 ? uniqueByLowercase(list.concat(base)) : list;
+      }
+      return base;
+    }
+
+    function getList(label, type, blends) {
+      const dict = type === "Words" ? wordsDict() : sentsDict();
+      if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)) {
+        let all = [];
+        for (const prefix of MIXED_RULES[label]) {
+          all = all.concat(readWithBlends(dict, prefix, type, blends));
+        }
+        return all;
+      }
+      const prefix = PREFIX[label];
+      if (prefix) return readWithBlends(dict, prefix, type, blends);
+
+      const tail1 = " " + type;
+      const tail2 = " " + type.toLowerCase();
+      const want = label.toLowerCase();
+      const guess = Object.keys(dict).find((key) => key.toLowerCase().includes(want) && (key.endsWith(tail1) || key.endsWith(tail2)));
+      return guess ? readDict(dict, guess) : [];
+    }
+
+    function allSkillNames() {
+      return SKILL_GROUPS.flatMap((group) => group.skills);
+    }
+
+    function normalizeSelection(skills) {
+      return uniqueByLowercase(skills).filter((skill) => allSkillNames().includes(skill));
+    }
+
+    function difficultyConfig() {
+      if (state.difficulty === "easy") return { mode: "words", includeBlends: false };
+      if (state.difficulty === "challenge") return { mode: state.content === "words" ? "both" : "sentences", includeBlends: true };
+      return { mode: state.content, includeBlends: state.content !== "sentences" };
+    }
+
+    function currentScenario() {
+      return SCENARIOS.find((scenario) => scenario.id === state.scenario) || SCENARIOS[0];
+    }
+
+    function setSelection(skills) {
+      state.selectedSkills = new Set(normalizeSelection(skills));
+      renderSelection();
+      renderLibrary();
+    }
+
+    function toggleSkill(skill) {
+      if (state.selectedSkills.has(skill)) state.selectedSkills.delete(skill);
+      else state.selectedSkills.add(skill);
+      renderSelection();
+      renderLibrary();
+    }
+
+    function toggleFavorite(skill) {
+      if (state.favorites.has(skill)) state.favorites.delete(skill);
+      else state.favorites.add(skill);
+      saveJson(STORAGE_KEYS.favorites, Array.from(state.favorites));
+      renderFavorites();
+      renderLibrary();
+    }
+
+    function rememberRecent(skills) {
+      state.recent = uniqueByLowercase(skills.concat(state.recent)).slice(0, 8);
+      saveJson(STORAGE_KEYS.recent, state.recent);
+      renderRecent();
+    }
+
+    function saveCurrentSet() {
+      const name = savedNameEl.value.trim();
+      const skills = Array.from(state.selectedSkills);
+      if (!name || !skills.length) {
+        window.alert("Enter a name and select at least one skill.");
+        return;
+      }
+      state.savedSets = [{ id: Date.now(), name, skills }]
+        .concat(state.savedSets.filter((set) => set.name !== name))
+        .slice(0, 10);
+      saveJson(STORAGE_KEYS.saved, state.savedSets);
+      savedNameEl.value = "";
+      renderSavedSets();
+    }
+
+    function deleteSavedSet(id) {
+      state.savedSets = state.savedSets.filter((set) => set.id !== id);
+      saveJson(STORAGE_KEYS.saved, state.savedSets);
+      renderSavedSets();
+    }
+
+    function contentPool(skills, mode, blends) {
+      const labels = normalizeSelection(skills);
+      if (mode === "words") return uniqueByLowercase(labels.flatMap((label) => getList(label, "Words", blends)));
+      if (mode === "sentences") return uniqueByLowercase(labels.flatMap((label) => getList(label, "Sentences", blends)));
+      const words = uniqueByLowercase(labels.flatMap((label) => getList(label, "Words", blends)));
+      const sentences = uniqueByLowercase(labels.flatMap((label) => getList(label, "Sentences", blends)));
+      return shuffle(fillToN(words, 12).concat(fillToN(sentences, 12)));
+    }
+
+    function generateBoards(count) {
+      const skills = Array.from(state.selectedSkills);
+      if (!skills.length) {
+        window.alert("Select at least one skill first.");
+        return;
+      }
+
+      const config = difficultyConfig();
+      const mode = config.mode;
+      const blends = config.includeBlends;
+      const size = state.game === "tictactoe" ? 9 : 24;
+      const pool = contentPool(skills, mode, blends);
+
+      if (!pool.length) {
+        window.alert("No content found for that combination. Try another skill set or difficulty.");
+        return;
+      }
+
+      rememberRecent(skills);
+
+      const boards = Array.from({ length: count }, (_, index) => ({
+        id: `${Date.now()}-${index}`,
+        title: state.game === "tictactoe" ? `Tic Tac Toe ${index + 1}` : `Roll and Read ${index + 1}`,
+        skills,
+        prompts: fillToN(shuffle(pool), size),
+        mode,
+        difficulty: state.difficulty,
+        game: state.game
+      }));
+
+      renderOutput(boards);
+    }
+
+    function renderOutput(boards) {
+      outputGridEl.innerHTML = "";
+      outputCopyEl.textContent = boards.length
+        ? "Preview is immediate so you can judge layout speed against actual output, not just controls."
+        : "Generate a board to test whether this scenario/layout combination feels fast or annoying.";
+      countLabelEl.textContent = `${boards.length} board${boards.length === 1 ? "" : "s"}`;
+
+      for (const board of boards) {
+        const article = document.createElement("article");
+        article.className = "preview";
+        article.innerHTML = `
+          <h3>${board.title}</h3>
+          <div class="preview-meta">
+            <span>${board.skills.join(" • ")}</span>
+            <span>${board.mode}</span>
+            <span>${board.difficulty}</span>
+          </div>
+        `;
+
+        const grid = document.createElement("div");
+        grid.className = "board-grid" + (board.game === "rollread" ? " roll" : "");
+
+        board.prompts.forEach((prompt, index) => {
+          const cell = document.createElement("div");
+          cell.className = "cell" + (board.game === "rollread" ? " roll" : "");
+          if (board.game === "rollread") {
+            cell.innerHTML = `<div class="die">${(index % 6) + 1}</div><div>${prompt}</div>`;
+          } else {
+            cell.textContent = prompt;
+          }
+          grid.appendChild(cell);
+        });
+
+        article.appendChild(grid);
+        outputGridEl.appendChild(article);
+      }
+    }
+
+    function renderLayouts() {
+      layoutModesEl.innerHTML = "";
+      LAYOUTS.forEach((layout) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "mode-btn" + (layout.id === state.layout ? " active" : "");
+        button.innerHTML = `<strong>${layout.label}: ${layout.title}</strong><span>${layout.desc}</span>`;
+        button.addEventListener("click", () => {
+          state.layout = layout.id;
+          workspaceEl.dataset.layout = layout.id;
+          saveJson(STORAGE_KEYS.layout, layout.id);
+          renderLayouts();
+          renderScenario();
+        });
+        layoutModesEl.appendChild(button);
+      });
+      workspaceEl.dataset.layout = state.layout;
+      const current = LAYOUTS.find((layout) => layout.id === state.layout) || LAYOUTS[0];
+      layoutLabelEl.textContent = `${current.label}: ${current.title}`;
+    }
+
+    function renderScenarioStrip() {
+      scenarioStripEl.innerHTML = "";
+      SCENARIOS.forEach((scenario) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "scenario-btn" + (scenario.id === state.scenario ? " active" : "");
+        button.innerHTML = `<strong>${scenario.title}</strong><span>Best fit: ${labelForLayout(scenario.recommendedLayout)}</span>`;
+        button.addEventListener("click", () => {
+          state.scenario = scenario.id;
+          saveJson(STORAGE_KEYS.scenario, scenario.id);
+          setSelection(scenario.preset);
+          renderScenarioStrip();
+          renderScenario();
+        });
+        scenarioStripEl.appendChild(button);
+      });
+    }
+
+    function labelForLayout(layoutId) {
+      const layout = LAYOUTS.find((item) => item.id === layoutId);
+      return layout ? layout.title : "";
+    }
+
+    function renderScenario() {
+      const scenario = currentScenario();
+      scenarioTitleEl.textContent = `Scenario: ${scenario.title}`;
+      scenarioCopyEl.textContent = scenario.copy;
+    }
+
+    function renderPresets() {
+      presetGridEl.innerHTML = "";
+      PRESETS.forEach((preset) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "preset-btn";
+        button.innerHTML = `<strong>${preset.label}</strong><span>${preset.desc}</span>`;
+        button.addEventListener("click", () => setSelection(preset.skills));
+        presetGridEl.appendChild(button);
+      });
+    }
+
+    function renderRecent() {
+      recentRowEl.innerHTML = "";
+      if (!state.recent.length) {
+        recentRowEl.innerHTML = `<p class="empty">Recent skills show up here after you generate once.</p>`;
+        return;
+      }
+      state.recent.forEach((skill) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "mini-btn" + (state.selectedSkills.has(skill) ? " active" : "");
+        button.textContent = skill;
+        button.addEventListener("click", () => toggleSkill(skill));
+        recentRowEl.appendChild(button);
+      });
+    }
+
+    function renderFavorites() {
+      favoritesRowEl.innerHTML = "";
+      const favorites = Array.from(state.favorites);
+      if (!favorites.length) {
+        favoritesRowEl.innerHTML = `<p class="empty">Favorite a few skills in the library to test repeat-use speed.</p>`;
+        return;
+      }
+      favorites.forEach((skill) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "mini-btn" + (state.selectedSkills.has(skill) ? " active" : "");
+        button.textContent = skill;
+        button.addEventListener("click", () => toggleSkill(skill));
+        favoritesRowEl.appendChild(button);
+      });
+    }
+
+    function renderSelection() {
+      const labels = Array.from(state.selectedSkills);
+      selectedChipsEl.innerHTML = "";
+      if (!labels.length) {
+        selectionTitleEl.textContent = "No skills selected";
+        selectionMetaEl.textContent = "Pick a preset, click a skill, or choose a scenario-driven flow.";
+        return;
+      }
+      selectionTitleEl.textContent = `${labels.length} skill${labels.length === 1 ? "" : "s"} selected`;
+      selectionMetaEl.textContent = labels.join(" • ");
+      labels.forEach((label) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "chip";
+        button.textContent = label;
+        button.addEventListener("click", () => toggleSkill(label));
+        selectedChipsEl.appendChild(button);
+      });
+    }
+
+    function renderChoiceRow(root, options, currentValue, onPick) {
+      root.innerHTML = "";
+      options.forEach((option) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "control-btn" + (option.value === currentValue ? " active" : "");
+        button.textContent = option.label;
+        button.addEventListener("click", () => onPick(option.value));
+        root.appendChild(button);
+      });
+    }
+
+    function renderControls() {
+      renderChoiceRow(gameRowEl, [
+        { value: "rollread", label: "Roll and Read" },
+        { value: "tictactoe", label: "Tic Tac Toe" }
+      ], state.game, (value) => { state.game = value; renderControls(); });
+
+      renderChoiceRow(difficultyRowEl, [
+        { value: "easy", label: "Easy" },
+        { value: "mixed", label: "Mixed" },
+        { value: "challenge", label: "Challenge" }
+      ], state.difficulty, (value) => { state.difficulty = value; renderControls(); });
+
+      renderChoiceRow(contentRowEl, [
+        { value: "words", label: "Words" },
+        { value: "sentences", label: "Sentences" },
+        { value: "both", label: "Both" }
+      ], state.content, (value) => { state.content = value; renderControls(); });
+
+      renderChoiceRow(batchRowEl, [
+        { value: 1, label: "Generate 1" },
+        { value: 5, label: "Generate 5" },
+        { value: 10, label: "Generate 10" }
+      ], state.batch, (value) => { state.batch = value; renderControls(); });
+    }
+
+    function renderSavedSets() {
+      savedRowEl.innerHTML = "";
+      if (!state.savedSets.length) {
+        savedRowEl.innerHTML = `<p class="empty">Saved groups appear here for repeat-use testing.</p>`;
+        return;
+      }
+      state.savedSets.forEach((set) => {
+        const wrap = document.createElement("div");
+        wrap.className = "saved-row";
+
+        const load = document.createElement("button");
+        load.type = "button";
+        load.className = "saved-btn";
+        load.textContent = `${set.name} (${set.skills.length})`;
+        load.addEventListener("click", () => setSelection(set.skills));
+
+        const del = document.createElement("button");
+        del.type = "button";
+        del.className = "mini-btn";
+        del.textContent = "Delete";
+        del.addEventListener("click", () => deleteSavedSet(set.id));
+
+        wrap.appendChild(load);
+        wrap.appendChild(del);
+        savedRowEl.appendChild(wrap);
+      });
+    }
+
+    function matchesSearch(skill) {
+      const term = state.search.trim().toLowerCase();
+      if (!term) return true;
+      return skill.toLowerCase().includes(term);
+    }
+
+    function renderLibrary() {
+      skillGroupsEl.innerHTML = "";
+      SKILL_GROUPS.forEach((group, index) => {
+        const visible = group.skills.filter((skill) => {
+          if (state.favoritesOnly && !state.favorites.has(skill)) return false;
+          return matchesSearch(skill);
+        });
+        if (!visible.length) return;
+
+        const details = document.createElement("details");
+        details.className = `skill-group group-${group.id}`;
+        details.open = state.layout === "guided" ? index === 0 : true;
+
+        const summary = document.createElement("summary");
+        summary.innerHTML = `<span>${group.label}</span><span>${visible.length} skills</span>`;
+        details.appendChild(summary);
+
+        if (state.layout === "guided") {
+          details.addEventListener("toggle", () => {
+            if (!details.open) return;
+            skillGroupsEl.querySelectorAll("details").forEach((item) => {
+              if (item !== details) item.open = false;
+            });
+          });
+        }
+
+        const wrap = document.createElement("div");
+        wrap.className = "skills-wrap";
+
+        visible.forEach((skill) => {
+          const card = document.createElement("div");
+          card.className = "skill-card";
+
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "skill-btn" + (state.selectedSkills.has(skill) ? " selected" : "");
+          button.textContent = skill;
+          button.addEventListener("click", () => toggleSkill(skill));
+
+          const star = document.createElement("button");
+          star.type = "button";
+          star.className = "star-btn" + (state.favorites.has(skill) ? " active" : "");
+          star.textContent = "★";
+          star.addEventListener("click", (event) => {
+            event.stopPropagation();
+            toggleFavorite(skill);
+          });
+
+          card.appendChild(button);
+          card.appendChild(star);
+          wrap.appendChild(card);
+        });
+
+        details.appendChild(wrap);
+        skillGroupsEl.appendChild(details);
+      });
+    }
+
+    document.getElementById("favoritesOnlyBtn").addEventListener("click", (event) => {
+      state.favoritesOnly = !state.favoritesOnly;
+      event.currentTarget.classList.toggle("active", state.favoritesOnly);
+      renderLibrary();
+    });
+
+    document.getElementById("randomBtn").addEventListener("click", () => {
+      setSelection(shuffle(allSkillNames()).slice(0, 3));
+    });
+
+    document.getElementById("clearBtn").addEventListener("click", () => setSelection([]));
+
+    document.getElementById("collapseToggleBtn").addEventListener("click", (event) => {
+      const groups = skillGroupsEl.querySelectorAll("details");
+      const shouldOpen = Array.from(groups).some((group) => !group.open);
+      groups.forEach((group) => { group.open = shouldOpen; });
+      event.currentTarget.textContent = shouldOpen ? "Collapse All" : "Expand All";
+    });
+
+    searchEl.addEventListener("input", () => {
+      state.search = searchEl.value;
+      renderLibrary();
+    });
+
+    document.getElementById("saveSetBtn").addEventListener("click", saveCurrentSet);
+    document.getElementById("generateBtn").addEventListener("click", () => generateBoards(Number(state.batch) || 1));
+    document.getElementById("classSetBtn").addEventListener("click", () => generateBoards(25));
+
+    renderLayouts();
+    renderScenarioStrip();
+    renderScenario();
+    renderPresets();
+    renderRecent();
+    renderFavorites();
+    renderSelection();
+    renderControls();
+    renderSavedSets();
+    setSelection(currentScenario().preset);
+  </script>
+</body>
+</html>

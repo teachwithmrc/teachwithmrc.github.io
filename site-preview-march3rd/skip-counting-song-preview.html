@@ -1,0 +1,1315 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intervention Station | Skip Counting Song</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./inside-library.css" />
+  <script src="./shared-left-nav.js" defer></script>
+  <style>
+    :root{
+      --song-navy:#173a63;
+      --song-ink:#183153;
+      --song-sky:#66c9f4;
+      --song-teal:#1db4b0;
+      --song-gold:#ffcf5c;
+      --song-cream:#fffaf0;
+      --song-panel:#ffffff;
+      --song-line:#d7e5f3;
+      --song-shadow:0 18px 40px rgba(23,58,99,.12);
+    }
+
+    body{
+      background:
+        radial-gradient(circle at top left, rgba(102,201,244,.2), transparent 26%),
+        radial-gradient(circle at top right, rgba(255,207,92,.18), transparent 24%),
+        #f3f5f7;
+    }
+
+    .skip-song-page .is-page{
+      border-radius:24px;
+      border:1px solid rgba(23,58,99,.16);
+      box-shadow:var(--song-shadow);
+      overflow:visible;
+    }
+
+    .song-hero{
+      position:relative;
+      overflow:hidden;
+      padding:28px;
+      border:1px solid #d8e5f2;
+      border-radius:24px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.96), rgba(244,250,255,.96)),
+        linear-gradient(135deg, #eff8ff, #fff8e8);
+    }
+    .song-hero::before,
+    .song-hero::after{
+      content:"";
+      position:absolute;
+      border-radius:999px;
+      pointer-events:none;
+    }
+    .song-hero::before{
+      width:240px;
+      height:240px;
+      right:-72px;
+      top:-100px;
+      background:radial-gradient(circle, rgba(102,201,244,.32), transparent 65%);
+    }
+    .song-hero::after{
+      width:220px;
+      height:220px;
+      left:-88px;
+      bottom:-120px;
+      background:radial-gradient(circle, rgba(255,207,92,.26), transparent 68%);
+    }
+
+    .song-hero-grid{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:minmax(0, 1.35fr) minmax(280px, .85fr);
+      gap:20px;
+      align-items:stretch;
+    }
+
+    .song-kicker{
+      margin:0 0 10px;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:#4d84b7;
+    }
+    .song-title{
+      margin:0;
+      font-size:clamp(2.2rem, 4vw, 3.5rem);
+      line-height:1;
+      color:#0f2e52;
+    }
+    .song-subtitle{
+      margin:12px 0 0;
+      max-width:56ch;
+      font-size:1rem;
+      line-height:1.7;
+      color:#4f6689;
+      font-weight:600;
+    }
+
+    .song-feature-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:20px;
+    }
+    .song-feature-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      min-height:42px;
+      padding:0 16px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid #d8e5f2;
+      font-size:14px;
+      font-weight:800;
+      color:#21496f;
+      box-shadow:0 10px 20px rgba(22,54,92,.07);
+    }
+    .song-feature-chip strong{
+      color:#0f2e52;
+    }
+
+    .song-action-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:24px;
+    }
+    .song-link{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      min-height:48px;
+      padding:0 18px;
+      border-radius:999px;
+      border:1px solid transparent;
+      text-decoration:none;
+      font-size:14px;
+      font-weight:900;
+      transition:transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+      box-shadow:0 12px 24px rgba(23,58,99,.1);
+    }
+    .song-link:hover{
+      transform:translateY(-1px);
+    }
+    .song-link.primary{
+      color:#fff;
+      background:linear-gradient(135deg, #1d6db1, #173a63);
+    }
+    .song-link.secondary{
+      color:#163e67;
+      background:#fff;
+      border-color:#d3e2f0;
+    }
+    .song-link.disabled{
+      pointer-events:none;
+      opacity:.45;
+      box-shadow:none;
+    }
+
+    .hero-preview-card{
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      gap:14px;
+      padding:18px;
+      border-radius:22px;
+      background:linear-gradient(160deg, #173a63, #245887);
+      color:#fff;
+      box-shadow:0 24px 40px rgba(14,41,71,.24);
+    }
+    .hero-preview-card img{
+      width:100%;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.18);
+      object-fit:cover;
+      aspect-ratio:16 / 10;
+      background:rgba(255,255,255,.1);
+    }
+    .hero-preview-label{
+      display:inline-flex;
+      align-items:center;
+      align-self:start;
+      width:max-content;
+      min-height:34px;
+      padding:0 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+    .hero-preview-card h2{
+      margin:0;
+      font-size:1.2rem;
+      line-height:1.2;
+    }
+    .hero-preview-card p{
+      margin:0;
+      color:rgba(255,255,255,.84);
+      font-size:14px;
+      line-height:1.6;
+      font-weight:600;
+    }
+
+    .song-board{
+      display:grid;
+      grid-template-columns:minmax(0, 1.35fr) minmax(280px, .75fr);
+      gap:18px;
+      margin-top:18px;
+    }
+
+    .panel{
+      background:var(--song-panel);
+      border:1px solid var(--song-line);
+      border-radius:22px;
+      box-shadow:var(--song-shadow);
+    }
+
+    .board-shell{
+      padding:20px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.98), rgba(249,252,255,.98)),
+        linear-gradient(135deg, rgba(102,201,244,.15), rgba(29,180,176,.08));
+    }
+
+    .panel-title-row{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:16px;
+    }
+    .panel-title-row h2,
+    .side-panel h2{
+      margin:0;
+      font-size:1.3rem;
+      color:#11365d;
+    }
+    .panel-title-row p,
+    .side-panel p{
+      margin:6px 0 0;
+      font-size:14px;
+      line-height:1.6;
+      color:#587092;
+      font-weight:600;
+    }
+
+    .selector-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:12px;
+    }
+    .count-btn{
+      position:relative;
+      min-height:72px;
+      padding:14px 16px;
+      border:1px solid #cfe0ee;
+      border-radius:20px;
+      background:#fff;
+      color:#14375d;
+      text-align:left;
+      cursor:pointer;
+      transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+      box-shadow:0 12px 24px rgba(23,58,99,.08);
+    }
+    .count-btn:hover{
+      transform:translateY(-2px);
+      border-color:#8ecff0;
+    }
+    .count-btn.is-active{
+      border-color:#0f598f;
+      background:linear-gradient(135deg, #173a63, #245887);
+      color:#fff;
+      box-shadow:0 16px 26px rgba(23,58,99,.2);
+    }
+    .count-btn strong{
+      display:block;
+      font-size:18px;
+      line-height:1.1;
+    }
+    .count-btn span{
+      display:block;
+      margin-top:6px;
+      font-size:12px;
+      font-weight:700;
+      opacity:.82;
+    }
+    .count-btn-badge{
+      position:absolute;
+      top:10px;
+      right:10px;
+      min-height:22px;
+      padding:0 8px;
+      border-radius:999px;
+      background:rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.2);
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      display:none;
+      align-items:center;
+    }
+    .count-btn.is-featured .count-btn-badge{
+      display:inline-flex;
+    }
+    .count-btn:not(.is-active).is-featured .count-btn-badge{
+      background:#fff6da;
+      border-color:#ffe09b;
+      color:#9b6c00;
+    }
+
+    .mode-toggle-row,
+    .control-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:16px;
+    }
+    .mode-chip,
+    .control-btn{
+      min-height:44px;
+      padding:0 16px;
+      border-radius:999px;
+      border:1px solid #cfe0ee;
+      background:#fff;
+      color:#174166;
+      font:inherit;
+      font-size:14px;
+      font-weight:800;
+      cursor:pointer;
+      transition:transform .16s ease, box-shadow .16s ease, background .16s ease, color .16s ease, border-color .16s ease;
+    }
+    .mode-chip:hover,
+    .control-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 10px 18px rgba(23,58,99,.1);
+    }
+    .mode-chip.is-active,
+    .control-btn.primary{
+      background:linear-gradient(135deg, #1db4b0, #127c7f);
+      border-color:#127c7f;
+      color:#fff;
+    }
+    .control-btn.secondary{
+      background:#f4f9fd;
+    }
+    .control-btn.is-playing{
+      background:linear-gradient(135deg, #173a63, #245887);
+      border-color:#173a63;
+      color:#fff;
+    }
+
+    .stage{
+      display:grid;
+      grid-template-columns:minmax(0, 1fr) 164px;
+      gap:16px;
+      margin-top:18px;
+      align-items:stretch;
+    }
+    .current-display{
+      position:relative;
+      overflow:hidden;
+      min-height:220px;
+      padding:20px;
+      border-radius:24px;
+      background:
+        linear-gradient(145deg, rgba(23,58,99,.98), rgba(40,95,143,.95)),
+        linear-gradient(160deg, #173a63, #245887);
+      color:#fff;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      box-shadow:0 24px 38px rgba(23,58,99,.22);
+    }
+    .current-display::after{
+      content:"";
+      position:absolute;
+      inset:auto -18% -32% auto;
+      width:260px;
+      height:260px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.14), transparent 68%);
+      pointer-events:none;
+    }
+    .current-meta{
+      position:relative;
+      z-index:1;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+    }
+    .current-label{
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.72);
+    }
+    .current-step{
+      min-height:34px;
+      padding:0 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      display:inline-flex;
+      align-items:center;
+      font-size:12px;
+      font-weight:800;
+    }
+    .current-number{
+      position:relative;
+      z-index:1;
+      margin:18px 0 0;
+      font-size:clamp(4.8rem, 10vw, 7rem);
+      line-height:.92;
+      font-weight:900;
+      letter-spacing:-.05em;
+      opacity:0;
+      transform:translateY(12px) scale(.96);
+      transition:opacity .25s ease, transform .25s ease;
+    }
+    .current-number.is-visible{
+      opacity:1;
+      transform:translateY(0) scale(1);
+    }
+    .current-caption{
+      position:relative;
+      z-index:1;
+      margin-top:14px;
+      color:rgba(255,255,255,.84);
+      font-size:15px;
+      line-height:1.6;
+      font-weight:600;
+    }
+    .progress-tower{
+      display:grid;
+      grid-template-rows:repeat(12, 1fr);
+      gap:8px;
+    }
+    .progress-dot{
+      border-radius:999px;
+      background:#edf3f9;
+      border:1px solid #d8e5f2;
+      transition:background .18s ease, transform .18s ease, border-color .18s ease;
+    }
+    .progress-dot.is-revealed{
+      background:linear-gradient(135deg, #66c9f4, #1db4b0);
+      border-color:transparent;
+    }
+    .progress-dot.is-active{
+      transform:scale(1.08);
+      box-shadow:0 0 0 3px rgba(102,201,244,.2);
+    }
+
+    .sequence-strip{
+      margin-top:18px;
+      padding:18px;
+      border-radius:20px;
+      background:#fff;
+      border:1px solid #d8e5f2;
+    }
+    .sequence-strip-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .sequence-strip-head h3{
+      margin:0;
+      font-size:1rem;
+      color:#14375d;
+    }
+    .sequence-strip-head span{
+      color:#5e7798;
+      font-size:13px;
+      font-weight:700;
+    }
+    .cards-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:12px;
+    }
+    .number-card{
+      position:relative;
+      min-height:88px;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid #d7e5f3;
+      background:#f8fbfe;
+      color:#14375d;
+      cursor:pointer;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+      overflow:hidden;
+    }
+    .number-card:hover{
+      transform:translateY(-2px);
+      box-shadow:0 14px 24px rgba(23,58,99,.1);
+      border-color:#8ecff0;
+    }
+    .number-card.is-active{
+      background:linear-gradient(145deg, #173a63, #245887);
+      border-color:#173a63;
+      color:#fff;
+      box-shadow:0 16px 26px rgba(23,58,99,.2);
+    }
+    .number-card.is-hidden{
+      border-style:dashed;
+      border-color:#eccb6d;
+      background:linear-gradient(135deg, #fffaf0, #fff2ca);
+      color:#8d6a06;
+    }
+    .number-card.is-locked{
+      opacity:.52;
+      cursor:default;
+      box-shadow:none;
+      transform:none;
+    }
+    .number-card-step{
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      opacity:.72;
+    }
+    .number-card-value{
+      font-size:1.9rem;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:-.04em;
+    }
+    .number-card-note{
+      margin-top:8px;
+      font-size:12px;
+      font-weight:700;
+      opacity:.82;
+    }
+
+    .side-panel{
+      padding:20px;
+      display:grid;
+      gap:16px;
+      align-content:start;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.98), rgba(250,252,255,.98)),
+        linear-gradient(135deg, rgba(29,180,176,.08), rgba(255,207,92,.08));
+    }
+    .side-card{
+      padding:18px;
+      border-radius:20px;
+      background:#fff;
+      border:1px solid #d8e5f2;
+    }
+    .mini-label{
+      display:inline-flex;
+      min-height:28px;
+      padding:0 10px;
+      border-radius:999px;
+      align-items:center;
+      background:#eef8ff;
+      color:#1a5b8f;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+    .featured-multiples{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:14px;
+    }
+    .featured-multiples span{
+      min-width:52px;
+      min-height:52px;
+      padding:0 12px;
+      border-radius:16px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(135deg, #173a63, #245887);
+      color:#fff;
+      font-size:1.15rem;
+      font-weight:900;
+      box-shadow:0 12px 18px rgba(23,58,99,.15);
+    }
+    .embed-shell{
+      margin-top:14px;
+      min-height:190px;
+      border-radius:18px;
+      border:1px dashed #b8cee3;
+      background:linear-gradient(135deg, #f6fbff, #fffdf6);
+      display:grid;
+      place-items:center;
+      text-align:center;
+      padding:18px;
+      color:#56718f;
+    }
+    .embed-shell strong{
+      display:block;
+      margin-bottom:6px;
+      color:#14375d;
+      font-size:16px;
+    }
+    .help-list{
+      margin:14px 0 0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+    .help-list li{
+      padding:12px 14px;
+      border-radius:16px;
+      background:#f7fbff;
+      border:1px solid #dfebf6;
+      color:#4f6888;
+      font-size:13px;
+      line-height:1.55;
+      font-weight:600;
+    }
+
+    .usage-section{
+      margin-top:18px;
+      padding:22px;
+    }
+    .usage-header{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-end;
+      margin-bottom:16px;
+    }
+    .usage-header h2{
+      margin:0;
+      color:#11365d;
+      font-size:1.45rem;
+    }
+    .usage-header p{
+      margin:8px 0 0;
+      color:#587092;
+      font-size:14px;
+      line-height:1.6;
+      font-weight:600;
+      max-width:52ch;
+    }
+    .usage-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:14px;
+    }
+    .idea-card{
+      padding:20px;
+      border-radius:22px;
+      border:1px solid #d8e5f2;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,251,255,.98)),
+        linear-gradient(135deg, rgba(102,201,244,.08), rgba(255,207,92,.08));
+      box-shadow:0 14px 24px rgba(23,58,99,.08);
+    }
+    .idea-card h3{
+      margin:12px 0 8px;
+      font-size:1.05rem;
+      color:#12355b;
+    }
+    .idea-card p{
+      margin:0;
+      color:#55708f;
+      font-size:14px;
+      line-height:1.65;
+      font-weight:600;
+    }
+
+    @media (max-width:1100px){
+      .song-hero-grid,
+      .song-board{
+        grid-template-columns:1fr;
+      }
+      .selector-grid{
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+      }
+      .usage-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:820px){
+      .song-hero,
+      .board-shell,
+      .side-panel,
+      .usage-section{
+        padding:18px;
+      }
+      .stage{
+        grid-template-columns:1fr;
+      }
+      .progress-tower{
+        grid-template-columns:repeat(12, 1fr);
+        grid-template-rows:none;
+      }
+      .cards-grid{
+        grid-template-columns:repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width:600px){
+      .selector-grid,
+      .cards-grid{
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+      }
+      .song-feature-row,
+      .song-action-row,
+      .mode-toggle-row,
+      .control-row{
+        gap:8px;
+      }
+      .song-link,
+      .mode-chip,
+      .control-btn{
+        width:100%;
+        justify-content:center;
+      }
+      .usage-header{
+        display:block;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-cta-wrap">
+    <div class="top-cta-bar">
+      <img class="top-logo" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/67c7821d79c4ff8be8d4b3c3.png" alt="Intervention Station" />
+      <div class="top-buttons-row">
+        <a href="./home-preview.html"><button type="button">Home</button></a>
+        <a href="./learning-songs-preview.html"><button type="button">Song Library</button></a>
+        <a href="./home-preview.html#join"><button type="button">Join Membership</button></a>
+      </div>
+    </div>
+  </div>
+
+  <section class="is-library skip-song-page">
+    <div class="is-wrap is-layout">
+      <aside class="is-nav" aria-label="Navigation"></aside>
+
+      <main class="is-main">
+        <section class="is-page">
+          <section class="song-hero panel">
+            <div class="song-hero-grid">
+              <div>
+                <p class="song-kicker">Interactive Skip Counting Practice</p>
+                <h1 class="song-title" id="songTitle"></h1>
+                <p class="song-subtitle">Move from printable charts to a polished classroom-ready board. Teachers can reveal one multiple at a time, show the full sequence, or switch into practice mode for student participation.</p>
+                <div class="song-feature-row" id="featuredCounts"></div>
+                <div class="song-action-row" id="songActions"></div>
+              </div>
+
+              <article class="hero-preview-card">
+                <span class="hero-preview-label">Premium Preview</span>
+                <img src="../images/skip.png" alt="Skip counting song resource preview" />
+                <div>
+                  <h2>Interactive board + song support in one place</h2>
+                  <p>Built to feel like a premium teacher tool, with flexible controls, future video support, and an easy config block for duplicating this page for other songs.</p>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="song-board">
+            <div class="panel board-shell">
+              <div class="panel-title-row">
+                <div>
+                  <h2>Skip Counting Board</h2>
+                  <p>Choose a multiple, reveal the chart step by step, and let students click the cards to track the sequence.</p>
+                </div>
+              </div>
+
+              <div class="selector-grid" id="countSelector"></div>
+
+              <div class="mode-toggle-row" id="modeToggles"></div>
+
+              <div class="control-row">
+                <button class="control-btn primary" id="prevBtn" type="button">Previous</button>
+                <button class="control-btn primary" id="nextBtn" type="button">Next</button>
+                <button class="control-btn secondary" id="autoBtn" type="button">Play Auto</button>
+                <button class="control-btn secondary" id="resetBtn" type="button">Reset</button>
+                <button class="control-btn secondary" id="showAllBtn" type="button">Show All</button>
+                <button class="control-btn secondary" id="hideAllBtn" type="button">Hide All</button>
+              </div>
+
+              <div class="stage">
+                <section class="current-display" aria-live="polite">
+                  <div class="current-meta">
+                    <div>
+                      <div class="current-label" id="currentLabel">Current Number</div>
+                      <div class="current-caption" id="currentCaption"></div>
+                    </div>
+                    <div class="current-step" id="currentStep"></div>
+                  </div>
+                  <div class="current-number" id="currentNumber">0</div>
+                </section>
+                <div class="progress-tower" id="progressDots" aria-hidden="true"></div>
+              </div>
+
+              <section class="sequence-strip">
+                <div class="sequence-strip-head">
+                  <h3 id="sequenceHeading">Sequence</h3>
+                  <span id="sequenceMeta"></span>
+                </div>
+                <div class="cards-grid" id="cardsGrid"></div>
+              </section>
+            </div>
+
+            <aside class="panel side-panel">
+              <section class="side-card">
+                <span class="mini-label">Featured in Song</span>
+                <h2 id="sideSongTitle" style="margin-top:12px;"></h2>
+                <p>This configuration highlights the skip-counting families taught in the song while still keeping 1 through 9 available for review and extension.</p>
+                <div class="featured-multiples" id="featuredSideCounts"></div>
+              </section>
+
+              <section class="side-card">
+                <span class="mini-label">Video Placeholder</span>
+                <div class="embed-shell" id="videoPanel"></div>
+              </section>
+
+              <section class="side-card">
+                <span class="mini-label">Lyrics / Teaching Notes</span>
+                <h2 style="margin-top:12px;">Help Panel</h2>
+                <p>Use this side panel later for song lyrics, gestures, call-and-response cues, or quick teacher reminders during whole group practice.</p>
+                <ul class="help-list">
+                  <li>Prompt students to say the pattern before pressing <strong>Next</strong>.</li>
+                  <li>Use <strong>Practice Mode</strong> to hide a few cards and ask students to predict the missing multiple.</li>
+                  <li>Pair the board with your slides or video once those links are added to the config object.</li>
+                </ul>
+              </section>
+            </aside>
+          </section>
+
+          <section class="panel usage-section">
+            <div class="usage-header">
+              <div>
+                <h2>More Ways to Use This Song</h2>
+                <p>Keep the resource flexible enough for direct instruction, targeted support, and independent review without changing the core board.</p>
+              </div>
+            </div>
+            <div class="usage-grid">
+              <article class="idea-card">
+                <span class="mini-label">Whole Class</span>
+                <h3>Whole Group Practice</h3>
+                <p>Project the board, choose a featured multiple, and tap through each card as the class sings and points to the current number together.</p>
+              </article>
+              <article class="idea-card">
+                <span class="mini-label">Intervention</span>
+                <h3>Small Group Intervention</h3>
+                <p>Switch to reveal mode and slow the pace. Let students predict each upcoming multiple, then confirm with the current display and sequence cards.</p>
+              </article>
+              <article class="idea-card">
+                <span class="mini-label">Independent</span>
+                <h3>Independent Review</h3>
+                <p>Use practice mode to hide a few values. Students click to reveal missing cards and check themselves against the full chart when finished.</p>
+              </article>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+  </section>
+
+  <script>
+    const songConfig = {
+      title: "Golden Skip Counting",
+      multiples: [6, 7, 8, 9],
+      youtubeUrl: "",
+      slidesUrl: "",
+      powerpointUrl: "",
+      googleSlidesUrl: ""
+    };
+
+    const skipCountingSequences = Array.from({ length: 9 }, (_, index) => {
+      const countBy = index + 1;
+      return [countBy, Array.from({ length: 12 }, (_, step) => countBy * (step + 1))];
+    }).reduce((accumulator, [countBy, sequence]) => {
+      accumulator[countBy] = sequence;
+      return accumulator;
+    }, {});
+
+    const modes = [
+      { id: "reveal", label: "Reveal One at a Time" },
+      { id: "full", label: "Show Full Chart" },
+      { id: "practice", label: "Practice Mode" }
+    ];
+
+    const state = {
+      selectedCount: songConfig.multiples[0] || 1,
+      activeIndex: 0,
+      revealedCount: 1,
+      mode: "reveal",
+      practiceRevealed: new Set(),
+      autoplayId: null
+    };
+
+    const elements = {
+      songTitle: document.getElementById("songTitle"),
+      sideSongTitle: document.getElementById("sideSongTitle"),
+      featuredCounts: document.getElementById("featuredCounts"),
+      featuredSideCounts: document.getElementById("featuredSideCounts"),
+      songActions: document.getElementById("songActions"),
+      countSelector: document.getElementById("countSelector"),
+      modeToggles: document.getElementById("modeToggles"),
+      currentNumber: document.getElementById("currentNumber"),
+      currentCaption: document.getElementById("currentCaption"),
+      currentStep: document.getElementById("currentStep"),
+      sequenceHeading: document.getElementById("sequenceHeading"),
+      sequenceMeta: document.getElementById("sequenceMeta"),
+      cardsGrid: document.getElementById("cardsGrid"),
+      progressDots: document.getElementById("progressDots"),
+      videoPanel: document.getElementById("videoPanel"),
+      prevBtn: document.getElementById("prevBtn"),
+      nextBtn: document.getElementById("nextBtn"),
+      autoBtn: document.getElementById("autoBtn"),
+      resetBtn: document.getElementById("resetBtn"),
+      showAllBtn: document.getElementById("showAllBtn"),
+      hideAllBtn: document.getElementById("hideAllBtn")
+    };
+
+    init();
+
+    function init() {
+      renderStaticContent();
+      bindControls();
+      resetStateForSelectedCount();
+      render();
+    }
+
+    function renderStaticContent() {
+      elements.songTitle.textContent = songConfig.title;
+      elements.sideSongTitle.textContent = songConfig.title;
+
+      songConfig.multiples.forEach((value) => {
+        const chip = document.createElement("div");
+        chip.className = "song-feature-chip";
+        chip.innerHTML = `<strong>Count by ${value}</strong><span>Featured in this song</span>`;
+        elements.featuredCounts.appendChild(chip);
+
+        const badge = document.createElement("span");
+        badge.textContent = value;
+        elements.featuredSideCounts.appendChild(badge);
+      });
+
+      const actionLinks = [
+        { label: "Watch Song", url: songConfig.youtubeUrl, variant: "primary" },
+        { label: "Open Slides", url: songConfig.slidesUrl, variant: "secondary" },
+        { label: "Download PowerPoint", url: songConfig.powerpointUrl, variant: "secondary" },
+        { label: "Download Google Slides", url: songConfig.googleSlidesUrl, variant: "secondary" }
+      ];
+
+      actionLinks.forEach(({ label, url, variant }) => {
+        const link = document.createElement("a");
+        link.className = `song-link ${variant}${url ? "" : " disabled"}`;
+        link.href = url || "#";
+        link.textContent = label;
+        if (!url) {
+          link.setAttribute("aria-disabled", "true");
+          link.title = "Add a URL in songConfig to enable this action.";
+        }
+        elements.songActions.appendChild(link);
+      });
+
+      if (songConfig.youtubeUrl) {
+        elements.videoPanel.innerHTML = `
+          <iframe
+            width="100%"
+            height="220"
+            src="${songConfig.youtubeUrl}"
+            title="${songConfig.title} video"
+            style="border:0; border-radius:16px;"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        `;
+      } else {
+        elements.videoPanel.innerHTML = `
+          <div>
+            <strong>YouTube Embed Ready</strong>
+            Add a YouTube URL to <code>songConfig.youtubeUrl</code> and swap this placeholder for an embedded video panel later.
+          </div>
+        `;
+      }
+
+      Object.keys(skipCountingSequences).forEach((countValue) => {
+        const button = document.createElement("button");
+        button.className = "count-btn";
+        if (songConfig.multiples.includes(Number(countValue))) {
+          button.classList.add("is-featured");
+        }
+        button.type = "button";
+        button.dataset.count = countValue;
+        button.innerHTML = `
+          <span class="count-btn-badge">Song</span>
+          <strong>Count by ${countValue}</strong>
+          <span>${skipCountingSequences[countValue].slice(0, 3).join(", ")}...</span>
+        `;
+        button.addEventListener("click", () => {
+          if (Number(countValue) === state.selectedCount) {
+            return;
+          }
+          stopAutoplay();
+          state.selectedCount = Number(countValue);
+          resetStateForSelectedCount();
+          render();
+        });
+        elements.countSelector.appendChild(button);
+      });
+
+      modes.forEach((mode) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "mode-chip";
+        button.dataset.mode = mode.id;
+        button.textContent = mode.label;
+        button.addEventListener("click", () => {
+          if (state.mode === mode.id) {
+            return;
+          }
+          stopAutoplay();
+          state.mode = mode.id;
+          resetStateForMode();
+          render();
+        });
+        elements.modeToggles.appendChild(button);
+      });
+    }
+
+    function bindControls() {
+      elements.prevBtn.addEventListener("click", handlePrevious);
+      elements.nextBtn.addEventListener("click", handleNext);
+      elements.autoBtn.addEventListener("click", toggleAutoplay);
+      elements.resetBtn.addEventListener("click", () => {
+        stopAutoplay();
+        resetStateForSelectedCount();
+        render();
+      });
+      elements.showAllBtn.addEventListener("click", () => {
+        stopAutoplay();
+        showAll();
+        render();
+      });
+      elements.hideAllBtn.addEventListener("click", () => {
+        stopAutoplay();
+        hideAll();
+        render();
+      });
+    }
+
+    function getSequence() {
+      return skipCountingSequences[state.selectedCount];
+    }
+
+    function getPracticeHiddenIndices() {
+      const sequence = getSequence();
+      const seed = state.selectedCount;
+      const hidden = new Set([
+        Math.min(2, sequence.length - 1),
+        Math.min(5 + (seed % 2), sequence.length - 1),
+        Math.min(9 + (seed % 3 === 0 ? 1 : 0), sequence.length - 1)
+      ]);
+      hidden.delete(0);
+      return [...hidden];
+    }
+
+    function isIndexVisible(index) {
+      if (state.mode === "full") {
+        return true;
+      }
+      if (state.mode === "reveal") {
+        return index < state.revealedCount;
+      }
+      const hiddenIndices = getPracticeHiddenIndices();
+      return !hiddenIndices.includes(index) || state.practiceRevealed.has(index);
+    }
+
+    function resetStateForSelectedCount() {
+      state.activeIndex = 0;
+      state.revealedCount = 1;
+      state.practiceRevealed = new Set();
+      resetStateForMode();
+    }
+
+    function resetStateForMode() {
+      if (state.mode === "full") {
+        state.revealedCount = getSequence().length;
+        state.activeIndex = 0;
+        state.practiceRevealed = new Set();
+        return;
+      }
+      if (state.mode === "reveal") {
+        state.revealedCount = 1;
+        state.activeIndex = 0;
+        state.practiceRevealed = new Set();
+        return;
+      }
+      state.activeIndex = 0;
+      state.revealedCount = getSequence().length;
+      state.practiceRevealed = new Set();
+    }
+
+    function showAll() {
+      const sequenceLength = getSequence().length;
+      state.revealedCount = sequenceLength;
+      if (state.mode === "practice") {
+        state.practiceRevealed = new Set(getPracticeHiddenIndices());
+      }
+      state.activeIndex = Math.min(state.activeIndex, sequenceLength - 1);
+    }
+
+    function hideAll() {
+      state.activeIndex = 0;
+      if (state.mode === "full") {
+        state.mode = "reveal";
+      }
+      if (state.mode === "practice") {
+        state.practiceRevealed = new Set();
+        return;
+      }
+      state.revealedCount = 0;
+    }
+
+    function handlePrevious() {
+      stopAutoplay();
+      if (state.activeIndex > 0) {
+        state.activeIndex -= 1;
+      } else if (state.mode === "reveal" && state.revealedCount > 0) {
+        state.revealedCount -= 1;
+      }
+      render();
+    }
+
+    function handleNext() {
+      const sequence = getSequence();
+      if (state.mode === "practice") {
+        const hiddenIndices = getPracticeHiddenIndices();
+        const nextHidden = hiddenIndices.find((index) => !state.practiceRevealed.has(index));
+        if (typeof nextHidden === "number") {
+          state.practiceRevealed.add(nextHidden);
+          state.activeIndex = nextHidden;
+          render();
+          return;
+        }
+      }
+
+      if (state.mode === "reveal" && state.revealedCount < sequence.length) {
+        state.revealedCount += 1;
+        state.activeIndex = state.revealedCount - 1;
+        render();
+        return;
+      }
+
+      if (state.activeIndex < sequence.length - 1) {
+        state.activeIndex += 1;
+        render();
+      } else {
+        stopAutoplay();
+      }
+    }
+
+    function toggleAutoplay() {
+      if (state.autoplayId) {
+        stopAutoplay();
+        render();
+        return;
+      }
+
+      state.autoplayId = window.setInterval(() => {
+        const beforeIndex = state.activeIndex;
+        const beforeReveal = state.revealedCount;
+        const beforePractice = state.practiceRevealed.size;
+        handleNext();
+        const isStuck = beforeIndex === state.activeIndex
+          && beforeReveal === state.revealedCount
+          && beforePractice === state.practiceRevealed.size;
+        if (isStuck) {
+          stopAutoplay();
+          render();
+        }
+      }, 1400);
+
+      render();
+    }
+
+    function stopAutoplay() {
+      if (!state.autoplayId) {
+        return;
+      }
+      window.clearInterval(state.autoplayId);
+      state.autoplayId = null;
+    }
+
+    function render() {
+      const sequence = getSequence();
+      const visibleCurrent = isIndexVisible(state.activeIndex) && sequence[state.activeIndex] !== undefined;
+      const currentValue = visibleCurrent ? sequence[state.activeIndex] : "—";
+      const visibleCards = sequence.filter((_, index) => isIndexVisible(index)).length;
+
+      document.querySelectorAll(".count-btn").forEach((button) => {
+        button.classList.toggle("is-active", Number(button.dataset.count) === state.selectedCount);
+      });
+
+      document.querySelectorAll(".mode-chip").forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.mode === state.mode);
+      });
+
+      elements.sequenceHeading.textContent = `Count by ${state.selectedCount}`;
+      elements.sequenceMeta.textContent = `${visibleCards} of ${sequence.length} visible`;
+      elements.currentStep.textContent = `Step ${Math.min(state.activeIndex + 1, sequence.length)} of ${sequence.length}`;
+      elements.currentCaption.textContent = buildCaption(sequence, visibleCurrent);
+      elements.currentNumber.textContent = currentValue;
+      elements.currentNumber.classList.remove("is-visible");
+      window.requestAnimationFrame(() => {
+        elements.currentNumber.classList.add("is-visible");
+      });
+
+      elements.progressDots.innerHTML = "";
+      sequence.forEach((_, index) => {
+        const dot = document.createElement("div");
+        dot.className = "progress-dot";
+        if (isIndexVisible(index)) {
+          dot.classList.add("is-revealed");
+        }
+        if (index === state.activeIndex) {
+          dot.classList.add("is-active");
+        }
+        elements.progressDots.appendChild(dot);
+      });
+
+      elements.cardsGrid.innerHTML = "";
+      sequence.forEach((value, index) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "number-card";
+        const visible = isIndexVisible(index);
+        const practiceHidden = state.mode === "practice" && !visible;
+        const revealLocked = state.mode === "reveal" && !visible;
+
+        if (practiceHidden) {
+          card.classList.add("is-hidden");
+        }
+        if (revealLocked) {
+          card.classList.add("is-locked");
+        }
+        if (index === state.activeIndex) {
+          card.classList.add("is-active");
+        }
+
+        if (visible) {
+          card.innerHTML = `
+            <span class="number-card-step">Multiple ${index + 1}</span>
+            <span class="number-card-value">${value}</span>
+            <span class="number-card-note">${state.selectedCount} × ${index + 1}</span>
+          `;
+        } else {
+          card.innerHTML = `
+            <span class="number-card-step">Multiple ${index + 1}</span>
+            <span class="number-card-value">?</span>
+            <span class="number-card-note">${practiceHidden ? "Tap to reveal" : "Press Next"}</span>
+          `;
+        }
+
+        card.addEventListener("click", () => {
+          if (practiceHidden) {
+            state.practiceRevealed.add(index);
+            state.activeIndex = index;
+            render();
+            return;
+          }
+          if (!visible) {
+            return;
+          }
+          state.activeIndex = index;
+          render();
+        });
+
+        elements.cardsGrid.appendChild(card);
+      });
+
+      elements.autoBtn.classList.toggle("is-playing", Boolean(state.autoplayId));
+      elements.autoBtn.textContent = state.autoplayId ? "Pause Auto" : "Play Auto";
+    }
+
+    function buildCaption(sequence, visibleCurrent) {
+      if (!visibleCurrent) {
+        if (state.mode === "practice") {
+          return "Some cards are hidden in practice mode. Ask students to predict the missing multiple, then tap to reveal it.";
+        }
+        if (state.revealedCount === 0) {
+          return "Nothing is showing yet. Press Next to reveal the first multiple.";
+        }
+        return "Use Next to reveal the next multiple in the sequence.";
+      }
+
+      const currentValue = sequence[state.activeIndex];
+      return `You are counting by ${state.selectedCount}. The highlighted value is ${currentValue}.`;
+    }
+  </script>
+</body>
+</html>

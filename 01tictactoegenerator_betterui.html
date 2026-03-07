@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tic Tac Toe Phonics Generator</title>
+
+  <script src="fluencyDataFull_v8-2_clean.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f4f7fc;
+      --surface: #ffffff;
+      --surface-soft: #f7faff;
+      --surface-accent: #eef4ff;
+      --text: #17212b;
+      --muted: #617082;
+      --line: #d8e1ec;
+      --line-strong: #c7d3e2;
+      --blue: #225fe4;
+      --blue-dark: #184dbf;
+      --blue-soft: #eaf1ff;
+      --blue-ink: #20479c;
+      --shadow-main: 0 14px 34px rgba(17, 24, 39, 0.07);
+      --shadow-soft: 0 8px 20px rgba(17, 24, 39, 0.05);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --radius-sm: 11px;
+      --focus: 0 0 0 4px rgba(34, 95, 228, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top center, rgba(34, 95, 228, 0.08), transparent 36%),
+        linear-gradient(180deg, #f8fbff 0%, var(--bg) 100%);
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .page-shell {
+      width: min(1120px, calc(100% - 24px));
+      margin: 16px auto 28px;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 4vw, 42px);
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+    }
+
+    .header-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(199, 211, 226, 0.95);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .workspace {
+      background: var(--surface);
+      border: 1px solid rgba(216, 225, 236, 0.9);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-main);
+      overflow: hidden;
+    }
+
+    .workflow-bar {
+      display: grid;
+      grid-template-columns: 2.4fr 1fr 1fr 1.2fr;
+      gap: 0;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    }
+
+    .workflow-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-right: 1px solid var(--line);
+      min-width: 0;
+    }
+
+    .workflow-step:last-child {
+      border-right: 0;
+    }
+
+    .workflow-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      background: var(--blue-soft);
+      color: var(--blue-dark);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .workflow-copy {
+      min-width: 0;
+    }
+
+    .workflow-title {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .workflow-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+      margin-top: 1px;
+    }
+
+    .workspace-body {
+      padding: 16px;
+    }
+
+    .main-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .section-shell {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .section-shell.soft {
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(248, 251, 255, 0.7);
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .section-number {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background: var(--blue);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex: 0 0 auto;
+      box-shadow: inset 0 -2px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    .section-meta {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .section-body {
+      padding: 14px 16px 16px;
+    }
+
+    /* Skills */
+    .skill-groups {
+      display: grid;
+      gap: 10px;
+    }
+
+    .skill-block {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .skill-header {
+      width: 100%;
+      border: 0;
+      background: linear-gradient(180deg, #ffffff 0%, #fafcff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 13px;
+      cursor: pointer;
+      text-align: left;
+      color: var(--text);
+    }
+
+    .skill-header:hover {
+      background: linear-gradient(180deg, #fbfdff 0%, #f6faff 100%);
+    }
+
+    .skill-header:focus-visible,
+    .skill-button:focus-visible,
+    .option-box:focus-visible,
+    .action-button:focus-visible {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+
+    .skill-header-main {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .skill-arrow {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .skill-title {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .skill-count {
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .skills-inner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 13px 13px;
+    }
+
+    .skills-inner.collapsed {
+      display: none;
+    }
+
+    .skill-button {
+      min-height: 36px;
+      padding: 7px 11px;
+      border-radius: 10px;
+      border: 1px solid var(--line-strong);
+      background: #fff;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.2;
+      cursor: pointer;
+      transition: transform 0.08s ease, border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .skill-button:hover {
+      transform: translateY(-1px);
+      border-color: #aebfd6;
+      background: #fbfdff;
+    }
+
+    .skill-button.selected {
+      background: linear-gradient(180deg, var(--blue) 0%, var(--blue-dark) 100%);
+      border-color: var(--blue-dark);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(34, 95, 228, 0.2);
+    }
+
+    .skill-button.full-width-label {
+      max-width: 216px;
+    }
+
+    /* Options + actions */
+    .option-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .option-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .option-card-header {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(248, 251, 255, 0.6);
+    }
+
+    .option-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .option-stack {
+      display: grid;
+      gap: 8px;
+      padding: 12px 14px 14px;
+    }
+
+    .option-box {
+      width: 100%;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: #fff;
+      padding: 11px 12px;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.08s ease, border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .option-box:hover {
+      transform: translateY(-1px);
+      border-color: #adc0d9;
+      background: #fbfdff;
+    }
+
+    .option-box.selected {
+      background: var(--blue-soft);
+      border-color: var(--blue);
+      box-shadow: inset 0 0 0 1px rgba(34, 95, 228, 0.06);
+    }
+
+    .option-title {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 3px;
+    }
+
+    .option-copy {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .action-strip {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      padding: 14px 16px 16px;
+    }
+
+    .chips-zone {
+      min-width: 0;
+    }
+
+    .chips-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .chips-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      min-height: 28px;
+    }
+
+    .chip-empty {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--surface-accent);
+      border: 1px solid #d8e4ff;
+      color: var(--blue-ink);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .chip .x {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border: 1px solid #cad9fa;
+      color: #5c76b4;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .chip .x:hover {
+      background: #f7faff;
+    }
+
+    .actions-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+
+    .print-tip {
+      display: none;
+    }
+
+    .action-button {
+      min-height: 48px;
+      padding: 11px 18px;
+      border-radius: 13px;
+      border: 1px solid var(--line-strong);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.08s ease, border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .action-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .action-button.primary {
+      background: linear-gradient(180deg, var(--blue) 0%, var(--blue-dark) 100%);
+      border-color: var(--blue-dark);
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(34, 95, 228, 0.22);
+    }
+
+    .action-button.primary:hover {
+      box-shadow: 0 12px 26px rgba(34, 95, 228, 0.28);
+    }
+
+    .action-button.secondary {
+      background: #fff;
+      color: var(--text);
+    }
+
+    .action-button.secondary:hover {
+      background: #f8fbff;
+      border-color: #b6c5d7;
+    }
+
+    /* Output */
+    #output {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 16px 0 8px;
+    }
+
+    .page {
+      width: 8.5in;
+      max-width: calc(100% - 12px);
+      background: #fff;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+      padding: 0.5in;
+      border: 2px solid #000;
+      border-radius: 12px;
+      margin: 0 auto;
+      page-break-inside: avoid;
+      text-align: center;
+    }
+
+    .worksheet-title {
+      font-size: 28px;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .skills-line {
+      font-size: 14px;
+      margin: 6px 0 10px;
+    }
+
+    .worksheet-directions {
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .board-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      justify-content: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .board-shell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      border: 3px solid #000;
+      border-radius: 16px;
+      padding: 8px 0;
+      background: #fff;
+      box-sizing: border-box;
+    }
+
+    .board-label {
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .tic-tac-toe {
+      table-layout: fixed;
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 300px;
+      height: 300px;
+      margin: 0;
+    }
+
+    .tic-tac-toe td {
+      border: none;
+      width: 100px;
+      height: 100px;
+      padding: 0;
+      vertical-align: middle;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .tic-tac-toe td .cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      width: 100%;
+      height: 100%;
+      line-height: 1.2;
+      box-sizing: border-box;
+      text-align: center;
+      overflow: hidden;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+
+    .tic-tac-toe td .cell.word {
+      font-size: 24px;
+      white-space: nowrap;
+    }
+
+    .tic-tac-toe td .cell.sentence {
+      font-size: 22px;
+      line-height: 1.12;
+    }
+
+    .tic-tac-toe td .cell.sentence.long {
+      font-size: 18px;
+      line-height: 1.08;
+    }
+
+    .tic-tac-toe td .cell.sentence.very-long {
+      font-size: 16px;
+      line-height: 1.05;
+    }
+
+    .tic-tac-toe td.has-bottom {
+      border-bottom: 6px solid #000;
+    }
+
+    .tic-tac-toe td.has-right {
+      border-right: 6px solid #000;
+    }
+
+    #copyright {
+      font-size: 12px;
+      text-align: right;
+      margin-top: 8px;
+      display: none;
+    }
+
+    @media (max-width: 980px) {
+      .workflow-bar {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .workflow-step:nth-child(2) {
+        border-right: 0;
+      }
+
+      .workflow-step:nth-child(-n+2) {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .option-row {
+        grid-template-columns: 1fr;
+      }
+
+      .action-strip {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+
+      .actions-right {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page-shell {
+        width: min(100%, calc(100% - 14px));
+        margin: 10px auto 20px;
+      }
+
+      .page-header {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .workflow-bar {
+        grid-template-columns: 1fr;
+      }
+
+      .workflow-step {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .workflow-step:last-child {
+        border-bottom: 0;
+      }
+
+      .workspace-body {
+        padding: 12px;
+      }
+
+      .section-header,
+      .section-body,
+      .action-strip {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .actions-right {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .skill-button {
+        width: 100%;
+        max-width: none;
+      }
+
+      .board-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .tic-tac-toe {
+        width: 276px;
+        height: 276px;
+      }
+
+      .tic-tac-toe td {
+        width: 92px;
+        height: 92px;
+      }
+    }
+
+    @media print {
+      body > .page-shell > .page-header,
+      body > .page-shell > .workspace {
+        display: none !important;
+      }
+
+      @page {
+        size: letter portrait;
+        margin: 0.45in 0.12in 0.42in 0.12in;
+      }
+
+      #output {
+        margin: 0;
+        padding: 0;
+      }
+
+      .page {
+        position: relative;
+        width: auto;
+        padding-block: 0.30in 0.22in;
+        padding-inline: 0.10in;
+        border: none;
+        box-shadow: none;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      .worksheet-title {
+        font-size: 19px;
+        margin-bottom: 0.05in;
+      }
+
+      .skills-line {
+        font-size: 12px;
+        margin: 0 0 0.10in;
+      }
+
+      .worksheet-directions {
+        font-size: 12px;
+        margin-bottom: 0.12in;
+      }
+
+      :root {
+        --board: 3.00in;
+        --cell: calc(var(--board) / 3);
+        --gap: 0.16in;
+      }
+
+      .board-wrap {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--gap);
+        break-inside: avoid;
+      }
+
+      .board-shell {
+        padding: 0.05in 0;
+        break-inside: avoid;
+      }
+
+      .board-label {
+        font-size: 12px;
+        margin-bottom: 0.04in;
+      }
+
+      .tic-tac-toe {
+        table-layout: fixed;
+        border-collapse: separate;
+        border-spacing: 0;
+        width: var(--board);
+        height: var(--board);
+        margin: 0;
+      }
+
+      .tic-tac-toe td {
+        width: var(--cell) !important;
+        height: var(--cell) !important;
+        padding: 0;
+        vertical-align: middle;
+        overflow: hidden;
+        box-sizing: border-box;
+        position: relative;
+      }
+
+      .tic-tac-toe td .cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.06in;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        line-height: 1.12;
+        overflow: hidden;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        box-sizing: border-box;
+      }
+
+      .tic-tac-toe td .cell.word {
+        font-size: 18px;
+        white-space: nowrap;
+      }
+
+      .tic-tac-toe td .cell.sentence {
+        font-size: 20px;
+      }
+
+      .tic-tac-toe td .cell.sentence.long {
+        font-size: 17px;
+      }
+
+      .tic-tac-toe td .cell.sentence.very-long {
+        font-size: 15px;
+      }
+
+      .tic-tac-toe td.has-bottom {
+        border-bottom: 6px solid #000;
+      }
+
+      .tic-tac-toe td.has-right {
+        border-right: 6px solid #000;
+      }
+
+      #copyright {
+        display: block;
+        position: absolute;
+        right: 0.10in;
+        bottom: 0.10in;
+        margin: 0;
+        font-size: 9.5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="page-header">
+      <h1>Tic Tac Toe Generator</h1>
+      <div id="selectionCount" class="header-meta">0 skills selected</div>
+    </header>
+
+    <main class="workspace">
+      <div class="workflow-bar" aria-hidden="true">
+        <div class="workflow-step">
+          <div class="workflow-number">1</div>
+          <div class="workflow-copy">
+            <div class="workflow-title">Choose Skills</div>
+            <div class="workflow-subtitle">Select one or more phonics skills.</div>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="workflow-number">2</div>
+          <div class="workflow-copy">
+            <div class="workflow-title">Blends</div>
+            <div class="workflow-subtitle">Include them or keep it simple.</div>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="workflow-number">3</div>
+          <div class="workflow-copy">
+            <div class="workflow-title">Content</div>
+            <div class="workflow-subtitle">Words, sentences, or both.</div>
+          </div>
+        </div>
+        <div class="workflow-step">
+          <div class="workflow-number">4</div>
+          <div class="workflow-copy">
+            <div class="workflow-title">Generate</div>
+            <div class="workflow-subtitle">Build and print the worksheet.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="workspace-body">
+        <div class="main-stack">
+          <section class="section-shell">
+            <div class="section-header">
+              <div class="section-title-wrap">
+                <div class="section-number">1</div>
+                <div class="section-title">Pick Skills</div>
+              </div>
+              <div class="section-meta">Select multiple</div>
+            </div>
+
+            <div class="section-body">
+              <div class="skill-groups">
+                <div class="skill-block">
+                  <button class="skill-header" type="button" data-target="cvc" aria-expanded="true">
+                    <span class="skill-header-main">
+                      <span class="skill-arrow">▲</span>
+                      <span class="skill-title">CVC Short Vowels</span>
+                    </span>
+                    <span class="skill-count">7 skills</span>
+                  </button>
+                  <div class="skills-inner" id="section-cvc">
+                    <button class="skill-button" data-skill="Short A" type="button">Short A</button>
+                    <button class="skill-button" data-skill="Short E" type="button">Short E</button>
+                    <button class="skill-button" data-skill="Short I" type="button">Short I</button>
+                    <button class="skill-button" data-skill="Short O" type="button">Short O</button>
+                    <button class="skill-button" data-skill="Short U" type="button">Short U</button>
+                    <button class="skill-button" data-skill="Mixed CVC" type="button">Mixed CVC</button>
+                    <button class="skill-button" data-skill="FLSZ" type="button">FLSZ</button>
+                  </div>
+                </div>
+
+                <div class="skill-block">
+                  <button class="skill-header" type="button" data-target="dig" aria-expanded="false">
+                    <span class="skill-header-main">
+                      <span class="skill-arrow">▼</span>
+                      <span class="skill-title">Digraphs</span>
+                    </span>
+                    <span class="skill-count">6 skills</span>
+                  </button>
+                  <div class="skills-inner collapsed" id="section-dig">
+                    <button class="skill-button" data-skill="ck" type="button">ck</button>
+                    <button class="skill-button" data-skill="sh" type="button">sh</button>
+                    <button class="skill-button" data-skill="th" type="button">th</button>
+                    <button class="skill-button" data-skill="ch" type="button">ch</button>
+                    <button class="skill-button" data-skill="wh" type="button">wh</button>
+                    <button class="skill-button" data-skill="Digraphs Mixed" type="button">Digraphs Mixed</button>
+                  </div>
+                </div>
+
+                <div class="skill-block">
+                  <button class="skill-header" type="button" data-target="glued" aria-expanded="false">
+                    <span class="skill-header-main">
+                      <span class="skill-arrow">▼</span>
+                      <span class="skill-title">Glued Sounds</span>
+                    </span>
+                    <span class="skill-count">4 skills</span>
+                  </button>
+                  <div class="skills-inner collapsed" id="section-glued">
+                    <button class="skill-button" data-skill="-all" type="button">-all</button>
+                    <button class="skill-button" data-skill="-ng" type="button">-ng</button>
+                    <button class="skill-button" data-skill="-nk" type="button">-nk</button>
+                    <button class="skill-button" data-skill="Glued Mixed" type="button">Glued Mixed</button>
+                  </div>
+                </div>
+
+                <div class="skill-block">
+                  <button class="skill-header" type="button" data-target="vce" aria-expanded="false">
+                    <span class="skill-header-main">
+                      <span class="skill-arrow">▼</span>
+                      <span class="skill-title">Silent E (VCe)</span>
+                    </span>
+                    <span class="skill-count">5 skills</span>
+                  </button>
+                  <div class="skills-inner collapsed" id="section-vce">
+                    <button class="skill-button" data-skill="a_e" type="button">a_e</button>
+                    <button class="skill-button" data-skill="i_e" type="button">i_e</button>
+                    <button class="skill-button" data-skill="o_e" type="button">o_e</button>
+                    <button class="skill-button" data-skill="u_e" type="button">u_e</button>
+                    <button class="skill-button" data-skill="Mixed VCe" type="button">Mixed VCe</button>
+                  </div>
+                </div>
+
+                <div class="skill-block">
+                  <button class="skill-header" type="button" data-target="rctrl" aria-expanded="false">
+                    <span class="skill-header-main">
+                      <span class="skill-arrow">▼</span>
+                      <span class="skill-title">R-Controlled</span>
+                    </span>
+                    <span class="skill-count">4 skills</span>
+                  </button>
+                  <div class="skills-inner collapsed" id="section-rctrl">
+                    <button class="skill-button" data-skill="ar" type="button">ar</button>
+                    <button class="skill-button" data-skill="or" type="button">or</button>
+                    <button class="skill-button" data-skill="er/ir/ur" type="button">er/ir/ur</button>
+                    <button class="skill-button" data-skill="Mixed R-Controlled" type="button">Mixed R-Controlled</button>
+                  </div>
+                </div>
+
+                <div class="skill-block">
+                  <button class="skill-header" type="button" data-target="vteams" aria-expanded="false">
+                    <span class="skill-header-main">
+                      <span class="skill-arrow">▼</span>
+                      <span class="skill-title">Vowel Teams</span>
+                    </span>
+                    <span class="skill-count">6 skills</span>
+                  </button>
+                  <div class="skills-inner collapsed" id="section-vteams">
+                    <button class="skill-button full-width-label" data-skill="Long A (ai/ay)" type="button">Long A (ai/ay)</button>
+                    <button class="skill-button full-width-label" data-skill="Long E (ee/ea)" type="button">Long E (ee/ea)</button>
+                    <button class="skill-button full-width-label" data-skill="Long I (igh/y/ie)" type="button">Long I (igh/y/ie)</button>
+                    <button class="skill-button full-width-label" data-skill="Long O (oa/ow/oe)" type="button">Long O (oa/ow/oe)</button>
+                    <button class="skill-button full-width-label" data-skill="Long U (oo/ew/ue)" type="button">Long U (oo/ew/ue)</button>
+                    <button class="skill-button full-width-label" data-skill="Mixed Vowel Teams" type="button">Mixed Vowel Teams</button>
+                  </div>
+                </div>
+
+                <div class="skill-block">
+                  <button class="skill-header" type="button" data-target="dip" aria-expanded="false">
+                    <span class="skill-header-main">
+                      <span class="skill-arrow">▼</span>
+                      <span class="skill-title">Diphthongs</span>
+                    </span>
+                    <span class="skill-count">2 skills</span>
+                  </button>
+                  <div class="skills-inner collapsed" id="section-dip">
+                    <button class="skill-button full-width-label" data-skill="Diphthongs (oy/oi)" type="button">oy/oi</button>
+                    <button class="skill-button full-width-label" data-skill="Diphthongs (ow/ou)" type="button">ow/ou</button>
+                  </div>
+                </div>
+
+                <div class="skill-block">
+                  <button class="skill-header" type="button" data-target="variant" aria-expanded="false">
+                    <span class="skill-header-main">
+                      <span class="skill-arrow">▼</span>
+                      <span class="skill-title">Variant Vowels</span>
+                    </span>
+                    <span class="skill-count">2 skills</span>
+                  </button>
+                  <div class="skills-inner collapsed" id="section-variant">
+                    <button class="skill-button full-width-label" data-skill="Variant Vowels (au/aw)" type="button">au/aw</button>
+                    <button class="skill-button full-width-label" data-skill="Variant Vowel (oo)" type="button">oo</button>
+                  </div>
+                </div>
+
+                <div class="skill-block">
+                  <button class="skill-header" type="button" data-target="soft" aria-expanded="false">
+                    <span class="skill-header-main">
+                      <span class="skill-arrow">▼</span>
+                      <span class="skill-title">Soft C/G Endings</span>
+                    </span>
+                    <span class="skill-count">3 skills</span>
+                  </button>
+                  <div class="skills-inner collapsed" id="section-soft">
+                    <button class="skill-button" data-skill="Soft C (-ce)" type="button">Soft C (-ce)</button>
+                    <button class="skill-button" data-skill="Soft G (-ge)" type="button">Soft G (-ge)</button>
+                    <button class="skill-button" data-skill="Soft G (-dge)" type="button">Soft G (-dge)</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div class="option-row">
+            <section class="option-card">
+              <div class="option-card-header">
+                <div class="section-title-wrap">
+                  <div class="section-number">2</div>
+                  <div class="option-card-title">Choose Blends</div>
+                </div>
+              </div>
+              <div id="blendOptions" class="option-stack">
+                <button class="option-box" data-blends="no" type="button">
+                  <span class="option-title">No, 3 Sounds</span>
+                  <span class="option-copy">Use the standard skill lists.</span>
+                </button>
+                <button class="option-box" data-blends="yes" type="button">
+                  <span class="option-title">Yes, 4+ Sounds</span>
+                  <span class="option-copy">Use with-blends lists and backfill if needed.</span>
+                </button>
+              </div>
+            </section>
+
+            <section class="option-card">
+              <div class="option-card-header">
+                <div class="section-title-wrap">
+                  <div class="section-number">3</div>
+                  <div class="option-card-title">Choose Content Type</div>
+                </div>
+              </div>
+              <div id="contentOptions" class="option-stack">
+                <button class="option-box" data-mode="words" type="button">
+                  <span class="option-title">Words Only</span>
+                  <span class="option-copy">Fill all four boards with words.</span>
+                </button>
+                <button class="option-box" data-mode="sentences" type="button">
+                  <span class="option-title">Sentences Only</span>
+                  <span class="option-copy">Use sentence reading in every square.</span>
+                </button>
+                <button class="option-box" data-mode="both" type="button">
+                  <span class="option-title">Both</span>
+                  <span class="option-copy">Mix words and sentences across the worksheet.</span>
+                </button>
+              </div>
+            </section>
+          </div>
+
+          <section class="section-shell soft">
+            <div class="section-header">
+              <div class="section-title-wrap">
+                <div class="section-number">4</div>
+                <div class="section-title">Generate and Print</div>
+              </div>
+              <div class="section-meta">4 boards per page</div>
+            </div>
+
+            <div class="action-strip">
+              <div class="chips-zone">
+                <div class="chips-label">Selected Skills</div>
+                <div id="chips" class="chips-wrap">
+                  <div class="chip-empty">No skills selected yet.</div>
+                </div>
+              </div>
+
+              <div class="actions-right">
+                <button id="btnGenerate" class="action-button primary" type="button">Generate</button>
+                <button id="btnPrint" class="action-button secondary" type="button">Print</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <div id="output"></div>
+  </div>
+
+  <script>
+    /* ===== Utilities ===== */
+    if (typeof CSS === "undefined" || typeof CSS.escape !== "function") {
+      window.CSS = window.CSS || {};
+      CSS.escape = CSS.escape || function (sel) {
+        return (sel + "").replace(/[^a-zA-Z0-9_-]/g, "\\$&");
+      };
+    }
+
+    function toArray(x) {
+      if (Array.isArray(x)) return x.slice();
+      if (x == null) return [];
+      try { return Array.from(x); } catch (err) { return []; }
+    }
+
+    function shuffle(list) {
+      const a = toArray(list);
+      const n = a.length >>> 0;
+      for (let i = n - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const t = a[i];
+        a[i] = a[j];
+        a[j] = t;
+      }
+      return a;
+    }
+
+    function uniqueByLowercase(list) {
+      const seen = new Set();
+      const out = [];
+      for (const item of toArray(list)) {
+        const key = String(item).toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          out.push(item);
+        }
+      }
+      return out;
+    }
+
+    function fillToN(list, n) {
+      const base = toArray(list);
+      if (base.length === 0 || !Number.isFinite(n) || n <= 0) return [];
+      const out = [];
+      let bag = shuffle(base);
+      while (out.length < n) {
+        if (bag.length === 0) {
+          bag = shuffle(base);
+          if (bag.length === 0) break;
+        }
+        out.push(bag.shift());
+      }
+      return out.slice(0, n);
+    }
+
+    function chunk36ToFour(cells) {
+      return [0, 9, 18, 27].map(function (i) {
+        return cells.slice(i, i + 9);
+      });
+    }
+
+    /* ===== Data keys / mapping ===== */
+    const PREFIX = {
+      "Short A": "0.1 - Short A",
+      "Short O": "0.2 - Short O",
+      "Short I": "0.3 - Short I",
+      "Short U": "0.4 - Short U",
+      "Short E": "0.5 - Short E",
+      "FLSZ": "0.6 - FLSZ",
+
+      "ck": "1.1 - ck",
+      "sh": "1.2 - sh",
+      "th": "1.3 - th",
+      "ch": "1.4 - ch",
+      "wh": "1.5 - wh",
+
+      "-all": "3.1 - all",
+      "-ng": "3.2 - ng",
+      "-nk": "3.3 - nk",
+
+      "a_e": "2.1 - a_e",
+      "i_e": "2.2 - i_e",
+      "o_e": "2.3 - o_e",
+      "u_e": "2.4 - u_e",
+
+      "ar": "4.1 - ar",
+      "or": "4.2 - or",
+      "er/ir/ur": "4.3 - er, ir, ur",
+
+      "Soft C (-ce)": "10.1 - ce",
+      "Soft G (-ge)": "10.2 - ge",
+      "Soft G (-dge)": "10.3 - dge"
+    };
+
+    const MIXED_RULES = {
+      "Mixed CVC": ["0.1 - Short A", "0.5 - Short E", "0.3 - Short I", "0.2 - Short O", "0.4 - Short U", "0.6 - FLSZ"],
+      "Digraphs Mixed": ["1.1 - ck", "1.2 - sh", "1.3 - th", "1.4 - ch", "1.5 - wh"],
+      "Glued Mixed": ["3.1 - all", "3.2 - ng", "3.3 - nk"],
+
+      "Mixed VCe": ["2.1 - a_e", "2.2 - i_e", "2.3 - o_e", "2.4 - u_e"],
+      "Mixed R-Controlled": ["4.1 - ar", "4.2 - or", "4.3 - er, ir, ur"],
+
+      "Long A (ai/ay)": ["6.1 - ay", "6.2 - ai"],
+      "Long E (ee/ea)": ["6.4 - ee", "6.5 - ea"],
+      "Long I (igh/y/ie)": ["6.6 - igh", "6.7 - Final y", "6.8 - ie"],
+      "Long O (oa/ow/oe)": ["6.9 - oa", "6.10 - ow", "6.11 - oe"],
+      "Long U (oo/ew/ue)": ["6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
+
+      "Mixed Vowel Teams": [
+        "6.1 - ay", "6.2 - ai", "6.4 - ee", "6.5 - ea",
+        "6.6 - igh", "6.7 - Final y", "6.8 - ie",
+        "6.9 - oa", "6.10 - ow", "6.11 - oe",
+        "6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"
+      ],
+
+      "Diphthongs (oy/oi)": ["7.4 - oy", "7.3 - oi"],
+      "Diphthongs (ow/ou)": ["7.2 - ow", "7.1 - ou"],
+
+      "Variant Vowels (au/aw)": ["7.5 - aw", "7.6 - au"],
+      "Variant Vowel (oo)": ["7.7 - oo variant"]
+    };
+
+    function wordsDict() {
+      return (typeof fluencyWords !== "undefined") ? fluencyWords : {};
+    }
+
+    function sentsDict() {
+      return (typeof fluencySentences !== "undefined") ? fluencySentences : {};
+    }
+
+    function readDict(dict, key) {
+      return Array.isArray(dict[key]) ? dict[key] : [];
+    }
+
+    function readWithBlends(dict, prefix, type, blends) {
+      const typeLower = type.toLowerCase();
+      const baseKeys = [
+        prefix + " " + type,
+        prefix + " " + typeLower,
+        prefix
+      ];
+
+      let base = [];
+      for (const k of baseKeys) {
+        base = base.concat(readDict(dict, k));
+      }
+
+      if (blends) {
+        const candidates = [
+          prefix + " with Blends " + type,
+          prefix + " with blends " + type,
+          prefix + " with Blends " + typeLower,
+          prefix + " with blends " + typeLower,
+          prefix + " with BLENDS " + type
+        ];
+
+        const bPrefix = prefix.replace(" - ", "b - ");
+        candidates.push(
+          bPrefix + " with Blends " + type,
+          bPrefix + " with blends " + type,
+          bPrefix + " with Blends " + typeLower,
+          bPrefix + " with blends " + typeLower
+        );
+
+        for (const k of candidates) {
+          const got = readDict(dict, k);
+          if (got.length) {
+            const MIN_BACKFILL = 9;
+            return (got.length < MIN_BACKFILL) ? uniqueByLowercase(got.concat(base)) : got;
+          }
+        }
+      }
+
+      return base;
+    }
+
+    function getList(label, type, blends) {
+      const dict = (type === "Words") ? wordsDict() : sentsDict();
+
+      if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)) {
+        let all = [];
+        for (const p of MIXED_RULES[label]) {
+          all = all.concat(readWithBlends(dict, p, type, blends));
+        }
+        return all;
+      }
+
+      const prefix = PREFIX[label];
+      if (prefix) return readWithBlends(dict, prefix, type, blends);
+
+      const tail1 = " " + type;
+      const tail2 = " " + type.toLowerCase();
+      const want = label.toLowerCase();
+      const keys = Object.keys(dict);
+      const guess = keys.find(function (k) {
+        return k.toLowerCase().includes(want) && (k.endsWith(tail1) || k.endsWith(tail2));
+      });
+      return guess ? readDict(dict, guess) : [];
+    }
+
+    /* ===== UI state ===== */
+    const selected = new Set();
+    let includeBlends = false;
+    let mode = null;
+
+    function updateSelectionCount() {
+      const countEl = document.getElementById("selectionCount");
+      const total = selected.size;
+      countEl.textContent = total + (total === 1 ? " skill selected" : " skills selected");
+    }
+
+    document.querySelectorAll(".skill-header").forEach(function (header) {
+      header.addEventListener("click", function () {
+        const target = header.getAttribute("data-target");
+        const inner = document.getElementById("section-" + target);
+        const arrow = header.querySelector(".skill-arrow");
+        const isCollapsed = inner.classList.contains("collapsed");
+
+        if (isCollapsed) {
+          inner.classList.remove("collapsed");
+          arrow.textContent = "▲";
+          header.setAttribute("aria-expanded", "true");
+        } else {
+          inner.classList.add("collapsed");
+          arrow.textContent = "▼";
+          header.setAttribute("aria-expanded", "false");
+        }
+      });
+    });
+
+    document.querySelectorAll(".skill-button").forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        const label = btn.dataset.skill;
+        if (selected.has(label)) {
+          selected.delete(label);
+          btn.classList.remove("selected");
+        } else {
+          selected.add(label);
+          btn.classList.add("selected");
+        }
+        renderChips();
+        updateSelectionCount();
+      });
+    });
+
+    function renderChips() {
+      const wrap = document.getElementById("chips");
+      wrap.innerHTML = "";
+
+      if (selected.size === 0) {
+        const empty = document.createElement("div");
+        empty.className = "chip-empty";
+        empty.textContent = "No skills selected yet.";
+        wrap.appendChild(empty);
+        return;
+      }
+
+      Array.from(selected).forEach(function (label) {
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        chip.innerHTML = "<span>" + label + "</span><span class=\"x\" title=\"Remove\">×</span>";
+        chip.querySelector(".x").addEventListener("click", function () {
+          selected.delete(label);
+          const btn = document.querySelector(".skill-button[data-skill=\"" + CSS.escape(label) + "\"]");
+          if (btn) btn.classList.remove("selected");
+          renderChips();
+          updateSelectionCount();
+        });
+        wrap.appendChild(chip);
+      });
+    }
+
+    document.querySelectorAll("#blendOptions .option-box").forEach(function (box) {
+      box.addEventListener("click", function () {
+        document.querySelectorAll("#blendOptions .option-box").forEach(function (b) {
+          b.classList.remove("selected");
+        });
+        box.classList.add("selected");
+        includeBlends = (box.dataset.blends === "yes");
+      });
+    });
+
+    document.querySelectorAll("#contentOptions .option-box").forEach(function (box) {
+      box.addEventListener("click", function () {
+        document.querySelectorAll("#contentOptions .option-box").forEach(function (b) {
+          b.classList.remove("selected");
+        });
+        box.classList.add("selected");
+        mode = box.dataset.mode;
+      });
+    });
+
+    document.getElementById("btnPrint").addEventListener("click", function () {
+      window.print();
+    });
+
+    function buildBoard(cells) {
+      const tbl = document.createElement("table");
+      tbl.className = "tic-tac-toe";
+
+      for (let r = 0; r < 3; r += 1) {
+        const row = tbl.insertRow();
+        for (let c = 0; c < 3; c += 1) {
+          const td = row.insertCell();
+          const idx = r * 3 + c;
+          const val = (cells[idx] != null) ? String(cells[idx]) : "";
+          const isSentence = val.includes(" ");
+
+          if (r < 2) td.classList.add("has-bottom");
+          if (c < 2) td.classList.add("has-right");
+
+          const inner = document.createElement("div");
+          inner.className = "cell " + (isSentence ? "sentence" : "word");
+
+          if (isSentence) {
+            const charCount = val.length;
+            if (charCount > 40) inner.classList.add("very-long");
+            else if (charCount > 24) inner.classList.add("long");
+          }
+
+          inner.textContent = val;
+          td.appendChild(inner);
+        }
+      }
+
+      const wrap = document.createElement("div");
+      wrap.className = "board-shell";
+
+      const label = document.createElement("div");
+      label.className = "board-label";
+      label.textContent = "";
+
+      wrap.appendChild(label);
+      wrap.appendChild(tbl);
+      return wrap;
+    }
+
+    function generateBoards() {
+      if (selected.size === 0) {
+        window.alert("Select at least one skill in Step 1.");
+        return;
+      }
+
+      if (!mode) {
+        window.alert("Choose Words Only / Sentences Only / Both in Step 3.");
+        return;
+      }
+
+      if (!wordsDict() && !sentsDict()) {
+        window.alert("Data not loaded. Check the <script src=\"...\"> file name.");
+        return;
+      }
+
+      const labels = Array.from(selected);
+      const TOTAL = 36;
+      let content = [];
+
+      if (mode === "words") {
+        const unionW = labels.flatMap(function (lbl) {
+          return getList(lbl, "Words", includeBlends);
+        });
+        const pool = uniqueByLowercase(unionW);
+        content = fillToN(shuffle(pool), TOTAL);
+      } else if (mode === "sentences") {
+        const unionS = labels.flatMap(function (lbl) {
+          return getList(lbl, "Sentences", includeBlends);
+        });
+        const pool = uniqueByLowercase(unionS);
+        content = fillToN(shuffle(pool), TOTAL);
+      } else {
+        const words = uniqueByLowercase(labels.flatMap(function (lbl) {
+          return getList(lbl, "Words", includeBlends);
+        }));
+        const sents = uniqueByLowercase(labels.flatMap(function (lbl) {
+          return getList(lbl, "Sentences", includeBlends);
+        }));
+        const w = fillToN(shuffle(words), Math.floor(TOTAL / 2));
+        const s = fillToN(shuffle(sents), TOTAL - w.length);
+        content = shuffle(w.concat(s));
+      }
+
+      if (content.length < TOTAL) {
+        window.alert("Not enough content found using these settings. Add more skills or change blends/content options.");
+        return;
+      }
+
+      const output = document.getElementById("output");
+      output.innerHTML = "";
+
+      const page = document.createElement("div");
+      page.className = "page";
+
+      const title = document.createElement("div");
+      title.className = "worksheet-title";
+      title.textContent = "Phonics Tic Tac Toe";
+
+      const skills = document.createElement("div");
+      skills.className = "skills-line";
+      skills.innerHTML = "<strong>Skills:</strong> " + (labels.length ? labels.join(" • ") : "—");
+
+      const directions = document.createElement("div");
+      directions.className = "worksheet-directions";
+      directions.innerHTML = "<strong>Directions:</strong> Read the word or sentence, then place your X or O. First to 3 in a row wins!";
+
+      const grid = document.createElement("div");
+      grid.className = "board-wrap";
+
+      const boards = chunk36ToFour(content);
+      boards.forEach(function (cells, i) {
+        const group = buildBoard(cells);
+        group.querySelector(".board-label").textContent = "Game " + (i + 1);
+        grid.appendChild(group);
+      });
+
+      const copy = document.createElement("div");
+      copy.id = "copyright";
+      copy.textContent = "Copyright - InterventionStation.com - @TeachwithMrC";
+
+      page.appendChild(title);
+      page.appendChild(skills);
+      page.appendChild(directions);
+      page.appendChild(grid);
+      page.appendChild(copy);
+      output.appendChild(page);
+      output.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    document.getElementById("btnGenerate").addEventListener("click", generateBoards);
+
+    renderChips();
+    updateSelectionCount();
+  </script>
+</body>
+</html>

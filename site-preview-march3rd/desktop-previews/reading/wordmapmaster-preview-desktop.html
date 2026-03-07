@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Word Mapping Preview - Desktop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    @font-face {
+      font-family: "BoxesFont";
+      src: url("https://teachwithmrc.github.io/fonts/boxes2.otf") format("opentype");
+      font-display: swap;
+    }
+
+    :root { --line: #111; }
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", Arial, sans-serif;
+      background: #f6f8fc;
+      color: #111;
+    }
+
+    .wrap {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .head {
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+      padding: 20px 18px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .head h1 {
+      margin: 0;
+      font-size: clamp(36px, 4.2vw, 58px);
+      line-height: 1.06;
+      font-weight: 800;
+    }
+
+    .controls {
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .option-block {
+      max-width: 520px;
+      margin: 0 auto 14px;
+      text-align: center;
+    }
+
+    .option-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #22344f;
+    }
+
+    .option-chip {
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      min-height: 58px;
+      padding: 12px 10px;
+      font-size: 20px;
+      font-weight: 900;
+      background: #fff;
+    }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(220px, 300px));
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .controls-note {
+      margin: 12px 0 0;
+      text-align: center;
+      font-size: 20px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: #22344f;
+    }
+
+    .status {
+      margin: 8px 0 0;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #55657e;
+      min-height: 1.2em;
+    }
+
+    .btn {
+      width: 100%;
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      min-height: 58px;
+      padding: 12px 10px;
+      font-family: "Poppins", Arial, sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      cursor: pointer;
+      background: #6ec1ff;
+      color: #fff;
+    }
+
+    .btn-print {
+      background: #fff;
+      color: #111;
+    }
+
+    .sheet-wrap {
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 14px;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      max-height: 84vh;
+    }
+
+    .page {
+      position: relative;
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 10px;
+      padding: 18px 18px 170px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .title {
+      margin: 0 0 6px;
+      font-size: clamp(40px, 3.4vw, 52px);
+      line-height: 1.04;
+      font-weight: 800;
+    }
+
+    .sub {
+      margin: 0 0 10px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #3b4c65;
+    }
+
+    .name-row {
+      text-align: right;
+      font-size: 19px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .name-row .line {
+      display: inline-block;
+      width: 260px;
+      border-bottom: 3px solid #111;
+      transform: translateY(-2px);
+      margin-left: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      border: 2px solid #000;
+      border-radius: 8px;
+      padding: 18px 10px 12px;
+      min-height: 250px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .word {
+      font-size: 40px;
+      font-weight: 800;
+      line-height: 1.05;
+      text-transform: lowercase;
+    }
+
+    .pattern {
+      margin-top: 16px;
+      font-family: "BoxesFont", monospace !important;
+      font-size: 94px;
+      font-weight: normal;
+      line-height: 0.9;
+      white-space: nowrap;
+      letter-spacing: 0;
+      transform: scale(1.25);
+      transform-origin: center top;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .footer {
+      margin-top: 10px;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 700;
+      color: #444;
+    }
+
+    .members-lock {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      z-index: 30;
+      border: 2px solid #fff;
+      border-radius: 16px;
+      background: rgba(15, 18, 24, 0.9);
+      color: #fff;
+      text-align: center;
+      padding: 14px 12px 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .members-lock-title {
+      margin: 0;
+      font-size: 46px;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .members-lock-copy {
+      margin: 10px 0 10px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .members-lock a {
+      display: inline-block;
+      text-decoration: none;
+      border-radius: 999px;
+      background: #fff;
+      color: #111;
+      border: 2px solid #fff;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .preview-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0.55;
+      background-image:
+        repeating-linear-gradient(-24deg, rgba(0, 0, 0, 0.12) 0 16px, rgba(255, 255, 255, 0.05) 16px 32px),
+        url("data:image/svg+xml,%3Csvg width='360' height='240' viewBox='0 0 360 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-23 180 120)'%3E%3Ctext x='22' y='112' fill='%23000' fill-opacity='.4' font-family='Poppins' font-size='40' font-weight='800'%3EPREVIEW%3C/text%3E%3Ctext x='92' y='158' fill='%23000' fill-opacity='.3' font-family='Poppins' font-size='20' font-weight='700'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+      background-size: auto, 360px 240px;
+      background-repeat: repeat;
+    }
+
+    @media (max-width: 1100px) {
+      .wrap { padding: 12px; }
+      .page { max-width: 100%; padding: 12px 12px 140px; }
+      .title { font-size: clamp(28px, 5vw, 40px); }
+      .sub { font-size: 14px; }
+      .name-row { font-size: 14px; margin-bottom: 8px; }
+      .name-row .line { width: 150px; border-bottom: 2px solid #111; }
+      .controls-note { font-size: 16px; margin-top: 10px; }
+      .card { min-height: 170px; padding: 10px 6px 8px; }
+      .word { font-size: 26px; }
+      .pattern { font-size: 64px; margin-top: 8px; }
+      .members-lock { left: 10px; right: 10px; bottom: 10px; padding: 10px 10px 12px; }
+      .members-lock-title { font-size: 30px; }
+      .members-lock-copy { margin: 6px 0 8px; font-size: 12px; }
+      .members-lock a { padding: 7px 14px; font-size: 12px; }
+    }
+
+    @media (max-width: 760px) {
+      .btn-row { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; gap: 8px; }
+    }
+
+    @media print {
+      body { display: none !important; }
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+  <div class="wrap">
+    <section class="head">
+      <h1>Word Mapping Preview</h1>
+    </section>
+
+    <section class="controls">
+      <div class="option-block">
+        <span class="option-label">Generator Option</span>
+        <div class="option-chip">Vowel Team Preview</div>
+      </div>
+
+      <div class="btn-row">
+        <button id="btnGenerate" class="btn" type="button">Generate</button>
+        <button id="btnPrint" class="btn btn-print" type="button">Print</button>
+      </div>
+
+      <p class="controls-note">Choose or Combine over 40 Phonics Skills</p>
+      <p id="status" class="status">Ready.</p>
+    </section>
+
+    <section class="sheet-wrap">
+      <div id="output"></div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      const VOWEL_TEAM_KEYS = [
+        "Long A(ai) with Blends",
+        "Long A(ay) with Blends",
+        "Long E(ee) with Blends",
+        "Long E(ea) with Blends",
+        "Long I(igh) with Blends",
+        "Long O(oa) with Blends",
+        "Long O(ow) with Blends",
+        "Long O(oe) with Blends",
+        "Long U(oo) with Blends",
+        "Long U(ew) with Blends",
+        "Long U(ue) with Blends"
+      ];
+
+      const DATA_SOURCES = [
+        "../../../newtry_FULL.js",
+        "/newtry_FULL.js",
+        "file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/newtry_FULL.js",
+        "https://teachwithmrc.github.io/newtry_FULL.js"
+      ];
+
+      const outputEl = document.getElementById("output");
+      const statusEl = document.getElementById("status");
+      const btnGenerate = document.getElementById("btnGenerate");
+      const btnPrint = document.getElementById("btnPrint");
+
+      function hasData() {
+        return !!(typeof window !== "undefined" && typeof window.soundBoxWords === "object" && window.soundBoxWords);
+      }
+
+      function loadScript(src) {
+        return new Promise(function (resolve) {
+          const script = document.createElement("script");
+          script.src = src + (src.indexOf("?") === -1 ? "?" : "&") + "v=" + Date.now();
+          script.async = true;
+          script.onload = function () { resolve(true); };
+          script.onerror = function () { resolve(false); };
+          document.head.appendChild(script);
+        });
+      }
+
+      async function ensureDataLoaded() {
+        if (hasData()) return true;
+        for (const src of DATA_SOURCES) {
+          statusEl.textContent = "Loading JS data source...";
+          await loadScript(src);
+          if (hasData()) return true;
+        }
+        return false;
+      }
+
+      function shuffle(list) {
+        const arr = list.slice();
+        for (let i = arr.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const temp = arr[i];
+          arr[i] = arr[j];
+          arr[j] = temp;
+        }
+        return arr;
+      }
+
+      function normalizeEntry(entry) {
+        if (!entry || typeof entry !== "object") return null;
+
+        const word = String(entry.word || entry.text || "").trim();
+        if (!word) return null;
+
+        const pattern = String(entry.pattern || "").trim();
+        if (!pattern) return null;
+
+        return { word: word, pattern: pattern };
+      }
+
+      function getDataPool() {
+        const source =
+          (typeof window !== "undefined" && typeof window.soundBoxWords === "object" && window.soundBoxWords)
+            ? window.soundBoxWords
+            : ((typeof soundBoxWords === "object" && soundBoxWords) ? soundBoxWords : null);
+
+        if (!source) return [];
+
+        let pool = [];
+        VOWEL_TEAM_KEYS.forEach(function (key) {
+          const list = source[key];
+          if (Array.isArray(list) && list.length) pool = pool.concat(list);
+        });
+
+        const normalized = [];
+        const seen = new Set();
+
+        pool.forEach(function (item) {
+          const entry = normalizeEntry(item);
+          if (!entry) return;
+          const key = (entry.word + "|" + entry.pattern).toLowerCase();
+          if (seen.has(key)) return;
+          seen.add(key);
+          normalized.push(entry);
+        });
+
+        return normalized;
+      }
+
+      function buildLockPanel() {
+        const lock = document.createElement("div");
+        lock.className = "members-lock";
+        lock.innerHTML = [
+          '<p class="members-lock-title">Preview Mode</p>',
+          '<p class="members-lock-copy">Printing is for Members Only. Create an Unlimited Amount as a Member.</p>',
+          '<a href="https://interventionstation.com/membershipchoices" target="_blank" rel="noopener">Join Membership</a>'
+        ].join("");
+        return lock;
+      }
+
+      function buildCard(item) {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const word = document.createElement("div");
+        word.className = "word";
+        word.textContent = item.word;
+
+        const pattern = document.createElement("div");
+        pattern.className = "pattern";
+        pattern.textContent = String(item.pattern || "").replace(/[^1-4]/g, "") || "111";
+
+        card.appendChild(word);
+        card.appendChild(pattern);
+        return card;
+      }
+
+      function generate() {
+        const pool = getDataPool();
+        if (!pool.length) {
+          outputEl.innerHTML = "";
+          statusEl.textContent = "No data loaded from JS source.";
+          return;
+        }
+
+        let picked = shuffle(pool).slice(0, 8);
+        while (picked.length < 8) {
+          picked = picked.concat(shuffle(pool).slice(0, 8 - picked.length));
+        }
+
+        outputEl.innerHTML = "";
+
+        const page = document.createElement("div");
+        page.className = "page";
+
+        const title = document.createElement("h2");
+        title.className = "title";
+        title.textContent = "Vowel Team Preview";
+
+        const sub = document.createElement("p");
+        sub.className = "sub";
+        sub.textContent = "Word Mapping Worksheet";
+
+        const nameRow = document.createElement("div");
+        nameRow.className = "name-row";
+        nameRow.innerHTML = 'Name:<span class="line"></span>';
+
+        const grid = document.createElement("div");
+        grid.className = "grid";
+        picked.forEach(function (item) {
+          grid.appendChild(buildCard(item));
+        });
+
+        const footer = document.createElement("div");
+        footer.className = "footer";
+        footer.textContent = "Copyright - InterventionStation.com - @TeachwithMrC";
+
+        const overlay = document.createElement("div");
+        overlay.className = "preview-overlay";
+
+        page.appendChild(title);
+        page.appendChild(sub);
+        page.appendChild(nameRow);
+        page.appendChild(grid);
+        page.appendChild(footer);
+        page.appendChild(overlay);
+        page.appendChild(buildLockPanel());
+        outputEl.appendChild(page);
+
+        statusEl.textContent = "Generated new vowel team preview.";
+      }
+
+      function generateWhenReady() {
+        ensureDataLoaded().then(function () {
+          generate();
+        });
+      }
+
+      btnGenerate.addEventListener("click", generateWhenReady);
+      btnPrint.addEventListener("click", function () {
+        alert("Printing is for Members Only.\nCreate an Unlimited Amount as a Member.");
+        statusEl.textContent = "Printing is for Members Only.";
+      });
+
+      window.addEventListener("DOMContentLoaded", generateWhenReady);
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tic Tac Toe Generator Preview - Desktop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="../../../fluencyDataFull_v8-2_clean.js"></script>
+  <style>
+    :root { --line: #111; }
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", Arial, sans-serif;
+      background: #f6f8fc;
+      color: #111;
+    }
+
+    .wrap {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .head {
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+      padding: 20px 18px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .head h1 {
+      margin: 0;
+      font-size: clamp(36px, 4.2vw, 58px);
+      line-height: 1.06;
+      font-weight: 800;
+    }
+
+    .head p {
+      margin: 8px 0 0;
+      font-size: 18px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: #3b4c65;
+    }
+
+    .controls {
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(220px, 300px));
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .btn {
+      width: 100%;
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      min-height: 58px;
+      padding: 12px 10px;
+      font-family: "Poppins", Arial, sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      cursor: pointer;
+      background: #6ec1ff;
+      color: #fff;
+    }
+
+    .btn-print {
+      background: #fff;
+      color: #111;
+    }
+
+    .controls-note {
+      margin: 12px 0 0;
+      text-align: center;
+      font-size: 20px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: #22344f;
+    }
+
+    .sheet-wrap {
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 14px;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      max-height: 84vh;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 18px 18px 170px;
+      border: 2px solid #111;
+      border-radius: 10px;
+      background: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .worksheet-title {
+      margin: 0 0 6px;
+      font-size: clamp(38px, 3.4vw, 50px);
+      line-height: 1.05;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .skills-line,
+    .worksheet-directions {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.35;
+      text-align: center;
+      color: #2d405b;
+    }
+
+    .board-wrap {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .board-shell {
+      width: 100%;
+      border: 2px solid #000;
+      border-radius: 10px;
+      padding: 12px 8px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #fff;
+      min-height: 440px;
+    }
+
+    .board-label {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .tic-tac-toe {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    .tic-tac-toe td {
+      width: auto;
+      aspect-ratio: 1 / 1;
+      height: auto;
+      padding: 0;
+      overflow: hidden;
+      vertical-align: middle;
+      position: relative;
+    }
+
+    .tic-tac-toe td .cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding: 10px;
+      text-align: center;
+      overflow: hidden;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+
+    .tic-tac-toe td .cell.word {
+      font-size: clamp(18px, 2vw, 26px);
+      line-height: 1.12;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .tic-tac-toe td .cell.sentence {
+      font-size: clamp(13px, 1.5vw, 18px);
+      line-height: 1.1;
+    }
+
+    .tic-tac-toe td .cell.sentence.long { font-size: clamp(12px, 1.35vw, 17px); }
+    .tic-tac-toe td .cell.sentence.very-long { font-size: clamp(11px, 1.2vw, 16px); }
+    .tic-tac-toe td.has-bottom { border-bottom: 3px solid #000; }
+    .tic-tac-toe td.has-right { border-right: 3px solid #000; }
+
+    .footer {
+      margin-top: 12px;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 700;
+      color: #444;
+    }
+
+    .preview-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 20;
+      opacity: 0.55;
+      background-image:
+        repeating-linear-gradient(-24deg, rgba(0, 0, 0, 0.12) 0 16px, rgba(255, 255, 255, 0.05) 16px 32px),
+        url("data:image/svg+xml,%3Csvg width='360' height='240' viewBox='0 0 360 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-23 180 120)'%3E%3Ctext x='22' y='112' fill='%23000' fill-opacity='.4' font-family='Poppins' font-size='40' font-weight='800'%3EPREVIEW%3C/text%3E%3Ctext x='92' y='158' fill='%23000' fill-opacity='.3' font-family='Poppins' font-size='20' font-weight='700'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+      background-size: auto, 360px 240px;
+      background-repeat: repeat;
+    }
+
+    .members-lock {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      z-index: 30;
+      border: 2px solid #fff;
+      border-radius: 16px;
+      background: rgba(15, 18, 24, 0.9);
+      color: #fff;
+      text-align: center;
+      padding: 14px 12px 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .members-lock-title {
+      margin: 0;
+      font-size: 46px;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .members-lock-copy {
+      margin: 10px 0 10px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .members-lock a {
+      display: inline-block;
+      text-decoration: none;
+      border-radius: 999px;
+      background: #fff;
+      color: #111;
+      border: 2px solid #fff;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 1100px) {
+      .wrap { padding: 12px; }
+      .page { max-width: 100%; padding: 12px 12px 140px; }
+      .worksheet-title { font-size: clamp(28px, 5vw, 40px); }
+      .skills-line, .worksheet-directions { font-size: 14px; }
+      .controls-note { font-size: 16px; margin-top: 10px; }
+      .board-wrap { gap: 8px; }
+      .board-shell { min-height: 280px; padding: 10px 6px 6px; }
+      .board-label { font-size: 13px; margin-bottom: 4px; }
+      .tic-tac-toe td .cell.word { font-size: clamp(11px, 3vw, 15px); }
+      .tic-tac-toe td .cell.sentence { font-size: clamp(9.5px, 2.6vw, 12.5px); }
+      .tic-tac-toe td .cell.sentence.long { font-size: clamp(9px, 2.3vw, 12px); }
+      .tic-tac-toe td .cell.sentence.very-long { font-size: clamp(8px, 2vw, 11px); }
+      .members-lock { left: 10px; right: 10px; bottom: 10px; padding: 10px 10px 12px; }
+      .members-lock-title { font-size: 30px; }
+      .members-lock-copy { margin: 6px 0 8px; font-size: 12px; }
+      .members-lock a { padding: 7px 14px; font-size: 12px; }
+    }
+
+    @media (max-width: 760px) {
+      .btn-row { grid-template-columns: 1fr; }
+      .board-wrap { grid-template-columns: 1fr; }
+    }
+
+    @media print { body { display: none !important; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="head">
+      <h1>Tic Tac Toe Generator Preview</h1>
+      <p>Vowel Team Long A preset.</p>
+    </section>
+
+    <section class="controls">
+      <div class="btn-row">
+        <button id="generateBtn" class="btn" type="button">Generate</button>
+        <button id="printBtn" class="btn btn-print" type="button">Print</button>
+      </div>
+      <p class="controls-note">Choose or Combine Over 40 Phonics Skills using Words, Sentences or Both!</p>
+    </section>
+
+    <section class="sheet-wrap" aria-label="Generated worksheet preview area">
+      <div id="output"></div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      var LOCK_MESSAGE = "Printing is for Members Only. Create an Unlimited Amount as a Member.";
+      var selectedSkill = "Long A (ai/ay)";
+      var includeBlends = false;
+      var mode = "words";
+
+      function toArray(x) {
+        if (Array.isArray(x)) return x.slice();
+        if (x == null) return [];
+        try { return Array.from(x); } catch (_e) { return []; }
+      }
+      function shuffle(list) {
+        var a = toArray(list);
+        for (var i = a.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = a[i]; a[i] = a[j]; a[j] = t;
+        }
+        return a;
+      }
+      function uniqueByLowercase(list) {
+        var seen = new Set();
+        var out = [];
+        toArray(list).forEach(function (item) {
+          var key = String(item).toLowerCase();
+          if (!seen.has(key)) { seen.add(key); out.push(item); }
+        });
+        return out;
+      }
+      function fillToN(list, n) {
+        var base = toArray(list);
+        if (!base.length || !Number.isFinite(n) || n <= 0) return [];
+        var out = [];
+        var bag = shuffle(base);
+        while (out.length < n) {
+          if (!bag.length) bag = shuffle(base);
+          if (!bag.length) break;
+          out.push(bag.shift());
+        }
+        return out.slice(0, n);
+      }
+      function chunk36ToFour(cells) { return [0, 9, 18, 27].map(function (i) { return cells.slice(i, i + 9); }); }
+
+      var DATA_SOURCES = [
+        "../../../fluencyDataFull_v8-2_clean.js",
+        "../../../ladder/fluencyDataFull_v8-2_clean.js",
+        "file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/fluencyDataFull_v8-2_clean.js",
+        "file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/ladder/fluencyDataFull_v8-2_clean.js",
+        "https://teachwithmrc.github.io/fluencyDataFull_v8-2_clean.js",
+        "https://teachwithmrc.github.io/ladder/fluencyDataFull_v8-2_clean.js"
+      ];
+
+      function hasFluencyData() {
+        return !!(
+          (typeof fluencyWords !== "undefined" && fluencyWords) ||
+          (typeof fluencySentences !== "undefined" && fluencySentences) ||
+          (typeof window.fluencyData !== "undefined" && window.fluencyData && window.fluencyData.words)
+        );
+      }
+
+      function loadScript(src) {
+        return new Promise(function (resolve) {
+          var script = document.createElement("script");
+          script.src = src + (src.indexOf("?") === -1 ? "?" : "&") + "v=" + Date.now();
+          script.async = true;
+          script.onload = function () { resolve(true); };
+          script.onerror = function () { resolve(false); };
+          document.head.appendChild(script);
+        });
+      }
+
+      async function ensureFluencyData() {
+        if (hasFluencyData()) return true;
+        for (var i = 0; i < DATA_SOURCES.length; i++) {
+          await loadScript(DATA_SOURCES[i]);
+          if (hasFluencyData()) return true;
+        }
+        return false;
+      }
+
+      function hasUsableContent() {
+        var words = wordsDict();
+        var sentences = sentsDict();
+        return Object.keys(words || {}).length > 0 || Object.keys(sentences || {}).length > 0;
+      }
+
+      function showInlineMessage(message) {
+        var output = document.getElementById("output");
+        output.innerHTML =
+          "<div class='page'>" +
+          "<div class='worksheet-title'>Phonics Tic Tac Toe</div>" +
+          "<div class='worksheet-directions'><strong>Preview note:</strong> " + message + "</div>" +
+          "</div>";
+      }
+
+      var PREFIX = {
+        "Short A": "0.1 - Short A",
+        "Short O": "0.2 - Short O",
+        "Short I": "0.3 - Short I",
+        "Short U": "0.4 - Short U",
+        "Short E": "0.5 - Short E",
+        "FLSZ": "0.6 - FLSZ",
+        "ck": "1.1 - ck",
+        "sh": "1.2 - sh",
+        "th": "1.3 - th",
+        "ch": "1.4 - ch",
+        "wh": "1.5 - wh",
+        "-all": "3.1 - all",
+        "-ng": "3.2 - ng",
+        "-nk": "3.3 - nk",
+        "a_e": "2.1 - a_e",
+        "i_e": "2.2 - i_e",
+        "o_e": "2.3 - o_e",
+        "u_e": "2.4 - u_e",
+        "ar": "4.1 - ar",
+        "or": "4.2 - or",
+        "er/ir/ur": "4.3 - er, ir, ur",
+        "Soft C (-ce)": "10.1 - ce",
+        "Soft G (-ge)": "10.2 - ge",
+        "Soft G (-dge)": "10.3 - dge"
+      };
+
+      var MIXED_RULES = {
+        "Mixed CVC": ["0.1 - Short A", "0.5 - Short E", "0.3 - Short I", "0.2 - Short O", "0.4 - Short U", "0.6 - FLSZ"],
+        "Digraphs Mixed": ["1.1 - ck", "1.2 - sh", "1.3 - th", "1.4 - ch", "1.5 - wh"],
+        "Glued Mixed": ["3.1 - all", "3.2 - ng", "3.3 - nk"],
+        "Mixed VCe": ["2.1 - a_e", "2.2 - i_e", "2.3 - o_e", "2.4 - u_e"],
+        "Mixed R-Controlled": ["4.1 - ar", "4.2 - or", "4.3 - er, ir, ur"],
+        "Long A (ai/ay)": ["6.1 - ay", "6.2 - ai"],
+        "Long E (ee/ea)": ["6.4 - ee", "6.5 - ea"],
+        "Long I (igh/y/ie)": ["6.6 - igh", "6.7 - Final y", "6.8 - ie"],
+        "Long O (oa/ow/oe)": ["6.9 - oa", "6.10 - ow", "6.11 - oe"],
+        "Long U (oo/ew/ue)": ["6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
+        "Mixed Vowel Teams": ["6.1 - ay", "6.2 - ai", "6.4 - ee", "6.5 - ea", "6.6 - igh", "6.7 - Final y", "6.8 - ie", "6.9 - oa", "6.10 - ow", "6.11 - oe", "6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
+        "Diphthongs (oy/oi)": ["7.4 - oy", "7.3 - oi"],
+        "Diphthongs (ow/ou)": ["7.2 - ow", "7.1 - ou"],
+        "Variant Vowels (au/aw)": ["7.5 - aw", "7.6 - au"],
+        "Variant Vowel (oo)": ["7.7 - oo variant"]
+      };
+
+      function wordsDict() { return (typeof fluencyWords !== "undefined") ? fluencyWords : {}; }
+      function sentsDict() { return (typeof fluencySentences !== "undefined") ? fluencySentences : {}; }
+      function readDict(dict, key) { return Array.isArray(dict[key]) ? dict[key] : []; }
+
+      function readWithBlends(dict, prefix, type, blends) {
+        var typeLower = type.toLowerCase();
+        var baseKeys = [prefix + " " + type, prefix + " " + typeLower, prefix];
+        var base = [];
+        baseKeys.forEach(function (k) { base = base.concat(readDict(dict, k)); });
+
+        if (blends) {
+          var candidates = [
+            prefix + " with Blends " + type,
+            prefix + " with blends " + type,
+            prefix + " with Blends " + typeLower,
+            prefix + " with blends " + typeLower,
+            prefix + " with BLENDS " + type
+          ];
+          var bPrefix = prefix.replace(" - ", "b - ");
+          candidates = candidates.concat([
+            bPrefix + " with Blends " + type,
+            bPrefix + " with blends " + type,
+            bPrefix + " with Blends " + typeLower,
+            bPrefix + " with blends " + typeLower
+          ]);
+
+          for (var i = 0; i < candidates.length; i++) {
+            var got = readDict(dict, candidates[i]);
+            if (got.length) {
+              var MIN_BACKFILL = 9;
+              return (got.length < MIN_BACKFILL) ? uniqueByLowercase(got.concat(base)) : got;
+            }
+          }
+        }
+        return base;
+      }
+
+      function getList(label, type, blends) {
+        var dict = (type === "Words") ? wordsDict() : sentsDict();
+        if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)) {
+          var all = [];
+          MIXED_RULES[label].forEach(function (p) {
+            all = all.concat(readWithBlends(dict, p, type, blends));
+          });
+          return all;
+        }
+
+        var prefix = PREFIX[label];
+        if (prefix) return readWithBlends(dict, prefix, type, blends);
+
+        var tail1 = " " + type;
+        var tail2 = " " + type.toLowerCase();
+        var want = label.toLowerCase();
+        var keys = Object.keys(dict);
+        var guess = keys.find(function (k) {
+          return k.toLowerCase().includes(want) && (k.endsWith(tail1) || k.endsWith(tail2));
+        });
+        return guess ? readDict(dict, guess) : [];
+      }
+
+      function buildBoard(cells) {
+        var tbl = document.createElement("table");
+        tbl.className = "tic-tac-toe";
+
+        for (var r = 0; r < 3; r++) {
+          var row = tbl.insertRow();
+          for (var c = 0; c < 3; c++) {
+            var td = row.insertCell();
+            var idx = r * 3 + c;
+            var val = (cells[idx] != null) ? String(cells[idx]) : "";
+            var isSentence = val.includes(" ");
+            if (r < 2) td.classList.add("has-bottom");
+            if (c < 2) td.classList.add("has-right");
+
+            var inner = document.createElement("div");
+            inner.className = "cell " + (isSentence ? "sentence" : "word");
+            if (isSentence) {
+              var charCount = val.length;
+              if (charCount > 40) inner.classList.add("very-long");
+              else if (charCount > 24) inner.classList.add("long");
+            }
+            inner.textContent = val;
+            td.appendChild(inner);
+          }
+        }
+
+        var wrap = document.createElement("div");
+        wrap.className = "board-shell";
+        var label = document.createElement("div");
+        label.className = "board-label";
+        wrap.appendChild(label);
+        wrap.appendChild(tbl);
+        return wrap;
+      }
+
+      function buildLockPanel() {
+        var panel = document.createElement("div");
+        panel.className = "members-lock";
+        panel.innerHTML =
+          "<p class='members-lock-title'>Members Only</p>" +
+          "<p class='members-lock-copy'>" + LOCK_MESSAGE + "</p>" +
+          "<a href='https://teachwithmrc.github.io/#two-setp-order-kGHIw9I8yBl' target='_blank' rel='noopener noreferrer'>Sign Up Now</a>";
+        return panel;
+      }
+
+      async function generateWorksheet() {
+        var dataOk = await ensureFluencyData();
+        if (!dataOk || !hasUsableContent()) {
+          showInlineMessage("The phonics data file did not load for this preview.");
+          return;
+        }
+
+        var TOTAL = 36;
+        var labels = [selectedSkill];
+        var content = [];
+
+        if (mode === "words") {
+          var unionW = labels.flatMap(function (lbl) { return getList(lbl, "Words", includeBlends); });
+          content = fillToN(shuffle(uniqueByLowercase(unionW)), TOTAL);
+        } else if (mode === "sentences") {
+          var unionS = labels.flatMap(function (lbl) { return getList(lbl, "Sentences", includeBlends); });
+          content = fillToN(shuffle(uniqueByLowercase(unionS)), TOTAL);
+        } else {
+          var words = uniqueByLowercase(labels.flatMap(function (lbl) { return getList(lbl, "Words", includeBlends); }));
+          var sents = uniqueByLowercase(labels.flatMap(function (lbl) { return getList(lbl, "Sentences", includeBlends); }));
+          var w = fillToN(shuffle(words), Math.floor(TOTAL / 2));
+          var s = fillToN(shuffle(sents), TOTAL - w.length);
+          content = shuffle(w.concat(s));
+        }
+
+        if (content.length < TOTAL) {
+          showInlineMessage("Not enough content was found for this preset.");
+          return;
+        }
+
+        var output = document.getElementById("output");
+        output.innerHTML = "";
+
+        var page = document.createElement("div");
+        page.className = "page";
+
+        var title = document.createElement("div");
+        title.className = "worksheet-title";
+        title.textContent = "Phonics Tic Tac Toe";
+
+        var skills = document.createElement("div");
+        skills.className = "skills-line";
+        skills.innerHTML = "<strong>Skills:</strong> " + labels.join(" • ");
+
+        var directions = document.createElement("div");
+        directions.className = "worksheet-directions";
+        directions.innerHTML = "<strong>Directions:</strong> Read the word or sentence, then place your X or O. First to 3 in a row wins!";
+
+        var grid = document.createElement("div");
+        grid.className = "board-wrap";
+
+        var boards = chunk36ToFour(content);
+        boards.forEach(function (cells, i) {
+          var group = buildBoard(cells);
+          group.querySelector(".board-label").textContent = "Game " + (i + 1);
+          grid.appendChild(group);
+        });
+
+        var footer = document.createElement("div");
+        footer.className = "footer";
+        footer.textContent = "Copyright - InterventionStation.com - @TeachwithMrC";
+
+        var overlay = document.createElement("div");
+        overlay.className = "preview-overlay";
+
+        page.appendChild(title);
+        page.appendChild(skills);
+        page.appendChild(directions);
+        page.appendChild(grid);
+        page.appendChild(footer);
+        page.appendChild(overlay);
+        page.appendChild(buildLockPanel());
+        output.appendChild(page);
+      }
+
+      document.getElementById("generateBtn").addEventListener("click", function () {
+        generateWorksheet();
+      });
+      document.getElementById("printBtn").addEventListener("click", function () {
+        alert(LOCK_MESSAGE);
+      });
+
+      generateWorksheet();
+    })();
+  </script>
+</body>
+</html>

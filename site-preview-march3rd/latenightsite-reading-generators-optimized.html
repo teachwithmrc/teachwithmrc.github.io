@@ -1,0 +1,1165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intervention Station | Reading Generator Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./reading-generators-preview-lab.css" />
+  <style>
+    :root {
+      --brand-dark: #2f3e4e;
+      --brand-blue: #66c9f4;
+      --ink: #102246;
+      --offwhite: #f3f5f7;
+      --panel: #ffffff;
+      --page-bg: linear-gradient(180deg, #f3f6fb 0%, #fbfcfe 100%);
+      --hero-bg: linear-gradient(135deg, #102246 0%, #1b406d 55%, #2d6195 100%);
+      --hero-subtle: #d7e9fb;
+      --picker-bg: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      --picker-border: #d7e5f3;
+      --picker-shadow: 0 18px 34px rgba(16, 34, 70, 0.08);
+      --stage-bg: #ffffff;
+      --stage-border: #d7e5f3;
+      --stage-shadow: 0 18px 34px rgba(16, 34, 70, 0.08);
+      --shell-padding: 22px;
+      --screen-min-height: 720px;
+      --page-width: 1520px;
+      --picker-width: 320px;
+      --left-rail-width: 220px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--offwhite);
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .is-ticker {
+      background: var(--brand-dark);
+      border-top: 1px solid rgba(255, 255, 255, 0.18);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .is-ticker-track {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      padding: 10px 0;
+      width: max-content;
+      white-space: nowrap;
+      animation: isTickerScroll 34s linear infinite;
+      will-change: transform;
+    }
+
+    .is-ticker:hover .is-ticker-track {
+      animation-play-state: paused;
+    }
+
+    .is-ticker-item {
+      display: inline-flex;
+      align-items: center;
+      flex: 0 0 auto;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 650;
+      line-height: 1.1;
+    }
+
+    .is-ticker-star {
+      color: #ffe08a;
+      margin-right: 6px;
+      font-weight: 900;
+    }
+
+    @keyframes isTickerScroll {
+      from {
+        transform: translate3d(0, 0, 0);
+      }
+
+      to {
+        transform: translate3d(-50%, 0, 0);
+      }
+    }
+
+    .top-cta-wrap {
+      background: var(--brand-dark);
+    }
+
+    .top-cta-bar {
+      position: sticky;
+      top: 0;
+      z-index: 9999;
+      background: var(--brand-dark);
+      width: min(1200px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: nowrap;
+    }
+
+    .top-logo {
+      width: auto;
+      height: auto;
+      max-width: min(480px, 40vw);
+    }
+
+    .top-buttons-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: nowrap;
+    }
+
+    .top-buttons-row a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      width: 168px;
+      min-width: 168px;
+      height: 46px;
+      padding: 0 14px;
+      background: var(--brand-blue);
+      border: 2px solid var(--brand-blue);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1;
+      white-space: nowrap;
+      transition: filter 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .top-buttons-row a:hover {
+      filter: brightness(0.96);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+    }
+
+    .merge-page {
+      width: min(var(--page-width), calc(100% - 32px));
+      margin: 24px auto 40px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .merge-hero {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 18px;
+      padding: 28px;
+      border-radius: 28px;
+      background: var(--hero-bg);
+      color: #ffffff;
+      box-shadow: 0 22px 42px rgba(16, 34, 70, 0.16);
+    }
+
+    .merge-hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -72px -110px auto;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      filter: blur(4px);
+    }
+
+    .merge-hero-copy,
+    .merge-hero-card {
+      position: relative;
+      z-index: 1;
+    }
+
+    .merge-hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(34px, 4vw, 48px);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+    }
+
+    .merge-hero p {
+      margin: 0;
+      max-width: 780px;
+      font-size: 15px;
+      line-height: 1.65;
+      font-weight: 600;
+      color: var(--hero-subtle);
+    }
+
+    .merge-hero-card {
+      align-self: end;
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(10px);
+    }
+
+    .merge-hero-card strong {
+      font-size: 22px;
+      line-height: 1.05;
+    }
+
+    .merge-shell {
+      display: grid;
+      grid-template-columns: var(--left-rail-width) var(--picker-width) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .merge-section-nav {
+      position: sticky;
+      top: 18px;
+      display: grid;
+      gap: 14px;
+      padding: 18px 0;
+    }
+
+    .merge-section-head {
+      padding: 0 4px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .merge-section-head h2 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+
+    .merge-section-head p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 600;
+      color: #5b7195;
+    }
+
+    .merge-section-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .merge-section-btn {
+      appearance: none;
+      width: 100%;
+      border: 0;
+      text-align: left;
+      font: inherit;
+      color: #0f2e52;
+      background: linear-gradient(180deg, #d8effd 0%, #c8e6fb 100%);
+      padding: 18px 22px;
+      border-radius: 18px 0 0 18px;
+      box-shadow: inset 0 0 0 1px rgba(15, 46, 82, 0.06);
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+    }
+
+    .merge-section-btn:hover {
+      transform: translateX(4px);
+      background: linear-gradient(180deg, #d0ebfd 0%, #bfe2fb 100%);
+    }
+
+    .merge-section-btn[aria-selected="true"] {
+      background: #ffffff;
+      color: #0c2747;
+      box-shadow: -10px 12px 24px rgba(16, 34, 70, 0.08);
+      position: relative;
+      z-index: 2;
+    }
+
+    .merge-section-btn strong,
+    .merge-section-btn span {
+      display: block;
+    }
+
+    .merge-section-btn strong {
+      font-size: 15px;
+      line-height: 1.2;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .merge-section-btn span {
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 600;
+      opacity: 0.86;
+    }
+
+    .merge-section-btn .merge-section-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      margin-top: 10px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(16, 34, 70, 0.08);
+      font-size: 11px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      opacity: 1;
+    }
+
+    .merge-section-btn[aria-selected="true"] .merge-section-badge {
+      background: #eef7ff;
+    }
+
+    .reading-lab-picker {
+      top: 18px;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 24px;
+      background: var(--picker-bg);
+      border: 1px solid var(--picker-border);
+      box-shadow: var(--picker-shadow);
+    }
+
+    .reading-lab-stage {
+      padding: 22px;
+    }
+
+    .merge-stage-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .merge-preview-frame {
+      padding: 18px;
+      border-radius: 26px;
+      background:
+        radial-gradient(circle at top left, rgba(102, 201, 244, 0.22), transparent 32%),
+        linear-gradient(180deg, #edf7ff 0%, #f8fbff 100%);
+      border: 1px solid #d7e5f3;
+    }
+
+    .merge-browser-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 4px 12px;
+      color: #5d789d;
+      font-size: 12px;
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .merge-browser-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .merge-browser-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(16, 34, 70, 0.22);
+    }
+
+    .reading-lab-preview-screen {
+      border-radius: 16px;
+      border: 1px solid rgba(16, 34, 70, 0.08);
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .merge-stage-footnote {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: #eef7ff;
+      color: #12385e;
+      font-size: 12px;
+      line-height: 1;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 1260px) {
+      .merge-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .merge-section-nav,
+      .reading-lab-picker {
+        position: relative;
+        top: auto;
+      }
+
+      .merge-section-nav {
+        padding: 0;
+      }
+
+      .merge-section-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .merge-section-btn {
+        border-radius: 18px;
+      }
+
+      .merge-section-btn:hover {
+        transform: translateY(-2px);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .top-cta-bar {
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .top-logo {
+        max-width: 92vw;
+      }
+
+      .top-buttons-row {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .merge-hero {
+        grid-template-columns: 1fr;
+      }
+
+      .merge-section-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .merge-page {
+        width: min(var(--page-width), calc(100% - 20px));
+        margin: 16px auto 28px;
+      }
+
+      .merge-hero,
+      .reading-lab-stage,
+      .reading-lab-picker {
+        padding: 18px;
+      }
+
+      .merge-stage-actions,
+      .reading-lab-stage-head,
+      .reading-lab-customizer-head,
+      .reading-lab-preview-caption,
+      .reading-lab-stage-footer,
+      .merge-browser-topline {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .reading-lab-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="is-ticker" aria-label="Reviews ticker">
+    <div class="is-ticker-track">
+      <div class="is-ticker-item"><span class="is-ticker-star">&#9733;</span>"Best intervention resources ever - my kids LOVE it."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">&#9733;</span>"Saved me hours every week. Worth every penny."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">&#9733;</span>"The generators are unreal. Print and go."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">&#9733;</span>"My small groups finally feel organized."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">&#9733;</span>"Best intervention resources ever - my kids LOVE it."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">&#9733;</span>"Saved me hours every week. Worth every penny."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">&#9733;</span>"The generators are unreal. Print and go."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">&#9733;</span>"My small groups finally feel organized."</div>
+    </div>
+  </div>
+
+  <div class="top-cta-wrap">
+    <div class="top-cta-bar">
+      <img
+        src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png"
+        height="95"
+        width="500"
+        alt="Intervention Station"
+        class="top-logo"
+      />
+      <div class="top-buttons-row">
+        <a href="./home-preview-generators-first.html#join">Join Membership</a>
+        <a href="./whats-inside-preview.html">What's Inside?</a>
+        <a href="./home-preview-generators-first.html#join">Log In</a>
+      </div>
+    </div>
+  </div>
+
+  <main class="merge-page">
+    <section class="merge-hero">
+      <div class="merge-hero-copy">
+        <p class="reading-lab-eyebrow">Optimized Reading Generator Flow</p>
+        <h1>Left-side browsing with working live reading generators.</h1>
+        <p>This combined version keeps the stronger late-night selection rail on the left, but swaps in the zoomed-out live preview treatment so the generators stay readable, interactive, and easier to compare.</p>
+      </div>
+      <div class="merge-hero-card">
+        <p class="reading-lab-eyebrow">Combined build</p>
+        <strong>7 live reading generators</strong>
+        <p>Grouped on the left, setup in the middle, and the working generator preview on the right with safer fit scaling.</p>
+      </div>
+    </section>
+
+    <section class="merge-shell" aria-label="Reading generator workspace">
+      <aside class="merge-section-nav" aria-label="Reading generator groups">
+        <div class="merge-section-head">
+          <p class="reading-lab-label">Left-side selections</p>
+          <h2>Browse by teaching need</h2>
+          <p>Choose a group first, then pick the exact generator in the next column.</p>
+        </div>
+        <div class="merge-section-list" id="groupNav"></div>
+      </aside>
+
+      <aside class="reading-lab-picker">
+        <div class="reading-lab-picker-head">
+          <p class="reading-lab-label">Reading generators</p>
+          <h2 id="groupTitle">Fluency and games</h2>
+          <p id="groupDescription">Fast-practice generators that stay easy to scan while the live page runs on the right.</p>
+        </div>
+        <div class="reading-lab-count" id="readingCount">3 generators</div>
+        <div class="reading-lab-option-list" id="readingOptionList"></div>
+      </aside>
+
+      <section class="reading-lab-stage" aria-live="polite">
+        <div class="reading-lab-stage-head">
+          <div class="reading-lab-stage-copy">
+            <p class="reading-lab-label">Reading generator</p>
+            <h2 id="stageTitle">Fluency Grid</h2>
+            <p id="stageDescription">Build a full fluency grid with repeated phrases and sentence practice directly in the page.</p>
+            <div class="reading-lab-chip-row" id="stageChips"></div>
+          </div>
+          <div class="reading-lab-stage-meta">
+            <span class="reading-lab-meta-chip" id="stageGroupChip">Fluency and games</span>
+            <span class="reading-lab-meta-chip" id="stageScaleChip">Measuring fit...</span>
+          </div>
+        </div>
+
+        <div class="merge-stage-actions">
+          <a class="reading-lab-btn reading-lab-btn--primary" id="previewLink" href="./desktop-previews/reading/fluencygridpreview-desktop.html">Open desktop preview</a>
+          <a class="reading-lab-btn reading-lab-btn--secondary" id="fullLink" href="../fluencygridpreview.html">Open original page</a>
+        </div>
+
+        <div class="reading-lab-customizer">
+          <div class="reading-lab-customizer-head">
+            <div>
+              <p class="reading-lab-label">Customization</p>
+              <h3 id="customizerTitle">Customize Fluency Grid</h3>
+              <p id="customizerDescription">Setup stays visible here, and the working generator page stays directly below it.</p>
+            </div>
+            <div class="reading-lab-customizer-badge">Setup above output</div>
+          </div>
+          <div class="reading-lab-customizer-grid">
+            <div class="reading-lab-customizer-field">
+              <span>Focus</span>
+              <strong id="customizerFocus">Phrases and sentences</strong>
+            </div>
+            <div class="reading-lab-customizer-field">
+              <span>Level</span>
+              <strong id="customizerLevel">Grades 1-2</strong>
+            </div>
+            <div class="reading-lab-customizer-field">
+              <span>Support</span>
+              <strong id="customizerSupport">Repeated reading</strong>
+            </div>
+            <div class="reading-lab-customizer-field">
+              <span>Format</span>
+              <strong id="customizerFormat">Full-page grid</strong>
+            </div>
+          </div>
+          <div class="reading-lab-customizer-toggles" id="customizerToggles">
+            <span class="reading-lab-customizer-toggle">Word bank</span>
+            <span class="reading-lab-customizer-toggle">Sentence mix</span>
+            <span class="reading-lab-customizer-toggle">Small-group ready</span>
+          </div>
+        </div>
+
+        <div class="reading-lab-preview-shell">
+          <div class="reading-lab-preview-caption">
+            <strong id="previewTitle">Live generator</strong>
+            <span id="previewNote">The real generator stays interactive while the viewport scales it down to fit the right panel.</span>
+          </div>
+
+          <div class="merge-preview-frame">
+            <div class="merge-browser-topline">
+              <div class="merge-browser-dots" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <div id="frameLabel">Fluency Grid</div>
+            </div>
+            <div class="reading-lab-browser">
+              <div class="reading-lab-preview-screen" id="previewScreen" data-fixed-height="false">
+                <div class="reading-lab-preview-viewport" id="previewViewport">
+                  <iframe
+                    id="previewFrame"
+                    class="reading-lab-iframe"
+                    src="./desktop-previews/reading/fluencygridpreview-desktop.html"
+                    title="Fluency Grid generator"
+                    loading="lazy"
+                  ></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reading-lab-stage-footer">
+          <p id="stageFooter">Fluency Grid stays live in the right panel while the grouped selection rail stays fixed on the left.</p>
+          <span class="merge-stage-footnote">Late-night shell + zoomed-out live fit</span>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const groups = [
+        {
+          id: "fluency-games",
+          title: "Fluency and games",
+          shortTitle: "Fluency and games",
+          description: "Fast-practice generators that stay easy to scan while the live page runs on the right.",
+          badge: "3 generators"
+        },
+        {
+          id: "spelling-visuals",
+          title: "Spelling and visuals",
+          shortTitle: "Spelling and visuals",
+          description: "Repeated spelling practice and image-supported work that benefits from a calmer live preview.",
+          badge: "2 generators"
+        },
+        {
+          id: "phonics-mapping",
+          title: "Phonics and mapping",
+          shortTitle: "Phonics and mapping",
+          description: "Sound work, ladders, and mapping activities grouped together so the left rail feels more useful.",
+          badge: "2 generators"
+        }
+      ];
+
+      const readingItems = [
+        {
+          id: "fluency-grid",
+          group: "fluency-games",
+          title: "Fluency Grid",
+          listLabel: "Fluency grid generator",
+          description: "Build a full fluency grid with repeated phrases and sentence practice directly in the page.",
+          previewUrl: "./desktop-previews/reading/fluencygridpreview-desktop.html",
+          fullUrl: "../fluencygridpreview.html",
+          chips: ["Reading", "Fluency", "Print-ready"],
+          setup: {
+            focus: "Phrases and sentences",
+            level: "Grades 1-2",
+            support: "Repeated reading",
+            format: "Full-page grid"
+          },
+          toggles: ["Word bank", "Sentence mix", "Small-group ready"]
+        },
+        {
+          id: "roll-and-read",
+          group: "fluency-games",
+          title: "Roll and Read",
+          listLabel: "Roll and read generator",
+          description: "Show the game-style worksheet version directly in the page so the generator stays usable under the setup block.",
+          previewUrl: "./desktop-previews/reading/rollread-desktop.html",
+          fullUrl: "../rollreadpreview31.html",
+          chips: ["Reading", "Game", "Fluency"],
+          setup: {
+            focus: "Decodable reading",
+            level: "Grades 1-3",
+            support: "Dice-based play",
+            format: "Game sheet"
+          },
+          toggles: ["Partner play", "Fast print", "Sentence strips"]
+        },
+        {
+          id: "sor-tic-tac-toe",
+          group: "fluency-games",
+          title: "SOR Tic Tac Toe",
+          listLabel: "SOR tic tac toe generator",
+          description: "Keep the choice-board format intact while the live generator stays fully visible in the right panel.",
+          previewUrl: "./desktop-previews/reading/tic-tac-preview-march1st-desktop.html",
+          fullUrl: "../tic-tac-preview-march1st.html",
+          chips: ["Reading", "Choice board", "Games"],
+          setup: {
+            focus: "Structured literacy skills",
+            level: "Grades 1-3",
+            support: "Choice board",
+            format: "Tic tac toe grid"
+          },
+          toggles: ["Small group", "Choice board", "Review game"]
+        },
+        {
+          id: "pyramid-spelling",
+          group: "spelling-visuals",
+          title: "Pyramid Spelling",
+          listLabel: "Pyramid spelling generator",
+          description: "Stack repeated spelling lines in a clean pyramid layout so the worksheet still reads well when embedded.",
+          previewUrl: "./desktop-previews/reading/pyramidpreview-desktop.html",
+          fullUrl: "../pyramidpreview.html",
+          chips: ["Reading", "Spelling", "Practice"],
+          setup: {
+            focus: "High-frequency words",
+            level: "Grades K-2",
+            support: "Trace and build",
+            format: "Pyramid lines"
+          },
+          toggles: ["Handwriting", "Repetition", "Independent practice"]
+        },
+        {
+          id: "spelling-pictures",
+          group: "spelling-visuals",
+          title: "Spelling with Pictures",
+          listLabel: "Spelling with pictures generator",
+          description: "Pair image support with spelling practice so the visual worksheet stays readable inside the combined shell.",
+          previewUrl: "./desktop-previews/reading/spellingpicture-desktop.html",
+          fullUrl: "../ladder/spelling-mobile-generator.html",
+          chips: ["Reading", "Pictures", "Spelling"],
+          setup: {
+            focus: "Picture-word match",
+            level: "Grades K-2",
+            support: "Visual cues",
+            format: "Picture worksheet"
+          },
+          toggles: ["Picture support", "Word bank", "Cut-and-sort"]
+        },
+        {
+          id: "word-ladder",
+          group: "phonics-mapping",
+          title: "Word Ladder",
+          listLabel: "Word ladder generator",
+          description: "Lay out sound-by-sound word changes in a ladder format that stays contained while the live page remains interactive.",
+          previewUrl: "./desktop-previews/reading/laddermobilepreview-desktop.html",
+          fullUrl: "../laddermobilepreview.html",
+          chips: ["Reading", "Word ladder", "Phonics"],
+          setup: {
+            focus: "Sound swaps",
+            level: "Grades 1-2",
+            support: "Step-by-step ladder",
+            format: "Printable ladder"
+          },
+          toggles: ["Short vowels", "Blend practice", "Independent work"]
+        },
+        {
+          id: "word-mapping",
+          group: "phonics-mapping",
+          title: "Word Mapping",
+          listLabel: "Word mapping generator",
+          description: "Keep the mapping boxes and sound-work layout visible while the right side stays cleaner and easier to compare.",
+          previewUrl: "./desktop-previews/reading/wordmapmaster-preview-desktop.html",
+          fullUrl: "./wordmap2preview.html",
+          chips: ["Reading", "Mapping", "Phonemic awareness"],
+          setup: {
+            focus: "Phoneme mapping",
+            level: "Grades K-2",
+            support: "Sound boxes",
+            format: "Mapping mat"
+          },
+          toggles: ["Tap and map", "Elkonin boxes", "Teacher-led"]
+        }
+      ];
+
+      const config = {
+        desktopWidth: 1360,
+        fallbackHeight: 980,
+        scalePadding: 0.88,
+        minScale: 0.52,
+        horizontalBuffer: 0
+      };
+
+      const elements = {
+        groupNav: document.getElementById("groupNav"),
+        groupTitle: document.getElementById("groupTitle"),
+        groupDescription: document.getElementById("groupDescription"),
+        optionList: document.getElementById("readingOptionList"),
+        count: document.getElementById("readingCount"),
+        stageTitle: document.getElementById("stageTitle"),
+        stageDescription: document.getElementById("stageDescription"),
+        stageChips: document.getElementById("stageChips"),
+        stageGroupChip: document.getElementById("stageGroupChip"),
+        stageScaleChip: document.getElementById("stageScaleChip"),
+        stageFooter: document.getElementById("stageFooter"),
+        previewLink: document.getElementById("previewLink"),
+        fullLink: document.getElementById("fullLink"),
+        customizerTitle: document.getElementById("customizerTitle"),
+        customizerDescription: document.getElementById("customizerDescription"),
+        customizerFocus: document.getElementById("customizerFocus"),
+        customizerLevel: document.getElementById("customizerLevel"),
+        customizerSupport: document.getElementById("customizerSupport"),
+        customizerFormat: document.getElementById("customizerFormat"),
+        customizerToggles: document.getElementById("customizerToggles"),
+        previewTitle: document.getElementById("previewTitle"),
+        previewNote: document.getElementById("previewNote"),
+        screen: document.getElementById("previewScreen"),
+        viewport: document.getElementById("previewViewport"),
+        frame: document.getElementById("previewFrame"),
+        frameLabel: document.getElementById("frameLabel")
+      };
+
+      if (Object.values(elements).some(function (element) { return !element; })) {
+        return;
+      }
+
+      const groupMap = new Map(groups.map(function (group) { return [group.id, group]; }));
+      const itemMap = new Map(readingItems.map(function (item) { return [item.id, item]; }));
+      const state = {
+        currentGroup: groups[0].id,
+        currentId: "fluency-grid"
+      };
+
+      let frameMutationObserver = null;
+      let pendingResizeTimers = [];
+
+      function itemsForGroup(groupId) {
+        return readingItems.filter(function (item) {
+          return item.group === groupId;
+        });
+      }
+
+      function currentGroup() {
+        return groupMap.get(state.currentGroup) || groups[0];
+      }
+
+      function currentItem() {
+        const allowedItems = itemsForGroup(state.currentGroup);
+        const activeItem = itemMap.get(state.currentId);
+        if (activeItem && activeItem.group === state.currentGroup) {
+          return activeItem;
+        }
+        state.currentId = allowedItems[0].id;
+        return allowedItems[0];
+      }
+
+      function renderGroupNav() {
+        elements.groupNav.innerHTML = "";
+
+        groups.forEach(function (group) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "merge-section-btn";
+          button.dataset.group = group.id;
+          button.setAttribute("aria-selected", group.id === state.currentGroup ? "true" : "false");
+          button.tabIndex = group.id === state.currentGroup ? 0 : -1;
+          button.innerHTML =
+            "<strong>" + group.title + "</strong>" +
+            "<span>" + group.description + "</span>" +
+            '<span class="merge-section-badge">' + group.badge + "</span>";
+          button.addEventListener("click", function () {
+            if (group.id === state.currentGroup) {
+              return;
+            }
+            state.currentGroup = group.id;
+            state.currentId = itemsForGroup(group.id)[0].id;
+            renderGroupNav();
+            renderOptions();
+            renderStage();
+          });
+          button.addEventListener("keydown", function (event) {
+            const key = event.key;
+            if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End"].indexOf(key) === -1) {
+              return;
+            }
+
+            event.preventDefault();
+            const buttons = Array.from(elements.groupNav.querySelectorAll(".merge-section-btn"));
+            const currentIndex = buttons.indexOf(button);
+            let nextIndex = currentIndex;
+
+            if (key === "Home") nextIndex = 0;
+            if (key === "End") nextIndex = buttons.length - 1;
+            if (key === "ArrowUp" || key === "ArrowLeft") nextIndex = (currentIndex - 1 + buttons.length) % buttons.length;
+            if (key === "ArrowDown" || key === "ArrowRight") nextIndex = (currentIndex + 1) % buttons.length;
+
+            buttons[nextIndex].focus();
+            buttons[nextIndex].click();
+          });
+          elements.groupNav.appendChild(button);
+        });
+      }
+
+      function renderOptions() {
+        const group = currentGroup();
+        const visibleItems = itemsForGroup(group.id);
+
+        elements.groupTitle.textContent = group.title;
+        elements.groupDescription.textContent = group.description;
+        elements.count.textContent = visibleItems.length + (visibleItems.length === 1 ? " generator" : " generators");
+        elements.optionList.innerHTML = "";
+
+        visibleItems.forEach(function (item) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "reading-lab-option";
+          if (item.id === state.currentId) {
+            button.classList.add("is-active");
+          }
+          button.innerHTML =
+            '<p class="reading-lab-option-eyebrow">Reading generator</p>' +
+            "<h3>" + item.title + "</h3>" +
+            "<p>" + item.listLabel + "</p>";
+          button.addEventListener("click", function () {
+            if (item.id === state.currentId) {
+              return;
+            }
+            state.currentId = item.id;
+            renderOptions();
+            renderStage();
+          });
+          elements.optionList.appendChild(button);
+        });
+      }
+
+      function clearResizeTimers() {
+        pendingResizeTimers.forEach(function (timerId) {
+          window.clearTimeout(timerId);
+        });
+        pendingResizeTimers = [];
+      }
+
+      function resetFrameMonitoring() {
+        clearResizeTimers();
+        if (frameMutationObserver) {
+          frameMutationObserver.disconnect();
+          frameMutationObserver = null;
+        }
+      }
+
+      function ensureEmbeddedPreviewStyles(doc) {
+        if (!doc || !doc.head) {
+          return;
+        }
+        if (doc.getElementById("optimizedReadingEmbedStyles")) {
+          return;
+        }
+
+        const style = doc.createElement("style");
+        style.id = "optimizedReadingEmbedStyles";
+        style.textContent = [
+          "html, body { overflow: visible !important; height: auto !important; min-height: 0 !important; }",
+          ".sheet-wrap { max-height: none !important; overflow: visible !important; }"
+        ].join("");
+        doc.head.appendChild(style);
+      }
+
+      function watchFrameContent(doc) {
+        if (!doc || !window.MutationObserver) {
+          return;
+        }
+
+        const root = doc.body || doc.documentElement;
+        if (!root) {
+          return;
+        }
+
+        if (frameMutationObserver) {
+          frameMutationObserver.disconnect();
+        }
+
+        frameMutationObserver = new MutationObserver(function () {
+          syncPreviewSize();
+        });
+
+        frameMutationObserver.observe(root, {
+          attributes: true,
+          childList: true,
+          subtree: true,
+          characterData: true
+        });
+      }
+
+      function scheduleResizePasses() {
+        clearResizeTimers();
+        [0, 80, 220, 450, 900, 1600, 2600].forEach(function (delay) {
+          const timerId = window.setTimeout(syncPreviewSize, delay);
+          pendingResizeTimers.push(timerId);
+        });
+      }
+
+      function measureFrameDocument() {
+        const doc = elements.frame.contentDocument;
+        if (!doc) {
+          return null;
+        }
+
+        ensureEmbeddedPreviewStyles(doc);
+        const html = doc.documentElement;
+        const body = doc.body;
+        if (!html || !body) {
+          return null;
+        }
+
+        return {
+          width: Math.max(
+            config.desktopWidth,
+            html.clientWidth,
+            html.scrollWidth,
+            html.offsetWidth,
+            body.scrollWidth,
+            body.offsetWidth
+          ),
+          height: Math.max(
+            html.clientHeight,
+            html.scrollHeight,
+            html.offsetHeight,
+            body.clientHeight,
+            body.scrollHeight,
+            body.offsetHeight
+          )
+        };
+      }
+
+      function applySizing(width, height) {
+        const safeWidth = width || config.desktopWidth;
+        const safeHeight = height || config.fallbackHeight;
+        const availableWidth = Math.max(320, elements.screen.clientWidth - config.horizontalBuffer);
+        const maxContainScale = Math.min(1, availableWidth / safeWidth);
+        let scale = maxContainScale * config.scalePadding;
+
+        scale = Math.max(scale, Math.min(config.minScale, maxContainScale));
+
+        const viewportWidth = Math.ceil(safeWidth * scale);
+        const viewportHeight = Math.ceil(safeHeight * scale);
+
+        elements.screen.style.height = viewportHeight + "px";
+        elements.screen.dataset.fixedHeight = "false";
+        elements.viewport.style.width = viewportWidth + "px";
+        elements.viewport.style.height = viewportHeight + "px";
+        elements.viewport.style.margin = "0 auto";
+        elements.frame.style.width = safeWidth + "px";
+        elements.frame.style.height = safeHeight + "px";
+        elements.frame.style.transform = "scale(" + scale.toFixed(4) + ")";
+        elements.stageScaleChip.textContent = "Fit " + Math.round(scale * 100) + "%";
+      }
+
+      function syncPreviewSize() {
+        const attemptResize = function () {
+          try {
+            const dimensions = measureFrameDocument();
+            if (dimensions) {
+              applySizing(dimensions.width, dimensions.height);
+              return;
+            }
+          } catch (_error) {
+          }
+
+          applySizing(config.desktopWidth, config.fallbackHeight);
+        };
+
+        window.requestAnimationFrame(attemptResize);
+        window.setTimeout(attemptResize, 180);
+        window.setTimeout(attemptResize, 650);
+      }
+
+      function renderStage() {
+        const group = currentGroup();
+        const item = currentItem();
+
+        resetFrameMonitoring();
+        elements.stageTitle.textContent = item.title;
+        elements.stageDescription.textContent = item.description;
+        elements.stageGroupChip.textContent = group.shortTitle;
+        elements.stageScaleChip.textContent = "Measuring fit...";
+        elements.previewLink.href = item.previewUrl;
+        elements.fullLink.href = item.fullUrl;
+        elements.frame.src = item.previewUrl;
+        elements.frame.title = item.title + " generator";
+        elements.frameLabel.textContent = item.title;
+        elements.previewTitle.textContent = "Live " + item.title;
+        elements.previewNote.textContent = "The real generator stays interactive while the viewport scales it down to fit the right panel.";
+        elements.customizerTitle.textContent = "Customize " + item.title;
+        elements.customizerDescription.textContent = "Setup stays visible here, and the working generator page stays directly below it.";
+        elements.customizerFocus.textContent = item.setup.focus;
+        elements.customizerLevel.textContent = item.setup.level;
+        elements.customizerSupport.textContent = item.setup.support;
+        elements.customizerFormat.textContent = item.setup.format;
+        elements.stageFooter.textContent = item.title + " stays live in the right panel while the grouped selection rail stays fixed on the left.";
+
+        elements.customizerToggles.innerHTML = "";
+        item.toggles.forEach(function (toggle) {
+          const span = document.createElement("span");
+          span.className = "reading-lab-customizer-toggle";
+          span.textContent = toggle;
+          elements.customizerToggles.appendChild(span);
+        });
+
+        elements.stageChips.innerHTML = "";
+        item.chips.forEach(function (chip) {
+          const span = document.createElement("span");
+          span.className = "reading-lab-tag";
+          span.textContent = chip;
+          elements.stageChips.appendChild(span);
+        });
+
+        syncPreviewSize();
+      }
+
+      elements.frame.addEventListener("load", function () {
+        const doc = elements.frame.contentDocument;
+        if (!doc) {
+          return;
+        }
+
+        ensureEmbeddedPreviewStyles(doc);
+        watchFrameContent(doc);
+        scheduleResizePasses();
+      });
+
+      window.addEventListener("resize", syncPreviewSize);
+
+      if (window.ResizeObserver) {
+        const resizeObserver = new ResizeObserver(syncPreviewSize);
+        resizeObserver.observe(elements.screen);
+      }
+
+      renderGroupNav();
+      renderOptions();
+      renderStage();
+    })();
+  </script>
+</body>
+</html>

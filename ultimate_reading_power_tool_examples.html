@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reading Power Tool Examples</title>
+  <script src="fluencyDataFull_v8-2_clean.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #17222d;
+      --muted: #5b6d7f;
+      --page: #eef4f7;
+      --panel: rgba(255, 255, 255, 0.9);
+      --line: #c7d4de;
+      --shadow: 0 14px 34px rgba(18, 33, 48, 0.08);
+      --accent: #0b6bcb;
+      --accent-2: #0d8a6b;
+      --warm: #f39837;
+      --rose: #c3517f;
+      --chip: #eaf1f6;
+      --selected: #102a43;
+
+      --cvc: #f8ead9;
+      --dig: #fde5eb;
+      --glued: #efe3ff;
+      --vce: #dfeeff;
+      --rctrl: #e3f4e9;
+      --vteams: #fff3cb;
+      --dip: #ffe7d9;
+      --variant: #eadff7;
+      --soft: #dfe7f7;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "DM Sans", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.9), transparent 28%),
+        linear-gradient(135deg, #eff7fb 0%, #f7f4ea 52%, #eef2ff 100%);
+      padding: 24px;
+    }
+
+    .app {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(16, 42, 67, 0.1);
+      font-weight: 800;
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Manrope", sans-serif;
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+    }
+
+    .intro {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 900px;
+    }
+
+    .mode-switcher {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .mode-btn,
+    .control-btn,
+    .pill,
+    .skill-btn,
+    .preset-btn,
+    .mini-btn,
+    .saved-btn {
+      border: 1px solid rgba(23, 34, 45, 0.12);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.84);
+      color: var(--ink);
+      font: inherit;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+      box-shadow: 0 1px 0 rgba(16, 42, 67, 0.03);
+    }
+
+    .mode-btn:hover,
+    .control-btn:hover,
+    .pill:hover,
+    .skill-btn:hover,
+    .preset-btn:hover,
+    .mini-btn:hover,
+    .saved-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(17, 35, 55, 0.08);
+    }
+
+    .mode-btn {
+      padding: 12px 16px;
+      min-width: 164px;
+      text-align: left;
+    }
+
+    .mode-btn strong,
+    .preset-btn strong {
+      display: block;
+      font-size: 0.95rem;
+      margin-bottom: 3px;
+    }
+
+    .mode-btn span,
+    .preset-btn span {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .mode-btn.active {
+      background: #102a43;
+      color: #fff;
+      border-color: #102a43;
+    }
+
+    .mode-btn.active span {
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .workspace {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1.1fr 0.9fr;
+      grid-template-areas:
+        "quick settings"
+        "library settings"
+        "library saved"
+        "output output";
+      align-items: start;
+    }
+
+    .workspace[data-layout="sidebar"] {
+      grid-template-columns: 320px minmax(0, 1fr);
+      grid-template-areas:
+        "quick output"
+        "saved output"
+        "settings output"
+        "library output";
+    }
+
+    .workspace[data-layout="planner"] {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-areas:
+        "quick quick settings"
+        "library saved settings"
+        "output output output";
+    }
+
+    .workspace[data-layout="focus"] {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        "quick"
+        "settings"
+        "library"
+        "output";
+    }
+
+    .panel {
+      background: var(--panel);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(23, 34, 45, 0.08);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel h2 {
+      margin: 0 0 6px;
+      font-family: "Manrope", sans-serif;
+      font-size: 1.18rem;
+      letter-spacing: -0.03em;
+    }
+
+    .panel-copy {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .panel.quick { grid-area: quick; }
+    .panel.library { grid-area: library; }
+    .panel.settings { grid-area: settings; }
+    .panel.saved { grid-area: saved; }
+    .panel.output { grid-area: output; }
+
+    .preset-grid,
+    .button-row,
+    .game-row,
+    .batch-row,
+    .recent-row,
+    .favorites-row,
+    .saved-row,
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .preset-btn {
+      padding: 12px 14px;
+      min-width: 170px;
+      text-align: left;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(245, 248, 251, 0.9));
+    }
+
+    .control-btn,
+    .pill,
+    .mini-btn,
+    .saved-btn {
+      padding: 11px 14px;
+      font-weight: 700;
+    }
+
+    .control-btn.active,
+    .pill.active,
+    .mini-btn.active,
+    .saved-btn.active {
+      background: #102a43;
+      color: #fff;
+      border-color: #102a43;
+    }
+
+    .mini-btn {
+      padding: 8px 12px;
+      font-size: 0.86rem;
+      border-radius: 999px;
+    }
+
+    .section-label {
+      margin: 16px 0 8px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #4b5d70;
+    }
+
+    .filter-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .filter-row input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font: inherit;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .skill-groups {
+      display: grid;
+      gap: 12px;
+    }
+
+    .skill-group {
+      border-radius: 20px;
+      border: 1px solid rgba(16, 42, 67, 0.08);
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .skill-group summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      font-weight: 800;
+      font-family: "Manrope", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .skill-group summary::-webkit-details-marker { display: none; }
+    .skill-group summary span:last-child { color: #526577; font-size: 0.82rem; }
+
+    .group-cvc summary { background: var(--cvc); }
+    .group-dig summary { background: var(--dig); }
+    .group-glued summary { background: var(--glued); }
+    .group-vce summary { background: var(--vce); }
+    .group-rctrl summary { background: var(--rctrl); }
+    .group-vteams summary { background: var(--vteams); }
+    .group-dip summary { background: var(--dip); }
+    .group-variant summary { background: var(--variant); }
+    .group-soft summary { background: var(--soft); }
+
+    .skills-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 14px;
+    }
+
+    .skill-chip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .skill-btn {
+      padding: 10px 14px;
+      padding-right: 40px;
+      border-radius: 999px;
+      font-weight: 700;
+      background: #fff;
+    }
+
+    .skill-btn.selected {
+      background: #102a43;
+      color: #fff;
+      border-color: #102a43;
+    }
+
+    .star-btn {
+      position: absolute;
+      right: 8px;
+      width: 24px;
+      height: 24px;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      color: #8a99a8;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .star-btn.active {
+      color: #f0a229;
+    }
+
+    .selection-card {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #102a43 0%, #214d78 100%);
+      color: #fff;
+    }
+
+    .selection-card strong {
+      font-family: "Manrope", sans-serif;
+      font-size: 1.02rem;
+    }
+
+    .selection-card small {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.86rem;
+    }
+
+    .pill {
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.15);
+      padding: 8px 12px;
+      font-size: 0.86rem;
+      box-shadow: none;
+    }
+
+    .pill.light {
+      color: var(--ink);
+      background: var(--chip);
+      border-color: rgba(16, 42, 67, 0.08);
+    }
+
+    .settings-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .setting-block {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(240, 245, 249, 0.8);
+      border: 1px solid rgba(16, 42, 67, 0.06);
+    }
+
+    .setting-title {
+      margin-bottom: 8px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #506476;
+    }
+
+    .saved-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .saved-form input {
+      flex: 1 1 220px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font: inherit;
+    }
+
+    .empty {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .output-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .output-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .preview-sheet {
+      border-radius: 22px;
+      border: 1px solid rgba(16, 42, 67, 0.08);
+      background: #fff;
+      padding: 16px;
+      box-shadow: 0 10px 24px rgba(16, 42, 67, 0.08);
+    }
+
+    .preview-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .ttt-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .ttt-cell,
+    .roll-cell {
+      min-height: 74px;
+      border-radius: 16px;
+      border: 1px solid rgba(16, 42, 67, 0.08);
+      background: #f8fbfd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10px;
+      font-weight: 700;
+      line-height: 1.18;
+    }
+
+    .roll-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .roll-cell:nth-child(6n + 1)::before,
+    .roll-cell:nth-child(6n + 2)::before,
+    .roll-cell:nth-child(6n + 3)::before,
+    .roll-cell:nth-child(6n + 4)::before,
+    .roll-cell:nth-child(6n + 5)::before,
+    .roll-cell:nth-child(6n + 6)::before {
+      display: block;
+      width: 100%;
+      font-size: 0.7rem;
+      color: #627688;
+      margin-bottom: 4px;
+    }
+
+    .roll-cell {
+      min-height: 82px;
+      display: block;
+      font-size: 0.92rem;
+    }
+
+    .roll-cell .die {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #102a43;
+      color: #fff;
+      font-size: 0.76rem;
+      margin-bottom: 7px;
+      font-weight: 800;
+    }
+
+    .preview-title {
+      margin: 0 0 6px;
+      font-family: "Manrope", sans-serif;
+      font-size: 1.04rem;
+    }
+
+    .focus-note {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: #fff7df;
+      border: 1px solid rgba(219, 162, 43, 0.22);
+      color: #6e5315;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 1100px) {
+      .workspace,
+      .workspace[data-layout="sidebar"],
+      .workspace[data-layout="planner"] {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+          "quick"
+          "settings"
+          "saved"
+          "library"
+          "output";
+      }
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 14px; }
+      .panel { padding: 14px; border-radius: 20px; }
+      .preset-btn, .mode-btn { min-width: 0; width: 100%; }
+      .filter-row { grid-template-columns: minmax(0, 1fr); }
+      .roll-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .output-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <div class="eyebrow">Teacher Power Tool Testbed</div>
+      <h1>4 working generator layouts built on your current reading data</h1>
+      <p class="intro">This page is for workflow testing, not final polish. Each mode keeps the same reading-skill engine but changes the UX around presets, favorites, recent skills, saved sets, random review, and batch generation so you can compare what feels fastest for paid users.</p>
+    </header>
+
+    <div class="mode-switcher" id="layoutModes"></div>
+
+    <main class="workspace" id="workspace" data-layout="strip">
+      <section class="panel quick">
+        <h2>Quick Start</h2>
+        <p class="panel-copy">Preset-first workflow for the teacher who wants a usable board in a few seconds.</p>
+        <div class="preset-grid" id="presetGrid"></div>
+        <div class="section-label">Fast Actions</div>
+        <div class="button-row">
+          <button class="control-btn" id="randomReviewBtn" type="button">Random Skill Review</button>
+          <button class="control-btn" id="clearSkillsBtn" type="button">Clear Selection</button>
+          <button class="control-btn" id="toggleFavoritesOnlyBtn" type="button">Show Favorites Only</button>
+        </div>
+        <div class="section-label">Recently Used</div>
+        <div class="recent-row" id="recentRow"></div>
+        <div class="section-label">Favorite Skills</div>
+        <div class="favorites-row" id="favoritesRow"></div>
+      </section>
+
+      <section class="panel settings">
+        <h2>Generate Setup</h2>
+        <p class="panel-copy">These controls stay fixed across all four examples so the comparison is mostly about layout and decision friction.</p>
+        <div class="selection-card">
+          <div>
+            <strong id="selectionTitle">No skills selected yet</strong><br />
+            <small id="selectionMeta">Choose a preset, click individual skills, or use random review.</small>
+          </div>
+          <div class="chip-row" id="selectedChips"></div>
+        </div>
+        <div class="settings-grid">
+          <div class="setting-block">
+            <div class="setting-title">Game Type</div>
+            <div class="game-row" id="gameTypeRow"></div>
+          </div>
+          <div class="setting-block">
+            <div class="setting-title">Difficulty</div>
+            <div class="game-row" id="difficultyRow"></div>
+          </div>
+          <div class="setting-block">
+            <div class="setting-title">Content</div>
+            <div class="game-row" id="contentRow"></div>
+          </div>
+          <div class="setting-block">
+            <div class="setting-title">Batch Size</div>
+            <div class="batch-row" id="batchRow"></div>
+          </div>
+          <div class="setting-block">
+            <div class="setting-title">Actions</div>
+            <div class="button-row">
+              <button class="control-btn active" id="generateBtn" type="button">Generate Now</button>
+              <button class="control-btn" id="generateClassSetBtn" type="button">Generate Class Set (25)</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel saved">
+        <h2>Saved Skill Sets</h2>
+        <p class="panel-copy">Local-only prototype for intervention groups, grade-level packs, or recurring weekly review sets.</p>
+        <div class="saved-form">
+          <input id="savedSetName" type="text" placeholder="Save current selection as..." />
+          <button class="control-btn" id="saveSetBtn" type="button">Save Set</button>
+        </div>
+        <div class="saved-row" id="savedRow"></div>
+        <div class="focus-note">Prototype note: this is intentionally local and lightweight. It is here to test whether saved groups change repeat use, not to define the final account model.</div>
+      </section>
+
+      <section class="panel library">
+        <h2>Skill Library</h2>
+        <p class="panel-copy">Your existing progression is the right backbone. This version keeps it intact and adds faster ways to narrow choices.</p>
+        <div class="filter-row">
+          <input id="skillSearch" type="search" placeholder="Search skills, patterns, or preset names..." />
+          <button class="control-btn" id="expandCollapseBtn" type="button">Collapse All</button>
+        </div>
+        <div class="skill-groups" id="skillGroups"></div>
+      </section>
+
+      <section class="panel output">
+        <div class="output-head">
+          <div>
+            <h2>Instant Preview</h2>
+            <p class="panel-copy" id="outputCopy">Nothing generated yet. Use this to compare how quickly each layout gets you to a usable game.</p>
+          </div>
+          <div class="chip-row">
+            <span class="pill light" id="layoutLabel">Example A</span>
+            <span class="pill light" id="outputCount">0 boards</span>
+          </div>
+        </div>
+        <div class="output-grid" id="outputGrid"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const LAYOUTS = [
+      { id: "strip", label: "Example A", title: "Power Strip", desc: "Quick-start presets on top, familiar generator below." },
+      { id: "sidebar", label: "Example B", title: "Teacher Sidebar", desc: "Everything reusable sits in a left rail." },
+      { id: "planner", label: "Example C", title: "Bulk Planner", desc: "Batch and saved sets are treated like first-class controls." },
+      { id: "focus", label: "Example D", title: "Focus Mode", desc: "Minimal stack for teachers who want less scanning." }
+    ];
+
+    const SKILL_GROUPS = [
+      { id: "cvc", label: "CVC", skills: ["Short A", "Short E", "Short I", "Short O", "Short U", "Mixed CVC", "FLSZ"] },
+      { id: "dig", label: "Digraphs", skills: ["ck", "sh", "th", "ch", "wh", "Digraphs Mixed"] },
+      { id: "glued", label: "Glued Sounds", skills: ["-all", "-ng", "-nk", "Glued Mixed"] },
+      { id: "vce", label: "VCe", skills: ["a_e", "i_e", "o_e", "u_e", "Mixed VCe"] },
+      { id: "rctrl", label: "R-Controlled", skills: ["ar", "or", "er/ir/ur", "Mixed R-Controlled"] },
+      { id: "vteams", label: "Vowel Teams", skills: ["Long A (ai/ay)", "Long E (ee/ea)", "Long I (igh/y/ie)", "Long O (oa/ow/oe)", "Long U (oo/ew/ue)", "Mixed Vowel Teams"] },
+      { id: "dip", label: "Diphthongs", skills: ["Diphthongs (oy/oi)", "Diphthongs (ow/ou)"] },
+      { id: "variant", label: "Variant Vowels", skills: ["Variant Vowels (au/aw)", "Variant Vowel (oo)"] },
+      { id: "soft", label: "Soft C/G", skills: ["Soft C (-ce)", "Soft G (-ge)", "Soft G (-dge)"] }
+    ];
+
+    const PRESETS = [
+      { id: "k", label: "Kindergarten Skills", desc: "Short vowels and early review", skills: ["Short A", "Short E", "Short I", "Short O", "Short U", "Mixed CVC"] },
+      { id: "first", label: "1st Grade Skills", desc: "Digraphs, glued, VCe, teams", skills: ["Digraphs Mixed", "Glued Mixed", "Mixed VCe", "Mixed Vowel Teams"] },
+      { id: "digraph", label: "Digraph Review", desc: "Fast review set", skills: ["sh", "th", "ch", "wh", "ck"] },
+      { id: "silent-e", label: "Silent E Review", desc: "All VCe patterns", skills: ["a_e", "i_e", "o_e", "u_e", "Mixed VCe"] },
+      { id: "mixed", label: "Mixed Review", desc: "Cross-skill warm-up", skills: ["Mixed CVC", "Digraphs Mixed", "Glued Mixed", "Mixed VCe", "Mixed R-Controlled"] },
+      { id: "intervention", label: "Intervention Set", desc: "High-frequency support mix", skills: ["FLSZ", "ck", "sh", "-ng", "a_e", "ar"] }
+    ];
+
+    const PREFIX = {
+      "Short A": "0.1 - Short A",
+      "Short O": "0.2 - Short O",
+      "Short I": "0.3 - Short I",
+      "Short U": "0.4 - Short U",
+      "Short E": "0.5 - Short E",
+      "FLSZ": "0.6 - FLSZ",
+      "ck": "1.1 - ck",
+      "sh": "1.2 - sh",
+      "th": "1.3 - th",
+      "ch": "1.4 - ch",
+      "wh": "1.5 - wh",
+      "-all": "3.1 - all",
+      "-ng": "3.2 - ng",
+      "-nk": "3.3 - nk",
+      "a_e": "2.1 - a_e",
+      "i_e": "2.2 - i_e",
+      "o_e": "2.3 - o_e",
+      "u_e": "2.4 - u_e",
+      "ar": "4.1 - ar",
+      "or": "4.2 - or",
+      "er/ir/ur": "4.3 - er, ir, ur",
+      "Soft C (-ce)": "10.1 - ce",
+      "Soft G (-ge)": "10.2 - ge",
+      "Soft G (-dge)": "10.3 - dge"
+    };
+
+    const MIXED_RULES = {
+      "Mixed CVC": ["0.1 - Short A", "0.5 - Short E", "0.3 - Short I", "0.2 - Short O", "0.4 - Short U", "0.6 - FLSZ"],
+      "Digraphs Mixed": ["1.1 - ck", "1.2 - sh", "1.3 - th", "1.4 - ch", "1.5 - wh"],
+      "Glued Mixed": ["3.1 - all", "3.2 - ng", "3.3 - nk"],
+      "Mixed VCe": ["2.1 - a_e", "2.2 - i_e", "2.3 - o_e", "2.4 - u_e"],
+      "Mixed R-Controlled": ["4.1 - ar", "4.2 - or", "4.3 - er, ir, ur"],
+      "Long A (ai/ay)": ["6.1 - ay", "6.2 - ai"],
+      "Long E (ee/ea)": ["6.4 - ee", "6.5 - ea"],
+      "Long I (igh/y/ie)": ["6.6 - igh", "6.7 - Final y", "6.8 - ie"],
+      "Long O (oa/ow/oe)": ["6.9 - oa", "6.10 - ow", "6.11 - oe"],
+      "Long U (oo/ew/ue)": ["6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
+      "Mixed Vowel Teams": ["6.1 - ay", "6.2 - ai", "6.4 - ee", "6.5 - ea", "6.6 - igh", "6.7 - Final y", "6.8 - ie", "6.9 - oa", "6.10 - ow", "6.11 - oe", "6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
+      "Diphthongs (oy/oi)": ["7.4 - oy", "7.3 - oi"],
+      "Diphthongs (ow/ou)": ["7.2 - ow", "7.1 - ou"],
+      "Variant Vowels (au/aw)": ["7.5 - aw", "7.6 - au"],
+      "Variant Vowel (oo)": ["7.7 - oo variant"]
+    };
+
+    const STORAGE_KEYS = {
+      favorites: "reading-power-tool-favorites",
+      recent: "reading-power-tool-recent",
+      saved: "reading-power-tool-saved-sets",
+      layout: "reading-power-tool-layout"
+    };
+
+    const state = {
+      layout: loadJson(STORAGE_KEYS.layout, "strip"),
+      selectedSkills: new Set(),
+      favorites: new Set(loadJson(STORAGE_KEYS.favorites, [])),
+      recent: loadJson(STORAGE_KEYS.recent, []),
+      savedSets: loadJson(STORAGE_KEYS.saved, []),
+      favoritesOnly: false,
+      search: "",
+      gameType: "rollread",
+      difficulty: "mixed",
+      content: "words",
+      batch: 1
+    };
+
+    const layoutModesEl = document.getElementById("layoutModes");
+    const workspaceEl = document.getElementById("workspace");
+    const presetGridEl = document.getElementById("presetGrid");
+    const recentRowEl = document.getElementById("recentRow");
+    const favoritesRowEl = document.getElementById("favoritesRow");
+    const selectedChipsEl = document.getElementById("selectedChips");
+    const selectionTitleEl = document.getElementById("selectionTitle");
+    const selectionMetaEl = document.getElementById("selectionMeta");
+    const gameTypeRowEl = document.getElementById("gameTypeRow");
+    const difficultyRowEl = document.getElementById("difficultyRow");
+    const contentRowEl = document.getElementById("contentRow");
+    const batchRowEl = document.getElementById("batchRow");
+    const savedRowEl = document.getElementById("savedRow");
+    const skillGroupsEl = document.getElementById("skillGroups");
+    const outputGridEl = document.getElementById("outputGrid");
+    const outputCopyEl = document.getElementById("outputCopy");
+    const outputCountEl = document.getElementById("outputCount");
+    const layoutLabelEl = document.getElementById("layoutLabel");
+    const savedSetNameEl = document.getElementById("savedSetName");
+    const searchInputEl = document.getElementById("skillSearch");
+
+    function loadJson(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (_) {
+        return fallback;
+      }
+    }
+
+    function saveJson(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function wordsDict() {
+      return (typeof fluencyWords !== "undefined")
+        ? fluencyWords
+        : ((typeof fluencyData !== "undefined" && fluencyData.words) ? fluencyData.words : {});
+    }
+
+    function sentsDict() {
+      return (typeof fluencySentences !== "undefined")
+        ? fluencySentences
+        : ((typeof fluencyData !== "undefined" && fluencyData.sentences) ? fluencyData.sentences : {});
+    }
+
+    function toArray(value) {
+      if (Array.isArray(value)) return value.slice();
+      if (value == null) return [];
+      try { return Array.from(value); } catch (_) { return []; }
+    }
+
+    function shuffle(items) {
+      const list = toArray(items);
+      for (let i = list.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const hold = list[i];
+        list[i] = list[j];
+        list[j] = hold;
+      }
+      return list;
+    }
+
+    function uniqueByLowercase(items) {
+      const out = [];
+      const seen = new Set();
+      for (const item of toArray(items)) {
+        const value = String(item || "").trim();
+        const key = value.toLowerCase();
+        if (value && !seen.has(key)) {
+          seen.add(key);
+          out.push(value);
+        }
+      }
+      return out;
+    }
+
+    function fillToN(items, count) {
+      const base = toArray(items);
+      if (!base.length || count <= 0) return [];
+      const out = [];
+      let bag = shuffle(base);
+      while (out.length < count) {
+        if (!bag.length) bag = shuffle(base);
+        out.push(bag.shift());
+      }
+      return out.slice(0, count);
+    }
+
+    function readDict(dict, key) {
+      return Array.isArray(dict[key]) ? dict[key] : [];
+    }
+
+    function readWithBlends(dict, prefix, type, blends) {
+      const typeLower = type.toLowerCase();
+      const baseKeys = [`${prefix} ${type}`, `${prefix} ${typeLower}`, `${prefix}`];
+      let base = [];
+      for (const key of baseKeys) base = base.concat(readDict(dict, key));
+      if (!blends) return base;
+
+      const candidates = [
+        `${prefix} with Blends ${type}`,
+        `${prefix} with blends ${type}`,
+        `${prefix} with Blends ${typeLower}`,
+        `${prefix} with blends ${typeLower}`
+      ];
+      const bPrefix = prefix.replace(" - ", "b - ");
+      candidates.push(
+        `${bPrefix} with Blends ${type}`,
+        `${bPrefix} with blends ${type}`,
+        `${bPrefix} with Blends ${typeLower}`,
+        `${bPrefix} with blends ${typeLower}`
+      );
+
+      for (const key of candidates) {
+        const list = readDict(dict, key);
+        if (list.length) return list.length < 9 ? uniqueByLowercase(list.concat(base)) : list;
+      }
+      return base;
+    }
+
+    function getList(label, type, blends) {
+      const dict = type === "Words" ? wordsDict() : sentsDict();
+
+      if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)) {
+        let all = [];
+        for (const prefix of MIXED_RULES[label]) {
+          all = all.concat(readWithBlends(dict, prefix, type, blends));
+        }
+        return all;
+      }
+
+      const prefix = PREFIX[label];
+      if (prefix) return readWithBlends(dict, prefix, type, blends);
+
+      const tail1 = " " + type;
+      const tail2 = " " + type.toLowerCase();
+      const want = label.toLowerCase();
+      const keys = Object.keys(dict);
+      const guess = keys.find((key) => key.toLowerCase().includes(want) && (key.endsWith(tail1) || key.endsWith(tail2)));
+      return guess ? readDict(dict, guess) : [];
+    }
+
+    function difficultyConfig() {
+      if (state.difficulty === "easy") return { mode: "words", includeBlends: false };
+      if (state.difficulty === "challenge") return { mode: state.content === "words" ? "both" : "sentences", includeBlends: true };
+      return { mode: state.content, includeBlends: state.content !== "sentences" };
+    }
+
+    function getAllSkillNames() {
+      return SKILL_GROUPS.flatMap((group) => group.skills);
+    }
+
+    function normalizeSelection(skills) {
+      return uniqueByLowercase(skills).filter((skill) => getAllSkillNames().includes(skill));
+    }
+
+    function setSelection(skills) {
+      state.selectedSkills = new Set(normalizeSelection(skills));
+      renderSelection();
+      renderSkillGroups();
+    }
+
+    function toggleSkill(skill) {
+      if (state.selectedSkills.has(skill)) {
+        state.selectedSkills.delete(skill);
+      } else {
+        state.selectedSkills.add(skill);
+      }
+      renderSelection();
+      renderSkillGroups();
+    }
+
+    function applyPreset(skills) {
+      setSelection(skills);
+    }
+
+    function recordRecent(skills) {
+      const next = uniqueByLowercase(skills.concat(state.recent)).slice(0, 8);
+      state.recent = next;
+      saveJson(STORAGE_KEYS.recent, next);
+      renderRecent();
+    }
+
+    function toggleFavorite(skill) {
+      if (state.favorites.has(skill)) state.favorites.delete(skill);
+      else state.favorites.add(skill);
+      saveJson(STORAGE_KEYS.favorites, Array.from(state.favorites));
+      renderFavorites();
+      renderSkillGroups();
+    }
+
+    function saveCurrentSet() {
+      const name = savedSetNameEl.value.trim();
+      const skills = Array.from(state.selectedSkills);
+      if (!name || !skills.length) {
+        window.alert("Choose at least one skill and enter a set name.");
+        return;
+      }
+      state.savedSets = [
+        { id: Date.now(), name, skills }
+      ].concat(state.savedSets.filter((set) => set.name !== name)).slice(0, 10);
+      saveJson(STORAGE_KEYS.saved, state.savedSets);
+      savedSetNameEl.value = "";
+      renderSavedSets();
+    }
+
+    function deleteSavedSet(id) {
+      state.savedSets = state.savedSets.filter((set) => set.id !== id);
+      saveJson(STORAGE_KEYS.saved, state.savedSets);
+      renderSavedSets();
+    }
+
+    function getContentPool(skills, mode, includeBlends) {
+      const labels = normalizeSelection(skills);
+      if (mode === "words") {
+        return uniqueByLowercase(labels.flatMap((label) => getList(label, "Words", includeBlends)));
+      }
+      if (mode === "sentences") {
+        return uniqueByLowercase(labels.flatMap((label) => getList(label, "Sentences", includeBlends)));
+      }
+      const words = uniqueByLowercase(labels.flatMap((label) => getList(label, "Words", includeBlends)));
+      const sentences = uniqueByLowercase(labels.flatMap((label) => getList(label, "Sentences", includeBlends)));
+      return shuffle(fillToN(words, 12).concat(fillToN(sentences, 12)));
+    }
+
+    function generateBoards(count) {
+      const skills = Array.from(state.selectedSkills);
+      if (!skills.length) {
+        window.alert("Select at least one skill first.");
+        return;
+      }
+
+      const config = difficultyConfig();
+      const mode = config.mode;
+      const includeBlends = config.includeBlends;
+      const boardSize = state.gameType === "tictactoe" ? 9 : 24;
+      const pool = getContentPool(skills, mode, includeBlends);
+
+      if (!pool.length) {
+        window.alert("No content found for that combination. Try a different difficulty or skill set.");
+        return;
+      }
+
+      recordRecent(skills);
+
+      const boards = Array.from({ length: count }, (_, index) => {
+        return {
+          id: `${Date.now()}-${index}`,
+          title: state.gameType === "tictactoe" ? `Tic Tac Toe ${index + 1}` : `Roll and Read ${index + 1}`,
+          gameType: state.gameType,
+          mode,
+          difficulty: state.difficulty,
+          skills,
+          prompts: fillToN(shuffle(pool), boardSize)
+        };
+      });
+
+      renderOutput(boards);
+    }
+
+    function renderOutput(boards) {
+      outputGridEl.innerHTML = "";
+      outputCopyEl.textContent = boards.length
+        ? "Preview appears directly below the controls so the workflow feels immediate."
+        : "Nothing generated yet. Use this to compare how quickly each layout gets you to a usable game.";
+      outputCountEl.textContent = `${boards.length} board${boards.length === 1 ? "" : "s"}`;
+
+      for (const board of boards) {
+        const article = document.createElement("article");
+        article.className = "preview-sheet";
+
+        const title = document.createElement("h3");
+        title.className = "preview-title";
+        title.textContent = board.title;
+
+        const meta = document.createElement("div");
+        meta.className = "preview-meta";
+        meta.innerHTML = `
+          <span>${board.skills.join(" • ")}</span>
+          <span>${board.mode}</span>
+          <span>${board.difficulty}</span>
+        `;
+
+        article.appendChild(title);
+        article.appendChild(meta);
+
+        if (board.gameType === "tictactoe") {
+          const grid = document.createElement("div");
+          grid.className = "ttt-grid";
+          board.prompts.forEach((prompt) => {
+            const cell = document.createElement("div");
+            cell.className = "ttt-cell";
+            cell.textContent = prompt;
+            grid.appendChild(cell);
+          });
+          article.appendChild(grid);
+        } else {
+          const grid = document.createElement("div");
+          grid.className = "roll-grid";
+          board.prompts.forEach((prompt, index) => {
+            const cell = document.createElement("div");
+            cell.className = "roll-cell";
+            cell.innerHTML = `<div class="die">${(index % 6) + 1}</div><div>${prompt}</div>`;
+            grid.appendChild(cell);
+          });
+          article.appendChild(grid);
+        }
+
+        outputGridEl.appendChild(article);
+      }
+    }
+
+    function renderLayouts() {
+      layoutModesEl.innerHTML = "";
+      LAYOUTS.forEach((layout) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "mode-btn" + (layout.id === state.layout ? " active" : "");
+        button.innerHTML = `<strong>${layout.label}: ${layout.title}</strong><span>${layout.desc}</span>`;
+        button.addEventListener("click", () => {
+          state.layout = layout.id;
+          workspaceEl.dataset.layout = layout.id;
+          saveJson(STORAGE_KEYS.layout, layout.id);
+          renderLayouts();
+          renderLayoutBadge();
+        });
+        layoutModesEl.appendChild(button);
+      });
+      workspaceEl.dataset.layout = state.layout;
+    }
+
+    function renderLayoutBadge() {
+      const current = LAYOUTS.find((layout) => layout.id === state.layout) || LAYOUTS[0];
+      layoutLabelEl.textContent = `${current.label}: ${current.title}`;
+    }
+
+    function renderPresets() {
+      presetGridEl.innerHTML = "";
+      PRESETS.forEach((preset) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "preset-btn";
+        button.innerHTML = `<strong>${preset.label}</strong><span>${preset.desc}</span>`;
+        button.addEventListener("click", () => applyPreset(preset.skills));
+        presetGridEl.appendChild(button);
+      });
+    }
+
+    function renderRecent() {
+      recentRowEl.innerHTML = "";
+      if (!state.recent.length) {
+        recentRowEl.innerHTML = `<p class="empty">Generate something once and the recent skills will show up here.</p>`;
+        return;
+      }
+      state.recent.forEach((skill) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "mini-btn";
+        button.textContent = skill;
+        button.addEventListener("click", () => toggleSkill(skill));
+        recentRowEl.appendChild(button);
+      });
+    }
+
+    function renderFavorites() {
+      favoritesRowEl.innerHTML = "";
+      const favorites = Array.from(state.favorites);
+      if (!favorites.length) {
+        favoritesRowEl.innerHTML = `<p class="empty">Star a few skills below to test whether favorites reduce repeat clicks.</p>`;
+        return;
+      }
+      favorites.forEach((skill) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "mini-btn" + (state.selectedSkills.has(skill) ? " active" : "");
+        button.textContent = skill;
+        button.addEventListener("click", () => toggleSkill(skill));
+        favoritesRowEl.appendChild(button);
+      });
+    }
+
+    function renderSelection() {
+      const labels = Array.from(state.selectedSkills);
+      selectedChipsEl.innerHTML = "";
+
+      if (!labels.length) {
+        selectionTitleEl.textContent = "No skills selected yet";
+        selectionMetaEl.textContent = "Choose a preset, click individual skills, or use random review.";
+        return;
+      }
+
+      selectionTitleEl.textContent = `${labels.length} skill${labels.length === 1 ? "" : "s"} selected`;
+      selectionMetaEl.textContent = labels.join(" • ");
+
+      labels.forEach((label) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "pill";
+        button.textContent = label;
+        button.addEventListener("click", () => toggleSkill(label));
+        selectedChipsEl.appendChild(button);
+      });
+    }
+
+    function renderChoiceRow(root, options, currentValue, onPick) {
+      root.innerHTML = "";
+      options.forEach((option) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "control-btn" + (option.value === currentValue ? " active" : "");
+        button.textContent = option.label;
+        button.addEventListener("click", () => onPick(option.value));
+        root.appendChild(button);
+      });
+    }
+
+    function renderControls() {
+      renderChoiceRow(
+        gameTypeRowEl,
+        [
+          { value: "rollread", label: "Roll and Read" },
+          { value: "tictactoe", label: "Tic Tac Toe" }
+        ],
+        state.gameType,
+        (value) => {
+          state.gameType = value;
+          renderControls();
+        }
+      );
+
+      renderChoiceRow(
+        difficultyRowEl,
+        [
+          { value: "easy", label: "Easy" },
+          { value: "mixed", label: "Mixed" },
+          { value: "challenge", label: "Challenge" }
+        ],
+        state.difficulty,
+        (value) => {
+          state.difficulty = value;
+          renderControls();
+        }
+      );
+
+      renderChoiceRow(
+        contentRowEl,
+        [
+          { value: "words", label: "Words" },
+          { value: "sentences", label: "Sentences" },
+          { value: "both", label: "Both" }
+        ],
+        state.content,
+        (value) => {
+          state.content = value;
+          renderControls();
+        }
+      );
+
+      renderChoiceRow(
+        batchRowEl,
+        [
+          { value: 1, label: "Generate 1" },
+          { value: 5, label: "Generate 5" },
+          { value: 10, label: "Generate 10" }
+        ],
+        state.batch,
+        (value) => {
+          state.batch = value;
+          renderControls();
+        }
+      );
+    }
+
+    function renderSavedSets() {
+      savedRowEl.innerHTML = "";
+      if (!state.savedSets.length) {
+        savedRowEl.innerHTML = `<p class="empty">Save a selection to test whether recurring groups deserve a permanent place in the product.</p>`;
+        return;
+      }
+
+      state.savedSets.forEach((set) => {
+        const wrap = document.createElement("div");
+        wrap.className = "saved-row";
+
+        const loadBtn = document.createElement("button");
+        loadBtn.type = "button";
+        loadBtn.className = "saved-btn";
+        loadBtn.textContent = `${set.name} (${set.skills.length})`;
+        loadBtn.addEventListener("click", () => setSelection(set.skills));
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.className = "mini-btn";
+        deleteBtn.textContent = "Delete";
+        deleteBtn.addEventListener("click", () => deleteSavedSet(set.id));
+
+        wrap.appendChild(loadBtn);
+        wrap.appendChild(deleteBtn);
+        savedRowEl.appendChild(wrap);
+      });
+    }
+
+    function matchesSearch(skill) {
+      const search = state.search.trim().toLowerCase();
+      if (!search) return true;
+      return skill.toLowerCase().includes(search);
+    }
+
+    function renderSkillGroups() {
+      skillGroupsEl.innerHTML = "";
+
+      SKILL_GROUPS.forEach((group) => {
+        const visibleSkills = group.skills.filter((skill) => {
+          if (state.favoritesOnly && !state.favorites.has(skill)) return false;
+          return matchesSearch(skill);
+        });
+
+        if (!visibleSkills.length) return;
+
+        const details = document.createElement("details");
+        details.className = `skill-group group-${group.id}`;
+        details.open = true;
+
+        const summary = document.createElement("summary");
+        summary.innerHTML = `<span>${group.label}</span><span>${visibleSkills.length} skills</span>`;
+        details.appendChild(summary);
+
+        const wrap = document.createElement("div");
+        wrap.className = "skills-wrap";
+
+        visibleSkills.forEach((skill) => {
+          const chip = document.createElement("div");
+          chip.className = "skill-chip";
+
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "skill-btn" + (state.selectedSkills.has(skill) ? " selected" : "");
+          button.textContent = skill;
+          button.addEventListener("click", () => toggleSkill(skill));
+
+          const star = document.createElement("button");
+          star.type = "button";
+          star.className = "star-btn" + (state.favorites.has(skill) ? " active" : "");
+          star.textContent = "★";
+          star.title = "Toggle favorite";
+          star.addEventListener("click", (event) => {
+            event.stopPropagation();
+            toggleFavorite(skill);
+          });
+
+          chip.appendChild(button);
+          chip.appendChild(star);
+          wrap.appendChild(chip);
+        });
+
+        details.appendChild(wrap);
+        skillGroupsEl.appendChild(details);
+      });
+    }
+
+    document.getElementById("randomReviewBtn").addEventListener("click", () => {
+      const all = getAllSkillNames();
+      const count = Math.min(3, all.length);
+      setSelection(shuffle(all).slice(0, count));
+    });
+
+    document.getElementById("clearSkillsBtn").addEventListener("click", () => {
+      setSelection([]);
+    });
+
+    document.getElementById("toggleFavoritesOnlyBtn").addEventListener("click", (event) => {
+      state.favoritesOnly = !state.favoritesOnly;
+      event.currentTarget.classList.toggle("active", state.favoritesOnly);
+      renderSkillGroups();
+    });
+
+    document.getElementById("expandCollapseBtn").addEventListener("click", (event) => {
+      const details = skillGroupsEl.querySelectorAll("details");
+      const shouldOpen = Array.from(details).some((item) => !item.open);
+      details.forEach((item) => { item.open = shouldOpen; });
+      event.currentTarget.textContent = shouldOpen ? "Collapse All" : "Expand All";
+    });
+
+    searchInputEl.addEventListener("input", () => {
+      state.search = searchInputEl.value;
+      renderSkillGroups();
+    });
+
+    document.getElementById("saveSetBtn").addEventListener("click", saveCurrentSet);
+    document.getElementById("generateBtn").addEventListener("click", () => generateBoards(Number(state.batch) || 1));
+    document.getElementById("generateClassSetBtn").addEventListener("click", () => generateBoards(25));
+
+    renderLayouts();
+    renderLayoutBadge();
+    renderPresets();
+    renderRecent();
+    renderFavorites();
+    renderSelection();
+    renderControls();
+    renderSavedSets();
+    renderSkillGroups();
+  </script>
+</body>
+</html>

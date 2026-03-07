@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intervention Station Preview</title>
+  <meta
+    name="description"
+    content="Intervention Station homepage preview with one notebook-style category showcase."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Nunito:wght@500;700;800;900&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell header-bar">
+      <div class="brand-block">
+        <a class="logo-wrap" href="./index.html" aria-label="Intervention Station home">
+          <img
+            src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png"
+            alt="Intervention Station"
+            width="500"
+            height="95"
+          />
+        </a>
+      </div>
+      <nav class="header-actions" aria-label="Top navigation">
+        <a class="button" href="../site-preview-march3rd/home-preview-generators-first.html">Join Now</a>
+        <a class="button-secondary" href="../site-preview-march3rd/whats-inside-preview.html">What's Inside</a>
+        <a class="button-secondary" href="../site-preview-march3rd/home-preview-generators-first.html">Log In</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-intro">
+      <div class="shell hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">Printable + Digital Teaching Tools</div>
+          <h1>Stop Searching For Worksheets. Make Them.</h1>
+          <p>Create fresh math and reading practice fast, then pull from a larger library of printables, songs, games, and freebies when you need them.</p>
+          <div class="hero-actions">
+            <a class="button" href="../site-preview-march3rd/home-preview-generators-first.html">Join The Membership</a>
+            <a class="button-secondary button-secondary-light" href="../site-preview-march3rd/whats-inside-preview.html">Browse What’s Inside</a>
+          </div>
+        </div>
+        <div class="hero-aside">
+          <div class="mini-proof">
+            <strong>19+</strong>
+            <span>generator previews teachers can open right away</span>
+          </div>
+          <div class="mini-proof">
+            <strong>200+</strong>
+            <span>printable math and reading supports organized by skill</span>
+          </div>
+          <div class="mini-proof">
+            <strong>5</strong>
+            <span>clear sections teachers can scan in seconds</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell showcase-section" aria-label="Membership category showcase">
+      <div class="binder-tabs-wrap">
+        <div class="binder-tabs" role="tablist" aria-label="Membership categories">
+          <button class="tool-tab tab-generators" type="button" role="tab" id="top-tab-generators" aria-selected="true" aria-controls="panel-generators" data-panel="panel-generators">
+            <span class="tool-tab-kicker">Try it now</span>
+            <span class="tool-tab-label">Generators</span>
+          </button>
+          <button class="tool-tab tab-resources" type="button" role="tab" id="top-tab-resources" aria-selected="false" aria-controls="panel-resources" tabindex="-1" data-panel="panel-resources">
+            <span class="tool-tab-kicker">Printables</span>
+            <span class="tool-tab-label">Resources</span>
+          </button>
+          <button class="tool-tab tab-songs" type="button" role="tab" id="top-tab-songs" aria-selected="false" aria-controls="panel-songs" tabindex="-1" data-panel="panel-songs">
+            <span class="tool-tab-kicker">Teach it</span>
+            <span class="tool-tab-label">Songs</span>
+          </button>
+          <button class="tool-tab tab-games" type="button" role="tab" id="top-tab-games" aria-selected="false" aria-controls="panel-games" tabindex="-1" data-panel="panel-games">
+            <span class="tool-tab-kicker">Play it</span>
+            <span class="tool-tab-label">Interactive Games</span>
+          </button>
+          <button class="tool-tab tab-freebies" type="button" role="tab" id="top-tab-freebies" aria-selected="false" aria-controls="panel-freebies" tabindex="-1" data-panel="panel-freebies">
+            <span class="tool-tab-kicker">Free Starter Pack</span>
+            <span class="tool-tab-label">Freebies</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="showcase-shell" data-active-theme="generators">
+        <section id="panel-generators" class="main-panel panel-theme panel-theme-generators" data-theme="generators" role="tabpanel" aria-labelledby="top-tab-generators">
+          <div class="try-now-shell">
+            <div class="try-now-copy">
+              <div class="panel-kicker">Try It Now</div>
+              <h3>Stop searching for worksheets. Create them.</h3>
+              <p>Choose Math or Reading, pick a real generator, and open a working preview right away.</p>
+            </div>
+            <div class="try-now-callout">
+              <span class="panel-callout-label">Quick Launch</span>
+              <strong>Pick a lane and try a working generator now.</strong>
+              <div class="try-now-checks">
+                <span>Real preview links</span>
+                <span>Math and reading ready</span>
+                <span>Featured picks below</span>
+              </div>
+              <div class="try-now-actions">
+                <button class="button try-now-jump" type="button" data-target-segment="segment-generators-math">Try Math</button>
+                <button class="button-secondary button-secondary-light try-now-jump" type="button" data-target-segment="segment-generators-reading">Try Reading</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="generator-switcher">
+            <span class="generator-switcher-label">Choose category</span>
+            <div class="segment-toggle" role="tablist" aria-label="Generator subject filters">
+              <button class="segment-button" type="button" role="tab" id="segment-generators-math" aria-selected="true" aria-controls="subpanel-generators-math">Math Generators</button>
+              <button class="segment-button" type="button" role="tab" id="segment-generators-reading" aria-selected="false" aria-controls="subpanel-generators-reading" tabindex="-1">Reading Generators</button>
+            </div>
+          </div>
+
+          <div class="subpanel" id="subpanel-generators-math" role="tabpanel" aria-labelledby="segment-generators-math">
+            <div class="generator-action-stage">
+              <div class="generator-lab-controls generator-launch-card" data-subject="math">
+                <div class="generator-lab-copy">
+                  <span class="launcher-kicker">Math Quick Launch</span>
+                  <h4>Open a math generator in seconds.</h4>
+                  <p>Start with addition, subtraction, division, or manipulatives and see a live working preview.</p>
+                </div>
+                <div class="generator-picker-row">
+                  <label class="generator-field">
+                    <span>Choose generator</span>
+                    <select id="generator-select-math" class="generator-select">
+                      <option value="addition">Addition Organizer</option>
+                      <option value="subtraction">Subtraction Organizer</option>
+                      <option value="partial-products">Partial Products</option>
+                      <option value="long-division">Long Division</option>
+                      <option value="division-organizer">Division Organizer</option>
+                      <option value="manipulatives">Manipulatives Add/Subtract</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="generator-quick-picks" aria-label="Popular math quick picks">
+                  <button class="quick-pick-button" type="button" data-generator-subject="math" data-generator-key="addition">Addition</button>
+                  <button class="quick-pick-button" type="button" data-generator-subject="math" data-generator-key="long-division">Long Division</button>
+                  <button class="quick-pick-button" type="button" data-generator-subject="math" data-generator-key="manipulatives">Manipulatives</button>
+                </div>
+                <div class="generator-inline-links generator-inline-actions">
+                  <button class="button generator-try-button" type="button" data-generator-subject="math">Open Preview Here</button>
+                  <a class="link-button link-button-secondary generator-open-link" id="generator-open-link-math" href="https://teachwithmrc.github.io/site%20previews/mobile-preview-safe/addition-graphic-organizer-preview-mobile-fit.html" target="_blank" rel="noreferrer">Open Full Preview</a>
+                  <a class="link-button link-button-secondary" href="../site-preview-march3rd/math-generators-preview.html">See All Math Generators</a>
+                </div>
+                <div class="generator-lab-note">
+                  <strong>Best first click:</strong>
+                  <span>Addition and Long Division usually make the value obvious fastest.</span>
+                </div>
+              </div>
+
+              <div class="generator-embed-shell">
+                <div class="generator-embed-topline">
+                  <strong id="generator-embed-title-math">Addition Organizer</strong>
+                  <span>Live math preview</span>
+                </div>
+                <iframe
+                  id="generator-frame-math"
+                  class="generator-embed-frame"
+                  src="https://teachwithmrc.github.io/site%20previews/mobile-preview-safe/addition-graphic-organizer-preview-mobile-fit.html"
+                  title="Math generator preview"
+                  loading="lazy"
+                ></iframe>
+              </div>
+            </div>
+
+            <div class="featured-launch-grid">
+              <button class="featured-launch-card" type="button" data-generator-subject="math" data-generator-key="addition">
+                <span class="card-badge">Featured math</span>
+                <strong>Addition Organizer</strong>
+                <p>Launch a clean graphic organizer preview for quick small-group practice.</p>
+              </button>
+              <button class="featured-launch-card" type="button" data-generator-subject="math" data-generator-key="long-division">
+                <span class="card-badge">Featured math</span>
+                <strong>Long Division</strong>
+                <p>Open the color-coded division preview teachers can test immediately.</p>
+              </button>
+              <button class="featured-launch-card" type="button" data-generator-subject="math" data-generator-key="manipulatives">
+                <span class="card-badge">Featured math</span>
+                <strong>Manipulatives</strong>
+                <p>Open a more hands-on math preview without leaving the page.</p>
+              </button>
+            </div>
+          </div>
+
+          <div class="subpanel" id="subpanel-generators-reading" role="tabpanel" aria-labelledby="segment-generators-reading" hidden>
+            <div class="generator-action-stage">
+              <div class="generator-lab-controls generator-launch-card" data-subject="reading">
+                <div class="generator-lab-copy">
+                  <span class="launcher-kicker">Reading Generator Suite</span>
+                  <h4>Structured literacy tools teachers can launch fast.</h4>
+                  <p>Start with core decoding practice, move into repetition and review, and finish with engaging practice that still feels instructionally grounded.</p>
+                </div>
+                <div class="generator-picker-row">
+                  <label class="generator-field">
+                    <span>Choose generator</span>
+                    <select id="generator-select-reading" class="generator-select">
+                      <option value="fluency-grid">Fluency Grid Generator</option>
+                      <option value="word-mapping">Word Mapping Generator</option>
+                      <option value="word-ladder">Word Ladder Generator</option>
+                      <option value="roll-and-read">Roll and Read Generator</option>
+                      <option value="pyramid-spelling">Pyramid Spelling Generator</option>
+                      <option value="spelling-with-pictures">Spelling With Pictures Generator</option>
+                      <option value="reading-tic-tac-toe">Reading Tic Tac Toe Generator</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="generator-inline-links generator-inline-actions">
+                  <button class="button generator-try-button" type="button" data-generator-subject="reading">Open Preview Here</button>
+                  <a class="link-button link-button-secondary generator-open-link" id="generator-open-link-reading" href="../fluencygridpreview.html" target="_blank" rel="noreferrer">Open Full Preview</a>
+                  <a class="link-button link-button-secondary" href="../site-preview-march3rd/sor-generators-preview.html">See All Reading Generators</a>
+                </div>
+                <div class="generator-lab-note">
+                  <strong>Suite flow:</strong>
+                  <span>Core practice starts with Fluency Grid, Word Mapping, and Word Ladder. Repetition and review continue with Roll and Read, Pyramid Spelling, and Spelling With Pictures, then Reading Tic Tac Toe finishes the lane with playful review.</span>
+                </div>
+              </div>
+
+              <div class="generator-embed-shell">
+                <div class="generator-embed-topline">
+                  <strong id="generator-embed-title-reading">Fluency Grid Generator</strong>
+                  <span>Live reading preview</span>
+                </div>
+                <iframe
+                  id="generator-frame-reading"
+                  class="generator-embed-frame"
+                  src="../fluencygridpreview.html"
+                  title="Reading generator preview"
+                  loading="lazy"
+                ></iframe>
+              </div>
+            </div>
+
+            <div class="reading-suite-header">
+              <div>
+                <span class="panel-kicker">Reading Generators</span>
+                <h4>The official seven-tool reading suite.</h4>
+              </div>
+              <p>Every card below matches the quick-launch dropdown, uses a confirmed preview path, and keeps the lane focused on teacher-ready structured literacy practice.</p>
+            </div>
+
+            <div class="reading-suite-groups" aria-label="Reading generator groupings">
+              <span class="reading-suite-group">Core practice</span>
+              <span class="reading-suite-group">Repetition and review</span>
+              <span class="reading-suite-group">Game-style practice</span>
+            </div>
+
+            <div class="featured-launch-grid reading-suite-grid">
+              <article class="featured-launch-card reading-suite-card" data-generator-subject="reading" data-generator-key="fluency-grid">
+                <span class="card-badge">Core practice</span>
+                <strong>Fluency Grid Generator</strong>
+                <p>Build repeat-reading fluency with an explicit routine that feels immediately useful for intervention groups.</p>
+                <div class="card-actions reading-suite-actions">
+                  <button class="button card-preview-button" type="button" data-generator-subject="reading" data-generator-key="fluency-grid">Preview Here</button>
+                  <a class="link-button link-button-secondary" href="../fluencygridpreview.html" target="_blank" rel="noreferrer">Open Preview</a>
+                </div>
+              </article>
+
+              <article class="featured-launch-card reading-suite-card" data-generator-subject="reading" data-generator-key="word-mapping">
+                <span class="card-badge">Core practice</span>
+                <strong>Word Mapping Generator</strong>
+                <p>Show sound-by-sound mapping and phoneme-grapheme work in a format teachers recognize right away.</p>
+                <div class="card-actions reading-suite-actions">
+                  <button class="button card-preview-button" type="button" data-generator-subject="reading" data-generator-key="word-mapping">Preview Here</button>
+                  <a class="link-button link-button-secondary" href="../wordmap2preview.html" target="_blank" rel="noreferrer">Open Preview</a>
+                </div>
+              </article>
+
+              <article class="featured-launch-card reading-suite-card" data-generator-subject="reading" data-generator-key="word-ladder">
+                <span class="card-badge">Core practice</span>
+                <strong>Word Ladder Generator</strong>
+                <p>Highlight guided word-change practice that strengthens decoding, spelling, and attention to patterns.</p>
+                <div class="card-actions reading-suite-actions">
+                  <button class="button card-preview-button" type="button" data-generator-subject="reading" data-generator-key="word-ladder">Preview Here</button>
+                  <a class="link-button link-button-secondary" href="../wordladderpreview.html" target="_blank" rel="noreferrer">Open Preview</a>
+                </div>
+              </article>
+
+              <article class="featured-launch-card reading-suite-card" data-generator-subject="reading" data-generator-key="roll-and-read">
+                <span class="card-badge">Repetition and review</span>
+                <strong>Roll and Read Generator</strong>
+                <p>Add repeated reading practice with a classroom-friendly routine that works for centers, pairs, or independent review.</p>
+                <div class="card-actions reading-suite-actions">
+                  <button class="button card-preview-button" type="button" data-generator-subject="reading" data-generator-key="roll-and-read">Preview Here</button>
+                  <a class="link-button link-button-secondary" href="../rollreadpreview.html" target="_blank" rel="noreferrer">Open Preview</a>
+                </div>
+              </article>
+
+              <article class="featured-launch-card reading-suite-card" data-generator-subject="reading" data-generator-key="pyramid-spelling">
+                <span class="card-badge">Repetition and review</span>
+                <strong>Pyramid Spelling Generator</strong>
+                <p>Reinforce accurate spelling through layered repetition that is fast to generate and easy to reuse.</p>
+                <div class="card-actions reading-suite-actions">
+                  <button class="button card-preview-button" type="button" data-generator-subject="reading" data-generator-key="pyramid-spelling">Preview Here</button>
+                  <a class="link-button link-button-secondary" href="../pyramid-spelling-generator-preview.html" target="_blank" rel="noreferrer">Open Preview</a>
+                </div>
+              </article>
+
+              <article class="featured-launch-card reading-suite-card" data-generator-subject="reading" data-generator-key="spelling-with-pictures">
+                <span class="card-badge">Repetition and review</span>
+                <strong>Spelling With Pictures Generator</strong>
+                <p>Support recall and engagement with a visual spelling format that broadens how students enter the task.</p>
+                <div class="card-actions reading-suite-actions">
+                  <button class="button card-preview-button" type="button" data-generator-subject="reading" data-generator-key="spelling-with-pictures">Preview Here</button>
+                  <a class="link-button link-button-secondary" href="../spelling-with-pictures-generator-preview.html" target="_blank" rel="noreferrer">Open Preview</a>
+                </div>
+              </article>
+
+              <article class="featured-launch-card reading-suite-card" data-generator-subject="reading" data-generator-key="reading-tic-tac-toe">
+                <span class="card-badge">Game-style practice</span>
+                <strong>Reading Tic Tac Toe Generator</strong>
+                <p>Finish with a game-style practice option that still keeps reading review purposeful and easy to run.</p>
+                <div class="card-actions reading-suite-actions">
+                  <button class="button card-preview-button" type="button" data-generator-subject="reading" data-generator-key="reading-tic-tac-toe">Preview Here</button>
+                  <a class="link-button link-button-secondary" href="../tictacpreview.html" target="_blank" rel="noreferrer">Open Preview</a>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section id="panel-resources" class="main-panel panel-theme panel-theme-resources" data-theme="resources" role="tabpanel" aria-labelledby="top-tab-resources" hidden>
+          <div class="panel-hero">
+            <div class="panel-hero-copy">
+              <div class="panel-kicker">Resources</div>
+              <h3>Premade printable libraries, organized by skill.</h3>
+              <p>Use the Math Resources and Reading Resources toggles to browse ready-to-print support pages without another left-nav experience.</p>
+            </div>
+            <div class="panel-callout">
+              <span class="panel-callout-label">Ready To Print</span>
+              <strong>Browse the printable library and pull a resource fast.</strong>
+            </div>
+          </div>
+
+          <div class="panel-stats">
+            <article class="stat-card"><strong>Printable</strong><span>Premade sets and support pages instead of tool launchers</span></article>
+            <article class="stat-card"><strong>Math</strong><span>Place value through fractions, all grouped as resource categories</span></article>
+            <article class="stat-card"><strong>Reading</strong><span>Heart words, phonics comics, mazes, slides, and spelling supports</span></article>
+            <article class="stat-card"><strong>Ready</strong><span>Teachers can browse the library without feeling like they are inside another homepage</span></article>
+          </div>
+
+          <div class="segment-toggle" role="tablist" aria-label="Resource subject filters">
+            <button class="segment-button" type="button" role="tab" id="segment-resources-math" aria-selected="true" aria-controls="subpanel-resources-math">Math Resources</button>
+            <button class="segment-button" type="button" role="tab" id="segment-resources-reading" aria-selected="false" aria-controls="subpanel-resources-reading" tabindex="-1">Reading Resources</button>
+          </div>
+
+          <div class="subpanel" id="subpanel-resources-math" role="tabpanel" aria-labelledby="segment-resources-math">
+            <div class="library-header">
+              <div>
+                <h4>Scaffolded math resource categories</h4>
+                <p>Real library categories pulled from the math resource preview, without the internal left-side browse layout.</p>
+              </div>
+              <a class="button-secondary button-secondary-light" href="../site-preview-march3rd/scaffolded-math-preview.html">Open full math resource preview</a>
+            </div>
+
+            <div class="resource-grid">
+              <article class="tool-card resource-card">
+                <img class="card-image" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6952e8ebd2e1fc67046a69f4.png" alt="Place Value preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge card-badge-download">Math resources</span>
+                  <h4>Place Value</h4>
+                  <p>Visual support and guided practice for place value understanding.</p>
+                  <div class="card-actions"><a class="link-button" href="../site-preview-march3rd/placevalue-preview.html">Preview</a></div>
+                </div>
+              </article>
+
+              <article class="tool-card resource-card">
+                <img class="card-image" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/69631633e18638255cb5fc98.png" alt="Rounding preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge card-badge-download">Math resources</span>
+                  <h4>Rounding</h4>
+                  <p>Scaffolded rounding resources that match the generator path.</p>
+                  <div class="card-actions"><a class="link-button" href="../site-preview-march3rd/rounding-preview.html">Preview</a></div>
+                </div>
+              </article>
+
+              <article class="tool-card resource-card">
+                <img class="card-image" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6963e6cbe18638b317d61de6.png" alt="Addition preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge card-badge-download">Printable organizer</span>
+                  <h4>Addition</h4>
+                  <p>Printable organizers and support pages for addition intervention.</p>
+                  <div class="card-actions"><a class="link-button" href="../site-preview-march3rd/addition-preview.html">Preview</a></div>
+                </div>
+              </article>
+
+              <article class="tool-card resource-card">
+                <img class="card-image" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6964014c02f1be8458b440e7.png" alt="Multiplication preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge card-badge-download">Printable organizer</span>
+                  <h4>Multiplication</h4>
+                  <p>Scaffolded multiplication support designed for reteach and practice.</p>
+                  <div class="card-actions"><a class="link-button" href="../site-preview-march3rd/multiplication-preview.html">Preview</a></div>
+                </div>
+              </article>
+
+              <article class="tool-card resource-card">
+                <img class="card-image" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6957183441557c97b4b76b88.png" alt="Division preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge card-badge-download">Printable organizer</span>
+                  <h4>Division</h4>
+                  <p>Printable division support pages for students who need explicit structure.</p>
+                  <div class="card-actions"><a class="link-button" href="../site-preview-march3rd/division-preview.html">Preview</a></div>
+                </div>
+              </article>
+
+              <article class="tool-card resource-card">
+                <img class="card-image" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/69641371f13bc3cd48a4653e.png" alt="Decimals preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge card-badge-download">Math resources</span>
+                  <h4>Decimals</h4>
+                  <p>Visual math resources that make decimal concepts more approachable.</p>
+                  <div class="card-actions"><a class="link-button" href="../site-preview-march3rd/decimals-preview.html">Preview</a></div>
+                </div>
+              </article>
+
+              <article class="tool-card resource-card">
+                <img class="card-image" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6964075ec7683b6be8ade343.png" alt="Fractions preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge card-badge-download">Math resources</span>
+                  <h4>Fractions</h4>
+                  <p>Fraction supports built to reduce overwhelm and increase independence.</p>
+                  <div class="card-actions"><a class="link-button" href="../site-preview-march3rd/fractions-preview.html">Preview</a></div>
+                </div>
+              </article>
+
+              <article class="tool-card resource-card">
+                <img class="card-image" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/69641544c7683bd4faafd823.png" alt="Math Fact Riddles preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge card-badge-download">Math review</span>
+                  <h4>Math Fact Riddles</h4>
+                  <p>Short review activities that add novelty to skill practice.</p>
+                  <div class="card-actions"><a class="link-button" href="../site-preview-march3rd/math-riddle-preview.html">Preview</a></div>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="subpanel" id="subpanel-resources-reading" role="tabpanel" aria-labelledby="segment-resources-reading" hidden>
+            <div class="library-header">
+              <div>
+                <h4>SOR-aligned reading resource categories</h4>
+                <p>SOR-aligned reading resources for warmups, intervention groups, and skill review.</p>
+              </div>
+              <a class="button-secondary button-secondary-light" href="../site-preview-march3rd/sor-reading-preview.html">Open full reading resource preview</a>
+            </div>
+
+            <div class="resource-grid">
+              <article class="tool-card resource-card">
+                <img class="card-image" src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png" alt="Heart Words preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge card-badge-download">Reading resources</span>
+                  <h4>Heart Words</h4>
+                  <p>Explicit practice for high-utility words that need special attention.</p>
+                  <div class="card-actions"><a class="link-button" href="../site-preview-march3rd/heart-words-preview.html">Preview</a></div>
+                </div>
+              </article>
+
+              <article class="tool-card resource-card">
+                <img class="card-image" src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png" alt="Phonics Comics preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge card-badge-download">Reading resources</span>
+                  <h4>Phonics Comics</h4>
+                  <p>Decodable stories with a stronger hook than standard drill pages.</p>
+                  <div class="card-actions"><a class="link-button" href="../site-preview-march3rd/phonics-comics-preview.html">Preview</a></div>
+                </div>
+              </article>
+
+              <article class="tool-card resource-card">
+                <img class="card-image" src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png" alt="Fix the Mix Up preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge card-badge-download">Reading resources</span>
+                  <h4>Fix the Mix Up</h4>
+                  <p>Students sort and correct targeted errors while practicing key patterns.</p>
+                  <div class="card-actions"><a class="link-button" href="../site-preview-march3rd/fix-mixup-preview.html">Preview</a></div>
+                </div>
+              </article>
+
+              <article class="tool-card resource-card">
+                <img class="card-image" src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png" alt="Blending Slides preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge card-badge-download">Reading resources</span>
+                  <h4>Blending Slides</h4>
+                  <p>Simple blending support that works well for intervention warmups and review.</p>
+                  <div class="card-actions"><a class="link-button" href="../site-preview-march3rd/blending-slides-preview.html">Preview</a></div>
+                </div>
+              </article>
+
+              <article class="tool-card resource-card">
+                <img class="card-image" src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png" alt="Phonics Path Maze preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge card-badge-download">Reading resources</span>
+                  <h4>Phonics Path Maze</h4>
+                  <p>A more game-like route through decoding and phonics practice.</p>
+                  <div class="card-actions"><a class="link-button" href="../site-preview-march3rd/phonics-maze-preview.html">Preview</a></div>
+                </div>
+              </article>
+
+              <article class="tool-card resource-card">
+                <img class="card-image" src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png" alt="Pick the Pic preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge card-badge-download">Reading resources</span>
+                  <h4>Pick the Pic</h4>
+                  <p>Picture-supported phonics practice for younger readers and intervention groups.</p>
+                  <div class="card-actions"><a class="link-button" href="../site-preview-march3rd/pick-the-pic-preview.html">Preview</a></div>
+                </div>
+              </article>
+
+              <article class="tool-card resource-card">
+                <img class="card-image" src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png" alt="High Frequency Word Pyramids preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge card-badge-download">Reading resources</span>
+                  <h4>High Frequency Word Pyramids</h4>
+                  <p>Repeated high-frequency word practice built around a simple visual routine.</p>
+                  <div class="card-actions"><a class="link-button" href="../site-preview-march3rd/hfw-pyramid-preview.html">Preview</a></div>
+                </div>
+              </article>
+
+              <article class="tool-card resource-card">
+                <img class="card-image" src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png" alt="Spelling by Phonics Skill preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge card-badge-download">Reading resources</span>
+                  <h4>Spelling by Phonics Skill</h4>
+                  <p>Practice pages organized around the skill teachers are actually teaching.</p>
+                  <div class="card-actions"><a class="link-button" href="../site-preview-march3rd/spelling-preview.html">Preview</a></div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section id="panel-songs" class="main-panel panel-theme panel-theme-songs" data-theme="songs" role="tabpanel" aria-labelledby="top-tab-songs" hidden>
+          <div class="panel-hero">
+            <div class="panel-hero-copy">
+              <div class="panel-kicker">Songs</div>
+              <h3>Songs, slides, and support materials that reinforce the skill.</h3>
+              <p>Use songs and slides to introduce a concept, reinforce it visually, and connect students to the printable follow-through that comes next.</p>
+            </div>
+            <div class="panel-callout">
+              <span class="panel-callout-label">Teaching support</span>
+              <strong>Music, visuals, and printables working as one lesson flow.</strong>
+            </div>
+          </div>
+
+          <div class="panel-stats">
+            <article class="stat-card"><strong>Songs</strong><span>Catchy concept support that helps new learning stick</span></article>
+            <article class="stat-card"><strong>Slides</strong><span>Projectable support for mini-lessons and intervention warmups</span></article>
+            <article class="stat-card"><strong>Printables</strong><span>Follow-up resources that extend the same skill after the song</span></article>
+            <article class="stat-card"><strong>Routine</strong><span>Position songs as part of instruction, not an extra add-on</span></article>
+          </div>
+
+          <div class="support-grid">
+            <article class="tool-card">
+              <img class="card-image" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c53098efbd78ecbbad10.png" alt="Fluency slides preview" />
+              <div class="tool-card-body">
+                <span class="card-badge">Slides + support</span>
+                <h4>Fluency Slides and Modeling Supports</h4>
+                <p>Use slides and projected supports to front-load the routine before students move into independent practice.</p>
+                <div class="card-actions">
+                  <a class="link-button" href="../site-preview-march3rd/fluencygridpreview.html">See Fluency Support</a>
+                  <a class="link-button link-button-secondary" href="../site-preview-march3rd/phonics-comics-preview.html">Reading Extras</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="tool-card">
+              <img class="card-image" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049e186383c509dc54f.png" alt="Math songs preview" />
+              <div class="tool-card-body">
+                <span class="card-badge">Song library</span>
+                <h4>Math Learning Songs and Resources</h4>
+                <p>Preview the main math songs destination teachers can use for concept teaching and review.</p>
+                <div class="card-actions">
+                  <a class="link-button" href="../site-preview-march3rd/math-song-preview.html">Preview Songs</a>
+                  <a class="link-button link-button-secondary" href="../site-preview-march3rd/learning-songs-preview.html">Song Library</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="tool-card">
+              <img class="card-image" src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png" alt="Skip counting song preview" />
+              <div class="tool-card-body">
+                <span class="card-badge">Lesson sequence</span>
+                <h4>Song-led review with printable follow-through</h4>
+                <p>Use individual song previews and the larger song library to show that teachers are getting teaching support, not just practice pages.</p>
+                <div class="card-actions">
+                  <a class="link-button" href="../site-preview-march3rd/skip-counting-song-preview.html">Open Song Example</a>
+                  <a class="link-button link-button-secondary" href="../site-preview-march3rd/whats-inside-preview.html">See Membership Mix</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="panel-games" class="main-panel panel-theme panel-theme-games" data-theme="games" role="tabpanel" aria-labelledby="top-tab-games" hidden>
+          <div class="panel-hero">
+            <div class="panel-hero-copy">
+              <div class="panel-kicker">Interactive Games</div>
+              <h3>Keep games grouped together as their own browse path.</h3>
+              <p>This lane stays simpler and more playful, so teachers can open reading games, math games, or the larger library without extra clutter.</p>
+            </div>
+            <div class="panel-callout">
+              <span class="panel-callout-label">Playful practice</span>
+              <strong>Bring more energy to intervention review without losing the skill focus.</strong>
+            </div>
+          </div>
+
+          <div class="panel-stats">
+            <article class="stat-card"><strong>Reading</strong><span>Game formats for repeated decoding and interactive review</span></article>
+            <article class="stat-card"><strong>Math</strong><span>Fact practice and structured games with quick setup</span></article>
+            <article class="stat-card"><strong>Centers</strong><span>Useful for small group rotations, stations, and partner practice</span></article>
+            <article class="stat-card"><strong>Simple</strong><span>Keep this panel distinct and easy to understand at a glance</span></article>
+          </div>
+
+          <div class="games-stage">
+            <div class="card-grid card-grid-wide">
+              <article class="tool-card">
+                <img class="card-image" src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png" alt="Reading Games preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge">Reading games</span>
+                  <h4>Reading Games</h4>
+                  <p>Interactive reading practice in a format that feels more playful than drill pages.</p>
+                  <div class="card-actions">
+                    <a class="link-button" href="../site-preview-march3rd/readinggames-preview.html">Preview</a>
+                    <a class="link-button link-button-secondary" href="https://teachwithmrc.github.io/ultimate_reading_game_modes_preview.html">Open Game Mode</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="tool-card">
+                <img class="card-image" src="https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/6962c049c7683b5d5571dd46.png" alt="Math Games preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge">Math games</span>
+                  <h4>Math Games</h4>
+                  <p>Review and repetition with a little more energy for intervention blocks.</p>
+                  <div class="card-actions">
+                    <a class="link-button" href="../site-preview-march3rd/math-game-board-preview.html">Preview</a>
+                    <a class="link-button link-button-secondary" href="https://teachwithmrc.github.io/math-tictac-mobile-preview.html">Math Tic Tac Toe</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="tool-card">
+                <img class="card-image" src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png" alt="Games Library preview" />
+                <div class="tool-card-body">
+                  <span class="card-badge">Games library</span>
+                  <h4>Games Library</h4>
+                  <p>A broader catch-all shelf for older game sets and additional practice formats.</p>
+                  <div class="card-actions">
+                    <a class="link-button" href="../site-preview-march3rd/games-preview.html">Preview</a>
+                    <a class="link-button link-button-secondary" href="../site-preview-march3rd/interactive-games-preview.html">Open Full Games Panel</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <aside class="launcher-card">
+              <div class="launcher-head">
+                <span class="launcher-kicker">Use in class</span>
+                <h4>Where games fit best</h4>
+              </div>
+              <div class="play-list">
+                <div class="play-item"><strong>Centers</strong><span>Quick practice formats for rotations and low-prep review</span></div>
+                <div class="play-item"><strong>Partners</strong><span>Repeat key skills without the same worksheet feel</span></div>
+                <div class="play-item"><strong>Warmups</strong><span>Open with fast engagement before moving into printables or generators</span></div>
+              </div>
+              <a class="launcher-footer" href="../site-preview-march3rd/interactive-games-preview.html">Browse the full games preview</a>
+            </aside>
+          </div>
+        </section>
+
+        <section id="panel-freebies" class="main-panel panel-theme panel-theme-freebies" data-theme="freebies" role="tabpanel" aria-labelledby="top-tab-freebies" hidden>
+          <div class="panel-hero">
+            <div class="panel-hero-copy">
+              <div class="panel-kicker">Freebies</div>
+              <h3>Start with a free pack teachers can use right away.</h3>
+              <p>Give visitors a quick win with printable samples, preview links, and a simple next step into the full membership.</p>
+            </div>
+            <div class="panel-callout">
+              <span class="panel-callout-label">Free Starter Pack</span>
+              <strong>Give teachers something useful before asking for the full commitment.</strong>
+            </div>
+          </div>
+
+          <div class="freebies-shell">
+            <div class="freebies-value">
+              <span class="freebies-pill">Free intervention pack</span>
+              <h4>Grab a free starter pack with printable samples, preview links, and a quick taste of the full library.</h4>
+              <p>Start with a small, useful pack teachers can use immediately, then guide them into the full library when they want more.</p>
+              <ul class="freebies-list">
+                <li>Sample math and reading printables teachers can use right away</li>
+                <li>One or two preview-ready practice routines to demonstrate the platform</li>
+                <li>A simple path from free pack to full membership</li>
+              </ul>
+              <a class="button freebies-cta" href="../site-preview-march3rd/home-preview-generators-first.html">Get The Free Pack</a>
+            </div>
+
+            <div class="freebies-media">
+              <div class="asset-placeholder asset-placeholder-video">
+                <strong>Freebie Walkthrough Video</strong>
+                <span>Add a short welcome video or quick tour of what is included in the starter pack.</span>
+              </div>
+              <div class="asset-placeholder asset-placeholder-form">
+                <strong>Email Signup Form</strong>
+                <span>Add the signup form here so teachers can get the free starter pack in one step.</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="shell proof-band" aria-label="Membership proof">
+      <article class="proof-card">
+        <span class="proof-label">Generators</span>
+        <strong>Create fresh practice fast</strong>
+        <p>Let teachers open a working preview first, then show them the larger membership behind it.</p>
+      </article>
+      <article class="proof-card">
+        <span class="proof-label">Resources</span>
+        <strong>Print-ready support by skill</strong>
+        <p>Separate the printable library from the generators so teachers know they are getting both.</p>
+      </article>
+      <article class="proof-card">
+        <span class="proof-label">Songs + Games</span>
+        <strong>More than a worksheet membership</strong>
+        <p>Broaden the offer with playful review, songs, slides, and follow-up materials.</p>
+      </article>
+    </section>
+
+    <section class="shell founder-section">
+      <div class="founder-card">
+        <div class="eyebrow">Founder Note</div>
+        <h2>Built to help intervention teachers save time without lowering quality.</h2>
+        <p>Intervention Station helps teachers create fresh practice, pull printable supports by skill, and keep lessons moving with songs, games, and easy-to-use extras.</p>
+      </div>
+      <div class="founder-quote">
+        <p>"The goal is not more stuff. The goal is better organized support that teachers can actually use tomorrow."</p>
+        <span>Intervention Station</span>
+      </div>
+    </section>
+
+    <section class="shell cta-band">
+      <div>
+        <div class="eyebrow">Join The Library</div>
+        <h2>See the full membership mix, not just one generator.</h2>
+        <p>Try a generator now, then browse the printable library, songs, games, and freebies that round out the membership.</p>
+      </div>
+      <div class="cta-actions">
+        <a class="button" href="../site-preview-march3rd/home-preview-generators-first.html">Join Membership</a>
+        <a class="button-secondary button-secondary-light" href="../site-preview-march3rd/whats-inside-preview.html">Browse What’s Inside</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="./tabs.js" defer></script>
+  <!--
+  LINKS TO VERIFY
+  None. All visible homepage destinations were matched to existing local preview files or known public preview URLs.
+  The original #join fragment links were rerouted to the parent preview page because that anchor is not present in the target file.
+  -->
+</body>
+</html>

@@ -53,7 +53,8 @@
     ]);
     const songsFiles = new Set([
       'learning-songs-preview.html',
-      'math-song-preview.html'
+      'math-song-preview.html',
+      'skip-counting-song-preview.html'
     ]);
     const insideFiles = new Set([
       'whats-inside-preview.html'

@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pyramid Spelling Worksheet Generator - Desktop</title>
+
+  <script src="https://teachwithmrc.github.io/newtry_FULL.js?v=20260307-pyramiddesktop" defer></script>
+  <script src="https://teachwithmrc.github.io/fluencyDataFull_v8-2_clean.js?v=20260307-pyramiddesktop" defer></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    @font-face {
+      font-family: "BoxesFont";
+      src: url("https://teachwithmrc.github.io/fonts/boxes2.otf") format("opentype");
+      font-display: swap;
+    }
+
+    :root { --line: #111; }
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", Arial, sans-serif;
+      background: #f6f8fc;
+      color: #111;
+    }
+
+    .wrap {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .head {
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+      padding: 20px 18px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .head h1 {
+      margin: 0;
+      font-size: clamp(36px, 4.2vw, 58px);
+      line-height: 1.06;
+      font-weight: 800;
+    }
+
+    .subhead {
+      margin: 8px 0 0;
+      font-size: 20px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: #3b4c65;
+    }
+
+    .controls {
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(220px, 300px));
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .btn {
+      width: 100%;
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      min-height: 58px;
+      padding: 12px 10px;
+      font-family: "Poppins", Arial, sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      cursor: pointer;
+      background: #6ec1ff;
+      color: #fff;
+    }
+
+    .btn-print {
+      background: #fff;
+      color: #111;
+    }
+
+    .controls-note {
+      margin: 12px 0 0;
+      text-align: center;
+      font-size: 20px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: #22344f;
+    }
+
+    .status {
+      margin: 8px 0 0;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #55657e;
+      min-height: 1.2em;
+    }
+
+    .mode-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(220px, 320px));
+      justify-content: center;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .mode-option {
+      border: 2px solid #b7c9df;
+      border-radius: 14px;
+      padding: 12px 10px;
+      text-align: center;
+      font-family: "Poppins", Arial, sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: #23466f;
+      cursor: pointer;
+      background: #f7fbff;
+      user-select: none;
+      line-height: 1.25;
+    }
+
+    .mode-option.selected {
+      background: #dcecff;
+      border-color: #6ea7e8;
+      color: #17385d;
+    }
+
+    .sheet-wrap {
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      padding: 14px;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      max-height: 84vh;
+    }
+
+    .page {
+      position: relative;
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 10px;
+      padding: 18px 18px 180px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: flex-end;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .name-row .line {
+      width: 260px;
+      border-bottom: 3px solid #111;
+      height: 0;
+    }
+
+    .page-title {
+      margin: 0 0 12px;
+      text-align: center;
+      font-size: clamp(40px, 3.4vw, 52px);
+      line-height: 1.04;
+      font-weight: 800;
+    }
+
+    .pyramid-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .pyramid-card {
+      border: 2px solid #111;
+      border-radius: 8px;
+      padding: 14px 12px;
+      display: grid;
+      grid-template-columns: 26px 1fr;
+      gap: 10px;
+      align-items: start;
+      min-height: 255px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .card-num {
+      font-weight: 800;
+      font-size: 18px;
+      line-height: 1.2;
+      text-align: left;
+    }
+
+    .sound-only-wrap {
+      display: grid;
+      justify-items: center;
+      row-gap: 8px;
+      width: 100%;
+    }
+
+    .sound-only-wrap.left {
+      justify-items: start;
+    }
+
+    .sound-word {
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: 0.01em;
+      text-transform: lowercase;
+    }
+
+    .sound-stack {
+      display: grid;
+      gap: 2px;
+      justify-items: center;
+    }
+
+    .sound-stack.left {
+      justify-items: start;
+    }
+
+    .sound-line {
+      line-height: 0.84;
+      font-weight: 400;
+      letter-spacing: 0;
+      font-family: "BoxesFont", monospace !important;
+      white-space: nowrap;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .target-word {
+      text-align: center;
+      font-weight: 800;
+      font-size: 2.3rem;
+      line-height: 1.1;
+      margin: 0 0 14px;
+      text-transform: lowercase;
+    }
+
+    .pyramid-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .p-row {
+      display: flex;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    .p-cell {
+      min-width: var(--letter-cell-w, 42px);
+      height: var(--letter-cell-h, 42px);
+      border: 2px solid #111;
+      display: grid;
+      place-items: center;
+      font-size: var(--letter-cell-font, 24px);
+      font-weight: 400;
+      font-family: "BoxesFont", monospace !important;
+      text-align: center;
+      padding: 0 4px;
+      background: #fff;
+      letter-spacing: 0;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .footer {
+      margin-top: 12px;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 700;
+      color: #444;
+    }
+
+    .members-lock {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      z-index: 30;
+      border: 2px solid #fff;
+      border-radius: 16px;
+      background: rgba(15, 18, 24, 0.9);
+      color: #fff;
+      text-align: center;
+      padding: 14px 12px 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .members-lock-title {
+      margin: 0;
+      font-size: 46px;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .members-lock-copy {
+      margin: 10px 0 10px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .members-lock a {
+      display: inline-block;
+      text-decoration: none;
+      border-radius: 999px;
+      background: #fff;
+      color: #111;
+      border: 2px solid #fff;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .preview-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0.55;
+      background-image:
+        repeating-linear-gradient(-24deg, rgba(0, 0, 0, 0.12) 0 16px, rgba(255, 255, 255, 0.05) 16px 32px),
+        url("data:image/svg+xml,%3Csvg width='360' height='240' viewBox='0 0 360 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='rotate(-23 180 120)'%3E%3Ctext x='22' y='112' fill='%23000' fill-opacity='.4' font-family='Poppins' font-size='40' font-weight='800'%3EPREVIEW%3C/text%3E%3Ctext x='92' y='158' fill='%23000' fill-opacity='.3' font-family='Poppins' font-size='20' font-weight='700'%3ENOT FOR CLASSROOM USE%3C/text%3E%3C/g%3E%3C/svg%3E");
+      background-size: auto, 360px 240px;
+      background-repeat: repeat;
+    }
+
+    @media (max-width: 1100px) {
+      .wrap { padding: 12px; }
+      .page { max-width: 100%; padding: 12px 12px 140px; }
+      .page-title { font-size: clamp(28px, 5vw, 40px); }
+      .name-row { font-size: 14px; margin-bottom: 8px; }
+      .name-row .line { width: 150px; border-bottom: 2px solid #111; }
+      .controls-note { font-size: 16px; margin-top: 10px; }
+      .mode-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      .mode-option { font-size: 13px; padding: 10px 6px; }
+      .pyramid-grid { gap: 8px; }
+      .pyramid-card {
+        min-height: 180px;
+        padding: 10px 8px;
+        grid-template-columns: 20px 1fr;
+        gap: 8px;
+      }
+      .card-num { font-size: 14px; }
+      .target-word { font-size: 1.5rem; margin-bottom: 8px; }
+      .members-lock { left: 10px; right: 10px; bottom: 10px; padding: 10px 10px 12px; }
+      .members-lock-title { font-size: 30px; }
+      .members-lock-copy { margin: 6px 0 8px; font-size: 12px; }
+      .members-lock a { padding: 7px 14px; font-size: 12px; }
+    }
+
+    @media (max-width: 760px) {
+      .btn-row { grid-template-columns: 1fr; }
+      .mode-row { grid-template-columns: 1fr; }
+      .pyramid-grid { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="head">
+      <h1>Pyramid Spelling Worksheet Generator</h1>
+      <p class="subhead">Skill: Variant Vowels Mixed.</p>
+    </section>
+
+    <section class="controls">
+      <div class="btn-row">
+        <button id="btnGenerate" class="btn" type="button">Generate</button>
+        <button id="btnPrint" class="btn btn-print" type="button">Print</button>
+      </div>
+
+      <p class="controls-note">Choose or pick more than 40 phonics skills or combine sets.</p>
+
+      <div id="modeRow" class="mode-row" role="radiogroup" aria-label="Layout mode">
+        <button type="button" class="mode-option selected" data-layout="pyramid">Pyramid (By Letter)</button>
+        <button type="button" class="mode-option" data-layout="left">Left Aligned (By Sound)</button>
+      </div>
+
+      <p id="status" class="status">Ready.</p>
+    </section>
+
+    <section class="sheet-wrap">
+      <div id="printArea"></div>
+    </section>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const FORCED_SKILL = "Variant Vowels Mixed";
+      const FORCED_BUILD_MODE = "sound";
+      const MAX_WORDS = 6;
+      const CARDS_PER_PAGE = 6;
+
+      const state = {
+        mode: FORCED_BUILD_MODE,
+        blendMode: "mix",
+        soundLayout: "pyramid",
+        soundPerPage: CARDS_PER_PAGE,
+        skillPool: [],
+        poolSignature: "",
+        randomOrder: [],
+        randomCursor: 0
+      };
+
+      const printArea = document.getElementById("printArea");
+      const modeRow = document.getElementById("modeRow");
+      const btnGenerate = document.getElementById("btnGenerate");
+      const btnPrint = document.getElementById("btnPrint");
+      const statusEl = document.getElementById("status");
+
+      const SOUND_CHUNKS = [
+        "eigh", "igh", "air", "are", "ear", "ure", "tch", "dge", "tion", "sion",
+        "qu", "ff", "ll", "ss", "zz", "tt", "pp", "bb", "dd", "gg", "mm", "nn", "rr",
+        "ch", "sh", "th", "wh", "ck", "ng", "nk", "ee", "ea", "oa", "ow", "oe",
+        "ai", "ay", "oi", "oy", "ou", "aw", "au", "er", "ir", "ur", "ar", "or",
+        "oo", "ew", "ue", "ie"
+      ];
+
+      function normalizeAlpha(word) {
+        return String(word || "").toLowerCase().replace(/[^a-z]/g, "");
+      }
+
+      function sanitizeWordToken(raw) {
+        const token = String(raw || "").replace(/[’]/g, "'").toLowerCase().trim();
+        if (!/^[a-z]+(?:'[a-z]+)?$/.test(token)) return "";
+        const alphaLen = token.replace(/[^a-z]/g, "").length;
+        if (alphaLen < 2 || alphaLen > 15) return "";
+        return token;
+      }
+
+      function sanitizeSplitPart(raw) {
+        const token = String(raw || "").replace(/[’]/g, "'").toLowerCase().trim();
+        if (!/^[a-z]+(?:'[a-z]+)?$/.test(token)) return "";
+        return token;
+      }
+
+      function normalizePattern(patternRaw) {
+        const value = String(patternRaw || "").replace(/[^0-9]/g, "");
+        if (!value) return "";
+        if (value.length < 1 || value.length > 15) return "";
+        return value;
+      }
+
+      function addPattern(entry, patternRaw) {
+        const pattern = normalizePattern(patternRaw);
+        if (!pattern) return;
+        if (!entry.patternSet.has(pattern)) {
+          entry.patternSet.add(pattern);
+          entry.patterns.push(pattern);
+        }
+      }
+
+      function addWord(word, splitParts, collector, patternValue) {
+        const cleanWord = sanitizeWordToken(word);
+        if (!cleanWord) return;
+        let entry = collector.get(cleanWord);
+        if (!entry) {
+          entry = {
+            key: cleanWord,
+            word: cleanWord,
+            splits: [],
+            splitKeys: new Set(),
+            patterns: [],
+            patternSet: new Set()
+          };
+          collector.set(cleanWord, entry);
+        }
+        addPattern(entry, patternValue);
+
+        if (Array.isArray(splitParts) && splitParts.length) {
+          const normalizedParts = splitParts
+            .map((part) => sanitizeSplitPart(String(part || "").replace(/[^a-zA-Z']/g, "")))
+            .filter(Boolean);
+          if (!normalizedParts.length) return;
+          const joined = normalizedParts.join("");
+          const cleanAlpha = normalizeAlpha(cleanWord);
+          if (joined !== cleanAlpha) return;
+          const splitKey = normalizedParts.join("|");
+          if (entry.splitKeys.has(splitKey)) return;
+          entry.splitKeys.add(splitKey);
+          entry.splits.push(normalizedParts);
+          const derivedPattern = normalizedParts.map((part) => String(normalizeAlpha(part).length || 1)).join("");
+          addPattern(entry, derivedPattern);
+        }
+      }
+
+      function dedupe(list) {
+        const seen = new Set();
+        const out = [];
+        for (const w of list) {
+          const key = (w && w.word && w.pattern) ? (w.word + "|" + w.pattern) : JSON.stringify(w);
+          if (!seen.has(key)) {
+            seen.add(key);
+            out.push(w);
+          }
+        }
+        return out;
+      }
+
+      function getWordsForSkill(skill, source, blendMode) {
+        const blendSuffixes = [" with Blends", " with Digraphs and Blends"];
+
+        function fetchBase(base) {
+          const baseWords = source[base] || [];
+          let blendWords = [];
+          blendSuffixes.forEach((suffix) => {
+            const key = base + suffix;
+            if (source[key]) blendWords = blendWords.concat(source[key]);
+          });
+          if (blendMode === "blends") return blendWords;
+          if (blendMode === "mix") return dedupe([].concat(baseWords, blendWords));
+          return baseWords;
+        }
+
+        switch (skill) {
+          case "Variant Vowels Mixed":
+            return dedupe([].concat(
+              fetchBase("Variant Vowels Mixed"),
+              fetchBase("Variant Vowels (au/aw)"),
+              fetchBase("Variant Vowel (oo)"),
+              fetchBase("Variant Vowel(aw)"),
+              fetchBase("Variant Vowel(au)"),
+              fetchBase("Variant Vowel(oo)")
+            ));
+          default:
+            return fetchBase(skill);
+        }
+      }
+
+      function buildSkillPool() {
+        if (typeof window.soundBoxWords === "undefined") return [];
+
+        const collector = new Map();
+        const words = getWordsForSkill(FORCED_SKILL, window.soundBoxWords, state.blendMode);
+
+        words.forEach((item) => {
+          if (item && typeof item === "object") {
+            addWord(item.word, item.split, collector, item.pattern);
+          } else {
+            addWord(item, null, collector);
+          }
+        });
+
+        return Array.from(collector.values())
+          .map((entry) => ({
+            key: entry.key,
+            word: entry.word,
+            splits: entry.splits.slice(),
+            patterns: entry.patterns.slice()
+          }))
+          .sort((a, b) => {
+            if (a.word.length !== b.word.length) return a.word.length - b.word.length;
+            return a.word.localeCompare(b.word);
+          });
+      }
+
+      function shuffle(array) {
+        const copy = array.slice();
+        for (let i = copy.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const temp = copy[i];
+          copy[i] = copy[j];
+          copy[j] = temp;
+        }
+        return copy;
+      }
+
+      function computePoolSignature(list) {
+        return list.map((entry) => entry.key).join("|");
+      }
+
+      function nextWordBatch(eligible, count) {
+        if (!eligible.length) return [];
+        if (eligible.length <= count) return eligible.slice();
+
+        const signature = computePoolSignature(eligible.map((item) => item.entry));
+        if (state.poolSignature !== signature || !state.randomOrder.length) {
+          state.poolSignature = signature;
+          state.randomOrder = shuffle(Array.from({ length: eligible.length }, (_, i) => i));
+          state.randomCursor = 0;
+        }
+
+        if (state.randomCursor + count > state.randomOrder.length) {
+          state.randomOrder = shuffle(Array.from({ length: eligible.length }, (_, i) => i));
+          state.randomCursor = 0;
+        }
+
+        const indexes = state.randomOrder.slice(state.randomCursor, state.randomCursor + count);
+        state.randomCursor += count;
+        return indexes.map((index) => eligible[index]);
+      }
+
+      function segmentBySound(word) {
+        const clean = normalizeAlpha(word);
+        if (!clean) return [];
+
+        const vowels = new Set(["a", "e", "i", "o", "u"]);
+        const consonants = new Set(["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z"]);
+        const hasLikelySilentETail =
+          clean.length >= 3 &&
+          clean.endsWith("e") &&
+          consonants.has(clean[clean.length - 2]) &&
+          vowels.has(clean[clean.length - 3]);
+
+        const scanLimit = hasLikelySilentETail ? clean.length - 2 : clean.length;
+        const parts = [];
+        let index = 0;
+
+        while (index < scanLimit) {
+          let found = "";
+          for (const chunk of SOUND_CHUNKS) {
+            if (clean.startsWith(chunk, index)) {
+              found = chunk;
+              break;
+            }
+          }
+          if (found) {
+            parts.push(found);
+            index += found.length;
+          } else {
+            parts.push(clean[index]);
+            index += 1;
+          }
+        }
+
+        if (hasLikelySilentETail) parts.push(clean.slice(-2));
+        return parts;
+      }
+
+      function pickSplitForSound(entry) {
+        if (!entry || !Array.isArray(entry.splits) || !entry.splits.length) return null;
+        const sorted = entry.splits.slice().sort((a, b) => b.length - a.length);
+        return sorted[0] || null;
+      }
+
+      function normalizeSourceSplit(split) {
+        if (!Array.isArray(split) || !split.length) return [];
+        const cleaned = split
+          .map((unit) => sanitizeSplitPart(unit))
+          .filter(Boolean);
+        if (!cleaned.length) return [];
+        if (cleaned.length > 1) return cleaned;
+        return segmentBySound(cleaned[0]);
+      }
+
+      function getUnits(entry) {
+        const split = pickSplitForSound(entry);
+        const normalized = normalizeSourceSplit(split);
+        if (normalized.length) return normalized;
+        return segmentBySound(entry.word);
+      }
+
+      function getLetterUnits(entry) {
+        return normalizeAlpha(entry.word).split("").filter(Boolean);
+      }
+
+      function getPatternGuide(entry, units) {
+        if (!Array.isArray(units) || !units.length) return "";
+
+        const derived = units.map((unit) => String(Math.max(1, normalizeAlpha(unit).length))).join("");
+        const numericCandidates = (Array.isArray(entry.patterns) ? entry.patterns : [])
+          .map((p) => String(p))
+          .filter((p) => /^\d+$/.test(p));
+
+        if (!numericCandidates.length) return derived;
+        const exact = numericCandidates.find((p) => p === derived);
+        if (exact) return exact;
+        const sameLength = numericCandidates.find((p) => p.length === units.length);
+        if (sameLength) return sameLength;
+        return numericCandidates[0];
+      }
+
+      function getSoundFontSizes(item) {
+        const guideLen = (item.patternGuide || "").length || Math.max(1, item.units.length);
+        const wordLen = normalizeAlpha(item.entry.word).length;
+
+        let line = 60 - Math.max(0, guideLen - 3) * 7;
+        let word = 36 - Math.max(0, guideLen - 3) * 1.5;
+        if (wordLen >= 7) word -= Math.min(6, (wordLen - 6) * 0.7);
+
+        return {
+          line: Math.max(30, line),
+          word: Math.max(22, word)
+        };
+      }
+
+      function makeSoundStackBlock(item) {
+        const wrap = document.createElement("div");
+        wrap.className = "sound-only-wrap " + (state.soundLayout === "left" ? "left" : "pyramid");
+
+        const sizes = getSoundFontSizes(item);
+        const wordLine = document.createElement("div");
+        wordLine.className = "sound-word";
+        wordLine.textContent = item.entry.word;
+        wordLine.style.fontSize = sizes.word + "px";
+        wrap.appendChild(wordLine);
+
+        const stack = document.createElement("div");
+        stack.className = "sound-stack " + (state.soundLayout === "left" ? "left" : "pyramid");
+
+        const fallbackGuide = (Array.isArray(item.units) ? item.units : [])
+          .map((unit) => String(Math.max(1, normalizeAlpha(unit).length)))
+          .join("");
+        const guide = /^\d+$/.test(String(item.patternGuide || "")) ? String(item.patternGuide) : fallbackGuide;
+        const leftWidth = Math.max(1.8, guide.length * 1.12) + "ch";
+
+        for (let i = 1; i <= guide.length; i += 1) {
+          const line = document.createElement("div");
+          line.className = "sound-line";
+          line.style.width = state.soundLayout === "left"
+            ? leftWidth
+            : (Math.max(1.8, i * 1.12) + "ch");
+          line.style.fontSize = sizes.line + "px";
+          line.style.textAlign = state.soundLayout === "left" ? "left" : "center";
+          line.textContent = guide.slice(0, i);
+          stack.appendChild(line);
+        }
+
+        wrap.appendChild(stack);
+        return wrap;
+      }
+
+      function getLetterCellMetrics(units) {
+        const count = units.length;
+        const longest = units.reduce((max, item) => Math.max(max, String(item).length), 1);
+        let height = 42;
+        if (count >= 10) height = 28;
+        else if (count >= 8) height = 32;
+        else if (count >= 6) height = 36;
+
+        const width = Math.min(92, Math.max(42, 18 + longest * 12));
+        const font = Math.max(18, Math.min(28, height * 0.66));
+        return { height, width, font };
+      }
+
+      function makeLetterPyramid(units) {
+        const wrap = document.createElement("div");
+        wrap.className = "pyramid-wrap";
+
+        for (let row = 1; row <= units.length; row += 1) {
+          const rowEl = document.createElement("div");
+          rowEl.className = "p-row";
+          for (let i = 0; i < row; i += 1) {
+            const cell = document.createElement("div");
+            cell.className = "p-cell";
+            cell.textContent = "";
+            rowEl.appendChild(cell);
+          }
+          wrap.appendChild(rowEl);
+        }
+
+        return wrap;
+      }
+
+      function makeLetterBlock(item) {
+        const wrap = document.createElement("div");
+        const word = document.createElement("div");
+        word.className = "target-word";
+        word.textContent = item.entry.word;
+        wrap.appendChild(word);
+
+        const metrics = getLetterCellMetrics(item.units);
+        wrap.style.setProperty("--letter-cell-h", metrics.height + "px");
+        wrap.style.setProperty("--letter-cell-w", metrics.width + "px");
+        wrap.style.setProperty("--letter-cell-font", metrics.font + "px");
+
+        const pyramid = makeLetterPyramid(item.units);
+        wrap.appendChild(pyramid);
+        return wrap;
+      }
+
+      function chunk(list, size) {
+        const out = [];
+        for (let i = 0; i < list.length; i += size) out.push(list.slice(i, i + size));
+        return out;
+      }
+
+      function buildLockPanel() {
+        const lock = document.createElement("div");
+        lock.className = "members-lock";
+        lock.innerHTML = [
+          '<p class="members-lock-title">Members Only</p>',
+          '<p class="members-lock-copy">Printing is for Members Only. Create an Unlimited Amount as a Member.</p>',
+          '<a href="https://interventionstation.com" target="_blank" rel="noopener noreferrer">Join</a>'
+        ].join("");
+        return lock;
+      }
+
+      function buildPage(items, pageNo, totalPages) {
+        const page = document.createElement("div");
+        page.className = "page";
+
+        const nameRow = document.createElement("div");
+        nameRow.className = "name-row";
+        nameRow.innerHTML = "<span>Name:</span><span class='line' aria-hidden='true'></span>";
+        page.appendChild(nameRow);
+
+        const title = document.createElement("h2");
+        title.className = "page-title";
+        title.textContent = "Pyramid Spelling";
+        page.appendChild(title);
+
+        const grid = document.createElement("div");
+        grid.className = "pyramid-grid";
+
+        items.forEach((item, index) => {
+          const card = document.createElement("div");
+          card.className = "pyramid-card";
+
+          const number = document.createElement("div");
+          number.className = "card-num";
+          number.textContent = String(index + 1 + ((pageNo - 1) * state.soundPerPage)) + ".";
+          card.appendChild(number);
+
+          if (state.soundLayout === "pyramid") {
+            card.appendChild(makeLetterBlock(item));
+          } else {
+            card.appendChild(makeSoundStackBlock(item));
+          }
+
+          grid.appendChild(card);
+        });
+
+        const footer = document.createElement("div");
+        footer.className = "footer";
+        footer.textContent = "Copyright - InterventionStation.com - @TeachwithMrC | Page " + pageNo + " of " + totalPages;
+
+        const overlay = document.createElement("div");
+        overlay.className = "preview-overlay";
+
+        page.appendChild(grid);
+        page.appendChild(footer);
+        page.appendChild(overlay);
+        page.appendChild(buildLockPanel());
+        return page;
+      }
+
+      function syncLayoutUi() {
+        modeRow.querySelectorAll(".mode-option").forEach((option) => {
+          option.classList.toggle("selected", option.getAttribute("data-layout") === state.soundLayout);
+        });
+      }
+
+      function generateWorksheet() {
+        state.mode = FORCED_BUILD_MODE;
+        state.skillPool = buildSkillPool();
+
+        if (!state.skillPool.length) {
+          printArea.innerHTML = "<article class='page'><p class='subhead'>Missing data: newtry_FULL.js did not load.</p></article>";
+          statusEl.textContent = "Data did not load.";
+          return;
+        }
+
+        const eligible = state.skillPool
+          .map((entry) => {
+            const units = state.soundLayout === "pyramid" ? getLetterUnits(entry) : getUnits(entry);
+            return { entry, units, patternGuide: getPatternGuide(entry, units) };
+          })
+          .filter((item) => item.units.length > 0);
+
+        const items = nextWordBatch(eligible, MAX_WORDS);
+        printArea.innerHTML = "";
+
+        if (!items.length) {
+          printArea.innerHTML = "<article class='page'><p class='subhead'>No preview words available for Variant Vowels Mixed.</p></article>";
+          statusEl.textContent = "No preview words available.";
+          return;
+        }
+
+        const pages = chunk(items, state.soundPerPage);
+        pages.forEach((group, idx) => {
+          printArea.appendChild(buildPage(group, idx + 1, pages.length));
+        });
+
+        statusEl.textContent = "Generated pyramid spelling preview.";
+      }
+
+      modeRow.addEventListener("click", (event) => {
+        const mode = event.target.closest(".mode-option");
+        if (!mode) return;
+        const layout = mode.getAttribute("data-layout");
+        if (!layout) return;
+        state.soundLayout = layout === "left" ? "left" : "pyramid";
+        syncLayoutUi();
+        generateWorksheet();
+      });
+
+      btnGenerate.addEventListener("click", generateWorksheet);
+      btnPrint.addEventListener("click", () => {
+        alert("Printing is for Members Only. Create an Unlimited Amount as a Member.");
+        statusEl.textContent = "Printing is for Members Only.";
+      });
+
+      syncLayoutUi();
+      generateWorksheet();
+    });
+  </script>
+</body>
+</html>

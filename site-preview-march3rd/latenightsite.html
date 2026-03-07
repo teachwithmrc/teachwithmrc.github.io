@@ -1,0 +1,1546 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intervention Station | Late Night Site</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --brand-dark:#2f3e4e;
+      --brand-blue:#66c9f4;
+      --ink:#102246;
+      --border:rgba(0,0,0,.55);
+      --offwhite:#f3f5f7;
+      --panel:#ffffff;
+    }
+
+    *{ box-sizing:border-box; }
+
+    html,body{
+      margin:0;
+      padding:0;
+      font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--ink);
+      background:var(--offwhite);
+    }
+
+    body{ overflow-x:hidden; }
+    img{ display:block; max-width:100%; height:auto; }
+
+    .is-ticker{
+      background:var(--brand-dark);
+      border-top:1px solid rgba(255,255,255,.18);
+      border-bottom:1px solid rgba(255,255,255,.18);
+      overflow:hidden;
+      width:100%;
+    }
+    .is-ticker-track{
+      display:flex;
+      align-items:center;
+      gap:28px;
+      padding:10px 0;
+      width:max-content;
+      white-space:nowrap;
+      animation:isTickerScroll 34s linear infinite;
+      will-change:transform;
+    }
+    .is-ticker:hover .is-ticker-track{ animation-play-state:paused; }
+    .is-ticker-item{
+      display:inline-flex;
+      align-items:center;
+      flex:0 0 auto;
+      color:#fff;
+      font-size:12px;
+      font-weight:650;
+      line-height:1.1;
+    }
+    .is-ticker-star{
+      color:#ffe08a;
+      margin-right:6px;
+      font-weight:900;
+    }
+    @keyframes isTickerScroll{
+      from{ transform:translate3d(0,0,0); }
+      to{ transform:translate3d(-50%,0,0); }
+    }
+
+    .top-cta-wrap{ background:var(--brand-dark); }
+    .top-cta-bar{
+      position:sticky;
+      top:0;
+      z-index:9999;
+      background:var(--brand-dark);
+      width:min(1200px, calc(100% - 32px));
+      margin:0 auto;
+      padding:12px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:nowrap;
+    }
+    .top-logo{
+      width:auto;
+      height:auto;
+      max-width:min(480px, 40vw);
+    }
+    .top-buttons-row{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:10px;
+      flex-wrap:nowrap;
+    }
+    .top-buttons-row a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      width:168px;
+      min-width:168px;
+      height:46px;
+      padding:0 14px;
+      background:var(--brand-blue);
+      border:2px solid var(--brand-blue);
+      border-radius:12px;
+      color:#fff;
+      font-family:"Poppins",system-ui,sans-serif;
+      font-size:16px;
+      font-weight:500;
+      line-height:1;
+      white-space:nowrap;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      transition:filter .15s ease, box-shadow .15s ease;
+    }
+    .top-buttons-row a:hover{
+      filter:brightness(.96);
+      box-shadow:0 2px 6px rgba(0,0,0,.18);
+    }
+
+    .late-page{
+      width:min(1200px, calc(100% - 32px));
+      margin:24px auto 40px;
+      background:var(--panel);
+      border:2px solid var(--border);
+      padding:24px;
+      overflow:hidden;
+    }
+
+    .generator-showcase{
+      display:grid;
+      gap:22px;
+    }
+    .generator-showcase__hero{
+      position:relative;
+      overflow:hidden;
+      border-radius:28px;
+      padding:28px;
+      background:
+        radial-gradient(circle at top right, rgba(110,193,255,.32), transparent 36%),
+        linear-gradient(135deg, #102246 0%, #183055 54%, #254a79 100%);
+      color:#fff;
+      box-shadow:0 18px 36px rgba(16,34,70,.16);
+    }
+    .generator-showcase__hero::after{
+      content:"";
+      position:absolute;
+      inset:auto -80px -120px auto;
+      width:320px;
+      height:320px;
+      border-radius:50%;
+      background:rgba(255,255,255,.08);
+      filter:blur(4px);
+    }
+    .generator-showcase__hero-content{
+      position:relative;
+      z-index:1;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:18px;
+    }
+    .generator-showcase__eyebrow{
+      margin:0 0 10px;
+      font-size:12px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      color:#d8efff;
+    }
+    .generator-showcase__hero h1{
+      margin:0 0 10px;
+      max-width:780px;
+      font-size:38px;
+      line-height:1.02;
+      letter-spacing:-.04em;
+    }
+    .generator-showcase__hero p{
+      margin:0;
+      max-width:760px;
+      font-size:15px;
+      line-height:1.6;
+      font-weight:600;
+      color:#d7e9fb;
+    }
+    .generator-showcase__hero-badge{
+      flex:0 0 auto;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:160px;
+      min-height:72px;
+      padding:14px 18px;
+      border-radius:22px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      font-size:14px;
+      line-height:1.35;
+      font-weight:800;
+      text-align:center;
+      color:#fff;
+      backdrop-filter:blur(8px);
+    }
+    .generator-showcase__shell{
+      display:block;
+    }
+    .generator-picker{
+      border:1px solid #d7e5f3;
+      border-radius:24px;
+      background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      padding:18px;
+      box-shadow:0 14px 30px rgba(16,34,70,.08);
+      display:grid;
+      gap:16px;
+      position:sticky;
+      top:92px;
+    }
+    .generator-picker__section{
+      display:grid;
+      gap:10px;
+    }
+    .generator-picker__kicker{
+      margin:0;
+      font-size:11px;
+      line-height:1;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-weight:900;
+      color:#5f7da0;
+    }
+    .generator-picker__title{
+      margin:0;
+      font-size:22px;
+      line-height:1.05;
+      color:#0e2b4f;
+    }
+    .generator-picker__sub{
+      margin:0;
+      font-size:13px;
+      line-height:1.55;
+      font-weight:600;
+      color:#5b7195;
+    }
+    .generator-category-grid{
+      display:grid;
+      gap:10px;
+    }
+    .generator-category-btn{
+      width:100%;
+      border:1px solid #d3e4f6;
+      border-radius:18px;
+      padding:16px;
+      background:#eef7ff;
+      color:#12385e;
+      text-align:left;
+      font:inherit;
+      cursor:pointer;
+      transition:transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
+    }
+    .generator-category-btn:hover{
+      transform:translateY(-1px);
+      border-color:#a9d4f3;
+      box-shadow:0 12px 24px rgba(16,34,70,.08);
+    }
+    .generator-category-btn.is-active{
+      background:linear-gradient(135deg, #102246 0%, #244a79 100%);
+      border-color:#102246;
+      color:#fff;
+      box-shadow:0 16px 26px rgba(16,34,70,.16);
+    }
+    .generator-category-btn strong{
+      display:block;
+      margin-bottom:4px;
+      font-size:16px;
+      line-height:1.2;
+    }
+    .generator-category-btn span{
+      display:block;
+      font-size:12px;
+      line-height:1.45;
+      font-weight:600;
+      color:inherit;
+      opacity:.82;
+    }
+    .generator-picker__section-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .generator-picker__count{
+      display:inline-flex;
+      align-items:center;
+      min-height:30px;
+      padding:0 10px;
+      border-radius:999px;
+      background:#eaf5ff;
+      color:#174166;
+      font-size:12px;
+      line-height:1;
+      font-weight:900;
+    }
+    .generator-option-list{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+    .generator-workspace{
+      display:grid;
+      grid-template-columns:300px minmax(0, 1fr);
+      gap:18px;
+      align-items:start;
+    }
+    .generator-workspace .generator-stage{
+      border:0;
+      background:transparent;
+      padding:0;
+      box-shadow:none;
+      gap:0;
+      min-width:0;
+    }
+    .generator-workspace .generator-stage__top,
+    .generator-workspace .generator-stage__actions,
+    .generator-workspace .generator-stage__footer{
+      display:none;
+    }
+    .generator-workspace .generator-stage__canvas{
+      min-height:0;
+      padding:0;
+      background:transparent;
+      border:0;
+      border-radius:0;
+      display:block;
+    }
+    .generator-workspace .generator-stage__frame{
+      width:100%;
+      max-width:none;
+      padding:0;
+      background:transparent;
+      border-radius:0;
+      box-shadow:none;
+    }
+    .generator-workspace .generator-stage__frame-top{
+      display:none;
+    }
+    .generator-workspace .generator-stage__screen{
+      position:relative;
+      overflow:hidden;
+      border:0;
+      border-radius:0;
+      background:transparent;
+      aspect-ratio:auto;
+      width:100%;
+    }
+    .generator-workspace .generator-stage__iframe{
+      display:block;
+      width:100%;
+      height:auto;
+      min-height:780px;
+      border:0;
+      background:#fff;
+      max-width:none;
+      transform-origin:top left;
+    }
+    .generator-workspace .generator-stage__canvas[data-preview-type="desktop"]{
+      min-height:0;
+      height:auto;
+      padding:0;
+    }
+    .generator-workspace .generator-stage__frame[data-preview-type="desktop"]{
+      width:100%;
+      height:auto;
+      padding:0;
+      border-radius:0;
+      background:transparent;
+      box-shadow:none;
+    }
+    .generator-workspace .generator-stage__screen[data-preview-type="desktop"]{
+      border:0;
+      border-radius:0;
+      aspect-ratio:auto;
+      background:transparent;
+    }
+    .generator-option{
+      width:100%;
+      border:1px solid #d3e4f6;
+      border-radius:20px;
+      padding:15px 16px;
+      background:#fff;
+      text-align:left;
+      font:inherit;
+      cursor:pointer;
+      transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+    .generator-option:hover{
+      transform:translateY(-1px);
+      border-color:#afd2f0;
+      box-shadow:0 12px 24px rgba(16,34,70,.08);
+    }
+    .generator-option.is-active{
+      border-color:#66c9f4;
+      background:#eef9ff;
+      box-shadow:0 16px 28px rgba(16,34,70,.1);
+    }
+    .generator-option__eyebrow{
+      margin:0 0 6px;
+      font-size:11px;
+      line-height:1;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-weight:900;
+      color:#5f7da0;
+    }
+    .generator-option__title{
+      margin:0 0 6px;
+      font-size:17px;
+      line-height:1.2;
+      color:#0f2e52;
+    }
+    .generator-option__desc{
+      margin:0;
+      font-size:13px;
+      line-height:1.5;
+      font-weight:600;
+      color:#5b7195;
+    }
+    .generator-stage{
+      border:1px solid #d7e5f3;
+      border-radius:28px;
+      background:#fff;
+      padding:22px;
+      box-shadow:0 18px 34px rgba(16,34,70,.08);
+      display:grid;
+      gap:18px;
+    }
+    .generator-stage__top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .generator-stage__meta{
+      min-width:0;
+    }
+    .generator-stage__meta h2{
+      margin:0 0 8px;
+      font-size:32px;
+      line-height:1.02;
+      color:#0e2b4f;
+      letter-spacing:-.04em;
+    }
+    .generator-stage__meta p{
+      margin:0;
+      max-width:700px;
+      font-size:14px;
+      line-height:1.6;
+      font-weight:600;
+      color:#587091;
+    }
+    .generator-stage__label{
+      margin:0 0 8px;
+      font-size:12px;
+      line-height:1;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-weight:900;
+      color:#4d84b7;
+    }
+    .generator-stage__chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      justify-content:flex-end;
+    }
+    .generator-stage__chip{
+      display:inline-flex;
+      align-items:center;
+      min-height:34px;
+      padding:0 12px;
+      border-radius:999px;
+      background:#eef7ff;
+      color:#12385e;
+      font-size:12px;
+      line-height:1;
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .generator-stage__actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .generator-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:46px;
+      padding:0 18px;
+      border-radius:999px;
+      text-decoration:none;
+      font-size:14px;
+      line-height:1;
+      font-weight:800;
+      white-space:nowrap;
+      transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    }
+    .generator-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 10px 22px rgba(16,34,70,.12);
+    }
+    .generator-btn--primary{
+      background:#66c9f4;
+      border:1px solid #57b8e2;
+      color:#fff;
+    }
+    .generator-btn--secondary{
+      background:#fff;
+      border:1px solid #d3e4f6;
+      color:#12385e;
+    }
+    .generator-stage__canvas{
+      border-radius:26px;
+      padding:22px;
+      background:
+        radial-gradient(circle at top left, rgba(102,201,244,.22), transparent 32%),
+        linear-gradient(180deg, #edf7ff 0%, #f8fbff 100%);
+      border:1px solid #d7e5f3;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:760px;
+    }
+    .generator-stage__frame{
+      width:min(100%, 440px);
+      border-radius:30px;
+      padding:12px;
+      background:linear-gradient(180deg, #102246 0%, #142c4e 100%);
+      box-shadow:0 28px 60px rgba(16,34,70,.22);
+    }
+    .generator-stage__canvas[data-preview-type="desktop"]{
+      min-height:640px;
+    }
+    .generator-stage__frame[data-preview-type="desktop"]{
+      width:min(100%, 1080px);
+      border-radius:22px;
+      padding:10px;
+    }
+    .generator-stage__frame-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:6px 8px 12px;
+      color:#dfeeff;
+      font-size:12px;
+      line-height:1;
+      font-weight:800;
+    }
+    .generator-stage__dots{
+      display:flex;
+      gap:6px;
+    }
+    .generator-stage__dots span{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:rgba(255,255,255,.45);
+    }
+    .generator-stage__screen{
+      overflow:hidden;
+      border-radius:22px;
+      background:#fff;
+      aspect-ratio:430 / 860;
+      border:1px solid rgba(16,34,70,.08);
+    }
+    .generator-stage__screen[data-preview-type="desktop"]{
+      border-radius:14px;
+      aspect-ratio:16 / 10;
+    }
+    .generator-stage__iframe{
+      display:block;
+      width:100%;
+      height:100%;
+      border:0;
+      background:#fff;
+    }
+    .generator-stage__footer{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding-top:2px;
+    }
+    .generator-stage__footer p{
+      margin:0;
+      font-size:12px;
+      line-height:1.5;
+      font-weight:700;
+      color:#5b7195;
+    }
+
+    @media (max-width:1080px){
+      .generator-workspace{
+        grid-template-columns:1fr;
+      }
+      .generator-picker{
+        position:relative;
+        top:auto;
+      }
+    }
+
+    @media (max-width:860px){
+      .generator-showcase__hero{
+        padding:22px;
+      }
+      .generator-showcase__hero-content,
+      .generator-stage__top,
+      .generator-stage__footer{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .generator-stage__chips{
+        justify-content:flex-start;
+      }
+      .generator-stage__canvas{
+        min-height:auto;
+        padding:16px;
+      }
+      .generator-panel-head{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+    }
+
+    @media (max-width:700px){
+      .generator-showcase__hero h1{
+        font-size:30px;
+      }
+      .late-page{
+        width:min(1200px, calc(100% - 20px));
+        margin:18px auto 28px;
+        padding:16px;
+      }
+      .generator-picker,
+      .generator-stage{
+        padding:16px;
+      }
+      .generator-stage__meta h2{
+        font-size:26px;
+      }
+      .generator-stage__actions{
+        width:100%;
+      }
+      .generator-option-list{
+        grid-template-columns:1fr;
+      }
+      .generator-btn{
+        width:100%;
+      }
+    }
+
+    .is-home .is-tabbed-library-shell{
+      display:grid;
+      grid-template-columns:260px minmax(0, 1fr);
+      gap:0;
+      align-items:stretch;
+      position:relative;
+      isolation:isolate;
+    }
+    .is-home .is-tabbed-nav{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      padding:26px 0 26px 0;
+      position:relative;
+      z-index:2;
+    }
+    .is-home .is-tabbed-nav-btn{
+      appearance:none;
+      border:0;
+      text-align:left;
+      font-family:"Poppins",system-ui,sans-serif;
+      background:linear-gradient(180deg, #d8effd 0%, #c8e6fb 100%);
+      color:#0f2e52;
+      padding:18px 22px;
+      border-radius:18px 0 0 18px;
+      font-size:15px;
+      line-height:1.2;
+      font-weight:700;
+      cursor:pointer;
+      transition:transform .16s ease, box-shadow .16s ease, background .16s ease;
+      box-shadow:inset 0 0 0 1px rgba(15,46,82,.06);
+      position:relative;
+    }
+    .is-home .is-tabbed-nav-btn:hover{
+      transform:translateX(4px);
+      background:linear-gradient(180deg, #d0ebfd 0%, #bfe2fb 100%);
+    }
+    .is-home .is-tabbed-nav-btn[aria-selected="true"]{
+      background:#fff;
+      font-weight:800;
+      color:#0c2747;
+      box-shadow:-10px 12px 24px rgba(16,34,70,.08);
+      z-index:3;
+    }
+    .is-home .is-tabbed-nav-btn[aria-selected="true"]::after{
+      content:none;
+    }
+    .is-home .is-tabbed-panel-wrap{
+      background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border:1px solid #d7e5f3;
+      border-radius:24px;
+      box-shadow:0 18px 34px rgba(16,34,70,.08);
+      padding:26px;
+      position:relative;
+      z-index:3;
+      overflow:hidden;
+    }
+    .is-home .is-tabbed-panel-wrap::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:24px;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.85);
+      pointer-events:none;
+    }
+    .generator-panel-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:16px;
+      padding-bottom:18px;
+      margin-bottom:18px;
+      border-bottom:1px solid #d7e5f3;
+      position:relative;
+      z-index:1;
+    }
+    .generator-panel-copy h2{
+      margin:0 0 8px;
+      font-size:30px;
+      line-height:1.05;
+      color:#0e2b4f;
+    }
+    .generator-panel-copy p{
+      margin:0;
+      font-size:14px;
+      line-height:1.55;
+      font-weight:600;
+      color:#4f6689;
+      max-width:760px;
+    }
+    .is-home .is-tabbed-panel[hidden]{
+      display:none;
+    }
+    .is-home .is-tabbed-panel-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:16px;
+      padding-bottom:18px;
+      margin-bottom:18px;
+      border-bottom:1px solid #d7e5f3;
+    }
+    .is-home .is-generator-eyebrow{
+      margin:0 0 8px;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:#4d84b7;
+    }
+    .is-home .is-tabbed-panel h2{
+      margin:0 0 8px;
+      font-size:30px;
+      line-height:1.05;
+      color:#0e2b4f;
+    }
+    .is-home .is-tabbed-panel p{
+      margin:0;
+      font-size:14px;
+      line-height:1.55;
+      font-weight:600;
+      color:#4f6689;
+      max-width:760px;
+    }
+    .is-home .is-tabbed-meta{
+      display:inline-flex;
+      align-items:center;
+      min-height:38px;
+      padding:0 14px;
+      border-radius:999px;
+      background:linear-gradient(135deg, #0f2e52 0%, #2d5e97 100%);
+      color:#fff;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.02em;
+      white-space:nowrap;
+      box-shadow:0 10px 20px rgba(16,34,70,.14);
+    }
+    .is-home .is-generator-stat-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:12px;
+      margin-bottom:16px;
+    }
+    .is-home .is-generator-stat{
+      background:#eef7ff;
+      border:1px solid #d7e5f3;
+      border-radius:16px;
+      padding:14px;
+    }
+    .is-home .is-generator-stat strong{
+      display:block;
+      font-size:28px;
+      line-height:1;
+      color:#0f2e52;
+      margin-bottom:6px;
+    }
+    .is-home .is-generator-stat span{
+      display:block;
+      font-size:13px;
+      line-height:1.35;
+      font-weight:700;
+      color:#4f6689;
+    }
+    .is-home .is-generator-card-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:16px;
+    }
+    .is-home .is-generator-card{
+      background:#fff;
+      border:1px solid #d7e5f3;
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow:0 10px 24px rgba(31,54,95,.07);
+      display:flex;
+      flex-direction:column;
+      min-height:100%;
+    }
+    .is-home .is-generator-card-shot{
+      width:100%;
+      height:184px;
+      object-fit:cover;
+      background:#dce9f9;
+      border-bottom:1px solid #d7e5f3;
+    }
+    .is-home .is-generator-card-body{
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      flex:1;
+    }
+    .is-home .is-generator-card h3{
+      margin:0;
+      font-size:18px;
+      line-height:1.2;
+      color:#0f2e52;
+    }
+    .is-home .is-generator-card p{
+      margin:0;
+      font-size:13px;
+      line-height:1.5;
+      font-weight:600;
+      color:#4f6689;
+      flex:1;
+    }
+    .is-home .is-generator-meta{
+      display:inline-flex;
+      align-items:center;
+      min-height:30px;
+      padding:0 10px;
+      border-radius:999px;
+      background:#eaf5ff;
+      color:#24507d;
+      font-size:12px;
+      font-weight:900;
+    }
+    .is-home .is-generator-card-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .is-home .is-join-btn,
+    .is-home .is-secondary-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      min-height:42px;
+      padding:0 14px;
+      border-radius:999px;
+      font-size:14px;
+      font-weight:500;
+      width:auto;
+      white-space:nowrap;
+    }
+    .is-home .is-join-btn{
+      background:#6ec1ff;
+      border:1px solid #5aaee9;
+      color:#fff;
+      box-shadow:0 8px 18px rgba(16,40,70,.14);
+    }
+    .is-home .is-secondary-btn{
+      background:#fff;
+      border:1px solid #cfd7ef;
+      color:#1f365f;
+    }
+
+    @media (max-width:980px){
+      .is-home .is-tabbed-library-shell{ grid-template-columns:1fr; gap:14px; }
+      .is-home .is-tabbed-nav{
+        flex-direction:row;
+        overflow-x:auto;
+        padding:0 2px;
+      }
+      .is-home .is-tabbed-nav-btn{
+        flex:0 0 auto;
+        border-radius:999px;
+        white-space:nowrap;
+      }
+      .is-home .is-tabbed-nav-btn:hover{ transform:translateY(-2px); }
+      .is-home .is-tabbed-nav-btn[aria-selected="true"]::after{ display:none; }
+      .is-home .is-tabbed-panel-head{ flex-direction:column; align-items:flex-start; }
+      .is-home .is-generator-stat-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+      .is-home .is-generator-card-grid{ grid-template-columns:1fr; }
+    }
+
+    @media (max-width:900px){
+      .top-cta-bar{
+        flex-wrap:wrap;
+        justify-content:center;
+        text-align:center;
+      }
+      .top-logo{ max-width:92vw; }
+      .top-buttons-row{
+        flex-wrap:wrap;
+        justify-content:center;
+      }
+    }
+
+    @media (max-width:700px){
+      .is-home .is-tabbed-panel-wrap{ padding:20px; }
+      .is-home .is-tabbed-panel h2{ font-size:24px; }
+      .is-home .is-generator-stat-grid{ grid-template-columns:1fr; }
+      .is-home .is-generator-card-shot{ height:168px; }
+      .is-home .is-generator-card-actions{ flex-direction:column; }
+      .is-home .is-join-btn,
+      .is-home .is-secondary-btn{ width:100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="is-ticker" aria-label="Reviews ticker">
+    <div class="is-ticker-track">
+      <div class="is-ticker-item"><span class="is-ticker-star">&#9733;</span>"Best intervention resources ever - my kids LOVE it."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">&#9733;</span>"Saved me hours every week. Worth every penny."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">&#9733;</span>"The generators are unreal. Print and go."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">&#9733;</span>"My small groups finally feel organized."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">&#9733;</span>"Best intervention resources ever - my kids LOVE it."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">&#9733;</span>"Saved me hours every week. Worth every penny."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">&#9733;</span>"The generators are unreal. Print and go."</div>
+      <div class="is-ticker-item"><span class="is-ticker-star">&#9733;</span>"My small groups finally feel organized."</div>
+    </div>
+  </div>
+
+  <div class="top-cta-wrap">
+    <div class="top-cta-bar">
+      <img
+        src="https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/695ae86905b511361b334920.png"
+        height="95"
+        width="500"
+        alt="Intervention Station"
+        class="top-logo"
+      />
+      <div class="top-buttons-row">
+        <a href="./home-preview-generators-first.html#join">Join Membership</a>
+        <a href="./whats-inside-preview.html">What's Inside?</a>
+        <a href="./home-preview-generators-first.html#join">Log In</a>
+      </div>
+    </div>
+  </div>
+
+  <main class="late-page is-home">
+    <section class="generator-showcase" aria-labelledby="generatorShowcaseTitle">
+      <div class="generator-showcase__hero">
+        <div class="generator-showcase__hero-content">
+          <div>
+            <p class="generator-showcase__eyebrow">Generator Preview Flow</p>
+            <h1 id="generatorShowcaseTitle">Pick math or reading, then choose a generator and preview it right here.</h1>
+            <p>Math starts with 2 generator previews, and Reading opens into the 7 desktop preview files you listed. The right side now uses the clean embedded layout only.</p>
+          </div>
+          <div class="generator-showcase__hero-badge">9 generators live on page</div>
+        </div>
+      </div>
+
+      <div class="generator-showcase__shell is-home">
+        <section class="is-tabbed-library" aria-label="Generator tab">
+          <div class="is-tabbed-library-shell">
+            <div class="is-tabbed-nav" aria-label="Generator categories">
+              <button class="is-tabbed-nav-btn generator-tab-btn" type="button" data-category="math" aria-selected="true">Math Generators</button>
+              <button class="is-tabbed-nav-btn generator-tab-btn" type="button" data-category="reading" aria-selected="false">Reading Generators</button>
+            </div>
+
+            <div class="is-tabbed-panel-wrap">
+              <div class="generator-panel-head">
+                <div class="generator-panel-copy">
+                  <p class="generator-stage__label">Generator Tab</p>
+                  <h2 id="generatorPanelTitle">Math generators with the correct preview pages.</h2>
+                  <p id="generatorPanelDescription">Choose from the first two math generator previews. These are now wired to the graphic-organizer mobile-fit pages used in the generator tab flow.</p>
+                </div>
+                <div class="generator-picker__count" id="generatorCount">2 choices</div>
+              </div>
+
+              <div class="generator-workspace" id="generatorWorkspace">
+                <div class="generator-option-list" id="generatorOptionList"></div>
+
+                <section class="generator-stage" aria-live="polite">
+                  <div class="generator-stage__top">
+                    <div class="generator-stage__meta">
+                      <p class="generator-stage__label" id="generatorStageLabel">Math Generator</p>
+                      <h2 id="generatorStageTitle">Addition Graphic Organizer</h2>
+                      <p id="generatorStageDescription">Build addition practice with the same graphic-organizer preview page referenced by the generator tab sources.</p>
+                    </div>
+                    <div class="generator-stage__chips" id="generatorStageChips"></div>
+                  </div>
+
+                  <div class="generator-stage__actions">
+                    <a class="generator-btn generator-btn--primary" id="generatorStandaloneLink" href="./mobile-preview-safe/addition-graphic-organizer-preview-mobile-fit.html">Open standalone preview</a>
+                    <a class="generator-btn generator-btn--secondary" id="generatorFullLink" href="./addition-generator-preview.html">Open original page</a>
+                  </div>
+
+                  <div class="generator-stage__canvas" id="generatorStageCanvas" data-preview-type="mobile">
+                    <div class="generator-stage__frame" id="generatorStageFrame" data-preview-type="mobile">
+                      <div class="generator-stage__frame-top">
+                        <div class="generator-stage__dots" aria-hidden="true">
+                          <span></span>
+                          <span></span>
+                          <span></span>
+                        </div>
+                        <div id="generatorFrameLabel">Addition Graphic Organizer</div>
+                      </div>
+                      <div class="generator-stage__screen" id="generatorStageScreen" data-preview-type="mobile">
+                        <iframe
+                          id="generatorPreviewFrame"
+                          class="generator-stage__iframe"
+                          src="./mobile-preview-safe/addition-graphic-organizer-preview-mobile-fit.html"
+                          title="Addition Graphic Organizer preview"
+                          loading="lazy"
+                        ></iframe>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="generator-stage__footer">
+                    <p id="generatorStageFooter">This is the mobile-fit preview for Addition Graphic Organizer, placed inside the restored generator-tab layout so you can judge the fit before we expand it.</p>
+                    <a class="generator-btn generator-btn--secondary" href="./home-preview-generators-first.html#join">Join Membership</a>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script id="generatorChooserScript">
+    (function(){
+      const catalog = {
+        math: {
+          panelTitle: 'Math generators with the correct preview pages.',
+          panelDescription: 'Choose from the first two math generator previews. These use the graphic-organizer mobile-fit pages referenced by the generator tab source files.',
+          label: 'Math Generator',
+          items: [
+            {
+              id: 'addition-graphic-organizer',
+              title: 'Addition Graphic Organizer',
+              listLabel: 'Addition organizer preview',
+              description: 'Build addition practice with the same graphic-organizer preview page referenced by the generator tab sources.',
+              previewUrl: './mobile-preview-safe/addition-graphic-organizer-preview-mobile-fit.html',
+              fullUrl: './addition-generator-preview.html',
+              previewType: 'mobile',
+              fullLabel: 'Open original page',
+              chips: ['Math', 'Graphic Organizer', 'Printable']
+            },
+            {
+              id: 'multiplication-graphic-organizer',
+              title: 'Multiplication Graphic Organizer',
+              listLabel: 'Multiplication organizer preview',
+              description: 'Show the multiplication graphic-organizer page that matches the generator tab links, with the same boxed support structure and mobile-fit treatment.',
+              previewUrl: './mobile-preview-safe/multiplication-graphic-organizer-preview-mobile-fit.html',
+              fullUrl: './multiplication-generator-preview.html',
+              previewType: 'mobile',
+              fullLabel: 'Open original page',
+              chips: ['Math', 'Graphic Organizer', 'Models']
+            }
+          ]
+        },
+        reading: {
+          panelTitle: 'Reading generators wired to the 7 desktop previews you listed.',
+          panelDescription: 'Pick Reading, then choose one of these seven desktop preview files: Fluency Grid, Word Ladder, Pyramid Spelling, Roll and Read, Spelling with Pictures, SOR Tic Tac Toe, or Word Mapping.',
+          label: 'Reading Generator',
+          items: [
+            {
+              id: 'fluency-grid',
+              title: 'Fluency Grid',
+              listLabel: 'Desktop fluency grid preview',
+              description: 'Use the desktop Fluency Grid preview file so the reading tab opens the full-width classroom version instead of a mobile-fit substitute.',
+              previewUrl: './desktop-previews/reading/fluencygridpreview-desktop.html',
+              fullUrl: '../fluencygridpreview.html',
+              filePreviewUrl: 'file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/site-preview-march3rd/desktop-previews/reading/fluencygridpreview-desktop.html',
+              fileFullUrl: 'file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/fluencygridpreview.html',
+              previewType: 'desktop',
+              fullLabel: 'Open original page',
+              chips: ['Reading', 'Desktop Preview', 'Fluency']
+            },
+            {
+              id: 'word-ladder',
+              title: 'Word Ladder',
+              listLabel: 'Desktop word ladder preview',
+              description: 'Show the Word Ladder desktop preview inside the generator tab so teachers can compare the larger worksheet layout directly in this page.',
+              previewUrl: './desktop-previews/reading/laddermobilepreview-desktop.html',
+              fullUrl: '../laddermobilepreview.html',
+              filePreviewUrl: 'file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/site-preview-march3rd/desktop-previews/reading/laddermobilepreview-desktop.html',
+              fileFullUrl: 'file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/laddermobilepreview.html',
+              previewType: 'desktop',
+              fullLabel: 'Open original page',
+              chips: ['Reading', 'Desktop Preview', 'Word Ladder']
+            },
+            {
+              id: 'pyramid-spelling',
+              title: 'Pyramid Spelling',
+              listLabel: 'Desktop pyramid spelling preview',
+              description: 'Load the Pyramid Spelling desktop preview so the repeated-pattern worksheet view stays true to the file you listed.',
+              previewUrl: './desktop-previews/reading/pyramidpreview-desktop.html',
+              fullUrl: '../pyramidpreview.html',
+              filePreviewUrl: 'file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/site-preview-march3rd/desktop-previews/reading/pyramidpreview-desktop.html',
+              fileFullUrl: 'file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/pyramidpreview.html',
+              previewType: 'desktop',
+              fullLabel: 'Open original page',
+              chips: ['Reading', 'Desktop Preview', 'Spelling']
+            },
+            {
+              id: 'roll-and-read',
+              title: 'Roll and Read',
+              listLabel: 'Desktop roll and read preview',
+              description: 'Use the Roll and Read desktop preview file so the generator tab opens the reading game page you specified.',
+              previewUrl: './desktop-previews/reading/rollread-desktop.html',
+              fullUrl: '../rollreadpreview31.html',
+              filePreviewUrl: 'file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/site-preview-march3rd/desktop-previews/reading/rollread-desktop.html',
+              fileFullUrl: 'file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/rollreadpreview31.html',
+              previewType: 'desktop',
+              fullLabel: 'Open original page',
+              chips: ['Reading', 'Desktop Preview', 'Game']
+            },
+            {
+              id: 'spelling-pictures',
+              title: 'Spelling with Pictures',
+              listLabel: 'Desktop spelling picture preview',
+              description: 'Show the desktop Spelling with Pictures preview so the reading path points to the visual-spelling page you named.',
+              previewUrl: './desktop-previews/reading/spellingpicture-desktop.html',
+              fullUrl: '../ladder/spelling-mobile-generator.html',
+              filePreviewUrl: 'file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/site-preview-march3rd/desktop-previews/reading/spellingpicture-desktop.html',
+              fileFullUrl: 'file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/ladder/spelling-mobile-generator.html',
+              previewType: 'desktop',
+              fullLabel: 'Open original page',
+              chips: ['Reading', 'Desktop Preview', 'Pictures']
+            },
+            {
+              id: 'sor-tic-tac-toe',
+              title: 'SOR Tic Tac Toe',
+              listLabel: 'Desktop tic tac toe preview',
+              description: 'Use the March 1 Tic Tac Toe desktop preview so the reading tab opens the exact game-style file from your list.',
+              previewUrl: './desktop-previews/reading/tic-tac-preview-march1st-desktop.html',
+              fullUrl: '../tic-tac-preview-march1st.html',
+              filePreviewUrl: 'file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/site-preview-march3rd/desktop-previews/reading/tic-tac-preview-march1st-desktop.html',
+              fileFullUrl: 'file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/tic-tac-preview-march1st.html',
+              previewType: 'desktop',
+              fullLabel: 'Open original page',
+              chips: ['Reading', 'Desktop Preview', 'Tic Tac Toe']
+            },
+            {
+              id: 'word-mapping',
+              title: 'Word Mapping',
+              listLabel: 'Desktop word mapping preview',
+              description: 'Use the desktop Word Mapping preview file so the reading generator tab matches the file list you gave exactly.',
+              previewUrl: './desktop-previews/reading/wordmapmaster-preview-desktop.html',
+              fullUrl: './wordmap2preview.html',
+              filePreviewUrl: 'file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/site-preview-march3rd/desktop-previews/reading/wordmapmaster-preview-desktop.html',
+              fileFullUrl: 'file:///Users/seanconnolly/Documents/GitHub/teachwithmrc.github.io/wordmap2preview.html',
+              previewType: 'desktop',
+              fullLabel: 'Open original page',
+              chips: ['Reading', 'Desktop Preview', 'Word Mapping']
+            }
+          ]
+        }
+      };
+
+      const categoryButtons = Array.from(document.querySelectorAll('.generator-tab-btn'));
+      const optionList = document.getElementById('generatorOptionList');
+      const count = document.getElementById('generatorCount');
+      const panelTitle = document.getElementById('generatorPanelTitle');
+      const panelDescription = document.getElementById('generatorPanelDescription');
+      const stageLabel = document.getElementById('generatorStageLabel');
+      const stageTitle = document.getElementById('generatorStageTitle');
+      const stageDescription = document.getElementById('generatorStageDescription');
+      const stageChips = document.getElementById('generatorStageChips');
+      const standaloneLink = document.getElementById('generatorStandaloneLink');
+      const fullLink = document.getElementById('generatorFullLink');
+      const stageCanvas = document.getElementById('generatorStageCanvas');
+      const stageFrame = document.getElementById('generatorStageFrame');
+      const stageScreen = document.getElementById('generatorStageScreen');
+      const frame = document.getElementById('generatorPreviewFrame');
+      const frameLabel = document.getElementById('generatorFrameLabel');
+      const footer = document.getElementById('generatorStageFooter');
+
+      if (!optionList || !count || !panelTitle || !panelDescription || !stageLabel || !stageTitle || !stageDescription || !stageChips || !standaloneLink || !fullLink || !stageCanvas || !stageFrame || !stageScreen || !frame || !frameLabel || !footer) {
+        return;
+      }
+
+      let currentCategory = 'math';
+      let currentGenerator = catalog.math.items[0].id;
+      let frameMutationObserver = null;
+      let frameResizeObserver = null;
+      let pendingResizeTimers = [];
+
+      function getCurrentItem(){
+        const bucket = catalog[currentCategory];
+        return bucket.items.find((item) => item.id === currentGenerator) || bucket.items[0];
+      }
+
+      function resolvePreviewUrl(item){
+        if (window.location.protocol === 'file:' && item.filePreviewUrl) return item.filePreviewUrl;
+        return item.previewUrl;
+      }
+
+      function resolveFullUrl(item){
+        if (window.location.protocol === 'file:' && item.fileFullUrl) return item.fileFullUrl;
+        return item.fullUrl;
+      }
+
+      function clearResizeTimers(){
+        pendingResizeTimers.forEach((timerId) => window.clearTimeout(timerId));
+        pendingResizeTimers = [];
+      }
+
+      function resetFrameMonitoring(){
+        clearResizeTimers();
+        if (frameMutationObserver) {
+          frameMutationObserver.disconnect();
+          frameMutationObserver = null;
+        }
+        if (frameResizeObserver) {
+          frameResizeObserver.disconnect();
+          frameResizeObserver = null;
+        }
+      }
+
+      function scheduleResizePasses(){
+        clearResizeTimers();
+        [0, 80, 220, 450, 900, 1600, 2600, 4200].forEach((delay) => {
+          const timerId = window.setTimeout(syncFrameSize, delay);
+          pendingResizeTimers.push(timerId);
+        });
+      }
+
+      function ensureEmbeddedPreviewStyles(doc, item){
+        if (!doc || !doc.head || !item || item.previewType !== 'desktop') return;
+        if (doc.getElementById('latenightsiteEmbedStyles')) return;
+
+        const style = doc.createElement('style');
+        style.id = 'latenightsiteEmbedStyles';
+        style.textContent = [
+          'html, body { overflow: visible !important; height: auto !important; min-height: 0 !important; }',
+          '.sheet-wrap, [class*="sheet-wrap"], .page-wrap, [class*="page-wrap"] { max-height: none !important; overflow: visible !important; height: auto !important; }'
+        ].join('');
+        doc.head.appendChild(style);
+      }
+
+      function watchFrameContent(doc){
+        const root = doc.body || doc.documentElement;
+        if (!root) return;
+
+        if (window.MutationObserver) {
+          if (frameMutationObserver) frameMutationObserver.disconnect();
+          frameMutationObserver = new MutationObserver(() => {
+            syncFrameSize();
+          });
+          frameMutationObserver.observe(root, {
+            attributes: true,
+            childList: true,
+            subtree: true,
+            characterData: true
+          });
+        }
+
+        if (window.ResizeObserver) {
+          if (frameResizeObserver) frameResizeObserver.disconnect();
+          frameResizeObserver = new ResizeObserver(() => {
+            syncFrameSize();
+          });
+          frameResizeObserver.observe(doc.documentElement);
+          if (doc.body) frameResizeObserver.observe(doc.body);
+          doc.querySelectorAll('.page, .sheet-wrap, .wrap').forEach((node) => {
+            frameResizeObserver.observe(node);
+          });
+        }
+
+        if (doc.fonts && typeof doc.fonts.ready === 'object' && typeof doc.fonts.ready.then === 'function') {
+          doc.fonts.ready.then(() => {
+            syncFrameSize();
+          }).catch(() => {});
+        }
+
+        doc.querySelectorAll('img').forEach((img) => {
+          if (img.complete) return;
+          img.addEventListener('load', syncFrameSize, { once: true });
+          img.addEventListener('error', syncFrameSize, { once: true });
+        });
+      }
+
+      function renderCategories(){
+        categoryButtons.forEach((button) => {
+          const active = button.dataset.category === currentCategory;
+          button.setAttribute('aria-selected', active ? 'true' : 'false');
+          button.tabIndex = active ? 0 : -1;
+        });
+      }
+
+      function syncFrameSize(){
+        const attemptResize = () => {
+          try {
+            const item = getCurrentItem();
+            const doc = frame.contentDocument;
+            if (!doc) return;
+            const html = doc.documentElement;
+            const body = doc.body;
+            if (!html || !body) return;
+
+            if ((item && item.previewType) === 'desktop') {
+              ensureEmbeddedPreviewStyles(doc, item);
+              const targetDesktopWidth = item.desktopWidth || 1360;
+              const targetDesktopHeight = Math.max(540, Math.round(optionList.getBoundingClientRect().height || 0));
+              const scalePadding = typeof item.scalePadding === 'number' ? item.scalePadding : 0.985;
+              const safeDesktopHeight = Math.max(320, targetDesktopHeight - 12);
+              frame.style.transform = 'none';
+              frame.style.width = targetDesktopWidth + 'px';
+              frame.style.minHeight = '0';
+
+              const naturalWidth = Math.max(
+                targetDesktopWidth,
+                body.scrollWidth,
+                body.offsetWidth,
+                html.scrollWidth,
+                html.offsetWidth
+              );
+              const naturalHeight = Math.max(
+                item.fallbackHeight || 1500,
+                body.scrollHeight,
+                body.offsetHeight,
+                html.clientHeight,
+                html.scrollHeight,
+                html.offsetHeight
+              );
+              const availableWidth = Math.max(
+                320,
+                stageScreen.clientWidth || stageFrame.clientWidth || stageCanvas.clientWidth || naturalWidth
+              );
+              const scale = Math.min(
+                1,
+                availableWidth / naturalWidth,
+                safeDesktopHeight / naturalHeight
+              ) * scalePadding;
+              const fittedWidth = Math.ceil(naturalWidth * scale);
+              const fittedHeight = Math.ceil(naturalHeight * scale);
+              const leftOffset = Math.max(0, Math.floor((availableWidth - fittedWidth) / 2));
+
+              stageCanvas.style.height = targetDesktopHeight + 'px';
+              stageCanvas.style.minHeight = targetDesktopHeight + 'px';
+              stageFrame.style.height = targetDesktopHeight + 'px';
+              stageFrame.style.padding = '0';
+              stageScreen.style.position = 'relative';
+              stageScreen.style.height = targetDesktopHeight + 'px';
+              stageScreen.style.maxWidth = '';
+              stageScreen.style.margin = '';
+              frame.style.position = 'absolute';
+              frame.style.top = '0';
+              frame.style.left = leftOffset + 'px';
+              frame.style.width = naturalWidth + 'px';
+              frame.style.height = naturalHeight + 'px';
+              frame.style.transformOrigin = 'top left';
+              frame.style.transform = 'scale(' + scale.toFixed(4) + ')';
+              return;
+            }
+
+            frame.style.position = 'relative';
+            frame.style.top = '';
+            frame.style.left = '';
+            frame.style.transform = 'none';
+            frame.style.transformOrigin = 'top left';
+            frame.style.width = '100%';
+            frame.style.minHeight = '';
+            stageCanvas.style.height = '';
+            stageCanvas.style.minHeight = '';
+            stageFrame.style.height = '';
+            stageFrame.style.padding = '';
+            stageScreen.style.height = '';
+            stageScreen.style.maxWidth = '';
+            stageScreen.style.margin = '';
+            stageScreen.style.position = 'relative';
+            const height = Math.max(
+              body.scrollHeight,
+              body.offsetHeight,
+              html.clientHeight,
+              html.scrollHeight,
+              html.offsetHeight
+            );
+            if (height > 0) {
+              frame.style.height = height + 'px';
+            }
+          } catch (_error) {
+            frame.style.height = '980px';
+          }
+        };
+
+        attemptResize();
+        window.requestAnimationFrame(attemptResize);
+        window.setTimeout(attemptResize, 250);
+        window.setTimeout(attemptResize, 900);
+      }
+
+      function renderOptions(){
+        const bucket = catalog[currentCategory];
+        count.textContent = bucket.items.length + (bucket.items.length === 1 ? ' choice' : ' choices');
+
+        optionList.innerHTML = '';
+
+        bucket.items.forEach((item) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'generator-option';
+          if (item.id === currentGenerator) button.classList.add('is-active');
+          button.innerHTML =
+            '<p class="generator-option__eyebrow">' + bucket.label + '</p>' +
+            '<h3 class="generator-option__title">' + item.title + '</h3>' +
+            '<p class="generator-option__desc">' + item.listLabel + '</p>';
+          button.addEventListener('click', () => {
+            currentGenerator = item.id;
+            renderOptions();
+            renderStage();
+          });
+          optionList.appendChild(button);
+        });
+      }
+
+      function renderStage(){
+        const bucket = catalog[currentCategory];
+        const item = getCurrentItem();
+        const previewUrl = resolvePreviewUrl(item);
+        const fullUrl = resolveFullUrl(item);
+
+        resetFrameMonitoring();
+        panelTitle.textContent = bucket.panelTitle;
+        panelDescription.textContent = bucket.panelDescription;
+        stageLabel.textContent = bucket.label;
+        stageTitle.textContent = item.title;
+        stageDescription.textContent = item.description;
+        standaloneLink.href = previewUrl;
+        standaloneLink.textContent = item.previewType === 'desktop' ? 'Open desktop preview' : 'Open standalone preview';
+        fullLink.href = fullUrl;
+        fullLink.textContent = item.fullLabel || 'Open original page';
+        frame.src = previewUrl;
+        frame.title = item.title + ' preview';
+        frameLabel.textContent = item.title;
+        stageCanvas.dataset.previewType = item.previewType || 'mobile';
+        stageFrame.dataset.previewType = item.previewType || 'mobile';
+        stageScreen.dataset.previewType = item.previewType || 'mobile';
+        footer.textContent = (item.previewType === 'desktop'
+          ? 'This is the desktop preview for '
+          : 'This is the mobile-fit preview for ') + item.title + ', shown inside the new late-night picker so you can compare how each version lands in context.';
+
+        stageChips.innerHTML = '';
+        item.chips.forEach((chip) => {
+          const span = document.createElement('span');
+          span.className = 'generator-stage__chip';
+          span.textContent = chip;
+          stageChips.appendChild(span);
+        });
+
+        syncFrameSize();
+      }
+
+      function handleFrameLoad(){
+        const doc = frame.contentDocument;
+        const item = getCurrentItem();
+        if (!doc) return;
+        ensureEmbeddedPreviewStyles(doc, item);
+        watchFrameContent(doc);
+        scheduleResizePasses();
+      }
+
+      categoryButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const nextCategory = button.dataset.category;
+          if (!catalog[nextCategory] || nextCategory === currentCategory) return;
+          currentCategory = nextCategory;
+          currentGenerator = catalog[nextCategory].items[0].id;
+          renderCategories();
+          renderOptions();
+          renderStage();
+        });
+
+        button.addEventListener('keydown', (event) => {
+          const key = event.key;
+          if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(key)) return;
+          event.preventDefault();
+
+          const currentIndex = categoryButtons.indexOf(button);
+          let nextIndex = currentIndex;
+          if (key === 'Home') nextIndex = 0;
+          if (key === 'End') nextIndex = categoryButtons.length - 1;
+          if (key === 'ArrowUp' || key === 'ArrowLeft') nextIndex = (currentIndex - 1 + categoryButtons.length) % categoryButtons.length;
+          if (key === 'ArrowDown' || key === 'ArrowRight') nextIndex = (currentIndex + 1) % categoryButtons.length;
+
+          categoryButtons[nextIndex].focus();
+          categoryButtons[nextIndex].click();
+        });
+      });
+
+      frame.addEventListener('load', handleFrameLoad);
+      window.addEventListener('resize', syncFrameSize);
+
+      renderCategories();
+      renderOptions();
+      renderStage();
+    })();
+  </script>
+</body>
+</html>

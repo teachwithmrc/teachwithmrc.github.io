@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reading Horizontal Menu Variations</title>
+  <script src="fluencyDataFull_v8-2_clean.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1b2735;
+      --muted: #60707f;
+      --line: #ccd8e3;
+      --card: rgba(255,255,255,0.92);
+      --shadow: 0 16px 36px rgba(17,35,54,0.1);
+      --navy: #17324c;
+      --bg:
+        radial-gradient(circle at top right, rgba(255,255,255,0.92), transparent 30%),
+        linear-gradient(135deg, #eef6fb 0%, #f7f4ea 48%, #eef1ff 100%);
+      --cvc: #f7ead8;
+      --dig: #fde3e6;
+      --glued: #eee1fb;
+      --vce: #dcecff;
+      --rctrl: #dff1e6;
+      --vteams: #fff3cb;
+      --dip: #ffe4d7;
+      --variant: #e8def4;
+      --soft: #dfe8f8;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 24px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "DM Sans", sans-serif;
+    }
+
+    .app {
+      max-width: 1520px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.84);
+      border: 1px solid rgba(23,50,76,0.08);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Manrope", sans-serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+    }
+
+    .intro {
+      margin: 0;
+      max-width: 940px;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .view-tabs,
+    .top-group-row,
+    .skill-row,
+    .option-row,
+    .chips-wrap,
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .view-tab,
+    .group-tab,
+    .skill-button,
+    .option-box,
+    .toolbar button,
+    .toggle-btn,
+    .chip {
+      border: 1px solid rgba(23,50,76,0.12);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.9);
+      color: var(--ink);
+      font: inherit;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease, color 120ms ease;
+      box-shadow: 0 1px 0 rgba(17,35,54,0.03);
+    }
+
+    .view-tab:hover,
+    .group-tab:hover,
+    .skill-button:hover,
+    .option-box:hover,
+    .toolbar button:hover,
+    .toggle-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(17,35,54,0.08);
+    }
+
+    .view-tab {
+      padding: 12px 14px;
+      text-align: left;
+    }
+
+    .view-tab strong {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .view-tab span {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .view-tab.active,
+    .group-tab.active,
+    .skill-button.selected,
+    .option-box.selected,
+    .toolbar .primary,
+    .toggle-btn.active {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy);
+    }
+
+    .view-tab.active span {
+      color: rgba(255,255,255,0.78);
+    }
+
+    .panel {
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(23,50,76,0.08);
+      border-radius: 26px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .layout {
+      display: grid;
+      gap: 16px;
+    }
+
+    .layout[data-view="menu-bar"] {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .layout[data-view="collapsible-tray"] {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .layout[data-view="sticky-top"] {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .panel h2 {
+      margin: 0 0 6px;
+      font-family: "Manrope", sans-serif;
+      font-size: 1.18rem;
+      letter-spacing: -0.03em;
+    }
+
+    .copy {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .menu-shell {
+      display: grid;
+      gap: 14px;
+    }
+
+    .group-bar {
+      display: grid;
+      gap: 12px;
+    }
+
+    .group-bar.compact .skill-panels {
+      display: none;
+    }
+
+    .skill-panel {
+      border-radius: 22px;
+      border: 1px solid rgba(23,50,76,0.08);
+      overflow: hidden;
+      background: rgba(255,255,255,0.72);
+    }
+
+    .skill-panel-header {
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: "Manrope", sans-serif;
+      font-weight: 800;
+    }
+
+    .bg-cvc { background: var(--cvc); }
+    .bg-dig { background: var(--dig); }
+    .bg-glued { background: var(--glued); }
+    .bg-vce { background: var(--vce); }
+    .bg-rctrl { background: var(--rctrl); }
+    .bg-vteams { background: var(--vteams); }
+    .bg-dip { background: var(--dip); }
+    .bg-variant { background: var(--variant); }
+    .bg-soft { background: var(--soft); }
+
+    .skill-row {
+      padding: 14px;
+    }
+
+    .skill-button {
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      background: #fff;
+    }
+
+    .summary-bar {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #17324c 0%, #24547f 100%);
+      color: #fff;
+    }
+
+    .summary-bar strong {
+      display: block;
+      font-family: "Manrope", sans-serif;
+      margin-bottom: 6px;
+    }
+
+    .summary-bar small {
+      color: rgba(255,255,255,0.8);
+      font-size: 0.86rem;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border-color: rgba(255,255,255,0.12);
+      font-size: 0.86rem;
+      cursor: default;
+    }
+
+    .chip.empty {
+      color: rgba(255,255,255,0.75);
+    }
+
+    .controls-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+    }
+
+    .controls-grid.single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .section-card {
+      padding: 16px;
+      border-radius: 22px;
+      background: rgba(242,247,251,0.82);
+      border: 1px solid rgba(23,50,76,0.06);
+    }
+
+    .section-label {
+      margin: 0 0 10px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #536577;
+    }
+
+    .option-box,
+    .toolbar button,
+    .toggle-btn,
+    .group-tab {
+      padding: 11px 14px;
+      font-weight: 700;
+    }
+
+    .group-tab {
+      text-align: left;
+    }
+
+    .select-wrap select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font: inherit;
+      background: rgba(255,255,255,0.94);
+    }
+
+    .toolbar {
+      margin-top: 10px;
+    }
+
+    .preview-card {
+      background: #fff;
+      border: 1px solid rgba(23,50,76,0.08);
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: 0 10px 24px rgba(17,35,54,0.08);
+    }
+
+    .preview-card h3 {
+      margin: 0 0 6px;
+      font-family: "Manrope", sans-serif;
+      font-size: 1.05rem;
+    }
+
+    .preview-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .roll-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .roll-cell {
+      min-height: 82px;
+      border-radius: 16px;
+      border: 1px solid rgba(23,50,76,0.08);
+      background: #f8fbfd;
+      padding: 10px;
+      text-align: center;
+      font-weight: 700;
+      line-height: 1.15;
+      font-size: 0.92rem;
+    }
+
+    .die {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      font-size: 0.76rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .empty-state {
+      padding: 28px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.72);
+      border: 1px dashed rgba(23,50,76,0.18);
+      color: var(--muted);
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .sticky-top-bar {
+      position: sticky;
+      top: 12px;
+      z-index: 10;
+    }
+
+    @media (max-width: 1000px) {
+      .controls-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 14px; }
+      .panel { padding: 14px; border-radius: 20px; }
+      .roll-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .view-tab, .group-tab { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <div class="eyebrow">Horizontal Menu</div>
+      <h1>Top menu versions with collapsible groups and selected-skill display</h1>
+      <p class="intro">This page tests a horizontal menu instead of the left accordion. It still only uses the real reading options from the originals: one selected skill, blends, words or sentences or both, roll grid size, generate, and print.</p>
+    </header>
+
+    <div class="view-tabs" id="viewTabs"></div>
+
+    <main class="layout" id="layout" data-view="menu-bar">
+      <section class="panel menu-shell">
+        <h2>Skill Menu</h2>
+        <p class="copy">The top categories act like a horizontal menu. Depending on the view, the skill trays stay open, collapse, or stick to the top.</p>
+        <div class="toolbar">
+          <button class="toggle-btn" id="togglePanelsBtn" type="button">Collapse Skill Trays</button>
+        </div>
+        <div class="group-bar" id="groupBar"></div>
+        <div id="menuPanels"></div>
+      </section>
+
+      <section class="panel">
+        <div class="summary-bar">
+          <div>
+            <strong id="selectionTitle">Selected Skill</strong>
+            <small id="selectionMeta">Choose one skill from the horizontal menu.</small>
+          </div>
+          <div id="selectedChips" class="chips-wrap"></div>
+        </div>
+      </section>
+
+      <section class="controls-grid" id="controlsGrid">
+        <div class="panel section-card">
+          <h2>Setup</h2>
+          <p class="copy">These controls stay exactly aligned with the original reading options.</p>
+          <div class="section-label">Step 2: Include Blends?</div>
+          <div class="option-row" id="blendOptions"></div>
+          <div class="section-label">Step 3: What would you like in the grid?</div>
+          <div class="option-row" id="contentOptions"></div>
+          <div class="section-label">Step 4: Generate & Print</div>
+          <div class="option-row">
+            <span class="select-wrap" style="min-width:260px;">
+              <select id="gridSizeSelect">
+                <option value="18">18 cells (3 rows)</option>
+                <option value="24" selected>24 cells (4 rows)</option>
+                <option value="30">30 cells (5 rows)</option>
+              </select>
+            </span>
+          </div>
+          <div class="toolbar">
+            <button id="btnGenerate" class="primary" type="button">Generate</button>
+            <button id="btnPrint" type="button">Print</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Live Preview</h2>
+          <p class="copy">This stays open so you can judge whether the horizontal navigation feels clearer or just adds movement.</p>
+          <div id="output"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    if (typeof CSS === "undefined" || typeof CSS.escape !== "function") {
+      window.CSS = window.CSS || {};
+      CSS.escape = CSS.escape || function(sel) {
+        return (sel + "").replace(/[^a-zA-Z0-9_-]/g, "\\$&");
+      };
+    }
+
+    const VIEW_MODES = [
+      { id: "menu-bar", title: "Version A", desc: "Top menu with open skill trays" },
+      { id: "collapsible-tray", title: "Version B", desc: "Top menu with collapsible trays" },
+      { id: "sticky-top", title: "Version C", desc: "Sticky top menu with setup below" }
+    ];
+
+    const SKILL_GROUPS = [
+      { id: "cvc", label: "CVC", bg: "bg-cvc", skills: ["Short A", "Short E", "Short I", "Short O", "Short U", "Mixed CVC", "FLSZ"] },
+      { id: "dig", label: "Digraphs", bg: "bg-dig", skills: ["ck", "sh", "th", "ch", "wh", "Digraphs Mixed"] },
+      { id: "glued", label: "Glued Sounds", bg: "bg-glued", skills: ["-all", "-ng", "-nk", "Glued Mixed"] },
+      { id: "vce", label: "VCe", bg: "bg-vce", skills: ["a_e", "i_e", "o_e", "u_e", "Mixed VCe"] },
+      { id: "rctrl", label: "R-Controlled", bg: "bg-rctrl", skills: ["ar", "or", "er/ir/ur", "Mixed R-Controlled"] },
+      { id: "vteams", label: "Vowel Teams", bg: "bg-vteams", skills: ["Long A (ai/ay)", "Long E (ee/ea)", "Long I (igh/y/ie)", "Long O (oa/ow/oe)", "Long U (oo/ew/ue)", "Mixed Vowel Teams"] },
+      { id: "dip", label: "Diphthongs", bg: "bg-dip", skills: ["Diphthongs (oy/oi)", "Diphthongs (ow/ou)"] },
+      { id: "variant", label: "Variant Vowels", bg: "bg-variant", skills: ["Variant Vowels (au/aw)", "Variant Vowel (oo)"] },
+      { id: "soft", label: "Soft C/G", bg: "bg-soft", skills: ["Soft C (-ce)", "Soft G (-ge)", "Soft G (-dge)"] }
+    ];
+
+    const PREFIX = {
+      "Short A": "0.1 - Short A",
+      "Short O": "0.2 - Short O",
+      "Short I": "0.3 - Short I",
+      "Short U": "0.4 - Short U",
+      "Short E": "0.5 - Short E",
+      "FLSZ": "0.6 - FLSZ",
+      "ck": "1.1 - ck",
+      "sh": "1.2 - sh",
+      "th": "1.3 - th",
+      "ch": "1.4 - ch",
+      "wh": "1.5 - wh",
+      "-all": "3.1 - all",
+      "-ng": "3.2 - ng",
+      "-nk": "3.3 - nk",
+      "a_e": "2.1 - a_e",
+      "i_e": "2.2 - i_e",
+      "o_e": "2.3 - o_e",
+      "u_e": "2.4 - u_e",
+      "ar": "4.1 - ar",
+      "or": "4.2 - or",
+      "er/ir/ur": "4.3 - er, ir, ur",
+      "Soft C (-ce)": "10.1 - ce",
+      "Soft G (-ge)": "10.2 - ge",
+      "Soft G (-dge)": "10.3 - dge"
+    };
+
+    const MIXED_RULES = {
+      "Mixed CVC": ["0.1 - Short A", "0.5 - Short E", "0.3 - Short I", "0.2 - Short O", "0.4 - Short U", "0.6 - FLSZ"],
+      "Digraphs Mixed": ["1.1 - ck", "1.2 - sh", "1.3 - th", "1.4 - ch", "1.5 - wh"],
+      "Glued Mixed": ["3.1 - all", "3.2 - ng", "3.3 - nk"],
+      "Mixed VCe": ["2.1 - a_e", "2.2 - i_e", "2.3 - o_e", "2.4 - u_e"],
+      "Mixed R-Controlled": ["4.1 - ar", "4.2 - or", "4.3 - er, ir, ur"],
+      "Long A (ai/ay)": ["6.1 - ay", "6.2 - ai"],
+      "Long E (ee/ea)": ["6.4 - ee", "6.5 - ea"],
+      "Long I (igh/y/ie)": ["6.6 - igh", "6.7 - Final y", "6.8 - ie"],
+      "Long O (oa/ow/oe)": ["6.9 - oa", "6.10 - ow", "6.11 - oe"],
+      "Long U (oo/ew/ue)": ["6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
+      "Mixed Vowel Teams": ["6.1 - ay", "6.2 - ai", "6.4 - ee", "6.5 - ea", "6.6 - igh", "6.7 - Final y", "6.8 - ie", "6.9 - oa", "6.10 - ow", "6.11 - oe", "6.12 - oo (long u)", "6.13 - ew", "6.14 - ue"],
+      "Diphthongs (oy/oi)": ["7.4 - oy", "7.3 - oi"],
+      "Diphthongs (ow/ou)": ["7.2 - ow", "7.1 - ou"],
+      "Variant Vowels (au/aw)": ["7.5 - aw", "7.6 - au"],
+      "Variant Vowel (oo)": ["7.7 - oo variant"]
+    };
+
+    const state = {
+      view: "menu-bar",
+      activeGroup: "cvc",
+      selectedSkill: "FLSZ",
+      includeBlends: false,
+      mode: "words",
+      gridSize: 24,
+      collapsed: false
+    };
+
+    const layoutEl = document.getElementById("layout");
+    const viewTabsEl = document.getElementById("viewTabs");
+    const groupBarEl = document.getElementById("groupBar");
+    const menuPanelsEl = document.getElementById("menuPanels");
+    const selectionTitleEl = document.getElementById("selectionTitle");
+    const selectionMetaEl = document.getElementById("selectionMeta");
+    const selectedChipsEl = document.getElementById("selectedChips");
+    const outputEl = document.getElementById("output");
+
+    function toArray(value) {
+      if (Array.isArray(value)) return value.slice();
+      if (value == null) return [];
+      try { return Array.from(value); } catch (_) { return []; }
+    }
+
+    function shuffle(items) {
+      const list = toArray(items);
+      for (let i = list.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const hold = list[i];
+        list[i] = list[j];
+        list[j] = hold;
+      }
+      return list;
+    }
+
+    function uniqueByLowercase(items) {
+      const out = [];
+      const seen = new Set();
+      for (const item of toArray(items)) {
+        const value = String(item || "").trim();
+        const key = value.toLowerCase();
+        if (value && !seen.has(key)) {
+          seen.add(key);
+          out.push(value);
+        }
+      }
+      return out;
+    }
+
+    function fillToN(items, count) {
+      const base = toArray(items);
+      if (!base.length || count <= 0) return [];
+      const out = [];
+      let bag = shuffle(base);
+      while (out.length < count) {
+        if (!bag.length) bag = shuffle(base);
+        out.push(bag.shift());
+      }
+      return out.slice(0, count);
+    }
+
+    function wordsDict() {
+      return (typeof fluencyWords !== "undefined")
+        ? fluencyWords
+        : ((typeof fluencyData !== "undefined" && fluencyData.words) ? fluencyData.words : {});
+    }
+
+    function sentsDict() {
+      return (typeof fluencySentences !== "undefined")
+        ? fluencySentences
+        : ((typeof fluencyData !== "undefined" && fluencyData.sentences) ? fluencyData.sentences : {});
+    }
+
+    function readDict(dict, key) {
+      return Array.isArray(dict[key]) ? dict[key] : [];
+    }
+
+    function readWithBlends(dict, prefix, type, blends) {
+      const typeLower = type.toLowerCase();
+      const baseKeys = [`${prefix} ${type}`, `${prefix} ${typeLower}`, `${prefix}`];
+      let base = [];
+      for (const key of baseKeys) base = base.concat(readDict(dict, key));
+      if (!blends) return base;
+
+      const candidates = [
+        `${prefix} with Blends ${type}`,
+        `${prefix} with blends ${type}`,
+        `${prefix} with Blends ${typeLower}`,
+        `${prefix} with blends ${typeLower}`
+      ];
+      const bPrefix = prefix.replace(" - ", "b - ");
+      candidates.push(
+        `${bPrefix} with Blends ${type}`,
+        `${bPrefix} with blends ${type}`,
+        `${bPrefix} with Blends ${typeLower}`,
+        `${bPrefix} with blends ${typeLower}`
+      );
+
+      for (const key of candidates) {
+        const list = readDict(dict, key);
+        if (list.length) return list.length < 9 ? uniqueByLowercase(list.concat(base)) : list;
+      }
+      return base;
+    }
+
+    function getList(label, type, blends) {
+      const dict = type === "Words" ? wordsDict() : sentsDict();
+      if (Object.prototype.hasOwnProperty.call(MIXED_RULES, label)) {
+        let all = [];
+        for (const prefix of MIXED_RULES[label]) {
+          all = all.concat(readWithBlends(dict, prefix, type, blends));
+        }
+        return all;
+      }
+      const prefix = PREFIX[label];
+      if (prefix) return readWithBlends(dict, prefix, type, blends);
+
+      const tail1 = " " + type;
+      const tail2 = " " + type.toLowerCase();
+      const want = label.toLowerCase();
+      const guess = Object.keys(dict).find((key) => key.toLowerCase().includes(want) && (key.endsWith(tail1) || key.endsWith(tail2)));
+      return guess ? readDict(dict, guess) : [];
+    }
+
+    function buildContent() {
+      if (state.mode === "words") {
+        return fillToN(shuffle(uniqueByLowercase(getList(state.selectedSkill, "Words", state.includeBlends))), state.gridSize);
+      }
+      if (state.mode === "sentences") {
+        return fillToN(shuffle(uniqueByLowercase(getList(state.selectedSkill, "Sentences", state.includeBlends))), state.gridSize);
+      }
+      const words = uniqueByLowercase(getList(state.selectedSkill, "Words", state.includeBlends));
+      const sentences = uniqueByLowercase(getList(state.selectedSkill, "Sentences", state.includeBlends));
+      const wordCount = Math.floor(state.gridSize / 2);
+      const wordPart = fillToN(shuffle(words), wordCount);
+      const sentencePart = fillToN(shuffle(sentences), state.gridSize - wordPart.length);
+      return shuffle(wordPart.concat(sentencePart));
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    function modeLabel() {
+      if (state.mode === "words") return "Words Only";
+      if (state.mode === "sentences") return "Sentences Only";
+      return "Both";
+    }
+
+    function previewHtml(content) {
+      if (!content.length) return `<div class="empty-state">No content found for that skill with those settings.</div>`;
+      const cells = content.map((item, index) => `<div class="roll-cell"><div class="die">${(index % 6) + 1}</div><div>${escapeHtml(item)}</div></div>`).join("");
+      return `
+        <article class="preview-card">
+          <h3>Reading Roll and Read</h3>
+          <div class="preview-meta">
+            <span>${escapeHtml(state.selectedSkill)}</span>
+            <span>${state.includeBlends ? "Yes - 4+ Sounds" : "No - 3 Sounds"}</span>
+            <span>${modeLabel()}</span>
+            <span>${state.gridSize} cells</span>
+          </div>
+          <div class="roll-grid">${cells}</div>
+        </article>
+      `;
+    }
+
+    function renderViewTabs() {
+      viewTabsEl.innerHTML = "";
+      VIEW_MODES.forEach((view) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "view-tab" + (view.id === state.view ? " active" : "");
+        button.innerHTML = `<strong>${view.title}</strong><span>${view.desc}</span>`;
+        button.addEventListener("click", () => {
+          state.view = view.id;
+          applyView();
+          renderViewTabs();
+          renderMenu();
+        });
+        viewTabsEl.appendChild(button);
+      });
+    }
+
+    function renderMenu() {
+      groupBarEl.innerHTML = "";
+      menuPanelsEl.innerHTML = "";
+
+      SKILL_GROUPS.forEach((group) => {
+        const groupBtn = document.createElement("button");
+        groupBtn.type = "button";
+        groupBtn.className = "group-tab" + (group.id === state.activeGroup ? " active" : "");
+        groupBtn.textContent = group.label;
+        groupBtn.addEventListener("click", () => {
+          state.activeGroup = group.id;
+          if (state.view === "collapsible-tray") state.collapsed = false;
+          renderMenu();
+        });
+        groupBarEl.appendChild(groupBtn);
+
+        const shouldShow = state.view === "menu-bar"
+          ? group.id === state.activeGroup
+          : group.id === state.activeGroup && !state.collapsed;
+
+        if (!shouldShow) return;
+
+        const panel = document.createElement("div");
+        panel.className = "skill-panel";
+        panel.innerHTML = `<div class="skill-panel-header ${group.bg}"><span>${group.label}</span><span>${group.skills.length} skills</span></div>`;
+
+        const row = document.createElement("div");
+        row.className = "skill-row";
+        group.skills.forEach((skill) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "skill-button" + (skill === state.selectedSkill ? " selected" : "");
+          button.textContent = skill;
+          button.addEventListener("click", () => {
+            state.selectedSkill = skill;
+            renderSelection();
+            renderMenu();
+          });
+          row.appendChild(button);
+        });
+
+        panel.appendChild(row);
+        menuPanelsEl.appendChild(panel);
+      });
+    }
+
+    function renderSelection() {
+      selectionTitleEl.textContent = state.selectedSkill || "Selected Skill";
+      selectionMetaEl.textContent = state.selectedSkill
+        ? "Horizontal menu version showing the current selection clearly."
+        : "Choose one skill from the horizontal menu.";
+      selectedChipsEl.innerHTML = "";
+      const chip = document.createElement("div");
+      chip.className = "chip" + (state.selectedSkill ? "" : " empty");
+      chip.textContent = state.selectedSkill || "No skill selected";
+      selectedChipsEl.appendChild(chip);
+    }
+
+    function renderOptionGroup(rootId, currentValue, options, onPick) {
+      const root = document.getElementById(rootId);
+      root.innerHTML = "";
+      options.forEach((option) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "option-box" + (option.value === currentValue ? " selected" : "");
+        button.textContent = option.label;
+        button.addEventListener("click", () => {
+          onPick(option.value);
+          renderOptions();
+        });
+        root.appendChild(button);
+      });
+    }
+
+    function renderOptions() {
+      renderOptionGroup("blendOptions", state.includeBlends, [
+        { value: false, label: "No - 3 Sounds" },
+        { value: true, label: "Yes - 4+ Sounds" }
+      ], (value) => { state.includeBlends = value; });
+
+      renderOptionGroup("contentOptions", state.mode, [
+        { value: "words", label: "Words Only" },
+        { value: "sentences", label: "Sentences Only" },
+        { value: "both", label: "Both" }
+      ], (value) => { state.mode = value; });
+
+      document.getElementById("gridSizeSelect").value = String(state.gridSize);
+    }
+
+    function generate() {
+      if (!state.selectedSkill) {
+        window.alert("Select one skill first.");
+        return;
+      }
+      outputEl.innerHTML = previewHtml(buildContent());
+    }
+
+    function applyView() {
+      layoutEl.dataset.view = state.view;
+      const menuPanel = document.querySelector(".menu-shell");
+      const controlsGrid = document.getElementById("controlsGrid");
+      menuPanel.classList.toggle("sticky-top-bar", state.view === "sticky-top");
+      controlsGrid.classList.toggle("single", state.view === "sticky-top");
+      document.getElementById("togglePanelsBtn").textContent = state.collapsed ? "Open Skill Trays" : "Collapse Skill Trays";
+    }
+
+    document.getElementById("togglePanelsBtn").addEventListener("click", () => {
+      state.collapsed = !state.collapsed;
+      applyView();
+      renderMenu();
+    });
+
+    document.getElementById("gridSizeSelect").addEventListener("change", (event) => {
+      state.gridSize = Number(event.target.value) || 24;
+      renderOptions();
+    });
+
+    document.getElementById("btnGenerate").addEventListener("click", generate);
+    document.getElementById("btnPrint").addEventListener("click", () => window.print());
+
+    renderViewTabs();
+    renderSelection();
+    renderOptions();
+    applyView();
+    renderMenu();
+  </script>
+</body>
+</html>
