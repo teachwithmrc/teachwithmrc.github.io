@@ -110,7 +110,6 @@
   const laneSupportEl = document.getElementById("laneSupport");
   const laneGridEl = document.getElementById("laneGrid");
   const categoryLinks = Array.from(document.querySelectorAll("[data-category]"));
-  const laneLinks = Array.from(document.querySelectorAll("[data-lane]"));
   const homeLinks = Array.from(document.querySelectorAll("[data-view='home']"));
   const navHeader = document.querySelector(".is-mobile-hub .is-nav-header");
   const navGroup = document.querySelector(".is-mobile-hub .is-nav-card .is-nav-group:not(.is-nav-home)");
@@ -126,7 +125,7 @@
   let currentCategoryId = "sor-generators";
   let currentItemId = "fluency-grid";
   let currentLaneId = "scaffolded-math";
-  let mobileNavOpen = false;
+  let mobileNavOpen = true;
 
   function syncMobileNav() {
     if (!navHeader || !navGroup) {
@@ -230,10 +229,6 @@
     setActiveState(categoryLinks, function (link) {
       return currentView === "browser" && link.dataset.category === currentCategoryId;
     });
-    setActiveState(laneLinks, function (link) {
-      return currentView === "lane" && link.dataset.lane === currentLaneId;
-    });
-
     const activeNavLink = document.querySelector(".is-nav-link--feature.is-current");
     if (activeNavLink && activeNavLink.scrollIntoView) {
       activeNavLink.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
@@ -291,46 +286,43 @@
     });
 
     const wrap = document.createElement("div");
-    wrap.className = "is-generator-select-wrap";
-
-    const label = document.createElement("label");
-    label.className = "is-generator-select-label";
-    label.setAttribute("for", "mobileGeneratorSelect");
-    label.textContent = "Choose a generator";
-
-    const select = document.createElement("select");
-    select.className = "is-generator-select";
-    select.id = "mobileGeneratorSelect";
-    select.name = "mobile-generator-select";
+    wrap.className = "is-generator-chip-wrap";
 
     groups.forEach(function (group) {
-      const optgroup = document.createElement("optgroup");
-      optgroup.label = group.name;
+      const groupEl = document.createElement("section");
+      groupEl.className = "is-generator-chip-group";
+
+      const label = document.createElement("h3");
+      label.className = "is-generator-chip-label";
+      label.textContent = group.name;
+
+      const list = document.createElement("div");
+      list.className = "is-generator-chip-list";
 
       group.items.forEach(function (item) {
-        const option = document.createElement("option");
-        option.value = item.id;
-        option.textContent = item.title;
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "is-generator-chip";
         if (item.id === currentItemId) {
-          option.selected = true;
+          button.classList.add("is-current");
         }
-        optgroup.appendChild(option);
+        button.textContent = item.title;
+        button.addEventListener("click", function () {
+          if (item.id === currentItemId) {
+            return;
+          }
+          currentItemId = item.id;
+          render();
+          setHash();
+        });
+        list.appendChild(button);
       });
 
-      select.appendChild(optgroup);
+      groupEl.appendChild(label);
+      groupEl.appendChild(list);
+      wrap.appendChild(groupEl);
     });
 
-    select.addEventListener("change", function () {
-      if (!select.value || select.value === currentItemId) {
-        return;
-      }
-      currentItemId = select.value;
-      render();
-      setHash();
-    });
-
-    wrap.appendChild(label);
-    wrap.appendChild(select);
     pickerEl.appendChild(wrap);
   }
 
@@ -451,7 +443,7 @@
     const sourceWidth = measured ? measured.width : (item.sourceWidth || 1360);
     const sourceHeight = measured ? measured.height : (item.fallbackHeight || 1200);
     const availableWidth = Math.max(280, viewport.clientWidth);
-    const scale = Math.min(1, availableWidth / sourceWidth);
+    const scale = Math.min(1.12, availableWidth / sourceWidth);
     const fittedHeight = Math.ceil(sourceHeight * scale);
 
     viewport.style.height = fittedHeight + "px";
@@ -559,23 +551,8 @@
     });
   });
 
-  laneLinks.forEach(function (link) {
-    link.addEventListener("click", function (event) {
-      const laneId = link.dataset.lane;
-      if (!laneId) {
-        return;
-      }
-      event.preventDefault();
-      mobileNavOpen = false;
-      openLane(laneId);
-    });
-  });
-
-  if (navHeader && navGroup) {
-    navHeader.addEventListener("click", function () {
-      mobileNavOpen = !mobileNavOpen;
-      syncMobileNav();
-    });
+  if (navHeader) {
+    navHeader.setAttribute("aria-expanded", "true");
   }
 
   frame.addEventListener("load", function () {

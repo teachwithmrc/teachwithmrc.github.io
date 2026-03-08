@@ -18,22 +18,32 @@ html,body{
   background:var(--mv4-bg);
   color:var(--mv4-ink);
   font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  overflow-x:hidden;
+  width:100%;
 }
 
 *,*::before,*::after{ box-sizing:border-box; }
 img{ display:block; max-width:100%; height:auto; }
 a{ color:inherit; text-decoration:none; }
-body{ padding-bottom:84px; }
+body{
+  padding-bottom:84px;
+  overscroll-behavior-x:none;
+  touch-action:pan-y;
+}
 
 .mv4-wrap{
   width:min(100% - 24px, 440px);
   margin:0 auto;
+  max-width:440px;
+  overflow-x:clip;
 }
 
 .mv4-page{
   display:grid;
   gap:16px;
   padding:0 0 20px;
+  overflow-x:clip;
+  touch-action:pan-y;
 }
 
 .mv4-hero{
@@ -227,14 +237,34 @@ body{ padding-bottom:84px; }
   grid-auto-columns:72%;
   gap:12px;
   overflow-x:auto;
+  overflow-y:hidden;
   padding:2px 2px 6px;
   scroll-snap-type:x mandatory;
   scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;
+  overscroll-behavior-y:none;
+  touch-action:pan-x pinch-zoom;
+  scroll-padding-left:2px;
 }
 
 .mv4-card-row::-webkit-scrollbar,
 .mv4-testimonial-row::-webkit-scrollbar{
   display:none;
+}
+
+.mv4-hero,
+.mv4-proof,
+.mv4-benefits,
+.mv4-testimonials,
+.mv4-credibility,
+.mv4-membership,
+.mv4-browser,
+.mv4-final-cta,
+.mv4-library-group,
+.mv4-section-head,
+.mv4-offer-box{
+  overflow-x:clip;
 }
 
 .mv4-mini-card,
