@@ -290,66 +290,48 @@
       group.items.push(item);
     });
 
+    const wrap = document.createElement("div");
+    wrap.className = "is-generator-select-wrap";
+
+    const label = document.createElement("label");
+    label.className = "is-generator-select-label";
+    label.setAttribute("for", "mobileGeneratorSelect");
+    label.textContent = "Choose a generator";
+
+    const select = document.createElement("select");
+    select.className = "is-generator-select";
+    select.id = "mobileGeneratorSelect";
+    select.name = "mobile-generator-select";
+
     groups.forEach(function (group) {
-      const section = document.createElement("section");
-      section.className = "is-generator-group";
-      const groupHasActiveItem = group.items.some(function (item) {
-        return item.id === currentItemId;
-      });
-      section.classList.toggle("is-open", groupHasActiveItem);
-
-      const label = document.createElement("button");
-      label.className = "is-generator-group-label";
-      label.type = "button";
-      label.textContent = group.name;
-      label.setAttribute("aria-expanded", groupHasActiveItem ? "true" : "false");
-
-      const options = document.createElement("div");
-      options.className = "is-generator-group-options";
-      options.hidden = !groupHasActiveItem;
-
-      label.addEventListener("click", function () {
-        const willOpen = options.hidden;
-        pickerEl.querySelectorAll(".is-generator-group").forEach(function (groupSection) {
-          groupSection.classList.remove("is-open");
-        });
-        pickerEl.querySelectorAll(".is-generator-group-label").forEach(function (groupLabel) {
-          groupLabel.setAttribute("aria-expanded", "false");
-        });
-        pickerEl.querySelectorAll(".is-generator-group-options").forEach(function (groupOptions) {
-          groupOptions.hidden = true;
-        });
-
-        if (willOpen) {
-          section.classList.add("is-open");
-          label.setAttribute("aria-expanded", "true");
-          options.hidden = false;
-        }
-      });
+      const optgroup = document.createElement("optgroup");
+      optgroup.label = group.name;
 
       group.items.forEach(function (item) {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "is-generator-option";
+        const option = document.createElement("option");
+        option.value = item.id;
+        option.textContent = item.title;
         if (item.id === currentItemId) {
-          button.classList.add("is-active");
+          option.selected = true;
         }
-        button.textContent = item.title;
-        button.addEventListener("click", function () {
-          if (item.id === currentItemId) {
-            return;
-          }
-          currentItemId = item.id;
-          render();
-          setHash();
-        });
-        options.appendChild(button);
+        optgroup.appendChild(option);
       });
 
-      section.appendChild(label);
-      section.appendChild(options);
-      pickerEl.appendChild(section);
+      select.appendChild(optgroup);
     });
+
+    select.addEventListener("change", function () {
+      if (!select.value || select.value === currentItemId) {
+        return;
+      }
+      currentItemId = select.value;
+      render();
+      setHash();
+    });
+
+    wrap.appendChild(label);
+    wrap.appendChild(select);
+    pickerEl.appendChild(wrap);
   }
 
   function updateBrowserHeader() {
