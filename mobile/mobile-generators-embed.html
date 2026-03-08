@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intervention Station | Mobile Generators Only</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./mobile.css" />
+</head>
+<body class="is-mobile-hub">
+  <section class="is-home-sections">
+    <div class="is-wrap is-layout">
+      <aside class="is-nav" aria-label="Navigation">
+        <nav class="is-nav-card">
+          <div class="is-nav-header">Generators</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link is-nav-link--feature" href="#math-generators" data-category="math-generators">Math Generators</a>
+            <a class="is-nav-link is-nav-link--feature" href="#sor-generators" data-category="sor-generators">SOR Generators</a>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="is-main">
+        <section class="is-page is-home" id="homePanel" hidden></section>
+
+        <section class="is-page is-generator-browser-page" id="browserPanel">
+          <header class="is-page-hero is-browser-hero">
+            <p class="is-browser-kicker" id="categoryKicker">Math Generators</p>
+            <h1 id="pageTitle">Math Generators - Rounding</h1>
+          </header>
+
+          <nav class="is-generator-picker" id="itemPicker" aria-label="Generator items"></nav>
+
+          <section class="is-generator-stage">
+            <div class="is-generator-viewport" id="previewViewport">
+              <iframe
+                id="previewFrame"
+                class="is-generator-iframe"
+                title="Math Generators - Rounding"
+                loading="lazy"
+              ></iframe>
+            </div>
+          </section>
+        </section>
+
+        <section class="is-page is-lane-page" id="lanePanel" hidden></section>
+      </main>
+    </div>
+  </section>
+
+  <script>
+    if (!window.location.hash) {
+      window.location.hash = "#math-generators/rounding";
+    }
+  </script>
+  <script src="./mobile.js"></script>
+</body>
+</html>
