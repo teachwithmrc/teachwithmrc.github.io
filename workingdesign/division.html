@@ -8,6 +8,40 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./workingdesign.css" />
+
+<style>
+  .is-download-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    min-height:44px;
+    padding:0 18px;
+    border-radius:999px;
+    border:1px solid #0f335b;
+    background:linear-gradient(180deg, #2f79b8 0%, #1e5688 100%);
+    color:#fff;
+    font-family:Poppins, Arial, sans-serif;
+    font-size:14px;
+    font-weight:900;
+    line-height:1;
+    opacity:1;
+    cursor:not-allowed;
+    box-shadow:0 8px 18px rgba(31,54,95,0.12);
+  }
+  .is-download-btn .lock{
+    font-size:14px;
+    line-height:1;
+  }
+  .is-download-btn:disabled,
+  .is-download-btn[aria-disabled="true"]{
+    color:#fff;
+    opacity:1;
+    border-color:#0f335b;
+    background:linear-gradient(180deg, #2f79b8 0%, #1e5688 100%);
+  }
+</style>
+
 </head>
 <body>
   <div class="is-ticker" aria-label="Reviews ticker">

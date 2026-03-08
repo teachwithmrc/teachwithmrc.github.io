@@ -62,7 +62,7 @@
         { title: "Blending Slides", description: "Small-group blending routines for repeated connected practice.", href: "../site-preview-march3rd/blending-slides-preview.html", directHref: "./blending-slides.html", image: "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/69ac9117b003fa18fa1f7b54.png", meta: "Open page" },
         { title: "Phonics Mazes", description: "Visual discrimination and word reading practice around one target skill.", href: "../site-preview-march3rd/phonics-maze-preview.html", directHref: "./phonics-mazes.html", image: "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/69ac9117618c8d43615f3c21.png", meta: "Open page" },
         { title: "Pick the Pic", description: "Picture-supported decoding and meaning checks tied to phonics patterns.", href: "../site-preview-march3rd/pick-the-pic-preview.html", directHref: "./pick-the-pic.html", image: "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/69ac91177bdf386bfed44d42.png", meta: "Open page" },
-        { title: "HFW Pyramids", description: "Repeated high-frequency word practice in a fast printable format.", href: "../site-preview-march3rd/hfw-pyramid-preview.html", directHref: "./hfw-pyramids.html", image: "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/69ac91177bdf381089d44d40.png", meta: "Open page" },
+        { title: "HFW Pyramids", description: "Repeated high-frequency word practice in a fast printable format.", href: "../site-preview-march3rd/hfw-pyramid-preview.html", directHref: "./hfw-pyramids.html", image: "https://storage.googleapis.com/msgsndr/F9vnmU5R8sOuTGoxp5by/media/697a03641d0982d5877d12d1.gif", meta: "Open page" },
         { title: "Spelling by Phonics Skill", description: "Spelling collections aligned to phonics patterns and intervention groups.", href: "../site-preview-march3rd/spelling-preview.html", directHref: "./spelling-by-phonics-skill.html", image: "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/69ac9117618c8db64b5f3c1f.png", meta: "Open page" },
         { title: "Spelling Google Sheets", description: "Self-checking spelling practice pages in the same reading support lane.", href: "../site-preview-march3rd/spelling-google-sheets-preview.html", directHref: "./spelling-google-sheets.html", image: "https://assets.cdn.filesafe.space/F9vnmU5R8sOuTGoxp5by/media/69ac9117618c8db64b5f3c1f.png", meta: "Open page" }
       ]
@@ -350,14 +350,16 @@
       style.id = "workingdesign-host-overrides";
       style.textContent =
         "html,body{margin:0!important;padding:0!important;overflow:visible!important;height:auto!important;min-height:0!important;}" +
-        ".wrap{max-width:none!important;margin:0!important;padding:0!important;}" +
+        ".wrap,.app,.container{max-width:none!important;width:100%!important;margin:0!important;padding:0!important;}" +
         ".head,.subtitle,.top-cta-wrap,.is-ticker,.is-nav,.is-mobile-hub-wrap,.is-page-hero,.promo-note,.controls-note{display:none!important;}" +
         ".status:empty{display:none!important;}" +
         ".is-home-sections .is-layout{grid-template-columns:1fr!important;}" +
         ".is-main{min-width:0!important;width:100%!important;}" +
         ".is-page{border:0!important;padding:0!important;}" +
         ".preview-frame-wrap{border:0!important;box-shadow:none!important;}" +
-        ".sheet-wrap,[class*='sheet-wrap'],.page-wrap,[class*='page-wrap'],.preview-shell{max-height:none!important;overflow:visible!important;height:auto!important;}";
+        ".controls{padding-left:0!important;padding-right:0!important;border-left:0!important;border-right:0!important;border-radius:0!important;}" +
+        ".sheet-wrap,[class*='sheet-wrap'],.page-wrap,[class*='page-wrap'],.preview-shell{max-height:none!important;overflow:visible!important;height:auto!important;padding:0!important;border:0!important;border-radius:0!important;}" +
+        ".page,.sheet{max-width:none!important;width:100%!important;margin:0!important;border-left:0!important;border-right:0!important;border-radius:0!important;padding-left:12px!important;padding-right:12px!important;}";
       doc.head.appendChild(style);
     }
   }
@@ -401,8 +403,8 @@
     frame.style.width = sourceWidth + "px";
     frame.style.height = sourceHeight + "px";
     frame.style.transform = "scale(" + scale.toFixed(4) + ")";
-    frame.style.transformOrigin = "top center";
-    frame.style.margin = "0 auto";
+    frame.style.transformOrigin = "top left";
+    frame.style.margin = "0";
   }
 
   function scheduleFit() {

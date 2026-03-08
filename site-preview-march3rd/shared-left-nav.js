@@ -246,6 +246,33 @@
       .is-home-sections .is-side-link:hover{
         text-decoration:underline;
       }
+      @media (min-width:861px){
+        .is-resource-grid,
+        .is-card-grid{
+          grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+        }
+      }
+      @media (max-width:1100px){
+        .top-cta-bar{
+          position:relative !important;
+          top:auto !important;
+        }
+        .is-home-sections .is-nav,
+        .is-library .is-nav{
+          position:relative !important;
+          top:auto !important;
+        }
+        .is-mobile-quick-nav{
+          position:relative !important;
+          top:auto !important;
+        }
+      }
+      @media (max-width:860px){
+        .is-resource-grid,
+        .is-card-grid{
+          grid-template-columns:1fr !important;
+        }
+      }
     `;
     document.head.appendChild(style);
   }
