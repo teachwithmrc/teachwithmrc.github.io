@@ -359,6 +359,7 @@
         ".preview-frame-wrap{border:0!important;box-shadow:none!important;}" +
         ".controls{padding-left:0!important;padding-right:0!important;border-left:0!important;border-right:0!important;border-radius:0!important;}" +
         ".sheet-wrap,[class*='sheet-wrap'],.page-wrap,[class*='page-wrap'],.preview-shell{max-height:none!important;overflow:visible!important;height:auto!important;padding:0!important;border:0!important;border-radius:0!important;}" +
+        ".preview-content{position:relative!important;left:0!important;top:0!important;width:100%!important;transform:none!important;padding:0!important;}" +
         ".page,.sheet{max-width:none!important;width:100%!important;margin:0!important;border-left:0!important;border-right:0!important;border-radius:0!important;padding-left:12px!important;padding-right:12px!important;}";
       doc.head.appendChild(style);
     }
@@ -510,8 +511,7 @@
       const observer = new MutationObserver(scheduleFit);
       observer.observe(doc.body, {
         childList: true,
-        subtree: true,
-        attributes: true
+        subtree: true
       });
     } catch (_error) {
     }

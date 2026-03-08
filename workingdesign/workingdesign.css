@@ -123,7 +123,7 @@ a{ color:inherit; text-decoration:none; }
 .is-value-banner{
   background:linear-gradient(180deg, #f7fbff 0%, #eef5ff 100%);
   color:#24344f;
-  padding:18px 0 20px;
+  padding:12px 0 14px;
   border-top:1px solid rgba(102,145,193,0.16);
   border-bottom:1px solid rgba(102,145,193,0.16);
 }
@@ -138,16 +138,16 @@ a{ color:inherit; text-decoration:none; }
   margin:0;
   display:grid;
   gap:2px;
-  font-size:52px;
-  line-height:.94;
+  font-size:42px;
+  line-height:.96;
   letter-spacing:-.05em;
   color:#1d2d49;
 }
 .is-value-banner__copy{
-  margin:14px 0 0;
-  max-width:560px;
-  font-size:20px;
-  line-height:1.25;
+  margin:10px 0 0;
+  max-width:520px;
+  font-size:17px;
+  line-height:1.2;
   font-weight:600;
   color:#415877;
 }
@@ -155,29 +155,29 @@ a{ color:inherit; text-decoration:none; }
   display:flex;
   flex-wrap:wrap;
   gap:10px 18px;
-  margin-top:16px;
-  font-size:13px;
+  margin-top:12px;
+  font-size:12px;
   line-height:1.3;
   font-weight:700;
   color:#516682;
 }
 .is-value-banner__content{
-  max-width:760px;
+  max-width:680px;
 }
 .is-value-banner__actions{
   display:flex;
   align-items:center;
   gap:12px;
-  margin-top:18px;
+  margin-top:12px;
 }
 .is-hero-btn{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-height:48px;
-  padding:0 18px;
+  min-height:42px;
+  padding:0 16px;
   border-radius:999px;
-  font-size:15px;
+  font-size:14px;
   font-weight:900;
   text-decoration:none;
   white-space:nowrap;
@@ -469,7 +469,7 @@ a{ color:inherit; text-decoration:none; }
 .is-home .is-slide{
   position:relative;
   flex:0 0 100%;
-  min-height:150px;
+  min-height:112px;
   display:block;
   color:#fff;
   text-decoration:none;
@@ -479,19 +479,19 @@ a{ color:inherit; text-decoration:none; }
 .is-home .is-slide-img{
   width:100%;
   height:100%;
-  min-height:150px;
+  min-height:112px;
   object-fit:cover;
   filter:saturate(.96);
 }
 .is-home .is-slide-overlay{
   position:absolute;
   inset:auto 0 0;
-  padding:14px 16px;
+  padding:10px 12px;
   background:linear-gradient(to top, rgba(6,13,24,.88), rgba(6,13,24,.15));
 }
 .is-home .is-slide-title{
   margin:0 0 4px;
-  font-size:20px;
+  font-size:16px;
   line-height:1.04;
   font-weight:900;
   color:#fff;
@@ -499,8 +499,8 @@ a{ color:inherit; text-decoration:none; }
 }
 .is-home .is-slide-sub{
   margin:0;
-  font-size:12px;
-  line-height:1.35;
+  font-size:11px;
+  line-height:1.2;
   font-weight:600;
   color:rgba(255,255,255,.95);
 }
