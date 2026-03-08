@@ -280,13 +280,39 @@
     groups.forEach(function (group) {
       const section = document.createElement("section");
       section.className = "is-generator-group";
+      const groupHasActiveItem = group.items.some(function (item) {
+        return item.id === currentItemId;
+      });
+      section.classList.toggle("is-open", groupHasActiveItem);
 
-      const label = document.createElement("h2");
+      const label = document.createElement("button");
       label.className = "is-generator-group-label";
+      label.type = "button";
       label.textContent = group.name;
+      label.setAttribute("aria-expanded", groupHasActiveItem ? "true" : "false");
 
       const options = document.createElement("div");
       options.className = "is-generator-group-options";
+      options.hidden = !groupHasActiveItem;
+
+      label.addEventListener("click", function () {
+        const willOpen = options.hidden;
+        pickerEl.querySelectorAll(".is-generator-group").forEach(function (groupSection) {
+          groupSection.classList.remove("is-open");
+        });
+        pickerEl.querySelectorAll(".is-generator-group-label").forEach(function (groupLabel) {
+          groupLabel.setAttribute("aria-expanded", "false");
+        });
+        pickerEl.querySelectorAll(".is-generator-group-options").forEach(function (groupOptions) {
+          groupOptions.hidden = true;
+        });
+
+        if (willOpen) {
+          section.classList.add("is-open");
+          label.setAttribute("aria-expanded", "true");
+          options.hidden = false;
+        }
+      });
 
       group.items.forEach(function (item) {
         const button = document.createElement("button");
