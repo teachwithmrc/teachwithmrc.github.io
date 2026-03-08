@@ -112,6 +112,8 @@
   const categoryLinks = Array.from(document.querySelectorAll("[data-category]"));
   const laneLinks = Array.from(document.querySelectorAll("[data-lane]"));
   const homeLinks = Array.from(document.querySelectorAll("[data-view='home']"));
+  const navHeader = document.querySelector(".is-mobile-hub .is-nav-header");
+  const navGroup = document.querySelector(".is-mobile-hub .is-nav-card .is-nav-group:not(.is-nav-home)");
   const topBar = document.querySelector(".top-cta-bar");
   const valueBanner = document.querySelector(".is-value-banner");
   const navEl = document.querySelector(".is-nav");
@@ -124,6 +126,16 @@
   let currentCategoryId = "sor-generators";
   let currentItemId = "fluency-grid";
   let currentLaneId = "scaffolded-math";
+  let mobileNavOpen = false;
+
+  function syncMobileNav() {
+    if (!navHeader || !navGroup) {
+      return;
+    }
+    navHeader.classList.toggle("is-open", mobileNavOpen);
+    navHeader.setAttribute("aria-expanded", mobileNavOpen ? "true" : "false");
+    navGroup.classList.toggle("is-collapsed", !mobileNavOpen);
+  }
 
   function currentCategory() {
     return categoryMap.get(currentCategoryId) || CATEGORIES[0];
@@ -226,6 +238,7 @@
     if (activeNavLink && activeNavLink.scrollIntoView) {
       activeNavLink.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
     }
+    syncMobileNav();
   }
 
   function renderPanels() {
@@ -547,6 +560,7 @@
   homeLinks.forEach(function (link) {
     link.addEventListener("click", function (event) {
       event.preventDefault();
+      mobileNavOpen = false;
       openHome();
     });
   });
@@ -558,6 +572,7 @@
         return;
       }
       event.preventDefault();
+      mobileNavOpen = false;
       openCategory(categoryId, link.dataset.item);
     });
   });
@@ -569,9 +584,17 @@
         return;
       }
       event.preventDefault();
+      mobileNavOpen = false;
       openLane(laneId);
     });
   });
+
+  if (navHeader && navGroup) {
+    navHeader.addEventListener("click", function () {
+      mobileNavOpen = !mobileNavOpen;
+      syncMobileNav();
+    });
+  }
 
   frame.addEventListener("load", function () {
     scheduleFit();
@@ -663,6 +686,7 @@
   })();
 
   parseHash();
+  syncMobileNav();
   render();
   schedulePanelScroll("auto");
 })();

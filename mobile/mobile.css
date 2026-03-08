@@ -1234,6 +1234,22 @@ body:not(.is-mobile-hub) .is-side-card{
 .is-mobile-hub .is-home-sections .is-nav-header{
   font-size:14px;
   padding:9px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  cursor:pointer;
+  user-select:none;
+}
+
+.is-mobile-hub .is-home-sections .is-nav-header::after{
+  content:"+";
+  font-size:18px;
+  line-height:1;
+  color:#1f365f;
+}
+
+.is-mobile-hub .is-home-sections .is-nav-header.is-open::after{
+  content:"−";
 }
 
 .is-mobile-hub .is-home-sections .is-nav-group{
@@ -1242,6 +1258,10 @@ body:not(.is-mobile-hub) .is-side-card{
   grid-template-columns:repeat(2, minmax(0, 1fr));
   gap:8px;
   overflow:visible;
+}
+
+.is-mobile-hub .is-home-sections .is-nav-group.is-collapsed{
+  display:none;
 }
 
 .is-home-sections .is-nav-link{
