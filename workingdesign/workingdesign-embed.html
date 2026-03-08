@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intervention Station | Generator Browser</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./workingdesign.css" />
+</head>
+<body>
+  <section class="is-home-sections">
+    <div class="is-wrap is-layout">
+      <aside class="is-nav" aria-label="Navigation">
+        <nav class="is-nav-card">
+          <div class="is-nav-header">Browse</div>
+          <div class="is-nav-group">
+            <a class="is-nav-link is-nav-link--feature" href="#math-generators" data-category="math-generators">Math Generators</a>
+            <a class="is-nav-link is-nav-link--feature" href="#sor-generators" data-category="sor-generators">SOR Generators</a>
+            <a class="is-nav-link is-nav-link--feature" href="#scaffolded-math" data-lane="scaffolded-math">Scaffolded Math</a>
+            <a class="is-nav-link is-nav-link--feature" href="#sor-reading" data-lane="sor-reading">SOR Reading</a>
+            <a class="is-nav-link is-nav-link--feature" href="#games" data-lane="games">Games</a>
+            <a class="is-nav-link is-nav-link--feature" href="#songs" data-lane="songs">Songs</a>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="is-main">
+        <section class="is-page is-home" id="homePanel" hidden></section>
+
+        <section class="is-page is-generator-browser-page" id="browserPanel">
+          <header class="is-page-hero is-browser-hero">
+            <p class="is-browser-kicker" id="categoryKicker">SOR Generators</p>
+            <h1 id="pageTitle">SOR Generators - Fluency Grid</h1>
+          </header>
+
+          <nav class="is-generator-picker" id="itemPicker" aria-label="Generator items"></nav>
+
+          <section class="is-generator-stage">
+            <div class="is-generator-viewport" id="previewViewport">
+              <iframe
+                id="previewFrame"
+                class="is-generator-iframe"
+                title="SOR Generators - Fluency Grid"
+                loading="lazy"
+              ></iframe>
+            </div>
+          </section>
+        </section>
+
+        <section class="is-page is-lane-page" id="lanePanel" hidden>
+          <header class="is-page-hero is-browser-hero">
+            <p class="is-browser-kicker" id="laneKicker">Browse by Collection</p>
+            <h1 id="laneTitle">Scaffolded Math</h1>
+            <p id="laneSupport">Choose a collection to open its full page.</p>
+          </header>
+
+          <section class="is-lane-grid" id="laneGrid" aria-label="Lane category cards"></section>
+        </section>
+      </main>
+    </div>
+  </section>
+
+  <script>
+    if (!window.location.hash) {
+      window.location.hash = "#math-generators/rounding";
+    }
+  </script>
+  <script src="./workingdesign.js"></script>
+</body>
+</html>
