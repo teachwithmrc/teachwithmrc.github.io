@@ -66,18 +66,14 @@
 
   function fitFrame() {
     const measured = measureFrame();
-    const sourceWidth = measured ? measured.width : Math.max(960, viewport.clientWidth);
     const sourceHeight = measured ? measured.height : 1200;
-    const availableWidth = Math.max(280, viewport.clientWidth);
-    const scale = Math.min(1, availableWidth / sourceWidth);
-    const fittedHeight = Math.ceil(sourceHeight * scale);
 
-    viewport.style.height = fittedHeight + "px";
-    frame.style.width = sourceWidth + "px";
+    viewport.style.height = sourceHeight + "px";
+    frame.style.width = "100%";
     frame.style.height = sourceHeight + "px";
-    frame.style.transform = "scale(" + scale.toFixed(4) + ")";
-    frame.style.transformOrigin = "top center";
-    frame.style.margin = "0 auto";
+    frame.style.transform = "none";
+    frame.style.transformOrigin = "top left";
+    frame.style.margin = "0";
   }
 
   function scheduleFit() {
