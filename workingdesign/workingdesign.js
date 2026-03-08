@@ -379,8 +379,8 @@
         return null;
       }
       return {
-        width: Math.max(item.sourceWidth || 1360, html.clientWidth, html.scrollWidth, html.offsetWidth, body.scrollWidth, body.offsetWidth),
-        height: Math.max(item.fallbackHeight || 1200, html.clientHeight, html.scrollHeight, html.offsetHeight, body.clientHeight, body.scrollHeight, body.offsetHeight)
+        width: Math.max(320, html.clientWidth, html.scrollWidth, html.offsetWidth, body.clientWidth, body.scrollWidth, body.offsetWidth),
+        height: Math.max(720, html.clientHeight, html.scrollHeight, html.offsetHeight, body.clientHeight, body.scrollHeight, body.offsetHeight)
       };
     } catch (_error) {
       return null;
@@ -393,14 +393,14 @@
     }
     const item = currentItem();
     const measured = measureFrame();
-    const sourceWidth = measured ? measured.width : (item.sourceWidth || 1360);
-    const sourceHeight = measured ? measured.height : (item.fallbackHeight || 1200);
+    const sourceWidth = measured && measured.width ? measured.width : (item.sourceWidth || 1360);
+    const sourceHeight = measured && measured.height ? measured.height : (item.fallbackHeight || 1200);
     const availableWidth = Math.max(320, viewport.clientWidth);
     const scale = Math.min(1, availableWidth / sourceWidth);
     const fittedHeight = Math.ceil(sourceHeight * scale);
 
     viewport.style.height = fittedHeight + "px";
-    viewport.style.maxWidth = "100%";
+    viewport.style.maxWidth = "none";
     frame.style.width = sourceWidth + "px";
     frame.style.height = sourceHeight + "px";
     frame.style.transform = "scale(" + scale.toFixed(4) + ")";
