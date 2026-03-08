@@ -244,13 +244,23 @@ body{
   -webkit-overflow-scrolling:touch;
   overscroll-behavior-x:contain;
   overscroll-behavior-y:none;
-  touch-action:pan-x pinch-zoom;
+  touch-action:auto;
   scroll-padding-left:2px;
 }
 
 .mv4-card-row::-webkit-scrollbar,
 .mv4-testimonial-row::-webkit-scrollbar{
   display:none;
+}
+
+.mv4-card-row > *,
+.mv4-testimonial-row > *{
+  touch-action:auto;
+}
+
+.mv4-card-row img,
+.mv4-testimonial-row img{
+  touch-action:auto;
 }
 
 .mv4-hero,

@@ -159,7 +159,13 @@
     if (window.location.protocol === "file:") {
       return item.previewLocalPath || "";
     }
-    return item.previewWebPath || "";
+    if (!item.previewWebPath) {
+      return "";
+    }
+    if (/^https?:\/\//.test(item.previewWebPath)) {
+      return item.previewWebPath;
+    }
+    return "https://teachwithmrc.github.io" + item.previewWebPath;
   }
 
   function buildResourceHref(card) {
