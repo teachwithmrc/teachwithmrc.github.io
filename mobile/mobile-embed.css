@@ -1,0 +1,128 @@
+:root {
+  --me-bg: #2b3e50;
+  --me-surface: #edf3f8;
+  --me-card: #ffffff;
+  --me-border: #d6e4f1;
+  --me-ink: #1d2d49;
+  --me-copy: #4f6689;
+  --me-blue: #41c4f2;
+  --me-blue-deep: #102246;
+  --me-shadow: 0 10px 24px rgba(31, 54, 95, 0.08);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background: var(--me-bg);
+  font-family: Poppins, Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.me-page {
+  width: 100%;
+  background: var(--me-bg);
+}
+
+.me-shell {
+  width: min(100%, 100vw);
+  margin: 0 auto;
+  padding: 18px 10px 24px;
+}
+
+.me-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.me-kicker {
+  margin: 0 0 8px;
+  color: #4f86b9;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.me-header h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 31px;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  font-weight: 900;
+}
+
+.me-copy {
+  margin: 12px 0 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 15px;
+  line-height: 1.42;
+  font-weight: 600;
+}
+
+.me-picker {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.me-pill {
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--me-border);
+  border-radius: 999px;
+  background: var(--me-card);
+  color: var(--me-blue-deep);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 800;
+  text-align: center;
+}
+
+.me-pill.is-active {
+  background: var(--me-blue-deep);
+  color: #ffffff;
+  border-color: var(--me-blue-deep);
+}
+
+.me-stage {
+  width: 100%;
+}
+
+.me-stage__frame {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--me-card);
+  box-shadow: var(--me-shadow);
+}
+
+.me-iframe {
+  display: block;
+  width: 488px;
+  height: 1240px;
+  border: 0;
+  margin: 0;
+  transform-origin: top left;
+  background: #ffffff;
+}
+
+@media (max-width: 380px) {
+  .me-picker {
+    grid-template-columns: 1fr;
+  }
+
+  .me-header h1 {
+    font-size: 28px;
+  }
+}

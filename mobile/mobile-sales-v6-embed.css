@@ -1,0 +1,22 @@
+@import url("./mobile-sales-v5-embed.css");
+
+body{
+  padding-bottom:20px;
+}
+
+.mv4-page{
+  gap:14px;
+  padding-bottom:12px;
+}
+
+.mv4-hero__actions--compact{
+  margin-top:0;
+}
+
+.mv4-browser{
+  padding-bottom:18px;
+}
+
+.mv4-browser__frame iframe{
+  min-height:1380px;
+}
