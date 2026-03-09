@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Intervention Station | Reading Generators</title>
+  <title>Intervention Station | Mobile Generator Browser</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -13,27 +13,53 @@
   <main class="me-page">
     <section class="me-shell">
       <header class="me-header">
-        <p class="me-kicker">Preview a Few Reading Generators</p>
-        <h1>Reading Generators</h1>
-        <p class="me-copy">Choose a sample generator below. The preview fills the mobile width and stays focused on the reading tools that are working best.</p>
+        <p class="me-kicker">Mobile Generator Browser</p>
+        <h1>Preview Stable Reading and Math Generators</h1>
+        <p class="me-copy">This mobile embed stays focused on a small curated set of working generators. Pick a reading or math preview below and the generator will scale to the full mobile width.</p>
       </header>
 
-      <nav class="me-picker" aria-label="Reading generator picker">
-        <button class="me-pill is-active" data-item="fluency-grid" type="button">Fluency Grid</button>
-        <button class="me-pill" data-item="word-mapping" type="button">Word Mapping</button>
-        <button class="me-pill" data-item="word-ladder" type="button">Word Ladder</button>
-        <button class="me-pill" data-item="roll-and-read" type="button">Roll and Read</button>
-        <button class="me-pill" data-item="pyramid-spelling" type="button">Pyramid Spelling</button>
-      </nav>
+      <section class="me-picker-group" aria-labelledby="me-reading-heading">
+        <div class="me-group-head">
+          <h2 id="me-reading-heading">Reading</h2>
+          <p>Stable phonics and fluency previews</p>
+        </div>
+        <nav class="me-picker" aria-label="Reading generator picker">
+          <button class="me-pill is-active" data-item="fluency-grid" type="button">Fluency Grid</button>
+          <button class="me-pill" data-item="word-mapping" type="button">Word Mapping</button>
+          <button class="me-pill" data-item="roll-and-read" type="button">Roll and Read</button>
+          <button class="me-pill" data-item="pyramid-spelling" type="button">Pyramid Spelling</button>
+        </nav>
+      </section>
+
+      <section class="me-picker-group" aria-labelledby="me-math-heading">
+        <div class="me-group-head">
+          <h2 id="me-math-heading">Math</h2>
+          <p>Requested scaffold and practice previews</p>
+        </div>
+        <nav class="me-picker" aria-label="Math generator picker">
+          <button class="me-pill" data-item="long-division-scaffold" type="button">Long Division Scaffold</button>
+          <button class="me-pill" data-item="partial-products" type="button">Partial Products</button>
+          <button class="me-pill" data-item="coin-counter" type="button">Coin Counter</button>
+          <button class="me-pill" data-item="math-roll-and-read" type="button">Math Roll and Read</button>
+          <button class="me-pill" data-item="long-division" type="button">Long Division</button>
+        </nav>
+      </section>
 
       <section id="generator-browser" class="me-stage" aria-label="Generator preview">
+        <div class="me-stage__meta">
+          <span class="me-stage__badge" id="previewCategory">Choose One</span>
+          <strong id="previewTitle">Tap a generator to load the preview</strong>
+        </div>
         <div class="me-stage__frame" id="previewViewport">
+          <div class="me-empty" id="previewEmpty">
+            <h3>Preview stays collapsed until you choose a generator</h3>
+            <p>Select one of the reading or math options above to load a mobile-sized preview.</p>
+          </div>
           <iframe
             id="previewFrame"
             class="me-iframe"
-            title="Reading Generators - Fluency Grid"
+            title="Intervention Station Generator Preview"
             loading="lazy"
-            src="https://teachwithmrc.github.io/mobile/generators/fluency-grid.html"
           ></iframe>
         </div>
       </section>

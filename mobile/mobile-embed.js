@@ -1,46 +1,84 @@
 const GENERATORS = {
   "fluency-grid": {
     title: "Fluency Grid",
+    category: "Reading",
     src: "https://teachwithmrc.github.io/mobile/generators/fluency-grid.html",
     width: 488,
     height: 1180
   },
   "word-mapping": {
     title: "Word Mapping",
+    category: "Reading",
     src: "https://teachwithmrc.github.io/mobile/generators/word-mapping.html",
     width: 488,
     height: 1240
   },
-  "word-ladder": {
-    title: "Word Ladder",
-    src: "https://teachwithmrc.github.io/mobile/generators/word-ladder.html",
-    width: 488,
-    height: 1280
-  },
   "roll-and-read": {
     title: "Roll and Read",
+    category: "Reading",
     src: "https://teachwithmrc.github.io/mobile/generators/roll-and-read.html",
     width: 488,
-    height: 1240
+    height: 1260
   },
   "pyramid-spelling": {
     title: "Pyramid Spelling",
+    category: "Reading",
     src: "https://teachwithmrc.github.io/mobile/generators/pyramid-spelling.html",
     width: 488,
     height: 1340
+  },
+  "long-division-scaffold": {
+    title: "Long Division Scaffold",
+    category: "Math",
+    src: "https://teachwithmrc.github.io/mobile/generators/long-division-scaffold.html",
+    width: 1160,
+    height: 1540
+  },
+  "partial-products": {
+    title: "Partial Products",
+    category: "Math",
+    src: "https://teachwithmrc.github.io/mobile/generators/partial-products.html",
+    width: 460,
+    height: 1320
+  },
+  "coin-counter": {
+    title: "Coin Counter",
+    category: "Math",
+    src: "https://teachwithmrc.github.io/mobile/generators/coin-counter.html",
+    width: 460,
+    height: 1180
+  },
+  "math-roll-and-read": {
+    title: "Math Roll and Read",
+    category: "Math",
+    src: "https://teachwithmrc.github.io/mobile/generators/math-roll-and-read.html",
+    width: 460,
+    height: 1260
+  },
+  "long-division": {
+    title: "Long Division",
+    category: "Math",
+    src: "https://teachwithmrc.github.io/mobile/generators/long-division.html",
+    width: 480,
+    height: 1280
   }
 };
 
 const previewFrame = document.getElementById("previewFrame");
 const previewViewport = document.getElementById("previewViewport");
+const previewTitle = document.getElementById("previewTitle");
+const previewCategory = document.getElementById("previewCategory");
+const previewEmpty = document.getElementById("previewEmpty");
 const pickerButtons = Array.from(document.querySelectorAll(".me-pill"));
 
-let currentId = "fluency-grid";
+let currentId = null;
 
 function fitPreview(item) {
+  if (!item) return;
+
   const frameWidth = item.width;
   const frameHeight = item.height;
-  const viewportWidth = previewViewport.clientWidth;
+  const viewportWidth = previewViewport.clientWidth || frameWidth;
   const scale = viewportWidth / frameWidth;
 
   previewFrame.style.width = `${frameWidth}px`;
@@ -58,9 +96,14 @@ function setActiveButton(id) {
 function loadGenerator(id) {
   const item = GENERATORS[id];
   if (!item) return;
+
   currentId = id;
   setActiveButton(id);
-  previewFrame.title = `Reading Generators - ${item.title}`;
+  previewTitle.textContent = item.title;
+  previewCategory.textContent = item.category;
+  previewFrame.title = `Intervention Station Generator Preview - ${item.title}`;
+  previewEmpty.style.display = "none";
+  previewFrame.style.display = "block";
   previewFrame.src = item.src;
   fitPreview(item);
 }
@@ -72,11 +115,13 @@ pickerButtons.forEach((button) => {
 });
 
 window.addEventListener("resize", () => {
-  fitPreview(GENERATORS[currentId]);
+  if (currentId) {
+    fitPreview(GENERATORS[currentId]);
+  }
 });
 
 previewFrame.addEventListener("load", () => {
-  fitPreview(GENERATORS[currentId]);
+  if (currentId) {
+    fitPreview(GENERATORS[currentId]);
+  }
 });
-
-loadGenerator(currentId);

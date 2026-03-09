@@ -43,7 +43,7 @@ body {
 
 .me-kicker {
   margin: 0 0 8px;
-  color: #4f86b9;
+  color: #78b0df;
   font-size: 11px;
   line-height: 1.2;
   font-weight: 900;
@@ -68,15 +68,38 @@ body {
   font-weight: 600;
 }
 
+.me-picker-group {
+  margin-bottom: 14px;
+}
+
+.me-group-head {
+  margin-bottom: 10px;
+}
+
+.me-group-head h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 18px;
+  line-height: 1.1;
+  font-weight: 800;
+}
+
+.me-group-head p {
+  margin: 5px 0 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 600;
+}
+
 .me-picker {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  margin-bottom: 14px;
 }
 
 .me-pill {
-  min-height: 46px;
+  min-height: 48px;
   padding: 0 14px;
   border: 1px solid var(--me-border);
   border-radius: 999px;
@@ -87,6 +110,7 @@ body {
   line-height: 1.2;
   font-weight: 800;
   text-align: center;
+  cursor: pointer;
 }
 
 .me-pill.is-active {
@@ -99,16 +123,75 @@ body {
   width: 100%;
 }
 
+.me-stage__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.me-stage__meta strong {
+  font-size: 16px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.me-stage__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
 .me-stage__frame {
   width: 100%;
   overflow: hidden;
   border-radius: 22px;
   background: var(--me-card);
   box-shadow: var(--me-shadow);
+  min-height: 170px;
+}
+
+.me-empty {
+  display: grid;
+  gap: 8px;
+  align-content: center;
+  justify-items: center;
+  min-height: 170px;
+  padding: 22px 18px;
+  text-align: center;
+}
+
+.me-empty h3 {
+  margin: 0;
+  color: var(--me-ink);
+  font-size: 18px;
+  line-height: 1.15;
+  font-weight: 800;
+}
+
+.me-empty p {
+  margin: 0;
+  color: var(--me-copy);
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 600;
 }
 
 .me-iframe {
-  display: block;
+  display: none;
   width: 488px;
   height: 1240px;
   border: 0;
