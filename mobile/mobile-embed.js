@@ -69,9 +69,12 @@ const previewViewport = document.getElementById("previewViewport");
 const previewTitle = document.getElementById("previewTitle");
 const previewCategory = document.getElementById("previewCategory");
 const previewEmpty = document.getElementById("previewEmpty");
+const categoryButtons = Array.from(document.querySelectorAll(".me-category"));
+const categoryPanels = Array.from(document.querySelectorAll("[data-category-panel]"));
 const pickerButtons = Array.from(document.querySelectorAll(".me-pill"));
 
 let currentId = null;
+let currentCategory = "reading";
 
 function fitPreview(item) {
   if (!item) return;
@@ -90,6 +93,16 @@ function fitPreview(item) {
 function setActiveButton(id) {
   pickerButtons.forEach((button) => {
     button.classList.toggle("is-active", button.dataset.item === id);
+  });
+}
+
+function setActiveCategory(category) {
+  currentCategory = category;
+  categoryButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.category === category);
+  });
+  categoryPanels.forEach((panel) => {
+    panel.classList.toggle("is-active", panel.dataset.categoryPanel === category);
   });
 }
 
@@ -114,6 +127,12 @@ pickerButtons.forEach((button) => {
   });
 });
 
+categoryButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    setActiveCategory(button.dataset.category);
+  });
+});
+
 window.addEventListener("resize", () => {
   if (currentId) {
     fitPreview(GENERATORS[currentId]);
@@ -125,3 +144,5 @@ previewFrame.addEventListener("load", () => {
     fitPreview(GENERATORS[currentId]);
   }
 });
+
+setActiveCategory(currentCategory);
