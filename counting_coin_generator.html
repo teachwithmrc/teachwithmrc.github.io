@@ -157,7 +157,7 @@
       grid-template-columns: 28px 1fr 150px;
       align-items: center;
       gap: 8px;
-      min-height: 112px;
+      min-height: 126px;
     }
 
     .pnum {
@@ -168,13 +168,13 @@
 
     .coin-area {
       padding: 2px;
-      min-height: 95px;
+      min-height: 108px;
       display: flex;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
       gap: 6px;
       align-content: flex-end;
       align-items: flex-end;
-      overflow: hidden;
+      overflow: visible;
     }
 
     .coin-item {
@@ -343,6 +343,9 @@
 
     const DIME_BASE_SIZE = 46;
     const COIN_RENDER_ORDER = ['quarter', 'dime', 'nickel', 'penny'];
+    const COIN_COUNT_LIMITS = {
+      penny: 7
+    };
 
     const coinSelect = document.getElementById('coinSelect');
     const sheet = document.getElementById('sheet');
@@ -387,6 +390,25 @@
       return items;
     }
 
+    function pickTotalsForWorksheet(allTotals, count) {
+      const sortedTotals = [...allTotals].sort((a, b) => a - b);
+      if (sortedTotals.length <= count) {
+        const picks = [...sortedTotals];
+        while (picks.length < count) {
+          picks.push(sortedTotals[randomInt(0, sortedTotals.length - 1)]);
+        }
+        return shuffleInPlace(picks);
+      }
+
+      const picks = [];
+      for (let i = 0; i < count; i += 1) {
+        const start = Math.floor((i * sortedTotals.length) / count);
+        const end = Math.floor((((i + 1) * sortedTotals.length) / count) - 1);
+        picks.push(sortedTotals[randomInt(start, Math.max(start, end))]);
+      }
+      return shuffleInPlace(picks);
+    }
+
     function buildCombinationBuckets(allowed, topAmount, maxCoins) {
       const buckets = new Map();
       const counts = Array(allowed.length).fill(0);
@@ -415,7 +437,8 @@
 
         const coin = allowed[index];
         const maxByAmount = Math.floor(remainingAmount / coin.value);
-        const maxCount = Math.min(maxByAmount, remainingCoins);
+        const coinLimit = COIN_COUNT_LIMITS[coin.key] ?? maxCoins;
+        const maxCount = Math.min(maxByAmount, remainingCoins, coinLimit);
 
         for (let count = 0; count <= maxCount; count += 1) {
           counts[index] = count;
@@ -482,13 +505,10 @@
         return;
       }
 
-      const totalsPool = shuffleInPlace([...allTotals]);
       const rows = [];
+      const chosenTotals = pickTotalsForWorksheet(allTotals, 6);
       for (let i = 1; i <= 6; i += 1) {
-        if (!totalsPool.length) {
-          totalsPool.push(...shuffleInPlace([...allTotals]));
-        }
-        const total = totalsPool.pop();
+        const total = chosenTotals[i - 1];
         const combosForTotal = buckets.get(total) || [];
         const problem = combosForTotal[randomInt(0, combosForTotal.length - 1)];
         const orderedPicks = orderCoinsForDisplay(problem.picks);
