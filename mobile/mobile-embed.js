@@ -76,6 +76,25 @@ const pickerButtons = Array.from(document.querySelectorAll(".me-pill"));
 let currentId = null;
 let currentCategory = "reading";
 
+function reportHeight() {
+  const height = Math.ceil(
+    Math.max(
+      document.documentElement.scrollHeight,
+      document.body ? document.body.scrollHeight : 0
+    )
+  );
+
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage(
+      {
+        type: "intervention-embed-height",
+        height
+      },
+      "*"
+    );
+  }
+}
+
 function fitPreview(item) {
   if (!item) return;
 
@@ -88,6 +107,7 @@ function fitPreview(item) {
   previewFrame.style.height = `${frameHeight}px`;
   previewFrame.style.transform = `scale(${scale})`;
   previewViewport.style.height = `${Math.ceil(frameHeight * scale)}px`;
+  reportHeight();
 }
 
 function setActiveButton(id) {
@@ -104,6 +124,7 @@ function setActiveCategory(category) {
   categoryPanels.forEach((panel) => {
     panel.classList.toggle("is-active", panel.dataset.categoryPanel === category);
   });
+  reportHeight();
 }
 
 function loadGenerator(id) {
@@ -119,6 +140,7 @@ function loadGenerator(id) {
   previewFrame.style.display = "block";
   previewFrame.src = item.src;
   fitPreview(item);
+  reportHeight();
 }
 
 pickerButtons.forEach((button) => {
@@ -143,6 +165,20 @@ previewFrame.addEventListener("load", () => {
   if (currentId) {
     fitPreview(GENERATORS[currentId]);
   }
+  reportHeight();
 });
+
+window.addEventListener("load", reportHeight);
+
+if (typeof ResizeObserver !== "undefined") {
+  const resizeObserver = new ResizeObserver(() => {
+    reportHeight();
+  });
+
+  resizeObserver.observe(document.documentElement);
+  if (document.body) {
+    resizeObserver.observe(document.body);
+  }
+}
 
 setActiveCategory(currentCategory);
