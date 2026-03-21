@@ -1,123 +1,93 @@
 (function () {
   let instanceCount = 0;
 
-  function escapeHtml(value) {
-    return String(value).replace(/[&<>"']/g, function (char) {
-      return {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-      }[char];
-    });
-  }
-
-  function renderApp(config) {
+  function render(config) {
     const mount = document.getElementById(config.mountId);
     if (!mount) return;
 
     instanceCount += 1;
-    const instanceId = "lds-" + instanceCount;
+    const id = "lds-" + instanceCount;
+
     mount.innerHTML = [
-      '<div class="lds-root" data-instance="' + instanceId + '">',
-      '  <div class="lds-shell">',
-      '    <div class="lds-topbar">',
-      '      <div class="lds-topbar-inner">',
-      '        <div class="lds-topbar-copy">' + escapeHtml(config.topbarLabel) + '</div>',
-      '        <div class="lds-topbar-actions">',
-      '          <a class="lds-link-btn lds-link-btn-ghost" href="' + escapeHtml(config.generatorUrl) + '" target="_blank" rel="noopener">Open on TeachWithMRC</a>',
-      '          <a class="lds-link-btn lds-link-btn-primary" href="' + escapeHtml(config.joinUrl) + '" target="_blank" rel="noopener">' + escapeHtml(config.joinLabel) + '</a>',
-      '        </div>',
-      '      </div>',
+      '<div class="lds-root">',
+      '  <div class="lds-app">',
+      '    <div class="lds-screen-only">',
+      '      <h1>' + config.title + '</h1>',
+      '      <p class="lds-subtitle">' + config.subtitle + '</p>',
       '    </div>',
-      '    <main class="lds-page-shell">',
-      '      <section class="lds-hero">',
-      '        <div class="lds-hero-card">',
-      '          <p class="lds-eyebrow">' + escapeHtml(config.eyebrow) + '</p>',
-      '          <h1 class="lds-title">' + escapeHtml(config.headline) + '</h1>',
-      '          <p class="lds-hero-copy">' + escapeHtml(config.subheadline) + '</p>',
-      '          <div class="lds-hero-actions">',
-      '            <a class="lds-link-btn lds-link-btn-primary" href="' + escapeHtml(config.joinUrl) + '" target="_blank" rel="noopener">' + escapeHtml(config.joinCtaLabel) + '</a>',
-      '            <a class="lds-link-btn lds-btn-soft" href="' + escapeHtml(config.generatorUrl) + '" target="_blank" rel="noopener">' + escapeHtml(config.secondaryCtaLabel) + '</a>',
-      '          </div>',
-      '        </div>',
-      '        <aside class="lds-stats-card">',
-      '          <h2>' + escapeHtml(config.sideTitle) + '</h2>',
-      '          <p>' + escapeHtml(config.sideCopy) + '</p>',
-      '          <div class="lds-stats-list">',
-      '            <div class="lds-stat">' + escapeHtml(config.sideStat1) + '</div>',
-      '            <div class="lds-stat">' + escapeHtml(config.sideStat2) + '</div>',
-      '            <div class="lds-stat">' + escapeHtml(config.sideStat3) + '</div>',
-      '          </div>',
-      '        </aside>',
-      '      </section>',
-      '      <section class="lds-controls-card">',
-      '        <div class="lds-controls-grid">',
-      '          <div class="lds-field">',
-      '            <label for="' + instanceId + '-problem-type">Problem Type</label>',
-      '            <select id="' + instanceId + '-problem-type">',
-      '              <option value="2x1">2-digit by 1-digit</option>',
-      '              <option value="3x1" selected>3-digit by 1-digit</option>',
-      '              <option value="4x1">4-digit by 1-digit</option>',
-      '            </select>',
-      '          </div>',
-      '          <div class="lds-field">',
-      '            <label for="' + instanceId + '-multiples-mode">Display Multiples</label>',
-      '            <select id="' + instanceId + '-multiples-mode">',
-      '              <option value="filled" selected>Yes, show multiples</option>',
-      '              <option value="blank">No, students fill them in</option>',
-      '            </select>',
-      '          </div>',
-      '          <div class="lds-field">',
-      '            <label for="' + instanceId + '-remainder-mode">Remainders</label>',
-      '            <select id="' + instanceId + '-remainder-mode">',
-      '              <option value="allow" selected>Allow remainders</option>',
-      '              <option value="none">No remainders</option>',
-      '            </select>',
-      '          </div>',
-      '          <div class="lds-field">',
-      '            <label for="' + instanceId + '-prompt-mode">Show Step Prompt Values</label>',
-      '            <select id="' + instanceId + '-prompt-mode">',
-      '              <option value="blank" selected>No, students fill in</option>',
-      '              <option value="filled">Yes, show prompt values</option>',
-      '            </select>',
-      '          </div>',
-      '          <div class="lds-field lds-field-wide">',
-      '            <label for="' + instanceId + '-custom-problem">Custom Problem</label>',
-      '            <input id="' + instanceId + '-custom-problem" type="text" placeholder="Examples: 684/6 or 6)684" />',
-      '          </div>',
-      '        </div>',
-      '        <div class="lds-button-row" style="margin-top:14px;">',
-      '          <button id="' + instanceId + '-generate" class="lds-btn lds-btn-primary" type="button">Generate Worksheet</button>',
-      '          <button id="' + instanceId + '-print" class="lds-btn lds-btn-light" type="button">Print</button>',
-      '          <a class="lds-link-btn lds-btn-dark" href="' + escapeHtml(config.joinUrl) + '" target="_blank" rel="noopener">' + escapeHtml(config.joinLabel) + '</a>',
-      '        </div>',
-      '        <div class="lds-note" id="' + instanceId + '-status">Choose your settings, then generate a scaffolded worksheet.</div>',
-      '      </section>',
-      '      <div id="' + instanceId + '-worksheet-host"></div>',
-      '    </main>',
-      '  </div>',
-      '  <div class="lds-preview-lock-banner">',
-      '    <strong>' + escapeHtml(config.previewLabel) + '</strong>',
-      '    <span>' + escapeHtml(config.previewCopy) + '</span>',
-      '    <a href="' + escapeHtml(config.joinUrl) + '" target="_blank" rel="noopener">' + escapeHtml(config.joinLabel) + '</a>',
-      '  </div>',
-      '</div>'
+      '    <div class="lds-controls-card">',
+      '      <section class="lds-controls-top">',
+      '        <div class="lds-type-buttons" id="' + id + '-type-buttons">',
+      '          <button class="lds-type-btn is-active" type="button" data-type="2x1">2-digit by 1-digit</button>',
+      '          <button class="lds-type-btn" type="button" data-type="3x1">3-digit by 1-digit</button>',
+      '          <button class="lds-type-btn" type="button" data-type="4x1">4-digit by 1-digit</button>',
+      "        </div>",
+      "      </section>",
+      '      <div class="lds-controls-grid">',
+      '        <div class="lds-field">',
+      '          <label for="' + id + '-problem-count">Problems</label>',
+      '          <select id="' + id + '-problem-count"></select>',
+      '          <div class="lds-field-hint" id="' + id + '-problem-count-hint"></div>',
+      "        </div>",
+      '        <div class="lds-field">',
+      '          <label for="' + id + '-multiples-mode">Display Multiples</label>',
+      '          <select id="' + id + '-multiples-mode">',
+      '            <option value="filled" selected>Yes (show multiples)</option>',
+      '            <option value="blank">No (students fill in)</option>',
+      "          </select>",
+      "        </div>",
+      '        <div class="lds-field">',
+      '          <label for="' + id + '-step-prompt-mode">Show Step Prompt Values</label>',
+      '          <select id="' + id + '-step-prompt-mode">',
+      '            <option value="blank" selected>No (students fill in)</option>',
+      '            <option value="filled">Yes (show step parts)</option>',
+      "          </select>",
+      "        </div>",
+      '        <div class="lds-field">',
+      '          <label for="' + id + '-remainder-mode">Remainders</label>',
+      '          <select id="' + id + '-remainder-mode">',
+      '            <option value="allow" selected>Allow remainders</option>',
+      '            <option value="none">No remainders (exact only)</option>',
+      "          </select>",
+      "        </div>",
+      '        <div class="lds-field">',
+      '          <label for="' + id + '-color-toggle">Color Coding</label>',
+      '          <label class="lds-checkbox-wrap"><input id="' + id + '-color-toggle" type="checkbox" checked>Use color coding</label>',
+      "        </div>",
+      '        <div class="lds-field">',
+      '          <label for="' + id + '-custom-problem">Custom Problem</label>',
+      '          <input id="' + id + '-custom-problem" type="text" placeholder="Examples: 654/6 or 6)654" />',
+      "        </div>",
+      "      </div>",
+      '      <div class="lds-button-row">',
+      '        <button id="' + id + '-generate" class="lds-btn lds-btn-primary" type="button">Generate</button>',
+      '        <button id="' + id + '-print" class="lds-btn lds-btn-secondary" type="button">Print</button>',
+      "      </div>",
+      '      <div class="lds-note" id="' + id + '-status">Choose settings and generate a worksheet.</div>',
+      "    </div>",
+      '    <div id="' + id + '-worksheet-host"></div>',
+      "  </div>",
+      "</div>"
     ].join("");
 
     const root = mount.querySelector(".lds-root");
     const els = {
-      root: root,
-      host: root.querySelector("#" + instanceId + "-worksheet-host"),
-      problemTypeSelect: root.querySelector("#" + instanceId + "-problem-type"),
-      customProblem: root.querySelector("#" + instanceId + "-custom-problem"),
-      multiplesMode: root.querySelector("#" + instanceId + "-multiples-mode"),
-      stepPromptMode: root.querySelector("#" + instanceId + "-prompt-mode"),
-      remainderMode: root.querySelector("#" + instanceId + "-remainder-mode"),
-      statusText: root.querySelector("#" + instanceId + "-status"),
-      generateBtn: root.querySelector("#" + instanceId + "-generate"),
-      printBtn: root.querySelector("#" + instanceId + "-print")
+      host: root.querySelector("#" + id + "-worksheet-host"),
+      typeButtons: Array.from(root.querySelectorAll("#" + id + "-type-buttons .lds-type-btn")),
+      problemCount: root.querySelector("#" + id + "-problem-count"),
+      problemCountHint: root.querySelector("#" + id + "-problem-count-hint"),
+      customProblem: root.querySelector("#" + id + "-custom-problem"),
+      multiplesMode: root.querySelector("#" + id + "-multiples-mode"),
+      stepPromptMode: root.querySelector("#" + id + "-step-prompt-mode"),
+      remainderMode: root.querySelector("#" + id + "-remainder-mode"),
+      colorToggle: root.querySelector("#" + id + "-color-toggle"),
+      statusText: root.querySelector("#" + id + "-status"),
+      generateBtn: root.querySelector("#" + id + "-generate"),
+      printBtn: root.querySelector("#" + id + "-print")
+    };
+
+    const state = {
+      problemType: config.defaultProblemType || "2x1"
     };
 
     const TYPE_CONFIG = {
@@ -131,15 +101,52 @@
     }
 
     function getTypeConfig() {
-      return TYPE_CONFIG[els.problemTypeSelect.value] || TYPE_CONFIG["3x1"];
+      return TYPE_CONFIG[state.problemType] || TYPE_CONFIG["2x1"];
+    }
+
+    function setProblemType(typeKey) {
+      if (!TYPE_CONFIG[typeKey]) return;
+      state.problemType = typeKey;
+      els.typeButtons.forEach(function (button) {
+        button.classList.toggle("is-active", button.dataset.type === typeKey);
+      });
     }
 
     function getProblemsPerPage(cfg) {
       return cfg.digits >= 3 ? 1 : 2;
     }
 
-    function getTotalProblemCount(cfg) {
-      return getProblemsPerPage(cfg);
+    function populateProblemCountOptions() {
+      const cfg = getTypeConfig();
+      const perPage = getProblemsPerPage(cfg);
+      const previous = Number(els.problemCount.value);
+      let selectedValue = Number.isFinite(previous) ? previous : (perPage === 2 ? 4 : 3);
+      const options = [];
+
+      for (let pages = 1; pages <= 5; pages += 1) {
+        const total = pages * perPage;
+        const label = perPage === 2 ? total + " (2 per page)" : total + " (1 per page)";
+        options.push({ value: total, label: label });
+      }
+
+      if (!options.some(function (option) { return option.value === selectedValue; })) {
+        selectedValue = options[Math.min(2, options.length - 1)].value;
+      }
+
+      els.problemCount.innerHTML = options.map(function (option) {
+        const selected = option.value === selectedValue ? " selected" : "";
+        return '<option value="' + option.value + '"' + selected + ">" + option.label + "</option>";
+      }).join("");
+
+      els.problemCountHint.textContent = perPage === 2
+        ? "2-digit by 1-digit uses 2 problems per page."
+        : "3-digit and 4-digit use 1 problem per page.";
+    }
+
+    function getTotalProblemCount() {
+      const raw = Number(els.problemCount.value);
+      if (!Number.isFinite(raw)) return 1;
+      return Math.max(1, raw);
     }
 
     function parseProblemToken(token, cfg) {
@@ -189,28 +196,43 @@
     function getProblems(cfg, requestedCount) {
       const allowRemainder = els.remainderMode.value === "allow";
       const problemCount = Math.max(1, requestedCount);
-      const customValue = els.customProblem.value.trim();
+      const tokens = els.customProblem.value
+        .split(/[\n,;]+/)
+        .map(function (token) { return token.trim(); })
+        .filter(Boolean);
 
-      if (customValue) {
-        const parsed = parseProblemToken(customValue, cfg);
-        if (!parsed) {
-          return {
-            problems: [],
-            warning: true,
-            message: "Invalid custom problem. Use 684/6 or 6)684."
-          };
+      if (tokens.length > 0) {
+        const parsed = [];
+
+        for (const token of tokens.slice(0, problemCount)) {
+          const problem = parseProblemToken(token, cfg);
+          if (!problem) {
+            return {
+              problems: [],
+              warning: true,
+              message: "Invalid custom problem. Use 654/6 or 6)654."
+            };
+          }
+          parsed.push(problem);
         }
 
-        if (!allowRemainder && (parsed.dividend % parsed.divisor !== 0)) {
+        const problems = new Array(problemCount).fill(0).map(function (_, idx) {
+          const source = parsed[Math.min(idx, parsed.length - 1)];
+          return { dividend: source.dividend, divisor: source.divisor };
+        });
+
+        if (!allowRemainder && problems.some(function (problem) {
+          return (problem.dividend % problem.divisor) !== 0;
+        })) {
           return {
             problems: [],
             warning: true,
-            message: "That custom problem has a remainder. Choose No remainders or change the problem."
+            message: "Custom problem has a remainder. Pick exact division or allow remainders."
           };
         }
 
         return {
-          problems: new Array(problemCount).fill(0).map(function () { return Object.assign({}, parsed); }),
+          problems: problems,
           warning: false,
           message: "Generated custom worksheet."
         };
@@ -228,42 +250,41 @@
     }
 
     function digitBoxesWithTones(text, tones, showValues) {
-      const chars = String(text).split("");
-      return chars.map(function (ch, idx) {
+      return String(text).split("").map(function (char, idx) {
         const tone = tones[Math.min(idx, tones.length - 1)] || "lds-tone-0";
-        return '<span class="lds-digit-box lds-small ' + tone + '">' + (showValues ? escapeHtml(ch) : "&nbsp;") + "</span>";
+        return '<span class="lds-digit-box lds-small ' + tone + '">' + (showValues ? char : "&nbsp;") + "</span>";
       }).join("");
     }
 
-    function rightAlignChars(value, len) {
+    function rightAlignChars(value, length) {
       const chars = String(value).split("");
-      const out = new Array(len).fill("&nbsp;");
-      let k = len - 1;
-      for (let i = chars.length - 1; i >= 0 && k >= 0; i -= 1) {
-        out[k] = chars[i];
-        k -= 1;
+      const output = new Array(length).fill("&nbsp;");
+      let cursor = length - 1;
+      for (let i = chars.length - 1; i >= 0 && cursor >= 0; i -= 1) {
+        output[cursor] = chars[i];
+        cursor -= 1;
       }
-      return out;
+      return output;
     }
 
-    function canvasBox(row, col, cls, value) {
+    function canvasBox(row, col, className, value) {
       const safeValue = value == null ? "&nbsp;" : value;
-      return '<div class="lds-canvas-box ' + cls + '" style="grid-row:' + row + ';grid-column:' + col + ';">' + safeValue + "</div>";
+      return '<div class="lds-canvas-box ' + className + '" style="grid-row:' + row + ";grid-column:" + col + ';">' + safeValue + "</div>";
     }
 
     function computeLongDivisionSteps(dividend, divisor) {
-      const digits = String(dividend).split("").map(function (d) { return Number(d); });
+      const digits = String(dividend).split("").map(Number);
       const steps = [];
       let current = 0;
 
-      function toneFor(idx) {
-        return "lds-tone-" + (idx % 4);
+      function toneFor(index) {
+        return "lds-tone-" + (index % 4);
       }
 
       for (let i = 0; i < digits.length; i += 1) {
         current = (current * 10) + digits[i];
-        const qDigit = Math.floor(current / divisor);
-        const product = qDigit * divisor;
+        const quotientDigit = Math.floor(current / divisor);
+        const product = quotientDigit * divisor;
         const remainder = current - product;
         const nextDigit = i < digits.length - 1 ? digits[i + 1] : null;
         const nextPartial = nextDigit === null ? remainder : (remainder * 10) + nextDigit;
@@ -275,7 +296,7 @@
           tone: toneFor(i),
           partialDisplay: partialDisplay,
           partialDigitTones: partialDigitTones,
-          quotientDigit: qDigit,
+          quotientDigit: quotientDigit,
           product: product,
           remainder: remainder,
           nextPartial: nextPartial
@@ -292,10 +313,10 @@
     }
 
     function renderProblemCanvas(problem, stepsData, cfg, showAnswers, showRemainderHeader) {
-      const n = cfg.digits;
-      const rows = (2 * n) + 2;
+      const digits = cfg.digits;
+      const rows = (2 * digits) + 2;
       const firstDigitCol = 3;
-      const remLabelCol = firstDigitCol + n;
+      const remLabelCol = firstDigitCol + digits;
       const remCol = remLabelCol + 1;
       const dividendDigits = String(problem.dividend).split("");
       const chunks = [];
@@ -304,7 +325,7 @@
         return "lds-tone-" + (Math.max(0, lane) % 4);
       }
 
-      for (let i = 0; i < n; i += 1) {
+      for (let i = 0; i < digits; i += 1) {
         const qVal = showAnswers ? stepsData.quotientDigits[i] : "&nbsp;";
         chunks.push(canvasBox(1, firstDigitCol + i, toneForLane(i), qVal));
       }
@@ -316,18 +337,18 @@
 
       chunks.push(canvasBox(2, 2, "lds-divisor", problem.divisor));
 
-      for (let i = 0; i < n; i += 1) {
+      for (let i = 0; i < digits; i += 1) {
         chunks.push(canvasBox(2, firstDigitCol + i, toneForLane(i), dividendDigits[i]));
       }
 
-      chunks.push('<div class="lds-division-top-line" style="grid-row:2;grid-column:' + firstDigitCol + " / " + (firstDigitCol + n) + ';"></div>');
+      chunks.push('<div class="lds-division-top-line" style="grid-row:2;grid-column:' + firstDigitCol + " / " + (firstDigitCol + digits) + ';"></div>');
       chunks.push('<div class="lds-division-left-line" style="grid-row:2;grid-column:' + firstDigitCol + ';"></div>');
 
       let row = 3;
 
       for (let i = 0; i < stepsData.steps.length; i += 1) {
         const step = stepsData.steps[i];
-        const startDigit = i === 0 ? 0 : Math.min(i - 1, n - 2);
+        const startDigit = i === 0 ? 0 : Math.min(i - 1, digits - 2);
         const startCol = firstDigitCol + startDigit;
         const productLen = i === 0 ? 1 : 2;
 
@@ -344,21 +365,22 @@
           const bringStartLane = startDigit + (productLen - 1);
           const bringStartCol = firstDigitCol + bringStartLane;
           const bringChars = showAnswers ? rightAlignChars(step.nextPartial, 2) : ["&nbsp;", "&nbsp;"];
+          const arrowTone = (bringStartLane + 1) % 4;
 
           chunks.push(canvasBox(row, bringStartCol, toneForLane(bringStartLane), bringChars[0]));
-          chunks.push(canvasBox(row, bringStartCol + 1, toneForLane(Math.min(bringStartLane + 1, n - 1)), bringChars[1]));
-          chunks.push('<div class="lds-down-arrow" style="grid-row:' + (row - 1) + ";grid-column:" + (bringStartCol + 1) + ';"></div>');
+          chunks.push(canvasBox(row, bringStartCol + 1, toneForLane(Math.min(bringStartLane + 1, digits - 1)), bringChars[1]));
+          chunks.push('<div class="lds-down-arrow lds-arrow-' + arrowTone + '" style="grid-row:' + (row - 1) + ";grid-column:" + (bringStartCol + 1) + ';"></div>');
           row += 1;
         } else {
-          const remChars = showAnswers ? rightAlignChars(stepsData.finalRemainder, 2) : ["&nbsp;", "&nbsp;"];
-          chunks.push(canvasBox(row, startCol, "", remChars[0]));
-          chunks.push(canvasBox(row, startCol + 1, "", remChars[1]));
+          const remainderChars = showAnswers ? rightAlignChars(stepsData.finalRemainder, 2) : ["&nbsp;", "&nbsp;"];
+          chunks.push(canvasBox(row, startCol, "", remainderChars[0]));
+          chunks.push(canvasBox(row, startCol + 1, "", remainderChars[1]));
         }
       }
 
       return [
         '<div class="lds-problem-canvas-wrap">',
-        '  <div class="lds-problem-canvas" style="--digits:' + n + ";--rows:" + rows + ';">',
+        '  <div class="lds-problem-canvas' + (showRemainderHeader ? "" : " lds-no-remainder") + '" style="--digits:' + digits + ";--rows:" + rows + ';">',
         chunks.join(""),
         "  </div>",
         "</div>"
@@ -369,14 +391,14 @@
       let cells = "";
       for (let i = 0; i <= 10; i += 1) {
         const value = mode === "filled" ? String(divisor * i) : "&nbsp;";
-        cells += '<td class="lds-multiple-cell ' + tone + '">' + value + "</td>";
+        cells += '<td class="' + tone + '">' + value + "</td>";
       }
       return cells;
     }
 
     function renderStepStrip(step, problem, multiplesMode, showPromptValues) {
-      const headers = new Array(11).fill(0).map(function (_, i) {
-        return '<th class="lds-tone-head ' + step.tone + '">x' + i + "</th>";
+      const headers = new Array(11).fill(0).map(function (_, index) {
+        return '<th class="lds-tone-head ' + step.tone + '">x' + index + "</th>";
       }).join("");
       const divisorValue = showPromptValues ? problem.divisor : "&nbsp;";
 
@@ -384,7 +406,7 @@
         '<section class="lds-strip">',
         '  <div class="lds-strip-head">',
         '    <div class="lds-strip-label ' + step.tone + '">Step ' + (step.index + 1) + "</div>",
-        '    <p class="lds-strip-question">How many times does <span class="lds-digit-box lds-small">' + divisorValue + '</span> go into <span class="lds-target-digits">' + digitBoxesWithTones(step.partialDisplay, step.partialDigitTones, showPromptValues) + "</span> evenly or without going over?</p>",
+        '    <p class="lds-strip-question">How many times does <span class="lds-digit-box lds-small lds-divisor-fixed">' + divisorValue + '</span> go into <span class="lds-target-digits">' + digitBoxesWithTones(step.partialDisplay, step.partialDigitTones, showPromptValues) + '</span> evenly or without going over?</p>',
         "  </div>",
         '  <table class="lds-strip-table" aria-label="Step multiples strip">',
         "    <thead><tr>" + headers + "</tr></thead>",
@@ -404,7 +426,7 @@
         sheet.style.transform = "";
         sheet.style.transformOrigin = "";
 
-        if (window.innerWidth <= 1100) return;
+        if (window.innerWidth <= 900) return;
 
         const available = wrap.clientWidth - 8;
         const sheetWidth = sheet.offsetWidth;
@@ -429,18 +451,16 @@
       });
     }
 
-    function blockedPreviewAction() {
-      window.alert(config.printLockedMessage);
-    }
-
     function renderWorksheet() {
       const cfg = getTypeConfig();
-      const totalProblemCount = getTotalProblemCount(cfg);
       const perPage = getProblemsPerPage(cfg);
+      const totalProblemCount = getTotalProblemCount();
+      const setCount = Math.max(1, Math.ceil(totalProblemCount / perPage));
       const source = getProblems(cfg, totalProblemCount);
+      const colorClass = els.colorToggle.checked ? "lds-color-fill" : "lds-no-color";
 
       els.statusText.textContent = source.message;
-      els.statusText.style.color = source.warning ? "#a33a3a" : "#5c7189";
+      els.statusText.style.color = source.warning ? "#a33a3a" : "#5a677f";
 
       if (!source.problems || source.problems.length === 0) {
         els.host.innerHTML = "";
@@ -451,8 +471,7 @@
       const showPromptValues = els.stepPromptMode.value === "filled";
       const showRemainderHeader = els.remainderMode.value === "allow";
 
-      const sheets = [];
-      for (let pageIndex = 0; pageIndex < Math.ceil(source.problems.length / perPage); pageIndex += 1) {
+      const sheets = new Array(setCount).fill(0).map(function (_, pageIndex) {
         const pageProblems = source.problems.slice(pageIndex * perPage, (pageIndex + 1) * perPage);
         const organizerBlocks = pageProblems.map(function (problem) {
           const stepsData = computeLongDivisionSteps(problem.dividend, problem.divisor);
@@ -461,89 +480,88 @@
           }).join("");
 
           return [
-            '<section class="lds-organizer">',
-            "  <section>",
-            '    <div class="lds-problem-equation">' + problem.dividend + " &divide; " + problem.divisor + "</div>",
-            '    <div class="lds-workspace">' + renderProblemCanvas(problem, stepsData, cfg, showAnswers, showRemainderHeader) + "</div>",
+            '<section class="lds-organizer-block">',
+            '  <section class="lds-organizer">',
+            '    <section class="lds-left-column">',
+            '      <div class="lds-problem-equation">' + problem.dividend + " &divide; " + problem.divisor + "</div>",
+            '      <div class="lds-workspace">',
+            '        <div class="lds-workspace-layout">',
+            renderProblemCanvas(problem, stepsData, cfg, showAnswers, showRemainderHeader),
+            "        </div>",
+            "      </div>",
+            "    </section>",
+            '    <section class="lds-right-column">' + strips + "</section>",
             "  </section>",
-            "  <section>" + strips + "</section>",
             "</section>"
           ].join("");
         }).join("");
 
-        sheets.push([
+        return [
           '<div class="lds-sheet-scale-wrap">',
-          '  <section class="lds-sheet" data-watermark="' + escapeHtml(config.watermarkText) + '">',
+          '  <section class="lds-sheet ' + colorClass + '">',
           '    <header class="lds-sheet-header">',
-          '      <h2 class="lds-sheet-title">' + escapeHtml(config.worksheetTitle) + " (" + escapeHtml(cfg.label) + ")</h2>",
+          '      <h2 class="lds-sheet-title">' + config.worksheetTitle + " (" + cfg.label + ")</h2>",
           '      <div class="lds-name-line">Name:<span class="lds-line"></span></div>',
           "    </header>",
-          '    <section class="lds-two-up">' + organizerBlocks + "</section>",
-          '    <div class="lds-footer-note">' + escapeHtml(config.footerNote) + "</div>",
+          '    <section class="lds-two-up' + (perPage === 1 ? " lds-single" : "") + '">',
+          organizerBlocks,
+          "    </section>",
+          '    <div class="lds-footer-note">' + config.footerNote + "</div>",
           "  </section>",
           "</div>"
-        ].join(""));
-      }
+        ].join("");
+      }).join("");
 
-      els.host.innerHTML = sheets.join("");
+      els.host.innerHTML = sheets;
       fitSheetsToWidth();
     }
 
-    els.generateBtn.addEventListener("click", renderWorksheet);
-    els.problemTypeSelect.addEventListener("change", renderWorksheet);
-    els.multiplesMode.addEventListener("change", renderWorksheet);
-    els.remainderMode.addEventListener("change", renderWorksheet);
-    els.stepPromptMode.addEventListener("change", renderWorksheet);
-    els.customProblem.addEventListener("change", renderWorksheet);
-    els.customProblem.addEventListener("input", function () {
-      if (els.customProblem.value.trim().length === 0) renderWorksheet();
+    els.typeButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        setProblemType(button.dataset.type);
+        populateProblemCountOptions();
+        renderWorksheet();
+      });
     });
 
+    els.generateBtn.addEventListener("click", renderWorksheet);
+    els.problemCount.addEventListener("change", renderWorksheet);
+    els.multiplesMode.addEventListener("change", renderWorksheet);
+    els.stepPromptMode.addEventListener("change", renderWorksheet);
+    els.remainderMode.addEventListener("change", renderWorksheet);
+    els.colorToggle.addEventListener("change", renderWorksheet);
+    els.customProblem.addEventListener("input", function () {
+      window.clearTimeout(renderWorksheet._timer);
+      renderWorksheet._timer = window.setTimeout(renderWorksheet, 180);
+    });
+    els.customProblem.addEventListener("change", renderWorksheet);
     els.printBtn.addEventListener("click", function () {
-      if (config.previewSecure) {
-        blockedPreviewAction();
-        return;
-      }
       window.print();
     });
+
+    setProblemType(state.problemType);
+    populateProblemCountOptions();
+    renderWorksheet();
 
     window.addEventListener("resize", fitSheetsToWidth);
     window.addEventListener("beforeprint", resetSheetsForPrint);
     window.addEventListener("afterprint", fitSheetsToWidth);
-
-    renderWorksheet();
   }
 
   const config = Object.assign({
     mountId: "long-division-scaffold",
-    joinUrl: "https://teachwithmrc.github.io/site-preview-march3rd/home-preview.html#join",
-    generatorUrl: "https://teachwithmrc.github.io/finaldivision.html",
-    previewSecure: true,
-    topbarLabel: "TeachWithMrC Long Division Scaffold Preview",
-    joinLabel: "Join Membership",
-    eyebrow: "Math Intervention Generator",
-    headline: "Scaffolded Long Division Graphic Organizer",
-    subheadline: "This version is hosted directly on your website, while the call-to-action links can still point back to TeachWithMRC.",
-    joinCtaLabel: "Join on TeachWithMRC",
-    secondaryCtaLabel: "View Original Page",
-    sideTitle: "What this page does",
-    sideCopy: "The page stays on your site, while the main membership links still send visitors to TeachWithMRC.",
-    sideStat1: "No iframe needed",
-    sideStat2: "Hosted CSS and JS live on TeachWithMRC",
-    sideStat3: "Generate button works on-page",
-    previewLabel: "Preview Mode",
-    previewCopy: "Printing can stay locked here if you want this to function like a preview page.",
-    printLockedMessage: "Printing is locked in preview mode. Send users to TeachWithMRC to unlock full access.",
+    title: "Long Division Color-Coded Organizer Generator",
+    subtitle: "Generate scaffolded long division worksheets directly on the page.",
+    defaultProblemType: "2x1",
     worksheetTitle: "Long Division Color-Coded Step Organizer",
-    watermarkText: "PREVIEW MODE",
-    footerNote: "Hosted on your website. Membership links point to TeachWithMRC."
+    footerNote: "Long Division Scaffold Generator - @TeachwithMrC"
   }, window.LongDivisionScaffoldConfig || {});
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
-      renderApp(config);
+      render(config);
     });
   } else {
-    renderApp(config);
+    render(config);
   }
 })();

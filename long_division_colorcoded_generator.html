@@ -83,54 +83,9 @@
 
     .controls-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
       align-items: end;
-    }
-
-    .controls-top {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 10px;
-    }
-
-    body.preview-locked .controls-top {
-      align-items: center;
-      text-align: center;
-    }
-
-    .type-buttons {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-    }
-
-    body.preview-locked .type-buttons {
-      grid-template-columns: minmax(0, 1fr);
-      max-width: 260px;
-      margin: 0 auto;
-    }
-
-    body.preview-locked .type-buttons .type-btn:not([data-type="3x1"]) {
-      display: none;
-    }
-
-    .type-btn {
-      border: 2px solid #1f2b3e;
-      border-radius: 10px;
-      background: #fff;
-      color: #1f2b3e;
-      font-size: 0.9rem;
-      font-weight: 700;
-      padding: 8px 10px;
-      cursor: pointer;
-      line-height: 1.2;
-    }
-
-    .type-btn.active {
-      background: #1f2b3e;
-      color: #fff;
     }
 
     .field {
@@ -174,7 +129,7 @@
     }
 
     .field.custom-problem {
-      grid-column: 2;
+      grid-column: span 2;
     }
 
     .checkbox-wrap {
@@ -746,10 +701,6 @@
         grid-template-columns: 1fr;
       }
 
-      .type-buttons {
-        grid-template-columns: 1fr;
-      }
-
       .field.custom-problem {
         grid-column: auto;
       }
@@ -994,17 +945,16 @@
       <p class="subtitle">Your right-side step-strip format with matching color logic</p>
 
       <section class="controls-card">
-        <div class="controls-top">
-          <label class="field-hint" for="problemType">Problem Type</label>
-          <div class="type-buttons" id="problemTypeButtons" role="group" aria-label="Problem type">
-            <button class="type-btn active" type="button" data-type="2x1">2-digit by 1-digit</button>
-            <button class="type-btn" type="button" data-type="3x1">3-digit by 1-digit</button>
-            <button class="type-btn" type="button" data-type="4x1">4-digit by 1-digit</button>
-          </div>
-          <input id="problemType" type="hidden" value="2x1" />
-        </div>
-
         <div class="controls-grid">
+          <div class="field">
+            <label for="problemType">Problem Type</label>
+            <select id="problemType">
+              <option value="2x1" selected>2-digit by 1-digit</option>
+              <option value="3x1">3-digit by 1-digit</option>
+              <option value="4x1">4-digit by 1-digit</option>
+            </select>
+          </div>
+
           <div class="field">
             <label for="problemSetCount">Total Problems</label>
             <select id="problemSetCount"></select>
@@ -1063,7 +1013,6 @@
     const els = {
       host: document.getElementById("worksheetHost"),
       problemType: document.getElementById("problemType"),
-      problemTypeButtons: Array.from(document.querySelectorAll(".type-btn")),
       problemSetCount: document.getElementById("problemSetCount"),
       problemCountHint: document.getElementById("problemCountHint"),
       customProblem: document.getElementById("customProblem"),
@@ -1090,14 +1039,6 @@
 
     function getTypeConfig() {
       return TYPE_CONFIG[els.problemType.value] || TYPE_CONFIG["2x1"];
-    }
-
-    function setProblemType(typeKey) {
-      if (!TYPE_CONFIG[typeKey]) return;
-      els.problemType.value = typeKey;
-      els.problemTypeButtons.forEach((btn) => {
-        btn.classList.toggle("active", btn.dataset.type === typeKey);
-      });
     }
 
     function getProblemsPerPage(cfg) {
@@ -1135,12 +1076,8 @@
     function applyPreviewLockdown() {
       if (!PREVIEW_MODE) return;
       document.body.classList.add("preview-locked");
-      els.problemTypeButtons.forEach((btn) => {
-        if (btn.dataset.type !== "3x1") {
-          btn.disabled = true;
-          btn.setAttribute("aria-disabled", "true");
-        }
-      });
+      els.problemType.value = "3x1";
+      els.problemType.disabled = true;
       els.multiplesMode.value = "blank";
       els.stepPromptMode.value = "blank";
       els.remainderMode.value = "allow";
@@ -1516,12 +1453,9 @@
     }
 
     els.generateBtn.addEventListener("click", renderWorksheet);
-    els.problemTypeButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        setProblemType(btn.dataset.type);
-        populateProblemCountOptions();
-        renderWorksheet();
-      });
+    els.problemType.addEventListener("change", () => {
+      populateProblemCountOptions();
+      renderWorksheet();
     });
     [els.problemSetCount, els.multiplesMode, els.stepPromptMode, els.remainderMode].forEach((el) => {
       el.addEventListener("change", renderWorksheet);
@@ -1535,7 +1469,6 @@
       document.body.classList.add("preview-locked");
       els.problemType.value = "3x1";
     }
-    setProblemType(els.problemType.value || "2x1");
     populateProblemCountOptions();
     applyPreviewLockdown();
     renderWorksheet();
