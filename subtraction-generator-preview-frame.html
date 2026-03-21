@@ -292,6 +292,14 @@
       border-bottom: 2px solid #cfd6e3;
     }
 
+    .sheet.layout-9 .problem-wrap {
+      --cell-size: 42px;
+      --cell-gap: 4px;
+      --op-width: 28px;
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+
     .problem-top {
       display: flex;
       align-items: center;
@@ -336,6 +344,21 @@
       font-size: 1.4rem;
       font-weight: 800;
       letter-spacing: 0.2px;
+    }
+
+    .sheet.layout-9 .problem-head {
+      padding: 6px 8px;
+      font-size: 0.88rem;
+    }
+
+    .sheet.layout-9 .problem-badge {
+      width: 22px;
+      height: 22px;
+      font-size: 0.72rem;
+    }
+
+    .sheet.layout-9 .problem-text {
+      font-size: 1.15rem;
     }
 
     .problem-dot {
@@ -658,7 +681,7 @@
   </div>
 
   <script>
-    const PROBLEMS_PER_PAGE = 6;
+    const ROWS_PER_PAGE = 3;
 
     const els = {
       host: document.getElementById("worksheetHost"),
@@ -752,7 +775,7 @@
       }
     }
 
-    function buildProblems(aDigits, bDigits, mode, customRaw, requireBorrowing) {
+    function buildProblems(aDigits, bDigits, mode, customRaw, requireBorrowing, problemsPerPage) {
       const problems = [];
       let warning = false;
       let message = "Generated random problems.";
@@ -760,7 +783,7 @@
       if (mode === "custom") {
         const custom = parseCustomList(customRaw, aDigits, bDigits, requireBorrowing);
 
-        for (let i = 0; i < PROBLEMS_PER_PAGE; i += 1) {
+        for (let i = 0; i < problemsPerPage; i += 1) {
           if (custom[i]) {
             problems.push(custom[i]);
           } else {
@@ -771,19 +794,29 @@
         if (custom.length === 0) {
           warning = true;
           message = `No valid custom problems for ${aDigits}-${bDigits} digits ${requireBorrowing ? "with borrowing" : "without borrowing"} (minuend must be greater). Used random problems.`;
-        } else if (custom.length < PROBLEMS_PER_PAGE) {
+        } else if (custom.length < problemsPerPage) {
           warning = true;
           message = `Used ${custom.length} custom problem(s), filled the rest with random.`;
         } else {
           message = "Generated custom problems.";
         }
       } else {
-        for (let i = 0; i < PROBLEMS_PER_PAGE; i += 1) {
+        for (let i = 0; i < problemsPerPage; i += 1) {
           problems.push(randomSubtractionProblem(aDigits, bDigits, requireBorrowing));
         }
       }
 
       return { problems, message, warning };
+    }
+
+    function getLayoutConfig(totalCols) {
+      const problemsPerRow = totalCols <= 4 ? 3 : 2;
+      const problemsPerPage = problemsPerRow * ROWS_PER_PAGE;
+      return {
+        problemsPerRow,
+        problemsPerPage,
+        layoutLabel: `${problemsPerPage} problems per page (${ROWS_PER_PAGE} rows x ${problemsPerRow})`
+      };
     }
 
     function cellStyleByColumn(colIndex, totalCols, colorOn) {
@@ -883,25 +916,26 @@
       const requireBorrowing = els.requireBorrowing.checked;
       const title = (els.sheetTitle.value || "").trim() || "Subtraction Graphic Organizer";
       const safeBDigits = Math.min(rawBDigits, aDigits);
+      const totalCols = Math.max(aDigits, safeBDigits);
+      const layout = getLayoutConfig(totalCols);
       const adjustedDigits = safeBDigits !== rawBDigits;
       if (adjustedDigits) els.digitsB.value = String(safeBDigits);
 
-      const built = buildProblems(aDigits, safeBDigits, mode, els.customProblem.value, requireBorrowing);
-      const totalCols = Math.max(aDigits, safeBDigits);
+      const built = buildProblems(aDigits, safeBDigits, mode, els.customProblem.value, requireBorrowing, layout.problemsPerPage);
       const cfgLabel = `${aDigits}-digit - ${safeBDigits}-digit`;
 
-      els.statusText.textContent = `${built.message} ${requireBorrowing ? "Borrowing problems only." : "No borrowing problems."}${adjustedDigits ? ` Subtrahend digits adjusted to ${safeBDigits} so top number stays larger.` : ""} Layout: 6 problems per page (3 rows x 2, ${cfgLabel}).`;
+      els.statusText.textContent = `${built.message} ${requireBorrowing ? "Borrowing problems only." : "No borrowing problems."}${adjustedDigits ? ` Subtrahend digits adjusted to ${safeBDigits} so top number stays larger.` : ""} Layout: ${layout.layoutLabel} (${cfgLabel}).`;
       els.statusText.style.color = built.warning ? "#a33a3a" : "#5a677f";
       els.customProblem.placeholder = `Example: ${"8".repeat(aDigits)}-${"7".repeat(safeBDigits)}, ${"6".repeat(aDigits)}-${"5".repeat(safeBDigits)}, ${"4".repeat(aDigits)}-${"3".repeat(safeBDigits)}`;
 
       els.host.innerHTML = `
-        <section class="sheet ${colorOn ? "" : "no-color"}">
+        <section class="sheet layout-${layout.problemsPerPage} ${colorOn ? "" : "no-color"}">
           <header class="sheet-header">
             <h2 class="sheet-title">${title}</h2>
             <div class="name-line">Name:<span class="line"></span></div>
           </header>
 
-          <div class="problems">
+          <div class="problems" style="grid-template-columns: repeat(${layout.problemsPerRow}, minmax(0, 1fr));">
             ${built.problems.map((p, i) => problemHtml(p, i, totalCols, showEq, colorOn, scaffoldOn, aDigits, safeBDigits)).join("")}
           </div>
 

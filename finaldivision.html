@@ -873,6 +873,59 @@
         width:100%;
       }
     }
+    @media print{
+      html, body{
+        background:#fff !important;
+      }
+      .top-cta-wrap,
+      .is-ticker,
+      .is-nav,
+      .hero-card,
+      .review-section,
+      .controls-card,
+      .preview-lock-banner{
+        display:none !important;
+      }
+      .is-home-sections,
+      .is-wrap,
+      .is-layout,
+      .is-main,
+      .is-page{
+        width:auto !important;
+        max-width:none !important;
+        margin:0 !important;
+        padding:0 !important;
+        border:0 !important;
+        box-shadow:none !important;
+        background:#fff !important;
+      }
+      .sheet-scale-wrap{
+        display:block !important;
+        overflow:visible !important;
+        height:auto !important;
+        margin:0 !important;
+        break-inside:avoid;
+        page-break-inside:avoid;
+      }
+      .sheet-scale-wrap + .sheet-scale-wrap{
+        margin-top:0 !important;
+      }
+      .sheet{
+        width:11in !important;
+        min-height:8.5in !important;
+        margin:0 !important;
+        border:0 !important;
+        border-radius:0 !important;
+        box-shadow:none !important;
+        transform:none !important;
+        break-after:page;
+        page-break-after:always;
+      }
+      .sheet-scale-wrap:last-child .sheet{
+        break-after:auto;
+        page-break-after:auto;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1494,6 +1547,17 @@
       alert("This feature is locked in Preview Mode.\nPlease join membership for full worksheet access.");
     }
 
+    function resetSheetsForPrint() {
+      const wraps = Array.from(document.querySelectorAll(".sheet-scale-wrap"));
+      wraps.forEach((wrap) => {
+        wrap.style.height = "auto";
+        const sheet = wrap.querySelector(".sheet");
+        if (!sheet) return;
+        sheet.style.transform = "none";
+        sheet.style.transformOrigin = "";
+      });
+    }
+
     function blockShortcuts(event) {
       const blocked = (event.ctrlKey || event.metaKey) && ["p", "s", "u"].includes(String(event.key || "").toLowerCase());
       if (blocked) {
@@ -1542,6 +1606,8 @@
     if (PREVIEW_SECURE) enablePreviewSecure();
     renderWorksheet();
     window.addEventListener("resize", fitSheetsToWidth);
+    window.addEventListener("beforeprint", resetSheetsForPrint);
+    window.addEventListener("afterprint", fitSheetsToWidth);
 
     const previewBanner = document.createElement("div");
     previewBanner.className = "preview-lock-banner";
