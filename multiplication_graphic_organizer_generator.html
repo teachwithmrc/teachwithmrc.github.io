@@ -61,11 +61,17 @@
       margin-bottom: 12px;
     }
 
-    .controls-grid {
+    .controls-layout {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .controls-column {
+      display: grid;
       gap: 10px;
-      align-items: end;
+      min-width: 0;
     }
 
     .field {
@@ -120,7 +126,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
     .button-row button {
@@ -423,6 +429,10 @@
     }
 
     @media (max-width: 980px) {
+      .controls-layout {
+        grid-template-columns: 1fr;
+      }
+
       .sheet {
         width: 100%;
         min-height: 0;
@@ -568,46 +578,49 @@
       <p class="subtitle">Standard algorithm organizer with 2x1, 2x2, 3x1, 4x1, and 3x2 problem types</p>
 
       <section class="controls-card">
-        <div class="controls-grid">
-          <div class="field">
-            <label for="problemType">Problem Type</label>
-            <select id="problemType">
-              <option value="2x1" selected>2 x 1</option>
-              <option value="2x2">2 x 2</option>
-              <option value="3x1">3 x 1</option>
-              <option value="4x1">4 x 1</option>
-              <option value="3x2">3 x 2</option>
-            </select>
+        <div class="controls-layout">
+          <div class="controls-column">
+            <div class="field">
+              <label for="problemType">Problem Type</label>
+              <select id="problemType">
+                <option value="2x1" selected>2 x 1</option>
+                <option value="2x2">2 x 2</option>
+                <option value="3x1">3 x 1</option>
+                <option value="4x1">4 x 1</option>
+                <option value="3x2">3 x 2</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="problemMode">Problem Source</label>
+              <select id="problemMode">
+                <option value="random" selected>Random problems</option>
+                <option value="custom">Custom problems</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="customProblem">Custom Problems (up to 8 for 2x1, otherwise 6)</label>
+              <input id="customProblem" type="text" placeholder="Example: 76x4, 58x9, 43x7, 91x8, 67x5, 84x6" />
+            </div>
           </div>
 
-          <div class="field">
-            <label for="problemMode">Problem Source</label>
-            <select id="problemMode">
-              <option value="random" selected>Random problems</option>
-              <option value="custom">Custom problems</option>
-            </select>
-          </div>
+          <div class="controls-column">
+            <div class="field">
+              <label for="sheetTitle">Worksheet Title</label>
+              <input id="sheetTitle" type="text" value="Multiplication Graphic Organizer" />
+            </div>
 
-          <div class="field">
-            <label for="customProblem">Custom Problems (up to 8 for 2x1, otherwise 6)</label>
-            <input id="customProblem" type="text" placeholder="Example: 76x4, 58x9, 43x7, 91x8, 67x5, 84x6" />
-          </div>
+            <div class="field">
+              <label>Color Coding</label>
+              <label class="checkbox-wrap"><input id="colorToggle" type="checkbox" checked />Use faint place-value colors</label>
+            </div>
 
-          <div class="field">
-            <label for="sheetTitle">Worksheet Title</label>
-            <input id="sheetTitle" type="text" value="Multiplication Graphic Organizer" />
+            <div class="field">
+              <label>Scaffold Version</label>
+              <label class="checkbox-wrap"><input id="scaffoldToggle" type="checkbox" />Fill multiplicand and multiplier boxes</label>
+            </div>
           </div>
-
-          <div class="field">
-            <label>Color Coding</label>
-            <label class="checkbox-wrap"><input id="colorToggle" type="checkbox" checked />Use faint place-value colors</label>
-          </div>
-
-          <div class="field">
-            <label>Scaffold Version</label>
-            <label class="checkbox-wrap"><input id="scaffoldToggle" type="checkbox" />Fill multiplicand/multiplier numbers in table boxes</label>
-          </div>
-
         </div>
 
         <div class="button-row">
