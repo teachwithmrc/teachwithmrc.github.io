@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Divide 2 Digit by 1 Digit Organizer</title>
   <style>
     * { box-sizing: border-box; }
@@ -289,6 +290,94 @@
       border-radius: 2px;
       border: 1px solid #000;
       background: #fff;
+    }
+
+    @media (max-width: 768px) {
+      .page {
+        padding: 14px 10px 18px;
+      }
+
+      h1 {
+        font-size: 1.1rem;
+      }
+
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .controls label,
+      .controls button,
+      input[type="number"],
+      select {
+        width: 100%;
+      }
+
+      input[type="number"],
+      select,
+      button {
+        min-height: 42px;
+        font-size: 1rem;
+      }
+
+      .top-row,
+      .main-area {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .problem-equation,
+      .steps-checklist {
+        text-align: center;
+      }
+
+      .left-panel,
+      .right-panel {
+        width: 100%;
+      }
+
+      .left-panel {
+        justify-content: center;
+      }
+
+      .ld-grid-wrapper {
+        grid-template-columns: 34px 34px 34px 34px;
+        grid-template-rows: repeat(6, 34px);
+        column-gap: 6px;
+        row-gap: 6px;
+        justify-content: center;
+      }
+
+      .ld-box {
+        width: 30px;
+        height: 30px;
+        font-size: 1rem;
+      }
+
+      .minus-cell,
+      .text-cell {
+        font-size: 1.2rem;
+      }
+
+      .arrow-cell {
+        font-size: 1.6rem;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .page {
+        padding-inline: 8px;
+      }
+
+      .organizer {
+        padding: 10px;
+      }
+
+      .ld-grid-wrapper {
+        transform: scale(0.92);
+        transform-origin: top center;
+      }
     }
 
     @media print {
