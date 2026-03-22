@@ -138,21 +138,27 @@
         const html = doc.documentElement;
         const body = doc.body;
 
+        const measuredWidth = Math.max(
+          html.scrollWidth,
+          html.offsetWidth,
+          html.clientWidth,
+          body.scrollWidth,
+          body.offsetWidth,
+          body.clientWidth
+        );
+
+        const measuredHeight = Math.max(
+          html.scrollHeight,
+          html.offsetHeight,
+          html.clientHeight,
+          body.scrollHeight,
+          body.offsetHeight,
+          body.clientHeight
+        );
+
         return {
-          width: Math.max(
-            item.width,
-            html.scrollWidth,
-            html.offsetWidth,
-            body.scrollWidth,
-            body.offsetWidth
-          ),
-          height: Math.max(
-            item.height,
-            html.scrollHeight,
-            html.offsetHeight,
-            body.scrollHeight,
-            body.offsetHeight
-          )
+          width: measuredWidth || item.width,
+          height: measuredHeight || item.height
         };
       } catch (_error) {
         return item;
