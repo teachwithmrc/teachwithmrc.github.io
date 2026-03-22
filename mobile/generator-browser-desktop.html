@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Intervention Station | Desktop Generator Browser</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./generator-browser-desktop.css">
+</head>
+<body>
+  <section class="desktop-generator-browser-page" aria-label="Intervention Station Desktop Generator Browser">
+    <main class="de-page">
+      <section class="de-shell">
+        <header class="de-header">
+          <p class="de-kicker">Desktop Generator Browser</p>
+          <h1>Preview Stable Reading and Math Generators</h1>
+          <p class="de-copy">Choose Reading or Math, then load a working generator preview sized for desktop browsing.</p>
+        </header>
+
+        <section class="de-browser">
+          <div class="de-controls">
+            <div class="de-switch" role="tablist" aria-label="Generator subjects">
+              <button class="de-subject is-active" type="button" data-subject="reading">Reading</button>
+              <button class="de-subject" type="button" data-subject="math">Math</button>
+            </div>
+
+            <section class="de-group is-active" data-subject-panel="reading" aria-labelledby="de-reading-heading">
+              <div class="de-group-head">
+                <h2 id="de-reading-heading">Reading Generators</h2>
+                <p>Preview working phonics and fluency generators.</p>
+              </div>
+              <div class="de-picks">
+                <button class="de-pill" type="button" data-generator-subject="reading" data-generator-key="fluency-grid">Fluency Grid</button>
+                <button class="de-pill" type="button" data-generator-subject="reading" data-generator-key="word-mapping">Word Mapping</button>
+                <button class="de-pill" type="button" data-generator-subject="reading" data-generator-key="roll-and-read">Roll and Read</button>
+                <button class="de-pill" type="button" data-generator-subject="reading" data-generator-key="pyramid-spelling">Pyramid Spelling</button>
+              </div>
+            </section>
+
+            <section class="de-group" data-subject-panel="math" aria-labelledby="de-math-heading">
+              <div class="de-group-head">
+                <h2 id="de-math-heading">Math Generators</h2>
+                <p>Preview requested scaffold and practice generators.</p>
+              </div>
+              <div class="de-picks">
+                <button class="de-pill" type="button" data-generator-subject="math" data-generator-key="long-division-scaffold">Long Division Scaffold</button>
+                <button class="de-pill" type="button" data-generator-subject="math" data-generator-key="partial-products">Partial Products</button>
+                <button class="de-pill" type="button" data-generator-subject="math" data-generator-key="coin-counter">Coin Counter</button>
+                <button class="de-pill" type="button" data-generator-subject="math" data-generator-key="math-roll-and-read">Math Roll and Read</button>
+                <button class="de-pill" type="button" data-generator-subject="math" data-generator-key="long-division">Long Division</button>
+              </div>
+            </section>
+
+            <section class="de-meta" aria-live="polite">
+              <span class="de-badge" id="desktopPreviewCategory">Choose One</span>
+              <h3 id="desktopPreviewTitle">Tap a generator to load the preview</h3>
+              <p id="desktopPreviewCopy">Choose a reading or math generator to load the live preview.</p>
+            </section>
+
+            <a class="de-open" id="desktopGeneratorOpen" href="https://teachwithmrc.github.io/mobile/generator-browser-mobile.html" target="_blank" rel="noopener noreferrer">Open Full Mobile Browser</a>
+          </div>
+
+          <div class="de-stage">
+            <div class="de-frame">
+              <iframe
+                id="desktopGeneratorFrame"
+                class="de-iframe"
+                title="Intervention Station Desktop Generator Preview"
+                loading="lazy"
+              ></iframe>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </section>
+
+  <script src="./generator-browser-desktop.js"></script>
+</body>
+</html>

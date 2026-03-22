@@ -492,9 +492,11 @@ body{ padding-bottom:84px; }
 .mv4-browser__frame iframe{
   display:block;
   width:100%;
-  min-height:1780px;
+  height:260px;
+  min-height:0;
   border:0;
   background:#fff;
+  transition:height .18s ease;
 }
 
 .mv4-final-cta__card{

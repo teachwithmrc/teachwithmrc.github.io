@@ -446,9 +446,11 @@ body{
 .ms-browser__frame iframe{
   display:block;
   width:100%;
-  min-height:1850px;
+  height:260px;
+  min-height:0;
   border:0;
   background:#fff;
+  transition:height .18s ease;
 }
 
 .ms-final-cta__card{
