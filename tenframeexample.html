@@ -662,7 +662,7 @@
   
   // PREVIEW MODE LOCK
   $("btnPrint").addEventListener("click", ()=>{
-    alert("This feature is locked in Preview Mode.\nPlease upgrade to print worksheets.");
+    showPrintMembersOnlyNotice();
   });
 
   ["min","max","prefill","crossOut"].forEach(id=>{
